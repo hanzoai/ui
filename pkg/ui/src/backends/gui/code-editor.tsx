@@ -7,9 +7,9 @@
  * handle that resizes the editor.
  *
  * Height. With no `height` the editor is as tall as its text, from `minHeight`
- * up to `maxHeight`, and scrolls past that. Dragging the footer (or ArrowUp /
- * ArrowDown on it) sets a height of the reader's own, past the cap if they
- * want; a double-click hands the height back to the text. A `height` fixes it,
+ * up to `maxHeight`, and scrolls past that. Dragging its bottom edge (`Grip`,
+ * or ArrowUp / ArrowDown on it) sets a height of the reader's own, past the cap
+ * if they want; a double-click hands the height back to the text. A `height` fixes it,
  * and `'100%'` fills a frame that is itself sized (a flex child).
  *
  * JSON. `language="json"` colours the syntax and checks the text on every
@@ -63,7 +63,7 @@ import { tags } from '@lezer/highlight'
 import * as React from 'react'
 
 import { Button } from './button'
-import { Grip, useGrip } from './grip'
+import { Grip } from './grip'
 import { checkJson, formatJson, type JsonCheck } from './json'
 import { Select, SelectContent, SelectItem, SelectTrigger } from './select'
 import { slot } from './slot'
@@ -125,6 +125,11 @@ const LABEL: Record<string, string> = {
   shell: 'Shell',
   plaintext: 'Plain Text',
 }
+
+/** The tallest a drag makes the editor, px: a ceiling that is not one. */
+const CEILING = 4096
+/** Half the grip's band, so it sits astride the editor's edge. */
+const BAND_HALF = 4
 
 /** Line height as a multiple of the font size. */
 const LEADING = 1.6
@@ -349,7 +354,7 @@ export interface CodeEditorProps
   minHeight?: number
   /** The tallest it grows on its own, in px; past it the editor scrolls. */
   maxHeight?: number
-  /** Whether the footer resizes the editor. Defaults to true unless `height` is set. */
+  /** Whether the editor's bottom edge resizes it. Defaults to true unless `height` is set. */
   resizable?: boolean
   /** JSON only: text that does not open an object or an array is plain text, not an error. */
   allowText?: boolean
@@ -410,12 +415,8 @@ export function CodeEditor({
   /** Every text reported to `onChange` and not yet seen back as `value`. */
   const sent = React.useRef<string[]>([])
   const view = React.useRef<EditorView | null>(null)
-  const sized = useGrip({
-    enabled: resizable,
-    min: minHeight,
-    measure: () => view.current?.dom.getBoundingClientRect().height ?? minHeight,
-  })
-  const dragged = sized.height
+  /** A height the reader dragged to, or null while the editor follows its text. */
+  const [dragged, setDragged] = React.useState<number | null>(null)
   const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const listeners = React.useRef({ onChange, onCheck })
   listeners.current = { onChange, onCheck }
@@ -571,7 +572,7 @@ export function CodeEditor({
   const fills = typeof height === 'string' && height.endsWith('%')
   const formattable = showFormatButton ?? (isJson && !readOnly)
   const toolbar = showLanguageSelector || showCopyButton || formattable
-  const footer = resizable || (isJson && check !== null)
+  const footer = isJson && check !== null
 
   return (
     <YStack
@@ -653,15 +654,26 @@ export function CodeEditor({
           </XStack>
         </XStack>
       )}
-      <YStack ref={host as never} {...slot('code-editor-body')} {...(fills && { flex: 1, minH: 0 })} />
+      {/* The grip measures its parent, so the editor and its grip share one box. */}
+      <YStack position="relative" {...(fills && { flex: 1, minH: 0 })}>
+        <YStack ref={host as never} {...slot('code-editor-body')} {...(fills && { flex: 1, minH: 0 })} />
+        {resizable && (
+          <Grip
+            side="top"
+            span={dragged ?? minHeight}
+            floor={minHeight}
+            ceil={CEILING}
+            onSpan={setDragged}
+            onReset={() => setDragged(null)}
+            label={`Resize ${label}`}
+            // Astride the editor's bottom edge, so it takes no line from the text.
+            b={-BAND_HALF}
+          />
+        )}
+      </YStack>
       {footer && (
-        // The whole footer is the drag target; the grip is the separator a keyboard
-        // and a screen reader find. The status stays outside the separator, whose
-        // children assistive tech treats as presentational.
         <XStack
-          ref={sized.grip as never}
           {...slot('code-editor-footer')}
-          cursor={resizable ? 'row-resize' : undefined}
           items="center"
           justify="space-between"
           gap="$2"
@@ -671,14 +683,8 @@ export function CodeEditor({
           borderTopWidth={1}
           borderColor="$borderColor"
           bg="$panel"
-          select="none"
-          // A touch drag would otherwise scroll the page and cancel the pointer.
-          style={resizable ? { touchAction: 'none' } : undefined}
         >
-          <Status check={isJson ? check : null} />
-          {resizable && (
-            <Grip knob={sized.knob} name="code-editor-resize" label={label} min={minHeight} height={dragged} />
-          )}
+          <Status check={check} />
         </XStack>
       )}
     </YStack>

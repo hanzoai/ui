@@ -164,30 +164,28 @@ describe('JsonTree', () => {
     ui.cleanup()
   })
 
-  it('resizes from a footer grip by keyboard, reports each height, and hands it back on a double-click', () => {
+  it('resizes from its bottom edge by keyboard, reports each height, and hands it back on a double-click', () => {
     const heights: (number | null)[] = []
     const ui = mount(<JsonTree data={DATA} resizable minHeight={80} maxHeight={200} onResize={(h) => heights.push(h)} />)
-    const body = ui.slot('json-tree-body')!
-    const grip = ui.slot('json-tree-resize')!
+    const grip = ui.host.querySelector<HTMLElement>('[data-slot="grip"]')!
     expect(grip.getAttribute('role')).toBe('separator')
-    expect(ui.slot('json-tree-footer')?.getAttribute('style')).toMatch(/touch-action:\s*none/)
+    expect(grip.getAttribute('aria-label')).toBe('Resize JSON')
 
-    vi.spyOn(body, 'getBoundingClientRect').mockReturnValue({ height: 150 } as DOMRect)
+    vi.spyOn(grip.parentElement!, 'getBoundingClientRect').mockReturnValue({ height: 150, width: 0 } as DOMRect)
     act(() => {
       grip.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }))
     })
-    expect(heights).toEqual([174])
-    expect(grip.getAttribute('aria-valuenow')).toBe('174')
+    expect(heights).toEqual([158])
+    expect(grip.getAttribute('aria-valuenow')).toBe('158')
 
     act(() => {
-      ui.slot('json-tree-footer')?.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }))
+      grip.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }))
     })
-    expect(heights).toEqual([174, null])
-    expect(grip.getAttribute('aria-valuetext')).toBe('Fits its content')
+    expect(heights).toEqual([158, null])
     ui.cleanup()
 
     const again = mount(<JsonTree data={DATA} resizable defaultHeight={240} />)
-    expect(again.slot('json-tree-resize')?.getAttribute('aria-valuenow')).toBe('240')
+    expect(again.host.querySelector('[data-slot="grip"]')?.getAttribute('aria-valuenow')).toBe('240')
     again.cleanup()
   })
 

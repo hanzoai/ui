@@ -657,10 +657,16 @@ add a second.
 - **A controlled value the editor reported is an echo**, however late it comes back
   (`sent` holds every text given to `onChange` and not yet seen as `value`); writing a
   parent's one-keystroke-stale value back in dropped the key and moved the caret.
-- **The footer is the drag target, the grip is the separator** (keyboard, aria
-  value/valuetext); the status sits outside it so it is still read, and the footer
-  takes `touch-action: none` so a finger drag resizes instead of scrolling. The
-  behaviour is `grip.tsx` (`useGrip` + `Grip`), shared with JsonTree.
+- **`Grip` is the one resizer** (`backends/gui/grip.tsx`, exported; moved from
+  `@hanzo/build`, which hanzo.ai's sidebar and asides use). `side` is the edge the box
+  is pinned to: `left` grows right (a sidebar, a split's first pane), `right` grows left
+  (an aside), `top` grows down (CodeEditor's and JsonTree's height). It sits absolutely
+  on the free edge, measures its parent as drawn on every drag and key, steps 8px (32
+  with Shift), Home/End to the bounds, `onShut` for a snap past the floor, `reset` or
+  `onReset` on a double-click, and draws its line only on hover, drag or keyboard
+  focus (no outline). `useSpan(store, initial, floor, ceil)` (moved from `@hanzo/rooms`)
+  keeps a width in localStorage and draws it through `--span`. build and rooms still
+  carry their own copies until they move onto these.
 - **Folding.** JSON gets a fold gutter on every multi-line object and array. The fold
   runs from `{` through `}` (lang-json folds inside the brackets) so the placeholder can
   draw `{…} 3 keys` / `[…] 2 items`; the count is read off the syntax tree.

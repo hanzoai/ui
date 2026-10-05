@@ -230,28 +230,27 @@ describe('CodeEditor', () => {
     fixed.cleanup()
   })
 
-  it('resizes from the footer by keyboard, past the cap, and hands the height back on a double-click', () => {
+  it('resizes from its bottom edge by keyboard, past the cap, and hands the height back on a double-click', () => {
     const ui = mount(<CodeEditor language="json" defaultValue="{}" minHeight={80} maxHeight={120} />)
-    const footer = ui.slot('code-editor-footer')
-    const grip = ui.slot('code-editor-resize')
-    expect(grip?.getAttribute('role')).toBe('separator')
-    expect(grip?.getAttribute('aria-valuetext')).toBe('Fits its content')
-    // The status is read, not swallowed by the separator.
-    expect(grip?.contains(ui.slot('code-editor-status'))).toBe(false)
-    expect(footer?.getAttribute('style')).toMatch(/touch-action:\s*none/)
+    const grip = ui.q('[data-slot="grip"]')!
+    expect(grip.getAttribute('role')).toBe('separator')
+    expect(grip.getAttribute('aria-orientation')).toBe('horizontal')
+    expect(grip.getAttribute('aria-label')).toBe('Resize Code')
+    // The verdict is not inside the separator, whose children assistive tech skips.
+    expect(grip.contains(ui.slot('code-editor-status'))).toBe(false)
 
-    // jsdom measures every box at 0, so the first step lands on the floor.
+    // A key steps from the editor as drawn: jsdom draws nothing, so the first lands on the floor.
     press(grip, { key: 'ArrowDown' })
     expect(ui.editor()?.style.height).toBe('80px')
     expect(ui.editor()?.style.maxHeight).toBe('')
 
-    vi.spyOn(ui.editor()!, 'getBoundingClientRect').mockReturnValue({ height: 140 } as DOMRect)
-    press(grip, { key: 'ArrowDown' })
-    expect(ui.editor()?.style.height).toBe('164px')
-    expect(grip?.getAttribute('aria-valuenow')).toBe('164')
+    vi.spyOn(grip.parentElement!, 'getBoundingClientRect').mockReturnValue({ height: 140, width: 0 } as DOMRect)
+    press(grip, { key: 'ArrowDown', shiftKey: true })
+    expect(ui.editor()?.style.height).toBe('172px')
+    expect(grip.getAttribute('aria-valuenow')).toBe('172')
 
     act(() => {
-      footer?.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }))
+      grip.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }))
     })
     expect(ui.editor()?.style.height).toBe('')
     expect(ui.editor()?.style.maxHeight).toBe('120px')

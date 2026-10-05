@@ -313,6 +313,8 @@ export { Calendar, type CalendarMultipleProps, type CalendarProps, type Calendar
 export { CodeEditor, type CodeEditorProps, type CodeEditorWordWrap } from './code-editor'
 export { checkJson, formatJson, type JsonCheck, type JsonCheckOptions } from './json'
 export { JsonTree, type JsonTreeProps } from './json-tree'
+export { Grip, type GripProps, type GripSide } from './grip'
+export { useSpan } from './span'
 export { CodeBlock, type CodeBlockDiff, type CodeBlockProps, type CodeBlockSize, type CodeBlockTheme } from './code-block'
 export { CompanyProfile, type CompanyProfileProps, type CompanyProfileTheme } from './company-profile'
 export { CreditCard, type CreditCardProps, type CreditCardVariant } from './credit-card'

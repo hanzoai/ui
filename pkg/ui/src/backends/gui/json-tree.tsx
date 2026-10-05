@@ -19,9 +19,9 @@
  * filter hands back the tree as it was opened before.
  *
  * Height. The tree is as tall as its rows up to `maxHeight`, then scrolls.
- * `resizable` adds CodeEditor's footer grip: a drag or ArrowUp / ArrowDown sets
- * a height of the reader's own and a double-click hands it back; `onResize`
- * hears each one and `defaultHeight` starts from it. Copy writes the whole
+ * `resizable` puts a `Grip` on its bottom edge: a drag or ArrowUp / ArrowDown
+ * sets a height of the reader's own and a double-click hands it back;
+ * `onResize` hears each one and `defaultHeight` starts from it. Copy writes the whole
  * value, whatever is open or filtered. Built from gui primitives only, so it
  * renders wherever gui does.
  */
@@ -37,10 +37,13 @@ import {
 import * as React from 'react'
 
 import { Button } from './button'
-import { Grip, useGrip } from './grip'
+import { Grip } from './grip'
 import { Input } from './input'
 import { slot } from './slot'
 import { toast } from './toaster'
+
+/** The tallest a drag makes the tree, px: a ceiling that is not one. */
+const CEILING = 4096
 
 /** Indent per level, in px. */
 const INDENT = 16
@@ -149,14 +152,12 @@ export function JsonTree({
   const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   /** The open set from before a filter, handed back when it clears. */
   const before = React.useRef<Set<string> | null>(null)
-  const body = React.useRef<HTMLElement | null>(null)
-  const sized = useGrip({
-    enabled: resizable,
-    min: minHeight,
-    measure: () => body.current?.getBoundingClientRect().height ?? minHeight,
-    initial: defaultHeight,
-    onChange: onResize,
-  })
+  /** A height the reader dragged to, or null while the tree follows its rows. */
+  const [height, setHeight] = React.useState<number | null>(defaultHeight)
+  const size = (n: number | null) => {
+    setHeight(n)
+    onResize?.(n)
+  }
 
   const sifted = React.useMemo(() => (query.trim() ? sift(data, query) : null), [data, query])
 
@@ -205,7 +206,7 @@ export function JsonTree({
   // Everything is kept when the root itself matched; nothing is when no row did.
   const kept = sifted && !sifted.rows.get('$') ? sifted.rows : null
   const none = sifted !== null && sifted.rows.size === 0
-  const fixed = sized.height !== null
+  const fixed = height !== null
 
   return (
     <YStack
@@ -251,7 +252,7 @@ export function JsonTree({
                   type="search"
                   value={query}
                   onChangeText={type}
-                  placeholder="Filter keys, paths, values"
+                  placeholder="Filter"
                   aria-label={`Filter ${title ?? 'JSON'} by key, path or value`}
                   // No adornment: its wrapper holds the field at its intrinsic width, and
                   // on a narrow pane that pushed the actions out of the header.
@@ -299,42 +300,37 @@ export function JsonTree({
           </XStack>
         </XStack>
       )}
-      <YStack
-        ref={body as never}
-        {...slot('json-tree-body')}
-        py="$2"
-        px="$2"
-        {...(fixed ? { height: sized.height } : maxHeight !== undefined ? { maxH: maxHeight } : null)}
-        overflowY={fixed || maxHeight !== undefined ? 'auto' : undefined}
-      >
-        {none ? (
-          <SizableText {...slot('json-tree-empty')} size="$2" color="$soft" px="$2" py="$1">
-            Nothing matches “{query.trim()}”.
-          </SizableText>
-        ) : (
-          <Node name={null} value={data} path="$" level={0} open={open} toggle={toggle} kept={kept} />
+      {/* The grip measures its parent, so the body and its grip share one box. */}
+      <YStack position="relative">
+        <YStack
+          {...slot('json-tree-body')}
+          py="$2"
+          px="$2"
+          {...(fixed ? { height } : maxHeight !== undefined ? { maxH: maxHeight } : null)}
+          overflowY={fixed || maxHeight !== undefined ? 'auto' : undefined}
+        >
+          {none ? (
+            <SizableText {...slot('json-tree-empty')} size="$2" color="$soft" px="$2" py="$1">
+              Nothing matches “{query.trim()}”.
+            </SizableText>
+          ) : (
+            <Node name={null} value={data} path="$" level={0} open={open} toggle={toggle} kept={kept} />
+          )}
+        </YStack>
+        {resizable && (
+          <Grip
+            side="top"
+            span={height ?? minHeight}
+            floor={minHeight}
+            ceil={CEILING}
+            onSpan={setHeight}
+            onKeep={size}
+            onReset={() => size(null)}
+            label={`Resize ${title ?? 'JSON'}`}
+            b={0}
+          />
         )}
       </YStack>
-      {resizable && (
-        // The whole footer is the drag target; the grip is the separator a keyboard finds.
-        <XStack
-          ref={sized.grip as never}
-          {...slot('json-tree-footer')}
-          cursor="row-resize"
-          items="center"
-          justify="flex-end"
-          minH={24}
-          px="$3"
-          borderTopWidth={1}
-          borderColor="$borderColor"
-          bg="$panel"
-          select="none"
-          // A touch drag would otherwise scroll the page and cancel the pointer.
-          style={{ touchAction: 'none' }}
-        >
-          <Grip knob={sized.knob} name="json-tree-resize" label={title ?? 'JSON'} min={minHeight} height={sized.height} />
-        </XStack>
-      )}
     </YStack>
   )
 }
