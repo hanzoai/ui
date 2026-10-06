@@ -11,6 +11,12 @@ export class ApiError extends Error {
 }
 
 export function parseErrorMessage(body: unknown, status: number): string {
+  if (status === 502 || status === 503 || status === 504) {
+    return 'Payment processing is temporarily unavailable. Please try again shortly.'
+  }
+  if (status === 401 || status === 403) {
+    return 'Please sign in again to continue.'
+  }
   if (!body) return `Request failed (${status})`
   if (typeof body === 'string') return body
   if (typeof body === 'object') {
@@ -35,6 +41,8 @@ export async function call<T>(base: string, path: string, init: RequestInit = {}
   const customHeaders = (init.headers as Record<string, string> | undefined) ?? {}
   const res = await fetch(`${base}${path}`, {
     ...init,
+    cache: 'no-store',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
