@@ -132,6 +132,7 @@ export {
   Choicebox,
   ChoiceCard,
   ChoiceGroup,
+  RadioCircle,
   Stepper,
   CodeBlock,
   CodeEditor,

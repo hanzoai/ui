@@ -5,7 +5,7 @@ import { Check, ChevronDown, User, Users } from '@hanzogui/lucide-icons-2'
 import { Badge } from '../backends/gui/badge'
 import { Button } from '../backends/gui/button'
 import { Card, CardContent } from '../backends/gui/card'
-import { ChoiceCard, ChoiceGroup } from '../backends/gui/choice'
+import { ChoiceCard, ChoiceGroup, RadioCircle } from '../backends/gui/choice'
 import { Field, FieldError, FieldLabel } from '../backends/gui/field'
 import { Input } from '../backends/gui/input'
 import { Anchor, Heading, Paragraph, SizableText, XStack, YStack } from '../backends/gui/layout'
@@ -261,17 +261,22 @@ export function IntervalChoice({ interval, setInterval, price, save }: { interva
     <ChoiceGroup label="Billing interval" flexWrap="wrap">
       {(['monthly', 'annual'] as const).filter((i) => i === 'monthly' || save > 0).map((i) => (
         <ChoiceCard key={i} selected={interval === i} onSelect={() => setInterval(i)} flex={1} flexBasis={200}>
-          {i === 'annual' ? (
-            <SizableText size="$1" color="$ink" self="flex-end" bg="$edge" px="$2" rounded="$1">
-              {`Save ${save}%`}
+          <XStack justify="space-between" items="center" width="100%">
+            <SizableText size="$3" fontWeight="600" color="$ink">
+              {i === 'annual' ? 'Annually' : 'Monthly'}
             </SizableText>
-          ) : null}
-          <SizableText size="$3" fontWeight="600" color="$ink">
-            {i === 'annual' ? 'Annually' : 'Monthly'}
-          </SizableText>
-          <SizableText size="$2" color="$ink">
-            {price(i)}
-          </SizableText>
+            <RadioCircle selected={interval === i} />
+          </XStack>
+          <XStack justify="space-between" items="center" width="100%">
+            <SizableText size="$2" color="$ink">
+              {price(i)}
+            </SizableText>
+            {i === 'annual' ? (
+              <SizableText size="$1" color="$ink" bg="$edge" px="$2" rounded="$1">
+                {`Save ${save}%`}
+              </SizableText>
+            ) : null}
+          </XStack>
         </ChoiceCard>
       ))}
     </ChoiceGroup>

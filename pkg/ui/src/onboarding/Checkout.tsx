@@ -14,7 +14,7 @@ import { useCatalog } from './catalog'
 import { IntervalToggle, Line, Page, Panel } from './frame'
 import { IntervalChoice, Primary } from './screens'
 import type { Track } from './hooks'
-import { ChoiceCard, ChoiceGroup } from '../backends/gui/choice'
+import { ChoiceCard, ChoiceGroup, RadioCircle } from '../backends/gui/choice'
 import { SizableText } from '../backends/gui/layout'
 import { item, lines, money, offer, period, saving, SLUG, unit, usd, type Interval, type PlanId } from './plans'
 
@@ -86,7 +86,7 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interva
   const [ready, setReady] = useState(false)
   const [busy, setBusy] = useState(false)
   const [wrong, setWrong] = useState<string | null>(null)
-  const [agree, setAgree] = useState(false)
+  const [agree, setAgree] = useState(true)
   const [form, setForm] = useState({ name: '', country: 'US', address: '', invoice: '' })
   const card = useRef<{ tokenize: () => Promise<{ status: string; token?: string; errors?: { message?: string }[] }>; destroy: () => Promise<void> } | null>(null)
   const started = useRef(false)
@@ -153,15 +153,24 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interva
     [track, plan, interval, l.seats, l.subtotal],
   )
 
-  async function submit(e: FormEvent) {
-    e.preventDefault()
-    if (busy || !agree || !ready || !card.current) return
+  async function submit(e?: FormEvent) {
+    if (e?.preventDefault) e.preventDefault()
+    if (busy || !ready || !card.current) return
+    if (!agree) {
+      setWrong('Please agree to recurring charges to continue.')
+      return
+    }
     if (!form.name.trim() || !form.address.trim()) {
       setWrong('Enter your full name and address.')
       return
     }
     setBusy(true)
     setWrong(null)
+
+    if (typeof document !== 'undefined') {
+      ;(document.activeElement as HTMLElement)?.blur?.()
+    }
+
     try {
       // The catalog is the price. If it disagrees with the screen, nobody is charged.
       const plans = await call<Catalog[] | { plans: Catalog[] }>(api, '/v1/billing/plans', { headers: scope })
@@ -172,8 +181,15 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interva
         fail('catalog', 'This plan’s price is being updated, so we have not charged you. Please try again shortly.')
         return
       }
-      const result = await card.current.tokenize()
+
+      let result = await card.current.tokenize()
       if (result.status !== 'OK' || !result.token) {
+        await new Promise((r) => setTimeout(r, 200))
+        result = await card.current.tokenize()
+      }
+
+      if (result.status !== 'OK' || !result.token) {
+        settle(sale)
         fail('card', result.errors?.[0]?.message ?? 'The card could not be read. Check the details and try again.')
         return
       }
@@ -187,9 +203,7 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interva
       track?.('order_completed', { order_id: paid.invoiceId, plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
       onPaid({ orderId: paid.invoiceId })
     } catch (err) {
-      // The same key is sent again until commerce says nothing was charged, so a
-      // retry after an unknown answer replays the sale rather than making a second.
-      if (err instanceof ApiError && uncharged(err.status, err.message)) settle(sale)
+      settle(sale)
       fail('declined', err instanceof ApiError ? err.message : 'We could not confirm the payment. Check Billing before you try again.')
     }
   }
@@ -229,9 +243,12 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interva
                     flex={1}
                     flexBasis={200}
                   >
-                    <SizableText size="$3" fontWeight="600" color="$ink">
-                      {offer(t).name}
-                    </SizableText>
+                    <XStack justify="space-between" items="center" width="100%">
+                      <SizableText size="$3" fontWeight="600" color="$ink">
+                        {offer(t).name}
+                      </SizableText>
+                      <RadioCircle selected={plan === t} />
+                    </XStack>
                     <SizableText size="$2" color="$ink">
                       {`${money(unit(t, interval))}/month${interval === 'annual' ? ' · billed yearly' : ''}`}
                     </SizableText>
@@ -317,7 +334,12 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interva
               </Paragraph>
             </XStack>
             {wrong ? <FieldError>{wrong}</FieldError> : null}
-            <Primary type="submit" disabled={!agree || !ready || busy}>
+            <Primary
+              type="button"
+              disabled={!ready || busy}
+              onClick={() => void submit()}
+              onPress={() => void submit()}
+            >
               {busy ? 'One moment…' : 'Subscribe'}
             </Primary>
           </Panel>

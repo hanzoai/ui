@@ -46,11 +46,11 @@ describe('the retry key of a purchase', () => {
     for (const status of [undefined, 0, 409, 500, 502, 503, 504]) expect(uncharged(status)).toBe(false)
   })
 
-  it('is new after a day, so a later purchase is not a replay of an old one', () => {
+  it('is new after 5 minutes, so a later purchase is not a replay of an old one', () => {
     const sale = purchase('acme', 'dev', 'monthly', 1)
     const t0 = 1_800_000_000_000
     const first = keyFor(sale, t0)
     expect(keyFor(sale, t0 + 60_000)).toBe(first)
-    expect(keyFor(sale, t0 + 25 * 60 * 60 * 1000)).not.toBe(first)
+    expect(keyFor(sale, t0 + 6 * 60 * 1000)).not.toBe(first)
   })
 })

@@ -60,6 +60,26 @@ export function ChoiceCard({ selected, onSelect, children, ...props }: ChoiceCar
   )
 }
 
+export function RadioCircle({ selected }: { selected: boolean }) {
+  return (
+    <XStack
+      {...slot('choice-indicator')}
+      width={18}
+      height={18}
+      rounded={9999}
+      borderWidth={2}
+      borderColor={selected ? '$ink' : '$bound'}
+      bg={selected ? '$ink' : 'transparent'}
+      items="center"
+      justify="center"
+      shrink={0}
+      pointerEvents="none"
+    >
+      {selected ? <XStack width={6} height={6} rounded={9999} bg="$background" /> : null}
+    </XStack>
+  )
+}
+
 export type ChoiceGroupProps = ComponentProps<typeof XStack> & { label: string }
 
 export function ChoiceGroup({ label, ...props }: ChoiceGroupProps) {

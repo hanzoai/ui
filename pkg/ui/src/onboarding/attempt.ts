@@ -10,8 +10,8 @@
 
 const PREFIX = 'hanzo.checkout:'
 
-/** How long a key is kept: a retry comes within minutes, a new purchase days later. */
-const DAY = 24 * 60 * 60 * 1000
+/** How long a key is kept for retry: within 5 minutes. */
+const WINDOW = 5 * 60 * 1000
 
 const random = (): string => (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`)
 
@@ -31,7 +31,7 @@ export function keyFor(name: string, now = Date.now()): string {
   const s = store()
   try {
     const [key, at] = (s?.getItem(name) ?? '').split('@')
-    if (key && now - Number(at) < DAY) return key
+    if (key && now - Number(at) < WINDOW) return key
     const fresh = random()
     s?.setItem(name, `${fresh}@${now}`)
     return fresh
