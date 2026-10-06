@@ -1,4 +1,4 @@
-import { bearer } from '../auth/session'
+import { bearer, currentOrg } from '../auth/session'
 import type { Accepted, Policy, Progress, Stored } from './state'
 
 /** Where the IAM and billing routes answer from. api.hanzo.ai answers CORS for every Hanzo host. */
@@ -10,11 +10,37 @@ export class ApiError extends Error {
   }
 }
 
-export async function call<T>(base: string, path: string, init: RequestInit = {}): Promise<T> {
-  const token = bearer()
+export function parseErrorMessage(body: unknown, status: number): string {
+  if (!body) return `Request failed (${status})`
+  if (typeof body === 'string') return body
+  if (typeof body === 'object') {
+    const b = body as Record<string, unknown>
+    if (typeof b.detail === 'string' && b.detail) return b.detail
+    if (typeof b.message === 'string' && b.message) return b.message
+    if (typeof b.msg === 'string' && b.msg) return b.msg
+    if (typeof b.error === 'string' && b.error) return b.error
+    if (typeof b.error === 'object' && b.error !== null) {
+      const errObj = b.error as Record<string, unknown>
+      if (typeof errObj.message === 'string' && errObj.message) return errObj.message
+      if (typeof errObj.detail === 'string' && errObj.detail) return errObj.detail
+      if (typeof errObj.msg === 'string' && errObj.msg) return errObj.msg
+    }
+  }
+  return `Request failed (${status})`
+}
+
+export async function call<T>(base: string, path: string, init: RequestInit = {}, explicitToken?: string): Promise<T> {
+  const token = explicitToken || bearer()
+  const activeOrg = currentOrg()
+  const customHeaders = (init.headers as Record<string, string> | undefined) ?? {}
   const res = await fetch(`${base}${path}`, {
     ...init,
-    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(init.headers as Record<string, string> | undefined) },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(activeOrg && !customHeaders['X-Org-Id'] ? { 'X-Org-Id': activeOrg } : {}),
+      ...customHeaders,
+    },
   })
   const text = await res.text()
   let body: unknown = null
@@ -24,8 +50,7 @@ export async function call<T>(base: string, path: string, init: RequestInit = {}
     body = null
   }
   if (!res.ok) {
-    const b = body as { detail?: string; msg?: string; error?: string } | null
-    throw new ApiError(b?.detail ?? b?.msg ?? b?.error ?? `Request failed (${res.status})`, res.status)
+    throw new ApiError(parseErrorMessage(body, res.status), res.status)
   }
   // IAM wraps answers as {status, data}; billing answers bare.
   const wrapped = body as { status?: string; data?: unknown } | null

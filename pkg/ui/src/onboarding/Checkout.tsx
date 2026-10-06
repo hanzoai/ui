@@ -8,6 +8,7 @@ import { Field, FieldError, FieldLabel } from '../backends/gui/field'
 import { Input } from '../backends/gui/input'
 import { Anchor, Heading, Paragraph, XStack, YStack } from '../backends/gui/layout'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../backends/gui/select'
+import { bearer, currentOrg } from '../auth/session'
 import { ApiError, API, call } from './api'
 import { keyFor, purchase, settle, uncharged } from './attempt'
 import { useCatalog } from './catalog'
@@ -34,6 +35,7 @@ export interface CheckoutProps {
   api?: string
   /** The IAM org the plan is bought for; omitted, the caller's own. */
   org?: string
+  token?: string
   plan: PlanId
   seats?: number
   interval: Interval
@@ -76,11 +78,13 @@ export function Checkout(props: CheckoutProps) {
   return <CheckoutForm {...props} />
 }
 
-function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interval, setInterval, setPlan, track, termsPath = '/terms', back, onPaid }: CheckoutProps) {
+function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, seats = 1, interval, setInterval, setPlan, track, termsPath = '/terms', back, onPaid }: CheckoutProps) {
   const o = offer(plan)
   const l = useMemo(() => lines(plan, interval, seats), [plan, interval, seats])
-  const scope = useMemo(() => (org ? { 'X-Org-Id': org } : undefined), [org])
-  const sale = purchase(org, SLUG[plan], interval, l.seats)
+  const activeOrg = org || currentOrg() || undefined
+  const scope = useMemo(() => (activeOrg ? { 'X-Org-Id': activeOrg } : undefined), [activeOrg])
+  const sale = purchase(activeOrg, SLUG[plan], interval, l.seats)
+  const token = propToken || bearer() || undefined
 
   const [settings, setSettings] = useState<Settings | null>(null)
   const [ready, setReady] = useState(false)
@@ -103,13 +107,13 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interva
 
   useEffect(() => {
     let live = true
-    call<Settings>(api, '/v1/billing/settings', { headers: scope })
+    call<Settings>(api, '/v1/billing/settings', { headers: scope }, token)
       .then((s) => live && setSettings(s))
       .catch((e: unknown) => live && setWrong(e instanceof Error ? e.message : 'Payments are not available right now.'))
     return () => {
       live = false
     }
-  }, [api, scope])
+  }, [api, scope, token])
 
   // The Square card field, drawn once the settings say which application it is.
   useEffect(() => {
@@ -173,7 +177,7 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interva
 
     try {
       // The catalog is the price. If it disagrees with the screen, nobody is charged.
-      const plans = await call<Catalog[] | { plans: Catalog[] }>(api, '/v1/billing/plans', { headers: scope })
+      const plans = await call<Catalog[] | { plans: Catalog[] }>(api, '/v1/billing/plans', { headers: scope }, token)
       const row = (Array.isArray(plans) ? plans : plans.plans).find((p) => p.slug === SLUG[plan])
       const cents = Math.round(period(plan, interval) * 100)
       const listed = interval === 'annual' ? row?.annualTotal : row?.price
@@ -194,17 +198,22 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interva
         return
       }
       track?.('payment_info_added', { plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
-      const paid = await call<{ subscriptionId: string; invoiceId: string }>(api, '/v1/billing/subscribe/card', {
-        method: 'POST',
-        headers: { ...scope, 'X-Idempotency-Key': keyFor(sale) },
-        body: JSON.stringify({ sourceId: result.token, planId: SLUG[plan], quantity: l.seats, ...(interval === 'annual' ? { interval: 'year' } : {}) }),
-      })
+      const paid = await call<{ subscriptionId: string; invoiceId: string }>(
+        api,
+        '/v1/billing/subscribe/card',
+        {
+          method: 'POST',
+          headers: { ...scope, 'X-Idempotency-Key': keyFor(sale) },
+          body: JSON.stringify({ sourceId: result.token, planId: SLUG[plan], quantity: l.seats, ...(interval === 'annual' ? { interval: 'year' } : {}) }),
+        },
+        token,
+      )
       settle(sale)
-      track?.('order_completed', { order_id: paid.invoiceId, plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
-      onPaid({ orderId: paid.invoiceId })
+      track?.('order_completed', { order_id: paid.invoiceId || paid.subscriptionId, plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
+      onPaid({ orderId: paid.invoiceId || paid.subscriptionId })
     } catch (err) {
       settle(sale)
-      fail('declined', err instanceof ApiError ? err.message : 'We could not confirm the payment. Check Billing before you try again.')
+      fail('declined', err instanceof Error ? err.message : 'We could not confirm the payment. Check Billing before you try again.')
     }
   }
 

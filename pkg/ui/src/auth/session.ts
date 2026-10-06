@@ -19,8 +19,53 @@ const read = (key: string): string | null => {
   }
 }
 
+const readSession = (key: string): string | null => {
+  if (typeof window === 'undefined') return null
+  try {
+    return window.sessionStorage?.getItem(key) ?? null
+  } catch {
+    return null
+  }
+}
+
+const readCookie = (name: string): string | null => {
+  if (typeof document === 'undefined' || !document.cookie) return null
+  try {
+    const match = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith(`${name}=`))
+    if (match) {
+      const val = match.split('=')[1]
+      return val ? decodeURIComponent(val) : null
+    }
+    return null
+  } catch {
+    return null
+  }
+}
+
 /** The access token, or null. Storage that throws answers null. */
-export const bearer = (): string | null => read(ACCESS)
+export const bearer = (): string | null =>
+  read(ACCESS) ||
+  read('hanzo_access_token') ||
+  read('token') ||
+  read('auth_token') ||
+  readSession(ACCESS) ||
+  readSession('hanzo_access_token') ||
+  readSession('token') ||
+  readCookie(ACCESS) ||
+  readCookie('auth_token') ||
+  readCookie('token') ||
+  readCookie('hanzo_access_token')
+
+/** The active organization slug, or null. */
+export const currentOrg = (): string | null =>
+  read(`${PREFIX}current_org`) ||
+  readSession(`${PREFIX}current_org`) ||
+  read('org') ||
+  readCookie(`${PREFIX}current_org`) ||
+  readCookie('org') ||
+  null
 
 /** The refresh token, or null. */
 export const refresher = (): string | null => read(REFRESH)
