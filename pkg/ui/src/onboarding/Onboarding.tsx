@@ -63,10 +63,10 @@ export interface OnboardingProps {
   /** The organization a team plan is billed to when this flow did not make it: a team already on Free. */
   org?: string
   /**
-   * Take the person to pay for a personal plan somewhere else (hanzo.ai/pay, which
-   * returns here once paid). Without it, and for a team's seats, the checkout is drawn in this flow.
+   * The host's own checkout, for every plan: a team's comes with its seats and
+   * the organization it is billed to. Without it the checkout is drawn in this flow.
    */
-  checkout?: (order: { plan: PlanId; interval: Interval; seats: number }) => void
+  checkout?: (order: { plan: PlanId; interval: Interval; seats: number; org?: string }) => void
 }
 
 type View = 'account' | 'pro' | 'use' | 'plans' | 'team' | 'seats' | 'enterprise' | 'checkout'
@@ -90,11 +90,10 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
   function pay(plan: PlanId, seats: number, back: 'pro' | 'plans') {
     setBuy({ plan, seats })
     setAt(back)
-    // A team is priced by its seats, which only this flow's own checkout takes.
-    if (checkout && offer(plan).category !== 'team') {
+    if (checkout) {
       const l = lines(plan, interval, seats)
       track?.('plan_selected', { plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
-      checkout({ plan, interval, seats })
+      checkout({ plan, interval, seats, ...(offer(plan).category === 'team' && org ? { org } : {}) })
     } else setView('checkout')
   }
 
