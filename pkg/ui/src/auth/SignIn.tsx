@@ -324,7 +324,7 @@ export function SignIn({
   const one = busy ? 'One moment…' : null
 
   return (
-    <YStack render="section" aria-label={signup ? 'Sign up' : 'Log in'} items="center" gap="$5" {...(frame ? { minH: 560, pt: 112, pb: 96, px: '$4' } : {})}>
+    <YStack render="section" aria-label={signup ? 'Sign up' : 'Log in'} items="center" gap="$5" {...(frame ? { minH: 560, pt: 56, pb: 96, px: '$4', $gtSm: { pt: 112 } } : {})}>
       <Card width="100%" maxW={400}>
         <CardContent gap="$5">
           {frame ? (
@@ -335,7 +335,7 @@ export function SignIn({
                   {site}
                 </SizableText>
               </XStack>
-              <Heading render="h1" size="$8" fontWeight="500" color="$ink" m={0}>
+              <Heading render="h1" size="$7" $gtSm={{ size: '$8' }} fontWeight="500" color="$ink" m={0}>
                 {title}
               </Heading>
             </>
@@ -423,7 +423,7 @@ export function SignIn({
 
           {signup ? (
             <Paragraph size="$1" color="$quiet" m={0}>
-              By creating an account you agree to the <Anchor href={termsPath} color="$ink" textDecorationLine="underline">Terms</Anchor> and the <Anchor href={privacyPath} color="$ink" textDecorationLine="underline">Privacy Policy</Anchor>.
+              By creating an account you agree to the <Anchor href={termsPath} color="$ink" textDecorationLine="underline" $touchable={{ display: 'inline-block', px: 6, py: 14, mx: -6, my: -14 }}>Terms</Anchor> and the <Anchor href={privacyPath} color="$ink" textDecorationLine="underline">Privacy Policy</Anchor>.
             </Paragraph>
           ) : null}
         </CardContent>
@@ -431,7 +431,7 @@ export function SignIn({
       {frame && (signup || signupPath) ? (
         <Paragraph size="$2" color="$quiet" m={0}>
           {signup ? 'Have an account? ' : `New to ${site}? `}
-          <Anchor href={`${signup ? loginPath : signupPath}${query}`} color="$ink" textDecorationLine="underline">
+          <Anchor href={`${signup ? loginPath : signupPath}${query}`} color="$ink" textDecorationLine="underline" $touchable={{ display: 'inline-block', px: 6, py: 14, mx: -6, my: -14 }}>
             {signup ? 'Log in' : 'Create an account'}
           </Anchor>
         </Paragraph>

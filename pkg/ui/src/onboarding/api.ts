@@ -84,3 +84,9 @@ export const acceptTerms = (base: string, policy: Policy) => call<Accepted>(base
 
 export const account = (base: string) => call<Account>(base, '/v1/iam/account')
 export const rename = (base: string, displayName: string) => call<Account>(base, '/v1/iam/account', { method: 'PUT', body: JSON.stringify({ displayName }) })
+
+/**
+ * GET /v1/link: the machines this person has signed the CLI in on (cloud's login-manager registry, org and user
+ * scoped). `hanzo login` and `hanzo code` register there, so the first-run CLI step watches it.
+ */
+export const links = (base: string) => call<{ links?: Array<{ host?: string; status?: string }>; devices?: Array<{ host?: string }> }>(base, '/v1/link')

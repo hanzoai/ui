@@ -26,21 +26,24 @@ export interface CreateAccountProps {
   onCreate: () => void
   /** Go back and start over with another address. */
   onOther: () => void
+  /** Where this page sits in the steps left to do. */
+  progress?: { at: number; of: number }
 }
 
-export function CreateAccount({ site = 'Hanzo', email, busy, wrong, termsPath = '/terms', aupPath = '/aup', onCreate, onOther }: CreateAccountProps) {
+export function CreateAccount({ site = 'Hanzo', email, busy, wrong, termsPath = '/terms', aupPath = '/aup', onCreate, onOther, progress }: CreateAccountProps) {
   const [agree, setAgree] = useState(false)
   return (
     <Page
       site={site}
       title="Let’s create your account"
       width={360}
+      progress={progress}
       foot={
         <>
           <SizableText size="$1" color="$quiet" text="center">
             {`Email verified as ${email}`}
           </SizableText>
-          <Button type="button" variant="link" size="sm" px={0} minH={0} disabled={busy} onClick={onOther}>
+          <Button type="button" variant="link" size="sm" px={0} minH={0} $touchable={{ py: 14, my: -14 }} disabled={busy} onClick={onOther}>
             Use a different email
           </Button>
         </>
@@ -51,11 +54,11 @@ export function CreateAccount({ site = 'Hanzo', email, busy, wrong, termsPath = 
           <Checkbox id="hanzo-terms" checked={agree} onCheckedChange={(v: boolean | 'indeterminate') => setAgree(v === true)} mt="$1" aria-label="I agree to the Terms of Service and Acceptable Use Policy and confirm that I am at least 18 years of age" />
           <Paragraph render="label" htmlFor="hanzo-terms" size="$2" color="$ink" flex={1} m={0}>
             {`I agree to ${site}’s `}
-            <Anchor href={termsPath} color="$ink" textDecorationLine="underline">
+            <Anchor href={termsPath} color="$ink" textDecorationLine="underline" $touchable={{ display: 'inline-block', px: 6, py: 14, mx: -6, my: -14 }}>
               Terms of Service
             </Anchor>
             {' and '}
-            <Anchor href={aupPath} color="$ink" textDecorationLine="underline">
+            <Anchor href={aupPath} color="$ink" textDecorationLine="underline" $touchable={{ display: 'inline-block', px: 6, py: 14, mx: -6, my: -14 }}>
               Acceptable Use Policy
             </Anchor>
             {' and confirm that I am at least 18 years of age.'}

@@ -22,8 +22,9 @@ export function Bare({ children }: { children: ReactNode }) {
 
 /**
  * One page of onboarding: the product's mark, a title, a line under it, and the
- * screen. No progress bar and no step counter. `width` sets how much room the
- * screen has: a column for a form, the full row for three plans.
+ * screen. `progress` draws "Step 2 of 4" over a slim bar when the flow has more
+ * than one step to go. `width` sets how much room the screen has: a column for a
+ * form, the full row for three plans.
  */
 export function Page({
   site,
@@ -36,6 +37,7 @@ export function Page({
   start,
   busy,
   foot,
+  progress,
 }: {
   site: string
   title: string
@@ -49,10 +51,12 @@ export function Page({
   busy?: boolean
   /** A quiet line under the screen: who the email is, a way out. */
   foot?: ReactNode
+  /** Where this page sits in the steps the person has left to do. */
+  progress?: { at: number; of: number }
 }) {
   const brand = useContext(Brand)
   return (
-    <YStack render={brand ? 'main' : 'div'} aria-busy={busy || undefined} bg="$background" minH="100vh" items="center" justify={center ? 'center' : 'flex-start'} gap="$4" pt={center ? 96 : 28} pb={96} px="$4">
+    <YStack render={brand ? 'main' : 'div'} aria-busy={busy || undefined} bg="$background" minH="100dvh" items="center" justify={center ? 'center' : 'flex-start'} gap="$4" pt={center ? 96 : 28} pb={96} px="$4">
       {back ? (
         <Button type="button" variant="ghost" size="icon-lg" aria-label="Back" position="absolute" t={20} l={20} rounded="$10" onClick={back}>
           <ArrowLeft size={18} />
@@ -66,10 +70,11 @@ export function Page({
           </SizableText>
         </XStack>
       ) : null}
+      {progress && progress.of > 1 ? <Steps at={progress.at} of={progress.of} width={width} /> : null}
       {title || lede ? (
         <YStack width="100%" maxW={start ? width : 720} items={start ? 'flex-start' : 'center'} gap="$3">
           {title ? (
-            <Heading render="h1" size="$9" fontWeight="500" color="$ink" text={start ? 'left' : 'center'} m={0}>
+            <Heading render="h1" size="$7" $gtSm={{ size: '$9' }} fontWeight="500" color="$ink" text={start ? 'left' : 'center'} m={0}>
               {title}
             </Heading>
           ) : null}
@@ -91,6 +96,22 @@ export function Page({
           {foot}
         </YStack>
       ) : null}
+    </YStack>
+  )
+}
+
+/** "Step 2 of 4" over a slim bar: how far through, and how much is left. */
+export function Steps({ at, of, width = 480 }: { at: number; of: number; width?: number }) {
+  return (
+    <YStack width="100%" maxW={Math.min(width, 480)} gap="$1.5" role="progressbar" aria-valuemin={1} aria-valuemax={of} aria-valuenow={at} aria-label={`Step ${at} of ${of}`}>
+      <SizableText size="$1" color="$quiet" text="center">
+        {`Step ${at} of ${of}`}
+      </SizableText>
+      <XStack gap="$1.5">
+        {Array.from({ length: of }, (_, i) => (
+          <YStack key={i} flex={1} height={3} rounded="$10" bg={i < at ? '$ink' : '$borderColor'} />
+        ))}
+      </XStack>
     </YStack>
   )
 }

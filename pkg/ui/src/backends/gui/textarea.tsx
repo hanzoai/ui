@@ -104,6 +104,8 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
       borderColor={invalid && invalid !== "false" ? "$red7" : "$borderColor"}
       placeholderTextColor="$soft"
       fontSize="$3"
+      // iOS zooms the page into any field under 16px, so a touch screen reads one at 16.
+      $touchable={{ fontSize: 16 }}
       opacity={props.disabled ? 0.5 : 1}
       {...(props as Record<string, unknown>)}
       // After the caller's props, so a passed `style` cannot silently disable

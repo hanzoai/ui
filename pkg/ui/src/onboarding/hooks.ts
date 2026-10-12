@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { account, acceptTerms, API, preferences, rename, saveProgress } from './api'
-import { chatStep, owesTerms, step, type Accepted, type Policy, type Progress, type Stored } from './state'
+import { chatStep, isNew, owesTerms, step, type Accepted, type Policy, type Progress, type Stored } from './state'
 
 export type Track = (name: string, props?: Record<string, unknown>) => void
 
@@ -17,6 +17,8 @@ export interface Session {
   email: string
   /** The "Let's create your account" page is owed (see `owesTerms`). */
   owesTerms: boolean
+  /** The account was made a moment ago and has not done the CLI step: it is the first thing a new account sees. */
+  owesCli: boolean
   /** Record the acceptance on the IAM user. */
   accept: (policy: Policy) => Promise<Accepted>
   /** Merge a step into the stored progress (and the screen). */
@@ -91,7 +93,7 @@ export function useSession(api: string = API): Session {
     [api],
   )
 
-  return { loading, progress: stored.onboarding ?? {}, trainOptIn: stored.train_opt_in, name, email: me.email, owesTerms: owesTerms(stored.terms, me.createdTime), accept, save, setName, setTrain, error }
+  return { loading, progress: stored.onboarding ?? {}, trainOptIn: stored.train_opt_in, name, email: me.email, owesTerms: owesTerms(stored.terms, me.createdTime), owesCli: isNew(me.createdTime) && !stored.onboarding?.cli, accept, save, setName, setTrain, error }
 }
 
 /**
@@ -103,7 +105,7 @@ export async function firstRun(api: string = API): Promise<{ pending: boolean; p
   try {
     const [s, me] = await Promise.all([preferences(api), account(api)])
     const p = s?.onboarding ?? {}
-    const pending = owesTerms(s?.terms, me?.createdTime) || step(p) !== 'done' || chatStep(p, Boolean(me?.displayName?.trim())) !== 'done'
+    const pending = owesTerms(s?.terms, me?.createdTime) || (isNew(me?.createdTime) && !p.cli) || step(p) !== 'done' || chatStep(p, Boolean(me?.displayName?.trim())) !== 'done'
     return { pending, plan: p.plan }
   } catch {
     return { pending: false, plan: undefined }

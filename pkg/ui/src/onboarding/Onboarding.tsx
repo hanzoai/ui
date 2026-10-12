@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useSignOut } from '../auth/signout'
 import { API } from './api'
 import { Checkout } from './Checkout'
+import { Cli } from './cli'
 import { Paragraph } from '../backends/gui/layout'
 import { Page } from './frame'
 import { CreateAccount } from './account'
@@ -17,6 +18,7 @@ import { step as nextStep, type Policy, type Use } from './state'
  * Sign-in is done; this is what comes next, and nothing else:
  *
  *   account      a new account reviews the terms ("Let's create your account")
+ *   cli          a new account installs the Hanzo CLI and signs in (skippable)
  *   pro          "Do more with Hanzo Pro": one recommended plan, or stay free
  *   plans        "Plans that grow with you": Free, Pro, Max
  *   checkout     the one checkout
@@ -69,7 +71,7 @@ export interface OnboardingProps {
   checkout?: (order: { plan: PlanId; interval: Interval; seats: number }) => void
 }
 
-type View = 'account' | 'pro' | 'use' | 'plans' | 'team' | 'seats' | 'enterprise' | 'checkout'
+type View = 'account' | 'cli' | 'pro' | 'use' | 'plans' | 'team' | 'seats' | 'enterprise' | 'checkout'
 
 export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, termsPath = '/terms', aupPath = '/aup', upgrade = null, open, from, onClose, onTeam, policy, prepare, checkout, org: billed }: OnboardingProps) {
   const session = useSession(api)
@@ -85,6 +87,14 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
   // Where the checkout was opened from, so Back returns there.
   const [at, setAt] = useState<'pro' | 'plans'>('pro')
   const decided = useRef(false)
+  // What `prepare` answered, kept for the step that follows the CLI.
+  const held = useRef<{ plan?: PlanId } | void>(undefined)
+  // The steps this person has to do, counted once when the first screen is chosen: the terms, the CLI, the plan.
+  const steps = useRef<View[]>([])
+  const prog = (v: View) => {
+    const at = steps.current.indexOf(v)
+    return at < 0 ? undefined : { at: at + 1, of: steps.current.length }
+  }
 
   /** Open the checkout on a plan: the host's, or this flow's own. */
   function pay(plan: PlanId, seats: number, back: 'pro' | 'plans') {
@@ -98,13 +108,23 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
     } else setView('checkout')
   }
 
-  /** Leave the account page: the host makes room for a plan, then the first screen that is owed. */
+  /** Leave the account page: the host makes room for a plan, then the CLI for a new account, then the first screen that is owed. */
   async function begin() {
-    const held = await prepare?.()
-    if (held && held.plan && !session.progress.plan) {
-      await session.save({ use: 'personal', plan: held.plan })
+    held.current = await prepare?.()
+    if (session.owesCli && !upgrade && !open) {
+      setView('cli')
+      return
+    }
+    await plan()
+  }
+
+  /** The first plan screen that is owed, or the end. */
+  async function plan() {
+    const had = held.current
+    if (had && had.plan && !session.progress.plan) {
+      await session.save({ use: 'personal', plan: had.plan })
       if (!upgrade && !open) {
-        onDone({ use: 'personal', plan: held.plan })
+        onDone({ use: 'personal', plan: had.plan })
         return
       }
     }
@@ -116,9 +136,20 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
       setView(open)
       return
     }
-    const s = nextStep(held && held.plan ? { ...session.progress, plan: held.plan } : session.progress)
+    const s = nextStep(had && had.plan ? { ...session.progress, plan: had.plan } : session.progress)
     if (s === 'done') onDone({ use: session.progress.use, plan: session.progress.plan, org: session.progress.team })
     else setView(s)
+  }
+
+  /** The CLI step is over, done or skipped: remember it and go on to the plans. */
+  async function afterCli() {
+    await session.save({ cli: true })
+    try {
+      await plan()
+    } catch (e) {
+      setWrong(e instanceof Error ? e.message : 'Could not get your account ready. Reload to try again.')
+      setView('pro')
+    }
   }
 
   // The first screen is the first step not yet finished: the terms for a new account, else what `begin` finds.
@@ -126,6 +157,8 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
     if (session.loading || catalog === null || decided.current) return
     decided.current = true
     if (upgrade || open === 'plans') track?.('upgrade_clicked', { from: from ?? 'app' })
+    const entering = !upgrade && !open
+    steps.current = [...(policy && session.owesTerms ? (['account'] as View[]) : []), ...(entering && session.owesCli ? (['cli'] as View[]) : []), ...(entering ? (['pro'] as View[]) : [])]
     if (policy && session.owesTerms) {
       setView('account')
       return
@@ -153,6 +186,7 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
     return (
       <CreateAccount
         site={site}
+        progress={prog('account')}
         email={session.email}
         busy={busy}
         wrong={wrong}
@@ -175,9 +209,13 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
     )
   }
 
+  if (view === 'cli') {
+    return <Cli site={site} api={api} track={track} progress={prog('cli')} onDone={() => void afterCli()} onSkip={() => void afterCli()} />
+  }
+
   if (view === 'pro') {
     return (
-      <Page site={site} title="Do more with Hanzo Pro" width={340}>
+      <Page site={site} title="Do more with Hanzo Pro" width={340} progress={prog('pro')}>
         {wrong ? <Paragraph size="$2" color="$quiet" text="center" m={0}>{wrong}</Paragraph> : null}
         <Pro
           interval={interval}

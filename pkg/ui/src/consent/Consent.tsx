@@ -50,13 +50,13 @@ const frame = {
   role: 'dialog',
   'aria-label': 'Cookie preferences',
   position: 'fixed',
-  b: 12,
-  l: 12,
-  r: 12,
+  b: 8,
+  l: 8,
+  r: 8,
   mx: 'auto',
   z: 2147483000,
-  py: '$2.5',
-  px: '$3.5',
+  py: '$2',
+  px: '$3',
   rounded: '$5',
   borderWidth: 1,
   borderColor: '$borderColor',
@@ -66,8 +66,37 @@ const frame = {
   shadowOffset: { width: 0, height: 8 },
 } as const
 
-/** The bar is as wide as its line and buttons, up to the window less its inset. */
-const FIT = { width: 'fit-content' } as const
+/** The bar is as wide as its line and buttons, up to the window less its inset; it clears the home indicator. */
+const FIT = { width: 'fit-content', bottom: 'max(8px, env(safe-area-inset-bottom))' } as const
+
+/** `--consent-h` is the room the bar holds at the foot of the page (0 when none): the page pads by it so
+ * every control scrolls clear of the bar, and a sticky footer sits above it with `bottom: var(--consent-h, 0px)`. */
+const ROOM = '--consent-h'
+
+/** Holds the page's foot clear of the bar while it shows, and lets go when it goes. */
+const useRoom = (shown: boolean, ref: { current: HTMLElement | null }, key: unknown): void => {
+  useEffect(() => {
+    const el = ref.current
+    if (!shown || !el) return
+    const root = document.documentElement
+    const body = document.body
+    const before = body.style.paddingBottom
+    const hold = () => {
+      const r = el.getBoundingClientRect()
+      const h = Math.ceil(r.height + (window.innerHeight - r.bottom))
+      root.style.setProperty(ROOM, `${h}px`)
+      body.style.paddingBottom = `${h}px`
+    }
+    hold()
+    const watch = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(hold)
+    watch?.observe(el)
+    return () => {
+      watch?.disconnect()
+      root.style.removeProperty(ROOM)
+      body.style.paddingBottom = before
+    }
+  }, [shown, ref, key])
+}
 
 /** A link in the banner's line: the line's own ink, underlined, never broken across lines. */
 const INLINE = { color: 'inherit', textDecoration: 'underline', whiteSpace: 'nowrap' } as const
@@ -85,6 +114,8 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
   // arrives after (cloud answers ~150ms into a page opened at #choices) redraws
   // the banner's question, and must not close what was asked for.
   const asked = useRef(false)
+  const bar = useRef<HTMLElement | null>(null)
+  useRoom(shown, bar, choosing)
   const locked = typeof window !== 'undefined' && gpc()
 
   useEffect(() => {
@@ -121,7 +152,7 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
 
   if (choosing)
     return (
-      <YStack {...frame} maxW={440} gap="$3">
+      <YStack {...frame} ref={bar as never} style={{ bottom: FIT.bottom, maxHeight: '80dvh', overflowY: 'auto' }} maxW={440} gap="$3">
         <Paragraph size="$2" color="$ink" m={0}>
           {'Choose what Hanzo may measure and share. You can change this at any time. '}
           <a href={privacy} style={INLINE}>
@@ -169,17 +200,17 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
   // the line fits beside them and the buttons drop under it where it does not,
   // so a phone shows the line over one row of buttons and nothing breaks mid-control.
   return (
-    <XStack {...frame} style={FIT} maxW={960} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
+    <XStack {...frame} ref={bar as never} style={FIT} maxW={960} flexWrap="wrap" items="center" columnGap="$4" rowGap="$1.5">
       <YStack shrink={1} minW={0}>
-        <Paragraph size="$2" color="$ink" m={0}>
+        <Paragraph fontSize={13} lineHeight={18} color="$ink" m={0}>
           {'Cookies measure visits and ads once you accept. '}
           <a href={privacy} style={INLINE}>
-            Privacy policy
+            Privacy
           </a>
         </Paragraph>
       </YStack>
       <XStack gap="$2" ml="auto" items="center">
-        <Button type="button" size="sm" variant="link" onClick={choose}>
+        <Button type="button" size="sm" variant="link" minH={44} onClick={choose}>
           Choose
         </Button>
         <Button type="button" size="sm" variant="secondary" onClick={done(rejectAll)}>
@@ -195,7 +226,7 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
 
 /** The footer link that reopens the choices, in every footer and every region. */
 const ConsentLink = ({ label = 'Cookie settings' }: { label?: string }) => (
-  <Button {...slot('consent-link')} type="button" variant="link" size="sm" px={0} minH={0} onClick={openConsent}>
+  <Button {...slot('consent-link')} type="button" variant="link" size="sm" px={0} minH={0} $touchable={{ py: 14, my: -14 }} onClick={openConsent}>
     {label}
   </Button>
 )

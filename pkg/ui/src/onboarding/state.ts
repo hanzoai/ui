@@ -16,6 +16,8 @@ export interface Progress {
   team?: string
   /** Enterprise: the contact form was sent. */
   sales?: boolean
+  /** The CLI step is done: signed in on a computer, or skipped. */
+  cli?: boolean
   /** The chat notice was accepted. */
   notice?: boolean
   /** A display name is set (IAM's displayName). */
@@ -61,6 +63,12 @@ export interface Accepted extends Policy {
 /** An account this young, that has accepted nothing, was made by the sign-in that just finished. */
 export const NEW_WITHIN = 60 * 60 * 1000
 
+/** An account made within `NEW_WITHIN`: the sign-up that just finished, never a returning person. */
+export function isNew(createdTime: string | undefined, now: number = Date.now()): boolean {
+  const made = createdTime ? Date.parse(createdTime) : Number.NaN
+  return Number.isFinite(made) && now - made <= NEW_WITHIN
+}
+
 /**
  * Whether the "Let's create your account" page is owed: the person has no
  * acceptance on record and the account was made a moment ago (a provider's first
@@ -68,8 +76,7 @@ export const NEW_WITHIN = 60 * 60 * 1000
  */
 export function owesTerms(accepted: Accepted | undefined, createdTime: string | undefined, now: number = Date.now()): boolean {
   if (accepted?.terms && accepted.aup) return false
-  const made = createdTime ? Date.parse(createdTime) : Number.NaN
-  return Number.isFinite(made) && now - made <= NEW_WITHIN
+  return isNew(createdTime, now)
 }
 
 /** The stored blob's shape: `onboarding` is this, `train_opt_in` sits beside it, `terms` is IAM's own record. */

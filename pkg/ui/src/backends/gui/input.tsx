@@ -87,7 +87,8 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       {...(fill ? FILL : null)}
       height={box.h}
       // Raised, never lowered: a caller that states its own height keeps it.
-      {...('height' in props ? null : { $touchable: { height: Math.max(box.h, TOUCH) } })}
+      // iOS zooms the page into any field under 16px, so a touch screen reads one at 16.
+      {...('height' in props ? { $touchable: { fontSize: 16 } } : { $touchable: { height: Math.max(box.h, TOUCH), fontSize: 16 } })}
       width="100%"
       minW={0}
       placeholderTextColor="$soft"

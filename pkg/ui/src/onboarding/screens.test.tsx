@@ -13,6 +13,9 @@ import { CATALOG } from './catalog.fixture'
 import { adopt } from './plans'
 import { CreateAccount } from './account'
 import { Plans, Pro, Seats, UseCards } from './screens'
+import { Cli } from './cli'
+import { COMMANDS, message } from './launch'
+import { isNew, NEW_WITHIN } from './state'
 
 const html = (node: React.ReactNode) =>
   renderToStaticMarkup(
@@ -26,11 +29,18 @@ const noop = () => {}
 beforeAll(() => adopt(CATALOG))
 
 describe('Page', () => {
-  it('has a title and no progress bar or step counter', () => {
+  it('has a title and no progress bar or step counter unless the flow has steps to count', () => {
     const out = html(<Page site="Hanzo" title="How are you planning to use Hanzo?" />).replace(/<style[\s\S]*?<\/style>/g, '')
     expect(out).toContain('How are you planning to use Hanzo?')
     expect(out).not.toMatch(/progress|step \d|of \d/i)
     expect(out).toContain('<h1')
+  })
+
+  it('counts the steps left, but only when there is more than one', () => {
+    const out = html(<Page site="Hanzo" title="x" progress={{ at: 2, of: 3 }} />)
+    expect(out).toContain('Step 2 of 3')
+    expect(out).toContain('role="progressbar"')
+    expect(html(<Page site="Hanzo" title="x" progress={{ at: 1, of: 1 }} />)).not.toContain('Step 1 of 1')
   })
 
   it('offers a labelled way back only when there is one', () => {
@@ -149,5 +159,32 @@ describe('components, not a stylesheet', () => {
   it('draws no hz- class on the page', () => {
     const out = html(<Plans interval="monthly" setInterval={noop} onFree={noop} onPick={noop} />)
     expect(out).not.toMatch(/class="[^"]*\bhz-/)
+  })
+})
+
+describe('Cli', () => {
+  it('lists the two commands, each with a Copy, and a way past them', () => {
+    const out = html(<Cli api="https://api.hanzo.ai" onDone={noop} onSkip={noop} />)
+    expect(COMMANDS.map((c) => c.run)).toEqual(['curl -fsSL hanzo.sh | sh', 'hanzo'])
+    for (const c of COMMANDS) {
+      expect(out).toContain(c.run)
+      expect(out).toContain(`aria-label="Copy: ${c.run}"`)
+    }
+    expect(out).toContain('Skip for now')
+    expect(out).toContain('Waiting for you to sign in')
+  })
+
+  it('sends a phone the commands in order, with where they are explained', () => {
+    const m = message()
+    expect(m.indexOf('curl -fsSL hanzo.sh | sh')).toBeLessThan(m.indexOf('\nhanzo\n'))
+    expect(m.endsWith('https://hanzo.ai/cli')).toBe(true)
+    expect(m).toContain('https://hanzo.ai/cli')
+  })
+
+  it('is owed to an account made within the hour and to no returning one', () => {
+    const now = Date.parse('2026-10-12T12:00:00Z')
+    expect(isNew(new Date(now - 60_000).toISOString(), now)).toBe(true)
+    expect(isNew(new Date(now - NEW_WITHIN - 1).toISOString(), now)).toBe(false)
+    expect(isNew(undefined, now)).toBe(false)
   })
 })

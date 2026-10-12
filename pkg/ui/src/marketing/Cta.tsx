@@ -70,6 +70,9 @@ export type TextLinkProps = Omit<CtaProps, 'quiet' | 'href'> & {
  *  body size. */
 const WORD = { fontFamily: 'inherit', fontSize: 'inherit', fontWeight: 'inherit', lineHeight: 'inherit', letterSpacing: 'inherit' } as const
 
+/** A word is 16px tall and a thumb needs 44: on a touch screen the link pads its hit area and takes the padding back in margin, so the line does not move. */
+const HIT = { $touchable: { display: 'inline-block', px: 6, py: 14, mx: -6, my: -14 } } as const
+
 const TextLink = ({ href, children, ...p }: TextLinkProps) =>
   href !== undefined ? (
     <Anchor
@@ -79,6 +82,7 @@ const TextLink = ({ href, children, ...p }: TextLinkProps) =>
       color="$ink"
       textDecorationLine="underline"
       style={{ textUnderlineOffset: 3 }}
+      {...(HIT as object)}
       {...(p as object)}
     >
       {children}
@@ -95,6 +99,7 @@ const TextLink = ({ href, children, ...p }: TextLinkProps) =>
       textDecorationLine="underline"
       cursor="pointer"
       style={{ textUnderlineOffset: 3 }}
+      {...(HIT as object)}
       {...(p as object)}
     >
       {children}

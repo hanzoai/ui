@@ -38,7 +38,7 @@ export function Primary({ children, ...props }: React.ComponentProps<typeof Butt
 /** A quiet text-sized action set inside a sentence. */
 function Ask({ onAsk }: { onAsk?: () => void }) {
   return onAsk ? (
-    <Button type="button" variant="link" size="sm" px={0} minH={0} onClick={onAsk}>
+    <Button type="button" variant="link" size="sm" px={0} minH={0} $touchable={{ py: 14, my: -14 }} onClick={onAsk}>
       Ask our buying specialist
     </Button>
   ) : (
@@ -342,7 +342,7 @@ export function Seats({
                 {onAsk ? (
                   <Ask onAsk={onAsk} />
                 ) : (
-                  <Button type="button" variant="link" size="sm" px={0} minH={0} onClick={onEnterprise}>
+                  <Button type="button" variant="link" size="sm" px={0} minH={0} $touchable={{ py: 14, my: -14 }} onClick={onEnterprise}>
                     Talk to sales
                   </Button>
                 )}

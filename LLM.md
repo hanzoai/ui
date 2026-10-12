@@ -1350,6 +1350,20 @@ those two exact versions, not a new minor.
 
 ## Gotchas
 
+- **First run is CLI-first** (8.27.87, `onboarding/cli.tsx`, `launch.ts`): a new account (made within `NEW_WITHIN`,
+  `Session.owesCli`) meets "Set up the Hanzo CLI" after the terms and before the plans: `curl -fsSL hanzo.sh | sh`,
+  then `hanzo` (browser sign-in, links Hanzo Tabs, asks once for the coding agent). The page polls the cloud's
+  `GET /v1/link` (`readLinks`) and moves on when a computer registers; on a phone it offers the share sheet instead.
+  `@hanzo/ui/launch` is the logic alone (commands, `message`, `usePhone`, `useComputer`) for hosts that draw their
+  own surface (platform.hanzo.ai): the `onboarding` barrel reaches `Checkout` and so `@hanzo/pay`, which a host
+  without it cannot resolve.
+- **Phone rules in this package**: a field is 16px on a touch screen (`$touchable` in `Input` and `Textarea`; iOS
+  zooms under 16), and an inline link or link-button pads its hit area to 44px with `$touchable` padding and an equal
+  negative margin, so the line does not move. The cookie bar (`consent/Consent.tsx`) publishes its height as
+  `--consent-h` on `:root` and pads `body` by it while shown; a sticky footer sits at `bottom: var(--consent-h, 0px)`.
+- `pnpm run build` in a worktree re-runs `pnpm install` when `package.json` changes and that hoists `react-native` into
+  `node_modules/.pnpm/node_modules`, which turns gui's web types into RN's and fails tsc in files nobody touched. Delete
+  that link, or run the build's commands directly.
 - Build with `...` or not at all — `pnpm --filter @hanzo/ui build` alone reports
   its siblings as missing modules and blames @hanzo/ui for it
 - `tsconfig.check.json` does not exist, so `pnpm typecheck:ui` fails on a missing
