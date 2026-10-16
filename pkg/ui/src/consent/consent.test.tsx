@@ -28,6 +28,7 @@ describe('Consent, opened by the visitor', () => {
   it('stays open when the policy arrives after it was asked for', async () => {
     // A visitor who has chosen, so is not asked until they open the choices.
     document.cookie = 'hz_consent=analytics; Path=/'
+    document.cookie = 'hz_consent_v=2; Path=/'
     const { createRoot } = await import('react-dom/client')
     const { act } = await import('react')
     const { openConsent } = await import('./Consent')
@@ -51,6 +52,7 @@ describe('Consent, opened by the visitor', () => {
     await act(async () => root.unmount())
     host.remove()
     document.cookie = 'hz_consent=; Max-Age=0; Path=/'
+    document.cookie = 'hz_consent_v=; Max-Age=0; Path=/'
   })
 })
 

@@ -13,7 +13,10 @@ const put = (k: string, value: unknown) => Object.defineProperty(globalThis, k, 
 
 function browser(zone: string, opts: { gpc?: boolean; dnt?: string; cookie?: string; href?: string } = {}) {
   const jar = new Map<string, string>()
-  if (opts.cookie !== undefined) jar.set(CONSENT_COOKIE, opts.cookie)
+  if (opts.cookie !== undefined) {
+    jar.set(CONSENT_COOKIE, opts.cookie)
+    jar.set(CONSENT_VERSION_COOKIE, '2')
+  }
   const fired: string[] = []
   const url = new URL(opts.href ?? 'https://hanzo.ai/')
   g.window = {
@@ -195,5 +198,73 @@ describe('the policy cloud serves', () => {
     browser('Europe/Berlin')
     serve({ tags: [] })
     expect(policy()).toBeUndefined()
+  })
+})
+
+describe('where the choice is kept', () => {
+  it.each([
+    ['https://hanzo.ai/', 'Domain=.hanzo.ai'],
+    ['https://chat.hanzo.ai/', 'Domain=.hanzo.ai'],
+    ['https://lux.id/', 'Domain=.lux.id'],
+    ['https://tenant-a.hanzo.app/', ''],
+    ['https://shop.co.uk/', ''],
+    ['https://me.github.io/', ''],
+  ])('%s keeps it %s', (href, want) => {
+    const lines: string[] = []
+    browser('Europe/Paris', { href })
+    const doc = g.document as { cookie: string }
+    const desc = Object.getOwnPropertyDescriptor(doc, 'cookie')!
+    Object.defineProperty(doc, 'cookie', {
+      get: desc.get,
+      set(line: string) {
+        lines.push(line)
+        desc.set!.call(doc, line)
+      },
+      configurable: true,
+    })
+    acceptAll()
+    const line = lines.find((l) => l.startsWith(`${CONSENT_COOKIE}=`))!
+    if (want) expect(line).toContain(want)
+    else expect(line).not.toContain('Domain=')
+  })
+})
+
+describe('the policy version before cloud answers', () => {
+  it('a choice made under an older version counts for nothing in the meantime', () => {
+    const b = browser('Europe/Paris', { cookie: 'analytics,marketing,ads' })
+    b.jar.set(CONSENT_VERSION_COOKIE, '1')
+    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
+    expect(asks()).toBe(true)
+  })
+
+  it('a choice made before cloud answers is kept under the version in force', () => {
+    const b = browser('Europe/Paris')
+    acceptAll()
+    expect(b.jar.get(CONSENT_VERSION_COOKIE)).toBe('2')
+    serve({ region: 'DE', mode: 'opt-in', version: 2, refused: false, defaults: {} })
+    expect(asks()).toBe(false)
+  })
+})
+
+describe('a refusal cloud saw', () => {
+  it('counts when the page cannot see it', () => {
+    browser('Europe/Paris', { cookie: 'analytics,marketing,ads' })
+    serve({ region: 'DE', mode: 'opt-in', version: 2, refused: true, defaults: {} })
+    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
+    expect(asks()).toBe(false)
+  })
+})
+
+describe('withdrawing', () => {
+  it('forgets what each withdrawn category kept', () => {
+    const b = browser('Europe/Paris', { cookie: 'analytics,marketing,ads' })
+    for (const k of ['iam-anon-id', 'hz_cid', '_ga', '_ga_ABC', 'hz_touch', '_fbp', '_fbc', '_gcl_au']) b.jar.set(k, 'x')
+    const store = new Map([['hz_session', '{}'], ['hz_first_touch', '{}'], ['iam-anon-id', 'x'], ['other', 'y']])
+    ;(g.window as Record<string, unknown>).localStorage = { removeItem: (k: string) => store.delete(k) }
+    save({ analytics: true, marketing: false, ads: false })
+    expect([...b.jar.keys()].sort()).toEqual(['_ga', '_ga_ABC', 'hz_cid', 'hz_consent', 'hz_consent_v', 'iam-anon-id'].sort())
+    rejectAll()
+    expect([...b.jar.keys()].sort()).toEqual(['hz_consent', 'hz_consent_v'])
+    expect([...store.keys()]).toEqual(['other'])
   })
 })

@@ -8,7 +8,11 @@
 - In a browser the client sends no pageview, event, identify or group, and writes no id, session, first touch or cohort, until the visitor allows Analytics. An error still goes, as a stranger: an id for that page alone, no session, no attribution. On Accept the client adopts the link it arrived with, stores the first and last touch, and sends the identify and the view in hand. `link()` carries nothing before consent.
 - Every browser event states the `consent` it was sent under.
 - `lastUtm` beside `utm`: the campaign of the most recent visit that arrived with one, kept 90 days (`hz_last_touch`).
-- The policy cloud served lives on the page (`Symbol.for('hanzo.event.consent')`), so `@hanzo/event` and `@hanzo/event/react` read the same version.
+- The policy cloud served lives on the page (`Symbol.for('hanzo.event.consent')`), so `@hanzo/event` and `@hanzo/event/react` read the same version. The version in force before cloud answers is the one this client was built under, `CONSENT_VERSION` = 2, so a choice made under the opt-out policy never counts. A refusal cloud saw on the request (GPC or DNT header) counts as one.
+- Withdrawing a category forgets what it kept: Analytics the anonymous id, the session, the first and last touch, the cohort and `_ga*`; Marketing `hz_touch`, `_fbp`, `_fbc` and `_gcl_*`.
+- Consent, the ad click and the browser ids are set on a brand's own registrable domain (`ORG_DOMAIN`) and stay on the host everywhere else, including every app on `hanzo.app`, so one tenant's choice is never another's.
+- A stranger's error names the page without its query. The site's team is marked (`hz_internal`) only under Analytics.
+- The client registry is `Symbol.for('hanzo.event.clients.optin')`: a client a pre-opt-in copy left on the page is never handed to this one.
 
 ## 0.3.52
 

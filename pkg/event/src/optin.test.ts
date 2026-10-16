@@ -14,7 +14,7 @@ const AID = '01920000-0000-7000-8000-0000000000aa'
 function browser(href: string, opts: { cookie?: string; gpc?: boolean; dnt?: string; store?: Record<string, string> } = {}) {
   const url = new URL(href)
   const store = new Map(Object.entries(opts.store ?? {}))
-  const jar = new Map<string, string>(opts.cookie !== undefined ? [['hz_consent', opts.cookie]] : [])
+  const jar = new Map<string, string>(opts.cookie !== undefined ? [['hz_consent', opts.cookie], ['hz_consent_v', '2']] : [])
   const listeners = new Map<string, Array<() => void>>()
   const location = { href: url.href, hostname: url.hostname, protocol: url.protocol, pathname: url.pathname, search: url.search }
   g.Event = class {
@@ -110,6 +110,7 @@ describe('before the visitor allows Analytics', () => {
     expect(e1.utm).toBeUndefined()
     expect(e1.lastUtm).toBeUndefined()
     expect(e1.properties?.consent).toBe('')
+    expect(e1.url, 'a stranger names the page, never its query').toBe('https://hanzo.ai/pricing')
     expect([...b.store.keys()]).toEqual([])
     expect([...b.jar.keys()]).toEqual([])
   })
@@ -205,5 +206,17 @@ describe('the last touch', () => {
     lapsed.capture('x')
     lapsed.flush()
     expect(tx.all[0].lastUtm).toBeUndefined()
+  })
+})
+
+describe('a client a copy built before opt-in left on the page', () => {
+  it('is never handed to this copy', async () => {
+    browser(LANDING, { cookie: 'analytics' })
+    const { createAnalytics, Analytics } = await load()
+    const old = new Analytics({ product: 'site', host: '', flushIntervalMs: 999999 })
+    const slot = Symbol.for('hanzo.event.clients')
+    ;(globalThis as Record<symbol, unknown>)[slot] = new Map([['\0site', old]])
+    expect(createAnalytics({ product: 'site', host: '' })).not.toBe(old)
+    delete (globalThis as Record<symbol, unknown>)[slot]
   })
 })

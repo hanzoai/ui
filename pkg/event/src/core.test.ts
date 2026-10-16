@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 /** A document whose cookie jar holds the choice of a visitor who accepted
  *  everything: a browser client sends only for them. */
 function accepted(fields: Record<string, unknown>): Record<string, unknown> {
-  const jar = new Map<string, string>([['hz_consent', 'analytics,marketing,ads']])
+  const jar = new Map<string, string>([['hz_consent', 'analytics,marketing,ads'], ['hz_consent_v', '2']])
   return {
     ...fields,
     get cookie() {
@@ -544,7 +544,7 @@ describe('a driven browser', () => {
 
   it('marks the events of a browser cloud named the team’s', async () => {
     drive(false)
-    const jar = new Map<string, string>([['hz_consent', 'analytics']])
+    const jar = new Map<string, string>([['hz_consent', 'analytics'], ['hz_consent_v', '2']])
     const g = globalThis as Record<string, unknown>
     g.window = {
       location: { hostname: 'hanzo.ai', protocol: 'https:', search: '', href: 'https://hanzo.ai/' },

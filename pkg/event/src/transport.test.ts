@@ -55,7 +55,7 @@ function unloadFlush(queued: boolean): { beacons: Beaconed[]; fetches: Fetched[]
     location: { href: 'https://acme.test/checkout', pathname: '/checkout', search: '' },
     addEventListener: () => {},
   })
-  define('document', { referrer: '', visibilityState: 'visible', cookie: 'hz_consent=analytics' })
+  define('document', { referrer: '', visibilityState: 'visible', cookie: 'hz_consent=analytics; hz_consent_v=2' })
   define('navigator', {
     sendBeacon: (url: string, blob: { type: string; body: string }) => {
       beacons.push({ url, type: blob.type, body: blob.body })

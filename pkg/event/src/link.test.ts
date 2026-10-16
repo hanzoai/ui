@@ -21,7 +21,7 @@ const g = globalThis as Record<string, unknown>
 function browser(href: string, storage: Record<string, string> = {}, consent = 'analytics') {
   const url = new URL(href)
   const store = new Map(Object.entries(storage))
-  const jar = new Map<string, string>(consent ? [['hz_consent', consent]] : [])
+  const jar = new Map<string, string>(consent ? [['hz_consent', consent], ['hz_consent_v', '2']] : [])
   const replaced: string[] = []
   const location = {
     href: url.href,

@@ -59,6 +59,7 @@ beforeEach(() => {
   tx = new FakeTransport()
   resetClients() // each `it` is its own page load
   document.cookie = 'hz_consent=analytics,marketing,ads; Path=/' // a visitor who accepted
+  document.cookie = 'hz_consent_v=2; Path=/'
   window.history.replaceState(null, '', '/pricing')
 })
 

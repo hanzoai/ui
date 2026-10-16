@@ -368,7 +368,7 @@ export function start(o: TagOptions = {}): () => void {
         clearTimeout(cap)
         serve(j.consent)
         if (j.audience === 'bot' || j.audience === 'internal') audience = j.audience
-        if (audience === 'internal') mark()
+        if (audience === 'internal' && read().analytics) mark()
         answer(Array.isArray(j.tags) ? j.tags : [])
       })
       .catch(() => {

@@ -125,6 +125,16 @@ const viewport = (): Record<string, string> =>
 
 const isBrowser = () => typeof window !== 'undefined' && typeof document !== 'undefined'
 
+/** An address with its query and fragment taken off. */
+function withoutQuery(href: string): string {
+  try {
+    const u = new URL(href)
+    return u.origin + u.pathname
+  } catch {
+    return ''
+  }
+}
+
 /** serializeBatch stringifies a batch, salvaging what it can. `properties` is
  *  arbitrary caller data — a DOM node, a React synthetic event, an axios error are
  *  all circular, and a getter on one can throw — so a whole batch must never be
@@ -499,7 +509,7 @@ export class Analytics {
    *  every subsequent event. Before the visitor allows Analytics they are held, and
    *  stored when they accept. */
   setCohort(patch: Cohort): void {
-    if (isBrowser() && !this.settled) {
+    if (isBrowser() && !(this.settled && this.allowed())) {
       this.patch = { ...this.patch, ...patch }
       this.cohort = { ...this.cohort, ...patch }
       this.settle()
@@ -590,7 +600,9 @@ export class Analytics {
       // Before `...extra`: pageview() passes an explicit path for route
       // changes that fire before window.location has caught up, and that value
       // has to win over the one read here.
-      url: isBrowser() ? window.location.href : undefined,
+      // A stranger's error names the page, never its query: the campaign and the
+      // ad click the address carries wait for the visitor's choice.
+      url: isBrowser() ? (known ? window.location.href : withoutQuery(window.location.href)) : undefined,
       path: isBrowser() ? window.location.pathname : undefined,
       library: '@hanzo/event',
       libraryVersion: VERSION,
@@ -659,7 +671,10 @@ export class Analytics {
 // Neither can see the other, so the fix cannot live in either. It lives here,
 // where the stream is: asking twice returns the same client.
 //
-// The registry is on the PAGE, under a `Symbol.for` slot, not in module scope.
+// The registry is on the PAGE, under a `Symbol.for` slot, not in module scope. The
+// slot is named for the consent contract its clients keep (`.optin`): a copy built
+// before every visitor opted in keeps its own clients, and never hands one to this
+// copy, whose callers rely on the client asking first.
 // `@hanzo/event` and `@hanzo/event/react` are separate bundles that each carry
 // a copy of this module, so a module-scope map is per-copy and the two copies
 // never see each other's — which is exactly how the duplicate arises. A
@@ -667,7 +682,7 @@ export class Analytics {
 //
 // Browser only. A server process serves many visitors, and one client shared
 // across requests would carry one visitor's personId into the next.
-const CLIENTS = Symbol.for('hanzo.event.clients')
+const CLIENTS = Symbol.for('hanzo.event.clients.optin')
 
 function registry(): Map<string, Analytics> {
   const g = globalThis as unknown as Record<symbol, Map<string, Analytics> | undefined>
