@@ -269,11 +269,11 @@ describe("a stranger's error", () => {
     const tx = new Tx()
     const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
     const boom = new Error('load failed: https://hanzo.ai/a.js?token=T1 then WSS://hanzo.ai/s?k=1 and /pricing?email=ada%40corp.com')
-    boom.stack = 'Error: x\n    at f (https://hanzo.ai/a.js?next=https://x.io&gclid=G1&t=12:30:12:34)\n    at g (/static/b.js?v=2:3:4)'
+    boom.stack = 'Error: x\n    at f (https://hanzo.ai/a.js?next=https://x.io&gclid=G1&t=12:30:12:34)\n    at g (/static/b.js?v=2:3:4)\nonLoad@https://hanzo.ai/reset?email=ada%40corp.com:12:5'
     a.captureError(boom, { properties: { email: 'ada@corp.com' } })
     const e = tx.all[0]
     expect(e.error?.message).toBe('load failed: https://hanzo.ai/a.js then WSS://hanzo.ai/s and /pricing')
-    expect(e.error?.stack).toBe('Error: x\n    at f (https://hanzo.ai/a.js:30:12:34)\n    at g (/static/b.js:3:4)')
+    expect(e.error?.stack).toBe('Error: x\n    at f (https://hanzo.ai/a.js:30:12:34)\n    at g (/static/b.js:3:4)\nonLoad@https://hanzo.ai/reset:12:5')
     expect(e.properties).toEqual({ consent: '' })
   })
 })

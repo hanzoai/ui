@@ -139,7 +139,7 @@ function withoutQuery(href: string): string {
 /** Takes the query and fragment off every address in free text — any scheme, or a
  *  path — keeping the :line:column a stack puts after one. */
 function bare(s: string | undefined): string | undefined {
-  return s?.replace(/(^|[\s('"@<[=])((?:[a-z][a-z0-9+.-]*:\/\/|\/)[^\s)'"]+)/gi, (_m, pre: string, a: string) => {
+  return s?.replace(/(^|[\s('"@<[=])((?:[a-z][a-z0-9+.-]*:\/\/|\/)[^\s)'"\]>]+)/gi, (_m, pre: string, a: string) => {
     const at = /(?::\d+)+$/.exec(a)?.[0] ?? ''
     const base = a.slice(0, a.length - at.length)
     const i = base.search(/[?#]/)
