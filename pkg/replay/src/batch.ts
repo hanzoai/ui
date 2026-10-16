@@ -8,6 +8,7 @@
 // contains damage: one unserializable event is dropped where it is found instead
 // of taking the whole batch with it.
 
+import { readConsent, renderConsent } from '@hanzo/event'
 import type { ReplayIds, ReplayTransport, eventWithTime } from './types'
 
 export const REPLAY_PATH = '/v1/replay' // the ONE replay ingest entry point
@@ -32,6 +33,9 @@ export function encodeBatch(ids: ReplayIds, parts: string[]): string {
     sessionId: ids.sessionId,
     windowId: ids.windowId,
     distinctId: ids.distinctId,
+    // The choice the batch was recorded under, as @hanzo/event spells it: cloud
+    // keeps a recording only under Analytics.
+    consent: renderConsent(readConsent()),
   })
   return head.slice(0, -1) + ',"events":[' + parts.join(',') + ']}'
 }

@@ -44,9 +44,9 @@ beforeEach(() => vi.useFakeTimers())
 afterEach(() => vi.useRealTimers())
 
 group('the wire body', () => {
-  it('is exactly { sessionId, windowId, distinctId, events: [raw rrweb] }', () => {
+  it('is exactly { sessionId, windowId, distinctId, consent, events: [raw rrweb] }', () => {
     const body = JSON.parse(encodeBatch(IDS, [JSON.stringify(ev(1)), JSON.stringify(ev(2))]))
-    expect(Object.keys(body)).toEqual(['sessionId', 'windowId', 'distinctId', 'events'])
+    expect(Object.keys(body)).toEqual(['sessionId', 'windowId', 'distinctId', 'consent', 'events'])
     expect(body.sessionId).toBe('s1')
     expect(body.windowId).toBe('w1')
     expect(body.distinctId).toBe('d1')

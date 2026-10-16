@@ -216,7 +216,7 @@ group('what leaves the browser (real rrweb)', () => {
   it('applies the whole gate through the documented POST body', () => {
     const { bodies, replay } = capture('<input type="password" value="hunter2">')
     const body = bodies[0]
-    expect(Object.keys(body)).toEqual(['sessionId', 'windowId', 'distinctId', 'events'])
+    expect(Object.keys(body)).toEqual(['sessionId', 'windowId', 'distinctId', 'consent', 'events'])
     expect(body.sessionId).toBe(replay.sessionId)
     expect(body.windowId).toBe(replay.windowId)
     expect(body.distinctId).toBe(replay.distinctId)
