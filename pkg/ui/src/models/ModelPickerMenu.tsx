@@ -190,7 +190,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
           bg="transparent"
           fontSize={sheet ? '$3' : '$2'}
           color="$ink"
-          placeholderTextColor="$soft"
+          placeholderTextColor="$placeholderColor"
           placeholder="Search models"
           value={q}
           onChangeText={setQ}

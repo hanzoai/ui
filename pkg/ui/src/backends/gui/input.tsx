@@ -90,7 +90,11 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       {...('height' in props ? null : { $touchable: { height: Math.max(box.h, TOUCH) } })}
       width="100%"
       minW={0}
-      placeholderTextColor="$soft"
+      // The value at the full ink, the hint at the placeholder token. gui's
+      // Input sub-theme draws its value at 80% grey, which left a typed value
+      // and a sample placeholder one rung apart.
+      color="$ink"
+      placeholderTextColor="$placeholderColor"
       fontSize="$3"
       pl={startAdornment ? inset : box.gutter}
       pr={endAdornment || toggle ? inset : box.gutter}

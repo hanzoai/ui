@@ -305,6 +305,90 @@ describe('the readable-secondary rung', () => {
  * assertion here is a relationship BETWEEN the two, so the only way to break it
  * is to author a value in one that does not exist in the other.
  */
+describe('an empty field reads as empty', () => {
+  /**
+   * The placeholder is a hint, the value is what the person typed, and the two
+   * must not be mistaken for each other. Measured on hanzo.ai before this
+   * existed: a placeholder at 67% grey under a value at 80% — 1.4:1 apart — and
+   * a customer reported "workshop", the placeholder, as the name they had typed.
+   *
+   * The token is this package's (theme.css), so it is read from the source
+   * sheet; the grounds are design's, read from design's published sheet.
+   */
+  const sheet = readFileSync(new URL('./theme.css', import.meta.url), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')
+
+  /** The `--text-placeholder` declaration in the block a selector opens. */
+  const declared = (selector: string) => {
+    const open = sheet.indexOf(`${selector} {`)
+    expect(open, `theme.css has no "${selector}" block`).toBeGreaterThan(-1)
+    const body = sheet.slice(open, sheet.indexOf('}', open))
+    return body.match(/--text-placeholder:\s*([^;]+);/)?.[1].trim()
+  }
+
+  /** What a field paints its placeholder as: the ink at the token's share. */
+  const SHARE = 0.45
+  const hint = (theme: 'dark' | 'light') => {
+    const [r, g, b] = parse(token('foreground', theme))
+    return `rgb(${r} ${g} ${b} / ${SHARE})`
+  }
+
+  /** Every ground a field sits on: the page, the card, and the field tiles
+   *  (`--muted` is the checkout's, `--secondary` the raised fill), plus the
+   *  pure black and white a host may paint its page. */
+  const grounds = (theme: 'dark' | 'light') => [
+    token('background', theme),
+    token('card', theme),
+    token('muted', theme),
+    token('secondary', theme),
+    theme === 'dark' ? '#000000' : '#ffffff',
+  ]
+
+  // A literal, not a color-mix() of --foreground: a host with shadcn-style
+  // triplets in --foreground, or a browser without color-mix(), makes a mix
+  // invalid, and the placeholder then falls back to the value's colour.
+  it.each([
+    ['dark', ':root,\n.dark'],
+    ['light', '.light, :root.t_light, .t_light'],
+  ] as const)('%s declares it as the ink at 45%%, as a literal', (theme, selector) => {
+    const value = declared(selector)
+    expect(value).toBeDefined()
+    expect(value).not.toMatch(/var\(|color-mix/)
+    expect(parse(value!)).toEqual(parse(hint(theme)))
+  })
+
+  it.each(['dark', 'light'] as const)('%s: gui reads the token, and its fallback is the same mix', (theme) => {
+    const ref = themed(theme, 'placeholderColor')
+    expect(ref.startsWith('var(--text-placeholder,')).toBe(true)
+    expect(parse(ref)).toEqual(parse(hint(theme)))
+  })
+
+  it.each(['dark', 'light'] as const)('%s: legible as a hint on every field ground — 3:1 or better', (theme) => {
+    for (const ground of grounds(theme)) {
+      expect(contrast(over(hint(theme), ground), ground), `on ${ground}`).toBeGreaterThanOrEqual(3)
+    }
+  })
+
+  it.each(['dark', 'light'] as const)('%s: and never mistaken for a value — 3:1 or more from the ink', (theme) => {
+    for (const ground of grounds(theme)) {
+      expect(contrast(over(hint(theme), ground), token('foreground', theme)), `on ${ground}`).toBeGreaterThanOrEqual(3)
+    }
+  })
+
+  it('a plain field and a gui field both take it', () => {
+    expect(sheet).toMatch(/::placeholder\s*\{[^}]*color:\s*var\(--text-placeholder\)/)
+    expect(sheet).toMatch(/\.is_Input,\s*\.is_TextArea\s*\{[^}]*--t_placeholderColor:\s*var\(--text-placeholder\)/)
+  })
+
+  it('in the base layer, so a host\'s own placeholder rule can still win', () => {
+    // Unlayered, these outranked every layered rule a host writes, whatever its
+    // specificity — a Tailwind `placeholder:` utility among them.
+    const open = sheet.search(/@layer base\s*\{\s*::placeholder/)
+    expect(open).toBeGreaterThan(-1)
+    const close = sheet.indexOf('}\n}', sheet.indexOf('--t_placeholderColor', open))
+    expect(close).toBeGreaterThan(open)
+  })
+})
+
 describe('monochrome is config minus the hues', () => {
   const names = (c: typeof config) => Object.keys(c.themes)
   const CHROMA = ['blue', 'green', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow']
@@ -493,7 +577,7 @@ describe('a person and a brand can both move this', () => {
     const dark = config.themes.dark as unknown as Record<string, { val?: string }>
     const refOf = (k: string) => String(dark[k]?.val ?? dark[k] ?? '')
     expect(refOf('color')).toContain('var(--foreground')
-    expect(refOf('placeholderColor')).toContain('var(--text-tertiary')
+    expect(refOf('placeholderColor')).toContain('var(--text-placeholder')
     // Accent reads ACCENT. It used to read `--primary`, and while nothing in the
     // package consumed the pair that was merely an odd mapping; the moment
     // Button's loud control started reading it, the difference became the

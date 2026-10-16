@@ -77,6 +77,8 @@
    `.light` follows both so it can still win. */
 :root,
 .dark {
+  /* The placeholder: the ink (#e5e5e5) at 45%. See "Placeholder" below. */
+  --text-placeholder: rgb(229 229 229 / .45);
 
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
@@ -95,6 +97,8 @@
 }
 
 .light, :root.t_light, .t_light {
+  /* The placeholder: the light ink (#0a0a0a) at 45%. */
+  --text-placeholder: rgb(10 10 10 / .45);
 
 
   --chart-1: oklch(0.646 0.222 41.116);
@@ -124,6 +128,44 @@
 
 :where(code, kbd, samp, pre) {
   font-family: var(--font-mono), monospace;
+}
+
+/* ── Placeholder ──────────────────────────────────────────────────────────────
+   An empty field reads as empty. The placeholder is the field's ink at 45%:
+   a hint, never mistaken for a value. The value keeps the full ink.
+
+   Translucent, so it lands at the same share over whatever ground the field
+   has. 45% clears 3:1 on every field ground the system paints, in both themes,
+   and sits 3:1 or more from the value (gui-config.test.ts); it is a hint beside
+   a label, not body text. Stated as a literal per theme rather than mixed from
+   `--foreground`: a host that keeps shadcn-style `--foreground: 0 0% 98%`
+   triplets, or a browser without color-mix(), makes a mix invalid, and an
+   invalid placeholder colour falls back to the VALUE's colour — the defect this
+   token exists to end.
+
+   Two rules, because there are two kinds of field:
+     · a plain `<input>`/`<textarea>` takes `::placeholder` directly. `opacity`
+       is reset because Firefox's UA dims placeholders again on top of colour.
+     · a gui `Input`/`TextArea` paints `::placeholder` from
+       `--t_placeholderColor`, which gui writes inline only when the field
+       names a `placeholderTextColor`. A field that names none got no value at
+       all, and its placeholder fell back to the VALUE's colour — a sample
+       placeholder then reads as typed. The default here is what such a field
+       inherits; a field that names a colour still wins, inline.
+
+   In `base`, the layer design's own placeholder rule is in (this one is later,
+   so it wins there), because an unlayered rule outranks every layered one: a
+   host's `placeholder:` utility has to be able to say otherwise. */
+@layer base {
+  ::placeholder {
+    color: var(--text-placeholder);
+    opacity: 1;
+  }
+
+  .is_Input,
+  .is_TextArea {
+    --t_placeholderColor: var(--text-placeholder);
+  }
 }
 
 /* ── Touch targets ────────────────────────────────────────────────────────────

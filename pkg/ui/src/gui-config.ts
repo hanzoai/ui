@@ -386,10 +386,15 @@ const SURFACE = {
  * owns, on the same terms as the three rungs above.
  *
  * `color`, `placeholderColor` and the accent pair are plain references, because
- * design spells them `--foreground`, `--text-tertiary`, `--primary` and
- * `--primary-foreground` while gui's keys are `color`, `placeholderColor`,
+ * the tokens are spelled `--foreground`, `--text-placeholder`, `--accent` and
+ * `--accent-foreground` while gui's keys are `color`, `placeholderColor`,
  * `accentBackground` and `accentColor`. Those names never meet, so the reference
  * is live and that is the end of it.
+ *
+ * `--text-placeholder` is this package's own token (theme.css): the ink at 45%.
+ * It used to be design's `--text-tertiary`, and no field read it — Input and
+ * Textarea asked for `$soft`, 67% grey, under an Input value of 80% grey, and
+ * on hanzo.ai a sample placeholder was reported as a value someone had typed.
  *
  * `background` is the ONE name that cannot be referenced, and it is worth being
  * exact about why. gui publishes each THEME key as a bare `--<key>` on
@@ -434,7 +439,8 @@ const GROUND = { dark: '#0a0a0a', light: '#f7f7f7' } as const
  * which the monochrome accent shares), for a host that mounts no token layer.
  */
 const ACCENT_HOVER = { dark: '#333333', light: '#e0e0e0' } as const
-const MUTED = { dark: 'rgb(255 255 255 / .55)', light: 'rgb(10 10 10 / .55)' } as const
+/** The placeholder: `LABEL` at 45%, the same literal theme.css declares as `--text-placeholder`. */
+const PLACEHOLDER = { dark: 'rgb(229 229 229 / .45)', light: 'rgb(10 10 10 / .45)' } as const
 const LOUD = { dark: '#fafafa', light: '#0a0a0a' } as const
 const LOUD_LABEL = { dark: '#0a0a0a', light: '#fafafa' } as const
 
@@ -559,7 +565,7 @@ const themes = Object.fromEntries(
             good: STATE.good,
             background: GROUND[s],
             color: `var(--foreground, ${LABEL[s]})`,
-            placeholderColor: `var(--text-tertiary, ${MUTED[s]})`,
+            placeholderColor: `var(--text-placeholder, ${PLACEHOLDER[s]})`,
             // The pair reads design's ACCENT, not its primary — the names match
             // 1:1 and, decisively, so do the values: design publishes
             // `--accent: #262626`, which is what Button's loud control already

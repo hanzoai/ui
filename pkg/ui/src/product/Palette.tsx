@@ -137,7 +137,7 @@ export function Palette({
         onValueChange={setSearch}
         placeholder={placeholder}
         color="$color"
-        placeholderTextColor="$quiet"
+        placeholderTextColor="$placeholderColor"
       />
       <XStack minH={height}>
         {/* THE LAST ROW MUST BE ABLE TO CLEAR THE BOTTOM EDGE. With equal

@@ -102,7 +102,11 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
       pt={box.riser}
       pb={box.riser}
       borderColor={invalid && invalid !== "false" ? "$red7" : "$borderColor"}
-      placeholderTextColor="$soft"
+      // The value at the full ink, the hint at the placeholder token. gui's
+      // Input sub-theme draws its value at 80% grey, which left a typed value
+      // and a sample placeholder one rung apart.
+      color="$ink"
+      placeholderTextColor="$placeholderColor"
       fontSize="$3"
       opacity={props.disabled ? 0.5 : 1}
       {...(props as Record<string, unknown>)}

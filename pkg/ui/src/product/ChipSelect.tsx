@@ -624,7 +624,7 @@ export function ChipSelect<T extends ChipItem>({
             bg="transparent"
             fontSize="$2"
             color="$ink"
-            placeholderTextColor="$soft"
+            placeholderTextColor="$placeholderColor"
             placeholder={placeholder}
             value={q}
             onChangeText={setQ}
