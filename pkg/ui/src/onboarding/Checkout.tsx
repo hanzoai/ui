@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
+import { readConsent, renderConsent } from '@hanzo/event'
 import { PALETTE } from '@hanzo/pay'
 import { load, pin, PRODUCTION, SANDBOX, style } from '@hanzo/pay/web'
 import { Checkbox } from '../backends/gui/checkbox'
@@ -198,18 +199,19 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
         return
       }
       track?.('payment_info_added', { plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
-      const paid = await call<{ subscriptionId: string; invoiceId: string }>(
+      const paid = await call<{ subscriptionId: string; invoiceId: string; eventId?: string }>(
         api,
         '/v1/billing/subscribe/card',
         {
           method: 'POST',
           headers: { ...scope, 'X-Idempotency-Key': keyFor(sale) },
-          body: JSON.stringify({ sourceId: result.token, planId: SLUG[plan], quantity: l.seats, ...(interval === 'annual' ? { interval: 'year' } : {}) }),
+          // The visitor's choice rides the sale: cloud sends the sale to an ad platform only under it.
+          body: JSON.stringify({ sourceId: result.token, planId: SLUG[plan], quantity: l.seats, consent: renderConsent(readConsent()), ...(interval === 'annual' ? { interval: 'year' } : {}) }),
         },
         token,
       )
       settle(sale)
-      track?.('order_completed', { order_id: paid.invoiceId || paid.subscriptionId, plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
+      track?.('order_completed', { ...(paid.eventId ? { event_id: paid.eventId } : {}), order_id: paid.invoiceId || paid.subscriptionId, plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
       onPaid({ orderId: paid.invoiceId || paid.subscriptionId })
     } catch (err) {
       settle(sale)
