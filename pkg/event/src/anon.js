@@ -232,9 +232,34 @@ function hzAnonAdopt(id) {
   }
 }
 
-/** hzAnonForget drops the id this page holds in memory, once its stores are cleared. */
+/**
+ * hzAnonForget drops this browser's anonymous id everywhere it lives — the shared
+ * cookie, every localStorage key it was ever kept under, and the page's memory —
+ * when the visitor withdraws Analytics.
+ */
 function hzAnonForget() {
   hzAnonMemo = undefined
+  var keys = [HZ_ANON_KEY].concat(HZ_ANON_ADOPT)
+  var s = hzAnonStore()
+  var d = hzAnonJar()
+  var host = ''
+  try {
+    host = window.location.hostname || ''
+  } catch (e) {
+    /* location unreachable — the host-only cookie is still expired */
+  }
+  var shared = ('.' + host).slice(-(HZ_ANON_DOMAIN.length + 1)) === '.' + HZ_ANON_DOMAIN
+  for (var i = 0; i < keys.length; i++) {
+    try {
+      if (d && hzAnonCookie(keys[i])) {
+        d.cookie = keys[i] + '=; Path=/; Max-Age=0'
+        if (shared) d.cookie = keys[i] + '=; Path=/; Max-Age=0; Domain=' + HZ_ANON_DOMAIN
+      }
+      if (s && s.getItem(keys[i]) !== null) s.removeItem(keys[i])
+    } catch (e) {
+      /* a jar or store that refuses: nothing more to forget there */
+    }
+  }
 }
 
 /* ── END hz anon chain ─────────────────────────────────────────────────────── */

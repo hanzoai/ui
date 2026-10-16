@@ -93,7 +93,7 @@ export function adoptAnonId(id: string): void {
   hzAnonAdopt(id)
 }
 
-/** Forget the anonymous id this page holds in memory; its stores are cleared by consent. */
+/** Forget this browser's anonymous id: its cookie, its stores and the page's memory. */
 export function forgetAnonId(): void {
   hzAnonForget()
 }
