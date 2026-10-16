@@ -95,6 +95,8 @@ export function record(config: ReplayConfig): ReplayHandle {
     // — not only the event stream — has to be able to notice.
     tick: () => {
       if (refused(config.refuse)) stop()
+      // A withdrawal in another tab, or before the page came back, is read on the clock.
+      else if (!readConsent().analytics) withdrawn()
     },
     onError: fail,
     debug: config.debug,

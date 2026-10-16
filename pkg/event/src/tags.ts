@@ -241,7 +241,7 @@ function loadMeta(id: string, c: Choice): void {
     n.queue = []
     script('https://connect.facebook.net/en_US/fbevents.js')
   }
-  if (!c.ads) p.fbq('dataProcessingOptions', ['LDU'], 0, 0)
+  if (!c.ads) p.fbq('dataProcessingOptions', ['LDU'], 1, 1000)
   p.fbq('init', id)
   p.fbq('track', 'PageView')
 }
@@ -349,7 +349,7 @@ const running = (t: BrowserTag): boolean => loaded.has(t.type === 'ga' || t.type
 function withdrawn(c: Choice, was: string): boolean {
   const p = page()
   // Personalized ads withdrawn with Marketing kept: Meta runs on under Limited Data Use.
-  if (p.fbq && !c.ads && was.split(',').includes('ads')) p.fbq('dataProcessingOptions', ['LDU'], 0, 0)
+  if (p.fbq && !c.ads && was.split(',').includes('ads')) p.fbq('dataProcessingOptions', ['LDU'], 1, 1000)
   const gone = tags.filter((t) => running(t) && !allowed(t, c))
   if (!gone.length) return false
   if (loaded.has('consent')) consentMode(c, false)

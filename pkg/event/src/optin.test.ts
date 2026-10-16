@@ -243,6 +243,39 @@ describe('a withdrawal', () => {
     expect(tx.all).toEqual([])
   })
 
+  it('then a yes within one flush sends the new visitor alone', async () => {
+    browser(LANDING)
+    const { Analytics, acceptAll, rejectAll } = await load()
+    const tx = new Tx()
+    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
+    a.init()
+    acceptAll()
+    a.capture('old')
+    rejectAll()
+    acceptAll()
+    a.capture('new')
+    a.flush()
+    expect(tx.all.map((e) => e.event)).toEqual(['new'])
+  })
+
+  it('made in another tab forgets the visitor when this page is shown again', async () => {
+    const b = browser(LANDING)
+    const { Analytics, acceptAll } = await load()
+    const tx = new Tx()
+    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
+    a.init()
+    acceptAll()
+    a.capture('one')
+    a.flush()
+    const first = tx.all[0].anonymousId
+    b.jar.set('__Host-hz_consent', '')
+    ;(g.window as { dispatchEvent: (e: { type: string }) => void }).dispatchEvent({ type: 'visibilitychange' })
+    b.jar.set('__Host-hz_consent', 'analytics')
+    a.capture('two')
+    a.flush()
+    expect(tx.all.at(-1)!.anonymousId).not.toBe(first)
+  })
+
   it('forgets the visitor this page held, so a later yes is a new one', async () => {
     browser(LANDING)
     const { Analytics, acceptAll, rejectAll } = await load()

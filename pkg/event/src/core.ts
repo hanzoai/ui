@@ -136,6 +136,13 @@ function withoutQuery(href: string): string {
   }
 }
 
+/** Whether the choice in force still covers the one an event was stamped with. */
+function covered(e: WireEvent): boolean {
+  if (!isBrowser()) return true
+  const now = new Set(renderConsent(readConsent()).split(',').filter(Boolean))
+  return String(e.properties?.consent ?? '').split(',').filter(Boolean).every((k) => now.has(k))
+}
+
 /** Takes the query and fragment off every address in free text — any scheme, or a
  *  path — keeping the :line:column a stack puts after one. */
 function bare(s: string | undefined): string | undefined {
@@ -360,6 +367,12 @@ export class Analytics {
       if (!this.allowed()) this.forgetVisitor()
       this.settle()
     })
+    // A withdrawal made in another tab is taken up when this page is shown again.
+    const shown = () => {
+      if (document.visibilityState !== 'hidden' && !this.allowed()) this.forgetVisitor()
+    }
+    window.addEventListener('pageshow', shown)
+    window.addEventListener('visibilitychange', shown)
 
     const flushHidden = () => {
       if (document.visibilityState === 'hidden') this.flush(true)
@@ -412,6 +425,7 @@ export class Analytics {
    *  forgets the visitor it held, so a later yes is a new visitor. What was queued
    *  under the old grant is held back at send (flush). */
   private forgetVisitor(): void {
+    this.queue = this.queue.filter(covered)
     forgetAnonId()
     this.settled = false
     this.linked = {}
@@ -560,9 +574,6 @@ export class Analytics {
     // An event goes only under a choice that still covers the one it was stamped
     // with: a grant withdrawn since — here or in another tab — takes what was
     // queued under it.
-    const now = new Set(renderConsent(readConsent()).split(',').filter(Boolean))
-    const covered = (e: WireEvent) =>
-      !isBrowser() || String(e.properties?.consent ?? '').split(',').filter(Boolean).every((k) => now.has(k))
     const batch = this.queue.filter(covered)
     this.queue = []
     this.clearTimer()

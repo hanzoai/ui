@@ -318,7 +318,7 @@ describe('after accepting', () => {
     saveConsent({ analytics: true, marketing: true, ads: false })
     await tick()
     const fbq = (g.window as { fbq: { queue: IArguments[] } }).fbq
-    expect(fbq.queue.map((a) => Array.from(a)).at(-1)).toEqual(['dataProcessingOptions', ['LDU'], 0, 0])
+    expect(fbq.queue.map((a) => Array.from(a)).at(-1)).toEqual(['dataProcessingOptions', ['LDU'], 1, 1000])
     expect(reload).not.toHaveBeenCalled()
   })
 
