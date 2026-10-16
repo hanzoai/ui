@@ -391,7 +391,8 @@ const SURFACE = {
  * `accentBackground` and `accentColor`. Those names never meet, so the reference
  * is live and that is the end of it.
  *
- * `--text-placeholder` is this package's own token (theme.css): the ink at 45%.
+ * `--text-placeholder` is this package's own token (theme.css): the ink at 60%
+ * (65% on light).
  * It used to be design's `--text-tertiary`, and no field read it — Input and
  * Textarea asked for `$soft`, 67% grey, under an Input value of 80% grey, and
  * on hanzo.ai a sample placeholder was reported as a value someone had typed.
@@ -439,8 +440,8 @@ const GROUND = { dark: '#0a0a0a', light: '#f7f7f7' } as const
  * which the monochrome accent shares), for a host that mounts no token layer.
  */
 const ACCENT_HOVER = { dark: '#333333', light: '#e0e0e0' } as const
-/** The placeholder: `LABEL` at 45%, the same literal theme.css declares as `--text-placeholder`. */
-const PLACEHOLDER = { dark: 'rgb(229 229 229 / .45)', light: 'rgb(10 10 10 / .45)' } as const
+/** The placeholder: `LABEL` at 60% (65% on light), the literal theme.css declares as `--text-placeholder`. */
+const PLACEHOLDER = { dark: 'rgb(229 229 229 / .6)', light: 'rgb(10 10 10 / .65)' } as const
 const LOUD = { dark: '#fafafa', light: '#0a0a0a' } as const
 const LOUD_LABEL = { dark: '#0a0a0a', light: '#fafafa' } as const
 

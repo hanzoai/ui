@@ -77,8 +77,8 @@
    `.light` follows both so it can still win. */
 :root,
 .dark {
-  /* The placeholder: the ink (#e5e5e5) at 45%. See "Placeholder" below. */
-  --text-placeholder: rgb(229 229 229 / .45);
+  /* The placeholder: the ink (#e5e5e5) at 60%. See "Placeholder" below. */
+  --text-placeholder: rgb(229 229 229 / .6);
 
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
@@ -97,8 +97,8 @@
 }
 
 .light, :root.t_light, .t_light {
-  /* The placeholder: the light ink (#0a0a0a) at 45%. */
-  --text-placeholder: rgb(10 10 10 / .45);
+  /* The placeholder: the light ink (#0a0a0a) at 65%. */
+  --text-placeholder: rgb(10 10 10 / .65);
 
 
   --chart-1: oklch(0.646 0.222 41.116);
@@ -131,13 +131,23 @@
 }
 
 /* ── Placeholder ──────────────────────────────────────────────────────────────
-   An empty field reads as empty. The placeholder is the field's ink at 45%:
-   a hint, never mistaken for a value. The value keeps the full ink.
+   An empty field reads as empty. The placeholder is the field's ink at 60%
+   (65% on light): a hint, never mistaken for a value. The value keeps the full
+   ink.
 
    Translucent, so it lands at the same share over whatever ground the field
-   has. 45% clears 3:1 on every field ground the system paints, in both themes,
-   and sits 3:1 or more from the value (gui-config.test.ts); it is a hint beside
-   a label, not body text. Stated as a literal per theme rather than mixed from
+   has, and held to text's own floor, 4.5:1 (gui-config.test.ts): on every
+   opaque field ground in both themes, on a Dialog behind its scrim in both,
+   and on a light glass panel whatever shows through it. Light takes 65% because
+   its glass over dark content is the closest ground. On every ground above it
+   stays at least 2:1 dimmer than the value.
+
+   One ground cannot reach 4.5:1: a DARK glass panel (Popover, Select, menu)
+   over bright content, where the hint would need about 75% and would then
+   read as a value. A field placed in a floating panel that can open over a
+   bright page should take `fill`, a solid ground; CommandInput does not yet.
+
+   Stated as a literal per theme rather than mixed from
    `--foreground`: a host that keeps shadcn-style `--foreground: 0 0% 98%`
    triplets, or a browser without color-mix(), makes a mix invalid, and an
    invalid placeholder colour falls back to the VALUE's colour — the defect this

@@ -325,23 +325,47 @@ describe('an empty field reads as empty', () => {
     return body.match(/--text-placeholder:\s*([^;]+);/)?.[1].trim()
   }
 
-  /** What a field paints its placeholder as: the ink at the token's share. */
-  const SHARE = 0.45
+  /** What a field paints its placeholder as: the ink at the token's share.
+   *  Light takes more, because its glass over dark content is its closest
+   *  ground. */
+  const SHARE = { dark: 0.6, light: 0.65 } as const
   const hint = (theme: 'dark' | 'light') => {
     const [r, g, b] = parse(token('foreground', theme))
-    return `rgb(${r} ${g} ${b} / ${SHARE})`
+    return `rgb(${r} ${g} ${b} / ${SHARE[theme]})`
   }
 
+  /** A floating panel's frost: `--background` at this share (glass.css). */
+  const glassSheet = readFileSync(new URL('./glass.css', import.meta.url), 'utf8')
+  const FROST = Number(glassSheet.match(/color-mix\(in oklab, var\(--background\) (\d+)%, transparent\)/)![1]) / 100
+  const glass = (theme: 'dark' | 'light', under: string) => {
+    const [r, g, b] = parse(token('background', theme))
+    return over(`rgb(${r} ${g} ${b} / ${FROST})`, under)
+  }
+  /** A Dialog: the frost over design's scrim over whatever the page shows. */
+  const dialog = (theme: 'dark' | 'light', page: string) => glass(theme, over(token('surface-scrim', theme), page))
+
   /** Every ground a field sits on: the page, the card, and the field tiles
-   *  (`--muted` is the checkout's, `--secondary` the raised fill), plus the
-   *  pure black and white a host may paint its page. */
-  const grounds = (theme: 'dark' | 'light') => [
-    token('background', theme),
-    token('card', theme),
-    token('muted', theme),
-    token('secondary', theme),
-    theme === 'dark' ? '#000000' : '#ffffff',
-  ]
+   *  (`--muted` is the checkout's, `--secondary` the raised fill), the pure
+   *  black and white a host may paint its page, gui's own raised rung for a
+   *  host without design's sheet, a Dialog over the page and over the
+   *  opposite extreme, and — on light — a glass panel over anything at all.
+   *  A dark glass panel over bright content is the one ground left out, and
+   *  theme.css says why. */
+  const grounds = (theme: 'dark' | 'light') => {
+    const page = theme === 'dark' ? '#000000' : '#ffffff'
+    const opposite = theme === 'dark' ? '#ffffff' : '#000000'
+    return [
+      token('background', theme),
+      token('card', theme),
+      token('muted', theme),
+      token('secondary', theme),
+      page,
+      over(themed(theme, 'color5'), themed(theme, 'background')),
+      dialog(theme, token('background', theme)),
+      dialog(theme, opposite),
+      ...(theme === 'light' ? [glass(theme, opposite), glass(theme, '#808080'), glass(theme, page)] : []),
+    ]
+  }
 
   // A literal, not a color-mix() of --foreground: a host with shadcn-style
   // triplets in --foreground, or a browser without color-mix(), makes a mix
@@ -349,7 +373,7 @@ describe('an empty field reads as empty', () => {
   it.each([
     ['dark', ':root,\n.dark'],
     ['light', '.light, :root.t_light, .t_light'],
-  ] as const)('%s declares it as the ink at 45%%, as a literal', (theme, selector) => {
+  ] as const)('%s declares it as the ink at its share, as a literal', (theme, selector) => {
     const value = declared(selector)
     expect(value).toBeDefined()
     expect(value).not.toMatch(/var\(|color-mix/)
@@ -362,15 +386,22 @@ describe('an empty field reads as empty', () => {
     expect(parse(ref)).toEqual(parse(hint(theme)))
   })
 
-  it.each(['dark', 'light'] as const)('%s: legible as a hint on every field ground — 3:1 or better', (theme) => {
+  // It is text, so it is held to text's floor (WCAG 1.4.3, 4.5:1), on every
+  // ground a field sits on.
+  it.each(['dark', 'light'] as const)('%s: readable as text on every field ground — 4.5:1 or better', (theme) => {
     for (const ground of grounds(theme)) {
-      expect(contrast(over(hint(theme), ground), ground), `on ${ground}`).toBeGreaterThanOrEqual(3)
+      expect(contrast(over(hint(theme), ground), ground), `on ${ground}`).toBeGreaterThanOrEqual(4.5)
     }
   })
 
-  it.each(['dark', 'light'] as const)('%s: and never mistaken for a value — 3:1 or more from the ink', (theme) => {
+  // And still plainly not a value: dimmer than the ink on every ground, and at
+  // least 2:1 from it (the defect this ends was 1.4:1).
+  it.each(['dark', 'light'] as const)('%s: and never mistaken for a value — dimmer, 2:1 or more from the ink', (theme) => {
+    const ink = token('foreground', theme)
     for (const ground of grounds(theme)) {
-      expect(contrast(over(hint(theme), ground), token('foreground', theme)), `on ${ground}`).toBeGreaterThanOrEqual(3)
+      const shown = over(hint(theme), ground)
+      expect(contrast(shown, ground), `on ${ground}`).toBeLessThan(contrast(ink, ground))
+      expect(contrast(shown, ink), `on ${ground}`).toBeGreaterThanOrEqual(2)
     }
   })
 
