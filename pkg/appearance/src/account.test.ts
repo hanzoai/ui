@@ -8,12 +8,25 @@ describe('the account layer', () => {
   // On IAM's own host the session IS the cookie, so requiring a bearer would mean
   // inventing one to satisfy a signature. The cookie rides on credentials.
   it('asks with the cookie when there is no bearer', async () => {
+    vi.stubGlobal('window', { location: { origin: base } })
     const fetchSpy = vi.fn(async () => ({ ok: true, json: async () => ({ status: 'ok', msg: '', data: { appearance: { type: 1.15 } } }) }))
     vi.stubGlobal('fetch', fetchSpy)
     expect(await load({ base })).toEqual({ type: 1.15 })
     const [, init] = fetchSpy.mock.calls[0] as unknown as [string, RequestInit]
     expect(init.credentials).toBe('include')
     expect((init.headers as Record<string, string>).Authorization).toBeUndefined()
+    vi.unstubAllGlobals()
+  })
+
+  // Another origin gets no credentialed answer on this route, and without a bearer
+  // IAM will refuse anyway, so avoid making a doomed cross-origin fetch.
+  it('skips network fetch cross-origin when there is no bearer token', async () => {
+    vi.stubGlobal('window', { location: { origin: 'https://hanzo.ai' } })
+    const fetchSpy = vi.fn()
+    vi.stubGlobal('fetch', fetchSpy)
+    expect(await load({ base: 'https://api.hanzo.ai' })).toBeUndefined()
+    expect(await save({ type: 1 }, { base: 'https://api.hanzo.ai' })).toBe(false)
+    expect(fetchSpy).not.toHaveBeenCalled()
     vi.unstubAllGlobals()
   })
 

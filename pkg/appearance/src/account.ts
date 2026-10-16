@@ -50,6 +50,11 @@ export interface Account {
  * `resolve()` expects.
  */
 export async function load({ base, token, signal }: Account): Promise<Preference | undefined> {
+  const isCrossOrigin = typeof window !== 'undefined' &&
+    new URL(base, window.location.origin).origin !== window.location.origin
+  if (isCrossOrigin && !token) {
+    return undefined
+  }
   try {
     // An empty patch merges nothing and returns the stored object, so the write
     // endpoint is also the read. One route, one merge, one shape to keep in step.
@@ -72,6 +77,11 @@ export async function save(
   appearance: Preference,
   { base, token, signal }: Account
 ): Promise<boolean> {
+  const isCrossOrigin = typeof window !== 'undefined' &&
+    new URL(base, window.location.origin).origin !== window.location.origin
+  if (isCrossOrigin && !token) {
+    return false
+  }
   try {
     return !!(await post(base, token, { [MEMBER]: appearance }, signal))
   } catch {
@@ -85,14 +95,17 @@ async function post(
   patch: Record<string, unknown>,
   signal?: AbortSignal
 ): Promise<Record<string, unknown> | undefined> {
+  const isCrossOrigin = typeof window !== 'undefined' &&
+    new URL(base, window.location.origin).origin !== window.location.origin
+
   const res = await fetch(`${base.replace(/\/+$/, '')}/v1/iam/preferences`, {
     method: 'POST',
-    // The bearer when there is one, the session cookie only when there is not.
+    // The session cookie only on IAM's own host when there is no bearer.
     // The cookie is IAM's own host's credential: the edge withholds
     // Access-Control-Allow-Credentials on this route from every page that is not
     // an identity origin, so a cross-origin call that asked for credentials would
-    // fail its preflight and take the bearer down with it.
-    credentials: token ? 'omit' : 'include',
+    // fail its preflight and take the call down with it.
+    credentials: (token || isCrossOrigin) ? 'omit' : 'include',
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
