@@ -13,6 +13,9 @@
 - Consent, the ad click and the browser ids are set on a brand's own registrable domain (`ORG_DOMAIN`) and stay on the host everywhere else, including every app on `hanzo.app`, so one tenant's choice is never another's.
 - A stranger's error names the page without its query. The site's team is marked (`hz_internal`) only under Analytics.
 - The client registry is `Symbol.for('hanzo.event.clients.optin')`: a client a pre-opt-in copy left on the page is never handed to this one.
+- The choice is kept under `__Host-hz_consent` / `__Host-hz_consent_v` on a secure page: host-only, so no sibling subdomain (another tenant's app, a shared page) can set or shadow it, and each host asks for itself. A plain-http page keeps the bare names on its host.
+- A policy older than the client's own (2) never revives a choice. GA4 waits for Analytics; Marketing alone loads only the ad platforms. `?hz_internal=1` keeps its mark only under Analytics. Withdrawing Analytics also forgets `_gid`, `_gat*` and `hz_internal`; withdrawing Marketing `_ttp` and `li_fat_id`. A stranger's error names its pages without their queries in the stack and frames too.
+- `@hanzo/ui` requires `@hanzo/event` (no longer an optional peer).
 
 ## 0.3.52
 

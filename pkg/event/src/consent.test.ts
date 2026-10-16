@@ -1,8 +1,12 @@
 // Consent: every visitor opts in, wherever they are; GPC and DNT refuse everything.
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { CONSENT_COOKIE, CONSENT_VERSION_COOKIE, acceptAll, asks, policy, read, region, rejectAll, save, serve } from './consent'
+import { CONSENT_COOKIE as BARE, CONSENT_VERSION_COOKIE as BARE_V, acceptAll, asks, policy, read, region, rejectAll, save, serve } from './consent'
 import { touch, capture } from './touch'
+
+// On a secure page the choice is kept under names only the host may write.
+const CONSENT_COOKIE = `__Host-${BARE}`
+const CONSENT_VERSION_COOKIE = `__Host-${BARE_V}`
 
 const g = globalThis as Record<string, unknown>
 const original = {
@@ -169,10 +173,18 @@ describe('the policy cloud serves', () => {
 
   it('a choice made under an older policy is asked again', () => {
     const b = browser('Europe/Berlin', { cookie: 'analytics' })
+    serve(rule(2))
+    expect(asks()).toBe(false)
+    serve(rule(3))
+    expect(asks()).toBe(true)
+    expect(read().analytics).toBe(false)
+    expect(b.jar.get(CONSENT_VERSION_COOKIE)).toBe('2')
+  })
+
+  it('a policy older than the one this client was built under never revives a choice', () => {
+    const b = browser('Europe/Berlin', { cookie: 'analytics' })
     b.jar.set(CONSENT_VERSION_COOKIE, '1')
     serve(rule(1))
-    expect(asks()).toBe(false)
-    serve(rule(2))
     expect(asks()).toBe(true)
     expect(read().analytics).toBe(false)
   })
@@ -202,14 +214,7 @@ describe('the policy cloud serves', () => {
 })
 
 describe('where the choice is kept', () => {
-  it.each([
-    ['https://hanzo.ai/', 'Domain=.hanzo.ai'],
-    ['https://chat.hanzo.ai/', 'Domain=.hanzo.ai'],
-    ['https://lux.id/', 'Domain=.lux.id'],
-    ['https://tenant-a.hanzo.app/', ''],
-    ['https://shop.co.uk/', ''],
-    ['https://me.github.io/', ''],
-  ])('%s keeps it %s', (href, want) => {
+  const written = (href: string, act: () => void): string[] => {
     const lines: string[] = []
     browser('Europe/Paris', { href })
     const doc = g.document as { cookie: string }
@@ -222,10 +227,45 @@ describe('where the choice is kept', () => {
       },
       configurable: true,
     })
-    acceptAll()
-    const line = lines.find((l) => l.startsWith(`${CONSENT_COOKIE}=`))!
+    act()
+    return lines
+  }
+
+  it.each(['https://hanzo.ai/', 'https://chat.hanzo.ai/', 'https://tenant-a.hanzo.app/', 'https://shop.co.uk/'])(
+    'on %s only the host may write it: __Host-, no Domain, Secure',
+    (href) => {
+      const line = written(href, acceptAll).find((l) => l.startsWith(`${CONSENT_COOKIE}=`))!
+      expect(line).toBeDefined()
+      expect(line).not.toContain('Domain=')
+      expect(line).toContain('Secure')
+    },
+  )
+
+  it('on a plain-http page it is the bare name on the host', () => {
+    const line = written('http://localhost:3000/', acceptAll).find((l) => l.startsWith(`${BARE}=`))!
+    expect(line).toBeDefined()
+    expect(line).not.toContain('Domain=')
+  })
+
+  it.each([
+    ['https://hanzo.ai/?gclid=G1', 'Domain=.hanzo.ai'],
+    ['https://chat.hanzo.ai/?gclid=G1', 'Domain=.hanzo.ai'],
+    ['https://lux.id/?gclid=G1', 'Domain=.lux.id'],
+    ['https://tenant-a.hanzo.app/?gclid=G1', ''],
+    ['https://shop.co.uk/?gclid=G1', ''],
+    ['https://me.github.io/?gclid=G1', ''],
+  ])('the ad click on %s is kept %s', (href, want) => {
+    const line = written(href, () => capture({ analytics: true, marketing: true, ads: true })).find((l) => l.startsWith('hz_touch='))!
     if (want) expect(line).toContain(want)
     else expect(line).not.toContain('Domain=')
+  })
+
+  it('a sibling cannot answer for this host: a bare hz_consent tossed from another subdomain counts for nothing', () => {
+    const b = browser('Europe/Paris', { href: 'https://shop.hanzo.app/' })
+    b.jar.set(BARE, 'analytics,marketing,ads')
+    b.jar.set(BARE_V, '2')
+    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
+    expect(asks()).toBe(true)
   })
 })
 
@@ -262,9 +302,9 @@ describe('withdrawing', () => {
     const store = new Map([['hz_session', '{}'], ['hz_first_touch', '{}'], ['iam-anon-id', 'x'], ['other', 'y']])
     ;(g.window as Record<string, unknown>).localStorage = { removeItem: (k: string) => store.delete(k) }
     save({ analytics: true, marketing: false, ads: false })
-    expect([...b.jar.keys()].sort()).toEqual(['_ga', '_ga_ABC', 'hz_cid', 'hz_consent', 'hz_consent_v', 'iam-anon-id'].sort())
+    expect([...b.jar.keys()].sort()).toEqual(['_ga', '_ga_ABC', 'hz_cid', CONSENT_COOKIE, CONSENT_VERSION_COOKIE, 'iam-anon-id'].sort())
     rejectAll()
-    expect([...b.jar.keys()].sort()).toEqual(['hz_consent', 'hz_consent_v'])
+    expect([...b.jar.keys()].sort()).toEqual([CONSENT_COOKIE, CONSENT_VERSION_COOKIE].sort())
     expect([...store.keys()]).toEqual(['other'])
   })
 })

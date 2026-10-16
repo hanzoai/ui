@@ -52,10 +52,10 @@ function unloadFlush(queued: boolean): { beacons: Beaconed[]; fetches: Fetched[]
     Object.defineProperty(g, name, { value, configurable: true, writable: true })
 
   define('window', {
-    location: { href: 'https://acme.test/checkout', pathname: '/checkout', search: '' },
+    location: { href: 'https://acme.test/checkout', protocol: 'https:', pathname: '/checkout', search: '' },
     addEventListener: () => {},
   })
-  define('document', { referrer: '', visibilityState: 'visible', cookie: 'hz_consent=analytics; hz_consent_v=2' })
+  define('document', { referrer: '', visibilityState: 'visible', cookie: '__Host-hz_consent=analytics; __Host-hz_consent_v=2' })
   define('navigator', {
     sendBeacon: (url: string, blob: { type: string; body: string }) => {
       beacons.push({ url, type: blob.type, body: blob.body })

@@ -636,6 +636,15 @@ export class Analytics {
     if (wire.url) wire.url = scrubText(withoutFragment(wire.url), capturePII)
     if (wire.path) wire.path = scrubText(withoutFragment(wire.path), capturePII)
     if (wire.referrer) wire.referrer = scrubText(withoutFragment(wire.referrer), capturePII)
+    // A stranger's error names its pages without their queries, in the stack too.
+    if (!known && wire.error) {
+      const e = wire.error
+      wire.error = {
+        ...e,
+        stack: e.stack?.replace(/(https?:\/\/[^\s?#)]+)[?#][^\s):]*/g, '$1'),
+        frames: e.frames?.map((f) => (f.file ? { ...f, file: withoutQuery(f.file) || f.file } : f)),
+      }
+    }
     if (internal()) wire.properties = { ...wire.properties, internal: true }
     // The consent the event was sent under, as the cookie spells it: cloud holds
     // every reader to it.

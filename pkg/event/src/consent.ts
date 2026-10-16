@@ -22,8 +22,10 @@
 // session, the first and last touch, the cohort and Google Analytics' cookies;
 // Marketing the ad click and the platforms' browser ids.
 //
-// The choice is a first-party cookie, `hz_consent`, on the registrable domain
-// for 13 months: the granted categories, comma separated. It is the one piece of
+// The choice is a first-party cookie only this host may write, `__Host-hz_consent`
+// (cookie.ts own), for 13 months: the granted categories, comma separated. No
+// sibling subdomain can set or shadow it, so another tenant's app or a shared page
+// never answers for this site; each host asks for itself. It is the one piece of
 // state a page keeps before a choice, because it is the choice. cloud reads the
 // same string off each event's `consent` property.
 //
@@ -31,7 +33,7 @@
 // module scope: `@hanzo/event` and `@hanzo/event/react` are separate bundles that
 // each carry a copy of this module, and every copy must read the same version.
 
-import { forget, get, set } from './cookie'
+import { forget, get, own, setOwn } from './cookie'
 
 export const CONSENT_COOKIE = 'hz_consent'
 
@@ -119,21 +121,21 @@ export function refused(): boolean {
 /** Which rule applies to this visitor: opt-in, for every visitor. */
 export const region = (): Region => 'opt-in'
 
-/** The policy version in force: cloud's, else the one this client was built under. */
-const version = (): number => slot().served?.version ?? CONSENT_VERSION
+/** The policy version in force: cloud's, never older than the one this client was built under. */
+const version = (): number => Math.max(slot().served?.version ?? 0, CONSENT_VERSION)
 
 /** Whether the visitor's browser refused, as the page sees it or as cloud saw the request. */
 const declined = (): boolean => refused() || slot().served?.refused === true
 
 /** Whether the visitor has stored a choice under the policy in force. */
 export function stored(): boolean {
-  return get(CONSENT_COOKIE) !== undefined && get(CONSENT_VERSION_COOKIE) === String(version())
+  return get(own(CONSENT_COOKIE)) !== undefined && get(own(CONSENT_VERSION_COOKIE)) === String(version())
 }
 
 /** The visitor's choice: the stored one, else nothing; nothing at all under GPC or DNT. */
 export function read(): Choice {
   if (declined() || !stored()) return { ...NONE }
-  const on = (get(CONSENT_COOKIE) ?? '').split(',')
+  const on = (get(own(CONSENT_COOKIE)) ?? '').split(',')
   return { analytics: on.includes('analytics'), marketing: on.includes('marketing'), ads: on.includes('ads') }
 }
 
@@ -156,8 +158,8 @@ export function render(c: Choice): string {
  */
 export function save(c: Choice): void {
   const out: Choice = declined() ? { ...NONE } : { analytics: c.analytics, marketing: c.marketing, ads: c.ads }
-  set(CONSENT_COOKIE, render(out), 395)
-  set(CONSENT_VERSION_COOKIE, String(version()), 395)
+  setOwn(CONSENT_COOKIE, render(out), 395)
+  setOwn(CONSENT_VERSION_COOKIE, String(version()), 395)
   if (!out.analytics) withdraw(ANALYTICS)
   if (!out.marketing) withdraw(MARKETING)
   if (typeof window !== 'undefined') window.dispatchEvent(new Event(CONSENT_EVENT))
@@ -167,12 +169,12 @@ export function save(c: Choice): void {
 type Kept = { cookies: readonly string[]; prefixes: readonly string[]; storage: readonly string[] }
 
 const ANALYTICS: Kept = {
-  cookies: ['iam-anon-id', 'hz_cid', '_ga'],
-  prefixes: ['_ga_'],
+  cookies: ['iam-anon-id', 'hz_cid', '_ga', '_gid', 'hz_internal'],
+  prefixes: ['_ga_', '_gat'],
   storage: ['iam-anon-id', 'hz_anon_id', 'hz_id', 'hz_session', 'hz_first_touch', 'hz_last_touch', 'hz_cohort'],
 }
 
-const MARKETING: Kept = { cookies: ['hz_touch', '_fbp', '_fbc'], prefixes: ['_gcl_'], storage: [] }
+const MARKETING: Kept = { cookies: ['hz_touch', '_fbp', '_fbc', '_ttp', 'li_fat_id'], prefixes: ['_gcl_'], storage: [] }
 
 /** Forgets what a withdrawn category kept. */
 function withdraw(k: Kept): void {

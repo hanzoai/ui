@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 /** A document whose cookie jar holds the choice of a visitor who accepted
  *  everything: a browser client sends only for them. */
 function accepted(fields: Record<string, unknown>): Record<string, unknown> {
-  const jar = new Map<string, string>([['hz_consent', 'analytics,marketing,ads'], ['hz_consent_v', '2']])
+  const jar = new Map<string, string>([['__Host-hz_consent', 'analytics,marketing,ads'], ['__Host-hz_consent_v', '2']])
   return {
     ...fields,
     get cookie() {
@@ -158,7 +158,7 @@ describe('Analytics capture', () => {
     const hadDocument = 'document' in g
     // enqueue() inits lazily, and init() is browser-only, so both are needed.
     g.window = {
-      location: { href: 'https://hanzo.chat/rooms/42?q=1', pathname: '/rooms/42', search: '?q=1' },
+      location: { href: 'https://hanzo.chat/rooms/42?q=1', protocol: 'https:', pathname: '/rooms/42', search: '?q=1' },
       addEventListener: () => {},
     }
     g.document = accepted({ referrer: '', visibilityState: 'visible' })
@@ -195,7 +195,7 @@ describe('Analytics capture', () => {
       const hadDocument = 'document' in g
       const u = new URL(href)
       g.window = {
-        location: { href, pathname: u.pathname, search: u.search },
+        location: { href, protocol: u.protocol, pathname: u.pathname, search: u.search },
         addEventListener: () => {},
       }
       g.document = accepted({ referrer, visibilityState: 'visible' })
@@ -544,7 +544,7 @@ describe('a driven browser', () => {
 
   it('marks the events of a browser cloud named the team’s', async () => {
     drive(false)
-    const jar = new Map<string, string>([['hz_consent', 'analytics'], ['hz_consent_v', '2']])
+    const jar = new Map<string, string>([['__Host-hz_consent', 'analytics'], ['__Host-hz_consent_v', '2']])
     const g = globalThis as Record<string, unknown>
     g.window = {
       location: { hostname: 'hanzo.ai', protocol: 'https:', search: '', href: 'https://hanzo.ai/' },

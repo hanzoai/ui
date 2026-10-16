@@ -301,9 +301,8 @@ const NEEDS: Record<string, keyof Choice> = {
   tiktok: 'marketing',
 }
 
-/** GA4 also counts a visit when only Marketing is allowed (Consent Mode keeps it cookieless). */
-const allowed = (t: BrowserTag, c: Choice): boolean =>
-  t.type === 'ga' ? c.analytics || c.marketing : Boolean(NEEDS[t.type] && c[NEEDS[t.type]])
+/** Each tag waits for its own category: GA4 for Analytics, every ad platform for Marketing. */
+const allowed = (t: BrowserTag, c: Choice): boolean => Boolean(NEEDS[t.type] && c[NEEDS[t.type]])
 
 function apply(): void {
   if (typeof window === 'undefined' || !configured) return

@@ -43,6 +43,24 @@ export function set(name: string, value: string, days: number): void {
 }
 
 /**
+ * The name a cookie only this host may write is kept under: `__Host-<name>` on a
+ * secure page, which the browser takes only from the host itself — Secure, Path=/
+ * and no Domain — so no sibling subdomain (another tenant's app, a shared page)
+ * can set it or shadow it. A page served over plain http (a developer's machine)
+ * cannot hold one, and keeps the bare name on its host.
+ */
+export function own(name: string): string {
+  return typeof window !== 'undefined' && window.location?.protocol === 'https:' ? `__Host-${name}` : name
+}
+
+/** Writes a cookie only this host may write (own) for `days`. */
+export function setOwn(name: string, value: string, days: number): void {
+  if (typeof document === 'undefined') return
+  const secure = window.location.protocol === 'https:' ? '; Secure' : ''
+  document.cookie = `${own(name)}=${encodeURIComponent(value)}; Max-Age=${days * DAY}; Path=/; SameSite=Lax${secure}`
+}
+
+/**
  * Forgets cookies: each name given, and every cookie whose name starts with one of
  * `prefixes`, wherever it was set — on this host, on our brand domain, and on the
  * registrable-looking domain a third-party library (gtag, the Pixel) writes to. A

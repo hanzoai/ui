@@ -68,7 +68,7 @@ afterEach(() => {
 const tick = () => new Promise((r) => setTimeout(r, 10))
 
 /** The cookie jar of a visitor who accepted everything. */
-const accepted = () => new Map([['hz_consent', 'analytics,marketing,ads'], ['hz_consent_v', '2']])
+const accepted = () => new Map([['__Host-hz_consent', 'analytics,marketing,ads'], ['__Host-hz_consent_v', '2']])
 
 describe('before consent', () => {
   it('an EU visitor makes no request to any platform', async () => {

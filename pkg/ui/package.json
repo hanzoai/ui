@@ -379,9 +379,6 @@
     "@hanzo/cd": {
       "optional": true
     },
-    "@hanzo/event": {
-      "optional": true
-    },
     "@hanzo/usage": {
       "optional": true
     },

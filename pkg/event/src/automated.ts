@@ -1,4 +1,5 @@
 import { get, set } from './cookie'
+import { read } from './consent'
 
 // A browser a program drives — Playwright, Puppeteer, Selenium, a CI run or an
 // uptime check — says so in `navigator.webdriver` (WebDriver §4.1). Its visits
@@ -21,7 +22,8 @@ export function internal(): boolean {
   // A host whose document keeps no cookies (a webview, a test double) has no mark.
   if (typeof document.cookie !== 'string') return false
   const asked = new URLSearchParams(window.location?.search ?? '').get(MARK)
-  if (asked === '1') set(MARK, '1', 365)
+  // The mark is kept only under Analytics; without it the address marks this page.
+  if (asked === '1' && read().analytics) set(MARK, '1', 365)
   if (asked === '0') {
     set(MARK, '', 0)
     return false

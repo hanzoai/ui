@@ -14,7 +14,7 @@ const AID = '01920000-0000-7000-8000-0000000000aa'
 function browser(href: string, opts: { cookie?: string; gpc?: boolean; dnt?: string; store?: Record<string, string> } = {}) {
   const url = new URL(href)
   const store = new Map(Object.entries(opts.store ?? {}))
-  const jar = new Map<string, string>(opts.cookie !== undefined ? [['hz_consent', opts.cookie], ['hz_consent_v', '2']] : [])
+  const jar = new Map<string, string>(opts.cookie !== undefined ? [['__Host-hz_consent', opts.cookie], ['__Host-hz_consent_v', '2']] : [])
   const listeners = new Map<string, Array<() => void>>()
   const location = { href: url.href, hostname: url.hostname, protocol: url.protocol, pathname: url.pathname, search: url.search }
   g.Event = class {
@@ -111,6 +111,13 @@ describe('before the visitor allows Analytics', () => {
     expect(e1.lastUtm).toBeUndefined()
     expect(e1.properties?.consent).toBe('')
     expect(e1.url, 'a stranger names the page, never its query').toBe('https://hanzo.ai/pricing')
+    const boom = new TypeError('z is undefined')
+    boom.stack = 'TypeError: z is undefined\n    at f (https://hanzo.ai/pricing?gclid=G1&utm_source=x:10:20)'
+    a.captureError(boom)
+    const e3 = tx.all[2]
+    expect(e3.error?.stack).not.toContain('gclid')
+    expect(e3.error?.stack).toContain('https://hanzo.ai/pricing:10:20')
+    expect(JSON.stringify(e3.error?.frames)).not.toContain('gclid')
     expect([...b.store.keys()]).toEqual([])
     expect([...b.jar.keys()]).toEqual([])
   })
