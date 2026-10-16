@@ -20,7 +20,10 @@
 //
 // Withdrawing a category forgets what it kept: Analytics the anonymous id, the
 // session, the first and last touch, the cohort and Google Analytics' cookies;
-// Marketing the ad click and the platforms' browser ids.
+// Marketing the ad click and the platforms' browser ids. A person the client knows
+// is told to cloud once (`$consent`, core.ts), so what the server keeps for them —
+// the touch a later sale reads — holds the withdrawal too. A browser that starts
+// refusing (GPC or DNT) after a grant withdraws it the same way.
 //
 // The choice is a first-party cookie only this host may write, `__Host-hz_consent`
 // (cookie.ts own), for 13 months: the granted categories, comma separated. No
@@ -48,6 +51,9 @@ export const POLICY_EVENT = 'hzpolicy'
 
 /** Fired on `window` whenever a choice is stored. */
 export const CONSENT_EVENT = 'hzconsent'
+
+/** Fired on `window` when a stored grant is withdrawn, before what it kept is forgotten. */
+export const WITHDRAW_EVENT = 'hzwithdraw'
 
 export interface Choice {
   analytics: boolean
@@ -96,6 +102,7 @@ export function serve(p: unknown): void {
     refused: d.refused === true || refused(),
     version: Number(d.version) || 0,
   }
+  honour()
   if (typeof window !== 'undefined') window.dispatchEvent(new Event(POLICY_EVENT))
 }
 
@@ -132,11 +139,23 @@ export function stored(): boolean {
   return get(own(CONSENT_COOKIE)) !== undefined && get(own(CONSENT_VERSION_COOKIE)) === String(version())
 }
 
-/** The visitor's choice: the stored one, else nothing; nothing at all under GPC or DNT. */
-export function read(): Choice {
-  if (declined() || !stored()) return { ...NONE }
+/** The choice stored under the policy in force, whatever the browser now sends. */
+function prior(): Choice {
+  if (!stored()) return { ...NONE }
   const on = (get(own(CONSENT_COOKIE)) ?? '').split(',')
   return { analytics: on.includes('analytics'), marketing: on.includes('marketing'), ads: on.includes('ads') }
+}
+
+/** The visitor's choice: the stored one, else nothing; nothing at all under GPC or DNT. */
+export function read(): Choice {
+  return declined() ? { ...NONE } : prior()
+}
+
+/** A browser that refuses now, over a grant stored before, withdraws that grant. */
+export function honour(): void {
+  if (!declined()) return
+  const was = prior()
+  if (was.analytics || was.marketing || was.ads) save({ ...NONE })
 }
 
 /** Whether the consent banner must be shown: a visitor who has not chosen and whose browser has not refused. */
@@ -157,9 +176,13 @@ export function render(c: Choice): string {
  * later page. A browser that refused stores a refusal, whatever was chosen.
  */
 export function save(c: Choice): void {
+  const was = prior()
   const out: Choice = declined() ? { ...NONE } : { analytics: c.analytics, marketing: c.marketing, ads: c.ads }
   setOwn(CONSENT_COOKIE, render(out), 395)
   setOwn(CONSENT_VERSION_COOKIE, String(version()), 395)
+  // The client tells cloud while it still knows who withdrew.
+  const less = (['analytics', 'marketing', 'ads'] as const).some((k) => was[k] && !out[k])
+  if (less && typeof window !== 'undefined') window.dispatchEvent(new Event(WITHDRAW_EVENT))
   if (!out.analytics) withdraw(ANALYTICS)
   if (!out.marketing) withdraw(MARKETING)
   if (typeof window !== 'undefined') window.dispatchEvent(new Event(CONSENT_EVENT))
@@ -169,12 +192,16 @@ export function save(c: Choice): void {
 type Kept = { cookies: readonly string[]; prefixes: readonly string[]; storage: readonly string[] }
 
 const ANALYTICS: Kept = {
-  cookies: ['iam-anon-id', 'hz_cid', '_ga', '_gid', 'hz_internal'],
+  cookies: ['iam-anon-id', 'hz_anon_id', 'hz_id', 'hz_cid', '_ga', '_gid', 'hz_internal'],
   prefixes: ['_ga_', '_gat'],
   storage: ['iam-anon-id', 'hz_anon_id', 'hz_id', 'hz_session', 'hz_first_touch', 'hz_last_touch', 'hz_cohort'],
 }
 
-const MARKETING: Kept = { cookies: ['hz_touch', '_fbp', '_fbc', '_ttp', 'li_fat_id'], prefixes: ['_gcl_'], storage: [] }
+const MARKETING: Kept = {
+  cookies: ['hz_touch', '_fbp', '_fbc', '_ttp', '_tt_enable_cookie', '_twclid', 'li_fat_id', 'li_giant'],
+  prefixes: ['_gcl_', '_gac_', '_uet', 'ttcsid'],
+  storage: [],
+}
 
 /** Forgets what a withdrawn category kept. */
 function withdraw(k: Kept): void {

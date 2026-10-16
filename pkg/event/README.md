@@ -42,10 +42,10 @@ than pasted into the page.
 This package is the client for a surface that **builds**. There is no second
 script-tag distribution here: one wire, one endpoint, one tag.
 
-It honours the same consent sources the bundled stack does: an explicit stored
-choice (`hz_consent`, the key a Hanzo consent banner writes) outranks the browser
-signal in both directions; otherwise Global Privacy Control and Do Not Track are
-refusals. A React app does not need this file — mount `<Hanzo analytics>` from
+It honours the same consent sources the bundled stack does: every visitor opts
+in, a stored choice (`__Host-hz_consent` on a secure page, the key the Hanzo
+consent banner writes) is the visitor's word, and Global Privacy Control and Do Not
+Track refuse everything, whatever is stored. A React app does not need this file — mount `<Hanzo analytics>` from
 `@hanzo/ui`, which wires this client and the capture engine together.
 
 > The tag used to live in `hanzoai/analytics` and post a **bare JSON array** of

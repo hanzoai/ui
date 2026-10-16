@@ -7,7 +7,7 @@
 // the one value the OTHER two distributions must agree with, so its chain lives in
 // ./anon.js and this file only calls it. Everything else here stays origin-local.
 
-import { hzAnonAdopt, hzAnonId } from './anon.js'
+import { hzAnonAdopt, hzAnonForget, hzAnonId } from './anon.js'
 import type { Attribution, Cohort } from './types'
 import { uuidv7 } from './uid'
 
@@ -91,6 +91,11 @@ export function adoptSession(id: string, now = Date.now()): void {
 /** Make `id` the browser's anonymous id, replacing the one it held. */
 export function adoptAnonId(id: string): void {
   hzAnonAdopt(id)
+}
+
+/** Forget the anonymous id this page holds in memory; its stores are cleared by consent. */
+export function forgetAnonId(): void {
+  hzAnonForget()
 }
 
 /** Read the persisted first-touch attribution. */

@@ -232,6 +232,11 @@ function hzAnonAdopt(id) {
   }
 }
 
+/** hzAnonForget drops the id this page holds in memory, once its stores are cleared. */
+function hzAnonForget() {
+  hzAnonMemo = undefined
+}
+
 /* ── END hz anon chain ─────────────────────────────────────────────────────── */
 
-export { hzAnonId, hzAnonAdopt, hzUuidv7 }
+export { hzAnonId, hzAnonAdopt, hzAnonForget, hzUuidv7 }

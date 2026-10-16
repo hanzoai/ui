@@ -15,3 +15,6 @@ export declare function hzAnonId(): string
 
 /** Makes `id` this browser's anonymous id, replacing the one it held. */
 export declare function hzAnonAdopt(id: string): void
+
+/** Drops the id this page holds in memory, once its stores are cleared. */
+export declare function hzAnonForget(): void

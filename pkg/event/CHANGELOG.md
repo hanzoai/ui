@@ -10,11 +10,13 @@
 - `lastUtm` beside `utm`: the campaign of the most recent visit that arrived with one, kept 90 days (`hz_last_touch`).
 - The policy cloud served lives on the page (`Symbol.for('hanzo.event.consent')`), so `@hanzo/event` and `@hanzo/event/react` read the same version. The version in force before cloud answers is the one this client was built under, `CONSENT_VERSION` = 2, so a choice made under the opt-out policy never counts. A refusal cloud saw on the request (GPC or DNT header) counts as one.
 - Withdrawing a category forgets what it kept: Analytics the anonymous id, the session, the first and last touch, the cohort and `_ga*`; Marketing `hz_touch`, `_fbp`, `_fbc` and `_gcl_*`.
-- Consent, the ad click and the browser ids are set on a brand's own registrable domain (`ORG_DOMAIN`) and stay on the host everywhere else, including every app on `hanzo.app`, so one tenant's choice is never another's.
+- The ad click and the browser ids are set on a brand's own registrable domain (`ORG_DOMAIN`) and stay on the host everywhere else, including every app on `hanzo.app`.
 - A stranger's error names the page without its query. The site's team is marked (`hz_internal`) only under Analytics.
 - The client registry is `Symbol.for('hanzo.event.clients.optin')`: a client a pre-opt-in copy left on the page is never handed to this one.
 - The choice is kept under `__Host-hz_consent` / `__Host-hz_consent_v` on a secure page: host-only, so no sibling subdomain (another tenant's app, a shared page) can set or shadow it, and each host asks for itself. A plain-http page keeps the bare names on its host.
 - A policy older than the client's own (2) never revives a choice. GA4 waits for Analytics; Marketing alone loads only the ad platforms. `?hz_internal=1` keeps its mark only under Analytics. Withdrawing Analytics also forgets `_gid`, `_gat*` and `hz_internal`; withdrawing Marketing `_ttp` and `li_fat_id`. A stranger's error names its pages without their queries in the stack and frames too.
+- A withdrawal reaches cloud. When a stored grant is withdrawn — in the banner, or by a browser that starts sending GPC or DNT — nothing queued under it is sent, the page forgets the visitor it held, and a person the client knows is told once: a `$consent` event with their id and the choice they hold now, nothing else. cloud keeps it whatever they allow, so a later sale it states for them goes to no ad platform the withdrawal closed. A visitor never identified sends nothing. Withdrawing also forgets the legacy `hz_anon_id` / `hz_id` cookies, `_gac_*`, `_uet*`, X's `_twclid`, TikTok's `_tt_enable_cookie` / `ttcsid*` and `li_giant`.
+- A stranger's error names no query in its message, and none in its stack even when the query holds a `:`.
 - `@hanzo/ui` requires `@hanzo/event` (no longer an optional peer).
 
 ## 0.3.52
