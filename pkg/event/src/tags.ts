@@ -95,6 +95,8 @@ const page = (): Page => window as unknown as Page
 let tags: BrowserTag[] = []
 let audience: Audience = 'person'
 let configured = false
+/** The choice the page last acted on, as `render` spells it. */
+let applied = ''
 let options: TagOptions = {}
 const loaded = new Set<string>()
 
@@ -310,7 +312,9 @@ const allowed = (t: BrowserTag, c: Choice): boolean => Boolean(NEEDS[t.type] && 
 function apply(): void {
   if (typeof window === 'undefined' || !configured) return
   const c = read()
-  if (withdrawn(c)) return
+  const was = applied
+  applied = render(c)
+  if (withdrawn(c, was)) return
   capture(c)
   // A program loads no platform's pixel; the site's own team loads Google
   // Analytics only, tagged internal.
@@ -342,10 +346,15 @@ const running = (t: BrowserTag): boolean => loaded.has(t.type === 'ga' || t.type
  * the denied state and Meta a revoke at once, and the page reloads so none of
  * them runs on. Says whether it did.
  */
-function withdrawn(c: Choice): boolean {
-  if (!tags.some((t) => running(t) && !allowed(t, c))) return false
+function withdrawn(c: Choice, was: string): boolean {
   const p = page()
+  // Personalized ads withdrawn with Marketing kept: Meta runs on under Limited Data Use.
+  if (p.fbq && !c.ads && was.split(',').includes('ads')) p.fbq('dataProcessingOptions', ['LDU'], 0, 0)
+  const gone = tags.filter((t) => running(t) && !allowed(t, c))
+  if (!gone.length) return false
   if (loaded.has('consent')) consentMode(c, false)
+  // gtag stops measuring this page at once, before the reload lets it go.
+  for (const t of gone) if (t.type === 'ga' || t.type === 'gads') (window as unknown as Record<string, boolean>)[`ga-disable-${t.id}`] = true
   if (p.fbq && !c.marketing) p.fbq('consent', 'revoke')
   setTimeout(() => window.location.reload(), 0)
   return true
@@ -360,6 +369,13 @@ export function start(o: TagOptions = {}): () => void {
   if (typeof window === 'undefined') return () => undefined
   options = o
   addEventListener(CONSENT_EVENT, apply)
+  // A choice made in another tab, or before a page came back from the back-forward
+  // cache, is read again whenever this page is shown.
+  const shown = () => {
+    if (document.visibilityState !== 'hidden' && render(read()) !== applied) apply()
+  }
+  addEventListener('pageshow', shown)
+  addEventListener('visibilitychange', shown)
   addEventListener('pagehide', pagehide)
   if (!configured) {
     configured = true

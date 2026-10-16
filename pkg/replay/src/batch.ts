@@ -154,6 +154,12 @@ export class Batch {
     }
   }
 
+  /** Throw away what is buffered, unsent: the visitor withdrew the grant it was recorded under. */
+  drop(): void {
+    this.parts = []
+    this.bytes = 0
+  }
+
   /** Stop the timers, drop the listeners, and send the tail. */
   stop(): void {
     if (this.timer) {

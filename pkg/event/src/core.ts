@@ -139,7 +139,7 @@ function withoutQuery(href: string): string {
 /** Takes the query and fragment off every address in free text — any scheme, or a
  *  path — keeping the :line:column a stack puts after one. */
 function bare(s: string | undefined): string | undefined {
-  return s?.replace(/(^|[\s('"])((?:[a-z][a-z0-9+.-]*:\/\/|\/)[^\s)'"]+)/gi, (_m, pre: string, a: string) => {
+  return s?.replace(/(^|[\s('"@<[=])((?:[a-z][a-z0-9+.-]*:\/\/|\/)[^\s)'"]+)/gi, (_m, pre: string, a: string) => {
     const at = /(?::\d+)+$/.exec(a)?.[0] ?? ''
     const base = a.slice(0, a.length - at.length)
     const i = base.search(/[?#]/)
@@ -408,12 +408,10 @@ export class Analytics {
     if (held) this.pageview(held.path, held.properties)
   }
 
-  /** forgetVisitor runs when the visitor no longer allows Analytics: nothing
-   *  queued under the old grant is sent, and the page forgets the visitor it held
-   *  in memory, so a later yes is a new visitor. */
+  /** forgetVisitor runs when the visitor no longer allows Analytics: the page
+   *  forgets the visitor it held, so a later yes is a new visitor. What was queued
+   *  under the old grant is held back at send (flush). */
   private forgetVisitor(): void {
-    this.queue = []
-    this.clearTimer()
     forgetAnonId()
     this.settled = false
     this.linked = {}
@@ -559,9 +557,16 @@ export class Analytics {
    */
   flush(beacon = false): void {
     if (!this.cfg.enabled || this.queue.length === 0) return
-    const batch = this.queue
+    // An event goes only under a choice that still covers the one it was stamped
+    // with: a grant withdrawn since — here or in another tab — takes what was
+    // queued under it.
+    const now = new Set(renderConsent(readConsent()).split(',').filter(Boolean))
+    const covered = (e: WireEvent) =>
+      !isBrowser() || String(e.properties?.consent ?? '').split(',').filter(Boolean).every((k) => now.has(k))
+    const batch = this.queue.filter(covered)
     this.queue = []
     this.clearTimer()
+    if (batch.length === 0) return
 
     // Two kinds of credential, and both ride when both are held: the publishable key
     // names the project, the bearer names the person. The bearer never replaces the key.

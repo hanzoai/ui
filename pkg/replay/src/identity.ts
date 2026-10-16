@@ -100,6 +100,15 @@ export function distinctId(): string {
   return id
 }
 
+/** Forget this tab's window id: the visitor withdrew Analytics. */
+export function forgetWindow(): void {
+  try {
+    window.sessionStorage.removeItem(WINDOW_KEY)
+  } catch {
+    /* storage refused: nothing was kept there */
+  }
+}
+
 /** This tab. Survives a reload (sessionStorage does), which is what makes a
  *  reload read as one window rather than two. */
 export function windowId(): string {

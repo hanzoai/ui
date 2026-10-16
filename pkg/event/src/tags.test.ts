@@ -289,6 +289,39 @@ describe('after accepting', () => {
     expect(b.scripts).toHaveLength(5)
   })
 
+  it('a withdrawal made in another tab is acted on when this page is shown again', async () => {
+    const b = browser('Europe/Berlin')
+    const reload = vi.fn()
+    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
+    ;(g.document as Record<string, unknown>).visibilityState = 'visible'
+    const { startTags, acceptAll } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    acceptAll()
+    await tick()
+    b.jar.set('__Host-hz_consent', '')
+    ;(g.window as { dispatchEvent: (e: { type: string }) => void }).dispatchEvent({ type: 'visibilitychange' })
+    await tick()
+    expect(reload).toHaveBeenCalledTimes(1)
+    expect((g.window as Record<string, unknown>)['ga-disable-G-TEST']).toBe(true)
+  })
+
+  it('withdrawing Personalized ads alone keeps Meta, under Limited Data Use', async () => {
+    browser('Europe/Berlin')
+    const reload = vi.fn()
+    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
+    const { startTags, acceptAll, saveConsent } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    acceptAll()
+    await tick()
+    saveConsent({ analytics: true, marketing: true, ads: false })
+    await tick()
+    const fbq = (g.window as { fbq: { queue: IArguments[] } }).fbq
+    expect(fbq.queue.map((a) => Array.from(a)).at(-1)).toEqual(['dataProcessingOptions', ['LDU'], 0, 0])
+    expect(reload).not.toHaveBeenCalled()
+  })
+
   it('a choice that withdraws nothing loaded neither reloads nor revokes', async () => {
     browser('Europe/Berlin')
     const reload = vi.fn()

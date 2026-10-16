@@ -17,7 +17,7 @@
 import { CONSENT_EVENT, readConsent } from '@hanzo/event'
 import { record as rrwebRecord } from 'rrweb'
 import { Batch, DEFAULT_ENDPOINT, defaultTransport, publishable, replayUrl } from './batch'
-import { distinctId, sessionId, windowId } from './identity'
+import { distinctId, forgetWindow, sessionId, windowId } from './identity'
 import { recorderOptions } from './policy'
 import { refused } from './routes'
 import { scrubEvent } from './scrub'
@@ -102,8 +102,12 @@ export function record(config: ReplayConfig): ReplayHandle {
 
   let live = true
   let end: (() => void) | undefined
+  // A withdrawal sends nothing more: what is buffered is thrown away, not flushed.
   const withdrawn = () => {
-    if (!readConsent().analytics) stop()
+    if (readConsent().analytics) return
+    batch.drop()
+    stop()
+    forgetWindow()
   }
 
   function stop(): void {

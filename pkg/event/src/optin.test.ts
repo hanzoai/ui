@@ -210,7 +210,7 @@ describe('a withdrawal', () => {
     expect([...b.store.keys()]).toEqual([])
   })
 
-  it('of Marketing alone keeps the visitor and what was queued', async () => {
+  it('of Marketing alone keeps the visitor, and sends nothing queued under Marketing', async () => {
     browser(LANDING)
     const { Analytics, acceptAll, save } = await load()
     const tx = new Tx()
@@ -220,14 +220,27 @@ describe('a withdrawal', () => {
     a.capture('one')
     a.flush()
     const anon = tx.all[0].anonymousId
-    a.capture('two')
+    a.capture('two', { gclid: 'G1' })
     save({ analytics: true, marketing: false, ads: false })
-    a.flush()
-    expect(tx.all.map((e) => e.event)).toEqual(['one', 'two'])
     a.capture('three')
     a.flush()
+    expect(tx.all.map((e) => e.event)).toEqual(['one', 'three'])
     expect(tx.all.at(-1)!.anonymousId).toBe(anon)
     expect(tx.all.at(-1)!.properties?.consent).toBe('analytics')
+  })
+
+  it('made in another tab holds back what this one queued under the old grant', async () => {
+    const b = browser(LANDING)
+    const { Analytics, acceptAll } = await load()
+    const tx = new Tx()
+    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
+    a.init()
+    acceptAll()
+    a.capture('queued')
+    // Another tab of the same host rejects: the shared cookie changes, no event here.
+    b.jar.set('__Host-hz_consent', '')
+    a.flush()
+    expect(tx.all).toEqual([])
   })
 
   it('forgets the visitor this page held, so a later yes is a new one', async () => {

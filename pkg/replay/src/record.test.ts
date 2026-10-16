@@ -99,10 +99,13 @@ group('consent', () => {
     const r = fakeRecorder()
     const replay = record({ ingestKey: KEY, transport: s.transport, recorder: r.recorder })
     expect(replay.recording).toBe(true)
+    r.emit({ type: 3, timestamp: 1, data: {} } as unknown as eventWithTime)
     choose('marketing')
     window.dispatchEvent(new Event('hzconsent'))
     expect(replay.recording).toBe(false)
     expect(r.stopped()).toBe(1)
+    expect(s.sent, 'nothing buffered is sent after the withdrawal').toEqual([])
+    expect(sessionStorage.getItem('hz_window')).toBeNull()
   })
 })
 
