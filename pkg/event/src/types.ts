@@ -112,7 +112,10 @@ export interface WireEvent {
   url?: string
   path?: string
   referrer?: string
+  /** First-touch campaign: the first visit that arrived with attribution. */
   utm?: Attribution['utm']
+  /** Last-touch campaign: the most recent visit that arrived with one. */
+  lastUtm?: Attribution['utm']
   refCode?: string
   channel?: string
   groupId?: string
@@ -193,7 +196,9 @@ export interface AnalyticsConfig {
   batchSize?: number
   /** Auto-flush cadence in ms. */
   flushIntervalMs?: number
-  /** Turn the client off entirely (e.g. opt-out / DNT). Defaults to enabled. */
+  /** Turn the client off entirely. Defaults to enabled. In a browser the client
+   *  also sends nothing but errors until the visitor allows Analytics (consent.ts),
+   *  whatever this says. */
   enabled?: boolean
   /** Auto-capture unhandled errors + promise rejections (window.onerror,
    *  unhandledrejection). Browser-only, defaults to enabled. */

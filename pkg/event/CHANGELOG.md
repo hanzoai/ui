@@ -1,5 +1,15 @@
 # @hanzo/event
 
+## 0.3.58
+
+### Patch Changes
+
+- Every visitor opts in, wherever they are. A visitor with no stored choice has allowed nothing: the time-zone guess is gone, and a `mode` or `defaults` cloud serves presumes nothing. Global Privacy Control and Do Not Track refuse all three categories, whatever is stored, and the banner does not ask.
+- In a browser the client sends no pageview, event, identify or group, and writes no id, session, first touch or cohort, until the visitor allows Analytics. An error still goes, as a stranger: an id for that page alone, no session, no attribution. On Accept the client adopts the link it arrived with, stores the first and last touch, and sends the identify and the view in hand. `link()` carries nothing before consent.
+- Every browser event states the `consent` it was sent under.
+- `lastUtm` beside `utm`: the campaign of the most recent visit that arrived with one, kept 90 days (`hz_last_touch`).
+- The policy cloud served lives on the page (`Symbol.for('hanzo.event.consent')`), so `@hanzo/event` and `@hanzo/event/react` read the same version.
+
 ## 0.3.52
 
 ### Patch Changes

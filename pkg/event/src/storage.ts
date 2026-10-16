@@ -1,6 +1,7 @@
-// SSR-safe browser storage for stable identifiers and first-touch state. Every
-// accessor no-ops (returns undefined) when there is no window/localStorage, so the
-// client imports cleanly in a Next.js server component.
+// SSR-safe browser storage for stable identifiers and first- and last-touch state.
+// Every accessor no-ops (returns undefined) when there is no window/localStorage, so
+// the client imports cleanly in a Next.js server component. Nothing here is written
+// before the visitor allows Analytics: core.ts asks first.
 //
 // The anonymous id is the one value that must outlive an ORIGIN, and it is also
 // the one value the OTHER two distributions must agree with, so its chain lives in
@@ -13,8 +14,12 @@ import { uuidv7 } from './uid'
 const KEY = {
   session: 'hz_session',
   firstTouch: 'hz_first_touch',
+  lastTouch: 'hz_last_touch',
   cohort: 'hz_cohort',
 } as const
+
+/** How long a last touch is credited: the lookback cloud applies to an ad click. */
+const LAST_TOUCH_MS = 90 * 24 * 60 * 60 * 1000
 
 /** 30-minute inactivity window defines a session (PostHog/GA convention). */
 const SESSION_TTL_MS = 30 * 60 * 1000
@@ -107,6 +112,25 @@ export function setFirstTouchOnce(a: Attribution): Attribution {
   if (existing) return existing
   if (s) s.setItem(KEY.firstTouch, JSON.stringify(a))
   return a
+}
+
+/** The campaign of the most recent visit that arrived with one, within the lookback. */
+export function getLastTouch(now = Date.now()): Attribution['utm'] | undefined {
+  const s = ls()
+  if (!s) return undefined
+  try {
+    const v = JSON.parse(s.getItem(KEY.lastTouch) || 'null') as { utm?: Attribution['utm']; at?: number } | null
+    if (!v?.utm || typeof v.at !== 'number' || now - v.at > LAST_TOUCH_MS) return undefined
+    return v.utm
+  } catch {
+    return undefined
+  }
+}
+
+/** Persist `utm` as the last touch, replacing the one before it. */
+export function setLastTouch(utm: Attribution['utm'], now = Date.now()): void {
+  const s = ls()
+  if (s) s.setItem(KEY.lastTouch, JSON.stringify({ utm, at: now }))
 }
 
 /** Read persisted cohort dimensions. */

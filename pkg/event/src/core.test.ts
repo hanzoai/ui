@@ -1,4 +1,21 @@
 import { describe, it, expect, beforeEach } from 'vitest'
+
+/** A document whose cookie jar holds the choice of a visitor who accepted
+ *  everything: a browser client sends only for them. */
+function accepted(fields: Record<string, unknown>): Record<string, unknown> {
+  const jar = new Map<string, string>([['hz_consent', 'analytics,marketing,ads']])
+  return {
+    ...fields,
+    get cookie() {
+      return [...jar].map(([k, v]) => `${k}=${v}`).join('; ')
+    },
+    set cookie(line: string) {
+      const [pair] = line.split(';')
+      const i = pair.indexOf('=')
+      jar.set(pair.slice(0, i), pair.slice(i + 1))
+    },
+  }
+}
 import { Analytics, VERSION } from './core'
 import { EVENTS, PAGEVIEW } from './events'
 import type { Transport, WireEvent } from './types'
@@ -144,7 +161,7 @@ describe('Analytics capture', () => {
       location: { href: 'https://hanzo.chat/rooms/42?q=1', pathname: '/rooms/42', search: '?q=1' },
       addEventListener: () => {},
     }
-    g.document = { referrer: '', visibilityState: 'visible' }
+    g.document = accepted({ referrer: '', visibilityState: 'visible' })
     try {
       const a = mk()
       a.capture('$click')
@@ -181,7 +198,7 @@ describe('Analytics capture', () => {
         location: { href, pathname: u.pathname, search: u.search },
         addEventListener: () => {},
       }
-      g.document = { referrer, visibilityState: 'visible' }
+      g.document = accepted({ referrer, visibilityState: 'visible' })
       try {
         fn()
       } finally {
@@ -527,7 +544,7 @@ describe('a driven browser', () => {
 
   it('marks the events of a browser cloud named the team’s', async () => {
     drive(false)
-    const jar = new Map<string, string>()
+    const jar = new Map<string, string>([['hz_consent', 'analytics']])
     const g = globalThis as Record<string, unknown>
     g.window = {
       location: { hostname: 'hanzo.ai', protocol: 'https:', search: '', href: 'https://hanzo.ai/' },

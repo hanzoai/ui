@@ -133,10 +133,9 @@ const listen = (on: () => void) => {
 }
 
 /**
- * The visitor's consent, live: what a region presumes until they choose, then
- * what they chose, re-rendering the moment they do. `enabled: choice.analytics`
- * on the provider's config is how a stream that started silent for an EU visitor
- * starts on Accept, with no reload.
+ * The visitor's consent, live: nothing until they choose, then what they chose,
+ * re-rendering the moment they do. The client itself sends nothing but errors
+ * before Analytics is allowed, and starts on Accept with no reload.
  */
 export function useConsent(): Choice {
   const kept = useSyncExternalStore(listen, () => render(read()), () => '')

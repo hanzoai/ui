@@ -67,6 +67,9 @@ afterEach(() => {
 
 const tick = () => new Promise((r) => setTimeout(r, 10))
 
+/** The cookie jar of a visitor who accepted everything. */
+const accepted = () => new Map([['hz_consent', 'analytics,marketing,ads']])
+
 describe('before consent', () => {
   it('an EU visitor makes no request to any platform', async () => {
     const b = browser('Europe/Berlin')
@@ -78,8 +81,47 @@ describe('before consent', () => {
     expect(b.scripts).toEqual([])
   })
 
-  it('a US visitor is presumed to allow, and every tag loads', async () => {
+  it('a US visitor makes no request to any platform either: the clock presumes nothing', async () => {
     const b = browser('America/New_York')
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(b.requests).toHaveLength(1)
+    expect(b.scripts).toEqual([])
+  })
+
+  it('nor does a visitor whose cloud answer names an opt-out region', async () => {
+    const b = browser('America/New_York')
+    put('fetch', async (url: string) => {
+      b.requests.push(url)
+      return { ok: true, json: async () => ({ ...TAGS, consent: { region: 'US', mode: 'opt-out', version: 1, defaults: { analytics: true, marketing: true, ads: true } } }) }
+    })
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(b.scripts).toEqual([])
+  })
+
+  it('a browser that sends Global Privacy Control loads nothing, even with a stored yes', async () => {
+    const b = browser('America/New_York', accepted())
+    put('navigator', { globalPrivacyControl: true, userAgent: 'UA' })
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(b.scripts).toEqual([])
+  })
+
+  it('a browser that sends Do Not Track loads nothing, even with a stored yes', async () => {
+    const b = browser('Europe/Berlin', accepted())
+    put('navigator', { globalPrivacyControl: false, doNotTrack: '1', userAgent: 'UA' })
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(b.scripts).toEqual([])
+  })
+
+  it('a visitor who accepted loads every tag', async () => {
+    const b = browser('America/New_York', accepted())
     const { startTags } = await import('./index')
     startTags({ key: 'pk-x' })
     await tick()
@@ -90,8 +132,8 @@ describe('before consent', () => {
 })
 
 describe('a driven browser', () => {
-  it('loads no platform even where the region presumes consent', async () => {
-    const b = browser('America/New_York')
+  it('loads no platform even for a visitor who accepted', async () => {
+    const b = browser('America/New_York', accepted())
     put('navigator', { globalPrivacyControl: false, userAgent: 'UA', webdriver: true })
     const { startTags } = await import('./index')
     startTags({ key: 'pk-x' })
@@ -103,7 +145,7 @@ describe('a driven browser', () => {
 
 describe('a teammate’s browser', () => {
   it('?hz_internal=1 keeps the mark, loads Google tagged internal, and no ad pixel', async () => {
-    const b = browser('America/New_York')
+    const b = browser('America/New_York', accepted())
     ;(g.window as { location: { search: string } }).location.search = '?hz_internal=1'
     const { startTags } = await import('./index')
     startTags({ key: 'pk-x' })
@@ -126,8 +168,8 @@ describe('the audience cloud names', () => {
       return { ok: true, json: async () => ({ ...TAGS, ...body }) }
     })
 
-  it('a bot loads nothing, even where the region presumes consent', async () => {
-    const b = browser('America/New_York')
+  it('a bot loads nothing, even for a visitor who accepted', async () => {
+    const b = browser('America/New_York', accepted())
     answering(b, { audience: 'bot' })
     const { startTags } = await import('./index')
     startTags({ key: 'pk-x' })
@@ -136,7 +178,7 @@ describe('the audience cloud names', () => {
   })
 
   it('the team loads Google alone, tagged internal, and the browser stays marked', async () => {
-    const b = browser('America/New_York')
+    const b = browser('America/New_York', accepted())
     answering(b, { audience: 'internal' })
     const { startTags } = await import('./index')
     startTags({ key: 'pk-x' })
@@ -150,7 +192,7 @@ describe('the audience cloud names', () => {
   })
 
   it('a person loads every tag, untagged, and is not marked', async () => {
-    const b = browser('America/New_York')
+    const b = browser('America/New_York', accepted())
     answering(b, { audience: 'person' })
     const { startTags } = await import('./index')
     startTags({ key: 'pk-x' })
@@ -162,7 +204,7 @@ describe('the audience cloud names', () => {
   })
 
   it('sends the site’s IAM token as the bearer, and nothing without one', async () => {
-    const b = browser('America/New_York')
+    const b = browser('America/New_York', accepted())
     const seen: Array<RequestInit | undefined> = []
     answering(b, {}, seen)
     const { startTags } = await import('./index')
@@ -171,7 +213,7 @@ describe('the audience cloud names', () => {
     expect(seen[0]).toEqual({ headers: { Authorization: 'Bearer jwt-abc' } })
 
     vi.resetModules()
-    const c = browser('America/New_York')
+    const c = browser('America/New_York', accepted())
     const none: Array<RequestInit | undefined> = []
     answering(c, {}, none)
     const again = await import('./index')
@@ -181,7 +223,7 @@ describe('the audience cloud names', () => {
   })
 
   it('a refused bearer asks again as a stranger', async () => {
-    const b = browser('America/New_York')
+    const b = browser('America/New_York', accepted())
     const seen: Array<RequestInit | undefined> = []
     put('fetch', async (url: string, init?: RequestInit) => {
       seen.push(init)
@@ -268,7 +310,7 @@ describe('a moment before the visitor answers', () => {
 
 describe('one event, every tag', () => {
   it('sends purchase under one id to each platform, with the names the table gives', async () => {
-    browser('America/New_York')
+    browser('America/New_York', accepted())
     const { startTags, track } = await import('./index')
     const captured: Array<{ name: string; props: Record<string, unknown> }> = []
     startTags({ key: 'pk-x' })
@@ -309,7 +351,7 @@ describe('one event, every tag', () => {
   })
 
   it('a test order is debug traffic', async () => {
-    browser('America/New_York')
+    browser('America/New_York', accepted())
     const { startTags, mirror } = await import('./index')
     startTags({ key: 'pk-x' })
     await tick()
@@ -325,7 +367,7 @@ describe('one event, every tag', () => {
 
 describe('a paid order the server also states', () => {
   it('fires the pixels under the order id and does not touch our stream', async () => {
-    browser('America/New_York')
+    browser('America/New_York', accepted())
     const { startTags, track } = await import('./index')
     startTags({ key: 'pk-x' })
     await tick()

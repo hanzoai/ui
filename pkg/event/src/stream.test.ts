@@ -58,6 +58,7 @@ const app = () =>
 beforeEach(() => {
   tx = new FakeTransport()
   resetClients() // each `it` is its own page load
+  document.cookie = 'hz_consent=analytics,marketing,ads; Path=/' // a visitor who accepted
   window.history.replaceState(null, '', '/pricing')
 })
 

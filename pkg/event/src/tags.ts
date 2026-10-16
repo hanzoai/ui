@@ -17,10 +17,10 @@
 //
 // WHAT LOADS WHEN. Nothing loads before consent. Analytics allows GA4;
 // Marketing allows Google Ads, Meta, LinkedIn, X and TikTok. A visitor who has
-// not chosen has allowed what their region presumes (consent.ts), so an EU
-// visitor's page makes no request to any platform until they accept. Google's
-// Consent Mode v2 is set denied before gtag.js is fetched and updated on every
-// choice. A choice that allows more loads the rest with no reload.
+// not chosen has allowed nothing, wherever they are (consent.ts), so their page
+// makes no request to any platform until they accept; GPC or DNT is a refusal.
+// Google's Consent Mode v2 is set denied before gtag.js is fetched and updated on
+// every choice. A choice that allows more loads the rest with no reload.
 //
 // WHO IS ASKING. Cloud classifies the visitor (`audience` on the tag config), and
 // the page adds what only a browser sees (automated.ts): a program — automation, a
@@ -107,7 +107,7 @@ function settled(): boolean {
 }
 
 /**
- * Whether a moment can go out: the tags have settled, and a visitor the region asks
+ * Whether a moment can go out: the tags have settled, and a visitor the banner asks
  * has answered. A moment from before the answer waits for it, so it carries the
  * consent the visitor gave rather than the empty one they had not yet chosen.
  */

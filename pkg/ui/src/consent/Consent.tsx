@@ -3,28 +3,22 @@
 /**
  * Consent — the one cookie banner every Hanzo, Lux and Zoo site mounts.
  *
- * It draws the choice; @hanzo/event stores it (`hz_consent`) and the tag
- * manager reacts: nothing from an ad platform loads before Accept, and Google
- * Consent Mode v2 starts denied.
+ * It draws the choice; @hanzo/event stores it (`hz_consent`) and acts on it:
+ * nothing from an ad platform, no Google, and no event on our own stream before
+ * Accept, and Google Consent Mode v2 starts denied.
  *
- *  - opt-in regions (EU/EEA, UK, CH, Quebec, Brazil, China, and anywhere cloud
- *    cannot place the visitor): a banner with Accept all, Reject all and Choose,
- *    until the visitor has chosen. Nothing from an advertiser loads first.
- *  - everywhere else (US, rest of Canada, Australia, Japan, ...): nothing is
- *    drawn. The region's defaults apply, and `ConsentLink` in the footer opens
- *    the same choices, "Do not sell or share my personal information" among
- *    them. A notice there is no law asking for is a popup.
- *  - cloud resolves the region from where the request came from and serves it
- *    with the site's tag config. The banner redraws when the answer arrives, and
- *    asks again when the policy version changes.
- *  - Global Privacy Control: marketing and ads are off and their switches are
- *    locked, in every zone.
+ *  - every visitor, wherever they are, is asked: a banner with Accept all,
+ *    Reject all and Choose, until they have chosen. Nothing optional loads first.
+ *  - Global Privacy Control or Do Not Track is the visitor's answer already: they
+ *    are not asked, nothing optional runs, and the switches are locked off.
+ *  - cloud serves the policy with the site's tag config; the banner redraws when
+ *    it arrives, and asks again when the policy version changes.
  *
  * `Consent` mounts once near the root; `ConsentLink` goes wherever a footer
- * link goes and opens the panel from anywhere.
+ * link goes and opens the panel from anywhere. `brand` names who is asking.
  */
 import { Paragraph, XStack, YStack } from '@hanzo/gui'
-import { acceptAll, asks, gpc, POLICY_EVENT, readConsent, rejectAll, saveConsent, type Choice } from '@hanzo/event'
+import { acceptAll, asks, POLICY_EVENT, readConsent, refused, rejectAll, saveConsent, type Choice } from '@hanzo/event'
 import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '../backends/gui/button'
@@ -38,11 +32,12 @@ export const openConsent = (): void => {
   if (typeof window !== 'undefined') window.dispatchEvent(new Event(OPEN))
 }
 
-const KINDS = [
-  { key: 'analytics', title: 'Analytics', body: 'Counts visits and finds what is broken, so Hanzo can get better.' },
-  { key: 'marketing', title: 'Marketing', body: 'Lets ad platforms measure the sign-ups and orders their ads led to.' },
-  { key: 'ads', title: 'Personalized ads', body: 'Lets those platforms use your visit to show you ads elsewhere.' },
-] as const
+const kinds = (brand: string) =>
+  [
+    { key: 'analytics', title: 'Analytics', body: `Counts visits and finds what is broken, so ${brand} can get better.` },
+    { key: 'marketing', title: 'Marketing', body: 'Lets ad platforms measure the sign-ups and orders their ads led to.' },
+    { key: 'ads', title: 'Personalized ads', body: 'Lets those platforms use your visit to show you ads elsewhere.' },
+  ] as const
 
 /** Where the banner sits: fixed to the foot of the window, inset 12px, centred. */
 const frame = {
@@ -75,9 +70,11 @@ const INLINE = { color: 'inherit', textDecoration: 'underline', whiteSpace: 'now
 export type ConsentProps = {
   /** Where the privacy policy lives. */
   privacy?: string
+  /** Who is asking: the brand the visitor is on. */
+  brand?: string
 }
 
-const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
+const Consent = ({ privacy = 'https://hanzo.ai/privacy', brand = 'Hanzo' }: ConsentProps) => {
   const [shown, setShown] = useState(false)
   const [choosing, setChoosing] = useState(false)
   const [draft, setDraft] = useState<Choice>({ analytics: false, marketing: false, ads: false })
@@ -85,7 +82,7 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
   // arrives after (cloud answers ~150ms into a page opened at #choices) redraws
   // the banner's question, and must not close what was asked for.
   const asked = useRef(false)
-  const locked = typeof window !== 'undefined' && gpc()
+  const locked = typeof window !== 'undefined' && refused()
 
   useEffect(() => {
     const sync = () => setShown(asks() || asked.current)
@@ -123,18 +120,18 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
     return (
       <YStack {...frame} maxW={440} gap="$3">
         <Paragraph size="$2" color="$ink" m={0}>
-          {'Choose what Hanzo may measure and share. You can change this at any time. '}
+          {`Choose what ${brand} may measure and share. You can change this at any time. `}
           <a href={privacy} style={INLINE}>
             Privacy policy
           </a>
         </Paragraph>
         {locked ? (
           <Paragraph size="$2" color="$soft" m={0}>
-            Your browser sends Global Privacy Control, so marketing and personalized ads stay off.
+            Your browser asks sites not to track you, so all of these stay off.
           </Paragraph>
         ) : null}
-        {KINDS.map((k) => {
-          const off = locked && k.key !== 'analytics'
+        {kinds(brand).map((k) => {
+          const off = locked
           return (
             <XStack key={k.key} gap="$3" items="center" justify="space-between">
               <YStack flex={1}>

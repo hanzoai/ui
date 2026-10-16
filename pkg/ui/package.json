@@ -340,7 +340,7 @@
     "@hanzo/canvas": ">=0.2.3",
     "@hanzo/cd": ">=0.1.2",
     "@hanzo/dashboard": ">=0.2.0",
-    "@hanzo/event": ">=0.3.52",
+    "@hanzo/event": ">=0.3.58",
     "@hanzo/data": ">=1.2.4",
     "@hanzo/gui": "^8.3.5",
     "@hanzo/iam": ">=0.21.26",

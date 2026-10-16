@@ -15,7 +15,8 @@ function domain(): string {
 
 /** Reads one cookie, or undefined. */
 export function get(name: string): string | undefined {
-  if (typeof document === 'undefined') return undefined
+  // A host whose document keeps no cookies (a webview, a test double) holds none.
+  if (typeof document === 'undefined' || typeof document.cookie !== 'string') return undefined
   const hit = document.cookie.split('; ').find((c) => c.startsWith(`${name}=`))
   return hit ? decodeURIComponent(hit.slice(name.length + 1)) : undefined
 }
