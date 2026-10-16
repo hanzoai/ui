@@ -174,15 +174,7 @@ describe('before the visitor allows Analytics', () => {
 })
 
 describe('a withdrawal', () => {
-  const record = (e: WireEvent) => {
-    expect(e.event).toBe('$consent')
-    expect(e.anonymousId).toBeUndefined()
-    expect(e.sessionId).toBeUndefined()
-    expect(e.url).toBeUndefined()
-    expect(e.utm).toBeUndefined()
-  }
-
-  it('tells cloud once, with the person and the choice they hold now, and sends nothing queued', async () => {
+  it('sends nothing after it, not even what was queued, and forgets the visitor', async () => {
     const b = browser(LANDING)
     const { Analytics, acceptAll, rejectAll } = await load()
     const tx = new Tx()
@@ -195,37 +187,17 @@ describe('a withdrawal', () => {
     a.capture('pricing_viewed')
     rejectAll()
     a.capture('plan_picked')
+    a.identify('sub-1')
     a.flush()
-    const after = tx.all.slice(before)
-    expect(after).toHaveLength(1)
-    record(after[0])
-    expect(after[0]).toMatchObject({ distinctId: 'sub-1', personId: 'sub-1', properties: { consent: '' } })
+    expect(tx.all.slice(before)).toEqual([])
     expect(b.jar.get('iam-anon-id'), 'the anonymous id is forgotten').toBeFalsy()
-    rejectAll()
-    expect(tx.all.slice(before)).toHaveLength(1)
-  })
-
-  it('from a visitor never known sends nothing, and is told when they sign in', async () => {
-    browser(LANDING)
-    const { Analytics, acceptAll, rejectAll } = await load()
-    const tx = new Tx()
-    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    a.init()
-    acceptAll()
-    rejectAll()
-    a.flush()
-    expect(tx.all).toEqual([])
-    a.identify('sub-2')
-    expect(tx.all).toHaveLength(1)
-    record(tx.all[0])
-    expect(tx.all[0]).toMatchObject({ distinctId: 'sub-2', properties: { consent: '' } })
   })
 
   it.each([
     ['Global Privacy Control', { gpc: true }],
     ['Do Not Track', { dnt: '1' }],
-  ])('by %s over a stored yes is a withdrawal, told once', async (_name, refusal) => {
-    const b = browser(LANDING, { cookie: 'analytics,marketing,ads', ...refusal })
+  ])('by %s over a stored yes forgets what the yes kept, and sends nothing', async (_name, refusal) => {
+    const b = browser(LANDING, { cookie: 'analytics,marketing,ads', ...refusal, store: { 'iam-anon-id': AID, hz_first_touch: '{}' } })
     const { Analytics } = await load()
     const tx = new Tx()
     const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
@@ -233,29 +205,29 @@ describe('a withdrawal', () => {
     a.identify('sub-3')
     a.pageview()
     a.flush()
-    expect(tx.all).toHaveLength(1)
-    record(tx.all[0])
-    expect(tx.all[0]).toMatchObject({ distinctId: 'sub-3', properties: { consent: '' } })
+    expect(tx.all).toEqual([])
     expect(b.jar.get('__Host-hz_consent')).toBe('')
+    expect([...b.store.keys()]).toEqual([])
   })
 
-  it('of Marketing alone keeps the visitor and tells cloud what remains', async () => {
+  it('of Marketing alone keeps the visitor and what was queued', async () => {
     browser(LANDING)
     const { Analytics, acceptAll, save } = await load()
     const tx = new Tx()
     const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
     a.init()
     acceptAll()
-    a.identify('sub-4')
+    a.capture('one')
     a.flush()
     const anon = tx.all[0].anonymousId
+    a.capture('two')
     save({ analytics: true, marketing: false, ads: false })
-    const told = tx.all.at(-1)!
-    record(told)
-    expect(told.properties?.consent).toBe('analytics')
-    a.pageview()
+    a.flush()
+    expect(tx.all.map((e) => e.event)).toEqual(['one', 'two'])
+    a.capture('three')
     a.flush()
     expect(tx.all.at(-1)!.anonymousId).toBe(anon)
+    expect(tx.all.at(-1)!.properties?.consent).toBe('analytics')
   })
 
   it('forgets the visitor this page held, so a later yes is a new one', async () => {
@@ -283,12 +255,13 @@ describe("a stranger's error", () => {
     const { Analytics } = await load()
     const tx = new Tx()
     const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    const boom = new Error('load failed: https://hanzo.ai/a.js?token=T1')
-    boom.stack = 'Error: x\n    at f (https://hanzo.ai/a.js?next=https://x.io&gclid=G1&t=12:30:12:34)'
-    a.captureError(boom)
+    const boom = new Error('load failed: https://hanzo.ai/a.js?token=T1 then WSS://hanzo.ai/s?k=1 and /pricing?email=ada%40corp.com')
+    boom.stack = 'Error: x\n    at f (https://hanzo.ai/a.js?next=https://x.io&gclid=G1&t=12:30:12:34)\n    at g (/static/b.js?v=2:3:4)'
+    a.captureError(boom, { properties: { email: 'ada@corp.com' } })
     const e = tx.all[0]
-    expect(e.error?.message).toBe('load failed: https://hanzo.ai/a.js')
-    expect(e.error?.stack).toBe('Error: x\n    at f (https://hanzo.ai/a.js:30:12:34)')
+    expect(e.error?.message).toBe('load failed: https://hanzo.ai/a.js then WSS://hanzo.ai/s and /pricing')
+    expect(e.error?.stack).toBe('Error: x\n    at f (https://hanzo.ai/a.js:30:12:34)\n    at g (/static/b.js:3:4)')
+    expect(e.properties).toEqual({ consent: '' })
   })
 })
 

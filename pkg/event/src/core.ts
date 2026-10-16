@@ -58,7 +58,7 @@ import {
 import { uuidv7 } from './uid'
 import { internal } from './automated'
 import { linkUrl, readLink, stripLink, type LinkState } from './link'
-import { CONSENT_EVENT, WITHDRAW_EVENT, honour, read as readConsent, render as renderConsent } from './consent'
+import { CONSENT_EVENT, honour, read as readConsent, render as renderConsent } from './consent'
 import type {
   AnalyticsConfig,
   Attribution,
@@ -136,19 +136,16 @@ function withoutQuery(href: string): string {
   }
 }
 
-/** Takes the query and fragment off every web address in free text, keeping the
- *  :line:column a stack puts after one. */
+/** Takes the query and fragment off every address in free text — any scheme, or a
+ *  path — keeping the :line:column a stack puts after one. */
 function bare(s: string | undefined): string | undefined {
-  return s?.replace(/https?:\/\/[^\s)]+/g, (a) => {
+  return s?.replace(/(^|[\s('"])((?:[a-z][a-z0-9+.-]*:\/\/|\/)[^\s)'"]+)/gi, (_m, pre: string, a: string) => {
     const at = /(?::\d+)+$/.exec(a)?.[0] ?? ''
     const base = a.slice(0, a.length - at.length)
     const i = base.search(/[?#]/)
-    return (i < 0 ? base : base.slice(0, i)) + at
+    return pre + (i < 0 ? base : base.slice(0, i)) + at
   })
 }
-
-/** The event a client sends when a person it knows withdraws a grant. */
-const CONSENT_RECORD = '$consent'
 
 /** serializeBatch stringifies a batch, salvaging what it can. `properties` is
  *  arbitrary caller data — a DOM node, a React synthetic event, an axios error are
@@ -287,8 +284,6 @@ export class Analytics {
   private patch?: Cohort
   /** Who an error is filed under before consent: this page alone, never stored. */
   private stranger = uuidv7()
-  /** A withdrawal not yet told to cloud, for want of knowing who withdrew. */
-  private owed = false
   /** The view pageview() last counted — path + location. */
   private counted?: string
   /** Guards against an error thrown *inside* the error path re-entering it. */
@@ -358,11 +353,13 @@ export class Analytics {
       }
     }
     this.landing = parseAttribution(window.location.search, document.referrer)
-    window.addEventListener(WITHDRAW_EVENT, () => this.withdrawn())
     // A browser that refuses now, over a grant stored on an earlier page, withdraws it.
     honour()
     this.settle()
-    window.addEventListener(CONSENT_EVENT, () => this.settle())
+    window.addEventListener(CONSENT_EVENT, () => {
+      if (!this.allowed()) this.forgetVisitor()
+      this.settle()
+    })
 
     const flushHidden = () => {
       if (document.visibilityState === 'hidden') this.flush(true)
@@ -411,48 +408,15 @@ export class Analytics {
     if (held) this.pageview(held.path, held.properties)
   }
 
-  /** withdrawn runs when a stored grant is withdrawn, before what it kept is
-   *  forgotten: nothing queued under the old grant is sent, the page forgets the
-   *  visitor it held, and a person this client knows is told to cloud — once, with
-   *  their id and the choice they hold now — so the server's record of them holds
-   *  it too. A person not yet known is told when they are (identify). */
-  private withdrawn(): void {
+  /** forgetVisitor runs when the visitor no longer allows Analytics: nothing
+   *  queued under the old grant is sent, and the page forgets the visitor it held
+   *  in memory, so a later yes is a new visitor. */
+  private forgetVisitor(): void {
     this.queue = []
     this.clearTimer()
-    this.owed = true
-    if (!readConsent().analytics) {
-      forgetAnonId()
-      this.settled = false
-      this.linked = {}
-    }
-    this.tell()
-  }
-
-  /** tell sends the consent record owed for the person this client knows. */
-  private tell(): void {
-    const person = this.personId
-    if (!this.owed || !person || !this.cfg.enabled) return
-    this.owed = false
-    const record: WireEvent = {
-      messageId: uuidv7(),
-      type: 'event',
-      event: CONSENT_RECORD,
-      timestamp: new Date().toISOString(),
-      distinctId: person,
-      personId: person,
-      product: this.cfg.product,
-      library: '@hanzo/event',
-      libraryVersion: VERSION,
-      properties: { consent: renderConsent(readConsent()) },
-    }
-    const body = serializeBatch([record])
-    if (body === null) return
-    this.transport.send(this.cfg.host + EVENT_PATH, body, {
-      beacon: false,
-      token: this.cfg.getToken?.() ?? undefined,
-      ingestKey: this.cfg.ingestKey?.trim() || undefined,
-      debug: this.cfg.debug,
-    })
+    forgetAnonId()
+    this.settled = false
+    this.linked = {}
   }
 
   /** allowed is whether this client may send and store: off a browser always, in
@@ -490,7 +454,6 @@ export class Analytics {
    *  the visitor allows Analytics the binding is held, and stated when they accept. */
   identify(personId: string, traits?: Record<string, unknown>): void {
     this.personId = personId
-    this.tell()
     if (this.cfg.enabled && !this.allowed()) {
       if (!this.started) this.init()
       this.traits = traits ?? {}
@@ -701,7 +664,9 @@ export class Analytics {
     if (wire.url) wire.url = scrubText(withoutFragment(wire.url), capturePII)
     if (wire.path) wire.path = scrubText(withoutFragment(wire.path), capturePII)
     if (wire.referrer) wire.referrer = scrubText(withoutFragment(wire.referrer), capturePII)
-    // A stranger's error names its pages without their queries, in its message and stack too.
+    // A stranger's error names its pages without their queries, in its message and
+    // stack too, and carries none of the caller's properties.
+    if (!known) wire.properties = undefined
     if (!known && wire.error) {
       const e = wire.error
       wire.error = {

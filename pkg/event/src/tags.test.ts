@@ -268,6 +268,43 @@ describe('after accepting', () => {
     expect(update?.[2]).toMatchObject({ analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' })
   })
 
+  it('a withdrawal tells Google and Meta at once and reloads, so nothing loaded under it runs on', async () => {
+    const b = browser('Europe/Berlin')
+    const reload = vi.fn()
+    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
+    const { startTags, acceptAll, rejectAll } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    acceptAll()
+    await tick()
+    const fbq = (g.window as { fbq: { queue: IArguments[] } }).fbq
+    rejectAll()
+    await tick()
+    const layer = (g.window as { dataLayer: IArguments[] }).dataLayer.map((a) => Array.from(a))
+    const last = layer.filter((a) => a[0] === 'consent').at(-1)
+    expect(last?.[1]).toBe('update')
+    expect(last?.[2]).toMatchObject({ analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' })
+    expect(fbq.queue.map((a) => Array.from(a))).toContainEqual(['consent', 'revoke'])
+    expect(reload).toHaveBeenCalledTimes(1)
+    expect(b.scripts).toHaveLength(5)
+  })
+
+  it('a choice that withdraws nothing loaded neither reloads nor revokes', async () => {
+    browser('Europe/Berlin')
+    const reload = vi.fn()
+    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
+    const { startTags, saveConsent, rejectAll } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    rejectAll()
+    await tick()
+    saveConsent({ analytics: true, marketing: false, ads: false })
+    await tick()
+    saveConsent({ analytics: true, marketing: false, ads: true })
+    await tick()
+    expect(reload).not.toHaveBeenCalled()
+  })
+
   it('analytics alone loads only Google, cookieless for ads', async () => {
     const b = browser('Europe/Berlin')
     const { startTags, saveConsent } = await import('./index')

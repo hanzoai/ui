@@ -67,11 +67,43 @@ function go(path: string): void {
   window.history.pushState({}, '', path)
 }
 
+/** The visitor's choice, as @hanzo/event keeps it on a plain-http page. */
+function choose(grants: string): void {
+  document.cookie = `hz_consent=${grants}; path=/`
+  document.cookie = 'hz_consent_v=2; path=/'
+}
+
 beforeEach(() => {
   go('/')
   document.body.innerHTML = ''
   localStorage.clear()
   sessionStorage.clear()
+  choose('analytics')
+})
+
+group('consent', () => {
+  it('records nothing, sends nothing and keeps no id before the visitor allows Analytics', () => {
+    choose('')
+    const s = spy()
+    const r = fakeRecorder()
+    const replay = record({ ingestKey: KEY, transport: s.transport, recorder: r.recorder })
+    expect(replay.recording).toBe(false)
+    expect(r.calls()).toBe(0)
+    replay.stop()
+    expect(s.sent).toEqual([])
+    expect(Object.keys(localStorage)).toEqual([])
+  })
+
+  it('stops when the visitor withdraws Analytics', () => {
+    const s = spy()
+    const r = fakeRecorder()
+    const replay = record({ ingestKey: KEY, transport: s.transport, recorder: r.recorder })
+    expect(replay.recording).toBe(true)
+    choose('marketing')
+    window.dispatchEvent(new Event('hzconsent'))
+    expect(replay.recording).toBe(false)
+    expect(r.stopped()).toBe(1)
+  })
 })
 
 afterEach(() => vi.useRealTimers())

@@ -18,7 +18,7 @@
  * link goes and opens the panel from anywhere. `brand` names who is asking.
  */
 import { Paragraph, XStack, YStack } from '@hanzo/gui'
-import { acceptAll, asks, POLICY_EVENT, readConsent, refused, rejectAll, saveConsent, type Choice } from '@hanzo/event'
+import { acceptAll, asks, declined, POLICY_EVENT, readConsent, rejectAll, saveConsent, type Choice } from '@hanzo/event'
 import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '../backends/gui/button'
@@ -39,17 +39,29 @@ const kinds = (brand: string) =>
     { key: 'ads', title: 'Personalized ads', body: 'Lets those platforms use your visit to show you ads elsewhere.' },
   ] as const
 
-/** Where the banner sits: fixed to the foot of the window, inset 12px, centred. */
+/** The banner's inset from the window's foot and sides: 16px, or the device's inset and 8px where that is wider. */
+const EDGE = {
+  bottom: 'max(16px, calc(var(--safe-bottom, env(safe-area-inset-bottom, 0px)) + 8px))',
+  left: 'max(16px, calc(var(--safe-left, env(safe-area-inset-left, 0px)) + 8px))',
+  right: 'max(16px, calc(var(--safe-right, env(safe-area-inset-right, 0px)) + 8px))',
+} as const
+
+/**
+ * Where the banner sits: fixed to the foot of the window, clear of the home
+ * indicator and the notch, centred. It stands on design's banner rung
+ * (`--z-banner`): over the page and its dock, under every overlay — a dialog, a
+ * menu, a phone drawer — and is answered once they close.
+ */
 const frame = {
   ...slot('consent'),
   role: 'dialog',
   'aria-label': 'Cookie preferences',
   position: 'fixed',
-  b: 12,
-  l: 12,
-  r: 12,
+  b: EDGE.bottom,
+  l: EDGE.left,
+  r: EDGE.right,
   mx: 'auto',
-  z: 2147483000,
+  z: 'var(--z-banner, 50)',
   py: '$2.5',
   px: '$3.5',
   rounded: '$5',
@@ -82,7 +94,8 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy', brand = 'Hanzo' }: Cons
   // arrives after (cloud answers ~150ms into a page opened at #choices) redraws
   // the banner's question, and must not close what was asked for.
   const asked = useRef(false)
-  const locked = typeof window !== 'undefined' && refused()
+  // The browser refused, as the page sees it or as cloud saw the request.
+  const locked = typeof window !== 'undefined' && declined()
 
   useEffect(() => {
     const sync = () => setShown(asks() || asked.current)
@@ -118,7 +131,14 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy', brand = 'Hanzo' }: Cons
 
   if (choosing)
     return (
-      <YStack {...frame} maxW={440} gap="$3">
+      // The choices are taller than a landscape phone: they keep under the header and scroll.
+      <YStack
+        {...frame}
+        maxW={440}
+        gap="$3"
+        maxH={`calc(100dvh - var(--safe-top, env(safe-area-inset-top, 0px)) - var(--header, 0px) - ${EDGE.bottom} - 16px)` as `var(--${string})`}
+        overflowY="auto"
+      >
         <Paragraph size="$2" color="$ink" m={0}>
           {`Choose what ${brand} may measure and share. You can change this at any time. `}
           <a href={privacy} style={INLINE}>

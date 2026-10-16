@@ -20,10 +20,10 @@
 //
 // Withdrawing a category forgets what it kept: Analytics the anonymous id, the
 // session, the first and last touch, the cohort and Google Analytics' cookies;
-// Marketing the ad click and the platforms' browser ids. A person the client knows
-// is told to cloud once (`$consent`, core.ts), so what the server keeps for them —
-// the touch a later sale reads — holds the withdrawal too. A browser that starts
-// refusing (GPC or DNT) after a grant withdraws it the same way.
+// Marketing the ad click and the platforms' browser ids. A browser that starts
+// refusing (GPC or DNT) after a grant withdraws it the same way. A sale cloud
+// states server-side is sent under the choice the buyer's checkout states, never
+// one stored from an earlier page.
 //
 // The choice is a first-party cookie only this host may write, `__Host-hz_consent`
 // (cookie.ts own), for 13 months: the granted categories, comma separated. No
@@ -51,9 +51,6 @@ export const POLICY_EVENT = 'hzpolicy'
 
 /** Fired on `window` whenever a choice is stored. */
 export const CONSENT_EVENT = 'hzconsent'
-
-/** Fired on `window` when a stored grant is withdrawn, before what it kept is forgotten. */
-export const WITHDRAW_EVENT = 'hzwithdraw'
 
 export interface Choice {
   analytics: boolean
@@ -132,29 +129,28 @@ export const region = (): Region => 'opt-in'
 const version = (): number => Math.max(slot().served?.version ?? 0, CONSENT_VERSION)
 
 /** Whether the visitor's browser refused, as the page sees it or as cloud saw the request. */
-const declined = (): boolean => refused() || slot().served?.refused === true
+export const declined = (): boolean => refused() || slot().served?.refused === true
 
 /** Whether the visitor has stored a choice under the policy in force. */
 export function stored(): boolean {
   return get(own(CONSENT_COOKIE)) !== undefined && get(own(CONSENT_VERSION_COOKIE)) === String(version())
 }
 
-/** The choice stored under the policy in force, whatever the browser now sends. */
-function prior(): Choice {
-  if (!stored()) return { ...NONE }
+/** The grants the cookie holds, under whatever policy they were made. */
+function held(): Choice {
   const on = (get(own(CONSENT_COOKIE)) ?? '').split(',')
   return { analytics: on.includes('analytics'), marketing: on.includes('marketing'), ads: on.includes('ads') }
 }
 
 /** The visitor's choice: the stored one, else nothing; nothing at all under GPC or DNT. */
 export function read(): Choice {
-  return declined() ? { ...NONE } : prior()
+  return declined() || !stored() ? { ...NONE } : held()
 }
 
 /** A browser that refuses now, over a grant stored before, withdraws that grant. */
 export function honour(): void {
   if (!declined()) return
-  const was = prior()
+  const was = held()
   if (was.analytics || was.marketing || was.ads) save({ ...NONE })
 }
 
@@ -169,20 +165,16 @@ export function render(c: Choice): string {
 }
 
 /**
- * Stores a choice and tells the page. The tags react without a reload: a
- * category just allowed loads its libraries, and Google's consent state is
- * updated. An ad library already running cannot be unloaded, so a choice that
- * withdraws marketing takes effect for what has not loaded yet and for every
- * later page. A browser that refused stores a refusal, whatever was chosen.
+ * Stores a choice and tells the page. A category just allowed loads its
+ * libraries with no reload, and Google's consent state is updated; a choice that
+ * withdraws what a running library was loaded under reloads the page (tags.ts),
+ * since a library that has run cannot be unloaded. A browser that refused stores
+ * a refusal, whatever was chosen.
  */
 export function save(c: Choice): void {
-  const was = prior()
   const out: Choice = declined() ? { ...NONE } : { analytics: c.analytics, marketing: c.marketing, ads: c.ads }
   setOwn(CONSENT_COOKIE, render(out), 395)
   setOwn(CONSENT_VERSION_COOKIE, String(version()), 395)
-  // The client tells cloud while it still knows who withdrew.
-  const less = (['analytics', 'marketing', 'ads'] as const).some((k) => was[k] && !out[k])
-  if (less && typeof window !== 'undefined') window.dispatchEvent(new Event(WITHDRAW_EVENT))
   if (!out.analytics) withdraw(ANALYTICS)
   if (!out.marketing) withdraw(MARKETING)
   if (typeof window !== 'undefined') window.dispatchEvent(new Event(CONSENT_EVENT))

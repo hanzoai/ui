@@ -10,7 +10,11 @@
 // movie the player can replay. Same privacy policy, different question, both ship.
 //
 // Nothing runs at module scope — importing this package records nothing.
+//
+// A recording is Analytics: nothing is recorded, sent or kept — not even an id —
+// until the visitor allows it (@hanzo/event's consent), and a withdrawal stops it.
 
+import { CONSENT_EVENT, readConsent } from '@hanzo/event'
 import { record as rrwebRecord } from 'rrweb'
 import { Batch, DEFAULT_ENDPOINT, defaultTransport, publishable, replayUrl } from './batch'
 import { distinctId, sessionId, windowId } from './identity'
@@ -48,6 +52,7 @@ function inert(ids: { sessionId: string; windowId: string; distinctId: string })
  * and stops if the app routes onto one while recording.
  */
 export function record(config: ReplayConfig): ReplayHandle {
+  if (!readConsent().analytics) return inert({ sessionId: '', windowId: '', distinctId: '' })
   const ids = {
     sessionId: config.sessionId || sessionId(),
     windowId: config.windowId || windowId(),
@@ -97,10 +102,14 @@ export function record(config: ReplayConfig): ReplayHandle {
 
   let live = true
   let end: (() => void) | undefined
+  const withdrawn = () => {
+    if (!readConsent().analytics) stop()
+  }
 
   function stop(): void {
     if (!live) return
     live = false
+    if (typeof window !== 'undefined') window.removeEventListener(CONSENT_EVENT, withdrawn)
     try {
       end?.()
     } catch (err) {
@@ -111,6 +120,7 @@ export function record(config: ReplayConfig): ReplayHandle {
   }
 
   batch.start()
+  if (typeof window !== 'undefined') window.addEventListener(CONSENT_EVENT, withdrawn)
 
   const options = recorderOptions(config.policy, {
     blockSelector: config.blockSelector,

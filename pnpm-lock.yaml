@@ -1140,8 +1140,8 @@ importers:
   pkg/replay:
     dependencies:
       '@hanzo/event':
-        specifier: 'catalog:'
-        version: 0.3.39(react@19.2.8)
+        specifier: workspace:^
+        version: link:../event
       '@hanzo/observe':
         specifier: 'catalog:'
         version: 0.1.11(react@19.2.8)

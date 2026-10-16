@@ -20,7 +20,10 @@
 // not chosen has allowed nothing, wherever they are (consent.ts), so their page
 // makes no request to any platform until they accept; GPC or DNT is a refusal.
 // Google's Consent Mode v2 is set denied before gtag.js is fetched and updated on
-// every choice. A choice that allows more loads the rest with no reload.
+// every choice. A choice that allows more loads the rest with no reload. A choice
+// that withdraws what a running library was loaded under tells Google and Meta at
+// once, then reloads the page: a library that has run cannot be unloaded, and
+// only a fresh page is sure to hold none of them.
 //
 // WHO IS ASKING. Cloud classifies the visitor (`audience` on the tag config), and
 // the page adds what only a browser sees (automated.ts): a program — automation, a
@@ -307,6 +310,7 @@ const allowed = (t: BrowserTag, c: Choice): boolean => Boolean(NEEDS[t.type] && 
 function apply(): void {
   if (typeof window === 'undefined' || !configured) return
   const c = read()
+  if (withdrawn(c)) return
   capture(c)
   // A program loads no platform's pixel; the site's own team loads Google
   // Analytics only, tagged internal.
@@ -328,6 +332,23 @@ function apply(): void {
     loaded.add(k)
   }
   flush()
+}
+
+/** Whether a tag already loaded on this page. */
+const running = (t: BrowserTag): boolean => loaded.has(t.type === 'ga' || t.type === 'gads' ? t.id : `${t.type}:${t.id}`)
+
+/**
+ * A choice that withdraws what a running library was loaded under: Google hears
+ * the denied state and Meta a revoke at once, and the page reloads so none of
+ * them runs on. Says whether it did.
+ */
+function withdrawn(c: Choice): boolean {
+  if (!tags.some((t) => running(t) && !allowed(t, c))) return false
+  const p = page()
+  if (loaded.has('consent')) consentMode(c, false)
+  if (p.fbq && !c.marketing) p.fbq('consent', 'revoke')
+  setTimeout(() => window.location.reload(), 0)
+  return true
 }
 
 /**
