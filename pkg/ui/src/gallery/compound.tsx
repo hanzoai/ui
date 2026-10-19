@@ -18,6 +18,7 @@ import { InputGroup } from '../backends/gui/input-group'
 import { CurrencyPicker } from '../backends/gui/currency-picker'
 import { PhoneCountryPicker } from '../backends/gui/phone-country-picker'
 import { CountrySelect } from '../backends/gui/country-select'
+import { PrimaryButton } from '../product/PrimaryButton'
 
 const NOOP = () => {}
 
@@ -108,6 +109,7 @@ export function Compound() {
         <Button fullWidth variant="outline">
           Full width
         </Button>
+        <PrimaryButton>Get started</PrimaryButton>
       </Section>
 
       <Section name="number-field">
@@ -162,6 +164,7 @@ export function Compound() {
             <NumberField aria-label="Compact grouped amount" defaultValue={99} />
           </InputGroup>
           <CountrySelect countries={COUNTRIES} defaultValue="DE" aria-label="Compact country" />
+          <PrimaryButton>Continue</PrimaryButton>
         </Section>
       </Density>
     </>

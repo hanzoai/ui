@@ -14,6 +14,11 @@
  * a view was the one control that ignored the person's accent.
  *
  * A caller's own `style`/`color` still win (spread last).
+ *
+ * Under `<Density value="compact">` it is the record surfaces' main action —
+ * an onboarding step, an import's next step — as twenty-ui's MainButton draws
+ * it (MIT, NOTICE): the label at semibold, 12px beside it, and lifted off the
+ * page by the small shadow. A regular surface draws it as it always has.
  */
 import type { ComponentProps } from 'react'
 // gui's Button, still — and this is the one place the ladder is knowingly not
@@ -30,10 +35,15 @@ import type { ComponentProps } from 'react'
 // on the component every surface depends on, and it wants its own change.
 import { Button } from '@hanzo/gui'
 
+import { useDensity } from '../backends/gui/density'
 import { labelOf, useEmit } from './instrument'
+
+/** The record density's main action: semibold, a 12px gutter, the small shadow. */
+const MAIN = { fontWeight: '600', px: '$3', boxShadow: 'var(--shadow-sm)' } as const
 
 export function PrimaryButton({ onPress, ...rest }: ComponentProps<typeof Button>) {
   const track = useEmit()
+  const compact = useDensity() === 'compact'
   // DESTRUCTURE the caller's handler out first. Wrapping it while still reading it
   // off a rebound `props` makes the wrapper call ITSELF — an unbounded recursion
   // that a real browser click turns into "Maximum call stack size exceeded".
@@ -55,6 +65,7 @@ export function PrimaryButton({ onPress, ...rest }: ComponentProps<typeof Button
       hoverStyle={{ bg: 'var(--primary-hover)', borderColor: 'var(--primary-hover)' }}
       pressStyle={{ bg: 'var(--primary-hover)', borderColor: 'var(--primary-hover)' }}
       onPress={handler}
+      {...(compact ? MAIN : null)}
       {...rest}
     />
   )
