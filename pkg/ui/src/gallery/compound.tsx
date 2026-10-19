@@ -7,7 +7,7 @@
  * (`gallery/records.tsx` renders it), so the stylesheet generator, the render
  * test and the consumer screenshots see these as they see everything else.
  */
-import { ChevronDown, Minus, Plus, Trash2 } from '@hanzogui/lucide-icons-2'
+import { ChevronDown, Columns3, Minus, Plus, Rows3, Trash2 } from '@hanzogui/lucide-icons-2'
 import { Section } from './section'
 import { Button, type ButtonTone, type ButtonVariant } from '../backends/gui/button'
 import { ButtonGroup } from '../backends/gui/button-group'
@@ -19,6 +19,7 @@ import { CurrencyPicker } from '../backends/gui/currency-picker'
 import { PhoneCountryPicker } from '../backends/gui/phone-country-picker'
 import { CountrySelect } from '../backends/gui/country-select'
 import { PrimaryButton } from '../product/PrimaryButton'
+import { Segmented } from '../product/Filters'
 
 const NOOP = () => {}
 
@@ -145,6 +146,42 @@ export function Compound() {
         <CountrySelect countries={COUNTRIES} defaultValue="GB" label="Country" />
         <CountrySelect countries={COUNTRIES} size="sm" aria-label="Country, none" />
         <CountrySelect countries={[]} size="xs" aria-label="Country, empty" />
+      </Section>
+
+      <Section name="segmented">
+        <Segmented
+          variant="track"
+          aria-label="When"
+          options={[
+            { label: 'Send now', value: 'now' },
+            { label: 'Schedule', value: 'later' },
+          ]}
+          value="now"
+          onChange={NOOP}
+        />
+        <Segmented
+          variant="track"
+          trackSize="sm"
+          itemWidth="content"
+          aria-label="Layout"
+          options={[
+            { label: '', value: 'table', icon: <Rows3 size={16} />, 'aria-label': 'Table' },
+            { label: '', value: 'kanban', icon: <Columns3 size={16} />, 'aria-label': 'Kanban' },
+          ]}
+          value="kanban"
+          onChange={NOOP}
+        />
+        <Segmented
+          variant="track"
+          disabled
+          aria-label="Disabled choice"
+          options={[
+            { label: 'Left', value: 'l' },
+            { label: 'Right', value: 'r' },
+          ]}
+          value="l"
+          onChange={NOOP}
+        />
       </Section>
 
       <Density value="compact">

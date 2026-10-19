@@ -10,7 +10,7 @@
  * `inference/parts.tsx` re-exports them, so there is exactly one definition.
  */
 import type { ComponentProps, ReactNode } from 'react'
-import { Button, Text, XStack } from '@hanzo/gui'
+import { Button, Text, ToggleGroup as GuiToggleGroup, XStack } from '@hanzo/gui'
 import { Search } from '@hanzogui/lucide-icons-2'
 
 import { Input } from '../backends/gui/input'
@@ -20,16 +20,40 @@ import type { FieldSize } from '../backends/gui/control'
 
 import { textSize, useEmit } from './instrument'
 
-/** One pill in a segmented control. */
-export type Option<T extends string> = { label: string; value: T }
+/** One pill in a segmented control. `icon` leads the label; an icon-only option needs `aria-label`. */
+export type Option<T extends string> = {
+  label: string
+  value: T
+  icon?: ReactNode
+  /** Names an icon-only option for assistive technology. */
+  'aria-label'?: string
+  disabled?: boolean
+}
 
-/** A compact segmented pill control — the ONE way filters/ranges/toggles render. */
+/** The two heights of the track and the inset that holds its thumb off the edge. */
+const TRACK = { md: { h: 32, p: 3, item: 24 }, sm: { h: 24, p: 1, item: 20 } } as const
+
+/**
+ * A compact segmented pill control — the ONE way filters/ranges/toggles render.
+ *
+ * `variant="track"` is one choice from a few as a pill track (twenty-ui's
+ * SegmentedControl, MIT, NOTICE): the options on one panel-ground capsule, the
+ * chosen one lifted onto the raised rung in full ink, the rest quiet. Radio
+ * semantics, from gui's single ToggleGroup: one tab stop, the arrows move the
+ * choice. `trackSize` md (32) or sm (24); `itemWidth` equal or content. The
+ * default `row` is the row of separate bordered buttons it has always been.
+ */
 export function Segmented<T extends string>({
   options,
   value,
   onChange,
   size = '$2',
   name,
+  variant = 'row',
+  trackSize = 'md',
+  itemWidth = 'equal',
+  disabled,
+  'aria-label': ariaLabel,
 }: {
   options: Option<T>[]
   value: T
@@ -37,8 +61,97 @@ export function Segmented<T extends string>({
   size?: ComponentProps<typeof Button>['size']
   /** Names the filter in analytics (`status`, `range`); defaults to `Segmented`. */
   name?: string
+  variant?: 'row' | 'track'
+  trackSize?: 'md' | 'sm'
+  itemWidth?: 'equal' | 'content'
+  disabled?: boolean
+  /** Names the choice for assistive technology. */
+  'aria-label'?: string
 }) {
   const track = useEmit()
+  const pick = (v: T) => {
+    track({ component: 'Segmented', action: 'filter', id: name, value: v })
+    onChange(v)
+  }
+  if (variant === 'track') {
+    const box = TRACK[trackSize]
+    // A radio group: the arrows move the CHOICE, not only the focus (gui's
+    // roving focus moves the focus; this moves the value with it).
+    const live = options.filter((o) => !o.disabled)
+    const onKeyDown = (e: { key?: string; preventDefault?: () => void }) => {
+      const by = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0
+      if (!by || disabled || live.length === 0) return
+      const at = live.findIndex((o) => o.value === value)
+      pick(live[(at + by + live.length) % live.length].value)
+    }
+    return (
+      <GuiToggleGroup
+        data-slot="segmented"
+        {...({
+          type: 'single',
+          value,
+          onValueChange: (next: string) => next && pick(next as T),
+          disableDeactivation: true,
+        } as ComponentProps<typeof GuiToggleGroup>)}
+        role="radiogroup"
+        aria-label={ariaLabel}
+        orientation="horizontal"
+        disabled={disabled}
+        unstyled
+        display="inline-flex"
+        self="flex-start"
+        flexDirection="row"
+        items="center"
+        gap="$0.5"
+        height={box.h}
+        p={box.p}
+        rounded="$10"
+        bg="$panel"
+        borderWidth={1}
+        borderColor="$borderColor"
+        opacity={disabled ? 0.5 : 1}
+        {...({ onKeyDown } as object)}
+      >
+        {options.map((o) => {
+          const on = o.value === value
+          const iconOnly = !!o.icon && !o.label
+          return (
+            <GuiToggleGroup.Item
+              key={o.value}
+              data-slot="segmented-item"
+              value={o.value}
+              role="radio"
+              aria-checked={on}
+              aria-label={o['aria-label']}
+              disabled={disabled || o.disabled}
+              data-state={on ? 'checked' : 'unchecked'}
+              unstyled
+              flexDirection="row"
+              items="center"
+              justify="center"
+              gap="$1"
+              height={box.item}
+              minW={box.item}
+              px={iconOnly ? 0 : '$2'}
+              {...(itemWidth === 'equal' ? { flex: 1, flexBasis: 0 } : null)}
+              rounded="$10"
+              borderWidth={0}
+              bg={on ? '$raised' : 'transparent'}
+              cursor={o.disabled ? 'not-allowed' : 'pointer'}
+              hoverStyle={{ bg: on ? '$raised' : '$hover' }}
+            >
+              {o.icon ?? null}
+              {o.label ? (
+                <Text fontSize="$2" fontWeight="500" color={on ? '$ink' : '$quiet'} numberOfLines={1}>
+                  {o.label}
+                </Text>
+              ) : null}
+            </GuiToggleGroup.Item>
+          )
+        })}
+      </GuiToggleGroup>
+    )
+  }
   return (
     <XStack gap="$1" flexWrap="wrap" items="center">
       {options.map((o) => {
@@ -51,10 +164,7 @@ export function Segmented<T extends string>({
             borderWidth={1}
             borderColor={active ? '$bound' : '$borderColor'}
             aria-pressed={active}
-            onPress={() => {
-              track({ component: 'Segmented', action: 'filter', id: name, value: o.value })
-              onChange(o.value)
-            }}
+            onPress={() => pick(o.value)}
           >
             <Text fontSize="$2" fontWeight={active ? '700' : '500'} color={active ? '$ink' : '$quiet'}>
               {o.label}
