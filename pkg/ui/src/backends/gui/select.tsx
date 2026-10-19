@@ -31,13 +31,13 @@ import {
 } from "@hanzo/gui"
 import { Check, ChevronDown, ChevronUp } from "@hanzogui/lucide-icons-2"
 
-import { BOX, CONTROL_H, EDGE, FIELD, FILL, type FieldSize } from "./control"
+import { BOX, EDGE, FIELD, FILL, type FieldSize } from "./control"
+import { fieldSize, useDensity } from "./density"
 import { touch } from "./gesture"
 import { ink } from "./ink"
 import { slot } from "./slot"
 
 const ROW_H = 32
-const TRIGGER_H = CONTROL_H
 
 /**
  * Disabling the control is one fact with two spellings: gui puts `disabled` on
@@ -68,7 +68,10 @@ const Select: SelectRoot = /* @__PURE__ */ Object.assign(
 const SelectGroup: typeof GuiSelect.Group = GuiSelect.Group
 const SelectValue: typeof GuiSelect.Value = GuiSelect.Value
 
-export type SelectTriggerProps = ComponentProps<typeof GuiSelect.Trigger>
+export type SelectTriggerProps = Omit<ComponentProps<typeof GuiSelect.Trigger>, "size"> & {
+  /** The box, as `Input`'s (control.ts `BOX`). Unset, the nearest `<Density>` decides. */
+  size?: FieldSize
+}
 export type SelectContentProps = ComponentProps<typeof GuiSelect.Content>
 export type SelectItemProps = Omit<
   ComponentProps<typeof GuiSelect.Item>,
@@ -85,15 +88,20 @@ export type SelectScrollButtonProps = ComponentProps<
 const SelectTrigger = ({
   children,
   disabled,
+  size,
   ...props
 }: SelectTriggerProps) => {
   const inherited = useContext(Disabled)
+  const density = useDensity()
+  const box = BOX[fieldSize(size, density)]
   return (
     <GuiSelect.Trigger
       {...slot("select-trigger")}
       unstyled
       disabled={disabled ?? inherited}
       {...FIELD}
+      {...(density === "compact" ? { bg: "$panel" } : null)}
+      px={box.gutter}
       items="center"
       justify="space-between"
       gap="$2"
@@ -102,7 +110,7 @@ const SelectTrigger = ({
       // off a pinned height. Select and Input kept theirs, so the same trap was
       // still armed in the two controls that sit in every form.
       height="auto"
-      minHeight={TRIGGER_H}
+      minHeight={box.h}
       // The trigger states its own vertical padding because otherwise something
       // else states it. `unstyled` does not survive gui's ListItem (it is
       // destructured into a local and never reaches the frame), so the frame
@@ -113,14 +121,14 @@ const SelectTrigger = ({
       // centring, which is exactly how the Input already behaves.
       py={0}
       cursor="pointer"
-      {...touch(TRIGGER_H, 44, "y")}
+      {...touch(box.h, 44, "y")}
       {...props}
     >
-      {/* $3, not $2. A Select and an Input are the same control — 36px tall, 8px
-        radius, 1px edge — and they sit side by side in every form; rendering one
-        at 14px and the other at 13px is the single most visible inconsistency
-        the package shipped. Input is the reference, so Select moves to it. */}
-      {ink(children, undefined, { size: "$3" })}
+      {/* The box's rung, as Input's. A Select and an Input are the same control
+        — one height, 8px radius, 1px edge — and they sit side by side in every
+        form; rendering one at 14px and the other at 13px was the single most
+        visible inconsistency the package shipped. Both read `box.font`. */}
+      {ink(children, undefined, { size: box.font })}
       <GuiSelect.Icon>
         <ChevronDown size={16} opacity={0.5} />
       </GuiSelect.Icon>

@@ -602,6 +602,17 @@ export {
   type MenubarTriggerProps,
 } from './backends/gui'
 
+// The record kit (the backend's last block): the parts a CRM, a data table and a
+// settings page are drawn from, merged from twenty-ui's MIT packages (NOTICE).
+export {
+  Density,
+  useDensity,
+  fieldSize,
+  InputGroup,
+  type DensityName,
+  type InputGroupProps,
+} from './backends/gui'
+
 // `Hanzo` — the root, and the only thing an app mounts. It carries the gui
 // config and the generated stylesheet, so `npm i @hanzo/ui` is the whole setup:
 // no gui.config.ts, no CSS import, no generator script.

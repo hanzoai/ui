@@ -388,3 +388,9 @@ export { Terminal, type TerminalCommand, type TerminalLineType, type TerminalPro
 export { Timeline, type TimelineItem, type TimelineOrientation, type TimelineProps, type TimelineStatus, type TimelineVariant } from './timeline'
 export { MediaPlayer, type MediaPlayerProps, type MediaPlayerSize, type MediaSource, type MediaSubtitleTrack } from './video-player'
 export { NavigationBar, type NavigationBarLink, type NavigationBarOption, type NavigationBarPerson, type NavigationBarProps, type NavigationBarVariant } from './navigation-bar'
+
+// THE RECORD KIT — the parts a CRM, a data table and a settings page are drawn
+// from, merged from twenty-ui's MIT packages (NOTICE) and re-expressed on gui.
+// One block, so the merge reads as one change and the root mirrors it as one.
+export { Density, useDensity, fieldSize, type DensityName } from './density'
+export { InputGroup, type InputGroupProps } from './input-group'

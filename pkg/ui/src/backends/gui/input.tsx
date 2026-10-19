@@ -9,11 +9,13 @@
  */
 import { Input as GuiInput, XStack } from '@hanzo/gui'
 import { Eye, EyeOff } from '@hanzogui/lucide-icons-2'
-import { forwardRef, useState, type ComponentProps, type ReactNode } from 'react'
+import { forwardRef, useContext, useEffect, useState, type ComponentProps, type ReactNode } from 'react'
 import { slot } from './slot'
 import { touch } from './gesture'
 import { masked } from './mask'
 import { BOX, FIELD, FILL, type FieldSize } from './control'
+import { fieldSize, useDensity } from './density'
+import { GroupContext } from './input-group'
 
 /** What an adornment takes past the gutter: its 16px mark and 8 beside it. */
 const MARK = 24
@@ -36,7 +38,11 @@ export type InputProps = Omit<ComponentProps<typeof GuiInput>, 'children' | 'siz
    * was pressed last and neither control can say which.
    */
   reveal?: boolean
-  /** The box: `default` 36 high, `lg` 46 for a page's own form (control.ts `BOX`). */
+  /**
+   * The box: `default` 36 high, `lg` 46 for a page's own form, `sm` 32 and `xs`
+   * 24 for the record density (control.ts `BOX`). Unset, the nearest `<Density>`
+   * decides; inside an `InputGroup` the group's box is the field's.
+   */
   size?: FieldSize
   /** On the raised ground instead of a bare edge (control.ts `FILL`). */
   fill?: boolean
@@ -52,15 +58,60 @@ const well = (side: 'l' | 'r', gutter: number) =>
     justify: 'center' as const,
   })
 
+/** `aria-invalid` as the DOM reads it: anything but absent or the string "false". */
+const isInvalid = (v: unknown) => v != null && v !== false && v !== 'false'
+
 const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function Input(
-  { startAdornment, endAdornment, reveal = true, type, secureTextEntry, size = 'default', fill = false, ...props },
+  { startAdornment, endAdornment, reveal = true, type, secureTextEntry, size, fill = false, ...props },
   ref,
 ) {
   const [revealed, setRevealed] = useState(false)
+  const density = useDensity()
+  const group = useContext(GroupContext)
   const isPassword = type === 'password' || secureTextEntry === true
   const toggle = isPassword && reveal
-  const box = BOX[size as FieldSize]
+  const box = BOX[group?.size ?? fieldSize(size, density)]
   const inset = box.gutter + MARK
+  const invalid = isInvalid((props as { 'aria-invalid'?: unknown })['aria-invalid'])
+  const disabled = !!(props as { disabled?: boolean }).disabled
+  const report = group?.report
+  useEffect(() => report?.({ invalid, disabled }), [report, invalid, disabled])
+
+  // Inside a group the GROUP is the box — its edge, its fill, its focus — and the
+  // field is the text that fills the space its adornments leave.
+  if (group) {
+    const { onFocus, onBlur } = props as { onFocus?: (e: unknown) => void; onBlur?: (e: unknown) => void }
+    return (
+      <GuiInput
+        ref={ref as never}
+        {...slot('input')}
+        {...(isPassword ? masked(!revealed) : { type, secureTextEntry })}
+        flex={1}
+        minW={0}
+        height={box.h - 2}
+        px={0}
+        borderWidth={0}
+        rounded={0}
+        bg="transparent"
+        color="$ink"
+        placeholderTextColor="$placeholderColor"
+        fontSize={box.font}
+        {...props}
+        // The group draws the one focus ring, round the whole box. Inline,
+        // because design's `:focus-visible` outline is a stylesheet rule and
+        // only an inline declaration is certain to outrank it here.
+        style={{ ...((props as { style?: object }).style ?? null), outlineStyle: 'none' }}
+        onFocus={(e: unknown) => {
+          group.focus(true)
+          onFocus?.(e)
+        }}
+        onBlur={(e: unknown) => {
+          group.focus(false)
+          onBlur?.(e)
+        }}
+      />
+    )
+  }
 
   const field = (
     <GuiInput
@@ -84,7 +135,11 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       // system saying the same thing. The floor rule is for controls that hold
       // children — Button and SelectTrigger.
       {...FIELD}
+      // The record density's ground: a field that reads as a field on a page of
+      // cells and chips, the 3% panel rung under its hairline.
+      {...(density === 'compact' ? { bg: '$panel' } : null)}
       {...(fill ? FILL : null)}
+      {...(invalid ? { borderColor: '$red7', focusStyle: { borderColor: '$red8' } } : null)}
       height={box.h}
       // Raised, never lowered: a caller that states its own height keeps it.
       {...('height' in props ? null : { $touchable: { height: Math.max(box.h, TOUCH) } })}
@@ -95,7 +150,7 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       // and a sample placeholder one rung apart.
       color="$ink"
       placeholderTextColor="$placeholderColor"
-      fontSize="$3"
+      fontSize={box.font}
       pl={startAdornment ? inset : box.gutter}
       pr={endAdornment || toggle ? inset : box.gutter}
       {...props}

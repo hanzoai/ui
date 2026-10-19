@@ -24,10 +24,12 @@
  */
 import { Button as GuiButton, Spinner, styled } from '@hanzo/gui'
 import {
+  cloneElement,
   createElement,
   isValidElement,
   type ComponentProps,
   type MouseEventHandler,
+  type ReactElement,
   type ReactNode,
 } from 'react'
 
@@ -35,6 +37,7 @@ import type { Microdata } from './microdata'
 import { sx } from '../../sx'
 import { ink } from './ink'
 import { touch } from './gesture'
+import { useDensity } from './density'
 
 export type ButtonVariant =
   | 'default'
@@ -47,17 +50,35 @@ export type ButtonVariant =
   | 'linkFG'
   | 'linkMuted'
 
-export type ButtonSize = 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg'
+export type ButtonSize =
+  | 'default'
+  | 'sm'
+  | 'xs'
+  | 'lg'
+  | 'icon'
+  | 'icon-sm'
+  | 'icon-xs'
+  | 'icon-2xs'
+  | 'icon-lg'
 
 /** The floor every size takes under a coarse pointer: a thumb, not a cursor. */
 const TOUCH = 44
 
+/**
+ * `xs` (24), `icon-xs` (24) and `icon-2xs` (20) are the record density: the
+ * quiet buttons a table cell, a chip, a kanban header and a menu row hold
+ * (twenty-ui's sm and xs, MIT). They sit beside 13px text, carry a 14px icon and
+ * keep the 44px press area under a coarse pointer like every other size.
+ */
 const HEIGHT: Record<ButtonSize, number> = {
   default: 36,
   sm: 32,
+  xs: 24,
   lg: 40,
   icon: 36,
   'icon-sm': 32,
+  'icon-xs': 24,
+  'icon-2xs': 20,
   'icon-lg': 40,
 }
 
@@ -65,10 +86,26 @@ const HEIGHT: Record<ButtonSize, number> = {
 const TYPE: Record<ButtonSize, string> = {
   default: '$3',
   sm: '$2',
+  xs: '$2',
   lg: '$3',
   icon: '$3',
   'icon-sm': '$2',
+  'icon-xs': '$2',
+  'icon-2xs': '$1',
   'icon-lg': '$3',
+}
+
+/** The icon each size draws a `startIcon`/`endIcon` at, when the icon names no size of its own. */
+const GLYPH: Record<ButtonSize, number> = {
+  default: 16,
+  sm: 14,
+  xs: 14,
+  lg: 16,
+  icon: 16,
+  'icon-sm': 16,
+  'icon-xs': 14,
+  'icon-2xs': 14,
+  'icon-lg': 20,
 }
 
 /** The spinner's CEILING, paired 1:1 with TYPE above. A ceiling rather than a
@@ -77,9 +114,12 @@ const TYPE: Record<ButtonSize, string> = {
 const SPIN: Record<ButtonSize, number> = {
   default: 16,
   sm: 14,
+  xs: 12,
   lg: 16,
   icon: 16,
   'icon-sm': 14,
+  'icon-xs': 12,
+  'icon-2xs': 12,
   'icon-lg': 16,
 }
 
@@ -179,10 +219,21 @@ const Frame = styled(GuiButton.Frame, {
       // TOUCH, the target a thumb lands on; a mouse keeps the designed sizes.
       default: { height: 'auto', minHeight: HEIGHT.default, px: '$4', $touchable: { minHeight: TOUCH } },
       sm: { height: 'auto', minHeight: HEIGHT.sm, px: '$3', gap: '$1.5', $touchable: { minHeight: TOUCH } },
+      xs: { height: 'auto', minHeight: HEIGHT.xs, px: '$2', gap: '$1', $touchable: { minHeight: TOUCH } },
       lg: { height: 'auto', minHeight: HEIGHT.lg, px: '$6', $touchable: { minHeight: TOUCH } },
       icon: { height: 'auto', minHeight: HEIGHT.icon, width: 'auto', minWidth: HEIGHT.icon, px: 0, $touchable: { minHeight: TOUCH, minWidth: TOUCH } },
       'icon-sm': { height: 'auto', minHeight: HEIGHT['icon-sm'], width: 'auto', minWidth: HEIGHT['icon-sm'], px: 0, $touchable: { minHeight: TOUCH, minWidth: TOUCH } },
+      'icon-xs': { height: 'auto', minHeight: HEIGHT['icon-xs'], width: 'auto', minWidth: HEIGHT['icon-xs'], px: 0, $touchable: { minHeight: TOUCH, minWidth: TOUCH } },
+      'icon-2xs': { height: 'auto', minHeight: HEIGHT['icon-2xs'], width: 'auto', minWidth: HEIGHT['icon-2xs'], px: 0, rounded: '$xs', $touchable: { minHeight: TOUCH, minWidth: TOUCH } },
       'icon-lg': { height: 'auto', minHeight: HEIGHT['icon-lg'], width: 'auto', minWidth: HEIGHT['icon-lg'], px: 0, $touchable: { minHeight: TOUCH, minWidth: TOUCH } },
+    },
+    // The record density's gutter: 8 beside the label and 4 between an icon and
+    // it, on the 32px box `compact` gives a size-less Button. After `size`, so
+    // it wins over the 12 `sm` states; passed only when the density chose the
+    // size, so a named size — an icon size, whose gutter is its width, above all
+    // — keeps its own.
+    compact: {
+      true: { px: '$2', gap: '$1' },
     },
     disabled: {
       true: { opacity: 0.5, pointerEvents: 'none', cursor: 'default' },
@@ -201,11 +252,24 @@ export { buttonVariants }
 
 export type ButtonProps = Omit<
   ComponentProps<typeof Frame>,
-  'variant' | 'size' | 'children' | 'onClick'
+  'variant' | 'size' | 'children' | 'onClick' | 'compact'
 > & {
   variant?: ButtonVariant | null
+  /**
+   * The box. Unset, it follows the nearest `<Density>`: `default` (36) on a
+   * regular surface, `sm` (32) with the 8px record gutter on a compact one.
+   */
   size?: ButtonSize | null
   isLoading?: boolean
+  /** An icon before the label, drawn at the size's glyph (14 at `sm`/`xs`, 16 otherwise) unless it names one. */
+  startIcon?: ReactNode
+  /** An icon after the label — a chevron on a menu button, an arrow on a link. */
+  endIcon?: ReactNode
+  /**
+   * `subtle` lowers the label to the quiet ink: the icon button inside a row, a
+   * chip or a column header, which is present without asking to be pressed.
+   */
+  emphasis?: 'standard' | 'subtle'
   children?: ReactNode
   /**
    * The DOM click. Frame types this from the cross-platform stack, where the
@@ -259,17 +323,41 @@ export type ButtonProps = Omit<
   value?: string
 } & Microdata
 
+/**
+ * A Lucide-style icon element, given the size it is drawn at and the label's
+ * colour, each only where it names none of its own. A gui icon reads its colour
+ * from a prop, not from the text context the label's colour rides on, so a
+ * subtle button's icon would otherwise stay at full ink beside a quiet label.
+ */
+const glyph = (icon: ReactNode, size: number, color?: string) => {
+  if (!isValidElement(icon)) return icon
+  const own = icon.props as { size?: unknown; color?: unknown }
+  const next = { ...(own.size == null ? { size } : null), ...(color && own.color == null ? { color } : null) }
+  return Object.keys(next).length ? cloneElement(icon as ReactElement<Record<string, unknown>>, next) : icon
+}
+
+/** The two record sizes whose child IS the icon, so the button draws it at its glyph. */
+const SMALL_ICON = new Set<ButtonSize>(['icon-xs', 'icon-2xs'])
+
 function Button({
   className,
   variant = 'default',
-  size = 'default',
+  size,
   asChild = false,
   isLoading = false,
   disabled,
+  startIcon,
+  endIcon,
+  emphasis = 'standard',
   children,
   ...props
 }: ButtonProps) {
-  const resolved = size ?? 'default'
+  const density = useDensity()
+  const resolved: ButtonSize = size ?? (density === 'compact' ? 'sm' : 'default')
+  // Only the box the density chose takes its gutter: a named size is a decision.
+  const compact = density === 'compact' && size == null
+  const quiet = emphasis === 'subtle' ? { color: '$quiet' } : null
+  const tint = emphasis === 'subtle' ? '$quiet' : undefined
   // gui's own `asChild` cannot merge into the child here: the Button frame bakes
   // a `render: <button>`, so asChild WRAPS the child in a button and drops every
   // compiled style (measured: `<button class="is_View "><a>…</a></button>`).
@@ -290,6 +378,7 @@ function Button({
       data-size={resolved}
       variant={variant ?? 'default'}
       size={resolved}
+      {...(compact ? { compact: true } : null)}
       // SPREAD, never `render={… : undefined}`. The frame bakes its own
       // `render: <button type="button" />`, and an explicitly passed undefined
       // overrides a default rather than falling back to it — so writing the
@@ -325,7 +414,12 @@ function Button({
           button wider than a phone, and the only element on the whole surface
           that overflowed at 390px. */}
       {isLoading && <Spinner size="small" maxW={SPIN[resolved]} maxH={SPIN[resolved]} />}
-      {ink(body, GuiButton.Text as never, { fontSize: TYPE[resolved] })}
+      {startIcon ? glyph(startIcon, GLYPH[resolved], tint) : null}
+      {ink(SMALL_ICON.has(resolved) ? glyph(body, GLYPH[resolved], tint) : body, GuiButton.Text as never, {
+        fontSize: TYPE[resolved],
+        ...quiet,
+      })}
+      {endIcon ? glyph(endIcon, GLYPH[resolved], tint) : null}
     </Frame>
   )
 }

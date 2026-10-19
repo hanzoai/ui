@@ -52,19 +52,30 @@ export const GUTTER = 12
 export const RISER = (CONTROL_H - 2 - 20) / 2
 
 /**
- * A field's two sizes.
+ * A field's four sizes.
  *
  * `default` is the product control, 36 high beside a 36px Button. `lg` is a
  * page's own form — a sign-in, a sales form — where the field is what the page
  * is for and sits beside a 44px marketing `Action`: the gutter all round its
  * line, 12 + a 20px line + 12 + 2 edges = 46, and 14 beside the text.
+ *
+ * `sm` and `xs` are the record density: 32 and 24 high, an 8px gutter and 13px
+ * text, the box a table cell, a filter value and a settings form are drawn at
+ * (twenty-ui's md and sm, MIT). They are asked for by name or by a
+ * `<Density value="compact">` around the control; nothing at 36 moves.
+ *
+ * The riser is the same arithmetic as `RISER` on each box's own line: a stacked
+ * field's first line lands where a single-line field of that size centres its
+ * only one (16px lines on the two dense rungs).
  */
-export type FieldSize = 'default' | 'lg'
+export type FieldSize = 'default' | 'lg' | 'sm' | 'xs'
 
-/** Each size's box: its height, the gutter beside the text, and the riser above a stacked field's first line. */
-export const BOX: Record<FieldSize, { h: number; gutter: number; riser: number }> = {
-  default: { h: CONTROL_H, gutter: GUTTER, riser: RISER },
-  lg: { h: 46, gutter: 14, riser: (46 - 2 - 20) / 2 },
+/** Each size's box: height, the gutter beside the text, the riser above a stacked field's first line, and its type rung. */
+export const BOX: Record<FieldSize, { h: number; gutter: number; riser: number; font: '$2' | '$3' }> = {
+  default: { h: CONTROL_H, gutter: GUTTER, riser: RISER, font: '$3' },
+  lg: { h: 46, gutter: 14, riser: (46 - 2 - 20) / 2, font: '$3' },
+  sm: { h: 32, gutter: 8, riser: (32 - 2 - 16) / 2, font: '$2' },
+  xs: { h: 24, gutter: 8, riser: (24 - 2 - 16) / 2, font: '$2' },
 }
 
 /** `fill`: the field on design's raised ground (`--surface-3`) instead of a bare edge. */

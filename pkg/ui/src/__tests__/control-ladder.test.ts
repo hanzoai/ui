@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
+import { BOX } from '../backends/gui/control'
 
 /**
  * The control ladder, asserted on the source that declares it.
@@ -64,13 +65,17 @@ describe('control ladder', () => {
   })
 
   // The two field controls must read at the same size or every form looks broken.
+  //
+  // Each size's rung is one fact in control.ts `BOX`, so both must read it from
+  // there rather than state a rung of their own.
   it('Input and SelectTrigger render their text at the same size', () => {
-    const inputSize = read('input.tsx').match(/fontSize="(\$\d+)"/)?.[1]
-    const selectSize = read('select.tsx').match(/ink\(children[^)]*size:\s*["'](\$\d+)["']/)?.[1]
+    const inputSize = read('input.tsx').match(/fontSize=\{(box\.font)\}/)?.[1]
+    const selectSize = read('select.tsx').match(/ink\(children[^)]*size:\s*(box\.font)/)?.[1]
 
-    expect(inputSize, 'input.tsx declares no fontSize').toBeDefined()
-    expect(selectSize, 'select.tsx declares no ink size').toBeDefined()
+    expect(inputSize, 'input.tsx does not read its rung from BOX').toBeDefined()
+    expect(selectSize, 'select.tsx does not read its rung from BOX').toBeDefined()
     expect(selectSize).toBe(inputSize)
+    for (const [size, font] of Object.entries(BOX)) expect(font.font, size).toMatch(/^\$\d$/)
   })
 })
 

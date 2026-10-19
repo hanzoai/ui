@@ -22,8 +22,10 @@ import { XStack, YStack } from '@hanzo/gui'
  * Variants are enumerated rather than sampled: gui compiles each distinct style
  * VALUE to its own class, so an unrendered variant is an unwritten rule.
  */
-import { useState, type ReactNode } from 'react'
+import { useState } from 'react'
 import { Box } from './box'
+import { Section } from './gallery/section'
+import { Records } from './gallery/records'
 import { Workbench } from './product/Workbench'
 import { Skeleton } from './product/Skeleton'
 import { ConnectionBadge } from './product/ConnectionBadge'
@@ -238,21 +240,6 @@ const USAGE = limitsOf({
   ],
 })!
 
-const Section = ({ name, children }: { name: string; children: ReactNode }) => (
-  <section
-    data-gallery={name}
-    style={{
-      display: 'flex',
-      flexWrap: 'wrap',
-      gap: 12,
-      alignItems: 'flex-start',
-      width: '100%',
-      maxWidth: 880,
-    }}
-  >
-    {children}
-  </section>
-)
 
 /**
  * Every component, once. `data-gallery` names each section so a browser test can
@@ -1158,6 +1145,9 @@ export const Gallery = () => (
       <Stepper label="Seats" value={2} min={2} max={150} onChange={NOOP} />
     </Section>
 
+    {/* The record kit — every part merged from twenty-ui, in every variant,
+        regular and compact. One module per group, still this one list. */}
+    <Records />
   </div>
 )
 
