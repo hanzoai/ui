@@ -15,6 +15,7 @@ import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
 import { Switch } from './switch'
+import { Density } from './density'
 
 const html = (node: React.ReactNode) =>
   renderToStaticMarkup(
@@ -104,5 +105,41 @@ describe('Switch', () => {
 
     expect(frame(markup)).toContain('data-touch-y="12"')
     expect(markup).not.toContain('hitslop')
+  })
+})
+
+describe('Switch sizes', () => {
+  it.each([
+    ['md', 32, 20, 16],
+    ['sm', 24, 16, 12],
+  ] as const)('%s: a %ix%i pill with a %ipx thumb, no edge, 2px in', (size, w, h, t) => {
+    const markup = html(<Switch size={size} aria-label={size} />)
+    const el = frame(markup)
+    expect(cls(el, 'width')).toBe(`_width-${w}px`)
+    expect(cls(el, 'height')).toBe(`_height-${h}px`)
+    expect(cls(el, 'minH')).toBe(`_minH-${h}px`)
+    expect(el).not.toMatch(/_btw-1px/)
+    expect(cls(el, 'pt')).toBe('_pt-2px')
+    expect(cls(thumb(markup), 'width')).toBe(`_width-${t}px`)
+  })
+
+  it('the record sizes keep the inverting thumb: it names its track’s token', () => {
+    for (const checked of [false, true]) {
+      const markup = html(<Switch size="sm" checked={checked} aria-label="x" />)
+      expect(cls(thumb(markup), 'bg')).toBe(cls(frame(markup), 'bg'))
+    }
+  })
+
+  it('regular stays 36 wide; compact makes a size-less switch md', () => {
+    expect(cls(frame(html(<Switch aria-label="x" />)), 'width')).toBe('_width-36px')
+    const compact = frame(
+      html(
+        <Density value="compact">
+          <Switch aria-label="x" />
+        </Density>,
+      ),
+    )
+    expect(compact).toContain('data-size="md"')
+    expect(cls(compact, 'width')).toBe('_width-32px')
   })
 })

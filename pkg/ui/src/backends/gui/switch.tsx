@@ -47,29 +47,49 @@
  * this file was measured — both thumbs came out the same colour as the track
  * behind them, off and on, exactly as 8.0.57 did. A flat name cannot say "and
  * the opposite of that, one level down", so this file names rungs on purpose.
+ *
+ * THREE SIZES, and the record two are twenty-ui's (MIT, NOTICE): `md` a 32×20
+ * pill with a 16px thumb, `sm` 24×16 with a 12px thumb, each with no edge and
+ * the thumb 2px in. `default` stays the 36×20 pill with its hairline; under
+ * `<Density value="compact">` a switch that names no size is `md`. The tokens do
+ * not change with the size — the inverting thumb works on every one.
  */
 import { Switch as GuiSwitch } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
 import { slot } from './slot'
 import { touch } from './gesture'
+import { useDensity } from './density'
 
-const TRACK_W = 36
-const TRACK_H = 20
-const THUMB = 16
+export type SwitchSize = 'default' | 'md' | 'sm'
 
-export type SwitchProps = ComponentProps<typeof GuiSwitch>
+/** Each size's track, thumb and edge. The edge is what keeps the UA's button border off. */
+const SIZE: Record<SwitchSize, { w: number; h: number; thumb: number; edge: number }> = {
+  default: { w: 36, h: 20, thumb: 16, edge: 1 },
+  md: { w: 32, h: 20, thumb: 16, edge: 0 },
+  sm: { w: 24, h: 16, thumb: 12, edge: 0 },
+}
 
-const Switch = ({ disabled, ...props }: SwitchProps) => (
+export type SwitchProps = Omit<ComponentProps<typeof GuiSwitch>, 'size'> & {
+  /** `default` 36×20; `md` 32×20 and `sm` 24×16, the record pair. Unset, the nearest `<Density>` decides. */
+  size?: SwitchSize
+}
+
+const Switch = ({ disabled, size, ...props }: SwitchProps) => {
+  const compact = useDensity() === 'compact'
+  const box = SIZE[size ?? (compact ? 'md' : 'default')]
+  return (
   <GuiSwitch
     {...slot('switch')}
-    width={TRACK_W}
-    height={TRACK_H}
-    minHeight={TRACK_H}
+    data-size={size ?? (compact ? 'md' : 'default')}
+    width={box.w}
+    height={box.h}
+    minHeight={box.h}
     padding={2}
     flexShrink={0}
     backgroundColor="$color3"
-    // Without an explicit border the UA's 2px outset button border shows.
-    borderWidth={1}
+    // Without an explicit border the UA's 2px outset button border shows; the
+    // record sizes draw none and say so with a zero.
+    borderWidth={box.edge}
     borderColor="$borderColor"
     activeStyle={{ backgroundColor: '$color12', borderColor: '$color12' }}
     // Stated rather than left to a `disabledStyle` this backend uses nowhere
@@ -79,13 +99,13 @@ const Switch = ({ disabled, ...props }: SwitchProps) => (
     disabled={disabled}
     opacity={disabled ? 0.5 : 1}
     cursor={disabled ? 'not-allowed' : 'pointer'}
-    {...touch(TRACK_H, 44, 'y')}
+    {...touch(box.h, 44, 'y')}
     {...props}
   >
     <GuiSwitch.Thumb
       {...slot('switch-thumb')}
-      width={THUMB}
-      height={THUMB}
+      width={box.thumb}
+      height={box.thumb}
       backgroundColor="$color3"
       // `bg`, and it is the only one of the three spellings that is both typed
       // and correct. The Thumb's activeStyle is typed as the SHORTHAND style set:
@@ -98,6 +118,7 @@ const Switch = ({ disabled, ...props }: SwitchProps) => (
       activeStyle={{ bg: '$color12' }}
     />
   </GuiSwitch>
-)
+  )
+}
 
 export { Switch }
