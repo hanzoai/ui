@@ -40,22 +40,55 @@ export type FieldType =
   | 'position'    // sort order
   | 'actor'       // audit: who/what created the record
 
-/** Tag palette key — resolved to bg/fg by the theme. Brand-neutral by name. */
+/**
+ * A tag's hue: one of @hanzo/ui's thirty data hues (the twenty-five a person
+ * picks, then the five tinted neutrals). The nine names this type had before
+ * the data palette — gray, blue, green, amber, red, purple, pink, teal, orange —
+ * are all among them, so a stored option keeps its colour.
+ */
 export type TagColor =
-  | 'gray' | 'blue' | 'green' | 'amber' | 'red'
-  | 'purple' | 'pink' | 'teal' | 'orange'
+  | 'red' | 'ruby' | 'crimson' | 'tomato' | 'orange' | 'amber' | 'yellow' | 'lime'
+  | 'grass' | 'green' | 'jade' | 'mint' | 'teal' | 'cyan' | 'sky' | 'blue' | 'iris'
+  | 'violet' | 'purple' | 'plum' | 'pink' | 'bronze' | 'gold' | 'brown' | 'gray'
+  | 'mauve' | 'olive' | 'sage' | 'sand' | 'slate'
 
-/** One option of a select/multiSelect field. */
+/** One option of a select/multiSelect field — or a candidate record of a relation. */
 export interface SelectOption {
   value: string
   label: string
   color?: TagColor
+  /** A relation candidate's picture; the initial in its hue is drawn without one. */
+  avatarUrl?: string
 }
 
 /** A labelled URL, for `links`. */
 export interface LinkValue {
   url: string
   label?: string
+}
+
+/** A postal address, for `address`. Every part is optional; `country` is ISO 3166-1 alpha-2 or a name. */
+export interface AddressValue {
+  street1?: string
+  street2?: string
+  city?: string
+  state?: string
+  postcode?: string
+  country?: string
+}
+
+/** A person's name, for `fullName`. `firstName`/`lastName` are read too. */
+export interface FullNameValue {
+  first?: string
+  last?: string
+}
+
+/** Who or what made a record, for `actor`. */
+export interface ActorValue {
+  name: string
+  /** Where it came from: `member` (a person, drawn round), or a source such as `api`, `import`, `workflow`. */
+  source?: string
+  avatarUrl?: string
 }
 
 /** A money value, for `currency`. */
@@ -81,13 +114,15 @@ export interface FieldMetadataMap {
   email: { placeholder?: string }
   url: { placeholder?: string }
   links: Record<string, never>
-  phone: { placeholder?: string }
+  /** `defaultCountry`: ISO 3166-1 alpha-2 the picker starts on when a number names none. */
+  phone: { placeholder?: string; defaultCountry?: string }
   rating: { max?: number }
-  relation: { objectName?: string; labelField?: string }
+  /** `avatarField`: the record field holding a picture; `shape`: `circle` for people, `square` (default) for things. */
+  relation: { objectName?: string; labelField?: string; avatarField?: string; shape?: 'square' | 'circle' }
   json: Record<string, never>
   uuid: Record<string, never>
   fullName: Record<string, never>
-  address: Record<string, never>
+  address: { defaultCountry?: string }
   files: Record<string, never>
   richText: Record<string, never>
   position: Record<string, never>

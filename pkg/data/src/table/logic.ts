@@ -1,12 +1,14 @@
 // Pure table logic — the decisions the record grid takes, isolated from React +
 // @hanzo/gui so they are trivially testable (data in, data out) and reusable by a
-// host doing server-side sort/filter. Imports only `type` from the field model,
-// so this module pulls in no runtime and runs in plain Node.
+// host doing server-side sort/filter. Imports only `type` from the field model
+// and the pure coercions (field/coerce), so this module pulls in no React and no
+// gui and runs in plain Node.
 //
 // One vocabulary for sort, filter, search, and pagination powers the table, the
 // board, and any saved view — decomplected from rendering. A field type maps to a
 // comparable primitive HERE, once, so every view orders and filters identically.
 import type { FieldDefinition, FieldType, SelectOption, CurrencyValue, LinkValue } from '../field/types'
+import { addressText, asActor, asEmails, asPhone, nameText, phoneText, richText } from '../field/coerce'
 
 export type Record_ = Record<string, unknown>
 
@@ -77,6 +79,19 @@ export function comparable(field: FieldDefinition | undefined, value: unknown): 
           .join(', ')
           .toLowerCase() || null
       )
+    // The composites sort by the text their cell shows, not by "[object Object]".
+    case 'fullName':
+      return nameText(value).toLowerCase() || null
+    case 'address':
+      return addressText(value).toLowerCase() || null
+    case 'phone':
+      return phoneText(asPhone(value)).toLowerCase() || null
+    case 'email':
+      return asEmails(value).join(', ').toLowerCase() || null
+    case 'actor':
+      return asActor(value)?.name.toLowerCase() || null
+    case 'richText':
+      return richText(value).toLowerCase() || null
     default: {
       const s = asStr(value)
       return s === '' ? null : s.toLowerCase()
