@@ -170,11 +170,20 @@ const TRACKING = {
   true: 0,
 } as const
 
-/** Radius — FOUR values, no more. 6 control · 8 input/row · 12 panel · pill.
- *  The inherited ladder had thirteen spellings rendering ten values, including
- *  three different spellings of "pill" (`{999}`, `{99}`, `$10`). `$10`+ IS the
- *  pill, so the 115 `rounded="$10"` call sites finally mean one thing. */
+/** Radius — SIX values, no more. 2 mark · 4 nested row · 6 control · 8 input/row
+ *  · 12 panel · pill. The inherited ladder had thirteen spellings rendering ten
+ *  values, including three different spellings of "pill" (`{999}`, `{99}`,
+ *  `$10`). `$10`+ IS the pill, so the 115 `rounded="$10"` call sites finally mean
+ *  one thing.
+ *
+ *  `$xs` and `$2xs` are the two named below the numbers, @hanzo/tokens'
+ *  `--radius-xs` / `--radius-2xs`. A row nested in an 8px panel with a 4px inset
+ *  is concentric at 4 (a chip, a tag, a menu row, a cell); 2 is a check mark, a
+ *  square avatar, a flag. They are names rather than `$1`/`$2` because those two
+ *  already mean 6 at ~hundreds of call sites. */
 const RADIUS = {
+  '2xs': 2,
+  xs: 4,
   0: 0,
   1: 6,
   2: 6,
@@ -820,7 +829,10 @@ type Ramp = Record<
   Base['themes']['dark']['color12']
 >
 
-type Registered = Omit<Base, 'fonts' | 'themes' | 'animations'> & {
+type Radius = Base['tokens']['radius']
+
+type Registered = Omit<Base, 'fonts' | 'themes' | 'animations' | 'tokens'> & {
+  tokens: Omit<Base['tokens'], 'radius'> & { radius: Radius & Record<'xs' | '2xs', Radius['1']> }
   animations: typeof animations
   fonts: Base['fonts'] & { mono: Base['fonts']['body'] }
   themes: { [K in keyof Base['themes']]: Base['themes'][K] & Ramp }

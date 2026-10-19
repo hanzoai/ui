@@ -329,6 +329,7 @@
     "@hanzo/brand": "catalog:",
     "@hanzo/design": "catalog:",
     "@hanzo/font": "catalog:",
+    "@hanzo/tokens": "workspace:^",
     "@hanzo/logo": "catalog:",
     "@hanzo/products": "catalog:",
     "@lezer/highlight": "catalog:",

@@ -93,17 +93,45 @@ const designNoFonts = designRaw.replace(/@font-face\s*\{[^}]*\}/g, '')
  * Pure CSS, so it works under SSR. Doing it in <Hanzo> with an effect would
  * leave the first paint dark in a light app.
  */
-const design = designNoFonts.replace(
-  /(^|})([^{}]*?)\.light(\s*)\{/g,
-  (m, brace, before, ws) => `${brace}${before}.light, :root.t_light, .t_light${ws}{`,
-)
+const lightAlias = (css) =>
+  css.replace(
+    /(^|})([^{}]*?)\.light(\s*)\{/g,
+    (m, brace, before, ws) => `${brace}${before}.light, :root.t_light, .t_light${ws}{`,
+  )
+const design = lightAlias(designNoFonts)
+
+/**
+ * What @hanzo/tokens declares and design does not ship yet.
+ *
+ * tokens is where a colour is decided (design copies its colors.css on design's
+ * own next build), so a token added there reaches this sheet before it reaches
+ * design's. Taking only the NAMES design lacks keeps design the authority for
+ * everything it does ship: the day design republishes, the gap is empty and this
+ * block disappears on its own, rather than restating design's values in a second
+ * place. Read from the built TypeScript, so the values are the ones tokens exports.
+ */
+const tokens = await import('@hanzo/tokens/theme')
+const declared = new Set([...designRaw.matchAll(/--([a-z0-9-]+)\s*:/gi)].map((m) => m[1]))
+const gap = (sections) =>
+  sections
+    .flatMap((s) => s.vars)
+    .filter((v) => !declared.has(v.name))
+    .map((v) => `  --${v.name}:${v.value};`)
+    .join('\n')
+const fill =
+  `/* ── @hanzo/tokens: declared there, not yet shipped by @hanzo/design ── */\n` +
+  `:root, .dark {\n${gap([...tokens.dark, ...tokens.scale])}\n}\n` +
+  `.light, :root.t_light, .t_light {\n${gap(tokens.light)}\n}\n`
+
+/** The data palette — colour a person chose for a record (`@hanzo/tokens/css/data`). */
+const data = lightAlias(readFileSync(require.resolve('@hanzo/tokens/css/data'), 'utf8'))
 
 // The trap from store's decision doc, checked rather than remembered: design
 // publishes FINISHED colors (`#000000`, `rgb(255 255 255 / .10)`). Wrapping one
 // in `hsl(...)` — the shadcn-era idiom, where tokens were bare `H S% L%` triples
 // — is invalid at computed-value time, and the browser drops the WHOLE
 // declaration without a word. One grep is cheaper than finding it on a page.
-const composed = `${design}\n${ours}\n${glass}\n${motion}`
+const composed = `${design}\n${fill}\n${data}\n${ours}\n${glass}\n${motion}`
 const bad = [...composed.matchAll(/\b(hsl|rgb|oklch)a?\(\s*var\(/g)].map((m) => m[0])
 if (bad.length) {
   throw new Error(
