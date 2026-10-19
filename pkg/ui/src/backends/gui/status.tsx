@@ -19,17 +19,24 @@
 import { SizableText, Spinner, XStack, createStyledContext, styled } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
 import { hueOr, useTone, type DataHue } from './hue'
+import { STATUS_COLOR } from './feedback'
 import { ink } from './ink'
 import { slot } from './slot'
 
-/** The one status → hue map, for every component that names a state. */
+/**
+ * Status's names onto data hues, read from the one status map (feedback.ts
+ * `STATUS_COLOR`), so a success pill, a success banner and a success toast
+ * cannot name different colours. The pill draws the hue's tag pair (data
+ * steps 3/11); the strip and the toast draw the state token — the same colour
+ * by name, each in its own material.
+ */
 export const STATUS_HUE: Record<StatusVariant, DataHue> = {
-  default: 'gray',
-  gray: 'gray',
-  success: 'green',
-  warning: 'orange',
-  error: 'red',
-  info: 'blue',
+  default: STATUS_COLOR.neutral,
+  gray: STATUS_COLOR.neutral,
+  success: STATUS_COLOR.success,
+  warning: STATUS_COLOR.warning,
+  error: STATUS_COLOR.error,
+  info: STATUS_COLOR.info,
 }
 
 export type StatusVariant = 'default' | 'success' | 'warning' | 'error' | 'info' | 'gray'

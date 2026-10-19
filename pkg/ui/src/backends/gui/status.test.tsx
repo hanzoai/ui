@@ -83,6 +83,12 @@ describe('Status in a data hue', () => {
     expect(tag(html(<Status color="chartreuse">x</Status>), 'status')).toContain('data-color="gray"')
   })
 
+  it('names the same colour for a state as the banner and the toast do', async () => {
+    const { STATUS_COLOR } = await import('./feedback')
+    for (const state of ['success', 'warning', 'error', 'info'] as const) expect(STATUS_HUE[state]).toBe(STATUS_COLOR[state])
+    expect(STATUS_HUE.default).toBe(STATUS_COLOR.neutral)
+  })
+
   it('loading busies the pill and narrows its end gutter', () => {
     const el = tag(html(<Status color="teal" loading>x</Status>), 'status')
     expect(el).toContain('aria-busy="true"')
