@@ -212,7 +212,7 @@ emit({ component: 'PlanCard', action: 'select', id: 'pro' })
 
 - **One home, no duplication** — components are extracted, never copied. The record layer's source of truth stays in `@hanzo/data`; `@hanzo/ui` composes it.
 - **Host-agnostic** — data + effects injected; zero coupling to any app.
-- **Clean-room** — original implementation, no GPL / Twenty code. Airtable/Twenty-*class* polish, our own code.
+- **Clean-room** — our own implementation on @hanzo/gui, no GPL code; parts that re-express MIT-licensed work are credited in NOTICE.
 - **Cross-platform** — web + native + desktop, because it's only `@hanzo/gui`.
 
 Hanzo AI, Inc — licensed [Apache-2.0](./LICENSE-APACHE) OR [MIT](./LICENSE-MIT), at your

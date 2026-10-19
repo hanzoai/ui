@@ -14,8 +14,8 @@ Data is the one exception, and it is scoped: `src/data.ts` is a palette of thirt
 tag, a kanban column, an object's icon tile, an avatar's initial, a chart series.
 Never a button, a border or a focus ring. Twenty-four of the twenty-five pickable
 hues and all five neutrals are Radix Colors scales (NOTICE); `hueOf(seed)` picks
-a record's hue from a string the way twenty-ui does, so an imported record keeps
-its colour.
+a record's hue from a stable string hash, so a record keeps its colour wherever
+it is drawn or imported.
 
 ## The pipeline
 
