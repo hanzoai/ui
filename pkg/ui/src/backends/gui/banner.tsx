@@ -201,7 +201,6 @@ function RecordBanner({
         bg={(solid ? paint.fill : paint.tint) as never}
         rounded={inline || compact ? '$3' : 0}
         mb={inline && !embedded ? '$4' : 0}
-        style={solid && !inline ? { backdropFilter: 'blur(5px)', WebkitBackdropFilter: 'blur(5px)' } : undefined}
         {...props}
       >
         {lead ? (
