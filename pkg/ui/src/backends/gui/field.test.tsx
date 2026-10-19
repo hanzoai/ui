@@ -24,6 +24,9 @@ import {
   FieldSet,
   FieldTitle,
 } from './field'
+import { Density } from './density'
+import { Textarea } from './textarea'
+import { Box } from '../../box'
 
 const html = (node: React.ReactNode) =>
   renderToStaticMarkup(
@@ -182,5 +185,114 @@ describe('FieldDescription / FieldSeparator / FieldError', () => {
 
     expect(markup).toContain('Custom message')
     expect(markup).not.toContain('ignored')
+  })
+})
+
+describe('the record density', () => {
+  const compact = (node: React.ReactNode) => html(<Density value="compact">{node}</Density>)
+
+  it('regular density draws what it always drew', () => {
+    const markup = html(
+      <Field>
+        <FieldLabel htmlFor="n">Name</FieldLabel>
+        <FieldDescription>d</FieldDescription>
+      </Field>,
+    )
+    expect(tag(markup, 'field')).toMatch(/_gap-c-space-3/)
+    expect(tag(markup, 'field-label')).toMatch(/_fs-f-size-2/)
+    expect(tag(markup, 'field-description')).toMatch(/_col-quiet/)
+  })
+
+  it('compact: a 12px semibold caption in the light ink, 4px above its control', () => {
+    const markup = compact(
+      <Field>
+        <FieldLabel htmlFor="n">Name</FieldLabel>
+        <FieldDescription>Shown on the record.</FieldDescription>
+        <FieldError>Required.</FieldError>
+      </Field>,
+    )
+    expect(tag(markup, 'field')).toMatch(/_gap-c-space-1/)
+    const label = tag(markup, 'field-label')
+    expect(label).toMatch(/_fs-f-size-1/)
+    expect(label).toMatch(/_fw-600/)
+    expect(label).toMatch(/_col-dim/)
+    const description = tag(markup, 'field-description')
+    expect(description).toMatch(/_fs-f-size-1/)
+    expect(description).toMatch(/_col-dim/)
+    expect(markup).toMatch(/_fs-f-size-1[^"]*_col-bad"[^>]*>Required\./)
+  })
+})
+
+describe('Field invalid', () => {
+  it('marks the block and hands the state to the control inside', () => {
+    const markup = html(
+      <Field invalid>
+        <Textarea placeholder="x" />
+        <FieldError>Bad.</FieldError>
+      </Field>,
+    )
+    expect(tag(markup, 'field')).toContain('data-invalid="true"')
+    const control = tag(markup, 'textarea')
+    expect(control).toContain('aria-invalid="true"')
+    expect(control).toMatch(/_btc-red7/)
+    expect(markup).toContain('Bad.')
+  })
+
+  it('a field that says it is valid shows no error, whatever is passed', () => {
+    const markup = html(
+      <Field invalid={false}>
+        <FieldError>Stale message.</FieldError>
+      </Field>,
+    )
+    expect(markup).not.toContain('Stale message.')
+    expect(tag(markup, 'field')).toContain('data-invalid="false"')
+  })
+
+  it('a control’s own aria-invalid wins over the field', () => {
+    const markup = html(
+      <Field invalid>
+        <Textarea aria-invalid={false} placeholder="x" />
+      </Field>,
+    )
+    expect(tag(markup, 'textarea')).not.toMatch(/_btc-red7/)
+  })
+})
+
+describe('FieldSet / FieldLegend as props, not utility strings', () => {
+  /** The class set of an element, order-free. */
+  const classes = (el: string) => new Set((el.match(/class="([^"]*)"/)?.[1] ?? '').split(/\s+/).filter(Boolean))
+
+  it('draws the frame the old `flex flex-col gap-6` Box drew, and says column', () => {
+    const now = classes(tag(html(<FieldSet />), 'field-set'))
+    const before = classes(
+      tag(html(<Box tag="fieldset" className="flex flex-col gap-6" data-slot="field-set" />), 'field-set'),
+    )
+    for (const c of before) expect(now, c).toContain(c)
+    // The one difference, and it is the fix: through `asChild` the Box dropped
+    // `flex-col` as the stack's default, so the fieldset fell back to the
+    // browser's row. The column is stated now.
+    expect(now).toContain('_fd-column')
+  })
+
+  it('a legend keeps its margin, rung and weight', () => {
+    for (const [variant, rung] of [['legend', 'base'], ['label', 'sm']] as const) {
+      const el = tag(html(<FieldLegend variant={variant}>x</FieldLegend>), 'field-legend')
+      expect(el.startsWith('<legend')).toBe(true)
+      expect(el).toMatch(/_mb-12px/)
+      expect(el).toContain(`font-size:var(--text-${rung})`)
+      expect(el).toContain('font-weight:500')
+    }
+  })
+
+  it('names no utility class at all', () => {
+    const markup = html(
+      <FieldSet>
+        <FieldLegend>x</FieldLegend>
+        <FieldError errors={[{ message: 'a' }, { message: 'b' }]} />
+      </FieldSet>,
+    )
+    const used = [...markup.matchAll(/class="([^"]*)"/g)].flatMap((m) => m[1].split(/\s+/))
+    for (const name of ['flex', 'flex-col', 'gap-6', 'gap-1', 'mb-3', 'text-sm', 'text-base', 'font-medium', 'ml-4', 'text-red9'])
+      expect(used, name).not.toContain(name)
   })
 })

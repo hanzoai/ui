@@ -20,41 +20,99 @@
  * the compiled `@media (min-width: …)` any `$md` prop emits), so there are no
  * container queries to reach for and none are needed: the same direction every
  * other responsive prop in this codebase is written in.
+ *
+ * Under `<Density value="compact">` the text leaves take the record density
+ * twenty-ui's Field draws (MIT, NOTICE): a 12px semibold label in the light ink
+ * 4px above its control, a 12px light description and a 12px error, the block's
+ * gap 4. Regular density draws exactly what it always did.
+ *
+ * `invalid` on the root is the one statement of the field's validity: it marks
+ * the block (`data-invalid`), and `useField()` hands it to the control inside —
+ * Textarea and SelectTrigger read it as their error edge — and to `FieldError`,
+ * which a field that says `invalid={false}` keeps hidden.
  */
 import { SizableText, XStack, YStack, createStyledContext, styled } from '@hanzo/gui'
-import { isValidElement, type ComponentProps, type ReactNode } from 'react'
-import { Box } from '../../box'
+import { createContext, isValidElement, useContext, type ComponentProps, type ReactNode } from 'react'
 import { Label } from './label'
 import { Separator } from './layout'
 import { ink } from './ink'
 import { slot } from './slot'
+import { useDensity } from './density'
+
+/** What a control inside a `Field` reads: whether the field is invalid, when it says. */
+const FieldState = /* @__PURE__ */ createContext<{ invalid?: boolean }>({})
+
+/** The nearest `Field`'s stated validity — `undefined` outside one, or where it states none. */
+export const useField = () => useContext(FieldState)
+
+/**
+ * `aria-invalid` as the DOM reads it, or the enclosing field's: anything but
+ * absent or the string "false" on the control, else what the Field states.
+ */
+export const invalidOf = (aria: unknown, field: { invalid?: boolean }) =>
+  aria != null ? aria !== false && aria !== 'false' : !!field.invalid
 
 export type FieldOrientation = 'vertical' | 'horizontal' | 'responsive'
 export type FieldLegendVariant = 'legend' | 'label'
 
+/**
+ * The gui values the old `flex flex-col gap-6` read as through `tw`, stated
+ * directly — the same frame `Box` drew (display flex, a 24px column gap, the
+ * div's `auto` minimums and its shrink), now through style props rather than a
+ * utility string. `field.test.tsx` holds the two renders equal.
+ */
 function FieldSet({ children, ...props }: ComponentProps<'fieldset'>) {
   return (
-    <Box tag="fieldset" className="flex flex-col gap-6" {...slot('field-set')} {...props}>
+    <YStack
+      render="fieldset"
+      display="flex"
+      flexDirection="column"
+      gap={24}
+      minH="auto"
+      minW="auto"
+      shrink={1}
+      {...slot('field-set')}
+      {...(props as object)}
+    >
       {children}
-    </Box>
+    </YStack>
   )
 }
 
 export type FieldSetProps = ComponentProps<typeof FieldSet>
 
-function FieldLegend({ variant = 'legend', children, ...props }: ComponentProps<'legend'> & {
+/**
+ * `mb-3 text-sm|text-base font-medium`, as what it compiled to: a block frame
+ * with a 12px margin under it, and the text on design's sm (13) or base (14)
+ * rung at the medium weight. The text rides as a plain style, as `Box` carried
+ * it: a frame drops a text property, and a legend's text is its children's to
+ * inherit. Line-height `normal` is what the utility resolved to
+ * (`--text-*--line-height` is not a token anyone ships).
+ */
+function FieldLegend({ variant = 'legend', children, style, ...props }: ComponentProps<'legend'> & {
   variant?: FieldLegendVariant
 }) {
+  const rung = variant === 'label' ? 'sm' : 'base'
   return (
-    <Box
-      tag="legend"
-      className={variant === 'label' ? 'mb-3 text-sm font-medium' : 'mb-3 text-base font-medium'}
+    <YStack
+      render="legend"
+      display="block"
+      mb={12}
+      minH="auto"
+      minW="auto"
+      shrink={1}
       {...slot('field-legend')}
       data-variant={variant}
-      {...props}
+      {...(props as object)}
+      style={{
+        fontSize: `var(--text-${rung})`,
+        lineHeight: `var(--text-${rung}--line-height, normal)`,
+        fontWeight: 500,
+        ...style,
+      }}
     >
       {children}
-    </Box>
+    </YStack>
   )
 }
 
@@ -98,22 +156,33 @@ const FieldFrame = styled(XStack, {
   defaultVariants: { orientation: 'vertical' },
 })
 
-export type FieldProps = Omit<ComponentProps<typeof FieldFrame>, 'orientation'> & {
+export type FieldProps = Omit<ComponentProps<typeof FieldFrame>, 'orientation' | 'invalid'> & {
   orientation?: FieldOrientation
+  /**
+   * The field's validity, stated once: the block is marked, the control inside
+   * draws its error edge, and `FieldError` shows (or, `false`, stays hidden).
+   */
+  invalid?: boolean
   'data-invalid'?: boolean
 }
 
-function Field({ orientation = 'vertical', ...props }: FieldProps) {
-  const invalid = props['data-invalid']
+function Field({ orientation = 'vertical', invalid: stated, ...props }: FieldProps) {
+  const invalid = stated ?? props['data-invalid']
+  const compact = useDensity() === 'compact'
   return (
-    <FieldFrame
-      role="group"
-      {...slot('field')}
-      data-orientation={orientation}
-      orientation={orientation}
-      invalid={invalid}
-      {...props}
-    />
+    <FieldState.Provider value={{ invalid: stated ?? props['data-invalid'] }}>
+      <FieldFrame
+        role="group"
+        {...slot('field')}
+        data-orientation={orientation}
+        orientation={orientation}
+        {...(stated !== undefined ? { 'data-invalid': stated } : null)}
+        invalid={invalid}
+        // The record density's rhythm: the label 4px above its control.
+        {...(compact ? { gap: '$1' } : null)}
+        {...props}
+      />
+    </FieldState.Provider>
   )
 }
 
@@ -128,11 +197,16 @@ export type FieldContentProps = ComponentProps<typeof FieldContent>
 /** A `Field` nested directly inside a `FieldLabel` reads as a choice card. */
 const isFieldChild = (children: ReactNode) => isValidElement(children) && children.type === Field
 
+/** The record density's caption: 12px semibold in the light ink. */
+const CAPTION = { fontSize: '$1', fontWeight: '600', color: '$dim', lineHeight: '$1' } as const
+
 function FieldLabel({ className, children, ...props }: ComponentProps<typeof Label>) {
   const card = isFieldChild(children)
+  const compact = useDensity() === 'compact'
   return (
     <Label
       {...slot('field-label')}
+      {...(compact && !card ? CAPTION : null)}
       gap="$2"
       {...(card
         ? {
@@ -155,9 +229,10 @@ function FieldLabel({ className, children, ...props }: ComponentProps<typeof Lab
 export type FieldLabelProps = ComponentProps<typeof FieldLabel>
 
 function FieldTitle({ children, ...props }: ComponentProps<typeof XStack>) {
+  const compact = useDensity() === 'compact'
   return (
     <XStack {...slot('field-label')} self="flex-start" items="center" gap="$2" {...props}>
-      {ink(children, SizableText, { fontSize: '$2', fontWeight: '500' })}
+      {ink(children, SizableText, compact ? CAPTION : { fontSize: '$2', fontWeight: '500' })}
     </XStack>
   )
 }
@@ -165,8 +240,15 @@ function FieldTitle({ children, ...props }: ComponentProps<typeof XStack>) {
 export type FieldTitleProps = ComponentProps<typeof FieldTitle>
 
 function FieldDescription({ children, ...props }: ComponentProps<typeof SizableText>) {
+  const compact = useDensity() === 'compact'
   return (
-    <SizableText {...slot('field-description')} fontSize="$2" fontWeight="400" color="$quiet" {...props}>
+    <SizableText
+      {...slot('field-description')}
+      fontSize={compact ? '$1' : '$2'}
+      fontWeight="400"
+      color={compact ? '$dim' : '$quiet'}
+      {...props}
+    >
       {children}
     </SizableText>
   )
@@ -210,18 +292,39 @@ function fieldErrorContent(
     // element, so it carries its own red9/text-sm rather than inheriting from
     // the alert frame. `listStyleType` is inline because `base.css` zeroes
     // `list-style` on every `ul` — a class cannot outrank that, an inline style does.
-    <Box
-      tag="ul"
-      className="ml-4 flex flex-col gap-1"
+    // The `ml-4 flex flex-col gap-1` and `text-sm text-red9` this used to spell
+    // as utility strings, as the props they compiled to.
+    <YStack
+      render="ul"
+      ml={16}
+      display="flex"
+      flexDirection="column"
+      gap={4}
+      minH="auto"
+      minW="auto"
+      shrink={1}
       style={{ listStyleType: 'disc' }}
       {...slot('field-error-list')}
     >
       {messages.map((error, index) => (
-        <Box key={index} tag="li" className="text-sm text-red9">
+        <YStack
+          key={index}
+          render="li"
+          display="block"
+          minH="auto"
+          minW="auto"
+          shrink={1}
+          style={{
+            display: 'list-item',
+            fontSize: 'var(--text-sm)',
+            lineHeight: 'var(--text-sm--line-height, normal)',
+            color: 'var(--red9)',
+          }}
+        >
           {error.message}
-        </Box>
+        </YStack>
       ))}
-    </Box>
+    </YStack>
   )
 }
 
@@ -232,11 +335,20 @@ export type FieldErrorProps = ComponentProps<typeof XStack> & {
 }
 
 function FieldError({ children, errors, issues, ...props }: FieldErrorProps) {
+  const field = useField()
+  const compact = useDensity() === 'compact'
   const content = fieldErrorContent(children, errors, issues)
-  if (!content) return null
+  // A field that states it is valid shows no error, whatever is passed in.
+  if (!content || field.invalid === false) return null
   return (
     <XStack role="alert" {...slot('field-error')} {...props}>
-      {ink(content, SizableText, { fontSize: '$2', fontWeight: '400', color: '$red9' })}
+      {ink(
+        content,
+        SizableText,
+        compact
+          ? { fontSize: '$1', fontWeight: '400', color: '$bad' }
+          : { fontSize: '$2', fontWeight: '400', color: '$red9' },
+      )}
     </XStack>
   )
 }
