@@ -366,9 +366,27 @@ const ALIASES = [
   'sunken', 'panel', 'hover', 'edge', 'raised', 'rim',
   'bound', 'dim', 'faint', 'soft', 'quiet', 'ink',
   'bad', 'good', 'accentHover',
+  'aside', 'hint', 'hush',
 ] as const
 /** The two state colours design publishes, so an error or a success is a rung. */
 const STATE = { bad: 'var(--state-error, #ef4444)', good: 'var(--state-success, #22c55e)' } as const
+
+/**
+ * Design's text ranks, as rungs: `$aside` the secondary line (78%), `$hint` the
+ * tertiary one (55%), `$hush` the faintest text that is still read (30%).
+ *
+ * The numbered ramp cannot say these. `$quiet`/`$soft`/`$dim` are its rungs 11,
+ * 10 and 8, and rung 11 is the high-contrast end in BOTH schemes — measured,
+ * `$quiet` is #cccccc on dark and #242424 on light, so a "secondary" line drawn
+ * with it is ink on a light page. Design's ranks are the ink at a share, so they
+ * keep their distance from the ink in either scheme; the record kit's secondary,
+ * tertiary and light text (twenty-ui's three ranks) read these. The literals are
+ * design's, per scheme, for a host that mounts no token layer.
+ */
+const RANK = {
+  dark: { aside: 'rgb(255 255 255 / .78)', hint: 'rgb(255 255 255 / .55)', hush: 'rgb(255 255 255 / .3)' },
+  light: { aside: 'rgb(10 10 10 / .78)', hint: 'rgb(10 10 10 / .55)', hush: 'rgb(10 10 10 / .3)' },
+} as const
 
 type Alias = Record<(typeof ALIASES)[number], string>
 
@@ -571,6 +589,9 @@ const themes = Object.fromEntries(
             soft: String(theme.color10),
             quiet: String(theme.color11),
             ink: `var(--foreground, ${LABEL[s]})`,
+            aside: `var(--text-secondary, ${RANK[s].aside})`,
+            hint: `var(--text-tertiary, ${RANK[s].hint})`,
+            hush: `var(--text-disabled, ${RANK[s].hush})`,
             bad: STATE.bad,
             good: STATE.good,
             background: GROUND[s],
@@ -825,6 +846,7 @@ type Base = ReturnType<typeof createGui<typeof defaultConfig>>
 type Ramp = Record<
   | 'sunken' | 'panel' | 'hover' | 'edge' | 'raised' | 'rim'
   | 'bound' | 'dim' | 'faint' | 'soft' | 'quiet' | 'ink' | 'bad' | 'good' | 'accentHover'
+  | 'aside' | 'hint' | 'hush'
   | `code${Capitalize<CodeToken>}`,
   Base['themes']['dark']['color12']
 >
