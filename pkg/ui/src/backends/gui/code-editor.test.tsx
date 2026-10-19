@@ -292,3 +292,32 @@ describe('CodeEditor', () => {
     ui.cleanup()
   })
 })
+
+describe('CodeEditor frames', () => {
+  it('a title draws the 40px header, with the toolbar’s controls and the actions in it', () => {
+    const ui = mount(<CodeEditor title="Code step" language="json" defaultValue="{}" actions={<button data-act>Test</button>} />)
+    const header = ui.slot('code-editor-header')!
+    expect(ui.slot('code-editor')?.getAttribute('data-variant')).toBe('with-header')
+    expect(header.className).toMatch(/_minH-40px/)
+    expect(ui.slot('code-editor-title')?.textContent).toBe('Code step')
+    expect(header.querySelector('[data-act]')).not.toBeNull()
+    expect(header.querySelector('[data-slot="code-editor-copy-button"]')).not.toBeNull()
+    expect(ui.slot('code-editor-toolbar')).toBeNull()
+    ui.cleanup()
+  })
+
+  it('borderless drops the edge and the corners', () => {
+    const ui = mount(<CodeEditor variant="borderless" defaultValue="x" showLanguageSelector={false} showCopyButton={false} />)
+    const frame = ui.slot('code-editor')!
+    expect(frame.className).toMatch(/_btw-0px/)
+    expect(frame.className).toMatch(/_btlr-0px/)
+    ui.cleanup()
+  })
+
+  it('autoHeight follows the text with no ceiling', () => {
+    const ui = mount(<CodeEditor defaultValue="x" autoHeight maxHeight={120} />)
+    expect(ui.editor()?.style.maxHeight).toBe('')
+    ui.cleanup()
+  })
+})
+

@@ -26,6 +26,15 @@
  * theme (`code-theme.ts`: Dracula on dark, GitHub Light on light), each token a
  * theme key of its own. Both follow the page into light or dark with nothing to
  * configure.
+ *
+ * Frame. `variant` is the record kit's three (twenty-ui's CodeEditor and
+ * CodeEditorHeader, MIT — NOTICE; CodeMirror stays, Monaco is not adopted):
+ * `default` (bordered, 8px corners), `borderless` (square, no edge, for an
+ * editor that IS its pane) and `with-header`, where `title` and `actions` draw
+ * a 40px bar on the panel rung — the title in the soft ink at medium weight, the
+ * actions 8px apart at its end — and the toolbar's language, Format and Copy
+ * move into it, so an editor has one bar. A `title` or `actions` alone implies
+ * `with-header`. `autoHeight` lets the editor follow its text with no ceiling.
  */
 import { SizableText, XStack, YStack, type YStackProps } from '@hanzo/gui'
 import { AlignLeft, Check, CircleAlert, CircleCheck, Copy, Type } from '@hanzogui/lucide-icons-2'
@@ -380,6 +389,14 @@ export interface CodeEditorProps
    * Defaults to "Code".
    */
   label?: string
+  /** `default`, `borderless` or `with-header`; a `title` or `actions` implies the last. */
+  variant?: 'default' | 'borderless' | 'with-header'
+  /** The header's title. */
+  title?: string
+  /** Controls at the header's end. */
+  actions?: React.ReactNode
+  /** Follow the text with no ceiling (`maxHeight` is ignored). */
+  autoHeight?: boolean
 }
 
 export function CodeEditor({
@@ -404,8 +421,14 @@ export function CodeEditor({
   showLanguageSelector = true,
   availableLanguages = LANGUAGES,
   label = 'Code',
+  variant,
+  title,
+  actions,
+  autoHeight = false,
   ...props
 }: CodeEditorProps) {
+  const frame = variant ?? (title !== undefined || actions !== undefined ? 'with-header' : 'default')
+  const headed = frame === 'with-header'
   const [selected, setSelected] = React.useState(language)
   const [text, setText] = React.useState(value ?? defaultValue)
   const [check, setCheck] = React.useState<JsonCheck | null>(null)
@@ -551,9 +574,9 @@ export function CodeEditor({
     const fixed = dragged !== null ? `${dragged}px` : height !== undefined ? px(height) : ''
     dom.style.height = fixed
     dom.style.minHeight = fixed ? '' : `${minHeight}px`
-    dom.style.maxHeight = fixed ? '' : `${maxHeight}px`
+    dom.style.maxHeight = fixed || autoHeight ? '' : `${maxHeight}px`
     view.current?.requestMeasure()
-  }, [dragged, height, minHeight, maxHeight, fontSize])
+  }, [dragged, height, minHeight, maxHeight, autoHeight, fontSize])
 
   const copy = React.useCallback(async () => {
     try {
@@ -571,23 +594,24 @@ export function CodeEditor({
   // resolve. Any other height is the editor's own, so the body is just as tall as the editor.
   const fills = typeof height === 'string' && height.endsWith('%')
   const formattable = showFormatButton ?? (isJson && !readOnly)
-  const toolbar = showLanguageSelector || showCopyButton || formattable
+  const toolbar = headed || showLanguageSelector || showCopyButton || formattable
   const footer = isJson && check !== null
 
   return (
     <YStack
       {...slot('code-editor')}
-      borderWidth={1}
+      data-variant={frame}
+      borderWidth={frame === 'borderless' ? 0 : 1}
       borderColor="$borderColor"
-      rounded="$3"
+      rounded={frame === 'borderless' ? 0 : '$3'}
       overflow="hidden"
       bg="$background"
-      focusWithinStyle={{ borderColor: '$outlineColor' }}
+      focusWithinStyle={frame === 'borderless' ? undefined : { borderColor: '$outlineColor' }}
       {...props}
     >
       {toolbar && (
         <XStack
-          {...slot('code-editor-toolbar')}
+          {...slot(headed ? 'code-editor-header' : 'code-editor-toolbar')}
           items="center"
           justify="space-between"
           flexWrap="wrap"
@@ -596,8 +620,14 @@ export function CodeEditor({
           borderColor="$borderColor"
           bg="$panel"
           px="$2"
-          py="$1"
+          py={headed ? 0 : '$1'}
+          {...(headed ? { minH: 40 } : null)}
         >
+          {headed ? (
+            <SizableText {...slot('code-editor-title')} size="$2" fontWeight="500" color="$soft" px="$1" numberOfLines={1} flex={1} minW={0}>
+              {title ?? label}
+            </SizableText>
+          ) : null}
           {showLanguageSelector ? (
             <Select value={selected} onValueChange={setSelected}>
               <SelectTrigger
@@ -626,7 +656,7 @@ export function CodeEditor({
               {LABEL[selected] ?? selected}
             </SizableText>
           )}
-          <XStack items="center" justify="flex-end" flexWrap="wrap" gap="$1" shrink={1} minW={0}>
+          <XStack items="center" justify="flex-end" flexWrap="wrap" gap={headed ? '$2' : '$1'} shrink={1} minW={0}>
             {formattable && (
               <Button
                 {...slot('code-editor-format-button')}
@@ -651,6 +681,7 @@ export function CodeEditor({
                 {copied ? 'Copied!' : 'Copy'}
               </Button>
             )}
+            {actions}
           </XStack>
         </XStack>
       )}
