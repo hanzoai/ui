@@ -203,3 +203,66 @@ describe('JsonTree', () => {
     ui.cleanup()
   })
 })
+
+describe('JsonTree, boxed', () => {
+  it('boxes each arrow and each key, the key led by an icon of its type, 32px a level', () => {
+    const ui = mount(<JsonTree data={{ a: { b: 'x', n: 2 } }} variant="boxed" depth={2} search={false} showCopyButton={false} />)
+    const arrow = ui.slot('json-tree-arrow')!
+    expect(getComputedStyle(arrow).width === '24px' || arrow.className.includes('_width-24px')).toBe(true)
+    const keys = [...ui.host.querySelectorAll<HTMLElement>('[data-slot="json-tree-key"]')]
+    expect(keys.map((k) => k.textContent)).toEqual(['a', 'b', 'n'])
+    expect(keys.every((k) => k.querySelector('svg'))).toBe(true)
+    const rows = [...ui.host.querySelectorAll<HTMLElement>('[data-slot="json-tree-row"]')]
+    expect(rows[1].className).toMatch(/_pl-32px/)
+    ui.cleanup()
+  })
+
+  it('marks a node by its dotted keyPath, and partial-blue only on the way there', () => {
+    const seen: string[] = []
+    const mark = (path: string) => {
+      seen.push(path)
+      return path === 'a.b' ? 'blue' : path === 'a' ? 'partial-blue' : path === 'a.n' ? 'red' : null
+    }
+    const ui = mount(<JsonTree data={{ a: { b: 'x', n: 2 } }} variant="boxed" depth={2} getNodeHighlighting={mark} />)
+    expect(seen).toEqual(expect.arrayContaining(['a', 'a.b', 'a.n']))
+    const rows = [...ui.host.querySelectorAll<HTMLElement>('[data-slot="json-tree-row"]')]
+    expect(rows.map((r) => r.getAttribute('data-highlight'))).toEqual([null, 'partial-blue', 'blue', 'red'])
+    ui.cleanup()
+  })
+
+  it('onNodeValueClick makes each leaf a button that names its path and value', () => {
+    const pick = vi.fn()
+    const ui = mount(<JsonTree data={{ user: { email: 'a@b.co' } }} depth={2} onNodeValueClick={pick} />)
+    const button = ui.host.querySelector<HTMLElement>('[data-slot="json-tree-value-button"]')!
+    expect(button.tagName).toBe('BUTTON')
+    expect(button.getAttribute('aria-label')).toBe('user.email: "a@b.co"')
+    act(() => button.click())
+    expect(pick).toHaveBeenCalledWith('a@b.co', 'user.email')
+    ui.cleanup()
+  })
+
+  it('entries draw a labelled root, keyed by id; the empty words are the host’s', () => {
+    const pick = vi.fn()
+    const ui = mount(
+      <JsonTree
+        variant="boxed"
+        depth={2}
+        search={false}
+        showCopyButton={false}
+        onNodeValueClick={pick}
+        labels={{ emptyString: 'Vide', emptyArray: 'Aucun élément' }}
+        entries={[
+          { id: 'step1', label: 'Find person', value: '' },
+          { id: 'step2', label: 'Send email', value: [] },
+        ]}
+      />,
+    )
+    expect(ui.keys()).toEqual(['Find person', 'Send email'])
+    expect(ui.host.textContent).toContain('Vide')
+    expect(ui.host.textContent).toContain('Aucun élément')
+    act(() => ui.host.querySelector<HTMLElement>('[data-slot="json-tree-value-button"]')!.click())
+    expect(pick).toHaveBeenCalledWith('', 'step1')
+    ui.cleanup()
+  })
+})
+

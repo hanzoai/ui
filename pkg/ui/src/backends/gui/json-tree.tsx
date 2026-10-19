@@ -24,15 +24,32 @@
  * `onResize` hears each one and `defaultHeight` starts from it. Copy writes the whole
  * value, whatever is open or filtered. Built from gui primitives only, so it
  * renders wherever gui does.
+ *
+ * `variant="boxed"` is the record kit's tree (twenty-ui's JsonTree, MIT —
+ * NOTICE), for workflow runs, tool calls and webhook samples: each disclosure a
+ * 24px boxed arrow that turns as it opens, each key a 24px boxed label led by a
+ * 16px icon naming its type (Type, Hash, SquareCheck, CircleOff, Brackets, Box),
+ * 32px of indent and 8px between rows. Either variant takes
+ * `getNodeHighlighting(keyPath)` — `blue` marks a node in the accent, `red` in
+ * the error state, `partial-blue` only its arrow — `onNodeValueClick(value,
+ * keyPath)`, which makes every leaf a button (copy a value, pick a variable),
+ * `entries` for a labelled root, and `labels` for the words the tree says.
+ * A keyPath is the keys joined with dots, entries by their id.
  */
 import { SizableText, XStack, YStack, type YStackProps } from '@hanzo/gui'
 import {
+  Box,
+  Brackets,
   Check,
   ChevronDown,
   ChevronRight,
   ChevronsDownUp,
   ChevronsUpDown,
+  CircleOff,
   Copy,
+  Hash,
+  SquareCheck,
+  Type,
 } from '@hanzogui/lucide-icons-2'
 import * as React from 'react'
 
@@ -45,8 +62,38 @@ import { toast } from './toaster'
 /** The tallest a drag makes the tree, px: a ceiling that is not one. */
 const CEILING = 4096
 
-/** Indent per level, in px. */
-const INDENT = 16
+/** Indent per level, in px: the code tree, and the boxed one. */
+const INDENT = { code: 16, boxed: 32 } as const
+
+export type JsonTreeVariant = 'code' | 'boxed'
+
+/** How a node is marked: in the accent, in the error state, or only its arrow in the accent. */
+export type JsonHighlight = 'blue' | 'red' | 'partial-blue'
+
+/** The words the tree says, for a host that translates them. */
+export type JsonTreeLabels = {
+  emptyString?: string
+  emptyArray?: string
+  emptyObject?: string
+}
+
+/** One labelled root entry: `id` is its key in a keyPath, `label` what is drawn. */
+export type JsonTreeEntry = { id: string; label: string; value: unknown }
+
+/** What a node needs that only the tree knows. */
+type Ctx = {
+  variant: JsonTreeVariant
+  highlight?: (keyPath: string) => JsonHighlight | null | undefined
+  onValue?: (value: unknown, keyPath: string) => void
+  labels: Required<JsonTreeLabels>
+  names: Map<string, string>
+}
+
+const LABELS: Required<JsonTreeLabels> = {
+  emptyString: 'Empty string',
+  emptyArray: 'Empty array',
+  emptyObject: 'Empty object',
+}
 
 type Branch = { kind: 'object' | 'array'; entries: [string, unknown][] }
 
@@ -112,8 +159,18 @@ export function sift(data: unknown, query: string): Sifted {
 }
 
 export interface JsonTreeProps extends Omit<YStackProps, 'children' | 'minHeight' | 'maxHeight'> {
-  /** The value to draw — anything `JSON.stringify` accepts. */
-  data: unknown
+  /** The value to draw — anything `JSON.stringify` accepts. Ignored when `entries` is given. */
+  data?: unknown
+  /** A labelled root: each entry a top-level node drawn with its label. */
+  entries?: JsonTreeEntry[]
+  /** `code` (default) or the record kit's `boxed`. */
+  variant?: JsonTreeVariant
+  /** How a node is marked, by its dotted keyPath. */
+  getNodeHighlighting?: (keyPath: string) => JsonHighlight | null | undefined
+  /** Makes every leaf a button; told the value and its dotted keyPath. */
+  onNodeValueClick?: (value: unknown, keyPath: string) => void
+  /** The words the tree says. */
+  labels?: JsonTreeLabels
   /** How many levels are open on first paint. */
   depth?: number
   /** The header's title. Omit it, `showCopyButton={false}` and `search={false}` to drop the header. */
@@ -134,7 +191,12 @@ export interface JsonTreeProps extends Omit<YStackProps, 'children' | 'minHeight
 }
 
 export function JsonTree({
-  data,
+  data: given,
+  entries,
+  variant = 'code',
+  getNodeHighlighting,
+  onNodeValueClick,
+  labels,
   depth = 2,
   title,
   showCopyButton = true,
@@ -146,6 +208,20 @@ export function JsonTree({
   onResize,
   ...props
 }: JsonTreeProps) {
+  const data = React.useMemo(
+    () => (entries ? Object.fromEntries(entries.map((e) => [e.id, e.value])) : given),
+    [entries, given],
+  )
+  const ctx = React.useMemo<Ctx>(
+    () => ({
+      variant,
+      highlight: getNodeHighlighting,
+      onValue: onNodeValueClick,
+      labels: { ...LABELS, ...labels },
+      names: new Map((entries ?? []).map((e) => [e.id, e.label])),
+    }),
+    [variant, getNodeHighlighting, onNodeValueClick, labels, entries],
+  )
   const [open, setOpen] = React.useState(() => paths(data, depth))
   const [query, setQuery] = React.useState('')
   const [copied, setCopied] = React.useState(false)
@@ -314,7 +390,7 @@ export function JsonTree({
               Nothing matches “{query.trim()}”.
             </SizableText>
           ) : (
-            <Node name={null} value={data} path="$" level={0} open={open} toggle={toggle} kept={kept} />
+            <Node name={null} value={data} path="$" dotted="" level={0} open={open} toggle={toggle} kept={kept} ctx={ctx} />
           )}
         </YStack>
         {resizable && (
@@ -343,23 +419,139 @@ const INK = {
   null: '$codeNull',
 } as const
 
-function Leaf({ value }: { value: unknown }) {
+/** The type icon a boxed key carries. */
+const KIND = {
+  string: Type,
+  number: Hash,
+  boolean: SquareCheck,
+  null: CircleOff,
+  array: Brackets,
+  object: Box,
+} as const
+
+/** A value's JSON kind, for its icon and its colour. */
+const kindOf = (v: unknown): keyof typeof KIND => {
+  if (v === null) return 'null'
+  if (Array.isArray(v)) return 'array'
+  const t = typeof v
+  return t === 'object' ? 'object' : t === 'number' || t === 'boolean' ? t : 'string'
+}
+
+/** The accent, the error state, or nothing, as the three parts of a node paint it. */
+const MARK = {
+  blue: { edge: 'var(--primary)', fill: '$hover', ink: 'var(--primary)', value: 'var(--primary)' },
+  red: { edge: '$red7', fill: 'var(--state-error-bg)', ink: '$bad', value: '$bad' },
+} as const
+
+function Leaf({ value, dotted, mark, ctx }: { value: unknown; dotted: string; mark: JsonHighlight | null; ctx: Ctx }) {
   const type = value === null ? 'null' : typeof value
-  return (
+  const boxed = ctx.variant === 'boxed'
+  const shown = value === '' ? ctx.labels.emptyString : text(value)
+  const hue = mark === 'blue' || mark === 'red' ? MARK[mark].value : null
+  const body = (
     <SizableText
       {...slot('json-tree-value')}
       data-type={type}
       size="$2"
       fontFamily="$mono"
-      color={INK[type as keyof typeof INK] ?? '$codePunctuation'}
+      color={(hue ?? (boxed ? '$soft' : (INK[type as keyof typeof INK] ?? '$codePunctuation'))) as never}
       shrink={1}
       minW={0}
+      {...(boxed ? { lineHeight: 24 } : null)}
       // A hash or a URL is one unbreakable word; without this it sets the tree's
       // min-content width and pushes the page sideways on a phone.
       style={{ overflowWrap: 'anywhere' }}
     >
-      {text(value)}
+      {shown}
     </SizableText>
+  )
+  if (!ctx.onValue) return body
+  return (
+    <XStack
+      {...slot('json-tree-value-button')}
+      render="button"
+      {...({ type: 'button' } as object)}
+      shrink={1}
+      minW={0}
+      bg="transparent"
+      borderWidth={0}
+      p={0}
+      rounded="$xs"
+      cursor="pointer"
+      hoverStyle={{ bg: '$hover' }}
+      focusVisibleStyle={{ outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' }}
+      aria-label={`${dotted || 'value'}: ${shown}`}
+      onPress={() => ctx.onValue?.(value, dotted)}
+    >
+      {body}
+    </XStack>
+  )
+}
+
+/** The disclosure arrow: a bare chevron in the code tree, a 24px box that turns in the boxed one. */
+function Arrow({ expanded, empty, mark, ctx }: { expanded: boolean; empty: boolean; mark: JsonHighlight | null; ctx: Ctx }) {
+  // `partial-blue` exists for exactly this: a branch with a marked node somewhere
+  // below it shows the accent on its arrow and nowhere else.
+  const ink = mark === 'red' ? '$bad' : mark ? 'var(--primary)' : '$soft'
+  if (ctx.variant !== 'boxed') {
+    if (empty) return <XStack width={14} shrink={0} />
+    return expanded ? <ChevronDown size={14} color={ink as never} /> : <ChevronRight size={14} color={ink as never} />
+  }
+  if (empty) return <XStack width={24} shrink={0} />
+  return (
+    <XStack
+      {...slot('json-tree-arrow')}
+      width={24}
+      height={24}
+      shrink={0}
+      items="center"
+      justify="center"
+      rounded="$xs"
+      borderWidth={1}
+      borderColor={(mark === 'red' ? '$red7' : mark ? 'var(--primary)' : '$borderColor') as never}
+      bg="$panel"
+    >
+      <ChevronDown
+        size={16}
+        color={(mark ? ink : '$quiet') as never}
+        style={{ transform: `rotate(${expanded ? 0 : -90}deg)`, transition: 'transform 300ms ease' }}
+      />
+    </XStack>
+  )
+}
+
+/** A key: name and colon in the code tree, a boxed label with its type icon in the boxed one. */
+function Key({ name, kind, mark, ctx }: { name: string; kind: keyof typeof KIND; mark: JsonHighlight | null; ctx: Ctx }) {
+  const shown = ctx.names.get(name) ?? name
+  if (ctx.variant !== 'boxed')
+    return (
+      <SizableText {...slot('json-tree-key')} size="$2" fontFamily="$mono" color={(mark === 'blue' || mark === 'red' ? MARK[mark].ink : '$codeKey') as never}>
+        {shown}
+        <SizableText size="$2" fontFamily="$mono" color="$codePunctuation">
+          :
+        </SizableText>
+      </SizableText>
+    )
+  const Icon = KIND[kind]
+  const m = mark === 'blue' || mark === 'red' ? MARK[mark] : null
+  return (
+    <XStack
+      {...slot('json-tree-key')}
+      items="center"
+      gap="$1"
+      height={24}
+      px="$2"
+      shrink={0}
+      rounded="$xs"
+      borderWidth={1}
+      borderColor={(m?.edge ?? '$borderColor') as never}
+      bg={(m?.fill ?? '$panel') as never}
+    >
+      <Icon size={16} color={(m?.ink ?? '$soft') as never} aria-hidden />
+      <SizableText size="$2" color={(m?.ink ?? '$ink') as never} numberOfLines={1}>
+        {shown}
+      </SizableText>
+    </XStack>
   )
 }
 
@@ -367,58 +559,60 @@ function Node({
   name,
   value,
   path,
+  dotted,
   level,
   open,
   toggle,
   kept,
+  ctx,
 }: {
   name: string | null
   value: unknown
   path: string
+  /** The keys down to here, joined with dots: what a host is told. */
+  dotted: string
   level: number
   open: Set<string>
   toggle: (path: string) => void
   /** The rows a filter keeps below here, or null when every row is. */
   kept: Map<string, boolean> | null
+  ctx: Ctx
 }) {
   const b = branch(value)
   const expanded = b !== null && open.has(path)
-  const key =
-    name === null ? null : (
-      <SizableText {...slot('json-tree-key')} size="$2" fontFamily="$mono" color="$codeKey">
-        {name}
-        <SizableText size="$2" fontFamily="$mono" color="$codePunctuation">
-          :
-        </SizableText>
-      </SizableText>
-    )
+  const mark = (ctx.highlight && dotted ? ctx.highlight(dotted) : null) ?? null
+  const boxed = ctx.variant === 'boxed'
+  const indent = level * INDENT[ctx.variant]
+  const gap = boxed ? '$2' : '$1.5'
+  const key = name === null ? null : <Key name={name} kind={kindOf(value)} mark={mark} ctx={ctx} />
 
   if (!b) {
     return (
-      <XStack {...slot('json-tree-row')} items="flex-start" gap="$1.5" pl={level * INDENT} py={1}>
-        <XStack width={14} shrink={0} />
+      <XStack {...slot('json-tree-row')} data-highlight={mark ?? undefined} items="flex-start" gap={gap} pl={indent} py={boxed ? 0 : 1}>
+        {boxed ? null : <XStack width={14} shrink={0} />}
         {key}
-        <Leaf value={value} />
+        <Leaf value={value} dotted={dotted} mark={mark} ctx={ctx} />
       </XStack>
     )
   }
 
   const empty = b.entries.length === 0
   return (
-    <YStack {...slot('json-tree-node')}>
+    <YStack {...slot('json-tree-node')} gap={boxed ? '$2' : 0}>
       <XStack
         {...slot('json-tree-row')}
+        data-highlight={mark ?? undefined}
         {...(!empty &&
           ({
             role: 'button',
             tabIndex: 0,
             'aria-expanded': expanded,
-            'aria-label': `${name ?? 'root'} ${count(b)}`,
+            'aria-label': `${name === null ? 'root' : (ctx.names.get(name) ?? name)} ${count(b)}`,
           } as object))}
         items="center"
-        gap="$1.5"
-        pl={level * INDENT}
-        py={1}
+        gap={gap}
+        pl={indent}
+        py={boxed ? 0 : 1}
         rounded="$2"
         cursor={empty ? undefined : 'pointer'}
         hoverStyle={empty ? undefined : { bg: '$hover' }}
@@ -434,20 +628,22 @@ function Node({
               }
         }
       >
-        {empty ? (
-          <XStack width={14} shrink={0} />
-        ) : expanded ? (
-          <ChevronDown size={14} color="$soft" />
-        ) : (
-          <ChevronRight size={14} color="$soft" />
-        )}
+        <Arrow expanded={expanded} empty={empty} mark={mark} ctx={ctx} />
         {key}
-        <SizableText {...slot('json-tree-count')} size="$2" fontFamily="$mono" color="$codeComment">
-          {empty ? (b.kind === 'array' ? '[]' : '{}') : count(b)}
+        <SizableText {...slot('json-tree-count')} size="$2" fontFamily={boxed ? undefined : '$mono'} color={boxed ? '$soft' : '$codeComment'}>
+          {empty
+            ? boxed
+              ? b.kind === 'array'
+                ? ctx.labels.emptyArray
+                : ctx.labels.emptyObject
+              : b.kind === 'array'
+                ? '[]'
+                : '{}'
+            : count(b)}
         </SizableText>
       </XStack>
       {expanded && (
-        <YStack>
+        <YStack gap={boxed ? '$2' : 0}>
           {b.entries.map(([k, v]) => {
             const at = child(path, k)
             if (kept && !kept.has(at)) return null
@@ -457,10 +653,12 @@ function Node({
                 name={k}
                 value={v}
                 path={at}
+                dotted={dotted ? `${dotted}.${k}` : k}
                 level={level + 1}
                 open={open}
                 toggle={toggle}
                 kept={kept && !kept.get(at) ? kept : null}
+                ctx={ctx}
               />
             )
           })}
