@@ -10,11 +10,20 @@
  * identical to every other menu and render correctly through the portal under a nested
  * `<Theme>` on gui-native hosts. The input row is the anchor (excluded from dismiss) and
  * the panel does NOT steal focus, so typing keeps filtering.
+ *
+ * Under `<Density value="compact">` it is the record kit's Autocomplete
+ * (twenty-ui's, MIT, NOTICE): one 32px field box, the chevron a quiet icon
+ * button inside its end rather than a control beside it. `limit` caps how many
+ * live options the list shows. A regular surface draws the row it always has.
  */
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { Button, Input, Spinner, Text, XStack } from '@hanzo/gui'
 import { ChevronDown, RefreshCw } from '@hanzogui/lucide-icons-2'
 
+import { Button as KitButton } from '../backends/gui/button'
+import { useDensity } from '../backends/gui/density'
+import { Input as KitInput } from '../backends/gui/input'
+import { InputGroup } from '../backends/gui/input-group'
 import { useEmit } from './instrument'
 import { filterOptions, type ComboOption } from './combobox/filter'
 import { MenuItemView } from './menu/items'
@@ -33,6 +42,7 @@ export function ComboBox({
   disabled,
   emptyText = 'No matches — press to use what you typed.',
   minWidth = 240,
+  limit,
 }: {
   value: string
   onChange: (v: string) => void
@@ -49,12 +59,18 @@ export function ComboBox({
   /** Row shown when the filter matches nothing (the typed value is still usable). */
   emptyText?: string
   minWidth?: number
+  /** At most this many live options in the list; all of them when unset. */
+  limit?: number
 }) {
   const [open, setOpen] = useState(false)
   const rowRef = useRef<HTMLElement | null>(null)
   const anchorRect = useCallback(() => rowRef.current?.getBoundingClientRect() ?? null, [])
   const anchorEl = useCallback(() => rowRef.current, [])
-  const filtered = useMemo(() => filterOptions(options, value), [options, value])
+  const filtered = useMemo(() => {
+    const all = filterOptions(options, value)
+    return limit != null && limit >= 0 ? all.slice(0, limit) : all
+  }, [options, value, limit])
+  const compact = useDensity() === 'compact'
 
   const track = useEmit()
 
@@ -64,8 +80,36 @@ export function ComboBox({
     setOpen(false)
   }
 
+  const toggle = () => {
+    track({ component: 'ComboBox', action: open ? 'close' : 'open' })
+    setOpen((o) => !o)
+  }
+
   return (
     <>
+      {compact ? (
+        <XStack ref={rowRef as never} minW={minWidth} data-slot="combo-box">
+          <InputGroup
+            end={
+              <KitButton size="icon-2xs" variant="ghost" emphasis="subtle" disabled={disabled} aria-label="Show options" onPress={toggle}>
+                <ChevronDown />
+              </KitButton>
+            }
+          >
+            <KitInput
+              value={value}
+              onChangeText={(v: string) => {
+                onChange(v)
+                if (!open) setOpen(true)
+              }}
+              onFocus={() => setOpen(true)}
+              disabled={disabled}
+              placeholder={placeholder}
+              autoCapitalize="none"
+            />
+          </InputGroup>
+        </XStack>
+      ) : (
       <XStack ref={rowRef as never} items="center" gap="$2" minW={minWidth}>
         <Input
           flex={1}
@@ -84,13 +128,11 @@ export function ComboBox({
           chromeless
           disabled={disabled}
           icon={<ChevronDown size={16} opacity={0.7} />}
-          onPress={() => {
-            track({ component: 'ComboBox', action: open ? 'close' : 'open' })
-            setOpen((o) => !o)
-          }}
+          onPress={toggle}
           aria-label="Show options"
         />
       </XStack>
+      )}
 
       <FloatingMenu
         open={open}

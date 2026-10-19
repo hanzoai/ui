@@ -21,6 +21,7 @@ import { CountrySelect } from '../backends/gui/country-select'
 import { PrimaryButton } from '../product/PrimaryButton'
 import { Segmented } from '../product/Filters'
 import { ImageInput } from '../backends/gui/image-input'
+import { ComboBox } from '../product/ComboBox'
 
 const NOOP = () => {}
 
@@ -112,6 +113,7 @@ export function Compound() {
           Full width
         </Button>
         <PrimaryButton>Get started</PrimaryButton>
+        <ComboBox value="" onChange={NOOP} options={[{ value: 'kai-1' }, { value: 'enso-flash' }]} placeholder="Model" />
       </Section>
 
       <Section name="number-field">
@@ -211,6 +213,7 @@ export function Compound() {
           </InputGroup>
           <CountrySelect countries={COUNTRIES} defaultValue="DE" aria-label="Compact country" />
           <PrimaryButton>Continue</PrimaryButton>
+          <ComboBox value="" onChange={NOOP} options={[{ value: 'kai-1' }, { value: 'enso-flash' }]} placeholder="Model" />
         </Section>
       </Density>
     </>
