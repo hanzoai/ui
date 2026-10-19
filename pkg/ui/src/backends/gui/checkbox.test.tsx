@@ -16,6 +16,7 @@ import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
 import { Checkbox } from './checkbox'
+import { Density } from './density'
 
 const html = (node: React.ReactNode, theme: 'dark' | 'light' = 'dark') =>
   renderToStaticMarkup(
@@ -81,5 +82,82 @@ describe('Checkbox', () => {
 
     expect(cls(on, 'bg')).toBe('_bg-transparent')
     expect(cls(on, 'bg')).toBe(cls(off, 'bg'))
+  })
+})
+
+describe('Checkbox, the record look', () => {
+  const box = (markup: string) => markup.match(/<div[^>]*data-slot="checkbox-box"[^>]*>/)?.[0] ?? ''
+  const halo = (markup: string) => markup.match(/<div[^>]*data-slot="checkbox-halo"[^>]*>/)?.[0] ?? ''
+
+  it('naming nothing keeps the plain box every caller already draws', () => {
+    const markup = html(<Checkbox checked />)
+    expect(frame(markup)).not.toContain('data-variant')
+    expect(box(markup)).toBe('')
+    expect(cls(frame(markup), 'width')).toBe('_width-16px')
+  })
+
+  it('solid sm: a 14px box in a 24px hit area, filled with the accent when checked', () => {
+    const markup = html(<Checkbox variant="solid" checked />)
+    const el = frame(markup)
+    expect(el).toContain('data-variant="solid"')
+    expect(cls(el, 'width')).toBe('_width-24px')
+    expect(el).toMatch(/data-touch-x="10"/)
+    expect(cls(box(markup), 'width')).toBe('_width-14px')
+    expect(cls(box(markup), 'bg')).toBe('_bg-primary')
+    expect(box(markup)).toMatch(/_bblr-c-radius-xs/)
+    // The halo is the hover rung at rest, the accent's tint when checked.
+    expect(halo(markup)).toMatch(/_bg-0hover-raised/)
+    expect(halo(html(<Checkbox variant="solid" />))).toMatch(/_bg-0hover-hover/)
+  })
+
+  it('the glyph is the accent’s foreground, a tick or a dash', () => {
+    expect(svg(html(<Checkbox variant="solid" checked />))).toMatch(/stroke="var\(--primary-foreground\)"/)
+    expect(path(html(<Checkbox variant="solid" checked />))).toBe(TICK)
+    expect(path(html(<Checkbox variant="solid" checked="indeterminate" />))).toBe(DASH)
+    expect(html(<Checkbox variant="solid" checked={false} />)).not.toContain('<svg')
+  })
+
+  it('md: an 18px box with its edge (21) in a 33px hit area, a 20px glyph', () => {
+    const markup = html(<Checkbox size="md" checked />)
+    expect(cls(frame(markup), 'width')).toBe('_width-33px')
+    expect(cls(box(markup), 'width')).toBe('_width-21px')
+    expect(svg(markup)).toContain('width="20"')
+  })
+
+  it('round, success, warning', () => {
+    const round = html(<Checkbox shape="round" checked />)
+    expect(box(round)).toMatch(/_bblr-c-radius-10/)
+    expect(cls(box(html(<Checkbox color="success" checked />)), 'bg')).toBe('_bg-good')
+    expect(box(html(<Checkbox color="warning" checked />))).toMatch(/_bg-state-warn/)
+  })
+
+  it('each variant has its own resting edge', () => {
+    expect(cls(box(html(<Checkbox variant="solid" />)), 'btc')).toBe('_btc-ink')
+    expect(cls(box(html(<Checkbox variant="outline" />)), 'btc')).toBe('_btc-quiet')
+    expect(cls(box(html(<Checkbox variant="soft" />)), 'btc')).toBe('_btc-borderColor')
+  })
+
+  it('without the halo the frame IS the box', () => {
+    const markup = html(<Checkbox hoverable={false} />)
+    expect(cls(frame(markup), 'width')).toBe('_width-14px')
+    expect(halo(markup)).toBe('')
+  })
+
+  it('disabled: the strong edge, no hover, a dimmed fill when checked', () => {
+    const off = html(<Checkbox variant="solid" disabled />)
+    expect(cls(box(off), 'btc')).toBe('_btc-rim')
+    expect(halo(off)).not.toMatch(/0hover/)
+    expect(frame(off)).toMatch(/_cur-not-allowed/)
+    expect(cls(box(html(<Checkbox variant="solid" disabled checked />)), 'o')).toBe('_o-0--5')
+  })
+
+  it('a compact density draws the record look with no prop at all', () => {
+    const markup = html(
+      <Density value="compact">
+        <Checkbox checked />
+      </Density>,
+    )
+    expect(frame(markup)).toContain('data-variant="solid"')
+    expect(cls(box(markup), 'bg')).toBe('_bg-primary')
   })
 })
