@@ -647,6 +647,14 @@ export {
   type StackIconProps,
   type HeadingProps,
   type LabelProps,
+  useField,
+  type CheckboxColor,
+  type CheckboxShape,
+  type CheckboxSize,
+  type CheckboxVariant,
+  type RadioSize,
+  type SwitchSize,
+  type SelectValueProps,
 } from './backends/gui'
 
 // `Hanzo` — the root, and the only thing an app mounts. It carries the gui

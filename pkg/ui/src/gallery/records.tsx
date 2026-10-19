@@ -17,6 +17,7 @@ import { Input } from '../backends/gui/input'
 import { InputGroup } from '../backends/gui/input-group'
 import { Density } from '../backends/gui/density'
 import { Display } from './display'
+import { FieldsGallery } from './fields'
 
 const NOOP = () => {}
 
@@ -61,6 +62,8 @@ export function Records() {
           <Input placeholder="Disabled" disabled />
         </InputGroup>
       </Section>
+
+      <FieldsGallery />
 
       <Density value="compact">
         <Section name="density-compact">
