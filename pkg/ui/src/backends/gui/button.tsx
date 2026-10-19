@@ -535,7 +535,9 @@ function Pressable({
   // focus away, so the state is said in ARIA and the press is refused here.
   const inert = !!disabled && !!focusableWhenDisabled
   const center = isLoading && loadingPosition === 'center'
-  const spinner = <Spinner size="small" maxW={SPIN[resolved]} maxH={SPIN[resolved]} />
+  // aria-hidden: the label stays the name and `disabled` says it is busy; an
+  // unnamed progressbar beside it is what axe reports.
+  const spinner = <Spinner aria-hidden size="small" maxW={SPIN[resolved]} maxH={SPIN[resolved]} />
   // gui's own `asChild` cannot merge into the child here: the Button frame bakes
   // a `render: <button>`, so asChild WRAPS the child in a button and drops every
   // compiled style (measured: `<button class="is_View "><a>…</a></button>`).
