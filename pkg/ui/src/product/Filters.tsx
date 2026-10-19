@@ -97,7 +97,9 @@ export function Segmented<T extends string>({
         aria-label={ariaLabel}
         orientation="horizontal"
         disabled={disabled}
-        unstyled
+        // No `unstyled` on the root: gui's ToggleGroup root does not consume it
+        // and it reached the DOM as an attribute. Every style it would reset is
+        // stated below.
         display="inline-flex"
         self="flex-start"
         flexDirection="row"

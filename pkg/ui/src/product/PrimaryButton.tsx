@@ -17,8 +17,11 @@
  *
  * Under `<Density value="compact">` it is the record surfaces' main action —
  * an onboarding step, an import's next step — as twenty-ui's MainButton draws
- * it (MIT, NOTICE): the label at semibold, 12px beside it, and lifted off the
- * page by the small shadow. A regular surface draws it as it always has.
+ * it (MIT, NOTICE): the label at semibold and 12px beside it. A regular surface
+ * draws it as it always has. Its lift (twenty-ui's elevated shadow) waits for
+ * the move onto the canonical Button below: the ladder's first rung is the
+ * `elevation-1` class, and gui's Button drops `className` (measured: the
+ * server render carries `is_Button` and nothing a caller passed).
  */
 import type { ComponentProps } from 'react'
 // gui's Button, still — and this is the one place the ladder is knowingly not
@@ -38,8 +41,8 @@ import { Button } from '@hanzo/gui'
 import { useDensity } from '../backends/gui/density'
 import { labelOf, useEmit } from './instrument'
 
-/** The record density's main action: semibold, a 12px gutter, the small shadow. */
-const MAIN = { fontWeight: '600', px: '$3', boxShadow: 'var(--shadow-sm)' } as const
+/** The record density's main action: semibold, a 12px gutter. */
+const MAIN = { fontWeight: '600', px: '$3' } as const
 
 export function PrimaryButton({ onPress, ...rest }: ComponentProps<typeof Button>) {
   const track = useEmit()

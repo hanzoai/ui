@@ -270,13 +270,14 @@ const Frame = styled(GuiButton.Frame, {
           return { color: t.ink }
       }
     },
-    // Lifted off the page: the small shadow, and an outline control on the
-    // ground itself with the stronger edge, so it reads as raised rather than
-    // as a hole (twenty-ui's `elevated`).
+    // Lifted off the page: the ladder's first rung (the `elevation-1` class the
+    // component adds — lit edge and small drop, owned by glass.css) and, on an
+    // outline, the page's ground with the stronger edge, so it reads as raised
+    // rather than as a hole (twenty-ui's `elevated`). Never `--shadow-sm`: that
+    // size ramp is common property and glass.test holds the ladder off it.
     elevated: (on: boolean, { props }: { props: Record<string, unknown> }) =>
       on
         ? {
-            boxShadow: 'var(--shadow-sm)',
             // The page's ground, through `--surface-page`. Neither `$background`
             // nor `var(--background)` will do: gui redeclares `--background` on
             // its Button sub-theme, so inside a button both read gui's button grey
@@ -571,7 +572,7 @@ function Pressable({
       // element with nothing behind them. `sx` converts what it knows and hands
       // back the rest as classes, so `btn`/`btn-link` — which are real rules in
       // our stylesheet — arrive intact.
-      {...sx(buttonVariants({ variant, size, className }))}
+      {...sx(buttonVariants({ variant, size, className: elevated ? [className, 'elevation-1'].filter(Boolean).join(' ') : className }))}
       // `as object`, because this spread is where two spellings of one prop
       // meet. `title` and `type` above pass through untouched — Frame does not
       // declare them, and a spread carries extra properties without complaint.
