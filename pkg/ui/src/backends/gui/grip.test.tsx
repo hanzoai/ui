@@ -136,6 +136,49 @@ describe('Grip', () => {
     expect(ui.grip.className).toMatch(/_outlineWidth-0px/)
     ui.cleanup()
   })
+
+  it('bar draws a visible handle: 4×48 on an edge, 3×32 between panes', () => {
+    for (const [bar, w, h] of [['edge', 4, 48], ['inline', 3, 32]] as const) {
+      const { ui } = one({ bar })
+      const handle = ui.grip.querySelector<HTMLElement>('[data-slot="grip-bar"]')!
+      expect(handle, bar).not.toBeNull()
+      expect(handle.className).toMatch(new RegExp(`_width-${w}px`))
+      expect(handle.className).toMatch(new RegExp(`_height-${h}px`))
+      expect(handle.className).toMatch(/_bg-raised/)
+      ui.cleanup()
+    }
+  })
+
+  it('steps by `step` when it is given', () => {
+    const { ui, kept } = one({ step: 10 })
+    ui.drawn(180)
+    ui.key('ArrowRight')
+    expect(kept).toEqual([190])
+    ui.cleanup()
+  })
+
+  it('Escape during a drag puts the box back where the drag found it, and keeps nothing', async () => {
+    const spans: number[] = []
+    const { ui, kept } = one({ onSpan: (n: number) => spans.push(n) })
+    ui.drawn(200)
+    const fire = (type: string, clientX: number) =>
+      act(() => {
+        ui.grip.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, button: 0, clientX }))
+      })
+    fire('pointerdown', 200)
+    fire('pointermove', 260)
+    await act(async () => {
+      await new Promise((r) => requestAnimationFrame(() => r(null)))
+    })
+    expect(spans.at(-1)).toBe(260)
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
+    })
+    expect(spans.at(-1)).toBe(200)
+    fire('pointerup', 260)
+    expect(kept).toEqual([])
+    ui.cleanup()
+  })
 })
 
 function Column() {

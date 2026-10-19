@@ -32,6 +32,17 @@
  * draws instead of an outline.
  *
  * Moved here from @hanzo/build, where hanzo.ai's sidebar and asides used it.
+ *
+ * `bar` draws a handle a person can see before reaching for it (twenty-ui's
+ * ResizeHandle, MIT, NOTICE): a pill in the middle of the band, 4×48 on an edge
+ * (`edge`) or 3×32 between two panes (`inline`), the raised rung at rest, the
+ * soft one under the pointer, and the strong edge while it moves, lengthened by
+ * a fifth whenever it is reached for. A drag in progress is cancelled by Escape,
+ * which puts the box back where the drag found it. `step` sets the key's step.
+ *
+ * It is THE standalone resizer: the docked side panel's edge, a drawer's width
+ * and an editor's height are a Grip; `ResizableHandle` is the separator inside
+ * a `ResizablePanelGroup` and nothing else.
  */
 import { YStack, type YStackProps } from '@hanzo/gui'
 import * as React from 'react'
@@ -60,6 +71,10 @@ export interface GripProps extends Omit<YStackProps, 'children'> {
   onShut?: () => void
   /** The separator's accessible name: "Resize sidebar", "Resize Input". */
   label: string
+  /** A visible handle: `edge` 4×48 on a box's edge, `inline` 3×32 between panes. Absent, the line alone. */
+  bar?: 'edge' | 'inline'
+  /** A key's step, px (32 with Shift). Default 8. */
+  step?: number
 }
 
 type Point = { clientX: number; clientY: number }
@@ -76,6 +91,8 @@ export function Grip({
   onKeep,
   onShut,
   label,
+  bar,
+  step: unit = STEP,
   ...rest
 }: GripProps) {
   const tall = side === 'top'
@@ -88,6 +105,8 @@ export function Grip({
   // keeps nothing.
   const drag = React.useRef<'none' | 'held' | 'moved'>('none')
   const want = React.useRef(span)
+  // The size the drag began at, for Escape to put back.
+  const began = React.useRef(span)
   const frame = React.useRef(0)
   const [hovered, setHovered] = React.useState(false)
   const [keyed, setKeyed] = React.useState(false)
@@ -117,6 +136,20 @@ export function Grip({
     stop()
     if (moved) settle(want.current)
   }
+  // Escape cancels a drag. The press took no focus (pointerdown is prevented so
+  // no text selection starts), so the key arrives at the document, not here.
+  React.useEffect(() => {
+    if (!moving || typeof window === 'undefined') return
+    const cancel = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || drag.current === 'none') return
+      e.preventDefault()
+      stop()
+      onSpan(began.current)
+    }
+    window.addEventListener('keydown', cancel, true)
+    return () => window.removeEventListener('keydown', cancel, true)
+  })
+
   const wider = side === 'left' ? 'ArrowRight' : side === 'right' ? 'ArrowLeft' : 'ArrowDown'
   const narrower = side === 'left' ? 'ArrowLeft' : side === 'right' ? 'ArrowRight' : 'ArrowUp'
   const edge = tall
@@ -155,6 +188,7 @@ export function Grip({
         const now = drawn(e.currentTarget)
         held.current = along(e) - grows * now
         want.current = clamp(now)
+        began.current = clamp(now)
         drag.current = 'held'
         setMoving(true)
       }}
@@ -180,7 +214,7 @@ export function Grip({
       onPointerCancel={end}
       onDoubleClick={() => (onReset ? onReset() : settle(clamp(reset ?? span)))}
       onKeyDown={(e: Keyed) => {
-        const step = e.shiftKey ? LONG : STEP
+        const step = e.shiftKey ? LONG : unit
         const now = drawn(e.currentTarget)
         const to =
           e.key === wider
@@ -199,13 +233,31 @@ export function Grip({
       }}
       {...rest}
     >
-      {/* The line: the box's own edge until a person reaches for it. */}
-      <YStack
-        {...(tall ? { height: 2, width: '100%' } : { width: 2, height: '100%' })}
-        rounded={1}
-        bg={keyed || moving ? '$outlineColor' : hovered ? '$rim' : 'transparent'}
-        pointerEvents="none"
-      />
+      {bar ? (
+        // The handle: always drawn, lit as it is reached for and while it moves.
+        <YStack
+          data-slot="grip-bar"
+          {...(() => {
+            const [thick, long] = bar === 'edge' ? [4, 48] : [3, 32]
+            return tall ? { height: thick, width: long } : { width: thick, height: long }
+          })()}
+          self="center"
+          rounded="$10"
+          bg={moving ? '$rim' : keyed ? '$outlineColor' : hovered ? '$soft' : '$raised'}
+          // Lengthened, not fattened: the scale runs along the bar.
+          {...{ [tall ? 'scaleX' : 'scaleY']: moving || hovered || keyed ? 1.2 : 1 }}
+          animation="quickest"
+          pointerEvents="none"
+        />
+      ) : (
+        // The line: the box's own edge until a person reaches for it.
+        <YStack
+          {...(tall ? { height: 2, width: '100%' } : { width: 2, height: '100%' })}
+          rounded={1}
+          bg={keyed || moving ? '$outlineColor' : hovered ? '$rim' : 'transparent'}
+          pointerEvents="none"
+        />
+      )}
     </YStack>
   )
 }
