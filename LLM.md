@@ -691,6 +691,65 @@ add a second.
 - **A View does not shrink.** RNW Views are `flex-shrink: 0`, so a toolbar's button
   group held its width at 390px; the groups carry `shrink={1} minW={0}` + `flexWrap`.
 
+### The record kit — twenty-ui's MIT parts, merged (8.28)
+
+The parts a CRM, a data table and a settings page are drawn from, merged from
+twenty-ui (MIT, commit dd7099a02f, NOTICE) and re-expressed on gui: no twenty-ui
+source, stylesheet or asset is copied, and Twenty's name appears only in NOTICE.
+A derived file says so in its header. The study that maps every twenty-ui part
+onto its Hanzo target lives outside the repo (`reuse.md`, `twenty-look.md`); the
+decisions it settled are these, and the code follows them:
+
+- **Chrome stays Hanzo's**: dark first, Zen, monochrome, alpha hairlines, the one
+  `--ring`, near-opaque floating surfaces, tooltips that follow the theme. Twenty's
+  indigo is what an org gets by setting its accent; nothing hard-codes it. Where
+  twenty-ui fills with its accent (a checked box, an on switch), the kit fills
+  with `var(--primary)` / `var(--primary-foreground)`, which @hanzo/appearance
+  repaints with the org's accent.
+- **Twenty's density is opt-in**: `<Density value="compact">` (backends/gui/
+  density.tsx) makes every control that names no size take the record box —
+  32px, 13px, an 8px gutter, the panel ground. `BOX` (control.ts) has the two
+  dense rungs `sm` (32) and `xs` (24) beside `default` (36) and `lg` (46);
+  Button has `xs` (24), `icon-xs` (24) and `icon-2xs` (20). A control that names
+  a size keeps it, and nothing that rendered at 36 before moves. A portalled
+  panel re-provides the density it opened from, as PortalTheme does the theme.
+- **Data colour is a palette of its own**: `--data-<hue>-<step>` (thirty 12-step
+  scales, @hanzo/tokens `src/data.ts`) for tags, avatars, icon tiles and status
+  pills — never chrome. Tag reads steps 3/11, an avatar 4/12 (5/6 outlined), a
+  tile 4/10. `hueOf(seed)` is twenty-ui's string hash, so a record keeps its
+  colour across an import.
+- **Two small radii**: `$xs` (4, a row nested in an 8px panel, a chip, a cell)
+  and `$2xs` (2, a mark, a flag), typed in gui-config beside the numbers.
+- **The 12px rung is `$1`**: @hanzo/design 0.5.35 publishes `--text-xs` at 12px,
+  so Twenty's 12px text and its 11px labels both land on `$1`; its 8px band
+  labels rise to the 10px floor's nearest rung, `$1`.
+
+theme.css carries what @hanzo/tokens declares and design does not ship yet:
+`compose-theme.mjs` reads the built `@hanzo/tokens/theme`, takes every name
+design's sheet lacks (dark and light separately) and appends it, then composes
+`@hanzo/tokens/css/data` with its light block answering to gui's `t_light`. The
+day design republishes those tokens the gap block is empty and disappears.
+
+`InputGroup` is one field box holding an input and the things beside it. The
+group draws the edge, the ground, the focus ring and the error state, lifted
+from the field through `GroupContext` (gui has no `:focus-within` or `:has()`);
+a grouped `Input` is bare text with an inline `outline-style: none`, because
+design's `:focus-visible` outline is a stylesheet rule and only an inline
+declaration reliably outranks it.
+
+The gallery renders the kit from `src/gallery/records.tsx`, one module per group
+(`fields`, `compound`, `display`, `menus`, …), still inside the one `Gallery`;
+`Section` lives in `src/gallery/section.tsx` so the modules can share it.
+
+**A non-frozen install in this repo poisons the type check.** Adding a workspace
+dependency with `pnpm install` re-resolved the auto-installed `@hanzo/ui` peer of
+`@hanzo/commerce` and left extra packages in `node_modules/.pnpm`; with the
+SAME source, `tsc -p tsconfig.build.json` then reported 23 errors in files
+nobody touched (`items` on `Row`, `minHeight` on Button) and `pnpm build` failed.
+The lockfile edit that adds a workspace link is three lines under the importer;
+write those by hand, `rm -rf node_modules pkg/*/node_modules`, and
+`pnpm install --frozen-lockfile`.
+
 ### modularizeImports support
 
 `scripts/gen-primitives.mjs` reads the gui backend barrel and emits one
