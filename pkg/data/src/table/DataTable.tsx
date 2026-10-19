@@ -11,15 +11,21 @@
 //   • pagination, hover-reveal "open" affordance, honest empty / loading
 // Presentational + data-injected: the host supplies records (already filtered +
 // sorted by the view) and the persistence callbacks; the table owns only its
-// interaction state. Palette is the package's raw-hex tokens (theme-independent).
+// interaction state.
+//
+// Drawn with @hanzo/ui's record kit and its theme rungs, so it follows the theme.
+// Under `<Density value="compact">` it takes the record density — 32px rows, an
+// 8px cell gutter, a 28px selection column, a framed hover action at a cell's end
+// — the cell geometry twenty-ui's tables are built from (MIT, see NOTICE); a host
+// that sets no density keeps its 44px rows.
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { ArrowDown, ArrowUp, ChevronLeft, ChevronRight, ChevronsUpDown, Maximize2 } from '@hanzogui/lucide-icons-2'
+import { Button, ButtonGroup, useDensity } from '@hanzo/ui'
 import type { FieldDefinition, SelectOption } from '../field/types'
 import { FieldDisplay } from '../field/FieldDisplay'
 import { FieldInput, isEditable } from '../field/FieldInput'
 import { CheckBox } from '../primitives'
-import { tokens } from '../theme'
 import { cycleSort, orderedColumns, paginate, sortDirOf, type SortRule } from './logic'
 
 type Record_ = Record<string, unknown>
@@ -27,9 +33,13 @@ type Record_ = Record<string, unknown>
 /** Field types whose editor commits on selection (a dropdown / toggle), not on Enter. */
 const INSTANT = new Set(['boolean', 'select', 'multiSelect', 'date', 'dateTime', 'relation', 'rating', 'files'])
 
-const SELECT_COL_W = 44
 const MIN_COL_W = 80
-const DEFAULT_ROW_H = 44
+
+/** The two densities' geometry: row height, cell gutter, selection column. */
+const GEOMETRY = {
+  regular: { row: 44, pad: 12, select: 44 },
+  compact: { row: 32, pad: 8, select: 28 },
+} as const
 
 export interface DataTableProps {
   fields: FieldDefinition[]
@@ -66,6 +76,7 @@ export interface DataTableProps {
 
   // pagination (0 / undefined → show all)
   pageSize?: number
+  /** Row height; unset, the density's (44, or 32 under `<Density value="compact">`). */
   rowHeight?: number
 }
 
@@ -76,8 +87,11 @@ export function DataTable(props: DataTableProps) {
     selectable, onSelectionChange, bulkActions,
     editable, onEditCommit, fieldOptions,
     columnOrder, onColumnOrderChange, hiddenFields,
-    pageSize = 25, rowHeight = DEFAULT_ROW_H,
+    pageSize = 25,
   } = props
+  const geo = GEOMETRY[useDensity()]
+  const rowHeight = props.rowHeight ?? geo.row
+  const SELECT_COL_W = geo.select
 
   const hidden = useMemo(() => new Set(hiddenFields ?? []), [hiddenFields])
   const [order, setOrder] = useState<string[] | undefined>(columnOrder)
@@ -191,25 +205,28 @@ export function DataTable(props: DataTableProps) {
     const w = widths[c.name] ?? c.width
     return w ? { width: w } : { flex: 1, minW: 140 }
   }
+  const hairline = { borderBottomWidth: 1, borderColor: '$borderColor' } as const
 
   return (
-    <YStack rounded={10} overflow="hidden" borderWidth={1} style={{ borderColor: tokens.border, backgroundColor: tokens.surface }}>
+    <YStack {...({ 'data-slot': 'data-table' } as object)} rounded="$3" overflow="hidden" borderWidth={1} borderColor="$borderColor" bg="$background">
       {selectable && selected.size > 0 ? (
-        <XStack items="center" justify="space-between" px={12} py={8} style={{ backgroundColor: tokens.surfaceRaised, borderBottomWidth: 1, borderBottomColor: tokens.border }}>
-          <Text fontSize={13} fontWeight="600" style={{ color: tokens.text }}>{selected.size} selected</Text>
-          <XStack items="center" gap={8}>
+        <XStack items="center" justify="space-between" px={geo.pad} py="$2" bg="$panel" {...hairline}>
+          <Text fontSize="$2" fontWeight="600" color="$ink">{`${selected.size} selected`}</Text>
+          <XStack items="center" gap="$2">
             {bulkActions?.([...selected])}
-            <Text fontSize={13} cursor="pointer" onPress={() => emit(new Set())} style={{ color: tokens.accent }}>Clear</Text>
+            <Button size="xs" variant="ghost" emphasis="subtle" onPress={() => emit(new Set())}>
+              Clear
+            </Button>
           </XStack>
         </XStack>
       ) : null}
 
-      <YStack style={{ minWidth: gridMinWidth }}>
+      <YStack {...({ role: 'table', 'aria-rowcount': pageData.total + 1 } as object)} style={{ minWidth: gridMinWidth }}>
         {/* header */}
-        <XStack style={{ backgroundColor: tokens.surfaceRaised, borderBottomWidth: 1, borderBottomColor: tokens.border }}>
+        <XStack bg="$panel" {...hairline} {...({ role: 'row' } as object)}>
           {selectable ? (
-            <XStack width={SELECT_COL_W} items="center" justify="center" py={10}>
-              <CheckBox checked={allOnPage} indeterminate={!allOnPage && someOnPage} onChange={toggleAll} />
+            <XStack width={SELECT_COL_W} items="center" justify="center" shrink={0} {...({ role: 'columnheader' } as object)}>
+              <CheckBox checked={allOnPage} indeterminate={!allOnPage && someOnPage} onChange={toggleAll} label="Select all rows" />
             </XStack>
           ) : null}
           {columns.map((c, i) => {
@@ -219,18 +236,22 @@ export function DataTable(props: DataTableProps) {
               <XStack
                 key={c.name}
                 {...cellWidthProps(c)}
+                {...({ role: 'columnheader', 'aria-sort': dir === 'asc' ? 'ascending' : dir === 'desc' ? 'descending' : undefined } as object)}
                 items="center"
-                gap={4}
-                px={12}
-                py={10}
+                gap="$1"
+                px={geo.pad}
+                minH={rowHeight}
+                borderLeftWidth={isDropTarget ? 2 : 0}
+                borderLeftColor={'var(--primary)' as never}
+                opacity={dragCol?.from === i ? 0.5 : 1}
                 ref={(node: unknown) => { headerRefs.current[i] = (node as HTMLElement | null) }}
-                style={{ position: 'relative', borderLeftWidth: isDropTarget ? 2 : 0, borderLeftColor: tokens.accent, opacity: dragCol?.from === i ? 0.5 : 1 }}
+                style={{ position: 'relative' }}
               >
-                <XStack items="center" gap={5} flex={1} cursor="pointer" onPress={() => onHeaderSort(c.name)} onPointerDown={beginReorder(i)}>
-                  <Text fontSize={11} fontWeight="700" numberOfLines={1} style={{ color: tokens.textFaint, letterSpacing: 0.4, textTransform: 'uppercase' }}>
+                <XStack items="center" gap="$1" flex={1} minW={0} cursor="pointer" onPress={() => onHeaderSort(c.name)} onPointerDown={beginReorder(i)}>
+                  <Text fontSize="$2" fontWeight="500" numberOfLines={1} color="$aside">
                     {c.label}
                   </Text>
-                  {dir === 'asc' ? <ArrowUp size={12} color={tokens.textMuted} /> : dir === 'desc' ? <ArrowDown size={12} color={tokens.textMuted} /> : onSortChange ? <ChevronsUpDown size={12} color={tokens.border} /> : null}
+                  {dir === 'asc' ? <ArrowUp size={12} color="$hint" /> : dir === 'desc' ? <ArrowDown size={12} color="$hint" /> : onSortChange ? <ChevronsUpDown size={12} color="$hush" /> : null}
                 </XStack>
                 {/* resize handle */}
                 <YStack
@@ -247,14 +268,18 @@ export function DataTable(props: DataTableProps) {
 
         {/* body */}
         {loading ? (
-          <XStack px={16} py={32} items="center" justify="center" gap={10}>
-            <Spinner size="small" color={tokens.textMuted} />
-            <Text style={{ color: tokens.textFaint }}>Loading…</Text>
+          <XStack {...({ role: 'row' } as object)}>
+            <XStack flex={1} px="$4" py="$6" items="center" justify="center" gap="$2" {...({ role: 'cell', 'aria-live': 'polite' } as object)}>
+              <Spinner size="small" aria-hidden />
+              <Text fontSize="$2" color="$hint">Loading…</Text>
+            </XStack>
           </XStack>
         ) : pageData.items.length === 0 ? (
-          <YStack px={16} py={40} items="center" gap={4}>
-            {typeof empty === 'string' ? <Text style={{ color: tokens.textFaint }}>{empty}</Text> : empty}
-          </YStack>
+          <XStack {...({ role: 'row' } as object)}>
+            <YStack flex={1} px="$4" py="$7" items="center" gap="$1" {...({ role: 'cell' } as object)}>
+              {typeof empty === 'string' ? <Text fontSize="$2" color="$hint">{empty}</Text> : empty}
+            </YStack>
+          </XStack>
         ) : (
           pageData.items.map((record, i) => {
             const rowKey = keyOf(record, i)
@@ -263,15 +288,18 @@ export function DataTable(props: DataTableProps) {
               <XStack
                 key={rowKey}
                 group
+                {...({ role: 'row', 'aria-selected': selectable ? isSel : undefined } as object)}
                 items="stretch"
                 cursor={rowPressable ? 'pointer' : undefined}
                 onPress={rowPressable ? () => onOpen?.(record) : undefined}
-                hoverStyle={{ bg: tokens.hover }}
-                style={{ borderBottomWidth: 1, borderBottomColor: tokens.border, backgroundColor: isSel ? tokens.hover : 'transparent', minHeight: rowHeight }}
+                bg={isSel ? '$hover' : 'transparent'}
+                hoverStyle={{ bg: '$hover' }}
+                minH={rowHeight}
+                {...hairline}
               >
                 {selectable ? (
-                  <XStack width={SELECT_COL_W} items="center" justify="center">
-                    <CheckBox checked={isSel} onChange={() => toggleOne(rowKey)} />
+                  <XStack width={SELECT_COL_W} items="center" justify="center" shrink={0} {...({ role: 'cell' } as object)}>
+                    <CheckBox checked={isSel} onChange={() => toggleOne(rowKey)} label={`Select row ${pageData.from + i}`} />
                   </XStack>
                 ) : null}
                 {columns.map((c, ci) => {
@@ -282,9 +310,9 @@ export function DataTable(props: DataTableProps) {
                     ? { ...c, metadata: { ...(c.metadata as object), options: fieldOptions(c) } as FieldDefinition['metadata'] }
                     : c
                   return (
-                    <XStack key={c.name} {...cellWidthProps(c)} items="center" px={12} py={6} style={{ position: 'relative' }}>
+                    <XStack key={c.name} {...cellWidthProps(c)} {...({ role: 'cell' } as object)} items="center" px={geo.pad} minW={0} style={{ position: 'relative' }}>
                       {isEditingCell ? (
-                        <YStack flex={1} onPress={(e: { stopPropagation?: () => void }) => e.stopPropagation?.()}>
+                        <YStack flex={1} minW={0} py="$1" onPress={(e: { stopPropagation?: () => void }) => e.stopPropagation?.()}>
                           <FieldInput
                             field={withOpts}
                             value={draft}
@@ -297,34 +325,30 @@ export function DataTable(props: DataTableProps) {
                       ) : (
                         <XStack
                           flex={1}
+                          minW={0}
                           items="center"
-                          minH={rowHeight - 12}
+                          gap="$1"
+                          minH={rowHeight - 8}
                           cursor={canEdit ? 'text' : undefined}
                           onPress={canEdit ? () => startEdit(rowKey, c, record[c.name]) : undefined}
-                          hoverStyle={canEdit ? { bg: tokens.surfaceRaised } : undefined}
-                          rounded={6}
-                          px={canEdit ? 6 : 0}
-                          style={{ marginLeft: canEdit ? -6 : 0 }}
+                          hoverStyle={canEdit ? { bg: '$raised' } : undefined}
+                          rounded="$xs"
+                          px={canEdit ? '$1' : 0}
+                          mx={canEdit ? -4 : 0}
+                          overflow="hidden"
                         >
                           <FieldDisplay field={c} value={record[c.name]} />
-                          {savingCell === cellId ? <Spinner size="small" color={tokens.textFaint} /> : null}
+                          {savingCell === cellId ? <Spinner size="small" aria-hidden /> : null}
                         </XStack>
                       )}
-                      {/* open affordance on the first column (hover-revealed) — editable rows only; read-only rows open on full-row press */}
+                      {/* open action on the first column, revealed on row hover — editable rows only; read-only rows open on a full-row press */}
                       {ci === 0 && onOpen && editable && !isEditingCell ? (
-                        <XStack
-                          $group-hover={{ opacity: 1 }}
-                          items="center"
-                          justify="center"
-                          width={26}
-                          height={26}
-                          rounded={6}
-                          cursor="pointer"
-                          onPress={() => onOpen(record)}
-                          hoverStyle={{ bg: tokens.border }}
-                          style={{ position: 'absolute', right: 6, opacity: 0, backgroundColor: tokens.surfaceRaised }}
-                        >
-                          <Maximize2 size={13} color={tokens.textMuted} />
+                        <XStack position="absolute" r={geo.pad / 2} opacity={0} $group-hover={{ opacity: 1 }} focusWithinStyle={{ opacity: 1 }}>
+                          <ButtonGroup framed size="icon-2xs" variant="ghost">
+                            <Button size="icon-2xs" variant="ghost" emphasis="subtle" aria-label="Open record" onPress={() => onOpen(record)}>
+                              <Maximize2 />
+                            </Button>
+                          </ButtonGroup>
                         </XStack>
                       ) : null}
                     </XStack>
@@ -338,32 +362,19 @@ export function DataTable(props: DataTableProps) {
 
       {/* footer / pagination */}
       {!loading && pageSize > 0 && pageData.total > 0 ? (
-        <XStack items="center" justify="space-between" px={12} py={8} style={{ backgroundColor: tokens.surfaceRaised, borderTopWidth: 1, borderTopColor: tokens.border }}>
-          <Text fontSize={12} style={{ color: tokens.textFaint }}>{`${pageData.from}–${pageData.to} of ${pageData.total}`}</Text>
-          <XStack items="center" gap={4}>
-            <PagerButton disabled={pageData.page <= 1} onPress={() => setPage((p) => Math.max(1, p - 1))}><ChevronLeft size={15} color={pageData.page <= 1 ? tokens.border : tokens.textMuted} /></PagerButton>
-            <Text fontSize={12} px={6} style={{ color: tokens.textMuted }}>{`${pageData.page} / ${pageData.pageCount}`}</Text>
-            <PagerButton disabled={pageData.page >= pageData.pageCount} onPress={() => setPage((p) => Math.min(pageData.pageCount, p + 1))}><ChevronRight size={15} color={pageData.page >= pageData.pageCount ? tokens.border : tokens.textMuted} /></PagerButton>
+        <XStack items="center" justify="space-between" px={geo.pad} py="$1" bg="$panel" borderTopWidth={1} borderColor="$borderColor">
+          <Text fontSize="$1" color="$hint">{`${pageData.from}–${pageData.to} of ${pageData.total}`}</Text>
+          <XStack items="center" gap="$1">
+            <Button size="icon-xs" variant="ghost" emphasis="subtle" aria-label="Previous page" disabled={pageData.page <= 1} onPress={() => setPage((p) => Math.max(1, p - 1))}>
+              <ChevronLeft />
+            </Button>
+            <Text fontSize="$1" px="$1" color="$hint">{`${pageData.page} / ${pageData.pageCount}`}</Text>
+            <Button size="icon-xs" variant="ghost" emphasis="subtle" aria-label="Next page" disabled={pageData.page >= pageData.pageCount} onPress={() => setPage((p) => Math.min(pageData.pageCount, p + 1))}>
+              <ChevronRight />
+            </Button>
           </XStack>
         </XStack>
       ) : null}
     </YStack>
-  )
-}
-
-function PagerButton({ children, disabled, onPress }: { children: ReactNode; disabled?: boolean; onPress: () => void }) {
-  return (
-    <XStack
-      width={28}
-      height={28}
-      items="center"
-      justify="center"
-      rounded={6}
-      cursor={disabled ? undefined : 'pointer'}
-      onPress={disabled ? undefined : onPress}
-      hoverStyle={disabled ? undefined : { bg: tokens.hover }}
-    >
-      {children}
-    </XStack>
   )
 }
