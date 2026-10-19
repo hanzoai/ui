@@ -11,6 +11,11 @@
  *
  * `Picker` is the other select: the platform's own, for a list the platform
  * should show — every country, on a phone.
+ *
+ * Rows are concentric in the panel: a 4px inset inside an 8px panel takes a 4px
+ * row radius (`$xs`). Under `<Density value="compact">` the list takes the
+ * record density twenty-ui's Select draws (MIT, NOTICE): 13px rows in the quiet
+ * ink on the hover rung, and the density crosses the portal with the list.
  */
 import {
   Children,
@@ -32,7 +37,8 @@ import {
 import { Check, ChevronDown, ChevronUp } from "@hanzogui/lucide-icons-2"
 
 import { BOX, EDGE, FIELD, FILL, type FieldSize } from "./control"
-import { fieldSize, useDensity } from "./density"
+import { Density, fieldSize, useDensity } from "./density"
+import { invalidOf, useField } from "./field"
 import { touch } from "./gesture"
 import { ink } from "./ink"
 import { slot } from "./slot"
@@ -66,7 +72,20 @@ const Select: SelectRoot = /* @__PURE__ */ Object.assign(
   GuiSelect
 ) as SelectRoot
 const SelectGroup: typeof GuiSelect.Group = GuiSelect.Group
-const SelectValue: typeof GuiSelect.Value = GuiSelect.Value
+
+/**
+ * The trigger's rung, handed to the value it shows. `ink()` sizes a string
+ * child; `SelectValue` is an element and drew gui's own 14px whatever the box,
+ * so a 32px compact trigger showed its value a rung larger than the Input
+ * beside it. The trigger provides its box's rung and the value reads it.
+ */
+const TriggerFont = /* @__PURE__ */ createContext<"$2" | "$3">("$3")
+
+export type SelectValueProps = ComponentProps<typeof GuiSelect.Value>
+
+const SelectValue = (props: SelectValueProps) => (
+  <GuiSelect.Value fontSize={useContext(TriggerFont)} {...props} />
+)
 
 export type SelectTriggerProps = Omit<ComponentProps<typeof GuiSelect.Trigger>, "size"> & {
   /** The box, as `Input`'s (control.ts `BOX`). Unset, the nearest `<Density>` decides. */
@@ -94,6 +113,7 @@ const SelectTrigger = ({
   const inherited = useContext(Disabled)
   const density = useDensity()
   const box = BOX[fieldSize(size, density)]
+  const invalid = invalidOf((props as { "aria-invalid"?: unknown })["aria-invalid"], useField())
   return (
     <GuiSelect.Trigger
       {...slot("select-trigger")}
@@ -101,6 +121,7 @@ const SelectTrigger = ({
       disabled={disabled ?? inherited}
       {...FIELD}
       {...(density === "compact" ? { bg: "$panel" } : null)}
+      {...(invalid ? { borderColor: "$red7", "aria-invalid": true } : null)}
       px={box.gutter}
       items="center"
       justify="space-between"
@@ -128,7 +149,7 @@ const SelectTrigger = ({
         — one height, 8px radius, 1px edge — and they sit side by side in every
         form; rendering one at 14px and the other at 13px was the single most
         visible inconsistency the package shipped. Both read `box.font`. */}
-      {ink(children, undefined, { size: box.font })}
+      <TriggerFont.Provider value={box.font}>{ink(children, undefined, { size: box.font })}</TriggerFont.Provider>
       <GuiSelect.Icon>
         <ChevronDown size={16} opacity={0.5} />
       </GuiSelect.Icon>
@@ -136,41 +157,45 @@ const SelectTrigger = ({
   )
 }
 
-const SelectItem = ({ children, value, ...props }: SelectItemProps) => (
-  <GuiSelect.Item
-    value={value}
-    {...slot("select-item")}
-    unstyled
-    index={props.index ?? 0}
-    items="center"
-    // Start-aligned. gui's ListItem centres its row on the main axis, which set
-    // every option's label in the middle of the list with the tick on the far edge.
-    justify="flex-start"
-    gap="$2"
-    minH={ROW_H}
-    pl="$2"
-    pr="$7"
-    rounded="$2"
-    cursor="pointer"
-    {...touch(ROW_H, 44, "y")}
-    hoverStyle={{ bg: "$raised" }}
-    focusStyle={{ bg: "$raised" }}
-    {...props}
-  >
-    <GuiSelect.ItemText>{children}</GuiSelect.ItemText>
-    <XStack
-      position="absolute"
-      r="$2"
+const SelectItem = ({ children, value, ...props }: SelectItemProps) => {
+  const compact = useDensity() === "compact"
+  return (
+    <GuiSelect.Item
+      value={value}
+      {...slot("select-item")}
+      unstyled
+      index={props.index ?? 0}
       items="center"
-      justify="center"
-      pointerEvents="none"
+      // Start-aligned. gui's ListItem centres its row on the main axis, which set
+      // every option's label in the middle of the list with the tick on the far edge.
+      justify="flex-start"
+      gap="$2"
+      minH={ROW_H}
+      pl={compact ? "$1" : "$2"}
+      pr="$7"
+      // Concentric: the panel is 8, its inset 4, so a row is 4.
+      rounded="$xs"
+      cursor="pointer"
+      {...touch(ROW_H, 44, "y")}
+      hoverStyle={{ bg: compact ? "$hover" : "$raised" }}
+      focusStyle={{ bg: compact ? "$hover" : "$raised" }}
+      {...props}
     >
-      <GuiSelect.ItemIndicator>
-        <Check size={16} />
-      </GuiSelect.ItemIndicator>
-    </XStack>
-  </GuiSelect.Item>
-)
+      <GuiSelect.ItemText {...(compact ? { fontSize: "$2", color: "$quiet" } : null)}>{children}</GuiSelect.ItemText>
+      <XStack
+        position="absolute"
+        r="$2"
+        items="center"
+        justify="center"
+        pointerEvents="none"
+      >
+        <GuiSelect.ItemIndicator>
+          <Check size={16} strokeWidth={2} />
+        </GuiSelect.ItemIndicator>
+      </XStack>
+    </GuiSelect.Item>
+  )
+}
 
 /** Depth-first stamp of `index` onto every `SelectItem` in render order. */
 const stampIndices = (children: ReactNode, next: () => number): ReactNode =>
@@ -210,20 +235,26 @@ const SelectScrollDownButton = (props: SelectScrollButtonProps) => (
 
 const SelectContent = ({ children, ...props }: SelectContentProps) => {
   let n = 0
+  // Read on the trigger's side of the portal and re-provided inside it: a
+  // context does not cross gui's portal, a provider placed in the portalled
+  // children does.
+  const density = useDensity()
   return (
     <GuiSelect.Content {...slot("select-content")} {...props}>
-      <SelectScrollUpButton />
-      <GuiSelect.Viewport
-        minW={128}
-        p="$1"
-        bg="$panel"
-        borderWidth={1}
-        borderColor="$borderColor"
-        rounded="$4"
-      >
-        {stampIndices(children, () => n++)}
-      </GuiSelect.Viewport>
-      <SelectScrollDownButton />
+      <Density value={density}>
+        <SelectScrollUpButton />
+        <GuiSelect.Viewport
+          minW={128}
+          p="$1"
+          bg="$panel"
+          borderWidth={1}
+          borderColor="$borderColor"
+          rounded="$3"
+        >
+          {stampIndices(children, () => n++)}
+        </GuiSelect.Viewport>
+        <SelectScrollDownButton />
+      </Density>
     </GuiSelect.Content>
   )
 }
@@ -234,6 +265,7 @@ const SelectLabel = (props: SelectLabelProps) => (
     px="$2"
     py="$1.5"
     fontSize="$1"
+    fontWeight="500"
     color="$quiet"
     {...props}
   />
@@ -276,10 +308,13 @@ export type PickerProps = Omit<TextProps, "render" | "size" | keyof Native> &
  * — a native control gui does not draw, so it names what gui's Input carries.
  */
 const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(function Picker(
-  { id, name, value, defaultValue, onChange, required, disabled, autoComplete, children, size = "default", fill = false, ...props },
+  { id, name, value, defaultValue, onChange, required, disabled, autoComplete, children, size, fill = false, ...props },
   ref,
 ) {
-  const box = BOX[size as FieldSize]
+  const density = useDensity()
+  const resolved = fieldSize(size, density)
+  const box = BOX[resolved]
+  const dense = resolved === "sm" || resolved === "xs"
   return (
     <Text
       ref={ref as never}
@@ -299,6 +334,7 @@ const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(functi
       componentName="Input"
       {...FIELD}
       {...EDGE}
+      {...(density === "compact" ? { bg: "$panel" } : null)}
       {...(fill ? FILL : null)}
       display="block"
       // A floor, as the trigger's: the riser and the line make the box, and a
@@ -311,8 +347,9 @@ const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(functi
       py={box.riser}
       color="$color"
       fontFamily="$body"
-      fontSize="$3"
-      lineHeight="$3"
+      fontSize={box.font}
+      // The record sizes set 13px on a 16px line; their riser is cut for it.
+      lineHeight={dense ? 16 : "$3"}
       cursor="pointer"
       {...props}
     >
