@@ -1009,6 +1009,15 @@ imports `AssetRegistry`, which `react-native-web@0.21.2` does not export, so the
 consumer app fails to build. The fix is a version pin on that chain, which is its
 own decision — do not paper over it here.
 
+Two newer failures used to stop the gate before it reached that one, and the
+consumer manifests now state what they need instead: `react-native` 0.87.1 (the
+workspace's; react-native-svg peers `react-native: *`, npm took 0.88.0, which
+peers `react ^19.3.0` against the manifest's 19.2.8 and ends `npm i` on ERESOLVE),
+and, in the Vite consumer only, `@hanzo/iam` and `@hanzogui/shell`, the optional
+peers the gallery's sign-in and onboarding sections import (rolldown fails the
+build on a missing export of an absent optional peer). Measured 2026-10-19: with
+both, the build stops exactly at react-native-svg's `TurboModuleRegistry`.
+
 ## Telemetry — `@hanzo/event` is the ONE client (`pkg/event`)
 
 `@hanzo/event` is the single canonical telemetry client for every Hanzo surface.
