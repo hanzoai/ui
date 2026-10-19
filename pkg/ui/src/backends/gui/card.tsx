@@ -7,13 +7,30 @@
  * and a row is the one box model that also exists on native.
  */
 import { SizableText, XStack, YStack, styled, withStaticProperties } from '@hanzo/gui'
-import type { ComponentProps } from 'react'
+import { createContext, useContext, type ComponentProps } from 'react'
+import { useDensity, type DensityName } from './density'
 import { AspectRatio, type AspectRatioProps } from './aspect-ratio'
 import { ink } from './ink'
 import { slot } from './slot'
 import type { Microdata } from './microdata'
 
 const PAD = 24
+
+/**
+ * The compact card (twenty-ui's Card, MIT, NOTICE): the settings and record
+ * frame. No inset of its own and an 8px corner; a Header and a Footer band at
+ * 8×16 in 12px medium on the ground, a Content well at 16 on the panel rung,
+ * hairlines between them (`divider` on Content, on by default for the Footer).
+ * Asked for with `density="compact"` or given by a compact `<Density>`. The
+ * regular card stays the 24px-padded panel.
+ */
+const Compact = /* @__PURE__ */ createContext(false)
+
+const COMPACT = {
+  frame: { py: 0, gap: 0, rounded: '$3', overflow: 'hidden', bg: 'transparent' },
+  band: { px: 16, py: 8, bg: '$background' },
+  content: { p: 16, bg: '$panel' },
+} as const
 
 const CardFrame = styled(YStack, {
   name: 'Card',
@@ -56,23 +73,35 @@ export type CardProps = ComponentProps<typeof CardFrame> & {
    * it.
    */
   interactive?: boolean
+  /** `compact` is the sectioned settings/record card; unset, the nearest `<Density>` decides. */
+  density?: DensityName
 } & Microdata
 export type CardHeaderProps = ComponentProps<typeof HeaderFrame>
 export type CardTitleProps = ComponentProps<typeof TitleFrame>
 export type CardDescriptionProps = ComponentProps<typeof DescriptionFrame>
 export type CardActionProps = ComponentProps<typeof ActionFrame>
-export type CardContentProps = ComponentProps<typeof ContentFrame>
-export type CardFooterProps = ComponentProps<typeof FooterFrame>
+export type CardContentProps = ComponentProps<typeof ContentFrame> & {
+  /** A hairline under the content (compact card). */
+  divider?: boolean
+}
+export type CardFooterProps = ComponentProps<typeof FooterFrame> & {
+  /** The hairline above the footer (compact card); on by default. */
+  divider?: boolean
+}
 
-const Card = ({ interactive, onPress, ...p }: CardProps) => (
+const Card = ({ interactive, onPress, density, children, ...p }: CardProps) => {
+  const near = useDensity()
+  const compact = (density ?? near) === 'compact'
+  return (
   <CardFrame
     {...slot('card')}
+    {...(compact ? { 'data-density': 'compact', ...COMPACT.frame } : null)}
     {...(interactive
       ? {
           role: 'button',
           tabIndex: 0,
           cursor: 'pointer',
-          hoverStyle: { borderColor: '$dim' },
+          hoverStyle: compact ? { bg: '$hover' } : { borderColor: '$dim' },
           focusStyle: { borderColor: '$dim', outlineWidth: 2, outlineStyle: 'solid', outlineColor: '$dim' },
           // A div with role="button" is not a button: the browser gives it no
           // keyboard activation, so it has to be spelled out or the card is
@@ -86,18 +115,51 @@ const Card = ({ interactive, onPress, ...p }: CardProps) => (
       : null)}
     onPress={onPress}
     {...p}
-  />
-)
-const CardHeader = (p: CardHeaderProps) => <HeaderFrame {...slot('card-header')} {...p} />
+  >
+    <Compact.Provider value={compact}>{children}</Compact.Provider>
+  </CardFrame>
+  )
+}
+
+const CardHeader = ({ children, ...p }: CardHeaderProps) => {
+  const compact = useContext(Compact)
+  return (
+    <HeaderFrame
+      {...slot('card-header')}
+      {...(compact ? { ...COMPACT.band, gap: '$1', borderBottomWidth: 1, borderColor: '$borderColor' } : null)}
+      {...p}
+    >
+      {compact ? ink(children, SizableText, { size: '$1', fontWeight: '500', color: '$quiet' }) : children}
+    </HeaderFrame>
+  )
+}
 const CardTitle = (p: CardTitleProps) => <TitleFrame {...slot('card-title')} {...p} />
 const CardDescription = (p: CardDescriptionProps) => <DescriptionFrame {...slot('card-description')} {...p} />
 const CardAction = (p: CardActionProps) => <ActionFrame {...slot('card-action')} {...p} />
-const CardContent = ({ children, ...p }: CardContentProps) => (
-  <ContentFrame {...slot('card-content')} {...p}>{ink(children)}</ContentFrame>
-)
-const CardFooter = ({ children, ...p }: CardFooterProps) => (
-  <FooterFrame {...slot('card-footer')} {...p}>{ink(children)}</FooterFrame>
-)
+const CardContent = ({ children, divider = false, ...p }: CardContentProps) => {
+  const compact = useContext(Compact)
+  return (
+    <ContentFrame
+      {...slot('card-content')}
+      {...(compact ? { ...COMPACT.content, ...(divider ? { borderBottomWidth: 1, borderColor: '$borderColor' } : null) } : null)}
+      {...p}
+    >
+      {ink(children)}
+    </ContentFrame>
+  )
+}
+const CardFooter = ({ children, divider = true, ...p }: CardFooterProps) => {
+  const compact = useContext(Compact)
+  return (
+    <FooterFrame
+      {...slot('card-footer')}
+      {...(compact ? { ...COMPACT.band, ...(divider ? { borderTopWidth: 1, borderColor: '$borderColor' } : null) } : null)}
+      {...p}
+    >
+      {compact ? ink(children, SizableText, { size: '$1', color: '$quiet' }) : ink(children)}
+    </FooterFrame>
+  )
+}
 
 /**
  * CardMedia — the picture at the top of a card, edge to edge.
