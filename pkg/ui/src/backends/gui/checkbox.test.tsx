@@ -133,7 +133,7 @@ describe('Checkbox, the record look', () => {
 
   it('each variant has its own resting edge', () => {
     expect(cls(box(html(<Checkbox variant="solid" />)), 'btc')).toBe('_btc-ink')
-    expect(cls(box(html(<Checkbox variant="outline" />)), 'btc')).toBe('_btc-quiet')
+    expect(cls(box(html(<Checkbox variant="outline" />)), 'btc')).toBe('_btc-hint')
     expect(cls(box(html(<Checkbox variant="soft" />)), 'btc')).toBe('_btc-borderColor')
   })
 

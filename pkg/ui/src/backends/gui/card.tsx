@@ -129,7 +129,7 @@ const CardHeader = ({ children, ...p }: CardHeaderProps) => {
       {...(compact ? { ...COMPACT.band, gap: '$1', borderBottomWidth: 1, borderColor: '$borderColor' } : null)}
       {...p}
     >
-      {compact ? ink(children, SizableText, { size: '$1', fontWeight: '500', color: '$quiet' }) : children}
+      {compact ? ink(children, SizableText, { size: '$1', fontWeight: '500', color: '$aside' }) : children}
     </HeaderFrame>
   )
 }
@@ -156,7 +156,7 @@ const CardFooter = ({ children, divider = true, ...p }: CardFooterProps) => {
       {...(compact ? { ...COMPACT.band, ...(divider ? { borderTopWidth: 1, borderColor: '$borderColor' } : null) } : null)}
       {...p}
     >
-      {compact ? ink(children, SizableText, { size: '$1', color: '$quiet' }) : ink(children)}
+      {compact ? ink(children, SizableText, { size: '$1', color: '$aside' }) : ink(children)}
     </FooterFrame>
   )
 }

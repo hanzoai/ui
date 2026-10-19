@@ -202,7 +202,7 @@ function Callout({
           render="div"
           size="$1"
           lineHeight={17}
-          color="$soft"
+          color="$hint"
           pl={lead ? 24 : 0}
           pb={action ? 0 : '$2'}
         >

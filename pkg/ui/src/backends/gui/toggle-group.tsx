@@ -275,7 +275,7 @@ function ToggleGroupItem({ variant, size, disabled, children, value, ...props }:
           size: '$1',
           fontWeight: '600',
           numberOfLines: 1,
-          color: off ? 'var(--text-faint)' : on ? 'var(--primary)' : '$soft',
+          color: off ? 'var(--text-faint)' : on ? 'var(--primary)' : '$hint',
         })}
       </GuiToggleGroup.Item>
     )

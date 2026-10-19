@@ -53,7 +53,7 @@ function CornerMark({ selected }: { selected: boolean }) {
       height={16}
       rounded={9999}
       borderWidth={1}
-      borderColor={selected ? 'var(--primary)' : '$quiet'}
+      borderColor={selected ? 'var(--primary)' : '$aside'}
       bg={selected ? 'var(--primary)' : 'transparent'}
       items="center"
       justify="center"

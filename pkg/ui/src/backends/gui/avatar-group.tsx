@@ -78,7 +78,7 @@ export function AvatarGroup({
           {renderOverflow ? (
             renderOverflow(hidden)
           ) : (
-            <SizableText size="$1" lineHeight={13} fontWeight="500" color="$quiet">
+            <SizableText size="$1" lineHeight={13} fontWeight="500" color="$aside">
               {`+${hidden}`}
             </SizableText>
           )}

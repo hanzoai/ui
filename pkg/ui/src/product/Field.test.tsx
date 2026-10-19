@@ -66,7 +66,7 @@ describe('settings Heading under a compact density', () => {
       </Density>,
     )
     expect(compact).toMatch(/_fw-600/)
-    expect(compact).toMatch(/_col-quiet/)
+    expect(compact).toMatch(/_col-aside/)
     expect(compact).toMatch(/_mb-c-space-4/)
     const regular = html(<Heading title="Members" detail="Who can see records." />)
     expect(regular).not.toMatch(/_mb-c-space-4/)

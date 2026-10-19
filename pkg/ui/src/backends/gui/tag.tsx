@@ -89,7 +89,7 @@ export function Tag({
   const bare = color === 'transparent'
   const hue = hueOr(bare ? 'gray' : color)
   const { style: hueStyle, tone } = useTone(hue, [3, 11])
-  const ink = bare ? '$quiet' : variant === 'solid' ? '$background' : tone(11)
+  const ink = bare ? '$aside' : variant === 'solid' ? '$background' : tone(11)
   const fill = bare || variant === 'outline' || variant === 'ghost' ? 'transparent' : variant === 'solid' ? tone(11) : tone(3)
   const text = { size: '$2', fontWeight: weight === 'medium' ? '500' : undefined, color: ink } as const
   const interactive = !disabled && (onPress != null || href != null)

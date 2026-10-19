@@ -171,7 +171,7 @@ export function Shortcut({
       {combos.map((combo, i) => (
         <XStack key={i} aria-hidden display="inline-flex" items="center" gap="$1">
           {i > 0 ? (
-            <SizableText size="$1" color="$soft">
+            <SizableText size="$1" color="$hint">
               {sequenceJoinLabel}
             </SizableText>
           ) : null}

@@ -115,11 +115,11 @@ export function CurrencyPicker({
           {renderValue ? (
             renderValue(picked)
           ) : (
-            <SizableText size="$2" fontWeight="500" color="$dim">
+            <SizableText size="$2" fontWeight="500" color="$hint">
               {picked?.code ?? placeholder}
             </SizableText>
           )}
-          <ChevronDown size={14} color="$dim" />
+          <ChevronDown size={14} color="$hint" />
         </Segment>
       }
     />

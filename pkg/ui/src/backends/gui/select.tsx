@@ -181,7 +181,7 @@ const SelectItem = ({ children, value, ...props }: SelectItemProps) => {
       focusStyle={{ bg: compact ? "$hover" : "$raised" }}
       {...props}
     >
-      <GuiSelect.ItemText {...(compact ? { fontSize: "$2", color: "$quiet" } : null)}>{children}</GuiSelect.ItemText>
+      <GuiSelect.ItemText {...(compact ? { fontSize: "$2", color: "$aside" } : null)}>{children}</GuiSelect.ItemText>
       <XStack
         position="absolute"
         r="$2"

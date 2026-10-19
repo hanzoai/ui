@@ -108,7 +108,7 @@ const LineTab = ({ children, startIcon, endIcon, badge, size = 'md', highlighted
   const { value: current, vertical } = useContext(LineContext)
   const [hovered, setHovered] = useState(false)
   const chosen = current === value
-  const tone = disabled ? '$dim' : chosen ? '$ink' : '$quiet'
+  const tone = disabled ? '$hush' : chosen ? '$ink' : '$aside'
   return (
     <GuiTabs.Tab
       {...slot('tabs-trigger')}

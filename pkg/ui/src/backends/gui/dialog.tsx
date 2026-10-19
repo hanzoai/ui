@@ -160,7 +160,7 @@ export const section = {
   body: { px: PAD, pb: PAD },
   footer: { px: PAD, pb: PAD, mt: 'auto', flexWrap: 'wrap', gap: '$2' },
   title: { size: '$4', fontWeight: '600', textAlign: 'center' },
-  description: { size: '$2', lineHeight: 20, textAlign: 'center' },
+  description: { size: '$2', lineHeight: 20, textAlign: 'center', color: '$aside' },
 } as const
 
 const DialogHeader = (props: DialogSectionProps) => {

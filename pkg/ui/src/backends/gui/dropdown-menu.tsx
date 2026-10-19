@@ -490,7 +490,7 @@ const DropdownMenuItem = /* @__PURE__ */ React.forwardRef<
       {opens ? (
         <>
           {ink(children, Text as never, { fontSize: '$2' })}
-          <ChevronRight size={ICON - 2} ml="auto" color="$dim" />
+          <ChevronRight size={ICON - 2} ml="auto" color="$hush" />
         </>
       ) : (
         ink(children, Text as never, { fontSize: '$2' })
@@ -693,7 +693,7 @@ const DropdownMenuOptionItem = /* @__PURE__ */ React.forwardRef<GuiElement, Drop
       <>
         {mark === "checkbox" ? <Box on={on} /> : null}
         {typeof children === "string" ? (
-          <Text fontSize="$2" color="$quiet" numberOfLines={1} flex={1} minW={0}>
+          <Text fontSize="$2" color="$aside" numberOfLines={1} flex={1} minW={0}>
             {children}
           </Text>
         ) : (
@@ -907,7 +907,7 @@ const DropdownMenuClose = /* @__PURE__ */ React.forwardRef<
       focusStyle={{ bg: "$hover" }}
       {...props}
     >
-      <X size={ICON} color="$quiet" />
+      <X size={ICON} color="$aside" />
     </Menu.Item>
   )
 })
@@ -932,7 +932,7 @@ const DropdownMenuBack = /* @__PURE__ */ React.forwardRef<GuiElement, React.Comp
         }}
         {...props}
       >
-        <ChevronLeft size={ICON} color="$quiet" />
+        <ChevronLeft size={ICON} color="$aside" />
         {typeof children === "string" ? (
           <Text fontSize="$2" fontWeight="500" color="$ink" numberOfLines={1} flex={1}>
             {children}
@@ -962,7 +962,7 @@ function Status({ slot, children }: { slot: string; children: React.ReactNode })
 function DropdownMenuEmpty({ children = "No results" }: { children?: React.ReactNode }) {
   return (
     <Status slot="dropdown-menu-empty">
-      <Text fontSize="$1" color="$quiet">
+      <Text fontSize="$1" color="$aside">
         {children}
       </Text>
     </Status>
@@ -1012,7 +1012,7 @@ const DropdownMenuLabel = /* @__PURE__ */ React.forwardRef<
         bg="$hover"
         fontSize="$1"
         fontWeight="400"
-        color="$soft"
+        color="$hint"
         select="none"
         {...props}
       />

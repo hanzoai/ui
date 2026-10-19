@@ -83,12 +83,12 @@ export type MenuRowContentProps = {
   /** Whether the row is under the pointer, for the hover-only grip. */
   hovered?: boolean
   /** The second line's rung: the sheet's softer one or a menu's quiet one. */
-  subColor?: '$soft' | '$quiet'
+  subColor?: '$soft' | '$hint'
 }
 
 /** The label's ink. The sheet row keeps the red it was drawn with; the record row reads the error state. */
 const labelColor = (tone: MenuRowContentProps['tone'], quiet: boolean) =>
-  tone === 'danger' ? (quiet ? '$bad' : '$red10') : tone === 'placeholder' ? '$soft' : quiet ? '$quiet' : '$ink'
+  tone === 'danger' ? (quiet ? '$bad' : '$red10') : tone === 'placeholder' ? '$hint' : quiet ? '$aside' : '$ink'
 
 /** Keys as text, a list as one chord. A node is the caller's own rendering. */
 const keys = (shortcut: MenuRowShortcut) => {
@@ -120,13 +120,13 @@ export function MenuRowContent({
   tone = 'default',
   quiet = false,
   hovered = false,
-  subColor = '$quiet',
+  subColor = '$hint',
 }: MenuRowContentProps) {
   const lead = dot ? <YStack width={8} height={8} rounded="$10" bg={dot} /> : icon
   const swap = grip === 'onHover' && hovered
   const leading =
     grip === 'always' || swap ? (
-      <GripVertical size={MENU_ROW.icon} color="$dim" />
+      <GripVertical size={MENU_ROW.icon} color="$hush" />
     ) : lead && iconContainer ? (
       <XStack p={MENU_ROW.well} rounded="$xs" bg="$hover" items="center" justify="center" shrink={0}>
         {lead}
@@ -135,7 +135,7 @@ export function MenuRowContent({
       lead
     )
   const dim = contextual != null && contextual !== '' ? (
-    <Text fontSize="$2" color="$dim" numberOfLines={1} pl={4} shrink={1}>
+    <Text fontSize="$2" color="$hint" numberOfLines={1} pl={4} shrink={1}>
       {contextual}
     </Text>
   ) : null
@@ -182,7 +182,7 @@ export function MenuRowContent({
           rotate={submenu === 'open' ? '90deg' : '0deg'}
           {...({ 'data-open': submenu === 'open' ? '' : undefined } as object)}
         >
-          <ChevronRight size={MENU_ROW.chevron} color="$dim" />
+          <ChevronRight size={MENU_ROW.chevron} color="$hush" />
         </XStack>
       ) : null}
     </>
@@ -276,7 +276,7 @@ export function MenuRow({
         tone={danger ? 'danger' : placeholder ? 'placeholder' : 'default'}
         quiet={row}
         hovered={hovered}
-        subColor="$soft"
+        subColor={row ? '$hint' : '$soft'}
       />
     </XStack>
   )

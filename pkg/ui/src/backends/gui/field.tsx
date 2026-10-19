@@ -198,7 +198,7 @@ export type FieldContentProps = ComponentProps<typeof FieldContent>
 const isFieldChild = (children: ReactNode) => isValidElement(children) && children.type === Field
 
 /** The record density's caption: 12px semibold in the light ink. */
-const CAPTION = { fontSize: '$1', fontWeight: '600', color: '$dim', lineHeight: '$1' } as const
+const CAPTION = { fontSize: '$1', fontWeight: '600', color: '$hint', lineHeight: '$1' } as const
 
 function FieldLabel({ className, children, ...props }: ComponentProps<typeof Label>) {
   const card = isFieldChild(children)
@@ -246,7 +246,7 @@ function FieldDescription({ children, ...props }: ComponentProps<typeof SizableT
       {...slot('field-description')}
       fontSize={compact ? '$1' : '$2'}
       fontWeight="400"
-      color={compact ? '$dim' : '$quiet'}
+      color={compact ? '$hint' : '$quiet'}
       {...props}
     >
       {children}

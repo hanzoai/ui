@@ -32,7 +32,7 @@ const Label = ({ variant = 'default', ...props }: LabelProps) => (
     color="$ink"
     select="none"
     cursor="pointer"
-    {...(variant === 'default' ? null : { 'data-variant': variant, ...SECTION[variant], fontWeight: '600', color: '$dim', cursor: 'default' })}
+    {...(variant === 'default' ? null : { 'data-variant': variant, ...SECTION[variant], fontWeight: '600', color: '$hint', cursor: 'default' })}
     {...props}
   />
 )

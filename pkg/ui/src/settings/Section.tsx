@@ -48,7 +48,7 @@ export function Heading({ title, detail, action, level = 2 }: HeadingProps) {
           {title}
         </SizableText>
         {detail ? (
-          <SizableText size="$2" color={compact ? '$quiet' : '$soft'} {...(compact ? { lineHeight: 20, numberOfLines: 5 } : null)}>
+          <SizableText size="$2" color={compact ? '$aside' : '$soft'} {...(compact ? { lineHeight: 20, numberOfLines: 5 } : null)}>
             {detail}
           </SizableText>
         ) : null}

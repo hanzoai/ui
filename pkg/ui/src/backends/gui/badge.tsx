@@ -120,7 +120,7 @@ const BadgeText = styled(SizableText, {
       link: { color: '$ink', textDecorationLine: 'underline' },
       inputAdornment: { color: '$ink', fontWeight: '500' },
       tags: { color: '$quiet', fontWeight: '400', textTransform: 'capitalize' },
-      muted: { color: '$soft', fontWeight: '500' },
+      muted: { color: '$hint', fontWeight: '500' },
       accent: { color: 'var(--primary-foreground)', fontWeight: '500' },
       inherit: {},
     },

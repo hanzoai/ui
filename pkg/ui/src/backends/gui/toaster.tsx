@@ -194,7 +194,7 @@ export function ToastFace({ t, duration, paused = false, onClose, onHold }: Toas
         <View shrink={0} width={16} height={16} items="center" justify="center">
           {t.icon ?? <Icon size={16} color={p.ink as never} aria-label={status} />}
         </View>
-        <SizableText {...slot('toast-message')} flex={1} size="$1" fontWeight="500" color="$quiet" numberOfLines={2}>
+        <SizableText {...slot('toast-message')} flex={1} size="$1" fontWeight="500" color="$aside" numberOfLines={2}>
           {title}
         </SizableText>
         {t.cancel ? (
@@ -218,7 +218,7 @@ export function ToastFace({ t, duration, paused = false, onClose, onHold }: Toas
         )}
       </XStack>
       {description ? (
-        <SizableText {...slot('toast-description')} size="$1" color="$soft" pl={24} maxW={224} numberOfLines={1} mb="$1">
+        <SizableText {...slot('toast-description')} size="$1" color="$hint" pl={24} maxW={224} numberOfLines={1} mb="$1">
           {description}
         </SizableText>
       ) : null}

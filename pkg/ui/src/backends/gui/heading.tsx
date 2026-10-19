@@ -20,8 +20,8 @@ export const Heading = styled(GuiHeading, {
   variants: {
     tone: {
       primary: { color: '$ink' },
-      secondary: { color: '$quiet' },
-      tertiary: { color: '$soft' },
+      secondary: { color: '$aside' },
+      tertiary: { color: '$hint' },
     },
   } as const,
 })

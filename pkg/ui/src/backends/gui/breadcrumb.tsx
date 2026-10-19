@@ -38,7 +38,7 @@ export const BreadcrumbList = ({ children, ...props }: Row) => (
 
 export const BreadcrumbItem = ({ children, ...props }: Row) => (
   <XStack {...slot('breadcrumb-item')} render="li" items="center" gap="$1" shrink={0} minW={0} {...props}>
-    {ink(children, Text as never, { fontSize: '$2', color: '$soft' })}
+    {ink(children, Text as never, { fontSize: '$2', color: '$hint' })}
   </XStack>
 )
 
@@ -56,7 +56,7 @@ export const BreadcrumbLink = ({ href, children, ...props }: Words & { href?: st
       render="a"
       {...({ href } as object)}
       fontSize="$2"
-      color="$soft"
+      color="$hint"
       textDecorationLine="none"
       hoverStyle={{ color: '$ink' }}
       {...props}
@@ -64,7 +64,7 @@ export const BreadcrumbLink = ({ href, children, ...props }: Words & { href?: st
       {children}
     </Text>
   ) : (
-    <Text {...slot('breadcrumb-link')} fontSize="$2" color="$soft" {...props}>
+    <Text {...slot('breadcrumb-link')} fontSize="$2" color="$hint" {...props}>
       {children}
     </Text>
   )
@@ -89,14 +89,14 @@ export const BreadcrumbPage = ({ children, ...props }: Words) => (
 
 export const BreadcrumbSeparator = ({ children, ...props }: Row) => (
   <XStack {...slot('breadcrumb-separator')} render="li" role="presentation" aria-hidden width={8} justify="center" shrink={0} {...props}>
-    {ink(children ?? '/', Text as never, { fontSize: '$2', color: '$soft' })}
+    {ink(children ?? '/', Text as never, { fontSize: '$2', color: '$hint' })}
   </XStack>
 )
 
 /** A trail too long to show whole. `…` is one character and reads as "more". */
 export const BreadcrumbEllipsis = (props: Row) => (
   <XStack {...slot('breadcrumb-ellipsis')} role="presentation" aria-hidden items="center" justify="center" {...props}>
-    <Text fontSize="$2" color="$soft">
+    <Text fontSize="$2" color="$hint">
       …
     </Text>
   </XStack>

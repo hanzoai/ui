@@ -366,11 +366,11 @@ export type ButtonProps = Omit<
   /** An icon after the label — a chevron on a menu button, an arrow on a link. */
   endIcon?: ReactNode
   /**
-   * `subtle` lowers the label to the dim ink: the icon button inside a row, a
-   * chip or a column header, which is present without asking to be pressed.
-   * `$dim` and not `$quiet`, measured: gui's ramp is not symmetric, and in the
-   * light theme `$quiet` is rgb(36,36,36) — the ink by another name — while
-   * `$dim` is the first mid grey in both (rgb(120) dark, rgb(115) light).
+   * `subtle` lowers the label to the tertiary rank, `$hint` (design's ink at
+   * 55%): the icon button inside a row, a chip or a column header, which is
+   * present without asking to be pressed. Not `$quiet`, measured: gui's ramp is
+   * not symmetric, and in the light theme `$quiet` is rgb(36,36,36) — the ink by
+   * another name. A share of the ink keeps its distance in either scheme.
    */
   emphasis?: 'standard' | 'subtle'
   /** The colour axis across the variant: `accent`, `danger`, `success` (see `ButtonTone`). */
@@ -511,8 +511,8 @@ function Pressable({
   const resolved: ButtonSize = size ?? group?.size ?? (density === 'compact' ? 'sm' : 'default')
   // Only the box the density chose takes its gutter: a named size is a decision.
   const compact = density === 'compact' && size == null && group?.size == null
-  const quiet = emphasis === 'subtle' ? { color: '$dim' } : null
-  const tint = emphasis === 'subtle' ? '$dim' : toneInk(tone, variant)
+  const quiet = emphasis === 'subtle' ? { color: '$hint' } : null
+  const tint = emphasis === 'subtle' ? '$hint' : toneInk(tone, variant)
   // The record density's label weight: medium, as twenty-ui sets every button.
   const weight = density === 'compact' ? { fontWeight: '500' } : null
   // Disabled but focusable: the frame's `disabled` would take pointer events and

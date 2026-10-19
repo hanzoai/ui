@@ -115,7 +115,7 @@ const Avatar = ({
           fontSize={(record?.font ?? '$2') as '$1'}
           lineHeight={box}
           fontWeight="500"
-          color={trimmed ? tone(12) : '$soft'}
+          color={trimmed ? tone(12) : '$hint'}
           select="none"
         >
           {initialOf(name)}

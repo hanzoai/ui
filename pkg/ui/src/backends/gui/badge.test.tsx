@@ -39,7 +39,7 @@ describe('Badge', () => {
   })
 
   it('muted, accent and inherit', () => {
-    expect(html(<Badge size="sm" variant="muted">1</Badge>)).toMatch(/_col-soft/)
+    expect(html(<Badge size="sm" variant="muted">1</Badge>)).toMatch(/_col-hint/)
     const accent = html(<Badge size="sm" variant="accent">1</Badge>)
     expect(tag(accent)).toMatch(/_bg-var\(--primary\)|primary/)
     expect(tag(html(<Badge size="sm" variant="inherit">1</Badge>))).toMatch(/color-mix\(in srgb, currentColor 16%/)

@@ -184,7 +184,7 @@ describe('RadioGroupItem, the record look', () => {
   it.each([
     ['sm', 16],
     ['md', 18],
-  ] as const)('%s: a %ipx quiet ring at 0.95, filled with the accent when checked', (size, px) => {
+  ] as const)('%s: a %ipx secondary-ink ring at 0.95, filled with the accent when checked', (size, px) => {
     const markup = html(
       <RadioGroup value="a">
         <RadioGroupItem size={size} value="a" aria-label="a" />
@@ -192,7 +192,7 @@ describe('RadioGroupItem, the record look', () => {
     )
     const item = tag(markup, 'radio-group-item')
     expect(cls(item, 'width')).toBe(`_width-${px}px`)
-    expect(cls(item, 'btc')).toBe('_btc-quiet')
+    expect(cls(item, 'btc')).toBe('_btc-aside')
     expect(item).toMatch(/_tr-scale0--95/)
     // The 4px hover halo, on the hover rung.
     expect(item).toMatch(/_bxsh-0hover-/)

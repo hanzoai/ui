@@ -60,7 +60,7 @@ export function Surfaces() {
             <TabsTrigger value="timeline" startIcon={<LineChart size={16} />}>
               Timeline
             </TabsTrigger>
-            <TabsTrigger value="tasks" badge={<Text fontSize="$1" color="$soft">3</Text>}>
+            <TabsTrigger value="tasks" badge={<Text fontSize="$1" color="$hint">3</Text>}>
               Tasks
             </TabsTrigger>
             <TabsTrigger value="notes" size="sm">

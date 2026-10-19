@@ -624,7 +624,7 @@ export function CodeEditor({
           {...(headed ? { minH: 40 } : null)}
         >
           {headed ? (
-            <SizableText {...slot('code-editor-title')} size="$2" fontWeight="500" color="$soft" px="$1" numberOfLines={1} flex={1} minW={0}>
+            <SizableText {...slot('code-editor-title')} size="$2" fontWeight="500" color="$hint" px="$1" numberOfLines={1} flex={1} minW={0}>
               {title ?? label}
             </SizableText>
           ) : null}

@@ -39,7 +39,7 @@ describe('MenuRow', () => {
     expect(html(<MenuRow size="row" label="Delete" danger onPress={NOOP} />)).toMatch(/_col-bad/)
   })
 
-  it('size row is the record geometry: 32 floor, 4 inset, 8 between, 4 corner, hover rung, quiet ink', () => {
+  it('size row is the record geometry: 32 floor, 4 inset, 8 between, 4 corner, hover rung, the secondary ink', () => {
     const markup = html(<MenuRow size="row" label="People" onPress={NOOP} />)
     const el = rowTag(markup)
     expect(el).toMatch(/_minH-32px/)
@@ -48,7 +48,7 @@ describe('MenuRow', () => {
     expect(el).toMatch(/_btlr-c-radius-xs/)
     expect(el).toMatch(/_bg-0hover-hover/)
     expect(el).toMatch(/_minH-_touchable|data-touch-y/)
-    expect(markup).toMatch(/_col-quiet/)
+    expect(markup).toMatch(/_col-aside/)
   })
 
   it('a row that can be current is a menuitemradio; one that cannot is a menuitem', () => {
@@ -59,7 +59,7 @@ describe('MenuRow', () => {
   it('draws contextual text on either side, and keys as a chord', () => {
     const left = html(<MenuRow size="row" label="Companies" contextual="12" onPress={NOOP} />)
     expect(left.indexOf('Companies')).toBeLessThan(left.indexOf('>12<'))
-    expect(left).toMatch(/_col-dim/)
+    expect(left).toMatch(/_col-hint/)
     const keys = html(<MenuRow size="row" label="Copy" shortcut={['⌘', 'L']} onPress={NOOP} />)
     expect(keys.match(/data-slot="kbd"/g)).toHaveLength(2)
     expect(keys).toContain('data-slot="kbd-group"')

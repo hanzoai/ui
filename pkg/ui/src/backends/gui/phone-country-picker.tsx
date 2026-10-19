@@ -59,7 +59,7 @@ export function Flag({ iso, override }: { iso?: string | null; override?: ReactN
   return (
     <XStack width={16} height={12} rounded="$2xs" overflow="hidden" items="center" justify="center" shrink={0} aria-hidden>
       {glyph == null ? (
-        <Globe size={14} color="$dim" />
+        <Globe size={14} color="$hint" />
       ) : typeof glyph === 'string' ? (
         <SizableText size="$2" lineHeight={12}>
           {glyph}
@@ -129,7 +129,7 @@ export function PhoneCountryPicker({
           pr="$1"
         >
           <Flag iso={picked?.value} override={picked?.flag} />
-          <ChevronDown size={14} color="$dim" />
+          <ChevronDown size={14} color="$hint" />
           <VisuallyHidden>{picked ? `${name}: ${picked.label} +${picked.callingCode}` : name}</VisuallyHidden>
         </Segment>
       }

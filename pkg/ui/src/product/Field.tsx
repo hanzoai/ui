@@ -192,11 +192,11 @@ export function FieldSwitch({
     >
       {start}
       <XStack flex={1} minW={0} items="center" gap={4}>
-        <Text fontSize="$2" color="$quiet" numberOfLines={1} shrink={0}>
+        <Text fontSize="$2" color="$aside" numberOfLines={1} shrink={0}>
           {label}
         </Text>
         {description ? (
-          <Text fontSize="$2" color="$dim" numberOfLines={1} shrink={1}>
+          <Text fontSize="$2" color="$hint" numberOfLines={1} shrink={1}>
             {'· '}
             {description}
           </Text>

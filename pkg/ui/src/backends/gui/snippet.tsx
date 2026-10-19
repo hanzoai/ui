@@ -241,7 +241,7 @@ export function Snippet({
         </YStack>
         <XStack {...slot('snippet-actions')} shrink={0} items="center" gap="$2">
           {actions ??
-            (showCopyButton ? <CopyButton copied={copied} onPress={copy} muted={'$soft' as Muted} /> : null)}
+            (showCopyButton ? <CopyButton copied={copied} onPress={copy} muted={'$hint' as Muted} /> : null)}
         </XStack>
       </XStack>
     )

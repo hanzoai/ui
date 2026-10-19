@@ -54,7 +54,7 @@ export function Fact({ label, value, mono, variant = 'row', startIcon, progress,
       <XStack data-slot="fact" data-variant="metric" items="center" gap="$2" minH={24}>
         <XStack flex={1} minW={0} items="center" gap="$1">
           {startIcon}
-          <Text fontSize="$1" fontWeight="500" color="$soft" numberOfLines={1}>
+          <Text fontSize="$1" fontWeight="500" color="$hint" numberOfLines={1}>
             {label}
           </Text>
         </XStack>

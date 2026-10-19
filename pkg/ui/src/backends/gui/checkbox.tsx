@@ -63,7 +63,7 @@ const DIM = {
 /** The unchecked edge per variant (twenty-ui: inverted, secondary-inverted, medium). */
 const EDGE: Record<Exclude<CheckboxVariant, 'plain'>, string> = {
   solid: '$ink',
-  outline: '$quiet',
+  outline: '$hint',
   soft: '$borderColor',
 }
 

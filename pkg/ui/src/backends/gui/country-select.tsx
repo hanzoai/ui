@@ -61,7 +61,7 @@ const Mark = ({ iso, override }: { iso?: string | null; override?: ReactNode }) 
   return (
     <XStack width={16} height={16} items="center" justify="center" shrink={0} aria-hidden>
       {glyph == null ? (
-        <CircleOff size={16} color="$dim" />
+        <CircleOff size={16} color="$hint" />
       ) : typeof glyph === 'string' ? (
         <SizableText size="$3" lineHeight={16}>
           {glyph}
@@ -145,7 +145,7 @@ export function CountrySelect({
   return (
     <YStack {...slot('country-select-field')} width="100%" minW={0} gap="$1">
       {label ? (
-        <SizableText id={id} size="$1" fontWeight="600" color="$dim">
+        <SizableText id={id} size="$1" fontWeight="600" color="$hint">
           {label}
         </SizableText>
       ) : null}

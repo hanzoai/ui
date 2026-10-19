@@ -59,9 +59,9 @@ describe('Chip markup', () => {
   })
 
   it('secondary and disabled read in quieter inks', () => {
-    expect(html(<Chip color="secondary" label="x" />)).toMatch(/_col-quiet/)
+    expect(html(<Chip color="secondary" label="x" />)).toMatch(/_col-aside/)
     const off = html(<Chip disabled onPress={() => {}} label="x" />)
-    expect(off).toMatch(/_col-dim/)
+    expect(off).toMatch(/_col-hush/)
     expect(tag(off)).toMatch(/aria-disabled="true"/)
   })
 

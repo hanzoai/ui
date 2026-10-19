@@ -243,7 +243,7 @@ export function Grip({
           })()}
           self="center"
           rounded="$10"
-          bg={moving ? '$rim' : keyed ? '$outlineColor' : hovered ? '$soft' : '$raised'}
+          bg={moving ? '$rim' : keyed ? '$outlineColor' : hovered ? '$hint' : '$raised'}
           // Lengthened, not fattened: the scale runs along the bar.
           {...{ [tall ? 'scaleX' : 'scaleY']: moving || hovered || keyed ? 1.2 : 1 }}
           animation="quickest"

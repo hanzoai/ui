@@ -203,7 +203,7 @@ describe('the record density', () => {
     expect(tag(markup, 'field-description')).toMatch(/_col-quiet/)
   })
 
-  it('compact: a 12px semibold caption in the light ink, 4px above its control', () => {
+  it('compact: a 12px semibold caption in the tertiary ink, 4px above its control', () => {
     const markup = compact(
       <Field>
         <FieldLabel htmlFor="n">Name</FieldLabel>
@@ -215,10 +215,10 @@ describe('the record density', () => {
     const label = tag(markup, 'field-label')
     expect(label).toMatch(/_fs-f-size-1/)
     expect(label).toMatch(/_fw-600/)
-    expect(label).toMatch(/_col-dim/)
+    expect(label).toMatch(/_col-hint/)
     const description = tag(markup, 'field-description')
     expect(description).toMatch(/_fs-f-size-1/)
-    expect(description).toMatch(/_col-dim/)
+    expect(description).toMatch(/_col-hint/)
     expect(markup).toMatch(/_fs-f-size-1[^"]*_col-bad"[^>]*>Required\./)
   })
 })

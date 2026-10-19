@@ -167,7 +167,7 @@ export function SearchList({
                     {o.label}
                   </SizableText>
                   {o.end != null ? (
-                    <SizableText size="$2" color="$dim" shrink={0}>
+                    <SizableText size="$2" color="$hint" shrink={0}>
                       {o.end}
                     </SizableText>
                   ) : null}

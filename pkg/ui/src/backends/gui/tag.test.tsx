@@ -48,10 +48,10 @@ describe('Tag', () => {
     expect(tag(html(<Tag color="chartreuse">x</Tag>))).toContain('data-color="gray"')
   })
 
-  it('transparent has no fill and the quiet ink', () => {
+  it('transparent has no fill and the secondary ink', () => {
     const markup = html(<Tag color="transparent">None</Tag>)
     expect(tag(markup)).toMatch(/_bg-transparent/)
-    expect(markup).toMatch(/_col-quiet/)
+    expect(markup).toMatch(/_col-aside/)
   })
 
   it('outline draws the strong edge, dashed on request', () => {

@@ -86,7 +86,7 @@ export function Chip({
   const text = {
     size: '$2',
     fontWeight: weight === 'medium' ? '500' : undefined,
-    color: disabled ? '$dim' : color === 'secondary' ? '$quiet' : '$ink',
+    color: disabled ? '$hush' : color === 'secondary' ? '$aside' : '$ink',
   } as const
   const body = label ?? children
 

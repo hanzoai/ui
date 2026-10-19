@@ -144,7 +144,7 @@ export function Segmented<T extends string>({
             >
               {o.icon ?? null}
               {o.label ? (
-                <Text fontSize="$2" fontWeight="500" color={on ? '$ink' : '$quiet'} numberOfLines={1}>
+                <Text fontSize="$2" fontWeight="500" color={on ? '$ink' : '$aside'} numberOfLines={1}>
                   {o.label}
                 </Text>
               ) : null}

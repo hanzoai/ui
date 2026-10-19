@@ -163,7 +163,7 @@ export function Item({
           {indicator === 'checkbox' ? <Box on={selected} /> : null}
           {/* A list row's text is the record row's: 13px, the quiet ink, the error ink for danger. */}
           {row
-            ? ink(children, SizableText, { size: '$2', color: color === 'danger' ? '$bad' : '$quiet', numberOfLines: 1, flex: 1, minW: 0 })
+            ? ink(children, SizableText, { size: '$2', color: color === 'danger' ? '$bad' : '$aside', numberOfLines: 1, flex: 1, minW: 0 })
             : children}
           {shortcut ? (
             typeof shortcut === 'string' ? (
@@ -193,7 +193,7 @@ export function Item({
           ) : null}
           {hasSubmenu ? (
             <XStack shrink={0} opacity={disabled ? 0 : 1}>
-              <ChevronRight size={14} color="$dim" />
+              <ChevronRight size={14} color="$hush" />
             </XStack>
           ) : null}
         </>

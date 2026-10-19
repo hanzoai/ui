@@ -108,7 +108,7 @@ const TooltipContent = ({ sideOffset, startIcon, description, children, ...props
             </XStack>
             {description ? (
               typeof description === 'string' ? (
-                <Text {...slot('tooltip-description')} fontSize="$1" lineHeight="$1" color="$quiet" style={{ whiteSpace: 'pre-line' }}>
+                <Text {...slot('tooltip-description')} fontSize="$1" lineHeight="$1" color="$aside" style={{ whiteSpace: 'pre-line' }}>
                   {description}
                 </Text>
               ) : (

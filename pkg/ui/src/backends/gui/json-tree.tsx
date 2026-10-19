@@ -454,7 +454,7 @@ function Leaf({ value, dotted, mark, ctx }: { value: unknown; dotted: string; ma
       data-type={type}
       size="$2"
       fontFamily="$mono"
-      color={(hue ?? (boxed ? '$soft' : (INK[type as keyof typeof INK] ?? '$codePunctuation'))) as never}
+      color={(hue ?? (boxed ? '$hint' : (INK[type as keyof typeof INK] ?? '$codePunctuation'))) as never}
       shrink={1}
       minW={0}
       {...(boxed ? { lineHeight: 24 } : null)}
@@ -492,7 +492,7 @@ function Leaf({ value, dotted, mark, ctx }: { value: unknown; dotted: string; ma
 function Arrow({ expanded, empty, mark, ctx }: { expanded: boolean; empty: boolean; mark: JsonHighlight | null; ctx: Ctx }) {
   // `partial-blue` exists for exactly this: a branch with a marked node somewhere
   // below it shows the accent on its arrow and nowhere else.
-  const ink = mark === 'red' ? '$bad' : mark ? 'var(--primary)' : '$soft'
+  const ink = mark === 'red' ? '$bad' : mark ? 'var(--primary)' : '$hint'
   if (ctx.variant !== 'boxed') {
     if (empty) return <XStack width={14} shrink={0} />
     return expanded ? <ChevronDown size={14} color={ink as never} /> : <ChevronRight size={14} color={ink as never} />
@@ -513,7 +513,7 @@ function Arrow({ expanded, empty, mark, ctx }: { expanded: boolean; empty: boole
     >
       <ChevronDown
         size={16}
-        color={(mark ? ink : '$quiet') as never}
+        color={(mark ? ink : '$aside') as never}
         style={{ transform: `rotate(${expanded ? 0 : -90}deg)`, transition: 'transform 300ms ease' }}
       />
     </XStack>
@@ -547,7 +547,7 @@ function Key({ name, kind, mark, ctx }: { name: string; kind: keyof typeof KIND;
       borderColor={(m?.edge ?? '$borderColor') as never}
       bg={(m?.fill ?? '$panel') as never}
     >
-      <Icon size={16} color={(m?.ink ?? '$soft') as never} aria-hidden />
+      <Icon size={16} color={(m?.ink ?? '$hint') as never} aria-hidden />
       <SizableText size="$2" color={(m?.ink ?? '$ink') as never} numberOfLines={1}>
         {shown}
       </SizableText>
@@ -630,7 +630,7 @@ function Node({
       >
         <Arrow expanded={expanded} empty={empty} mark={mark} ctx={ctx} />
         {key}
-        <SizableText {...slot('json-tree-count')} size="$2" fontFamily={boxed ? undefined : '$mono'} color={boxed ? '$soft' : '$codeComment'}>
+        <SizableText {...slot('json-tree-count')} size="$2" fontFamily={boxed ? undefined : '$mono'} color={boxed ? '$hint' : '$codeComment'}>
           {empty
             ? boxed
               ? b.kind === 'array'
