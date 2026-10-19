@@ -344,11 +344,15 @@ const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(functi
       minW={0}
       pl={box.gutter - INSET}
       pr={box.gutter - INSET}
-      py={box.riser}
+      // Chromium ignores line-height on a <select> and sets its text on
+      // `normal` (19px at 13px Zen), so the record sizes cannot be built from a
+      // riser and a line the way the regular one is: 7 + 19 + 7 + 2 came out 35
+      // in a 32px box. They take no vertical padding and let the floor decide;
+      // the menulist centres its own text.
+      py={dense ? 0 : box.riser}
       color="$color"
       fontFamily="$body"
       fontSize={box.font}
-      // The record sizes set 13px on a 16px line; their riser is cut for it.
       lineHeight={dense ? 16 : "$3"}
       cursor="pointer"
       {...props}

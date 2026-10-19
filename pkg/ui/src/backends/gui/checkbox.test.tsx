@@ -87,7 +87,6 @@ describe('Checkbox', () => {
 
 describe('Checkbox, the record look', () => {
   const box = (markup: string) => markup.match(/<div[^>]*data-slot="checkbox-box"[^>]*>/)?.[0] ?? ''
-  const halo = (markup: string) => markup.match(/<div[^>]*data-slot="checkbox-halo"[^>]*>/)?.[0] ?? ''
 
   it('naming nothing keeps the plain box every caller already draws', () => {
     const markup = html(<Checkbox checked />)
@@ -105,9 +104,10 @@ describe('Checkbox, the record look', () => {
     expect(cls(box(markup), 'width')).toBe('_width-14px')
     expect(cls(box(markup), 'bg')).toBe('_bg-primary')
     expect(box(markup)).toMatch(/_bblr-c-radius-xs/)
-    // The halo is the hover rung at rest, the accent's tint when checked.
-    expect(halo(markup)).toMatch(/_bg-0hover-raised/)
-    expect(halo(html(<Checkbox variant="solid" />))).toMatch(/_bg-0hover-hover/)
+    // The halo is the button's own hover: the hover rung, the accent's tint
+    // when checked. A layer inside a <button> never matched :hover in Chromium.
+    expect(el).toMatch(/_bg-0hover-raised/)
+    expect(frame(html(<Checkbox variant="solid" />))).toMatch(/_bg-0hover-hover/)
   })
 
   it('the glyph is the accent’s foreground, a tick or a dash', () => {
@@ -140,13 +140,13 @@ describe('Checkbox, the record look', () => {
   it('without the halo the frame IS the box', () => {
     const markup = html(<Checkbox hoverable={false} />)
     expect(cls(frame(markup), 'width')).toBe('_width-14px')
-    expect(halo(markup)).toBe('')
+    expect(frame(markup)).not.toMatch(/_bg-0hover-hover/)
   })
 
   it('disabled: the strong edge, no hover, a dimmed fill when checked', () => {
     const off = html(<Checkbox variant="solid" disabled />)
     expect(cls(box(off), 'btc')).toBe('_btc-rim')
-    expect(halo(off)).not.toMatch(/0hover/)
+    expect(frame(off)).not.toMatch(/_bg-0hover-hover/)
     expect(frame(off)).toMatch(/_cur-not-allowed/)
     expect(cls(box(html(<Checkbox variant="solid" disabled checked />)), 'o')).toBe('_o-0--5')
   })

@@ -86,7 +86,7 @@ type Look = {
 /**
  * The visible box, inside the button. It reads the checked state from the
  * control's context, so the fill follows a controlled AND an uncontrolled
- * checkbox; the halo behind it does the same for its hover tint.
+ * checkbox.
  */
 const RecordBox = ({ look }: { look: Look }) => {
   const checked = useContext(CheckboxContext).checked
@@ -94,16 +94,6 @@ const RecordBox = ({ look }: { look: Look }) => {
   const Icon = checked === 'indeterminate' ? Minus : Check
   const { dim, tone } = look
   return (
-    <>
-      {look.hoverable ? (
-        <XStack
-          {...slot('checkbox-halo')}
-          position="absolute"
-          inset={0}
-          rounded={look.round ? '$10' : '$3'}
-          {...(look.disabled ? null : { hoverStyle: { bg: on ? tone.tint : '$hover' } })}
-        />
-      ) : null}
       <XStack
         {...slot('checkbox-box')}
         position="relative"
@@ -120,7 +110,6 @@ const RecordBox = ({ look }: { look: Look }) => {
       >
         {on ? <Icon size={dim.glyph} color={tone.glyph as never} strokeWidth={2.5} /> : null}
       </XStack>
-    </>
   )
 }
 
@@ -134,6 +123,11 @@ const Checkbox = ({ variant, size, shape, color, hoverable, ...props }: Checkbox
     const halo = hoverable ?? true
     const outer = dim.box + 2 * dim.edge
     const frame = halo ? outer + 2 * dim.pad : outer
+    // The halo is the BUTTON's own hover, not a layer inside it: Chromium hit-
+    // tests a <button> as one target, so a child never matched :hover and a
+    // halo drawn as one never showed (measured). A checked box takes its
+    // colour's tint, read from the controlled value where there is one.
+    const lit = props.checked === true || props.checked === 'indeterminate'
     const look: Look = {
       dim,
       variant: resolved,
@@ -157,6 +151,7 @@ const Checkbox = ({ variant, size, shape, color, hoverable, ...props }: Checkbox
         borderWidth={0}
         rounded={shape === 'round' ? '$10' : halo ? '$3' : '$xs'}
         backgroundColor="transparent"
+        {...(halo && !props.disabled ? { hoverStyle: { bg: lit ? look.tone.tint : '$hover' } } : null)}
         // The fill is the box's, drawn from context; the button stays a well.
         activeStyle={{ bg: 'transparent' }}
         cursor={props.disabled ? 'not-allowed' : 'pointer'}

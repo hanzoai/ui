@@ -126,7 +126,9 @@ export function Stepper({
             {...slot('stepper-value')}
             aria-label={label}
             size={compact ? 'sm' : 'default'}
-            width={64}
+            // 64 holds a short count; a longer one widens the field rather
+            // than clipping its own digits (about 8px a character at 13px).
+            width={Math.max(64, draft.length * 8 + 20)}
             text="center"
             fontWeight="500"
             inputMode={decimals > 0 ? 'decimal' : 'numeric'}
