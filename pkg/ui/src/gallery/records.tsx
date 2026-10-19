@@ -18,6 +18,7 @@ import { InputGroup } from '../backends/gui/input-group'
 import { Density } from '../backends/gui/density'
 import { Display } from './display'
 import { FieldsGallery } from './fields'
+import { Compound } from './compound'
 
 const NOOP = () => {}
 
@@ -79,6 +80,7 @@ export function Records() {
         </Section>
       </Density>
       <Display />
+      <Compound />
     </>
   )
 }

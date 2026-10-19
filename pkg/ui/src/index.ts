@@ -657,6 +657,16 @@ export {
   type SelectValueProps,
 } from './backends/gui'
 
+// The record kit's compound controls: grouped buttons, the number field and the
+// pickers that sit at the start of a field.
+export {
+  ButtonGroup,
+  ButtonGroupContext,
+  type ButtonGroupProps,
+  type ButtonGroupDefaults,
+  type ButtonTone,
+} from './backends/gui'
+
 // `Hanzo` — the root, and the only thing an app mounts. It carries the gui
 // config and the generated stylesheet, so `npm i @hanzo/ui` is the whole setup:
 // no gui.config.ts, no CSS import, no generator script.

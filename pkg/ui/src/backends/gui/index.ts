@@ -413,3 +413,5 @@ export type { CheckboxColor, CheckboxShape, CheckboxSize, CheckboxVariant } from
 export type { RadioSize } from './radio-group'
 export type { SwitchSize } from './switch'
 export type { SelectValueProps } from './select'
+export { ButtonGroup, ButtonGroupContext, type ButtonGroupProps, type ButtonGroupDefaults } from './button-group'
+export type { ButtonTone } from './button'

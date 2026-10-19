@@ -22,11 +22,12 @@
  * The 44px touch floor comes from `touch()`, which is platform-correct on web
  * as well as native — visual density stays at 36/32/40px.
  */
-import { Button as GuiButton, Spinner, styled } from '@hanzo/gui'
+import { Button as GuiButton, Spinner, XStack, styled } from '@hanzo/gui'
 import {
   cloneElement,
   createElement,
   isValidElement,
+  useContext,
   type ComponentProps,
   type MouseEventHandler,
   type ReactElement,
@@ -38,6 +39,8 @@ import { sx } from '../../sx'
 import { ink } from './ink'
 import { touch } from './gesture'
 import { useDensity } from './density'
+import { ButtonGroupContext } from './button-group'
+import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip'
 
 export type ButtonVariant =
   | 'default'
@@ -49,6 +52,16 @@ export type ButtonVariant =
   | 'primary'
   | 'linkFG'
   | 'linkMuted'
+
+/**
+ * The colour a control speaks in, across its variant: twenty-ui's `color` axis
+ * (MIT). Named `tone` because `color` is already the label's colour here.
+ *
+ * `accent` is the monochrome accent — `--primary`, ink by default and an org's
+ * colour once it picks one — never a hue of its own. `danger` and `success` are
+ * the two state hues design permits.
+ */
+export type ButtonTone = 'neutral' | 'accent' | 'danger' | 'success'
 
 export type ButtonSize =
   | 'default'
@@ -235,6 +248,46 @@ const Frame = styled(GuiButton.Frame, {
     compact: {
       true: { px: '$2', gap: '$1' },
     },
+    // After `variant`, so a tone restates the variant's colours rather than
+    // racing them. A function of the variant because the axis means a different
+    // pair per shape: the edge and the ink of an outline, the tint of a soft
+    // button, the fill of a solid one. `neutral` is the variant as it is.
+    tone: (tone: ButtonTone, { props }: { props: Record<string, unknown> }) => {
+      const t = TONES[tone as Exclude<ButtonTone, 'neutral'>]
+      if (!t) return {}
+      switch (props.variant) {
+        case 'primary':
+          return { bg: t.fill, color: t.fillInk, borderColor: 'transparent', hoverStyle: { bg: t.fillHover, borderColor: 'transparent' } }
+        case 'secondary':
+          return { bg: t.soft, color: t.ink, hoverStyle: { bg: t.softHover, opacity: 1 } }
+        case 'ghost':
+          return { color: t.ink, hoverStyle: { bg: t.tint } }
+        case 'default':
+        case 'outline':
+        case undefined:
+          return { color: t.ink, borderColor: t.edge, hoverStyle: { bg: t.tint, borderColor: t.edge } }
+        default:
+          return { color: t.ink }
+      }
+    },
+    // Lifted off the page: the small shadow, and an outline control on the
+    // ground itself with the stronger edge, so it reads as raised rather than
+    // as a hole (twenty-ui's `elevated`).
+    elevated: (on: boolean, { props }: { props: Record<string, unknown> }) =>
+      on
+        ? {
+            boxShadow: 'var(--shadow-sm)',
+            ...(props.variant === 'default' || props.variant === 'outline' || props.variant === undefined
+              ? { bg: '$background', borderColor: '$rim' }
+              : null),
+          }
+        : {},
+    fullWidth: {
+      true: { width: '100%', self: 'stretch' },
+    },
+    round: {
+      true: { rounded: '$10' },
+    },
     disabled: {
       true: { opacity: 0.5, pointerEvents: 'none', cursor: 'default' },
     },
@@ -242,6 +295,47 @@ const Frame = styled(GuiButton.Frame, {
 
   defaultVariants: { variant: 'default', size: 'default' },
 })
+
+/** Each tone's pairs: ink and edge for an outline, tint under the pointer, the
+ *  soft fill and its hover, the solid fill, its ink and its hover. */
+const TONES = {
+  accent: {
+    ink: 'var(--primary)',
+    edge: 'var(--primary)',
+    tint: '$hover',
+    soft: '$hover',
+    softHover: '$raised',
+    fill: 'var(--primary)',
+    fillInk: 'var(--primary-foreground)',
+    fillHover: 'var(--primary-hover)',
+  },
+  danger: {
+    ink: '$bad',
+    edge: '$red7',
+    tint: 'var(--state-error-bg)',
+    soft: 'var(--state-error-bg)',
+    softHover: '$red4',
+    fill: 'var(--destructive)',
+    fillInk: 'var(--destructive-foreground)',
+    fillHover: 'var(--destructive-hover)',
+  },
+  success: {
+    ink: '$good',
+    edge: '$green7',
+    tint: 'var(--state-success-bg)',
+    soft: 'var(--state-success-bg)',
+    softHover: '$green4',
+    fill: '$green9',
+    fillInk: '#ffffff',
+    fillHover: '$green10',
+  },
+} as const
+
+/** The ink a tone gives its icons, which read colour from a prop and not from the label's text context. */
+const toneInk = (tone: ButtonTone, variant: ButtonVariant): string | undefined => {
+  if (tone === 'neutral') return undefined
+  return variant === 'primary' ? TONES[tone].fillInk : TONES[tone].ink
+}
 
 /**
  * A stable class handle for hosts that hook buttons from CSS. Styling lives in
@@ -252,7 +346,7 @@ export { buttonVariants }
 
 export type ButtonProps = Omit<
   ComponentProps<typeof Frame>,
-  'variant' | 'size' | 'children' | 'onClick' | 'compact'
+  'variant' | 'size' | 'children' | 'onClick' | 'compact' | 'tone' | 'elevated' | 'fullWidth' | 'round'
 > & {
   variant?: ButtonVariant | null
   /**
@@ -270,6 +364,31 @@ export type ButtonProps = Omit<
    * chip or a column header, which is present without asking to be pressed.
    */
   emphasis?: 'standard' | 'subtle'
+  /** The colour axis across the variant: `accent`, `danger`, `success` (see `ButtonTone`). */
+  tone?: ButtonTone
+  /**
+   * Where the spinner stands while `isLoading`. `start` (the default) puts it
+   * before the label; `end` after it; `center` keeps the label's width but hides
+   * it, so a button does not change size when it starts working.
+   */
+  loadingPosition?: 'start' | 'center' | 'end'
+  /** Takes the whole width of its row. */
+  fullWidth?: boolean
+  /** Lifted: the small shadow and, on an outline, the ground fill with the stronger edge. */
+  elevated?: boolean
+  /** `round` makes an icon size a circle. */
+  shape?: 'square' | 'round'
+  /**
+   * A hint shown under the button after a second's hover or on focus. A string
+   * also names an icon-only button for assistive technology when it has no
+   * `aria-label`. A disabled button keeps showing it.
+   */
+  tooltip?: ReactNode
+  /**
+   * A disabled button that still takes focus: announced as disabled
+   * (`aria-disabled`), not pressable, but reachable — so its tooltip can say why.
+   */
+  focusableWhenDisabled?: boolean
   children?: ReactNode
   /**
    * The DOM click. Frame types this from the cross-platform stack, where the
@@ -339,9 +458,27 @@ const glyph = (icon: ReactNode, size: number, color?: string) => {
 /** The two record sizes whose child IS the icon, so the button draws it at its glyph. */
 const SMALL_ICON = new Set<ButtonSize>(['icon-xs', 'icon-2xs'])
 
-function Button({
+/** How long a pointer rests on a button before its tooltip shows (twenty-ui's 1000ms). */
+const TOOLTIP_DELAY = 1000
+
+function Button({ tooltip, ...props }: ButtonProps) {
+  if (tooltip == null || tooltip === false) return <Pressable {...props} />
+  const label = typeof tooltip === 'string' && props['aria-label' as keyof ButtonProps] == null ? { 'aria-label': tooltip } : null
+  return (
+    <Tooltip delay={TOOLTIP_DELAY} placement="bottom">
+      {/* The trigger is a wrapper, not the button: a disabled button takes no
+          pointer events, and the tooltip has to show over it all the same. */}
+      <TooltipTrigger {...({ 'data-slot': 'button-tooltip' } as object)} display="inline-flex" self="flex-start">
+        <Pressable {...props} {...(label as object)} />
+      </TooltipTrigger>
+      <TooltipContent>{tooltip}</TooltipContent>
+    </Tooltip>
+  )
+}
+
+function Pressable({
   className,
-  variant = 'default',
+  variant: own,
   size,
   asChild = false,
   isLoading = false,
@@ -349,15 +486,29 @@ function Button({
   startIcon,
   endIcon,
   emphasis = 'standard',
+  tone: ownTone,
+  loadingPosition = 'start',
+  fullWidth,
+  elevated,
+  shape,
+  focusableWhenDisabled,
   children,
   ...props
-}: ButtonProps) {
+}: Omit<ButtonProps, 'tooltip'>) {
   const density = useDensity()
-  const resolved: ButtonSize = size ?? (density === 'compact' ? 'sm' : 'default')
+  const group = useContext(ButtonGroupContext)
+  const variant: ButtonVariant = own ?? group?.variant ?? 'default'
+  const tone: ButtonTone = ownTone ?? group?.tone ?? 'neutral'
+  const resolved: ButtonSize = size ?? group?.size ?? (density === 'compact' ? 'sm' : 'default')
   // Only the box the density chose takes its gutter: a named size is a decision.
-  const compact = density === 'compact' && size == null
+  const compact = density === 'compact' && size == null && group?.size == null
   const quiet = emphasis === 'subtle' ? { color: '$quiet' } : null
-  const tint = emphasis === 'subtle' ? '$quiet' : undefined
+  const tint = emphasis === 'subtle' ? '$quiet' : toneInk(tone, variant)
+  // Disabled but focusable: the frame's `disabled` would take pointer events and
+  // focus away, so the state is said in ARIA and the press is refused here.
+  const inert = !!disabled && !!focusableWhenDisabled
+  const center = isLoading && loadingPosition === 'center'
+  const spinner = <Spinner size="small" maxW={SPIN[resolved]} maxH={SPIN[resolved]} />
   // gui's own `asChild` cannot merge into the child here: the Button frame bakes
   // a `render: <button>`, so asChild WRAPS the child in a button and drops every
   // compiled style (measured: `<button class="is_View "><a>…</a></button>`).
@@ -374,11 +525,21 @@ function Button({
   return (
     <Frame
       data-slot="button"
-      data-variant={variant ?? 'default'}
+      data-variant={variant}
       data-size={resolved}
-      variant={variant ?? 'default'}
+      {...(tone !== 'neutral' ? { 'data-tone': tone } : null)}
+      variant={variant}
       size={resolved}
       {...(compact ? { compact: true } : null)}
+      {...(tone !== 'neutral' ? { tone } : null)}
+      {...(elevated ? { elevated: true } : null)}
+      {...(fullWidth ? { fullWidth: true } : null)}
+      {...(shape === 'round' ? { round: true } : null)}
+      // Inside a frame the corners are cut to 1px, concentric with the frame's
+      // 4px corner and 2px padding. Before the caller's props, so XGroup's
+      // zeroed connecting corners (which arrive in them) still win.
+      {...(group?.framed ? { rounded: 1 } : null)}
+      {...(center ? { position: 'relative' } : null)}
       // SPREAD, never `render={… : undefined}`. The frame bakes its own
       // `render: <button type="button" />`, and an explicitly passed undefined
       // overrides a default rather than falling back to it — so writing the
@@ -391,7 +552,8 @@ function Button({
         ? { render: createElement(host.type, { ...(host.props as object), children: undefined }) }
         : null)}
       {...(link ? { role: undefined } : null)}
-      disabled={disabled || isLoading}
+      disabled={inert ? false : disabled || isLoading}
+      {...(inert ? { 'aria-disabled': true, opacity: 0.5, cursor: 'not-allowed' } : null)}
       {...touch(HEIGHT[resolved], 44, 'y')}
       // Class notation is READ here, not forwarded. A caller writing
       // `<Button className="w-full mt-4">` is writing the same notation Box
@@ -407,19 +569,31 @@ function Button({
       // actually arrives on the rendered <button> is the DOM's. Declared above
       // as what arrives, handed on here as what the frame will forward.
       {...(props as object)}
+      // After the caller's, so a press on a disabled-but-focusable button is
+      // refused whatever handler it was given.
+      {...(inert ? { onPress: undefined, onClick: (e: { preventDefault?: () => void }) => e?.preventDefault?.() } : null)}
     >
       {/* Bounded in pixels, not by `size="small"`. gui's Spinner drops that prop
           on web and the indicator then takes its container: measured 300×305,
           which made `<Button isLoading>loading</Button>` render 389×309 — a
           button wider than a phone, and the only element on the whole surface
           that overflowed at 390px. */}
-      {isLoading && <Spinner size="small" maxW={SPIN[resolved]} maxH={SPIN[resolved]} />}
+      {isLoading && loadingPosition === 'start' ? spinner : null}
+      {center ? (
+        // Centred over the label, which keeps its width but is not painted: the
+        // button stays the size it was, and nothing beside it moves.
+        <XStack position="absolute" t={0} b={0} l={0} r={0} items="center" justify="center" pointerEvents="none">
+          {spinner}
+        </XStack>
+      ) : null}
       {startIcon ? glyph(startIcon, GLYPH[resolved], tint) : null}
       {ink(SMALL_ICON.has(resolved) ? glyph(body, GLYPH[resolved], tint) : body, GuiButton.Text as never, {
         fontSize: TYPE[resolved],
         ...quiet,
+        ...(center ? { opacity: 0 } : null),
       })}
       {endIcon ? glyph(endIcon, GLYPH[resolved], tint) : null}
+      {isLoading && loadingPosition === 'end' ? spinner : null}
     </Frame>
   )
 }
