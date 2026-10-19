@@ -16,15 +16,15 @@
 import { describe, expect, it, vi } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 
-const seen: { offset?: number }[] = []
+const seen: { offset?: number; delay?: unknown }[] = []
 
 // Only Tooltip is replaced. The rest of gui is the real module, because `ink`
 // and the surface props reach for a good deal of it and a hand-built stub would
 // be a second, drifting copy of that surface.
 vi.mock('@hanzo/gui', async (importActual) => {
   const actual = await importActual<Record<string, unknown>>()
-  const Root = ({ offset, children }: { offset?: number; children?: React.ReactNode }) => {
-    seen.push({ offset })
+  const Root = ({ offset, delay, children }: { offset?: number; delay?: unknown; children?: React.ReactNode }) => {
+    seen.push({ offset, delay })
     return <div data-testid="root">{children}</div>
   }
   Root.Trigger = ({ children }: { children?: React.ReactNode }) => <button>{children}</button>
@@ -43,7 +43,7 @@ vi.mock('../../product/menu/portal-theme', () => ({
 
 const { GuiProvider } = await import('@hanzo/gui')
 const { default: config } = await import('../../gui-config')
-const { Tooltip, TooltipContent, TooltipTrigger } = await import('./tooltip')
+const { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } = await import('./tooltip')
 
 const markup = (node: React.ReactNode) =>
   renderToStaticMarkup(
@@ -77,7 +77,8 @@ describe('Tooltip offset', () => {
         <TooltipContent>Hint</TooltipContent>
       </Tooltip>,
     )
-    expect(first.offset).toBe(4)
+    // 10: the hint clears its anchor by twenty-ui's distance (was 4).
+    expect(first.offset).toBe(10)
   })
 
   it('leaves a root offset standing when Content names none', () => {
@@ -101,5 +102,55 @@ describe('Tooltip offset', () => {
         </Tooltip>,
       ),
     ).not.toThrow()
+  })
+})
+
+describe('Tooltip delay', () => {
+  it('a tooltip standing alone opens after 600ms', () => {
+    const [first] = render(
+      <Tooltip>
+        <TooltipTrigger>Hover</TooltipTrigger>
+        <TooltipContent>Hint</TooltipContent>
+      </Tooltip>,
+    )
+    expect(first.delay).toBe(600)
+  })
+
+  it('a tooltip in a provider leaves the delay to the group', () => {
+    const [first] = render(
+      <TooltipProvider delay={0}>
+        <Tooltip>
+          <TooltipTrigger>Hover</TooltipTrigger>
+          <TooltipContent>Hint</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>,
+    )
+    expect(first.delay).toBeUndefined()
+  })
+
+  it('a tooltip naming its own delay keeps it', () => {
+    const [first] = render(
+      <Tooltip delay={1000}>
+        <TooltipTrigger>Hover</TooltipTrigger>
+        <TooltipContent>Hint</TooltipContent>
+      </Tooltip>,
+    )
+    expect(first.delay).toBe(1000)
+  })
+})
+
+describe('TooltipContent title and description', () => {
+  it('leads the title with its icon and keeps the description under it, line breaks kept', () => {
+    const html = markup(
+      <Tooltip>
+        <TooltipTrigger>Hover</TooltipTrigger>
+        <TooltipContent startIcon={<i data-icon />} description={'Line one\nLine two'}>
+          Mailbox sync
+        </TooltipContent>
+      </Tooltip>,
+    )
+    expect(html.indexOf('data-icon')).toBeLessThan(html.indexOf('Mailbox sync'))
+    expect(html.indexOf('Mailbox sync')).toBeLessThan(html.indexOf('Line one'))
+    expect(html).toMatch(/data-slot="tooltip-description"[^>]*style="white-space:pre-line"|style="white-space:pre-line"[^>]*data-slot="tooltip-description"/)
   })
 })
