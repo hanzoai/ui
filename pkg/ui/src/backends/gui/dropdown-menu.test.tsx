@@ -309,6 +309,9 @@ describe('status lines and shared geometry', () => {
     )
     await settle(150)
     const cls = rows()[0].className
+    // A string label reaches gui ALONE, so gui sets it in its Text: never a
+    // bare text node directly inside the item's View.
+    expect([...rows()[0].childNodes].some((n) => n.nodeType === Node.TEXT_NODE)).toBe(false)
     expect(cls).toMatch(/_minH-32px/)
     expect(cls).toMatch(/_btlr-c-radius-xs/)
     expect(cls).toMatch(/_bg-0hover-hover/)

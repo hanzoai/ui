@@ -482,10 +482,19 @@ const DropdownMenuItem = /* @__PURE__ */ React.forwardRef<
       }}
       {...props}
     >
-      {/* gui wraps a lone string in its Text; beside the chevron the label is
-          one of two children, so it is wrapped here, the same way. */}
-      {opens ? ink(children, Text as never) : children}
-      {opens ? <ChevronRight size={ICON - 2} ml="auto" color="$dim" /> : null}
+      {/* A string label is set here, in the 13px row text the declarative rows
+          already use — gui's own wrap gave it the body default, a size larger
+          than every other row. And it is ONE child: gui leaves an array alone,
+          so a label beside a `null` became a bare text node inside a View, an
+          error on web and a crash on native. */}
+      {opens ? (
+        <>
+          {ink(children, Text as never, { fontSize: '$2' })}
+          <ChevronRight size={ICON - 2} ml="auto" color="$dim" />
+        </>
+      ) : (
+        ink(children, Text as never, { fontSize: '$2' })
+      )}
     </Menu.Item>
   )
   if (!actions) return item
