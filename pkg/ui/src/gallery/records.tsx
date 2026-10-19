@@ -19,6 +19,7 @@ import { Density } from '../backends/gui/density'
 import { Display } from './display'
 import { FieldsGallery } from './fields'
 import { Compound } from './compound'
+import { Menus } from './menus'
 
 const NOOP = () => {}
 
@@ -81,6 +82,7 @@ export function Records() {
       </Density>
       <Display />
       <Compound />
+      <Menus />
     </>
   )
 }
