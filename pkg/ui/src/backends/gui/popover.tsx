@@ -10,8 +10,16 @@
  * gui keeps BOTH placement facts on the popper ROOT — `offset` and `placement`
  * — while the compound API spells them on Content, as `sideOffset` and `align`.
  * One value, one owner: the root holds them, Content publishes into it.
+ *
+ * `size="sm"` is the record panel (twenty-ui's Popover, MIT, NOTICE): an 8px
+ * inset, sized to its content up to the room there is, 8px clear of its anchor.
+ * A `<Density value="compact">` makes it the default for a panel that names no
+ * size. The default stays the 16px-inset, 288-wide panel every surface has. The
+ * fill stays Hanzo's near-opaque panel — not twenty-ui's translucent glass.
+ * `arrow` adds a 12×6 pointer in the panel's own fill and edge.
  */
 import { Popover as GuiPopover } from '@hanzo/gui'
+import { Density, useDensity } from './density'
 import {
   createContext,
   useCallback,
@@ -40,7 +48,9 @@ const Solid = /* @__PURE__ */ createContext(false)
 
 export type PopoverProps = Omit<ComponentProps<typeof GuiPopover>, 'offset'> & { offset?: number }
 
-function Popover({ offset = DEFAULT_OFFSET, placement, ...props }: PopoverProps) {
+function Popover({ offset, placement, ...props }: PopoverProps) {
+  const density = useDensity()
+  offset ??= density === 'compact' ? 8 : DEFAULT_OFFSET
   const [placed, setPlaced] = useState<Placed>({})
   const publish = useCallback((p: Placed) => setPlaced((prev) => ({ ...prev, ...p })), [])
   return (
@@ -68,28 +78,43 @@ export type PopoverContentProps = ComponentProps<typeof GuiPopover.Content> & {
    * lit edge, and any popover opened from inside it is solid too.
    */
   solid?: boolean
+  /** `sm`: an 8px inset, content-sized up to the room there is. Unset, the nearest `<Density>` decides. */
+  size?: 'default' | 'sm'
+  /** A 12×6 pointer toward the anchor, in the panel's fill. */
+  arrow?: boolean
 }
 
-const PopoverContent = ({ sideOffset = DEFAULT_OFFSET, align, solid, ...props }: PopoverContentProps) => {
+const PopoverContent = ({ sideOffset, align, solid, size, arrow = false, children, ...props }: PopoverContentProps) => {
   const themeName = useThemeName()
+  const density = useDensity()
   const publish = useContext(Publish)
   const inherited = useContext(Solid)
   const opaque = solid ?? inherited
-  useEffect(() => publish?.({ offset: sideOffset, align }), [publish, sideOffset, align])
+  const small = (size ?? (density === 'compact' ? 'sm' : 'default')) === 'sm'
+  const offset = sideOffset ?? (density === 'compact' ? 8 : DEFAULT_OFFSET)
+  useEffect(() => publish?.({ offset, align }), [publish, offset, align])
+  const ground = opaque ? 'var(--popover)' : '$panel'
   return (
     <Solid.Provider value={opaque}>
       <PortalTheme name={themeName}>
-        <GuiPopover.Content
-          {...slot('popover-content')}
-          {...(opaque ? { 'data-material': 'solid' } : null)}
-          bg={opaque ? 'var(--popover)' : '$panel'}
-          borderWidth={1}
-          borderColor="$borderColor"
-          rounded="$4"
-          p="$4"
-          width={288}
-          {...props}
-        />
+        <Density value={density}>
+          <GuiPopover.Content
+            {...slot('popover-content')}
+            {...(opaque ? { 'data-material': 'solid' } : null)}
+            {...(small ? { 'data-size': 'sm' } : null)}
+            bg={ground}
+            borderWidth={1}
+            borderColor="$borderColor"
+            rounded="$4"
+            {...(small
+              ? { p: '$2', gap: '$1', maxW: 'var(--hanzogui-popper-available-width, 100vw)' as never }
+              : { p: '$4', width: 288 })}
+            {...props}
+          >
+            {arrow ? <GuiPopover.Arrow {...slot('popover-arrow')} size={6} bg={ground} borderWidth={1} borderColor="$borderColor" /> : null}
+            {children}
+          </GuiPopover.Content>
+        </Density>
       </PortalTheme>
     </Solid.Provider>
   )

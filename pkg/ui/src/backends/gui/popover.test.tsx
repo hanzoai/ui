@@ -22,6 +22,7 @@ import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
+import { Density } from './density'
 
 const html = (node: React.ReactNode) =>
   renderToStaticMarkup(
@@ -111,5 +112,67 @@ describe('PopoverContent solid', () => {
     expect(glass.map((p) => p.textContent)).toEqual(['Glass'])
     await act(async () => root.unmount())
     host.remove()
+  })
+})
+
+/**
+ * The record panel: an 8px inset sized to its content, asked for by `size="sm"`
+ * or given by a compact density; the default stays the 16px, 288-wide panel;
+ * `arrow` adds the pointer. Mounted, because the content is portalled.
+ */
+describe('PopoverContent size', () => {
+  const panels = async (node: React.ReactNode) => {
+    ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    const root = createRoot(host)
+    await act(async () => {
+      root.render(<GuiProvider config={config} defaultTheme="dark">{node}</GuiProvider>)
+      await new Promise((r) => setTimeout(r, 0))
+    })
+    const found = [...document.querySelectorAll<HTMLElement>('[data-slot="popover-content"]')].map((p) => ({
+      size: p.getAttribute('data-size'),
+      cls: p.className,
+      arrow: !!p.querySelector('[data-slot="popover-arrow"]'),
+    }))
+    await act(async () => root.unmount())
+    host.remove()
+    return found
+  }
+
+  it('sm: an 8px inset and no fixed width; the default keeps 16 and 288', async () => {
+    const [sm, regular] = await panels(
+      <>
+        <Popover open>
+          <PopoverTrigger>A</PopoverTrigger>
+          <PopoverContent size="sm" arrow>
+            Small
+          </PopoverContent>
+        </Popover>
+        <Popover open>
+          <PopoverTrigger>B</PopoverTrigger>
+          <PopoverContent>Regular</PopoverContent>
+        </Popover>
+      </>,
+    )
+    expect(sm.size).toBe('sm')
+    expect(sm.cls).toMatch(/_pl-c-space-2/)
+    expect(sm.cls).not.toMatch(/_w-288px|_width-288px/)
+    expect(sm.arrow).toBe(true)
+    expect(regular.size).toBeNull()
+    expect(regular.cls).toMatch(/_pl-c-space-4/)
+    expect(regular.arrow).toBe(false)
+  })
+
+  it('a compact density gives the small panel to a popover that names no size', async () => {
+    const [p] = await panels(
+      <Density value="compact">
+        <Popover open>
+          <PopoverTrigger>A</PopoverTrigger>
+          <PopoverContent>Compact</PopoverContent>
+        </Popover>
+      </Density>,
+    )
+    expect(p.size).toBe('sm')
   })
 })
