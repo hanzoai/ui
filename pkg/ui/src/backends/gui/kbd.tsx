@@ -66,7 +66,9 @@ export function Kbd({ children, variant = 'default', ...props }: KbdProps) {
       {...(variant === 'cap' ? { 'data-variant': 'cap', ...CAP } : null)}
       {...(props as React.ComponentProps<typeof KbdFrame>)}
     >
-      {ink(children, KbdText)}
+      {/* A keycap's legend is the secondary rank (twenty-ui's keys), the flat
+          chip's stays the ramp's quiet rung it always was. */}
+      {ink(children, KbdText, variant === 'cap' ? { color: '$aside' } : {})}
     </KbdFrame>
   )
 }

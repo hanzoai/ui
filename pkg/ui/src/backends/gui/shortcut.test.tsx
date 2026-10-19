@@ -86,4 +86,9 @@ describe('Kbd variant="cap"', () => {
     expect(flat).toMatch(/_height-20px/)
     expect(flat).not.toMatch(/box-shadow/)
   })
+
+  it('a keycap reads its legend in the secondary rank; the flat chip keeps the quiet rung', () => {
+    expect(html(<Kbd variant="cap">K</Kbd>)).toMatch(/_col-aside[^"]*"[^>]*>K</)
+    expect(html(<Kbd>K</Kbd>)).toMatch(/_col-quiet[^"]*"[^>]*>K</)
+  })
 })
