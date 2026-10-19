@@ -68,3 +68,48 @@ describe('Tabs selected state', () => {
     expect(bgClass(classesOf(tags[2]!))).toBe(bgClass(inactive)) // c is inactive, like b
   })
 })
+
+describe('Tabs variant line', () => {
+  const strip = () =>
+    html(
+      <Tabs variant="line" defaultValue="b">
+        <TabsList>
+          <TabsTrigger value="a" startIcon={<i data-icon />} badge={<b data-badge>3</b>}>
+            tab a
+          </TabsTrigger>
+          <TabsTrigger value="b">tab b</TabsTrigger>
+          <TabsTrigger value="c" size="sm" highlighted>
+            tab c
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>,
+    )
+
+  it('is a transparent list over a 1px baseline, tabs 40px tall', () => {
+    const markup = strip()
+    const list = markup.match(/<[a-z0-9]+[^>]*data-slot="tabs-list"[^>]*>/)![0]
+    expect(list).toMatch(/_borderBottomWidth-1px/)
+    expect(list).toMatch(/_bg-transparent/)
+    for (const tag of triggerTags(markup)) expect(tag).toMatch(/_minH-40px/)
+  })
+
+  it('draws the ink line under the chosen tab only, and its label in full ink', () => {
+    const markup = strip()
+    expect(markup.match(/data-slot="tabs-indicator"/g)).toHaveLength(1)
+    const chosen = triggerTags(markup).findIndex((t) => t.includes('data-chosen'))
+    expect(chosen).toBe(1)
+    expect(markup).toMatch(/_bg-ink/)
+  })
+
+  it('seats the icon and the badge round the label, and rings a highlighted tab', () => {
+    const markup = strip()
+    expect(markup.indexOf('data-icon')).toBeLessThan(markup.indexOf('tab a'))
+    expect(markup.indexOf('tab a')).toBeLessThan(markup.indexOf('data-badge'))
+    expect(markup).toMatch(/_outlineWidth-1px/)
+  })
+
+  it('the default variant is still the segmented pill', () => {
+    const list = html(three()).match(/<[a-z0-9]+[^>]*data-slot="tabs-list"[^>]*>/)![0]
+    expect(list).toMatch(/_height-36px/)
+  })
+})
