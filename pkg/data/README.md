@@ -1,20 +1,24 @@
 # @hanzo/data
 
-Cross-platform, metadata-driven **data-app components** for any [Hanzo Base](https://github.com/hanzoai/base)-backed app — CRM, CMS, commerce, or a one-off internal tool. One model (typed **fields** → **records** → **views**) renders everywhere, on web, native (iOS), and desktop, because it's built on [`@hanzo/gui`](https://github.com/hanzoai/gui) (Tamagui). **Airtable/Twenty-class polish** — table ⇆ board, filter, sort, group, inline edit, saved views — all clean-room and original.
+Cross-platform, metadata-driven **data-app components** for any [Hanzo Base](https://github.com/hanzoai/base)-backed app — CRM, CMS, commerce, or a one-off internal tool. One model (typed **fields** → **records** → **views**) renders everywhere, on web, native (iOS), and desktop, because it's built on [`@hanzo/gui`](https://github.com/hanzoai/gui) and drawn with [`@hanzo/ui`](../ui)'s record kit — table ⇆ board, filter, sort, group, inline edit, saved views.
 
 An object is a set of typed fields. A record is values for those fields. Every view — table, board, detail — renders from that one model, dispatched through a registry, so adding a field type is **one registration**, never a `switch` edit. A business app (CRM/CMS/ERP) is just a curated set of views over these components.
 
 ## Install
 
 ```sh
-bun add @hanzo/data @hanzo/gui
+bun add @hanzo/data @hanzo/ui @hanzo/gui
 ```
 
-`@hanzo/gui` and `react` are peers.
+`@hanzo/ui`, `@hanzo/gui` and `react` are peers. Mount it under `<Hanzo>` (the
+@hanzo/ui root) and the cells, cards and editors follow the theme. Wrap a record
+surface in `<Density value="compact">` for the record density: 32px rows and
+controls, an 8px gutter, 13px text; without it the table keeps 44px rows and the
+editors the kit's 36px.
 
 ## The flagship: `RecordsView`
 
-One shell turns any collection into a Twenty-class surface — a toolbar (view switch, search, filter builder, sort builder, board group-by) over a **DataTable** or a **BoardView**, driven by a single `ViewConfig`. Presentational + data-injected: the host supplies raw records and the persistence callbacks; the view owns interaction state.
+One shell turns any collection into a record surface — a toolbar (view switch, search, filter builder, sort builder, board group-by) over a **DataTable** or a **BoardView**, driven by a single `ViewConfig`. Presentational + data-injected: the host supplies raw records and the persistence callbacks; the view owns interaction state.
 
 ```tsx
 import { RecordsView, type FieldDefinition } from '@hanzo/data'
@@ -37,7 +41,7 @@ import { RecordsView, type FieldDefinition } from '@hanzo/data'
 
 `text · longText · number · percent · currency · boolean · select · multiSelect · date · dateTime · email · url · links · phone · rating · relation · json · uuid · fullName · address · files · richText · position · actor`
 
-Each type has a read **Display** and (where editable) an **Input**, resolved by the registry. Editors are polished: searchable **select** dropdowns with color chips, a month-grid **calendar**, a **relation** record-picker (over injected candidates), a **file** upload, a validated **JSON** editor, a sliding **boolean** toggle.
+Each type has a read **Display** and (where editable) an **Input**, resolved by the registry, both from @hanzo/ui's record kit: a select is a **Tag** in its option's colour (thirty data hues, `TagColor`) and its editor a searchable menu with a "No …" row; several values are one line of tags or pills with a **+N**; emails, links and phones are pills with their mailto / https / tel target; a relation is a record chip with an **Avatar**; a currency is an amount with a **currency picker** at its start; a phone a number with a **calling-code picker**; a date the kit's **calendar** under a typed day; a rating a row of stars. Enter commits an edit, Escape cancels it.
 
 ## Extend
 
@@ -59,11 +63,12 @@ import { applyView, sortRecords, filterRecords, boardColumns } from '@hanzo/data
 
 ## Surface
 
-- **Model** — `FieldDefinition`, `FieldType`, `FieldMetadata`, `SelectOption`, `CurrencyValue`, `LinkValue`
+- **Model** — `FieldDefinition`, `FieldType`, `FieldMetadata`, `SelectOption`, `TagColor`, `CurrencyValue`, `LinkValue`, `AddressValue`, `FullNameValue`, `ActorValue`
+- **Lists** — `regions()`, `currencies()` (from Intl, in the reader's language), `CALLING` (E.164 calling codes)
 - **Views** — `RecordsView`, `DataTable`, `BoardView`, `RecordDetail`, `RecordForm`, `RecordCard`, `RecordsToolbar`
 - **Primitives** — `Menu`, `MenuItem`, `CheckBox`, `Toggle`, `Calendar`
 - **Routers / Registry** — `FieldDisplay`, `FieldInput`, `isEditable`, `registerField`, `getFieldRenderers`
 - **Logic** — `applyView`, `sortRecords`, `filterRecords`, `searchRecords`, `paginate`, `boardColumns`, `movePatch`, `operatorsForType`, `emptyView`, `describeView`, …
-- **Theme** — `tokens`, `TAG_TONES`, `tagTone`
+- **Theme** — `TAG_TONES`, `tagTone` (the data palette's tag pairs as custom properties); `tokens` (the old fixed dark palette, kept for callers)
 
 MIT · Hanzo AI — see [LICENSE.md](../../LICENSE.md). HIP-0137 (`hanzoai/hips`).

@@ -2,7 +2,8 @@
 //
 // One model (typed fields → records → views) powers any Base-backed app: CRM,
 // CMS, commerce, internal tools. Built on @hanzo/gui so the same components run on
-// web, native (iOS), and desktop. Airtable/Twenty-class polish, clean-room.
+// web, native (iOS), and desktop. Drawn with @hanzo/ui's record kit, so its cells,
+// cards and editors are the kit's and follow the host's theme and density.
 // Importing the package registers the built-in field renderers; register more to
 // extend. A business app is a curated set of views over these components.
 //
@@ -18,6 +19,9 @@ export type {
   SelectOption,
   LinkValue,
   CurrencyValue,
+  AddressValue,
+  FullNameValue,
+  ActorValue,
   FieldMetadata,
   FieldMetadataMap,
   FieldDefinition,
@@ -42,6 +46,12 @@ export { FieldDisplay } from './field/FieldDisplay'
 export { FieldInput, isEditable } from './field/FieldInput'
 export * from './field/displays'
 export * from './field/inputs'
+
+// The lists the phone, address and currency editors pick from, for a host's own
+// settings (a default country, a default currency): built from Intl in the
+// reader's language, with each region's E.164 calling code.
+export { regions, currencies, type Region, type Currency } from './field/regions'
+export { CALLING } from './field/calling'
 
 // ── Views ────────────────────────────────────────────────────────────────────
 export { DataTable, type DataTableProps } from './table/DataTable'
