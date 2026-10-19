@@ -16,6 +16,7 @@ import { masked } from './mask'
 import { BOX, FIELD, FILL, type FieldSize } from './control'
 import { fieldSize, useDensity } from './density'
 import { GroupContext } from './input-group'
+import { invalidOf, useField } from './field'
 
 /** What an adornment takes past the gutter: its 16px mark and 8 beside it. */
 const MARK = 24
@@ -58,9 +59,6 @@ const well = (side: 'l' | 'r', gutter: number) =>
     justify: 'center' as const,
   })
 
-/** `aria-invalid` as the DOM reads it: anything but absent or the string "false". */
-const isInvalid = (v: unknown) => v != null && v !== false && v !== 'false'
-
 const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function Input(
   { startAdornment, endAdornment, reveal = true, type, secureTextEntry, size, fill = false, ...props },
   ref,
@@ -72,7 +70,10 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
   const toggle = isPassword && reveal
   const box = BOX[group?.size ?? fieldSize(size, density)]
   const inset = box.gutter + MARK
-  const invalid = isInvalid((props as { 'aria-invalid'?: unknown })['aria-invalid'])
+  // Its own `aria-invalid` first, else the enclosing Field's stated validity —
+  // the one rule Textarea and SelectTrigger read too (field.tsx `invalidOf`).
+  const enclosing = useField()
+  const invalid = invalidOf((props as { 'aria-invalid'?: unknown })['aria-invalid'], enclosing)
   const disabled = !!(props as { disabled?: boolean }).disabled
   const report = group?.report
   useEffect(() => report?.({ invalid, disabled }), [report, invalid, disabled])
@@ -96,6 +97,7 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
         color="$ink"
         placeholderTextColor="$placeholderColor"
         fontSize={box.font}
+        {...(invalid ? { 'aria-invalid': true } : null)}
         {...props}
         // The group draws the one focus ring, round the whole box. Inline,
         // because design's `:focus-visible` outline is a stylesheet rule and
@@ -151,6 +153,7 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       color="$ink"
       placeholderTextColor="$placeholderColor"
       fontSize={box.font}
+      {...(invalid ? { 'aria-invalid': true } : null)}
       pl={startAdornment ? inset : box.gutter}
       pr={endAdornment || toggle ? inset : box.gutter}
       {...props}

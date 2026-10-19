@@ -186,3 +186,32 @@ describe('InputGroup', () => {
     expect(tag(markup, 'input')).toMatch(/_height-22px/)
   })
 })
+
+describe('Input inside a Field', () => {
+  it('takes the field’s stated validity: the error edge, and aria-invalid for assistive tech', async () => {
+    const { Field } = await import('./field')
+    const el = tag(
+      html(
+        <Field invalid>
+          <Input size="sm" placeholder="x" />
+        </Field>,
+      ),
+      'input',
+    )
+    expect(el).toMatch(/_btc-red7/)
+    expect(el).toContain('aria-invalid="true"')
+  })
+
+  it('its own aria-invalid="false" outranks the field', async () => {
+    const { Field } = await import('./field')
+    const el = tag(
+      html(
+        <Field invalid>
+          <Input size="sm" placeholder="x" aria-invalid={false} />
+        </Field>,
+      ),
+      'input',
+    )
+    expect(el).not.toMatch(/_btc-red7/)
+  })
+})
