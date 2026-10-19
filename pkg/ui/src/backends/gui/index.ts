@@ -165,7 +165,7 @@ export {
 // 216 files in hanzo.app ended up doing exactly that. See ./layout.
 export {
   XStack, YStack, ZStack,
-  SizableText, Paragraph, Heading, H1, H2, H3, H4, H5, H6, Span, Strong, Em,
+  SizableText, Paragraph, H1, H2, H3, H4, H5, H6, Span, Strong, Em,
   Anchor, Image, Separator, Spacer, ScrollView, View, Text,
   type GuiElement,
 } from './layout'
@@ -380,7 +380,7 @@ export { SymbolInfo, type SymbolInfoProps, type SymbolInfoTheme } from './symbol
 export { Status, type StatusProps, type StatusVariant } from './status'
 export { StockMarket, type StockMarketPreset, type StockMarketProps, type StockMarketSymbol, type StockMarketTab, type StockMarketTheme } from './stock-market'
 export { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow, type TableBodyProps, type TableCaptionProps, type TableCellProps, type TableFooterProps, type TableHeadProps, type TableHeaderProps, type TableProps, type TableRowProps } from './table'
-export { Tags, type Tag, type TagsProps } from './tags'
+export { Tags, type TagsProps } from './tags'
 export { TechnicalAnalysis, type TechnicalAnalysisDisplayMode, type TechnicalAnalysisInterval, type TechnicalAnalysisProps, type TechnicalAnalysisTheme } from './technical-analysis'
 export { Ticker, type TickerDirection, type TickerProps } from './ticker'
 export { Toggle, type ToggleProps, type ToggleSize, type ToggleVariant } from './toggle'
@@ -394,3 +394,17 @@ export { NavigationBar, type NavigationBarLink, type NavigationBarOption, type N
 // One block, so the merge reads as one change and the root mirrors it as one.
 export { Density, useDensity, fieldSize, type DensityName } from './density'
 export { InputGroup, type InputGroupProps } from './input-group'
+export { Tag, type TagProps, type TagColor, type TagVariant } from './tag'
+export { Chip, type ChipProps, type ChipSize, type ChipVariant } from './chip'
+export { TruncatedText, TruncatedTextProvider, type TruncatedTextProps, type TruncateMode } from './truncated-text'
+export { initialOf, type AvatarProps, type AvatarSize, type AvatarShape } from './avatar'
+export { AvatarGroup, type AvatarGroupProps } from './avatar-group'
+export { Shortcut, formatShortcut, speakShortcut, type ShortcutProps, type ShortcutKeys, type ShortcutPlatform } from './shortcut'
+export { OverflowingList, type OverflowingListProps } from './overflowing-list'
+export { type BadgeSize } from './badge'
+export { STATUS_HUE } from './status'
+export { IconTile, tileTones, type IconTileProps } from './icon-tile'
+export { ColorSample, type ColorSampleProps } from './color-sample'
+export { StackIcon, type StackIconProps } from './stack-icon'
+export { Heading, type HeadingProps } from './heading'
+export { type LabelProps } from './label'

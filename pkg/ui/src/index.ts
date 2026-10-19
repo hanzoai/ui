@@ -575,7 +575,6 @@ export {
   type TableHeaderProps,
   type TableProps,
   type TableRowProps,
-  type Tag,
   type TagsProps,
   type TechnicalAnalysisDisplayMode,
   type TechnicalAnalysisInterval,
@@ -609,8 +608,45 @@ export {
   useDensity,
   fieldSize,
   InputGroup,
+  Tag,
+  Chip,
+  TruncatedText,
+  TruncatedTextProvider,
+  initialOf,
+  AvatarGroup,
+  Shortcut,
+  formatShortcut,
+  speakShortcut,
+  OverflowingList,
+  STATUS_HUE,
+  IconTile,
+  tileTones,
+  ColorSample,
+  StackIcon,
   type DensityName,
   type InputGroupProps,
+  type TagProps,
+  type TagColor,
+  type TagVariant,
+  type ChipProps,
+  type ChipSize,
+  type ChipVariant,
+  type TruncatedTextProps,
+  type TruncateMode,
+  type AvatarProps,
+  type AvatarSize,
+  type AvatarShape,
+  type AvatarGroupProps,
+  type ShortcutProps,
+  type ShortcutKeys,
+  type ShortcutPlatform,
+  type OverflowingListProps,
+  type BadgeSize,
+  type IconTileProps,
+  type ColorSampleProps,
+  type StackIconProps,
+  type HeadingProps,
+  type LabelProps,
 } from './backends/gui'
 
 // `Hanzo` — the root, and the only thing an app mounts. It carries the gui
@@ -641,7 +677,7 @@ export { buttonVariants, badgeVariants, fit } from './style'
 
 // The live dot and the typing caret: gui Views carrying `data-motion`, whose
 // keyframes are styles/motion.css.
-export { Pulse, Caret, type PulseProps, type CaretProps } from './motion'
+export { Pulse, Caret, Crossfade, type PulseProps, type CaretProps, type CrossfadeProps } from './motion'
 
 // The config the components are styled against, for a host that lays out with
 // @hanzo/gui stacks of its own.

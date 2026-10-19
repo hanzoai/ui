@@ -16,6 +16,7 @@ import { Button, type ButtonSize } from '../backends/gui/button'
 import { Input } from '../backends/gui/input'
 import { InputGroup } from '../backends/gui/input-group'
 import { Density } from '../backends/gui/density'
+import { Display } from './display'
 
 const NOOP = () => {}
 
@@ -74,6 +75,7 @@ export function Records() {
           </InputGroup>
         </Section>
       </Density>
+      <Display />
     </>
   )
 }
