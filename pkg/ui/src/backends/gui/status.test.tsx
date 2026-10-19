@@ -10,7 +10,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
-import { Status } from './status'
+import { Status, STATUS_HUE } from './status'
 
 const html = (node: React.ReactNode) =>
   renderToStaticMarkup(
@@ -60,5 +60,32 @@ describe('Status', () => {
     expect(error).toBeTruthy()
     expect(success).not.toBe(base)
     expect(error).not.toBe(success)
+  })
+})
+
+describe('Status in a data hue', () => {
+  it('a variant renders as before', () => {
+    expect(tag(html(<Status variant="success">ok</Status>), 'status')).toContain('data-variant="success"')
+  })
+
+  it('a colour is a 20px pill in the hue, its dot 4px in the ink', () => {
+    const markup = html(<Status color="teal">Importing</Status>)
+    const el = tag(markup, 'status')
+    expect(el).toContain('data-color="teal"')
+    expect(el).toContain('--tone-3:var(--data-teal-3)')
+    expect(el).toMatch(/_height-20px/)
+    expect(tag(markup, 'status-dot')).toMatch(/_width-4px/)
+  })
+
+  it('the semantic names alias onto hues', () => {
+    expect(STATUS_HUE).toEqual({ default: 'gray', gray: 'gray', success: 'green', warning: 'orange', error: 'red', info: 'blue' })
+    expect(tag(html(<Status color="warning">x</Status>), 'status')).toContain('data-color="orange"')
+    expect(tag(html(<Status color="chartreuse">x</Status>), 'status')).toContain('data-color="gray"')
+  })
+
+  it('loading busies the pill and narrows its end gutter', () => {
+    const el = tag(html(<Status color="teal" loading>x</Status>), 'status')
+    expect(el).toContain('aria-busy="true"')
+    expect(el).toMatch(/_pr-c-space-1/)
   })
 })
