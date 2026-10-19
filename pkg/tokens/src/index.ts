@@ -26,5 +26,9 @@ export {
   scale as scaleSections,
   darkVars,
   lightVars,
+  data as dataSections,
 } from "./theme"
 export type { TokenVar, TokenSection } from "./theme"
+
+export { hues, neutrals, scales, data, next, hueOf } from "./data"
+export type { DataHue, PickHue, Scale } from "./data"

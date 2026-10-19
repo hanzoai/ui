@@ -26,6 +26,8 @@
  * --surface-0..3, --text-helper, the state hues) inherit from :root by design.
  */
 
+import { hues, neutrals, scales } from './data'
+
 export interface TokenVar {
   /** CSS custom-property name WITHOUT the leading `--`. */
   name: string
@@ -184,6 +186,7 @@ export const dark: TokenSection[] = [
       { name: 'text-tertiary', value: 'var(--white-55)' },
       { name: 'text-helper', value: 'var(--muted-foreground)' },
       { name: 'text-disabled', value: 'var(--white-30)' },
+      { name: 'text-faint', value: 'var(--white-22)', comment: 'an empty cell, a grip, a resting light icon: present, never read' },
     ],
   },
   {
@@ -194,6 +197,9 @@ export const dark: TokenSection[] = [
       { name: 'state-error-bg', value: 'rgb(239 68 68 / .1)' },
       { name: 'state-online', value: '#4ade80', comment: 'green-400 — live status dot' },
       { name: 'state-success', value: '#22c55e', comment: 'green-500 — "Free" / "Save N%" callouts' },
+      { name: 'state-success-bg', value: 'rgb(34 197 94 / .1)' },
+      { name: 'state-warning', value: '#f59e0b', comment: 'amber-500 — needs attention, not blocking' },
+      { name: 'state-warning-bg', value: 'rgb(245 158 11 / .1)' },
       { name: 'chrome-dot-red', value: 'rgb(239 68 68 / .6)' },
       { name: 'chrome-dot-yellow', value: 'rgb(234 179 8 / .6)' },
       { name: 'chrome-dot-green', value: 'rgb(34 197 94 / .6)' },
@@ -265,6 +271,7 @@ export const light: TokenSection[] = [
       { name: 'text-secondary', value: 'rgb(10 10 10 / .78)' },
       { name: 'text-tertiary', value: 'rgb(10 10 10 / .55)' },
       { name: 'text-disabled', value: 'rgb(10 10 10 / .3)' },
+      { name: 'text-faint', value: 'rgb(10 10 10 / .2)' },
     ],
   },
 ]
@@ -290,6 +297,8 @@ export const scale: TokenSection[] = [
       { name: 'radius-2xl', value: '1.5rem', comment: 'rounded-3xl — story / hero cards' },
       { name: 'radius-composer', value: '28px', comment: 'the chat composer, exactly 28px' },
       { name: 'radius-full', value: '9999px', comment: 'pills, CTAs, avatars, badges' },
+      { name: 'radius-xs', value: 'calc(0.25rem * var(--radius-scale, 1))', comment: '4px — chips, tags, menu rows, cells: a row nested in an 8px panel' },
+      { name: 'radius-2xs', value: 'calc(0.125rem * var(--radius-scale, 1))', comment: '2px — a check mark, a square avatar, a flag' },
     ],
   },
   {
@@ -305,7 +314,7 @@ export const scale: TokenSection[] = [
         value:
           "'Zen Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
       },
-      { name: 'font-size-xs', value: '0.6875rem', comment: '11px — eyebrows / section labels' },
+      { name: 'font-size-xs', value: '0.75rem', comment: '12px — eyebrows, section labels, chips, a menu row\'s second line (design 0.5.35)' },
       { name: 'font-size-sm', value: '0.8125rem', comment: '13px — nav labels, dense body' },
       { name: 'font-size-base', value: '0.875rem', comment: '14px — base app text' },
       { name: 'font-size-lg', value: '0.9375rem', comment: '15px' },
@@ -337,7 +346,41 @@ export const scale: TokenSection[] = [
       { name: 'space-24', value: '6rem' },
     ],
   },
+  {
+    title: 'icons, blur, loops and keycaps',
+    note: [
+      'Icons are Lucide at stroke 2: 16 in menus, tabs and labels, 14 in buttons and',
+      'tags, 20 to 24 in empty states. The blurs are radii for an optional glass',
+      'panel (floating surfaces are near-opaque by default). The loop is for a',
+      'shimmer or a sweep only; --duration-slow stays the 400ms entry.',
+    ],
+    vars: [
+      { name: 'icon-size-sm', value: '14px' },
+      { name: 'icon-size-md', value: '16px' },
+      { name: 'icon-size-lg', value: '20px' },
+      { name: 'icon-size-xl', value: '24px' },
+      { name: 'blur-sm', value: 'blur(6px)' },
+      { name: 'blur-md', value: 'blur(12px)' },
+      { name: 'blur-lg', value: 'blur(20px)' },
+      { name: 'duration-loop', value: '1500ms' },
+      { name: 'shadow-underline', value: '0 1px 0 0 var(--border-strong)', comment: 'a keycap sits on its own lower edge' },
+    ],
+  },
 ]
+
+/**
+ * The data palette (data.ts) as two themes of `--data-<hue>-<step>`. Its own
+ * file, `dist/data.css`, and part of the full bundle, but NOT of colors.css:
+ * that file is the chrome contract @hanzo/design republishes, and data colour is
+ * not chrome.
+ */
+const palette = (theme: 'light' | 'dark'): TokenSection[] =>
+  [...hues, ...neutrals].map((hue) => ({
+    title: `data: ${hue}`,
+    vars: scales[hue][theme].map((value, i) => ({ name: `data-${hue}-${i + 1}`, value })),
+  }))
+
+export const data = { dark: palette('dark'), light: palette('light') }
 
 /** Flat `{ '--name': 'value' }` maps, first-wins, dark then light overrides. */
 function flatten(sections: TokenSection[]): Record<string, string> {

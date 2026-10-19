@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/tokens",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Design tokens for Hanzo UI: colors, spacing, radii, typography, themes",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -38,6 +38,7 @@
     },
     "./css": "./dist/tokens.css",
     "./css/colors": "./dist/colors.css",
+    "./css/data": "./dist/data.css",
     "./theme": {
       "types": "./dist/theme.d.ts",
       "import": "./dist/theme.mjs",
@@ -52,10 +53,17 @@
       "types": "./dist/gui.d.ts",
       "import": "./dist/gui.mjs",
       "require": "./dist/gui.js"
+    },
+    "./data": {
+      "types": "./dist/data.d.ts",
+      "import": "./dist/data.mjs",
+      "require": "./dist/data.js"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "NOTICE",
+    "LICENSE-MIT"
   ],
   "scripts": {
     "prepublishOnly": "node ../../scripts/guard-publish.mjs",
