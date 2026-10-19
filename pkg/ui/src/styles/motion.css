@@ -202,3 +202,73 @@
    a diagonal hatch drawn by the UA that matches nothing. A composer that grows
    with its content does not need one. */
 :where([data-slot='textarea'], [data-slot='composer-field']) { resize: none; }
+
+/* ── The record kit's motion (twenty-ui, MIT — NOTICE) ────────────────────────
+   Appended after the reduced-motion block above, so each rule here restates its
+   own: a later `[data-motion]` rule of equal specificity would otherwise win
+   over `animation: none`.
+
+     shimmer on a skeleton  the loop duration, 1.5s                    Skeleton
+     hop      a dot travels a pill and squashes as it lands, 0.8s      Spinner dot
+     sweep    a quarter-width bar crosses its track, 1.5s              Progress (indeterminate)
+     orbit    a ring turns once a loop, 1.5s                           ProgressRing (indeterminate)
+     drain    a fill empties across its box, the toast's duration      toast countdown */
+
+[data-slot='skeleton'][data-motion='shimmer'] {
+  animation-duration: var(--duration-loop, 1.5s);
+}
+
+@keyframes hop {
+  0% { transform: translateX(-16px); width: 8px; height: 8px; }
+  15% { transform: translateX(0); width: 12px; height: 2px; }
+  30%, 100% { transform: translateX(16px); width: 8px; height: 8px; }
+}
+
+[data-motion='hop'] {
+  animation: hop 0.8s ease-in-out infinite;
+}
+
+@keyframes sweep {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(400%); }
+}
+
+[data-motion='sweep'] {
+  animation: sweep var(--duration-loop, 1.5s) ease-in-out infinite;
+}
+
+@keyframes orbit {
+  from { transform: rotate(-90deg); }
+  to { transform: rotate(270deg); }
+}
+
+[data-motion='orbit'] {
+  animation: orbit var(--duration-loop, 1.5s) linear infinite;
+}
+
+@keyframes drain {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+[data-motion='drain'] {
+  transform-origin: left center;
+  animation: drain var(--drain, 6000ms) linear forwards;
+}
+
+[data-motion='drain'][data-paused] {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-motion='hop'],
+  [data-motion='sweep'],
+  [data-motion='orbit'],
+  [data-slot='skeleton'][data-motion='shimmer'] {
+    animation: none;
+  }
+  /* A countdown still has to say how long is left; it just does not move. */
+  [data-motion='drain'] {
+    animation-play-state: paused;
+  }
+}
