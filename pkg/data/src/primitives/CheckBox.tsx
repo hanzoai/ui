@@ -1,10 +1,10 @@
-// CheckBox — a small, self-contained selection box (no composite gui Checkbox
-// API), used for row selection in the table. Checked / indeterminate states with
-// the data palette; press toggles. Keeps the package on its minimal primitive
-// surface so it type-checks everywhere.
-import { Check, Minus } from '@hanzogui/lucide-icons-2'
-import { YStack } from '@hanzo/gui'
-import { tokens } from '../theme'
+'use client'
+
+// CheckBox — the row-selection box: @hanzo/ui's Checkbox in its record look
+// (the 12px solid box with its hover halo), keeping this package's small
+// `checked` / `indeterminate` / `onChange` contract for the table and its callers.
+// `size` above 16 takes the kit's md box.
+import { Checkbox } from '@hanzo/ui'
 
 export interface CheckBoxProps {
   checked?: boolean
@@ -12,31 +12,19 @@ export interface CheckBoxProps {
   indeterminate?: boolean
   onChange?: (checked: boolean) => void
   size?: number
+  /** What the box selects, for assistive technology ("Select all", "Select Acme"). */
+  label?: string
 }
 
-export function CheckBox({ checked, indeterminate, onChange, size = 16 }: CheckBoxProps) {
-  const on = checked || indeterminate
+export function CheckBox({ checked, indeterminate, onChange, size = 16, label }: CheckBoxProps) {
   return (
-    <YStack
-      width={size}
-      height={size}
-      rounded={4}
-      items="center"
-      justify="center"
-      borderWidth={1}
-      cursor="pointer"
-      onPress={onChange ? () => onChange(!checked) : undefined}
-      hoverStyle={{ borderColor: tokens.accent }}
-      style={{
-        backgroundColor: on ? tokens.accent : 'transparent',
-        borderColor: on ? tokens.accent : tokens.border,
-      }}
-    >
-      {indeterminate ? (
-        <Minus size={size - 4} color="#0b1220" strokeWidth={3} />
-      ) : checked ? (
-        <Check size={size - 4} color="#0b1220" strokeWidth={3} />
-      ) : null}
-    </YStack>
+    <Checkbox
+      size={size > 16 ? 'md' : 'sm'}
+      variant="solid"
+      hoverable
+      checked={indeterminate ? 'indeterminate' : Boolean(checked)}
+      onCheckedChange={() => onChange?.(indeterminate ? true : !checked)}
+      aria-label={label ?? (indeterminate ? 'Select all' : 'Select')}
+    />
   )
 }

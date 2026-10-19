@@ -1,11 +1,14 @@
-// Menu — the ONE dropdown/overlay primitive the data views use (column sort menu,
-// filter builder, select/relation pickers, view switcher). A thin, controlled
-// wrapper over @hanzo/gui's proven Popover with the package's raw-hex palette
-// (theme-config independent) and a scrolling content panel. Everything that pops
-// over goes through here, so menus look and behave identically everywhere.
+'use client'
+
+// Menu — a controlled floating panel with a scrolling body and an optional fixed
+// header (a search box), and MenuItem, one pressable row in it. @hanzo/ui's
+// Popover is the surface (its ground, edge, radius and density), the rows take
+// the record kit's row geometry: 32px, a 4px corner inside the 8px panel, the
+// hover rung. Field pickers use @hanzo/ui's DropdownMenu instead; this stays for
+// free-form panels (a filter builder) and for callers of this API.
 import type { ReactNode } from 'react'
-import { Popover, ScrollView, XStack, YStack } from '@hanzo/gui'
-import { tokens } from '../theme'
+import { ScrollView, Text, XStack, YStack } from '@hanzo/gui'
+import { Popover, PopoverContent, PopoverTrigger } from '@hanzo/ui'
 
 export interface MenuProps {
   /** The element that opens the menu (wrapped in a Popover.Trigger). */
@@ -21,29 +24,23 @@ export interface MenuProps {
   header?: ReactNode
 }
 
-/** A controlled popover menu with the data palette. Trigger toggles; select closes. */
+/** A controlled popover menu. Trigger toggles; select closes. */
 export function Menu({ trigger, children, open, onOpenChange, placement = 'bottom-start', width = 240, maxHeight = 320, header }: MenuProps) {
   return (
     <Popover placement={placement} open={open} onOpenChange={onOpenChange} allowFlip>
-      <Popover.Trigger asChild>{trigger}</Popover.Trigger>
-      <Popover.Content
-        borderWidth={1}
-        p={0}
-        rounded={10}
-        overflow="hidden"
-        elevate
-        width={width}
-        style={{ backgroundColor: tokens.surfaceRaised, borderColor: tokens.border }}
-      >
+      <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+      <PopoverContent size="sm" p={0} gap={0} width={width} overflow="hidden">
         {header ? (
-          <YStack p={6} style={{ borderBottomWidth: 1, borderBottomColor: tokens.border }}>
+          <YStack p="$1" borderBottomWidth={1} borderColor="$borderColor">
             {header}
           </YStack>
         ) : null}
         <ScrollView style={{ maxHeight }}>
-          <YStack p={4}>{children}</YStack>
+          <YStack p="$1" gap={2}>
+            {children}
+          </YStack>
         </ScrollView>
-      </Popover.Content>
+      </PopoverContent>
     </Popover>
   )
 }
@@ -62,20 +59,39 @@ export interface MenuItemProps {
 /** One selectable row in a Menu — hover-highlighted, with optional lead/trail slots. */
 export function MenuItem({ children, onPress, active, icon, trailing, tone = 'default' }: MenuItemProps) {
   return (
-    <YStack
+    <XStack
+      {...({ role: 'menuitem', tabIndex: 0 } as object)}
       onPress={onPress}
+      onKeyDown={(e: { key?: string; preventDefault?: () => void }) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return
+        e.preventDefault?.()
+        onPress?.()
+      }}
       cursor="pointer"
-      px={10}
-      py={7}
-      rounded={6}
-      hoverStyle={{ bg: tokens.hover }}
-      style={active ? { backgroundColor: tokens.hover } : undefined}
+      items="center"
+      gap="$2"
+      minH={32}
+      px="$2"
+      rounded="$xs"
+      bg={active ? '$hover' : 'transparent'}
+      hoverStyle={{ bg: tone === 'danger' ? ('var(--state-error-bg)' as never) : '$hover' }}
+      focusVisibleStyle={{ outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' }}
     >
-      <XStack items="center" gap={8}>
-        {icon ? <XStack items="center" justify="center">{icon}</XStack> : null}
-        <YStack flex={1}>{children}</YStack>
-        {trailing ?? null}
-      </XStack>
-    </YStack>
+      {icon ? (
+        <XStack items="center" justify="center" shrink={0}>
+          {icon}
+        </XStack>
+      ) : null}
+      <YStack flex={1} minW={0}>
+        {typeof children === 'string' ? (
+          <Text fontSize="$2" color={tone === 'danger' ? '$bad' : '$aside'} numberOfLines={1}>
+            {children}
+          </Text>
+        ) : (
+          children
+        )}
+      </YStack>
+      {trailing ?? null}
+    </XStack>
   )
 }
