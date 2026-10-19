@@ -84,7 +84,7 @@ const config: OverviewConfig = {
   load: async ({ range }) => fromMyApi(await MyApi.overview(range)), // → OverviewData
 }
 
-<Overview config={config} isGlobalAdmin={amAdmin} />
+<Overview config={config} superAdmin={superAdmin(claims)} /> // @hanzo/iam's one reading
 ```
 
 The loader returns the normalized **`OverviewData`** (`kpi` / `series` / `distribution`
@@ -178,8 +178,8 @@ Extracted (and generalized: no `~/lib/*` / `~/config` imports) from
 
 - **Icons** are consumer-supplied (`IconComponent` = a `size`/`color` icon), replacing
   the console's `ProductIcon` from its registry.
-- **`Overview`** drops `~/lib/api` `ApiError`, `useIsGlobalAdmin`, `PageHeader`,
-  `FadeIn`, and `States` — `isGlobalAdmin` is now a prop and the header/fade/error
+- **`Overview`** drops `~/lib/api` `ApiError`, the console's SuperAdmin hook, `PageHeader`,
+  `FadeIn`, and `States` — `superAdmin` is now a prop (the host's verdict) and the header/fade/error
   chrome is inlined (self-contained).
 - **Landing** takes brand/docs/support/discord/accent from `LandingConfig` (was
   `~/config`). `LandingHero` inlines the hero graphic + accent button (was
@@ -205,7 +205,7 @@ per component:
    `@hanzo/dashboard`; `RailwayDeploy` + `LandingMetrics` import these hooks.
 3. **Overview** — replace `overview/living/{config,logic,tiles,LivingOverview}` with
    thin wrappers over the package. The console's `LivingOverviewModule` keeps its
-   registry-router wrapper and passes `isGlobalAdmin={useIsGlobalAdmin()}` +
+   registry-router wrapper and passes `superAdmin={useIsSuperAdmin()}` +
    maps `ApiError` into the driver's caught error. `PageHeader`/`FadeIn`/`States`
    stay in console (they're used elsewhere) — the driver now inlines its own.
 4. **Landing** — replace `products/landing/*` with the package; the console builds a

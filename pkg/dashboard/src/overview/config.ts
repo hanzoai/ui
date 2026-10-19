@@ -142,15 +142,16 @@ export type LiveConfig = {
 /** The context passed to a loader (range + org scope). */
 export type OverviewContext = {
   range: OverviewRange
-  /** Global-admin all-orgs god view. */
+  /** SuperAdmin all-orgs god view. */
   allOrgs?: boolean
   /**
-   * True when the viewer is a global (cross-tenant) admin. Loaders use this to
-   * SKIP admin-only aggregates that a tenant user's browser would only ever get a
-   * 403 from, going straight to the org-scoped source instead — the board renders
-   * the same, minus the console noise.
+   * The host's SuperAdmin verdict (a person whose home org is the reserved `admin`
+   * org, as the server or @hanzo/iam `superAdmin` states it — never derived here).
+   * Loaders use this to SKIP admin-only aggregates that a tenant user's browser
+   * would only ever get a 403 from, going straight to the org-scoped source
+   * instead — the board renders the same, minus the console noise.
    */
-  isGlobalAdmin?: boolean
+  superAdmin?: boolean
 }
 
 export type OverviewRange = '24h' | '7d' | '30d'

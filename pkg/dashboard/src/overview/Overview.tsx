@@ -35,7 +35,7 @@ const RANGES: { key: OverviewRange; label: string }[] = [
   { key: '30d', label: '30D' },
 ]
 
-export function Overview({ config, allOrgs, isGlobalAdmin = false }: { config: OverviewConfig; allOrgs?: boolean; isGlobalAdmin?: boolean }) {
+export function Overview({ config, allOrgs, superAdmin = false }: { config: OverviewConfig; allOrgs?: boolean; superAdmin?: boolean }) {
   const [range, setRange] = useState<OverviewRange>('24h')
   const [state, setState] = useState<Loadable<OverviewData>>({ s: 'loading' })
   const [refreshing, setRefreshing] = useState(false)
@@ -57,7 +57,7 @@ export function Overview({ config, allOrgs, isGlobalAdmin = false }: { config: O
     const first = state.s === 'loading'
     if (!first) setRefreshing(true)
     config
-      .load({ range, allOrgs, isGlobalAdmin })
+      .load({ range, allOrgs, superAdmin })
       .then((v) => {
         if (id === reqRef.current) setState({ s: 'ready', v })
       })
@@ -74,7 +74,7 @@ export function Overview({ config, allOrgs, isGlobalAdmin = false }: { config: O
         if (id === reqRef.current) setRefreshing(false)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [range, allOrgs, isGlobalAdmin, tick, config])
+  }, [range, allOrgs, superAdmin, tick, config])
 
   const onRange = (k: OverviewRange) => {
     setRange(k)
