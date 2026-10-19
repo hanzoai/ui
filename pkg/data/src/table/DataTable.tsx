@@ -223,7 +223,7 @@ export function DataTable(props: DataTableProps) {
 
       <YStack {...({ role: 'table', 'aria-rowcount': pageData.total + 1 } as object)} style={{ minWidth: gridMinWidth }}>
         {/* header */}
-        <XStack bg="$panel" {...hairline} {...({ role: 'row' } as object)}>
+        <XStack bg="$panel" minH={rowHeight} {...hairline} {...({ role: 'row' } as object)}>
           {selectable ? (
             <XStack width={SELECT_COL_W} items="center" justify="center" shrink={0} {...({ role: 'columnheader' } as object)}>
               <CheckBox checked={allOnPage} indeterminate={!allOnPage && someOnPage} onChange={toggleAll} label="Select all rows" />
@@ -240,7 +240,6 @@ export function DataTable(props: DataTableProps) {
                 items="center"
                 gap="$1"
                 px={geo.pad}
-                minH={rowHeight}
                 borderLeftWidth={isDropTarget ? 2 : 0}
                 borderLeftColor={'var(--primary)' as never}
                 opacity={dragCol?.from === i ? 0.5 : 1}
