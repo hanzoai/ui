@@ -253,3 +253,33 @@ describe('ToggleGroup', () => {
     expect(segments[1].getAttribute('aria-pressed')).toBe('true')
   })
 })
+
+describe('ToggleGroup variant tile', () => {
+  const tiles = () =>
+    renderToStaticMarkup(
+      <GuiProvider config={config} defaultTheme="dark">
+        <ToggleGroup type="single" variant="tile" defaultValue="table">
+          <ToggleGroupItem value="table" aria-label="Table">
+            Table
+          </ToggleGroupItem>
+          <ToggleGroupItem value="kanban" aria-label="Kanban">
+            Kanban
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </GuiProvider>,
+    )
+
+  it('is a column tile: icon over a 12px semibold label, 4px corner, filling its cell', () => {
+    const item = tiles().match(/<[a-z0-9]+[^>]*data-variant="tile"[^>]*>/)![0]
+    expect(item).toMatch(/_fd-column/)
+    expect(item).toMatch(/_btlr-c-radius-xs/)
+    expect(item).toMatch(/_minH-32px/)
+    expect(item).toMatch(/_width-10037/)
+  })
+
+  it('keeps single-choice semantics: radios, the chosen one checked', () => {
+    const markup = tiles()
+    expect(markup.match(/role="radio"/g)).toHaveLength(2)
+    expect(markup).toMatch(/aria-checked="true"[^>]*>|aria-checked="true"/)
+  })
+})

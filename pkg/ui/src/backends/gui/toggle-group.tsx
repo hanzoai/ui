@@ -47,7 +47,13 @@ import { RING } from './press'
 import { slot } from './slot'
 import { touch } from './gesture'
 
-export type ToggleGroupVariant = 'default' | 'outline'
+/**
+ * `tile` is the picker tile (twenty-ui's MenuPicker, MIT, NOTICE): an icon over
+ * a small label in a 4px-cornered box that fills its grid cell — a chart type,
+ * a view layout. The chosen tile takes the accent edge and label; the label is
+ * 12px semibold and truncates.
+ */
+export type ToggleGroupVariant = 'default' | 'outline' | 'tile'
 export type ToggleGroupSize = 'default' | 'sm' | 'lg'
 
 /** Density ladder — the Button's, so a toggle and a button line up in a row. */
@@ -67,6 +73,11 @@ const REST = {
     borderColor: '$borderColor',
     hoverStyle: { backgroundColor: '$hover' },
   },
+  tile: {
+    backgroundColor: 'transparent',
+    borderColor: '$borderColor',
+    hoverStyle: { backgroundColor: '$hover' },
+  },
 } as const
 
 /**
@@ -79,6 +90,7 @@ const REST = {
 const ON = {
   default: { backgroundColor: '$rim', borderColor: '$bound' },
   outline: { backgroundColor: '$raised', borderColor: '$bound' },
+  tile: { backgroundColor: 'transparent', borderColor: 'var(--primary)' },
 } as const
 
 
@@ -228,6 +240,45 @@ function ToggleGroupItem({ variant, size, disabled, children, value, ...props }:
   const s = group.size ?? size ?? 'default'
   const on = group.selected.includes(value)
   const off = disabled || group.disabled
+
+  if (v === 'tile')
+    return (
+      <GuiToggleGroup.Item
+        value={value}
+        {...slot('toggle-group-item')}
+        data-variant="tile"
+        role={group.type === 'single' ? 'radio' : undefined}
+        aria-checked={group.type === 'single' ? on : undefined}
+        unstyled
+        flexDirection="column"
+        items="center"
+        justify="center"
+        width="100%"
+        minH={32}
+        px="$1"
+        py="$1.5"
+        gap="$1"
+        borderWidth={1}
+        rounded="$xs"
+        select="none"
+        disabled={off}
+        cursor={off ? 'default' : 'pointer'}
+        focusVisibleStyle={RING}
+        {...REST.tile}
+        {...(off ? { backgroundColor: '$panel', hoverStyle: { backgroundColor: '$panel' } } : null)}
+        activeStyle={ON.tile}
+        animation="75ms"
+        {...touch(32, 44, 'y')}
+        {...props}
+      >
+        {ink(children, undefined, {
+          size: '$1',
+          fontWeight: '600',
+          numberOfLines: 1,
+          color: off ? 'var(--text-faint)' : on ? 'var(--primary)' : '$soft',
+        })}
+      </GuiToggleGroup.Item>
+    )
 
   return (
     <GuiToggleGroup.Item
