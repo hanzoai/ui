@@ -55,18 +55,18 @@ describe('StackIcon', () => {
 })
 
 describe('Label section', () => {
-  it('is 12px semibold in the dim ink; the default label is untouched', () => {
+  it('is 12px semibold in the tertiary ink; the default label is untouched', () => {
     const el = tag(html(<Label variant="section">Favorites</Label>), 'label')
     expect(el).toContain('data-variant="section"')
-    expect(el).toMatch(/_col-dim/)
+    expect(el).toMatch(/_col-hint/)
     expect(tag(html(<Label>Name</Label>), 'label')).toMatch(/_col-ink/)
   })
 })
 
 describe('Heading tone', () => {
-  it('secondary and tertiary read in quieter inks', () => {
-    expect(html(<Heading tone="secondary">x</Heading>)).toMatch(/_col-quiet/)
-    expect(html(<Heading tone="tertiary">x</Heading>)).toMatch(/_col-soft/)
+  it('secondary and tertiary read in the design text ranks', () => {
+    expect(html(<Heading tone="secondary">x</Heading>)).toMatch(/_col-aside/)
+    expect(html(<Heading tone="tertiary">x</Heading>)).toMatch(/_col-hint/)
   })
 })
 
