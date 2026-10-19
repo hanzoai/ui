@@ -12,6 +12,7 @@ import { Section } from './section'
 import { Button, type ButtonTone, type ButtonVariant } from '../backends/gui/button'
 import { ButtonGroup } from '../backends/gui/button-group'
 import { Density } from '../backends/gui/density'
+import { NumberField } from '../backends/gui/number-field'
 
 const NOOP = () => {}
 
@@ -86,6 +87,15 @@ export function Compound() {
         </Button>
       </Section>
 
+      <Section name="number-field">
+        <NumberField aria-label="Amount" defaultValue={1234.5} locale="en-US" />
+        <NumberField aria-label="Seats" defaultValue={2} min={1} max={150} buttons />
+        <NumberField aria-label="Decimals" size="sm" defaultValue={2} min={0} max={100} buttons />
+        <NumberField aria-label="Limit" size="xs" defaultValue={10} buttons readOnly />
+        <NumberField aria-label="Rate" size="sm" defaultValue={0.25} format={{ style: 'percent' }} />
+        <NumberField aria-label="Invalid" size="sm" defaultValue={3} aria-invalid />
+      </Section>
+
       <Density value="compact">
         <Section name="button-group-compact">
           <ButtonGroup aria-label="Update view, compact">
@@ -97,6 +107,7 @@ export function Compound() {
           <Button tone="danger" variant="outline">
             Delete
           </Button>
+          <NumberField aria-label="Compact amount" defaultValue={42} buttons />
         </Section>
       </Density>
     </>

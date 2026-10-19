@@ -665,6 +665,9 @@ export {
   type ButtonGroupProps,
   type ButtonGroupDefaults,
   type ButtonTone,
+  NumberField,
+  parseNumber,
+  type NumberFieldProps,
 } from './backends/gui'
 
 // `Hanzo` — the root, and the only thing an app mounts. It carries the gui
