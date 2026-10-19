@@ -41,6 +41,7 @@ import { touch } from './gesture'
 import { useDensity } from './density'
 import { ButtonGroupContext } from './button-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip'
+import { Shortcut, type ShortcutKeys } from './shortcut'
 
 export type ButtonVariant =
   | 'default'
@@ -366,6 +367,15 @@ export type ButtonProps = Omit<
   /** An icon after the label — a chevron on a menu button, an arrow on a link. */
   endIcon?: ReactNode
   /**
+   * The keys that do what the button does, drawn after the label as the quiet
+   * `Shortcut variant="button"` hint ("Update view ⌘↵"): one combination
+   * (`['Mod', 'Enter']`) or a sequence (`[['G'], ['P']]`). It names the keys;
+   * binding them is the host's.
+   */
+  shortcut?: ShortcutKeys
+  /** The word between a sequence's combinations. Default "then". */
+  shortcutJoinLabel?: string
+  /**
    * `subtle` lowers the label to the tertiary rank, `$hint` (design's ink at
    * 55%): the icon button inside a row, a chip or a column header, which is
    * present without asking to be pressed. Not `$quiet`, measured: gui's ramp is
@@ -494,6 +504,8 @@ function Pressable({
   disabled,
   startIcon,
   endIcon,
+  shortcut,
+  shortcutJoinLabel,
   emphasis = 'standard',
   tone: ownTone,
   loadingPosition = 'start',
@@ -604,6 +616,9 @@ function Pressable({
         ...quiet,
         ...(center ? { opacity: 0 } : null),
       })}
+      {shortcut && shortcut.length ? (
+        <Shortcut keys={shortcut} variant="button" sequenceJoinLabel={shortcutJoinLabel} {...(center ? { opacity: 0 } : null)} />
+      ) : null}
       {endIcon ? glyph(endIcon, GLYPH[resolved], tint) : null}
       {isLoading && loadingPosition === 'end' ? spinner : null}
     </Frame>

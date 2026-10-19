@@ -215,3 +215,30 @@ describe('Input inside a Field', () => {
     expect(el).not.toMatch(/_btc-red7/)
   })
 })
+
+describe('Button shortcut', () => {
+  it('draws the keys after the label as the quiet button hint, spoken once', () => {
+    const markup = html(
+      <Button size="sm" shortcut={['Mod', 'Enter']}>
+        Update view
+      </Button>,
+    )
+    expect(markup).toMatch(/data-slot="shortcut"[^>]*data-variant="button"|data-variant="button"[^>]*data-slot="shortcut"/)
+    expect(markup.indexOf('Update view')).toBeLessThan(markup.indexOf('data-slot="shortcut"'))
+    // The server answers "other" for the platform, so Mod is Control here.
+    expect(markup).toMatch(/aria-label="Control \+ Enter"/)
+  })
+
+  it('a sequence takes the join label it is given', () => {
+    const markup = html(
+      <Button shortcut={[['G'], ['P']]} shortcutJoinLabel="puis">
+        Personnes
+      </Button>,
+    )
+    expect(markup).toMatch(/aria-label="G puis P"/)
+  })
+
+  it('no shortcut, no hint', () => {
+    expect(html(<Button>Save</Button>)).not.toContain('data-slot="shortcut"')
+  })
+})
