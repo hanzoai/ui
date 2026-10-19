@@ -312,13 +312,18 @@ jobs:
                 # A false red is worse than a slow green — it reports a release
                 # that did happen as failed, and the next person bumps the
                 # version to "fix" it.
+                # Five minutes, not one. Measured on 2026-10-19: @hanzo/dashboard
+                # 0.2.2 and @hanzo/tokens 1.1.0 each printed npm's success line
+                # and were readable about two minutes later (the registry's own
+                # time for tokens 1.1.0 is 2m08s after pnpm said published), so a
+                # 60s window reported both releases as failed.
                 landed=
-                for attempt in 1 2 3 4 5 6; do
+                for attempt in $(seq 1 30); do
                   # The version's own document, not the packument `npm view`
                   # reads: the packument lags a publish by minutes, the version
                   # document answers as soon as the release exists.
                   if curl -fsS -o /dev/null "https://registry.npmjs.org/$NAME/$WANT" 2>/dev/null; then landed=1; break; fi
-                  echo "$NAME@$WANT not visible to npmjs yet (attempt $attempt/6); waiting 10s"
+                  echo "$NAME@$WANT not visible to npmjs yet (attempt $attempt/30); waiting 10s"
                   sleep 10
                 done
                 if [ -n "$landed" ]; then
@@ -339,7 +344,7 @@ jobs:
                   # A false red here burns a version number over propagation.
                   echo "::warning::$NAME@$WANT published but is not readable yet (first release) — confirm on the registry before re-running; republishing the same version 403s."
                 else
-                  echo "::error::$NAME@$WANT is not on npmjs 60s after publish"
+                  echo "::error::$NAME@$WANT is not on npmjs 300s after publish"
                   return 1
                 fi ;;
             esac
