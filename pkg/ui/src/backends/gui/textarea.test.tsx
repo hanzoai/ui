@@ -12,8 +12,11 @@ import { createRef } from 'react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { GuiProvider } from '@hanzo/gui'
 
+import { renderToStaticMarkup } from 'react-dom/server'
+
 import config from '../../gui-config'
 import { Textarea } from './textarea'
+import { Density } from './density'
 
 declare global {
   // eslint-disable-next-line no-var
@@ -71,5 +74,61 @@ describe('Textarea', () => {
     const cls = host.querySelector('textarea')?.className ?? ''
     expect(cls).toContain('_minH-44px')
     expect(cls).toContain('_maxH-200px')
+  })
+})
+
+describe('Textarea sizes', () => {
+  const html = (node: React.ReactNode) =>
+    renderToStaticMarkup(
+      <GuiProvider config={config} defaultTheme="dark">
+        {node}
+      </GuiProvider>,
+    )
+  const tag = (markup: string) => markup.match(/<textarea[^>]*>/)?.[0] ?? ''
+
+  it('the regular box is untouched: 12px gutter, 7px riser, 14px rung, 64px floor', () => {
+    const el = tag(html(<Textarea placeholder="x" />))
+    expect(el).toMatch(/_pl-12px/)
+    expect(el).toMatch(/_pt-7px/)
+    expect(el).toMatch(/_fs-f-size-3/)
+    expect(el).toMatch(/_minH-64px/)
+    expect(el).not.toMatch(/_lh-16px/)
+  })
+
+  it.each([
+    ['sm', 7, 64],
+    ['xs', 3, 56],
+  ] as const)('%s: 8px gutter, its riser, 13px on a 16px line, three lines high', (size, riser, floor) => {
+    const el = tag(html(<Textarea size={size} placeholder="x" />))
+    expect(el).toMatch(/_pl-8px/)
+    expect(el).toMatch(new RegExp(`_pt-${riser}px`))
+    expect(el).toMatch(/_fs-f-size-2/)
+    expect(el).toMatch(/_lh-16px/)
+    expect(el).toMatch(new RegExp(`_minH-${floor}px`))
+  })
+
+  it('maxRows caps the box at its lines, risers and edges', () => {
+    // 4 lines of 16 + 2 x 7 + 2 = 80.
+    expect(tag(html(<Textarea size="sm" maxRows={4} />))).toMatch(/_maxH-80px/)
+    // 4 lines of 20 + 2 x 7 + 2 = 96 on the regular box.
+    expect(tag(html(<Textarea maxRows={4} />))).toMatch(/_maxH-96px/)
+  })
+
+  it('compact: the sm box on the panel ground', () => {
+    const el = tag(
+      html(
+        <Density value="compact">
+          <Textarea placeholder="x" />
+        </Density>,
+      ),
+    )
+    expect(el).toMatch(/_pl-8px/)
+    expect(el).toMatch(/_bg-panel/)
+  })
+
+  it('an invalid field draws the error edge, deeper under focus', () => {
+    const el = tag(html(<Textarea aria-invalid placeholder="x" />))
+    expect(el).toMatch(/_btc-red7/)
+    expect(el).toMatch(/_btc-0focus-red8/)
   })
 })

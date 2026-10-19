@@ -3,10 +3,19 @@
 import * as React from "react"
 import { TextArea } from "@hanzo/gui"
 import { BOX, FIELD, FILL, type FieldSize } from "./control"
+import { fieldSize, useDensity } from "./density"
+import { invalidOf, useField } from "./field"
 import { slot } from "./slot"
 
 /** Floor for the grown row count. */
 const MIN_ROWS = 3
+
+/**
+ * The line each size sets its text on. The record sizes (`sm`, `xs`) set 13px
+ * text on a 16px line, as twenty-ui's Textarea does (MIT, NOTICE); the regular
+ * ones keep the 20px line of the 14px rung.
+ */
+const LINE: Record<FieldSize, number> = { default: 20, lg: 20, sm: 16, xs: 16 }
 
 const rowsOf = (v: unknown) =>
   typeof v === "string" ? v.split("\n").length : 0
@@ -34,18 +43,32 @@ const rowsOf = (v: unknown) =>
  */
 export type TextareaProps = Omit<React.ComponentProps<typeof TextArea>, "children" | "size"> &
   Pick<React.ComponentProps<"textarea">, "onKeyDown" | "rows"> & {
-    /** The gutter and riser of the Input it stands under (control.ts `BOX`). */
+    /**
+     * The gutter and riser of the Input it stands under (control.ts `BOX`).
+     * Unset, the nearest `<Density>` decides.
+     */
     size?: FieldSize
     /** On the raised ground instead of a bare edge (control.ts `FILL`). */
     fill?: boolean
+    /**
+     * The tallest the field grows, in lines, before it scrolls: the box is
+     * capped at `maxRows` lines plus its risers and edges. A `maxH` the caller
+     * states still wins.
+     */
+    maxRows?: number
   }
 
 const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  function Textarea({ rows, value, defaultValue, style, size = "default", fill = false, ...props }, ref) {
-  const box = BOX[size as FieldSize]
+  function Textarea({ rows, value, defaultValue, style, size, fill = false, maxRows, ...props }, ref) {
+  const density = useDensity()
+  const field = useField()
+  const resolved = fieldSize(size, density)
+  const box = BOX[resolved]
+  const line = LINE[resolved]
+  const dense = resolved === "sm" || resolved === "xs"
   const [typed, setTyped] = React.useState(() => rowsOf(defaultValue))
   const uncontrolled = value === undefined
-  const invalid = props["aria-invalid"]
+  const invalid = invalidOf(props["aria-invalid"], field)
 
   const node = React.useRef<HTMLTextAreaElement | null>(null)
   const [grown, setGrown] = React.useState<number | undefined>(undefined)
@@ -84,9 +107,14 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
       defaultValue={defaultValue as string | undefined}
       onChangeText={uncontrolled ? (t: any) => setTyped(rowsOf(t)) : undefined}
       {...FIELD}
+      // The record density's ground, as Input's.
+      {...(density === "compact" ? { bg: "$panel" } : null)}
       {...(fill ? FILL : null)}
       width="100%"
-      minH={64}
+      // Three lines of the size's own leading, its risers and its two edges —
+      // 64 on the regular rungs, as it has always been; a dense box is shorter.
+      minH={dense ? MIN_ROWS * line + 2 * box.riser + 2 : 64}
+      {...(maxRows ? { maxH: maxRows * line + 2 * box.riser + 2 } : null)}
       // The gutter has to be NAMED, both ways. Left unsaid the HORIZONTAL one
       // came from gui's `textAreaSizeVariant`, which computes its own and landed
       // on 20 — so the one field a form makes tall was also the one indented
@@ -101,14 +129,18 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
       px={box.gutter}
       pt={box.riser}
       pb={box.riser}
-      borderColor={invalid && invalid !== "false" ? "$red7" : "$borderColor"}
+      borderColor={invalid ? "$red7" : "$borderColor"}
+      {...(invalid ? { focusStyle: { borderColor: "$red8" } } : null)}
       // The value at the full ink, the hint at the placeholder token. gui's
       // Input sub-theme draws its value at 80% grey, which left a typed value
       // and a sample placeholder one rung apart.
       color="$ink"
       placeholderTextColor="$placeholderColor"
-      fontSize="$3"
+      fontSize={box.font}
+      {...(dense ? { lineHeight: line } : null)}
       opacity={props.disabled ? 0.5 : 1}
+      // A Field that states it is invalid says so to assistive tech as well.
+      {...(invalid ? { "aria-invalid": true } : null)}
       {...(props as Record<string, unknown>)}
       // After the caller's props, so a passed `style` cannot silently disable
       // growth. A fixed height is asked for with `height`.
