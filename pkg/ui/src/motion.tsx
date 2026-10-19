@@ -9,7 +9,7 @@
  *   <Caret width={2} height="1em" />
  */
 import { View } from '@hanzo/gui'
-import type { ComponentProps } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 
 export type PulseProps = ComponentProps<typeof View>
 
@@ -22,3 +22,41 @@ export type CaretProps = ComponentProps<typeof View>
 export const Caret = (props: CaretProps) => (
   <View data-motion="blink" width={1} height={'1em' as never} bg="var(--foreground)" {...props} />
 )
+
+export type CrossfadeProps = Omit<ComponentProps<typeof View>, 'children'> & {
+  /** Shown while `isActive`. */
+  activeIcon: ReactNode
+  /** Shown otherwise. */
+  inactiveIcon: ReactNode
+  isActive: boolean
+}
+
+/**
+ * Two icons in one 14px place, swapped by a scale-and-fade: the pencil that
+ * becomes an X, the heart that fills. The hidden one sits at 0 opacity and 85%
+ * scale; both move over the fast duration. Reduced motion stops the move, not
+ * the swap, by design's own rule. (twenty-ui's AnimatedIconCrossfade, MIT, see
+ * NOTICE.)
+ */
+export const Crossfade = ({ activeIcon, inactiveIcon, isActive, ...props }: CrossfadeProps) => {
+  const layer = (shown: boolean) =>
+    ({
+      position: 'absolute',
+      t: 0,
+      l: 0,
+      r: 0,
+      b: 0,
+      items: 'center',
+      justify: 'center',
+      opacity: shown ? 1 : 0,
+      scale: shown ? 1 : 0.85,
+      'aria-hidden': !shown,
+      style: { transition: 'opacity var(--duration-fast, 150ms) ease-in-out, transform var(--duration-fast, 150ms) ease-in-out' },
+    }) as const
+  return (
+    <View data-slot="crossfade" data-active={isActive ? '' : undefined} position="relative" width={14} height={14} shrink={0} {...props}>
+      <View {...layer(isActive)}>{activeIcon}</View>
+      <View {...layer(!isActive)}>{inactiveIcon}</View>
+    </View>
+  )
+}

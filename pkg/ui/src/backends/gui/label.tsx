@@ -1,13 +1,27 @@
 'use client'
 
-/** Label — form-control caption bound to its field by @hanzogui/label. */
+/**
+ * Label — form-control caption bound to its field by @hanzogui/label.
+ *
+ * `variant="section"` is the caption over a group of rows — "Favorites",
+ * "Workspace", a side panel's group — 12px semibold in the dim ink, and
+ * `section-sm` the same on the 10px floor (twenty-ui's internal Label, MIT, see
+ * NOTICE: 11 and 9px there, on Hanzo's ramp here).
+ */
 import { Label as GuiLabel } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
 import { slot } from './slot'
 
-export type LabelProps = ComponentProps<typeof GuiLabel>
+export type LabelProps = ComponentProps<typeof GuiLabel> & {
+  variant?: 'default' | 'section' | 'section-sm'
+}
 
-const Label = (props: LabelProps) => (
+const SECTION = {
+  section: { fontSize: '$1', lineHeight: '$1' },
+  'section-sm': { fontSize: 'var(--text-floor, 10px)' as never, lineHeight: 14 },
+} as const
+
+const Label = ({ variant = 'default', ...props }: LabelProps) => (
   <GuiLabel
     {...slot('label')}
     fontSize="$2"
@@ -18,6 +32,7 @@ const Label = (props: LabelProps) => (
     color="$ink"
     select="none"
     cursor="pointer"
+    {...(variant === 'default' ? null : { 'data-variant': variant, ...SECTION[variant], fontWeight: '600', color: '$dim', cursor: 'default' })}
     {...props}
   />
 )
