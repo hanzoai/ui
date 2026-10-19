@@ -678,6 +678,8 @@ export {
   type CountryOption,
   type CountrySelectProps,
   flag,
+  ImageInput,
+  type ImageInputProps,
 } from './backends/gui'
 
 // `Hanzo` — the root, and the only thing an app mounts. It carries the gui

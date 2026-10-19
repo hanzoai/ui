@@ -420,3 +420,4 @@ export { CurrencyPicker, type CurrencyOption, type CurrencyPickerProps } from '.
 export { PhoneCountryPicker, type PhoneCountry, type PhoneCountryPickerProps } from './phone-country-picker'
 export { CountrySelect, type CountryOption, type CountrySelectProps } from './country-select'
 export { flag } from './flag'
+export { ImageInput, type ImageInputProps } from './image-input'

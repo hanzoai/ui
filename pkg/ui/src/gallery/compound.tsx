@@ -20,6 +20,7 @@ import { PhoneCountryPicker } from '../backends/gui/phone-country-picker'
 import { CountrySelect } from '../backends/gui/country-select'
 import { PrimaryButton } from '../product/PrimaryButton'
 import { Segmented } from '../product/Filters'
+import { ImageInput } from '../backends/gui/image-input'
 
 const NOOP = () => {}
 
@@ -182,6 +183,14 @@ export function Compound() {
           value="l"
           onChange={NOOP}
         />
+      </Section>
+
+      <Section name="image-input">
+        <ImageInput title="Logo" helperText="PNG or JPG, up to 2MB" />
+        <ImageInput title="Photo" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="" />
+        <ImageInput title="Uploading" isUploading />
+        <ImageInput title="Broken" errorMessage="That file is too large" />
+        <ImageInput title="Off" disabled />
       </Section>
 
       <Density value="compact">
