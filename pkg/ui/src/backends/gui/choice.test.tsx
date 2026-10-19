@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
+import { Density } from './density'
 import config from '../../gui-config'
 import { ChoiceCard, ChoiceGroup } from './choice'
 import { Stepper } from './stepper'
@@ -53,5 +54,43 @@ describe('Stepper', () => {
     const more = out.match(/<button[^>]*aria-label="More standard seats"[^>]*>/)![0]
     expect(fewer).toMatch(/disabled/)
     expect(more).not.toMatch(/disabled/)
+  })
+})
+
+describe('ChoiceCard, the radio card', () => {
+  const card = (m: string) => m.match(/<div[^>]*data-slot="choice"[^>]*>/)?.[0] ?? ''
+  const mark = (m: string) => m.match(/<div[^>]*data-slot="choice-mark"[^>]*>/)?.[0] ?? ''
+
+  it('draws no corner radio unless asked', () => {
+    expect(mark(html(<ChoiceCard selected onSelect={() => {}}>x</ChoiceCard>))).toBe('')
+  })
+
+  it('indicator: a radio 8px in from the top-end corner, filled when picked', () => {
+    const on = mark(html(<ChoiceCard indicator selected onSelect={() => {}}>x</ChoiceCard>))
+    expect(on).toMatch(/_pos-absolute/)
+    expect(on).toMatch(/_t-8px/)
+    expect(on).toMatch(/_r-8px/)
+    expect(on).toMatch(/_bg-primary/)
+    expect(on).toContain('aria-hidden="true"')
+    const off = mark(html(<ChoiceCard indicator selected={false} onSelect={() => {}}>x</ChoiceCard>))
+    expect(off).toMatch(/_bg-transparent/)
+    // The text clears the mark.
+    expect(card(html(<ChoiceCard indicator selected onSelect={() => {}}>x</ChoiceCard>))).toMatch(/_pr-32px/)
+  })
+
+  it('compact: 8px radius, 16 by 12 padding, the panel ground', () => {
+    const el = card(
+      html(
+        <Density value="compact">
+          <ChoiceCard selected={false} onSelect={() => {}}>
+            x
+          </ChoiceCard>
+        </Density>,
+      ),
+    )
+    expect(el).toMatch(/_bblr-c-radius-3/)
+    expect(el).toMatch(/_pt-c-space-4/)
+    expect(el).toMatch(/_pl-c-space-3/)
+    expect(el).toMatch(/_bg-panel/)
   })
 })

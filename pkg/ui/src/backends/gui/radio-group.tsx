@@ -27,18 +27,42 @@
  * `orientation` for those two and never forwards it, so the frame's own
  * `orientation` variant never runs and the group stays a COLUMN while
  * announcing itself a row. The direction is restored here, from the same prop.
+ *
+ * Two looks. With no `size`, an item is the 16px ring and `$ink` dot it has
+ * always been. Naming `size` (sm 16 | md 18), or a `<Density value="compact">`
+ * around it, draws twenty-ui's radio (MIT, NOTICE): a quiet ring at rest that
+ * FILLS when checked — the monochrome accent (`--primary`, which an org's accent
+ * restates) round a dot in its foreground — a 4px hover halo, and the 32%
+ * register of a disabled option.
  */
-import { RadioGroup as GuiRadioGroup } from '@hanzo/gui'
+import { RadioGroup as GuiRadioGroup, XStack } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
 import { slot } from './slot'
 import { touch } from './gesture'
+import { useDensity } from './density'
 
 /** 16px control, 8px dot — the Checkbox's box, made round. */
 const BOX = 16
 const DOT = 8
 
+export type RadioSize = 'sm' | 'md'
+
 export type RadioGroupProps = ComponentProps<typeof GuiRadioGroup>
-export type RadioGroupItemProps = ComponentProps<typeof GuiRadioGroup.Item>
+type GuiItemProps = ComponentProps<typeof GuiRadioGroup.Item>
+
+/**
+ * gui's item props with its `size` (a gui size token) replaced by the record
+ * size. `Omit` over gui's props loses `value` from the union it is built from,
+ * so `value` is restated — it is the one prop an item cannot do without.
+ */
+export type RadioGroupItemProps = Omit<GuiItemProps, 'size' | 'value'> & {
+  value: string
+  /** The record radio: `sm` a 16px ring (the default under compact) or `md` 18px. */
+  size?: RadioSize
+}
+
+/** The record radio per size: the ring with its edge, and the dot inside a checked one. */
+const RECORD = { sm: { ring: 16, dot: 6 }, md: { ring: 18, dot: 8 } } as const
 
 const RadioGroup = ({ orientation = 'vertical', ...props }: RadioGroupProps) => (
   <GuiRadioGroup
@@ -50,7 +74,61 @@ const RadioGroup = ({ orientation = 'vertical', ...props }: RadioGroupProps) => 
   />
 )
 
-const RadioGroupItem = ({ disabled, children, ...props }: RadioGroupItemProps) => (
+const RadioGroupItem = ({ size, ...props }: RadioGroupItemProps) => {
+  const compact = useDensity() === 'compact'
+  const record = size ?? (compact ? 'sm' : undefined)
+  return record ? <RecordItem size={record} {...props} /> : <PlainItem {...props} />
+}
+
+/**
+ * The record radio. The fill is the INDICATOR, laid over the ring edge to
+ * edge: it mounts only while checked, so presence is the state here too, and
+ * no part of the item has to know which state it is in to be drawn.
+ */
+const RecordItem = ({ size, disabled, children, ...props }: RadioGroupItemProps & { size: RadioSize }) => {
+  const dim = RECORD[size]
+  return (
+    <GuiRadioGroup.Item
+      {...slot('radio-group-item')}
+      data-size={size}
+      width={dim.ring}
+      height={dim.ring}
+      flexShrink={0}
+      padding={0}
+      borderRadius={1000}
+      borderWidth={1}
+      borderColor="$quiet"
+      backgroundColor="transparent"
+      scale={0.95}
+      disabled={disabled}
+      opacity={disabled ? 0.32 : 1}
+      cursor={disabled ? 'not-allowed' : 'pointer'}
+      {...(disabled ? null : { hoverStyle: { bg: '$hover', boxShadow: '0 0 0 4px var(--hover)' } })}
+      {...touch(dim.ring)}
+      {...(props as GuiItemProps)}
+    >
+      <GuiRadioGroup.Indicator
+        {...slot('radio-group-indicator')}
+        position="absolute"
+        t={-1}
+        l={-1}
+        width={dim.ring}
+        height={dim.ring}
+        borderRadius={1000}
+        backgroundColor="var(--primary)"
+        items="center"
+        justify="center"
+        // 1.05 at the item's 0.95, as twenty-ui grows a checked radio.
+        scale={1.1}
+      >
+        <XStack width={dim.dot} height={dim.dot} rounded={1000} bg="var(--primary-foreground)" />
+      </GuiRadioGroup.Indicator>
+      {children}
+    </GuiRadioGroup.Item>
+  )
+}
+
+const PlainItem = ({ disabled, children, ...props }: Omit<RadioGroupItemProps, 'size'>) => (
   <GuiRadioGroup.Item
     {...slot('radio-group-item')}
     width={BOX}
@@ -72,7 +150,7 @@ const RadioGroupItem = ({ disabled, children, ...props }: RadioGroupItemProps) =
     opacity={disabled ? 0.5 : 1}
     cursor={disabled ? 'not-allowed' : 'pointer'}
     {...touch(BOX)}
-    {...props}
+    {...(props as GuiItemProps)}
   >
     {/* Mounts only while checked — presence IS the state, and it is the one
         affordance a 16px control has room for. `$ink` against the

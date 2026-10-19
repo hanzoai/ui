@@ -19,6 +19,7 @@ import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
 import { RadioGroup, RadioGroupItem } from './radio-group'
+import { Density } from './density'
 
 const wrap = (node: React.ReactNode) => (
   <GuiProvider config={config} defaultTheme="dark">
@@ -170,5 +171,71 @@ describe('RadioGroup', () => {
     expect(picked).toEqual(['b'])
     expect(items[1].getAttribute('aria-checked')).toBe('true')
     expect(items[0].getAttribute('aria-checked')).toBe('false')
+  })
+})
+
+describe('RadioGroupItem, the record look', () => {
+  it('naming no size keeps the plain 16px ring and its ink dot', () => {
+    const markup = html(group)
+    expect(tag(markup, 'radio-group-item')).not.toContain('data-size')
+    expect(cls(tag(markup, 'radio-group-indicator'), 'bg')).toBe('_bg-ink')
+  })
+
+  it.each([
+    ['sm', 16],
+    ['md', 18],
+  ] as const)('%s: a %ipx quiet ring at 0.95, filled with the accent when checked', (size, px) => {
+    const markup = html(
+      <RadioGroup value="a">
+        <RadioGroupItem size={size} value="a" aria-label="a" />
+      </RadioGroup>,
+    )
+    const item = tag(markup, 'radio-group-item')
+    expect(cls(item, 'width')).toBe(`_width-${px}px`)
+    expect(cls(item, 'btc')).toBe('_btc-quiet')
+    expect(item).toMatch(/_tr-scale0--95/)
+    // The 4px hover halo, on the hover rung.
+    expect(item).toMatch(/_bxsh-0hover-/)
+    const fill = tag(markup, 'radio-group-indicator')
+    expect(cls(fill, 'bg')).toBe('_bg-primary')
+    expect(markup).toMatch(/_bg-primary-fo/)
+  })
+
+  it('a disabled option sits at 32% and takes no hover', () => {
+    const item = tag(
+      html(
+        <RadioGroup>
+          <RadioGroupItem size="sm" value="a" disabled aria-label="a" />
+        </RadioGroup>,
+      ),
+      'radio-group-item',
+    )
+    expect(cls(item, 'o')).toBe('_o-0--32')
+    expect(item).not.toMatch(/_bxsh-0hover/)
+  })
+
+  it('a compact density draws it with no size given', () => {
+    const markup = html(
+      <Density value="compact">
+        <RadioGroup value="a">
+          <RadioGroupItem value="a" aria-label="a" />
+        </RadioGroup>
+      </Density>,
+    )
+    expect(tag(markup, 'radio-group-item')).toContain('data-size="sm"')
+  })
+
+  it('still selects on a click, as the plain item does', () => {
+    let picked = ''
+    const host = mount(
+      <RadioGroup onValueChange={(v) => (picked = v)}>
+        <RadioGroupItem size="sm" value="a" aria-label="a" />
+        <RadioGroupItem size="sm" value="b" aria-label="b" />
+      </RadioGroup>,
+    )
+    const b = host.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]')[1]
+    act(() => b.click())
+    expect(picked).toBe('b')
+    host.remove()
   })
 })
