@@ -24,5 +24,6 @@
       ]
     }
   },
-  "include": ["src", "gui.config.ts", "gui.d.ts"]
+  "include": ["src", "gui.config.ts", "gui.d.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
 }
