@@ -139,7 +139,7 @@ export function ImageInput({
         {src ? (
           <Image src={src} alt={alt} width={SIZE} height={SIZE} objectFit="cover" />
         ) : (
-          <ImageUp size={20} color={over ? '$soft' : '$dim'} />
+          <ImageUp size={20} color={over ? '$quiet' : '$dim'} />
         )}
       </XStack>
 

@@ -118,20 +118,20 @@ describe('the record button sizes', () => {
     expect(markup.indexOf('Add filter')).toBeLessThan(markup.indexOf('data-icon="end"'))
   })
 
-  it('subtle lowers the label to the quiet ink, and tints a small icon child', () => {
+  it('subtle lowers the label to the dim ink, and tints a small icon child', () => {
     const Icon = ({ color }: { color?: string }) => <i data-icon data-color={color} />
     const quiet = html(
       <Button size="icon-xs" variant="ghost" emphasis="subtle" aria-label="More">
         <Icon />
       </Button>,
     )
-    expect(quiet).toMatch(/data-color="\$quiet"/)
+    expect(quiet).toMatch(/data-color="\$dim"/)
     const label = html(
       <Button size="xs" variant="ghost" emphasis="subtle">
         Reset
       </Button>,
     )
-    expect(label).toMatch(/_col-quiet/)
+    expect(label).toMatch(/_col-dim/)
   })
 })
 

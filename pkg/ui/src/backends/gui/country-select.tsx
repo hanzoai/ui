@@ -61,7 +61,7 @@ const Mark = ({ iso, override }: { iso?: string | null; override?: ReactNode }) 
   return (
     <XStack width={16} height={16} items="center" justify="center" shrink={0} aria-hidden>
       {glyph == null ? (
-        <CircleOff size={16} color="$soft" />
+        <CircleOff size={16} color="$dim" />
       ) : typeof glyph === 'string' ? (
         <SizableText size="$3" lineHeight={16}>
           {glyph}
