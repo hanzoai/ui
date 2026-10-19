@@ -42,7 +42,7 @@ import { Text, XStack, YStack, isWeb } from '@hanzo/gui'
 import { Check, ChevronRight, GripVertical } from '@hanzogui/lucide-icons-2'
 
 import { press, RING } from '../backends/gui/press'
-import { Kbd, KbdGroup } from '../backends/gui/kbd'
+import { Shortcut, type ShortcutKeys } from '../backends/gui/shortcut'
 import { touch } from '../backends/gui/gesture'
 
 /** The tier hue a row may carry. Monochrome by default — only the genuine states
@@ -52,7 +52,7 @@ export type DotColor = '$green10' | '$yellow10' | '$soft' | '$faint' | '$dim'
 /** The record row's geometry, shared with DropdownMenu so a menu and a list are one row. */
 export const MENU_ROW = { h: 32, px: 4, gap: 8, icon: 16, chevron: 14, well: 4 } as const
 
-export type MenuRowShortcut = ReactNode | string | readonly string[]
+export type MenuRowShortcut = ReactNode | string | ShortcutKeys
 
 export type MenuRowContentProps = {
   label: ReactNode
@@ -90,18 +90,11 @@ export type MenuRowContentProps = {
 const labelColor = (tone: MenuRowContentProps['tone'], quiet: boolean) =>
   tone === 'danger' ? (quiet ? '$bad' : '$red10') : tone === 'placeholder' ? '$hint' : quiet ? '$aside' : '$ink'
 
-/** Keys as text, a list as one chord. A node is the caller's own rendering. */
+/** A key, a chord or a sequence, as the kit's Shortcut keycaps (spoken once). A node is the caller's own rendering. */
 const keys = (shortcut: MenuRowShortcut) => {
   if (shortcut == null || shortcut === false) return null
-  if (typeof shortcut === 'string') return <Kbd>{shortcut}</Kbd>
-  if (Array.isArray(shortcut))
-    return (
-      <KbdGroup>
-        {(shortcut as readonly string[]).map((k, i) => (
-          <Kbd key={`${k}-${i}`}>{k}</Kbd>
-        ))}
-      </KbdGroup>
-    )
+  if (typeof shortcut === 'string') return <Shortcut keys={[shortcut]} />
+  if (Array.isArray(shortcut)) return <Shortcut keys={shortcut as ShortcutKeys} />
   return shortcut as ReactNode
 }
 

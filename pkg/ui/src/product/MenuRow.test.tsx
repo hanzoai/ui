@@ -56,13 +56,17 @@ describe('MenuRow', () => {
     expect(rowTag(html(<MenuRow label="Settings" onPress={NOOP} />))).toContain('role="menuitem"')
   })
 
-  it('draws contextual text on either side, and keys as a chord', () => {
+  it('draws contextual text on either side, and keys as one spoken shortcut', () => {
     const left = html(<MenuRow size="row" label="Companies" contextual="12" onPress={NOOP} />)
     expect(left.indexOf('Companies')).toBeLessThan(left.indexOf('>12<'))
     expect(left).toMatch(/_col-hint/)
     const keys = html(<MenuRow size="row" label="Copy" shortcut={['⌘', 'L']} onPress={NOOP} />)
+    // Two keycaps, inside one Shortcut that assistive tech hears once.
     expect(keys.match(/data-slot="kbd"/g)).toHaveLength(2)
-    expect(keys).toContain('data-slot="kbd-group"')
+    expect(keys).toMatch(/data-slot="shortcut"[^>]*role="img"|role="img"[^>]*data-slot="shortcut"/)
+    expect(keys).toMatch(/aria-label="⌘ \+ L"/)
+    const sequence = html(<MenuRow size="row" label="Go to people" shortcut={[['G'], ['P']]} onPress={NOOP} />)
+    expect(sequence).toMatch(/aria-label="G then P"/)
   })
 
   it('seats an icon in its well, swaps a grip in, and turns an open submenu chevron', () => {
