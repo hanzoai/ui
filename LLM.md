@@ -741,6 +741,73 @@ The gallery renders the kit from `src/gallery/records.tsx`, one module per group
 (`fields`, `compound`, `display`, `menus`, …), still inside the one `Gallery`;
 `Section` lives in `src/gallery/section.tsx` so the modules can share it.
 
+**Text ranks are design's, not the ramp's.** `$quiet`/`$soft`/`$dim` are the
+numbered ramp's rungs 11/10/8, and rung 11 is the high-contrast end in BOTH
+schemes: `$quiet` measures #cccccc on dark and #242424 on light, so a secondary
+line drawn with it is ink on a light page. The kit reads `$aside` (design's
+`--text-secondary`, 78%), `$hint` (`--text-tertiary`, 55%) and `$hush`
+(`--text-disabled`, 30%). twenty-ui's secondary → `$aside`, tertiary → `$hint`;
+its "light" rank → `$hint` for text a person reads (30% is ~2.7:1, under the
+4.5:1 text floor) and `$hush` only for decoration (chevrons, grips, a resting
+icon). Pre-kit default paths keep their old tokens; the merge proved it by
+hashing every pre-kit gallery section's SSR markup before and after (56/56
+identical).
+
+What the kit adds, by group (all opt-in by prop or by `<Density value="compact">`):
+
+- Fields: Field `invalid` shared through `useField()`/`invalidOf()` (Input,
+  Textarea, SelectTrigger read it), Textarea `maxRows`, Select rows concentric,
+  Checkbox/Radio/Switch record sizes and variants (no new prop = the old look),
+  editable Stepper, SearchInput on InputGroup.
+- Compound: ButtonGroup (attached on gui `XGroup`, framed), Button `tone`
+  (`color` already meant the label colour), `loadingPosition`, `elevated`,
+  `shape`, `tooltip` (the button is its own trigger — a wrapper div with gui's
+  `aria-expanded` fails axe — and a disabled one renders aria-disabled so the
+  tooltip still shows), `shortcut`; NumberField + `parseNumber`; CurrencyPicker,
+  PhoneCountryPicker, CountrySelect (data-free: the caller passes the lists;
+  `flag()` draws regional-indicator emoji); ImageInput; Segmented `track`.
+- Display: Tag, Chip, TruncatedText (+ provider), Avatar record sizes/shapes/hue
+  (a number size is still gui's box), AvatarGroup, Shortcut/`formatShortcut`
+  with Kbd `variant="cap"`, OverflowingList, Badge sizes, Status `color`,
+  IconTile, ColorSample, StackIcon, Heading `tone`, Label `section`, Crossfade.
+  A data-hue element sets `--tone-N: var(--data-<hue>-N)` inline (`hue.ts`,
+  `useTone`) and its parts read `var(--tone-N)`: one atomic class per step
+  whatever the hue.
+- Menus and surfaces: DropdownMenu Search/Section/SelectionGroup/OptionItem/
+  Page/Back/Header/Empty/Loading and row `actions` (a panel holding Search, Empty
+  or Loading is a dialog labelled by its trigger, each run of rows its own menu —
+  a menu may own only items, groups and separators); MenuRow `size="row"` as the
+  one row anatomy; Item `size="row"`; Tooltip geometry + `startIcon`/
+  `description`, and it now FOLLOWS THE THEME everywhere (gui's Tooltip carried
+  an inverting sub-theme: a light slab on a dark page); Popover `size="sm"` +
+  `arrow`; Grip gains `bar`, `step` and Escape-cancels (it already was the one
+  standalone resizer); Tabs `line`; ToggleGroup `tile`; Dialog `size` +
+  DialogBody; Card `density="compact"`; Breadcrumb on gui props; FieldSwitch row;
+  VisuallyHidden exported.
+- Feedback: one status map (`feedback.ts`), one Skeleton (gui props, no utility
+  strings), Spinner `dot`, Progress `line`, ProgressRing, the toast with its own
+  countdown clock (gui's restarts from full on resume), Banner record shapes,
+  Alert as the callout, JsonTree `boxed`, Fact `metric`, Snippet `command`,
+  CodeEditor frames.
+- Frames: DetailPane `mode="docked"` (an in-layout column, 320–600, width kept
+  by `store`) with a page stack (`push`/`back`/`depth`) and PaneBar/PaneBody/
+  PaneFoot; CommandMenu (product) on the Command state machine; RecordsToolbar
+  hands off to ViewBar under compact; RecordCard/BoardView compact cards.
+- @hanzo/data renders every field type through @hanzo/ui (it peers on it), its
+  own GuiCustomConfig augmentation is gone (ui's applies once data imports it),
+  its component tests read @hanzo/ui's built `dist` — build ui first — and the
+  table is table/row/columnheader/cell.
+
+Measured traps in the kit: an open menu in SSR is never placed (0,0, opacity 0)
+— measure menus live; gui wraps themed components in `span`s in SSR markup;
+atomic class names are truncated and hashed, so tests match a prefix; a style
+prop with a variable value mints one class per value (Progress and toast widths
+are inline styles); inside a Button `$background` is the Button sub-theme's,
+not the page (`var(--surface-page)` is); `boxShadow: var(--shadow-*)` fails
+glass.test, the lift is the `elevation-1` class; gui's `useMedia` is false on
+the server, so the docked column's classes are inserted at runtime, not
+shipped; in @hanzo/data `tsc` accepts a bogus JSX prop, only the tests catch it.
+
 **A non-frozen install in this repo poisons the type check.** Adding a workspace
 dependency with `pnpm install` re-resolved the auto-installed `@hanzo/ui` peer of
 `@hanzo/commerce` and left extra packages in `node_modules/.pnpm`; with the

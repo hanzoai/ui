@@ -1,0 +1,50 @@
+ui
+Copyright (c) 2023 Hanzo AI, Inc.
+
+This product includes software from shadcn/ui (https://github.com/shadcn-ui/ui), licensed under MIT:
+
+    Copyright (c) 2023 shadcn
+
+This product includes software derived from Hanzo Build v2
+(https://github.com/hanzoai/build-v2), licensed under MIT:
+
+    Copyright (c) 2025 Hanzo AI, Inc.
+
+which is derived from OSW Studio (https://github.com/o-stahl/osw-studio),
+licensed under MIT:
+
+    Copyright (c) 2025 Otto Stahl
+
+which is itself derived from DeepSite v2
+(https://huggingface.co/spaces/enzostvs/deepsite), by enzostvs and the
+DeepSite authors, licensed under MIT.
+
+The derived files are the builder workspace in pkg/ui/src/agents:
+Workspace, Choice, FileTree, FileTabs, PreviewFrame, Console, Suggestions,
+Attachments and Feedback (.tsx), and tree, log and bridge (.ts). The MIT
+permission notice that governs them is the one in LICENSE-MIT.
+
+This product includes software derived from Twenty's twenty-ui package
+(https://github.com/twentyhq/twenty, packages/twenty-ui, commit
+dd7099a02f83ddc021231b71d5344d3b83f4cf7d), licensed under MIT:
+
+    Copyright (c) 2023-present Twenty.com, PBC
+
+The derived parts are the record kit: every file under pkg/ui/src and
+pkg/data/src whose header names twenty-ui. Each re-expresses a twenty-ui
+component's props, states and measured values on @hanzo/gui; no twenty-ui
+source, stylesheet or asset is copied. "Twenty" and the Twenty logo are
+trademarks of Twenty.com, PBC and are not licensed; neither appears in this
+product.
+
+This product includes the colour scales of Radix Colors
+(https://github.com/radix-ui/colors), licensed under MIT:
+
+    Copyright (c) 2021 Radix
+
+They are the data palette in pkg/tokens/src/data.ts: twenty-four of its
+twenty-five pickable hues and all five tinted neutrals are Radix Colors 3.0.0
+scales (its `blue` is Radix indigo, its `teal` Radix teal), as twenty-ui ships
+them, converted from display-p3 to sRGB. Its `gray` is twenty-ui's own.
+
+The MIT permission notice that governs both is the one in LICENSE-MIT.

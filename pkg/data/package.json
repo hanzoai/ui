@@ -1,8 +1,8 @@
 {
   "name": "@hanzo/data",
-  "version": "1.2.4",
+  "version": "1.3.0",
   "type": "module",
-  "description": "Hanzo Data \u2014 cross-platform, metadata-driven data-app components (typed fields, record table, kanban board, record detail, saved views) on @hanzo/gui. The universal object/field/record/view layer that powers any Base-backed CRM, CMS, or commerce app on web, native (iOS), and desktop.",
+  "description": "Hanzo Data — cross-platform, metadata-driven data-app components (typed fields, record table, kanban board, record detail, saved views) on @hanzo/gui. The universal object/field/record/view layer that powers any Base-backed CRM, CMS, or commerce app on web, native (iOS), and desktop.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -40,7 +40,9 @@
     "**/index.cjs"
   ],
   "files": [
-    "dist"
+    "dist",
+    "NOTICE",
+    "LICENSE-MIT"
   ],
   "scripts": {
     "prepublishOnly": "node ../../scripts/guard-publish.mjs",
