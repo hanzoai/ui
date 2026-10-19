@@ -5,7 +5,12 @@
 // Every control edits the one ViewConfig through the pure view/logic helpers and
 // emits it via onView; the shell re-applies the view. Filter VALUES are entered
 // with the field's OWN editor (FieldInput) — one editor vocabulary everywhere.
+//
+// Under `<Density value="compact">` it is the record kit's view bar (ViewBar,
+// view/ViewBar.tsx); at regular density it renders as it always has.
 import { Fragment, useState, type ReactNode } from 'react'
+import { useDensity } from '@hanzo/ui'
+import { ViewBar } from './ViewBar'
 import { Button, Input, Text, XStack, YStack } from '@hanzo/gui'
 import { ArrowDownUp, ArrowDown, ArrowUp, Columns3, LayoutGrid, ListFilter, Plus, Search, Table2, X } from '@hanzogui/lucide-icons-2'
 import type { FieldDefinition, SelectOption } from '../field/types'
@@ -30,6 +35,18 @@ export interface RecordsToolbarProps {
   extra?: ReactNode
   /** Hide the board view option (table-only surfaces). */
   boardDisabled?: boolean
+  /** View bar: how many records the view shows ("· N" beside its name). */
+  count?: number
+  /** View bar: the saved views its picker lists and switches between. */
+  savedViews?: { views: ViewConfig[]; activeId?: string; onSelect: (id: string) => void }
+  /** View bar: the view differs from its saved state, so Reset and Update view show. */
+  dirty?: boolean
+  /** View bar: back to the saved state. */
+  onResetView?: () => void
+  /** View bar: write the current state over the saved view. */
+  onSaveView?: () => void
+  /** View bar: keep the current state as a new view. */
+  onSaveAsView?: () => void
 }
 
 /** A compact bordered control used as a Menu trigger. */
@@ -228,6 +245,10 @@ function GroupPicker({ fields, view, onView }: { fields: FieldDefinition[]; view
 }
 
 export function RecordsToolbar(props: RecordsToolbarProps) {
+  return useDensity() === 'compact' ? <ViewBar {...props} /> : <Sheet {...props} />
+}
+
+function Sheet(props: RecordsToolbarProps) {
   const { fields, view, onView, onCreate, createLabel = 'New', extra, boardDisabled } = props
   return (
     <XStack items="center" gap={8} style={{ flexWrap: 'wrap' }}>

@@ -11,6 +11,7 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { Plus, X } from '@hanzogui/lucide-icons-2'
+import { useDensity } from '@hanzo/ui'
 import type { FieldDefinition, SelectOption } from '../field/types'
 import { DataTable } from '../table/DataTable'
 import { BoardView } from '../board/BoardView'
@@ -90,6 +91,22 @@ export function RecordsView(props: RecordsViewProps) {
 
   const visible = useMemo(() => applyView(records, view, fields), [records, view, fields])
 
+  // On a compact surface the view bar carries the saved views itself: its picker
+  // lists them, and it offers Reset and Update view while the view has moved
+  // off what was saved.
+  const record = useDensity() === 'compact'
+  const saved = savedViews?.views.find((v) => v.id === (savedViews.activeId ?? view.id))
+  const dirty = !!saved && JSON.stringify(saved) !== JSON.stringify(view)
+  const bar = record && savedViews
+    ? {
+        savedViews: { views: savedViews.views, activeId: savedViews.activeId, onSelect: savedViews.onSelect },
+        dirty,
+        onResetView: saved ? () => setView(saved) : undefined,
+        onSaveView: () => savedViews.onSave(view),
+        onSaveAsView: () => savedViews.onSave({ ...view, id: `view-${Date.now()}`, name: `View ${savedViews.views.length + 1}` }),
+      }
+    : null
+
   const boardChange = onRecordChange
     ?? (onEditCommit
       ? (record: Record_, patch: Record<string, unknown>) => {
@@ -103,7 +120,7 @@ export function RecordsView(props: RecordsViewProps) {
     <YStack gap={12}>
       {title ? (typeof title === 'string' ? <Text fontSize={20} fontWeight="800" style={{ color: tokens.text }}>{title}</Text> : title) : null}
 
-      {savedViews ? <SavedViewsBar saved={savedViews} current={view} onLoad={setView} /> : null}
+      {savedViews && !record ? <SavedViewsBar saved={savedViews} current={view} onLoad={setView} /> : null}
 
       <RecordsToolbar
         fields={fields}
@@ -114,6 +131,8 @@ export function RecordsView(props: RecordsViewProps) {
         fieldOptions={fieldOptions}
         extra={toolbarExtra}
         boardDisabled={boardDisabled}
+        {...(record ? { count: visible.length } : null)}
+        {...bar}
       />
 
       {view.kind === 'board' ? (
