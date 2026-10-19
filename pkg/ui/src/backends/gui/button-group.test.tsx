@@ -165,10 +165,10 @@ describe('Button: loading, width, elevation, shape', () => {
     expect(tags(html(<Button fullWidth>Continue</Button>), 'button')[0]).toMatch(/_width-10037/)
   })
 
-  it('elevated: the small shadow and, on an outline, the ground with the stronger edge', () => {
+  it('elevated: the small shadow and, on an outline, the page ground with the stronger edge', () => {
     const el = tags(html(<Button elevated>Continue</Button>), 'button')[0]
     expect(el).toMatch(/_bxsh-/)
-    expect(el).toMatch(/_bg-background/)
+    expect(el).toMatch(/_bg-surface-pag/)
     expect(el).toMatch(/_btc-rim/)
   })
 

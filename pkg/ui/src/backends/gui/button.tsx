@@ -277,10 +277,13 @@ const Frame = styled(GuiButton.Frame, {
       on
         ? {
             boxShadow: 'var(--shadow-sm)',
-            // design's ground, not `$background`: inside the Button sub-theme
-            // that name is gui's button grey (rgb(36,36,36) measured), not the page.
+            // The page's ground, through `--surface-page`. Neither `$background`
+            // nor `var(--background)` will do: gui redeclares `--background` on
+            // its Button sub-theme, so inside a button both read gui's button grey
+            // (rgb(36,36,36) measured). `--surface-page` is declared on :root as
+            // `var(--background)` and inherits RESOLVED, so it is the page's.
             ...(props.variant === 'default' || props.variant === 'outline' || props.variant === undefined
-              ? { bg: 'var(--background)', borderColor: '$rim' }
+              ? { bg: 'var(--surface-page)', borderColor: '$rim' }
               : null),
           }
         : {},
