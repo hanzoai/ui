@@ -7,9 +7,17 @@
 // pointer and lands immediately) and reverts if persistence fails — responsive,
 // never fabricated. The same FieldDisplay engine as the table, so the card
 // understands every field type. Presentational + data-injected.
-import { useEffect, useMemo, useRef, useState } from 'react'
+//
+// Under `<Density value="compact">` it is the record kit's board (twenty-ui's
+// kanban, MIT, NOTICE): 200px columns with no ground of their own, each headed
+// by its value's Tag (a dashed outline for "No value"), the count in the
+// tertiary ink and a quiet + to add; the kanban card stacked 8 apart; a drop
+// target lit on the hover rung; the dragged card faded at its source and lifted
+// 2% under the pointer. At regular density it renders as it always has.
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Plus } from '@hanzogui/lucide-icons-2'
 import { ScrollView, Text, XStack, YStack } from '@hanzo/gui'
+import { Button, Tag as KitTag, useDensity } from '@hanzo/ui'
 import type { FieldDefinition } from '../field/types'
 import { RecordCard } from '../table/RecordCard'
 import { Tag } from '../field/displays'
@@ -19,6 +27,8 @@ import { boardColumns, movePatch, groupKeyOf, NO_VALUE, type BoardColumn } from 
 type Record_ = Record<string, unknown>
 
 const COL_W = 300
+/** The record board's column (twenty-ui's default; resizing 150–400 is the app's). */
+const RECORD_COL_W = 200
 
 export interface BoardViewProps {
   fields: FieldDefinition[]
@@ -35,11 +45,32 @@ export interface BoardViewProps {
   /** Create a record in a column (the column value is pre-filled). */
   onCreate?: (columnKey: string) => void
   getRowKey?: (record: Record_) => string
+  /** Record look: the ids in the selection (each card's checkbox reads it). */
+  selectedIds?: ReadonlySet<string>
+  /** Record look: a card's checkbox changed. Cards draw a checkbox only when this is given. */
+  onSelectedChange?: (record: Record_, selected: boolean) => void
+  /** Record look: the id of the record open in the side panel. */
+  activeId?: string
+  /** Record look: a 16px icon per field name on the cards. */
+  fieldIcons?: Record<string, ReactNode>
 }
 
 export function BoardView(props: BoardViewProps) {
   const { fields, records, groupField, titleField, cardFields, onOpen, onRecordChange, onCreate, getRowKey } = props
+  const { selectedIds, onSelectedChange, activeId, fieldIcons } = props
   const keyOf = (r: Record_) => (getRowKey ? getRowKey(r) : String(r.id ?? ''))
+  const record = useDensity() === 'compact'
+  const colW = record ? RECORD_COL_W : COL_W
+  const cardOf = (r: Record_, drag?: 'source' | 'preview') =>
+    record
+      ? {
+          selected: selectedIds?.has(keyOf(r)) ?? false,
+          onSelectedChange: onSelectedChange ? (on: boolean) => onSelectedChange(r, on) : undefined,
+          active: activeId != null && activeId === keyOf(r),
+          fieldIcons,
+          drag,
+        }
+      : null
 
   const field = fields.find((f) => f.name === groupField)
   const [overrides, setOverrides] = useState<Record<string, string>>({})
@@ -56,7 +87,11 @@ export function BoardView(props: BoardViewProps) {
   const columns: BoardColumn[] = useMemo(() => (field ? boardColumns(effective, field) : []), [effective, field])
 
   if (!field) {
-    return (
+    return record ? (
+      <YStack p="$5" items="center" borderWidth={1} rounded="$xs" borderColor="$borderColor" bg="$panel">
+        <Text fontSize="$2" color="$hint">Pick a select or status field to group the board by.</Text>
+      </YStack>
+    ) : (
       <YStack p={24} items="center" borderWidth={1} rounded={10} style={{ borderColor: tokens.border, backgroundColor: tokens.surface }}>
         <Text style={{ color: tokens.textFaint }}>Pick a select or status field to group the board by.</Text>
       </YStack>
@@ -102,48 +137,93 @@ export function BoardView(props: BoardViewProps) {
   return (
     <YStack ref={(node: unknown) => { boardRef.current = node as HTMLElement | null }} style={{ position: 'relative' }}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <XStack gap={12} py={2} items="flex-start">
+        <XStack gap={record ? 8 : 12} py={2} items="flex-start">
           {columns.map((col, i) => {
             const isTarget = drag && drag.target === col.key && drag.from !== col.key
+            const frame = record
+              ? {
+                  gap: 8,
+                  p: 4,
+                  rounded: '$xs' as const,
+                  bg: isTarget ? ('$hover' as const) : ('transparent' as const),
+                }
+              : {
+                  gap: 8,
+                  p: 8,
+                  rounded: 12,
+                  style: { backgroundColor: tokens.surfaceRaised, borderWidth: 1, borderColor: isTarget ? tokens.accent : tokens.border },
+                }
             return (
               <YStack
                 key={col.key || '∅'}
-                width={COL_W}
+                data-slot="board-column"
+                width={colW}
                 ref={(node: unknown) => { colRefs.current[i] = (node as HTMLElement | null) }}
-                gap={8}
-                p={8}
-                rounded={12}
-                style={{ backgroundColor: tokens.surfaceRaised, borderWidth: 1, borderColor: isTarget ? tokens.accent : tokens.border }}
+                {...frame}
               >
-                <XStack items="center" justify="space-between" px={4} py={2}>
-                  <XStack items="center" gap={8}>
-                    {col.key === NO_VALUE ? (
-                      <Text fontSize={13} fontWeight="700" style={{ color: tokens.textMuted }}>{col.label}</Text>
-                    ) : (
-                      <Tag label={col.label} color={col.color} />
-                    )}
-                    <Text fontSize={12} style={{ color: tokens.textFaint }}>{col.records.length}</Text>
+                {record ? (
+                  <XStack items="center" justify="space-between" minH={24} px={4}>
+                    <XStack items="center" gap="$2" minW={0}>
+                      {col.key === NO_VALUE ? (
+                        <KitTag variant="outline" borderStyle="dashed" color="transparent">{col.label}</KitTag>
+                      ) : (
+                        <KitTag color={col.color ?? 'gray'}>{col.label}</KitTag>
+                      )}
+                      <Text fontSize="$1" color="$hint">{col.records.length}</Text>
+                    </XStack>
+                    {onCreate ? (
+                      <Button size="icon-xs" variant="ghost" emphasis="subtle" aria-label={`Add to ${col.label}`} onPress={() => onCreate(col.key)}>
+                        <Plus />
+                      </Button>
+                    ) : null}
                   </XStack>
-                  {onCreate ? (
-                    <YStack cursor="pointer" p={3} rounded={6} hoverStyle={{ bg: tokens.hover }} onPress={() => onCreate(col.key)}>
-                      <Plus size={14} color={tokens.textMuted} />
-                    </YStack>
-                  ) : null}
-                </XStack>
+                ) : (
+                  <XStack items="center" justify="space-between" px={4} py={2}>
+                    <XStack items="center" gap={8}>
+                      {col.key === NO_VALUE ? (
+                        <Text fontSize={13} fontWeight="700" style={{ color: tokens.textMuted }}>{col.label}</Text>
+                      ) : (
+                        <Tag label={col.label} color={col.color} />
+                      )}
+                      <Text fontSize={12} style={{ color: tokens.textFaint }}>{col.records.length}</Text>
+                    </XStack>
+                    {onCreate ? (
+                      <YStack cursor="pointer" p={3} rounded={6} hoverStyle={{ bg: tokens.hover }} onPress={() => onCreate(col.key)}>
+                        <Plus size={14} color={tokens.textMuted} />
+                      </YStack>
+                    ) : null}
+                  </XStack>
+                )}
 
                 <YStack gap={8} style={{ minHeight: 40 }}>
                   {col.records.map((r) => {
                     const dragging = drag?.id === keyOf(r)
                     return (
-                      <YStack key={keyOf(r)} onPointerDown={startDrag(r)} style={{ opacity: dragging ? 0.35 : 1, cursor: onRecordChange ? 'grab' : undefined }}>
-                        <RecordCard titleField={titleField} fields={cardFields ?? fields.filter((f) => f.name !== field.name)} record={r} onPress={onOpen} />
+                      <YStack
+                        key={keyOf(r)}
+                        onPointerDown={startDrag(r)}
+                        style={{ opacity: dragging && !record ? 0.35 : 1, cursor: onRecordChange ? 'grab' : undefined }}
+                      >
+                        <RecordCard
+                          titleField={titleField}
+                          fields={cardFields ?? fields.filter((f) => f.name !== field.name)}
+                          record={r}
+                          onPress={onOpen}
+                          {...cardOf(r, dragging ? 'source' : undefined)}
+                        />
                       </YStack>
                     )
                   })}
                   {col.records.length === 0 ? (
-                    <YStack items="center" justify="center" py={16} rounded={8} style={{ borderWidth: 1, borderColor: tokens.border, borderStyle: 'dashed' }}>
-                      <Text fontSize={12} style={{ color: tokens.textFaint }}>Drop here</Text>
-                    </YStack>
+                    record ? (
+                      <YStack items="center" justify="center" py="$4" rounded="$xs" borderWidth={1} borderStyle="dashed" borderColor="$borderColor">
+                        <Text fontSize="$1" color="$hint">Drop here</Text>
+                      </YStack>
+                    ) : (
+                      <YStack items="center" justify="center" py={16} rounded={8} style={{ borderWidth: 1, borderColor: tokens.border, borderStyle: 'dashed' }}>
+                        <Text fontSize={12} style={{ color: tokens.textFaint }}>Drop here</Text>
+                      </YStack>
+                    )
                   ) : null}
                 </YStack>
               </YStack>
@@ -155,10 +235,23 @@ export function BoardView(props: BoardViewProps) {
       {/* floating card follows the pointer during a drag */}
       {drag && draggedRecord ? (
         <YStack
-          width={COL_W - 20}
-          style={{ position: 'absolute', left: (drag.x - (boardRect()?.left ?? 0)) - (COL_W - 20) / 2, top: (drag.y - (boardRect()?.top ?? 0)) - 20, pointerEvents: 'none', zIndex: 50, transform: [{ rotate: '2deg' }], boxShadow: '0 12px 32px rgba(0,0,0,0.4)' }}
+          width={colW - (record ? 8 : 20)}
+          style={{
+            position: 'absolute',
+            left: (drag.x - (boardRect()?.left ?? 0)) - (colW - (record ? 8 : 20)) / 2,
+            top: (drag.y - (boardRect()?.top ?? 0)) - 20,
+            pointerEvents: 'none',
+            zIndex: 50,
+            ...(record ? null : { transform: [{ rotate: '2deg' }], boxShadow: '0 12px 32px rgba(0,0,0,0.4)' }),
+          }}
+          {...(record ? { className: 'elevation-2' } : null)}
         >
-          <RecordCard titleField={titleField} fields={cardFields ?? fields.filter((f) => f.name !== field.name)} record={draggedRecord} />
+          <RecordCard
+            titleField={titleField}
+            fields={cardFields ?? fields.filter((f) => f.name !== field.name)}
+            record={draggedRecord}
+            {...cardOf(draggedRecord, 'preview')}
+          />
         </YStack>
       ) : null}
     </YStack>
