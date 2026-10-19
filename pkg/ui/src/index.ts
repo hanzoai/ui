@@ -696,8 +696,6 @@ export {
   type DialogSize,
   type TabsProps,
   type TabsTriggerProps,
-  type DensityName,
-  type InputGroupProps,
   type DropdownMenuSearchProps,
   type DropdownMenuSectionProps,
   type DropdownMenuSelectionGroupProps,
