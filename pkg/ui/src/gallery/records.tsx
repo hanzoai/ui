@@ -21,6 +21,7 @@ import { FieldsGallery } from './fields'
 import { Compound } from './compound'
 import { Menus } from './menus'
 import { Feedback } from './feedback'
+import { Frames } from './frames'
 
 const NOOP = () => {}
 
@@ -85,6 +86,7 @@ export function Records() {
       <Compound />
       <Menus />
       <Feedback />
+      <Frames />
     </>
   )
 }
