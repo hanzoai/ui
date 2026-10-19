@@ -9,9 +9,14 @@
  * — the same separation-of-concerns move `ui/Metric.tsx` made out of `gpus/`.
  * `inference/parts.tsx` re-exports them, so there is exactly one definition.
  */
-import type { ComponentProps } from 'react'
-import { Button, Input, Text, XStack } from '@hanzo/gui'
+import type { ComponentProps, ReactNode } from 'react'
+import { Button, Text, XStack } from '@hanzo/gui'
 import { Search } from '@hanzogui/lucide-icons-2'
+
+import { Input } from '../backends/gui/input'
+import { InputGroup } from '../backends/gui/input-group'
+import { useDensity } from '../backends/gui/density'
+import type { FieldSize } from '../backends/gui/control'
 
 import { textSize, useEmit } from './instrument'
 
@@ -61,19 +66,34 @@ export function Segmented<T extends string>({
   )
 }
 
-/** A search input with a leading magnifier. */
+/**
+ * A search input with a leading magnifier, on the one field box: an
+ * `InputGroup`, so the glyph sits in the row (lifting while the field has focus)
+ * and `actions` sit beside the field rather than inside it — twenty-ui's
+ * SearchInput (MIT, NOTICE). Regular density keeps the sunken ground it always
+ * had; compact takes the group's own.
+ */
 export function SearchInput({
   value,
   onChange,
   placeholder,
   name,
+  size,
+  actions,
+  autoFocus,
 }: {
   value: string
   onChange: (v: string) => void
   placeholder?: string
   /** Names the search box in analytics; defaults to `SearchInput`. */
   name?: string
+  /** The field box (control.ts `BOX`). Unset, the nearest `<Density>` decides. */
+  size?: FieldSize
+  /** Controls after the field, 8px from it: a filter toggle, a "new" button. */
+  actions?: ReactNode
+  autoFocus?: boolean
 }) {
+  const compact = useDensity() === 'compact'
   const track = useEmit()
   // The QUERY IS NEVER SENT — only how long it was. The shape of the behaviour
   // (did people search? how specifically?) without the content.
@@ -81,10 +101,25 @@ export function SearchInput({
     track({ component: 'SearchInput', action: 'search', id: name, value: textSize(v) })
     onChange(v)
   }
+  const field = (
+    <InputGroup
+      size={size}
+      flex={1}
+      minW={180}
+      gap="$2"
+      {...(compact ? null : { bg: '$sunken' })}
+      start={<Search size={16} color="$ink" />}
+    >
+      <Input value={value} onChangeText={onChangeTracked} placeholder={placeholder} autoFocus={autoFocus} />
+    </InputGroup>
+  )
+  if (!actions) return field
   return (
-    <XStack flex={1} minW={180} items="center" gap="$2" px="$3" borderWidth={1} borderColor="$borderColor" rounded="$4" bg="$sunken">
-      <Search size={16} color="$soft" />
-      <Input flex={1} value={value} onChangeText={onChangeTracked} placeholder={placeholder} borderWidth={0} bg="transparent" px="$0" fontSize="$3" />
+    <XStack flex={1} minW={180} width="100%" items="center" gap="$2">
+      {field}
+      <XStack shrink={0} items="center" gap="$2">
+        {actions}
+      </XStack>
     </XStack>
   )
 }
