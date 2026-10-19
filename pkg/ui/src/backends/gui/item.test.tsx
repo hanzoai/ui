@@ -121,3 +121,40 @@ describe('Item', () => {
     expect(tag(markup, 'item-footer')).not.toBe('')
   })
 })
+
+describe('Item size row (the list row)', () => {
+  const row = (node: React.ReactNode) => tag(html(node), 'item')
+
+  it('is the record geometry: 32 floor, 4 inset, 8 between, 4 corner', () => {
+    const el = row(<Item size="row">Ada</Item>)
+    expect(el).toContain('data-size="row"')
+    expect(el).toMatch(/_minH-32px/)
+    expect(el).toMatch(/_pl-c-space-1/)
+    expect(el).toMatch(/_gap-c-space-2/)
+    expect(el).toMatch(/_btlr-c-radius-xs/)
+  })
+
+  it('a selected row with no indicator tints; check and checkbox draw their mark', () => {
+    expect(row(<Item size="row" selected>A</Item>)).toMatch(/_bg-hover/)
+    expect(html(<Item size="row" indicator="check" selected>A</Item>)).toContain('<svg')
+    const box = html(<Item size="row" indicator="checkbox" selected>A</Item>)
+    expect(box.indexOf('<svg')).toBeLessThan(box.indexOf('>A<'))
+  })
+
+  it('a disabled row is aria-disabled, or natively disabled as a button unless it must stay focusable', () => {
+    expect(row(<Item size="row" disabled>A</Item>)).toContain('aria-disabled="true"')
+    const button = html(<Item size="row" render="button" disabled>A</Item>)
+    expect(button).toMatch(/<button[^>]*data-slot="item"[^>]*disabled=""/)
+    expect(html(<Item size="row" render="button" disabled focusableWhenDisabled>A</Item>)).toMatch(/<button[^>]*aria-disabled="true"/)
+  })
+
+  it('draws keys, hover actions and a submenu chevron after the content', () => {
+    const markup = html(
+      <Item size="row" shortcut={['⌘', 'K']} actions={<b>edit</b>} hasSubmenu>
+        A
+      </Item>,
+    )
+    expect(markup.match(/data-slot="kbd"/g)).toHaveLength(2)
+    expect(markup).toMatch(/data-slot="item-row-actions"[^>]*class="[^"]*_o-0\b|class="[^"]*_o-0\b[^"]*"[^>]*data-slot="item-row-actions"/)
+  })
+})
