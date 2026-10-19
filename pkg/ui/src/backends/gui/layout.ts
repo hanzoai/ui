@@ -66,6 +66,11 @@ export {
   // The untyped hosts, for the rare case a component needs a bare box.
   View,
   Text,
+
+  // Text a screen reader reads and a screen does not draw: the name of an
+  // icon-only control, a table header, a live line (twenty-ui's VisuallyHidden,
+  // MIT, NOTICE — the same clip pattern, gui's own).
+  VisuallyHidden,
 } from '@hanzo/gui'
 
 export type { GuiElement } from '@hanzo/gui'

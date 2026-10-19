@@ -428,3 +428,6 @@ export {
 } from './dropdown-menu'
 export type { TooltipContentProps, TooltipProps } from './tooltip'
 export type { PopoverContentProps, PopoverProps } from './popover'
+export { VisuallyHidden } from './layout'
+export { DialogBody, type DialogSize } from './dialog'
+export type { TabsProps, TabsTriggerProps } from './tabs'

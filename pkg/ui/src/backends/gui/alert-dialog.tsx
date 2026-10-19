@@ -8,6 +8,10 @@
  * flattens its compound parts into the shadcn names and dresses them in the
  * Hanzo tokens, exactly as `dialog.tsx` does for the ordinary modal.
  *
+ * `size` gives it the record frame Dialog's `size` does (twenty-ui's
+ * AlertDialog, MIT, NOTICE): the same widths less `compact`, the same sections
+ * and scrim, from the one frame definition in dialog.tsx.
+ *
  * `AlertDialogContent` mounts its OWN portal + overlay (so callers never wrap
  * it) and re-applies the trigger's resolved theme inside the portal via
  * `PortalTheme` — gui portals re-root the subtree, so React theme context does
@@ -32,7 +36,8 @@
  * button is `primary` and Cancel is `outline`.
  */
 import { AlertDialog as GuiAlertDialog, XStack, YStack } from '@hanzo/gui'
-import type { ComponentProps, ReactNode } from 'react'
+import { useContext, type ComponentProps, type ReactNode } from 'react'
+import { Sized, frame, scrim, section, type DialogSize } from './dialog'
 import { PortalTheme, useThemeName } from '../../product/menu/portal-theme'
 import { Button, type ButtonProps } from './button'
 import { slot } from './slot'
@@ -57,16 +62,20 @@ const AlertDialogOverlay = (props: AlertDialogOverlayProps) => (
   />
 )
 
-export type AlertDialogContentProps = ComponentProps<typeof GuiAlertDialog.Content>
+export type AlertDialogContentProps = ComponentProps<typeof GuiAlertDialog.Content> & {
+  /** The record dialog's sizes (Dialog's, less `compact`): the same frame, scrim and sections. */
+  size?: Exclude<DialogSize, 'compact'>
+}
 
-const AlertDialogContent = ({ children, ...props }: AlertDialogContentProps) => {
+const AlertDialogContent = ({ children, size, ...props }: AlertDialogContentProps) => {
   const themeName = useThemeName()
   return (
     <GuiAlertDialog.Portal>
       <PortalTheme name={themeName}>
-        <AlertDialogOverlay />
+        <AlertDialogOverlay {...(size ? scrim : null)} />
         <GuiAlertDialog.Content
           {...slot('alert-dialog-content')}
+          {...(size ? { 'data-size': size } : null)}
           bg="$background"
           borderWidth={1}
           borderColor="$borderColor"
@@ -75,9 +84,10 @@ const AlertDialogContent = ({ children, ...props }: AlertDialogContentProps) => 
           gap="$4"
           width="100%"
           maxW={512}
+          {...(size ? frame(size) : null)}
           {...props}
         >
-          {children}
+          <Sized.Provider value={size ?? null}>{children}</Sized.Provider>
         </GuiAlertDialog.Content>
       </PortalTheme>
     </GuiAlertDialog.Portal>
@@ -86,26 +96,33 @@ const AlertDialogContent = ({ children, ...props }: AlertDialogContentProps) => 
 
 export type AlertDialogSectionProps = ComponentProps<typeof YStack> & { children?: ReactNode }
 
-const AlertDialogHeader = (props: AlertDialogSectionProps) => (
-  <YStack {...slot('alert-dialog-header')} gap="$2" {...props} />
-)
+const AlertDialogHeader = (props: AlertDialogSectionProps) => {
+  const sized = useContext(Sized)
+  return <YStack {...slot('alert-dialog-header')} gap="$2" {...(sized ? section.header : null)} {...props} />
+}
 
-const AlertDialogFooter = (props: ComponentProps<typeof XStack>) => (
-  <XStack {...slot('alert-dialog-footer')} gap="$2" justify="flex-end" items="center" {...props} />
-)
+const AlertDialogFooter = (props: ComponentProps<typeof XStack>) => {
+  const sized = useContext(Sized)
+  return <XStack {...slot('alert-dialog-footer')} gap="$2" justify="flex-end" items="center" {...(sized ? section.footer : null)} {...props} />
+}
 
-const AlertDialogTitle = (props: ComponentProps<typeof GuiAlertDialog.Title>) => (
-  <GuiAlertDialog.Title {...slot('alert-dialog-title')} size="$5" fontWeight="600" {...props} />
-)
+const AlertDialogTitle = (props: ComponentProps<typeof GuiAlertDialog.Title>) => {
+  const sized = useContext(Sized)
+  return <GuiAlertDialog.Title {...slot('alert-dialog-title')} size="$5" fontWeight="600" {...(sized ? section.title : null)} {...props} />
+}
 
-const AlertDialogDescription = (props: ComponentProps<typeof GuiAlertDialog.Description>) => (
-  <GuiAlertDialog.Description
-    {...slot('alert-dialog-description')}
-    size="$2"
-    color="$quiet"
-    {...props}
-  />
-)
+const AlertDialogDescription = (props: ComponentProps<typeof GuiAlertDialog.Description>) => {
+  const sized = useContext(Sized)
+  return (
+    <GuiAlertDialog.Description
+      {...slot('alert-dialog-description')}
+      size="$2"
+      color="$quiet"
+      {...(sized ? section.description : null)}
+      {...props}
+    />
+  )
+}
 
 /**
  * Both buttons are the one `Button` with gui's close part as its HOST — the

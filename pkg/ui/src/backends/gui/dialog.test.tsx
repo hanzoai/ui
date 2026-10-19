@@ -22,7 +22,7 @@ import { createRoot, type Root } from 'react-dom/client'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
-import { Dialog, DialogContent, DialogTitle } from './dialog'
+import { Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './dialog'
 
 let root: Root | null = null
 let host: HTMLDivElement | null = null
@@ -142,5 +142,48 @@ describe('DialogContent’s close button', () => {
       </Dialog>,
     )
     expect(close()).toBeNull()
+  })
+})
+
+describe('DialogContent size', () => {
+  const sized = (size?: 'sm' | 'md' | 'fullscreen') =>
+    mount(
+      <Dialog open>
+        <DialogContent size={size}>
+          <DialogHeader>
+            <DialogTitle>Delete field</DialogTitle>
+            <DialogDescription>This cannot be undone.</DialogDescription>
+          </DialogHeader>
+          <DialogBody>Body</DialogBody>
+          <DialogFooter>Actions</DialogFooter>
+        </DialogContent>
+      </Dialog>,
+    )
+  const content = () => document.querySelector('[data-slot="dialog-content"]') as HTMLElement
+
+  it('a sized dialog is the record frame: its width, an 8px corner, no edge, no inset, the 72% scrim', () => {
+    sized('md')
+    expect(content().getAttribute('data-size')).toBe('md')
+    expect(content().className).toMatch(/_width-400px/)
+    expect(content().className).toMatch(/_btlr-c-radius-3/)
+    expect(content().className).toMatch(/_btw-0px/)
+    expect(content().className).toMatch(/_pt-0px/)
+    expect(overlay()!.className).toMatch(/_o-1/)
+  })
+
+  it('its sections take twenty-ui’s insets and centre the title', () => {
+    sized('sm')
+    const header = document.querySelector('[data-slot="dialog-header"]')!.className
+    expect(header).toMatch(/_pt-24px/)
+    expect(document.querySelector('[data-slot="dialog-body"]')!.className).toMatch(/_pb-24px/)
+    expect(document.querySelector('[data-slot="dialog-title"]')!.className).toMatch(/_text-center/)
+    expect(content().className).toMatch(/_width-300px/)
+  })
+
+  it('no size is the 512-wide panel every surface has', () => {
+    sized()
+    expect(content().hasAttribute('data-size')).toBe(false)
+    expect(content().className).toMatch(/_maxW-512px/)
+    expect(document.querySelector('[data-slot="dialog-header"]')!.className).not.toMatch(/_pt-24px/)
   })
 })

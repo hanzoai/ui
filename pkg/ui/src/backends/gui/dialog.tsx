@@ -6,15 +6,55 @@
  * `DialogContent` mounts its OWN portal + overlay (so callers never wrap it) and
  * re-applies the trigger's resolved theme inside the portal via `PortalTheme` —
  * gui portals re-root the subtree, so React theme context does not flow.
+ *
+ * `size` is the record dialog (twenty-ui's Dialog, MIT, NOTICE): sm 300, compact
+ * 360, md 400, lg the larger of 400 and 53% of the viewport, xl 1200 (at most
+ * 800 tall), fullscreen. A sized dialog is a frame of three sections — Header
+ * (24 all round, title and description centred), Body (24 at the sides and
+ * foot) and Footer (actions to the end, 8 apart, pinned to the bottom) — on an
+ * 8px corner with the floating shadow instead of an edge, over a 72% scrim. With
+ * no `size` the dialog is the 512-wide panel every surface has. AlertDialog wears
+ * the same frame (`frame`, `scrim`, `Sized`).
  */
 import { Dialog as GuiDialog, XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
-import type { ComponentProps, ReactNode } from 'react'
+import { createContext, useContext, type ComponentProps, type ReactNode } from 'react'
 import { PortalTheme, useThemeName } from '../../product/menu/portal-theme'
 import { slot } from './slot'
 import { touch } from './gesture'
 
 const PAD = 24
+
+export type DialogSize = 'sm' | 'compact' | 'md' | 'lg' | 'xl' | 'fullscreen'
+
+const WIDTH: Record<DialogSize, number | string> = {
+  sm: 300,
+  compact: 360,
+  md: 400,
+  lg: 'max(400px, 53vw)',
+  xl: 1200,
+  fullscreen: '100vw',
+}
+
+/** The sized frame both dialogs wear: the width, the corner, the floating shadow, no edge, no inset of its own. */
+export const frame = (size: DialogSize) =>
+  ({
+    width: WIDTH[size] as never,
+    maxW: size === 'fullscreen' ? '100vw' : 'calc(100vw - 32px)',
+    maxH: size === 'fullscreen' ? '100vh' : size === 'xl' ? 'min(800px, calc(100vh - 32px))' : 'calc(100vh - 32px)',
+    ...(size === 'fullscreen' ? { height: '100vh' as never } : null),
+    rounded: size === 'fullscreen' ? 0 : '$3',
+    borderWidth: 0,
+    p: 0,
+    gap: 0,
+    style: size === 'fullscreen' ? undefined : { boxShadow: 'var(--shadow-floating, 0 24px 60px -16px rgb(0 0 0 / .75))' },
+  }) as const
+
+/** The scrim under a sized dialog: black at 72%, opaque layer. */
+export const scrim = { bg: 'rgba(0,0,0,0.72)', opacity: 1 } as const
+
+/** The size a dialog's sections are drawn for; `null` for the unsized panel. */
+export const Sized = /* @__PURE__ */ createContext<DialogSize | null>(null)
 
 const Dialog = (p: ComponentProps<typeof GuiDialog>) => <GuiDialog modal {...p} />
 const DialogTrigger: typeof GuiDialog.Trigger = GuiDialog.Trigger
@@ -54,11 +94,14 @@ export type DialogContentProps = ComponentProps<typeof GuiDialog.Content> & {
    * Absent, nothing changes: the default overlay renders exactly as before.
    */
   overlay?: DialogOverlayProps
+  /** The record dialog's sizes; absent, the 512-wide panel. */
+  size?: DialogSize
 }
 
 const DialogContent = ({
   showCloseButton = true,
   overlay,
+  size,
   children,
   ...props
 }: DialogContentProps) => {
@@ -66,9 +109,10 @@ const DialogContent = ({
   return (
     <GuiDialog.Portal>
       <PortalTheme name={themeName}>
-        <DialogOverlay {...overlay} />
+        <DialogOverlay {...(size ? scrim : null)} {...overlay} />
         <GuiDialog.Content
           {...slot('dialog-content')}
+          {...(size ? { 'data-size': size } : null)}
           bg="$background"
           borderWidth={1}
           borderColor="$borderColor"
@@ -77,9 +121,10 @@ const DialogContent = ({
           gap="$4"
           width="100%"
           maxW={512}
+          {...(size ? frame(size) : null)}
           {...props}
         >
-          {children}
+          <Sized.Provider value={size ?? null}>{children}</Sized.Provider>
           {showCloseButton ? (
             <GuiDialog.Close asChild>
               <XStack
@@ -109,24 +154,43 @@ const DialogContent = ({
 
 export type DialogSectionProps = ComponentProps<typeof YStack> & { children?: ReactNode }
 
-const DialogHeader = (props: DialogSectionProps) => (
-  <YStack {...slot('dialog-header')} gap="$2" {...props} />
+/** The three sections of a sized frame, as twenty-ui pads them. */
+export const section = {
+  header: { p: PAD, gap: '$2', items: 'center' },
+  body: { px: PAD, pb: PAD },
+  footer: { px: PAD, pb: PAD, mt: 'auto', flexWrap: 'wrap', gap: '$2' },
+  title: { size: '$4', fontWeight: '600', textAlign: 'center' },
+  description: { size: '$2', lineHeight: 20, textAlign: 'center' },
+} as const
+
+const DialogHeader = (props: DialogSectionProps) => {
+  const sized = useContext(Sized)
+  return <YStack {...slot('dialog-header')} gap="$2" {...(sized ? section.header : null)} {...props} />
+}
+
+/** A sized dialog's middle: what the dialog is for, inset at the sides and foot. */
+const DialogBody = (props: DialogSectionProps) => (
+  <YStack {...slot('dialog-body')} {...section.body} {...props} />
 )
 
-const DialogFooter = (props: ComponentProps<typeof XStack>) => (
-  <XStack {...slot('dialog-footer')} gap="$2" justify="flex-end" items="center" {...props} />
-)
+const DialogFooter = (props: ComponentProps<typeof XStack>) => {
+  const sized = useContext(Sized)
+  return <XStack {...slot('dialog-footer')} gap="$2" justify="flex-end" items="center" {...(sized ? section.footer : null)} {...props} />
+}
 
-const DialogTitle = (props: ComponentProps<typeof GuiDialog.Title>) => (
-  <GuiDialog.Title {...slot('dialog-title')} size="$5" fontWeight="600" {...props} />
-)
+const DialogTitle = (props: ComponentProps<typeof GuiDialog.Title>) => {
+  const sized = useContext(Sized)
+  return <GuiDialog.Title {...slot('dialog-title')} size="$5" fontWeight="600" {...(sized ? section.title : null)} {...props} />
+}
 
-const DialogDescription = (props: ComponentProps<typeof GuiDialog.Description>) => (
-  <GuiDialog.Description {...slot('dialog-description')} size="$2" color="$quiet" {...props} />
-)
+const DialogDescription = (props: ComponentProps<typeof GuiDialog.Description>) => {
+  const sized = useContext(Sized)
+  return <GuiDialog.Description {...slot('dialog-description')} size="$2" color="$quiet" {...(sized ? section.description : null)} {...props} />
+}
 
 export {
   Dialog,
+  DialogBody,
   DialogClose,
   DialogContent,
   DialogDescription,
