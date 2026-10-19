@@ -5,9 +5,17 @@ spacing — for **every** surface. React reads the TypeScript; non-React surface
 Gitea fork, a Go dashboard, an Argo CD fork) embed the generated CSS. One edit
 propagates everywhere.
 
-Hanzo is monochrome: one hue through an opacity ladder, dark by default. The only
-permitted non-mono values are the three status hues (`--state-error`,
-`--state-online`, `--state-success`). Type is Geist + Geist Mono, self-hosted.
+Hanzo's chrome is monochrome: one hue through an opacity ladder, dark by default.
+The only hues in chrome are the states (`--state-error`, `--state-warning`,
+`--state-online`, `--state-success`). Type is Zen + Zen Mono, from @hanzo/font.
+
+Data is the one exception, and it is scoped: `src/data.ts` is a palette of thirty
+12-step hues (`--data-<hue>-<step>`) for what a PERSON colours — a select option's
+tag, a kanban column, an object's icon tile, an avatar's initial, a chart series.
+Never a button, a border or a focus ring. Twenty-four of the twenty-five pickable
+hues and all five neutrals are Radix Colors scales (NOTICE); `hueOf(seed)` picks
+a record's hue from a string the way twenty-ui does, so an imported record keeps
+its colour.
 
 ## The pipeline
 
@@ -23,8 +31,13 @@ src/theme.ts   ──gen-css──▶  dist/colors.css   ──▶  @hanzo/desig
 - **`scripts/gen-css.mjs`** reads the built `dist/theme.mjs` and emits:
   - `dist/colors.css` — the colour tokens only (`@hanzo/tokens/css/colors`); the
     contract `@hanzo/design` republishes.
-  - `dist/tokens.css` — colours + radius + type + spacing (`@hanzo/tokens/css`);
-    what `@hanzo/brand` re-emits for Go surfaces.
+  - `dist/tokens.css` — colours + radius + type + spacing + the data palette
+    (`@hanzo/tokens/css`); what `@hanzo/brand` re-emits for Go surfaces.
+  - `dist/data.css` — the data palette alone (`@hanzo/tokens/css/data`). Not in
+    colors.css, which design republishes as the chrome contract.
+- `@hanzo/ui` composes `data.css` into its theme.css, and also every token this
+  package declares that @hanzo/design's sheet does not ship yet — so a token added
+  here reaches the components before design's next build copies it.
 - `themes.ts` / `colors.ts` are the resolved, flat views for JavaScript consumers
   that cannot dereference `var()`. They mirror `theme.ts`.
 
