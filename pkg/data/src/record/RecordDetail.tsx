@@ -10,17 +10,20 @@
 // edit props (backward compatible).
 // RecordForm: a label → editor list for create/edit, emitting per-field changes;
 // the host owns the draft + save.
+//
+// Drawn with @hanzo/ui's theme rungs: a field's name in the tertiary ink above
+// its value, hairlines between fields, the hover rung on an editable value —
+// the record page's field list as twenty-ui composes it (MIT, see NOTICE).
 import { useState, type ReactNode } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import type { FieldDefinition, SelectOption } from '../field/types'
 import { FieldDisplay } from '../field/FieldDisplay'
 import { FieldInput, isEditable } from '../field/FieldInput'
-import { tokens } from '../theme'
 
 const INSTANT = new Set(['boolean', 'select', 'multiSelect', 'date', 'dateTime', 'relation', 'rating', 'files'])
 
 const FieldLabel = ({ children }: { children: ReactNode }) => (
-  <Text fontSize={11} fontWeight="700" style={{ color: tokens.textFaint, letterSpacing: 0.4, textTransform: 'uppercase' }}>
+  <Text fontSize="$1" fontWeight="500" color="$hint" numberOfLines={1}>
     {children}
   </Text>
 )
@@ -56,7 +59,7 @@ function DetailField({ field, value, editable, onCommit, options }: {
   const commit = (v: unknown) => { setEditing(false); void onCommit?.(v) }
 
   return (
-    <YStack gap={5} py={8} style={{ borderBottomWidth: 1, borderBottomColor: tokens.border }}>
+    <YStack gap="$1" py="$2" borderBottomWidth={1} borderColor="$borderColor">
       <FieldLabel>{field.label}</FieldLabel>
       {editing ? (
         <FieldInput
@@ -70,13 +73,20 @@ function DetailField({ field, value, editable, onCommit, options }: {
       ) : (
         <XStack
           items="center"
-          minH={26}
+          minH={24}
+          minW={0}
           cursor={canEdit ? 'text' : undefined}
-          rounded={6}
-          px={canEdit ? 6 : 0}
-          py={canEdit ? 3 : 0}
-          hoverStyle={canEdit ? { bg: tokens.hover } : undefined}
-          style={{ marginLeft: canEdit ? -6 : 0 }}
+          rounded="$xs"
+          px={canEdit ? '$1' : 0}
+          mx={canEdit ? -4 : 0}
+          hoverStyle={canEdit ? { bg: '$hover' } : undefined}
+          {...(canEdit ? { role: 'button', tabIndex: 0, 'aria-label': `Edit ${field.label}` } : null)}
+          onKeyDown={canEdit ? (e: { key?: string; preventDefault?: () => void }) => {
+            if (e.key !== 'Enter') return
+            e.preventDefault?.()
+            setDraft(value)
+            setEditing(true)
+          } : undefined}
           onPress={canEdit ? () => { setDraft(value); setEditing(true) } : undefined}
         >
           <FieldDisplay field={field} value={value} />
@@ -91,8 +101,8 @@ export function RecordDetail({ fields, record, title, editable, onEditCommit, fi
   return (
     <YStack gap={2}>
       {title ? (
-        <YStack pb={12} mb={4} style={{ borderBottomWidth: 1, borderBottomColor: tokens.border }}>
-          <Text fontSize={22} fontWeight="800" numberOfLines={2} style={{ color: tokens.text }}>{title}</Text>
+        <YStack pb="$3" mb="$1" borderBottomWidth={1} borderColor="$borderColor">
+          <Text fontSize="$7" fontWeight="600" numberOfLines={2} color="$ink">{title}</Text>
         </YStack>
       ) : null}
       {fields.map((f) => (
@@ -105,7 +115,7 @@ export function RecordDetail({ fields, record, title, editable, onEditCommit, fi
           options={fieldOptions?.(f)}
         />
       ))}
-      {related ? <YStack pt={16} gap={8}>{related}</YStack> : null}
+      {related ? <YStack pt="$4" gap="$2">{related}</YStack> : null}
     </YStack>
   )
 }
@@ -123,12 +133,12 @@ export interface RecordFormProps {
 /** Editable field list — create/edit form. Read-only fields render as display. */
 export function RecordForm({ fields, values, onChange, fieldOptions }: RecordFormProps) {
   return (
-    <YStack gap={14}>
+    <YStack gap="$3">
       {fields.map((f) => {
         const opts = fieldOptions?.(f)
         const withOpts: FieldDefinition = opts ? { ...f, metadata: { ...(f.metadata as object), options: opts } as FieldDefinition['metadata'] } : f
         return (
-          <YStack key={f.name} gap={6}>
+          <YStack key={f.name} gap="$1">
             <FieldLabel>{f.label}</FieldLabel>
             {f.readOnly ? (
               <XStack><FieldDisplay field={f} value={values[f.name]} /></XStack>
