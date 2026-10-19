@@ -14,7 +14,7 @@
  */
 import { useState } from 'react'
 import { XStack, YStack } from '@hanzo/gui'
-import { Building2, Copy, Info, Pencil, Settings, Trash2, User } from '@hanzogui/lucide-icons-2'
+import { BarChart3, Building2, Copy, Info, Kanban, LineChart, Pencil, Settings, Table, Trash2, User } from '@hanzogui/lucide-icons-2'
 import { Section } from './section'
 import { Density } from '../backends/gui/density'
 import { Button } from '../backends/gui/button'
@@ -42,6 +42,99 @@ import {
   DropdownMenuTrigger,
 } from '../backends/gui/dropdown-menu'
 import { MenuRow } from '../product/MenuRow'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../backends/gui/tabs'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '../backends/gui/breadcrumb'
+import { Card, CardContent, CardFooter, CardHeader } from '../backends/gui/card'
+import { ToggleGroup, ToggleGroupItem } from '../backends/gui/toggle-group'
+import { FieldSwitch } from '../product/Field'
+import { Heading as SettingsHeading } from '../settings/Section'
+import { Text, VisuallyHidden } from '../backends/gui/layout'
+
+/** The record page's surfaces: line tabs, the trail, a compact card, picker tiles, a settings row. */
+export function Surfaces() {
+  return (
+    <>
+      <Section name="tabs-line">
+        <Tabs variant="line" defaultValue="timeline" width={480}>
+          <TabsList>
+            <TabsTrigger value="timeline" startIcon={<LineChart size={16} />}>
+              Timeline
+            </TabsTrigger>
+            <TabsTrigger value="tasks" badge={<Text fontSize="$1" color="$soft">3</Text>}>
+              Tasks
+            </TabsTrigger>
+            <TabsTrigger value="notes" size="sm">
+              Notes
+            </TabsTrigger>
+            <TabsTrigger value="files" highlighted>
+              Files
+            </TabsTrigger>
+            <TabsTrigger value="emails" disabled>
+              Emails
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="timeline">Timeline</TabsContent>
+        </Tabs>
+      </Section>
+      <Section name="breadcrumb">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="#companies">Companies</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Acme Corporation</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </Section>
+      <Section name="card-compact">
+        <Card density="compact" width={320}>
+          <CardHeader>Email</CardHeader>
+          <CardContent divider>ada@acme.com</CardContent>
+          <CardFooter>Synced 2 minutes ago</CardFooter>
+        </Card>
+        <Card density="compact" interactive width={200} onPress={NOOP}>
+          <CardContent>Interactive</CardContent>
+        </Card>
+      </Section>
+      <Section name="toggle-tile">
+        <ToggleGroup type="single" variant="tile" defaultValue="table" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 72px)' }}>
+          <ToggleGroupItem value="table" aria-label="Table">
+            <Table size={16} />
+            Table
+          </ToggleGroupItem>
+          <ToggleGroupItem value="kanban" aria-label="Kanban">
+            <Kanban size={16} />
+            Kanban
+          </ToggleGroupItem>
+          <ToggleGroupItem value="chart" aria-label="Chart" disabled>
+            <BarChart3 size={16} />
+            Chart
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </Section>
+      <Section name="settings-row">
+        <YStack width={320} gap={2}>
+          <FieldSwitch label="Compact view" description="Fewer fields per card" checked onChange={NOOP} />
+          <FieldSwitch label="Hide empty groups" checked={false} onChange={NOOP} disabled />
+        </YStack>
+        <Density value="compact">
+          <YStack width={360}>
+            <SettingsHeading title="Members" detail="Who can see and edit records in this workspace." />
+          </YStack>
+        </Density>
+        <Text>
+          Visible
+          <VisuallyHidden>
+            <Text>read aloud only</Text>
+          </VisuallyHidden>
+        </Text>
+      </Section>
+    </>
+  )
+}
 
 const NOOP = () => {}
 
@@ -201,6 +294,7 @@ export function Menus() {
   return (
     <>
       <Rows />
+      <Surfaces />
       <Section name="dropdown-record">
         <Picker />
         <Paged />
