@@ -87,14 +87,14 @@ describe('the records toolbar', () => {
     expect(markup).toContain('Search…')
   })
 
-  it('compact: a 39px top row on a hairline, the picker naming the view and its count', () => {
+  it('compact: a top row 39 high over its hairline, the picker naming the view and its count', () => {
     const markup = html(
       <Density value="compact">
         <RecordsToolbar fields={FIELDS} view={plain} onView={() => {}} count={12} />
       </Density>,
     )
     const top = tag(markup, 'view-bar-top')
-    expect(top).toMatch(/_minH-39px/)
+    expect(top).toMatch(/_minH-40px/)
     expect(top).toMatch(/_borderBottomWidth-1px/)
     expect(markup).toContain('All companies')
     expect(markup).toContain('· 12')

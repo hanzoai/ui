@@ -88,7 +88,8 @@ function KanbanCard({
       data-active={active ? '' : undefined}
       bg={selected || active || within ? '$hover' : '$panel'}
       borderWidth={1}
-      borderColor={active || hovered ? '$rim' : '$borderColor'}
+      borderColor={active ? '$rim' : '$borderColor'}
+      hoverStyle={{ borderColor: '$rim' }}
       rounded="$xs"
       overflow="hidden"
       cursor={open ? 'pointer' : undefined}
@@ -115,6 +116,9 @@ function KanbanCard({
         {onSelectedChange ? (
           <XStack
             data-slot="record-card-check"
+            // The chip's line, not the box's halo: the header stays 32 and the
+            // halo's outer 2px is clipped until the pointer is on it.
+            height={20}
             width={check ? CARD.check : 0}
             $touchable={{ width: CARD.check }}
             overflow="hidden"

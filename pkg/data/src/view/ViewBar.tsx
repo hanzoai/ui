@@ -111,7 +111,8 @@ export function ViewBar(props: RecordsToolbarProps) {
     <YStack {...({ 'data-slot': 'view-bar' } as object)}>
       <XStack
         {...({ 'data-slot': 'view-bar-top' } as object)}
-        minH={VIEW_BAR.top}
+        // 39 above its hairline, as twenty-ui measures it.
+        minH={VIEW_BAR.top + 1}
         items="center"
         justify="space-between"
         gap="$2"
