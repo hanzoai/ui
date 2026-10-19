@@ -6,6 +6,11 @@
  *
  * `KbdGroup` sets several keys side by side (`Ctrl` `B`) with a small gap and
  * no separator glyph — the spacing alone reads as a chord.
+ *
+ * `variant="cap"` is a keycap that stands on its own lower edge: 18px tall, a
+ * 1px strong edge on the panel ground, 4px radius and the keycap underline —
+ * the key `Shortcut` draws in a command menu or a help sheet (re-expressed from
+ * twenty-ui's Shortcut keys, MIT, see NOTICE). The default stays the flat chip.
  */
 import { SizableText, XStack, styled } from '@hanzo/gui'
 import * as React from 'react'
@@ -36,12 +41,31 @@ const KbdText = styled(SizableText, {
   color: '$quiet',
 })
 
-export type KbdProps = React.ComponentProps<'kbd'>
+/** The keycap: what `variant="cap"` puts in place of the flat chip. */
+const CAP = {
+  height: 18,
+  minW: 16,
+  px: '$0.5',
+  bg: '$panel',
+  borderWidth: 1,
+  borderColor: '$rim',
+  rounded: '$xs',
+  style: { userSelect: 'none', boxShadow: 'var(--shadow-underline, 0 1px 0 0 var(--border-strong))' },
+} as const
+
+export type KbdProps = React.ComponentProps<'kbd'> & {
+  /** `cap` is a keycap with an edge and an underline; the default is the flat chip. */
+  variant?: 'default' | 'cap'
+}
 
 /** One keyboard key, e.g. `<Kbd>Ctrl</Kbd>`. */
-export function Kbd({ children, ...props }: KbdProps) {
+export function Kbd({ children, variant = 'default', ...props }: KbdProps) {
   return (
-    <KbdFrame data-slot="kbd" {...(props as React.ComponentProps<typeof KbdFrame>)}>
+    <KbdFrame
+      data-slot="kbd"
+      {...(variant === 'cap' ? { 'data-variant': 'cap', ...CAP } : null)}
+      {...(props as React.ComponentProps<typeof KbdFrame>)}
+    >
       {ink(children, KbdText)}
     </KbdFrame>
   )
