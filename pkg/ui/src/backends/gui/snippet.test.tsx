@@ -170,3 +170,24 @@ describe('Snippet', () => {
     expect(bg(dark)).not.toBe(bg(retro))
   })
 })
+
+describe('Snippet, command', () => {
+  it('draws each line behind a "> " the reader does not copy or hear, on the panel ground', () => {
+    const markup = html(<Snippet variant="command" code={'hanzo login\nhanzo mcp add'} />)
+    const frame = markup.match(/<[a-z]+[^>]*data-slot="snippet"[^>]*>/)?.[0] ?? ''
+    expect(frame).toContain('data-variant="command"')
+    expect(frame).toMatch(/_bg-panel/)
+    expect(frame).toMatch(/_btlr-c-radius-xs/)
+    expect(frame).toMatch(/_gap-c-space-3/)
+    const lines = [...markup.matchAll(/data-slot="snippet-line"/g)]
+    expect(lines).toHaveLength(2)
+    expect(markup).toMatch(/aria-hidden="true"[^>]*>&gt; </)
+  })
+
+  it('takes actions in place of the copy button', () => {
+    const markup = html(<Snippet variant="command" code="x" actions={<span data-act>Run</span>} />)
+    expect(markup).toContain('data-act')
+    expect(markup).not.toContain('Copy code')
+  })
+})
+

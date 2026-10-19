@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Text, XStack } from '@hanzo/gui'
 
 import { fontMono } from '../core/fonts'
+import { ProgressRing } from '../backends/gui/progress-ring'
 
 export type FactProps = {
   /** The row's left-hand label. */
@@ -12,6 +13,21 @@ export type FactProps = {
   value: ReactNode
   /** Render a string value in the monospace face — an id, a hash, a path. */
   mono?: boolean
+  /**
+   * `row` (default) is the property-list row. `metric` is the record kit's
+   * metric row (twenty-ui's MetricRow, MIT — NOTICE): no rule, a 24px floor,
+   * 12px medium, the label quiet beside an optional icon, the value at the end,
+   * and an optional progress ring that the value labels.
+   */
+  variant?: 'row' | 'metric'
+  /** `metric`: an icon before the label. */
+  startIcon?: ReactNode
+  /** `metric`: a 14px ring at the end, 0–100 or `null` for indeterminate. */
+  progress?: number | null
+  /** `metric`: the ring's colour. */
+  progressColor?: string
+  /** `metric`: the ring's accessible value, when the value text is not it. */
+  progressValueText?: string
 }
 
 /**
@@ -24,7 +40,39 @@ export type FactProps = {
  * either could find the other. This is the one definition; the wider of the
  * two shapes won (a non-string `value` renders as given, not stringified).
  */
-export function Fact({ label, value, mono }: FactProps) {
+export function Fact({ label, value, mono, variant = 'row', startIcon, progress, progressColor, progressValueText }: FactProps) {
+  if (variant === 'metric') {
+    const shown =
+      typeof value === 'string' || typeof value === 'number' ? (
+        <Text fontSize="$1" fontWeight="500" color="$ink" numberOfLines={1} style={mono ? { fontFamily: fontMono } : undefined}>
+          {value}
+        </Text>
+      ) : (
+        value
+      )
+    return (
+      <XStack data-slot="fact" data-variant="metric" items="center" gap="$2" minH={24}>
+        <XStack flex={1} minW={0} items="center" gap="$1">
+          {startIcon}
+          <Text fontSize="$1" fontWeight="500" color="$soft" numberOfLines={1}>
+            {label}
+          </Text>
+        </XStack>
+        {progress !== undefined ? (
+          <ProgressRing
+            value={progress}
+            size="sm"
+            {...(progressColor ? { barColor: progressColor } : null)}
+            aria-label={`${label}${progressValueText ? `: ${progressValueText}` : ''}`}
+          >
+            {shown}
+          </ProgressRing>
+        ) : (
+          shown
+        )}
+      </XStack>
+    )
+  }
   return (
     <XStack
       justify="space-between"

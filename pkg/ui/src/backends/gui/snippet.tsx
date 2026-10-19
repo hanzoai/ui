@@ -13,6 +13,13 @@
  * no syntax highlighter, the same constraint `code-block.tsx` documents.
  * `theme` names a fixed palette for the code surface, independent of the
  * page's own light or dark theme; `size` picks the type scale.
+ *
+ * `variant="command"` is the record kit's command block (twenty-ui's
+ * CommandBlock, MIT — NOTICE): shell lines on the panel ground, 1px hairline,
+ * 4px corners, 12px padding, each line led by a "> " the reader does not copy
+ * or hear, wrapping anywhere, with `actions` (the copy button by default) 12px
+ * from the text and never shrinking. It follows the page's theme rather than a
+ * fixed palette, since it sits in settings and setup pages beside other chrome.
  */
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import { Check, Copy, FileText, Maximize2, Minimize2 } from '@hanzogui/lucide-icons-2'
@@ -21,7 +28,7 @@ import { Badge } from './badge'
 import { Button } from './button'
 import { slot } from './slot'
 
-export type SnippetVariant = 'default' | 'inline' | 'minimal'
+export type SnippetVariant = 'default' | 'inline' | 'minimal' | 'command'
 
 export type SnippetTheme = 'dark' | 'light' | 'github' | 'github-dark' | 'terminal' | 'retro'
 
@@ -61,6 +68,8 @@ export interface SnippetProps extends Omit<ComponentProps<'div'>, 'children'> {
   collapsedHeight?: number | string
   wrapLines?: boolean
   startLineNumber?: number
+  /** `command`: the controls beside the lines; the copy button unless given. */
+  actions?: ReactNode
 }
 
 const Frame = styled(YStack, {
@@ -178,6 +187,7 @@ export function Snippet({
   collapsedHeight = 200,
   wrapLines = false,
   startLineNumber = 1,
+  actions,
   ...props
 }: SnippetProps) {
   const resolvedVariant = variant ?? 'default'
@@ -197,6 +207,45 @@ export function Snippet({
       // No clipboard permission or no clipboard API — nothing else to do.
     }
   }, [code])
+
+  if (resolvedVariant === 'command') {
+    return (
+      <XStack
+        {...slot('snippet')}
+        data-variant="command"
+        items="flex-start"
+        justify="space-between"
+        gap="$3"
+        p="$3"
+        bg="$panel"
+        borderWidth={1}
+        borderColor="$borderColor"
+        rounded="$xs"
+        {...(props as ComponentProps<typeof XStack>)}
+      >
+        <YStack {...slot('snippet-body')} flex={1} minW={0}>
+          {code.split('\n').map((line, i) => (
+            <Mono
+              key={i}
+              data-slot="snippet-line"
+              size="$2"
+              color="$ink"
+              style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
+            >
+              <Mono aria-hidden color="$codeNumber" select="none">
+                {'> '}
+              </Mono>
+              {line}
+            </Mono>
+          ))}
+        </YStack>
+        <XStack {...slot('snippet-actions')} shrink={0} items="center" gap="$2">
+          {actions ??
+            (showCopyButton ? <CopyButton copied={copied} onPress={copy} muted={'$soft' as Muted} /> : null)}
+        </XStack>
+      </XStack>
+    )
+  }
 
   if (resolvedVariant === 'inline') {
     return (
