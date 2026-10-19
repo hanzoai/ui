@@ -13,8 +13,31 @@ import { Button, type ButtonTone, type ButtonVariant } from '../backends/gui/but
 import { ButtonGroup } from '../backends/gui/button-group'
 import { Density } from '../backends/gui/density'
 import { NumberField } from '../backends/gui/number-field'
+import { Input } from '../backends/gui/input'
+import { InputGroup } from '../backends/gui/input-group'
+import { CurrencyPicker } from '../backends/gui/currency-picker'
+import { PhoneCountryPicker } from '../backends/gui/phone-country-picker'
+import { CountrySelect } from '../backends/gui/country-select'
 
 const NOOP = () => {}
+
+/** Sample data: the pickers are data-free, so the gallery brings its own. */
+const CURRENCIES = [
+  { code: 'USD', name: 'US Dollar', symbol: '$' },
+  { code: 'EUR', name: 'Euro', symbol: '€' },
+  { code: 'GBP', name: 'British Pound', symbol: '£' },
+  { code: 'JPY', name: 'Japanese Yen', symbol: '¥', disabled: true },
+]
+const PHONES = [
+  { value: 'US', label: 'United States', callingCode: '1' },
+  { value: 'FR', label: 'France', callingCode: '33' },
+  { value: 'DE', label: 'Germany', callingCode: '49' },
+]
+const COUNTRIES = [
+  { value: 'FR', label: 'France' },
+  { value: 'DE', label: 'Germany' },
+  { value: 'GB', label: 'United Kingdom of Great Britain and Northern Ireland' },
+]
 
 const TONES: ButtonTone[] = ['accent', 'danger', 'success']
 /** The variants a tone restates: outline-shaped, ghost, soft and solid. */
@@ -96,6 +119,32 @@ export function Compound() {
         <NumberField aria-label="Invalid" size="sm" defaultValue={3} aria-invalid />
       </Section>
 
+      <Section name="pickers">
+        <InputGroup>
+          <CurrencyPicker currencies={CURRENCIES} defaultValue="USD" />
+          <NumberField aria-label="Amount" defaultValue={1200} />
+        </InputGroup>
+        <InputGroup size="sm">
+          <CurrencyPicker currencies={CURRENCIES} />
+          <Input aria-label="Amount, no currency" placeholder="0.00" />
+        </InputGroup>
+        <InputGroup size="sm">
+          <PhoneCountryPicker countries={PHONES} defaultValue="FR" />
+          <Input aria-label="Phone number" placeholder="6 12 34 56 78" />
+        </InputGroup>
+        <InputGroup size="xs">
+          <PhoneCountryPicker countries={PHONES} />
+          <Input aria-label="Phone number, no country" placeholder="Number" />
+        </InputGroup>
+        <InputGroup size="sm">
+          <CurrencyPicker currencies={CURRENCIES} defaultValue="EUR" disabled />
+          <Input aria-label="Disabled amount" disabled placeholder="0.00" />
+        </InputGroup>
+        <CountrySelect countries={COUNTRIES} defaultValue="GB" label="Country" />
+        <CountrySelect countries={COUNTRIES} size="sm" aria-label="Country, none" />
+        <CountrySelect countries={[]} size="xs" aria-label="Country, empty" />
+      </Section>
+
       <Density value="compact">
         <Section name="button-group-compact">
           <ButtonGroup aria-label="Update view, compact">
@@ -108,6 +157,11 @@ export function Compound() {
             Delete
           </Button>
           <NumberField aria-label="Compact amount" defaultValue={42} buttons />
+          <InputGroup>
+            <CurrencyPicker currencies={CURRENCIES} defaultValue="GBP" />
+            <NumberField aria-label="Compact grouped amount" defaultValue={99} />
+          </InputGroup>
+          <CountrySelect countries={COUNTRIES} defaultValue="DE" aria-label="Compact country" />
         </Section>
       </Density>
     </>
