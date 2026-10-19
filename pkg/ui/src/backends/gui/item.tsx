@@ -140,7 +140,7 @@ export function Item({
       render={asChild ? undefined : 'div'}
       {...(row ? touch(32, 44, 'y') : null)}
       {...((selected && indicator === 'none') || focused ? { bg: '$hover' } : null)}
-      {...(color === 'danger' ? { theme: 'red' as never } : null)}
+      {...(color === 'danger' && !row ? { theme: 'red' as never } : null)}
       {...(disabled
         ? {
             opacity: 0.5,
@@ -161,7 +161,10 @@ export function Item({
       ) : (
         <>
           {indicator === 'checkbox' ? <Box on={selected} /> : null}
-          {children}
+          {/* A list row's text is the record row's: 13px, the quiet ink, the error ink for danger. */}
+          {row
+            ? ink(children, SizableText, { size: '$2', color: color === 'danger' ? '$bad' : '$quiet', numberOfLines: 1, flex: 1, minW: 0 })
+            : children}
           {shortcut ? (
             typeof shortcut === 'string' ? (
               <Kbd>{shortcut}</Kbd>

@@ -80,7 +80,7 @@ export type PopoverContentProps = ComponentProps<typeof GuiPopover.Content> & {
   solid?: boolean
   /** `sm`: an 8px inset, content-sized up to the room there is. Unset, the nearest `<Density>` decides. */
   size?: 'default' | 'sm'
-  /** A 12×6 pointer toward the anchor, in the panel's fill. */
+  /** A 12×6 pointer toward the anchor, in the panel's fill (gui's arrow is a turned square: 8.5 across is 12 wide, 6 out). */
   arrow?: boolean
 }
 
@@ -111,7 +111,7 @@ const PopoverContent = ({ sideOffset, align, solid, size, arrow = false, childre
               : { p: '$4', width: 288 })}
             {...props}
           >
-            {arrow ? <GuiPopover.Arrow {...slot('popover-arrow')} size={6} bg={ground} borderWidth={1} borderColor="$borderColor" /> : null}
+            {arrow ? <GuiPopover.Arrow {...slot('popover-arrow')} size={8.5} bg={ground} borderWidth={1} borderColor="$borderColor" /> : null}
             {children}
           </GuiPopover.Content>
         </Density>

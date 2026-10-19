@@ -51,6 +51,7 @@ import { Input as GuiInput, Menu, Spinner, Text, XStack, YStack, isWeb, type Gui
 import { Check, ChevronLeft, ChevronRight, Circle, X } from "@hanzogui/lucide-icons-2"
 
 import { touch } from "./gesture"
+import { ink } from "./ink"
 import { Density, useDensity } from "./density"
 import type { MenuItemSpec } from "../../product/menu/items"
 import { MenuRowContent } from "../../product/MenuRow"
@@ -481,7 +482,9 @@ const DropdownMenuItem = /* @__PURE__ */ React.forwardRef<
       }}
       {...props}
     >
-      {children}
+      {/* gui wraps a lone string in its Text; beside the chevron the label is
+          one of two children, so it is wrapped here, the same way. */}
+      {opens ? ink(children, Text as never) : children}
       {opens ? <ChevronRight size={ICON - 2} ml="auto" color="$dim" /> : null}
     </Menu.Item>
   )
@@ -681,7 +684,7 @@ const DropdownMenuOptionItem = /* @__PURE__ */ React.forwardRef<GuiElement, Drop
       <>
         {mark === "checkbox" ? <Box on={on} /> : null}
         {typeof children === "string" ? (
-          <Text fontSize="$2" color="$ink" numberOfLines={1} flex={1} minW={0}>
+          <Text fontSize="$2" color="$quiet" numberOfLines={1} flex={1} minW={0}>
             {children}
           </Text>
         ) : (
@@ -992,10 +995,11 @@ const DropdownMenuLabel = /* @__PURE__ */ React.forwardRef<
         ref={ref}
         data-slot="dropdown-menu-label"
         data-variant="band"
-        minH={BAND_H}
+        height={BAND_H}
+        lineHeight={BAND_H}
         mx={-PAD}
-        px={ROW_PX + PAD}
-        py={2}
+        px={ROW_PX}
+        py={0}
         bg="$hover"
         fontSize="$1"
         fontWeight="400"
