@@ -90,6 +90,12 @@ export function Compound() {
       </Section>
 
       <Section name="button-state">
+        <Button size="sm" shortcut={['Mod', 'Enter']}>
+          Update view
+        </Button>
+        <Button size="sm" variant="ghost" shortcut={[['G'], ['P']]}>
+          Go to people
+        </Button>
         <Button isLoading loadingPosition="center">
           Saving
         </Button>
