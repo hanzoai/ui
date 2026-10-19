@@ -17,7 +17,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
-import { Banner } from './banner'
+import { Banner, BannerAction } from './banner'
 
 const wrap = (node: React.ReactNode) => (
   <GuiProvider config={config} defaultTheme="dark">
@@ -130,3 +130,52 @@ describe('Banner', () => {
     view.cleanup()
   })
 })
+
+describe('Banner, the record shape', () => {
+  it('a status draws the record banner: centred, 40 tall, 8 padding, 12 gap, solid on the status’s fill', () => {
+    const el = tag(html(<Banner status="error">Sync failed.</Banner>), 'banner')
+    expect(el).toContain('data-variant="solid"')
+    expect(el).toContain('data-color="red"')
+    expect(el).toMatch(/_minH-40px/)
+    expect(el).toMatch(/_gap-c-space-3/)
+    expect(el).toMatch(/_justify-center/)
+    expect(el).toMatch(/_bg-destructive/)
+  })
+
+  it('soft paints the tint in the ink; info is the accent, warning the warning state', () => {
+    expect(tag(html(<Banner status="warning" emphasis="soft">x</Banner>), 'banner')).toMatch(/_bg-state-warni/)
+    const markup = html(<Banner status="info" emphasis="soft">x</Banner>)
+    expect(tag(markup, 'banner-message')).toMatch(/_col-primary/)
+  })
+
+  it('inline is soft, rounded, 16 below unless embedded, and leads with the info icon', () => {
+    const markup = html(<Banner status="success" layout="inline">x</Banner>)
+    const el = tag(markup, 'banner')
+    expect(el).toContain('data-variant="soft"')
+    expect(el).toMatch(/_btlr-c-radius-3/)
+    expect(el).toMatch(/_mb-c-space-4/)
+    expect(markup).toContain('data-slot="banner-icon"')
+    expect(tag(html(<Banner status="success" layout="inline" embedded>x</Banner>), 'banner')).toMatch(/_mb-0px/)
+  })
+
+  it('compact is sized to its content up to 512, its ends apart', () => {
+    const el = tag(html(<Banner status="error" layout="compact">x</Banner>), 'banner')
+    expect(el).toMatch(/_maxW-512px/)
+    expect(el).toMatch(/_justify-space-betwe/)
+  })
+
+  it('an action is the banner’s own small outline button, edged in the banner’s ink', () => {
+    const markup = html(<Banner status="info" action={<BannerAction>Reconnect</BannerAction>}>x</Banner>)
+    const action = tag(markup, 'banner-action')
+    expect(action).toContain('data-size="xs"')
+    expect(action).toMatch(/color-mix/)
+    expect(markup).toContain('Reconnect')
+  })
+
+  it('without any record prop it is the legacy strip, untouched', () => {
+    const el = tag(html(<Banner variant="warning">x</Banner>), 'banner')
+    expect(el).toContain('data-variant="warning"')
+    expect(el).not.toContain('data-layout')
+  })
+})
+

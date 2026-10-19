@@ -15,7 +15,11 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
-import { Alert, AlertDescription, AlertTitle } from './alert'
+import { Alert, AlertDescription, AlertTitle, CalloutAction } from './alert'
+import { act } from 'react'
+import { createRoot } from 'react-dom/client'
+import { vi } from 'vitest'
+import { audit } from '../../../test/axe'
 
 const html = (node: React.ReactNode) =>
   renderToStaticMarkup(
@@ -112,3 +116,56 @@ describe('Alert', () => {
     expect(markup).toMatch(/<span[^>]*data-slot="sizable-text"[^>]*>plain<\/span>/)
   })
 })
+
+describe('Alert as the callout', () => {
+  it('a status draws the callout: 512 wide at most, 12 12 8, 8px corners, the colour’s faint ground and edge', () => {
+    const el = tag(html(<Alert status="info" title="Code steps run in a sandbox" />), 'alert')
+    expect(el).toContain('data-variant="callout"')
+    expect(el).toMatch(/_maxW-512px/)
+    expect(el).toMatch(/_pt-c-space-3/)
+    expect(el).toMatch(/_pb-c-space-2/)
+    expect(el).toMatch(/_btlr-c-radius-3/)
+    expect(el).toMatch(/_bg-data-blue-1/)
+    expect(el).toMatch(/_btc-data-blue-6/)
+  })
+
+  it('a quiet callout is a note; an error or a warning is an alert', () => {
+    expect(tag(html(<Alert status="info" title="t" />), 'alert')).toContain('role="note"')
+    expect(tag(html(<Alert status="error" title="t" />), 'alert')).toContain('role="alert"')
+  })
+
+  it('the title is one line, the description indented to clear the icon, the footer holds the action', () => {
+    const markup = html(<Alert status="success" title="Verified" description="It answered 200." action={<CalloutAction>Open</CalloutAction>} />)
+    expect(tag(markup, 'alert-description')).toMatch(/_pl-24px/)
+    expect(tag(markup, 'alert-footer')).toMatch(/_justify-flex-end/)
+    expect(markup).toContain('Open')
+  })
+
+  it('fullWidth lifts the cap; icon={null} draws none and the description stops indenting', () => {
+    const markup = html(<Alert color="gray" title="t" description="d" icon={null} fullWidth />)
+    expect(tag(markup, 'alert')).not.toMatch(/_maxW-512px/)
+    expect(markup).not.toContain('data-slot="alert-icon"')
+    expect(tag(markup, 'alert-description')).toMatch(/_pl-0px/)
+  })
+
+  it('the dismiss button calls onDismiss, and axe finds nothing', async () => {
+    ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
+    const onDismiss = vi.fn()
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    const root = createRoot(host)
+    act(() =>
+      root.render(
+        <GuiProvider config={config} defaultTheme="dark">
+          <Alert status="warning" title="Rate limited" description="Try again in a minute." onDismiss={onDismiss} closeLabel="Hide" />
+        </GuiProvider>,
+      ),
+    )
+    act(() => host.querySelector<HTMLElement>('[aria-label="Hide"]')!.click())
+    expect(onDismiss).toHaveBeenCalledTimes(1)
+    expect(await audit(host)).toEqual([])
+    act(() => root.unmount())
+    host.remove()
+  })
+})
+
