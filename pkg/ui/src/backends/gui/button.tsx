@@ -485,10 +485,14 @@ function Button({ tooltip, ...props }: ButtonProps) {
   const label = typeof tooltip === 'string' && props['aria-label' as keyof ButtonProps] == null ? { 'aria-label': tooltip } : null
   return (
     <Tooltip delay={TOOLTIP_DELAY} placement="bottom">
-      {/* The trigger is a wrapper, not the button: a disabled button takes no
-          pointer events, and the tooltip has to show over it all the same. */}
-      <TooltipTrigger {...({ 'data-slot': 'button-tooltip' } as object)} display="inline-flex" self="flex-start">
-        <Pressable {...props} {...(label as object)} />
+      {/* The trigger IS the button (asChild). A wrapper div was the trigger
+          before, and gui stamps `aria-expanded` on its trigger — axe fails that
+          on a div (aria-allowed-attr). A disabled button takes no pointer
+          events, so one with a tooltip stays reachable instead: aria-disabled,
+          focusable, inert to presses (`focusableWhenDisabled`), and the tooltip
+          can say why it is off. */}
+      <TooltipTrigger asChild>
+        <Pressable {...props} {...(props.disabled ? { focusableWhenDisabled: true } : null)} {...(label as object)} />
       </TooltipTrigger>
       <TooltipContent>{tooltip}</TooltipContent>
     </Tooltip>

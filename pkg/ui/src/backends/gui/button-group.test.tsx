@@ -213,7 +213,7 @@ describe('Button in a live DOM', () => {
     expect(onPress).not.toHaveBeenCalled()
   })
 
-  it('a string tooltip names an icon-only button, and the trigger wraps it', () => {
+  it('a string tooltip names an icon-only button, which is its own trigger', async () => {
     mount(
       <Button size="icon-sm" variant="ghost" tooltip="Close side panel">
         ×
@@ -221,7 +221,24 @@ describe('Button in a live DOM', () => {
     )
     const el = host.querySelector('[data-slot="button"]')!
     expect(el.getAttribute('aria-label')).toBe('Close side panel')
-    expect(el.closest('[data-slot="button-tooltip"]')).not.toBeNull()
+    // No wrapper: the button is the trigger, so nothing but a button carries
+    // the trigger's aria state, and axe passes.
+    expect(el.parentElement?.getAttribute('data-slot')).not.toBe('button-tooltip')
+    expect(await audit(host)).toEqual([])
+  })
+
+  it('a disabled button with a tooltip stays reachable, so the tooltip can say why', () => {
+    const onPress = vi.fn()
+    mount(
+      <Button size="icon-sm" variant="ghost" tooltip="Nothing to undo" disabled onPress={onPress}>
+        ↶
+      </Button>,
+    )
+    const el = host.querySelector<HTMLElement>('[data-slot="button"]')!
+    expect(el.getAttribute('aria-disabled')).toBe('true')
+    expect(el.hasAttribute('disabled')).toBe(false)
+    act(() => el.click())
+    expect(onPress).not.toHaveBeenCalled()
   })
 
   it('a group of buttons passes axe', async () => {
