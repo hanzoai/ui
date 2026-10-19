@@ -1,6 +1,13 @@
-// Hanzo data-app tokens. Brand-neutral, dark-first — the zinc-on-black identity
-// the Base/console surfaces use. Tag colors are muted fills with legible text,
-// resolved once here so every tag (select, multiSelect, status) reads the same.
+// Hanzo data-app colours.
+//
+// The components draw with @hanzo/ui's theme rungs and its data palette, so they
+// follow the theme they are mounted in. What remains here is for a host that
+// paints its own element in a data colour: `TAG_TONES` names each hue's tag pair
+// as the palette's custom properties (`--data-<hue>-<step>`: fill step 3, text
+// step 11, edge step 6), which resolve in either theme wherever @hanzo/ui's
+// stylesheet is mounted. `tokens` is the fixed dark palette the views drew with
+// before the record kit; the field renderers, the table and the record views no
+// longer read it, and it stays for callers that do.
 import type { TagColor } from './field/types'
 
 export interface TagTone {
@@ -9,24 +16,26 @@ export interface TagTone {
   border: string
 }
 
-/** TagColor → tone. Muted, dark-surface friendly. One source of truth. */
-export const TAG_TONES: Record<TagColor, TagTone> = {
-  gray:   { bg: '#27272a', fg: '#e4e4e7', border: '#3f3f46' },
-  blue:   { bg: '#1e3a5f', fg: '#bfdbfe', border: '#1e40af' },
-  green:  { bg: '#14432a', fg: '#bbf7d0', border: '#166534' },
-  amber:  { bg: '#451a03', fg: '#fde68a', border: '#92400e' },
-  red:    { bg: '#450a0a', fg: '#fecaca', border: '#991b1b' },
-  purple: { bg: '#2e1065', fg: '#ddd6fe', border: '#6d28d9' },
-  pink:   { bg: '#500724', fg: '#fbcfe8', border: '#9d174d' },
-  teal:   { bg: '#042f2e', fg: '#99f6e4', border: '#0f766e' },
-  orange: { bg: '#431407', fg: '#fed7aa', border: '#9a3412' },
-}
+const HUES: TagColor[] = [
+  'red', 'ruby', 'crimson', 'tomato', 'orange', 'amber', 'yellow', 'lime', 'grass', 'green', 'jade', 'mint', 'teal',
+  'cyan', 'sky', 'blue', 'iris', 'violet', 'purple', 'plum', 'pink', 'bronze', 'gold', 'brown', 'gray',
+  'mauve', 'olive', 'sage', 'sand', 'slate',
+]
+
+const tone = (hue: TagColor): TagTone => ({
+  bg: `var(--data-${hue}-3)`,
+  fg: `var(--data-${hue}-11)`,
+  border: `var(--data-${hue}-6)`,
+})
+
+/** TagColor → its tag pair and edge, as the data palette's custom properties. One source of truth: @hanzo/tokens. */
+export const TAG_TONES: Record<TagColor, TagTone> = Object.fromEntries(HUES.map((h) => [h, tone(h)])) as Record<TagColor, TagTone>
 
 export function tagTone(color: TagColor | undefined): TagTone {
-  return TAG_TONES[color ?? 'gray']
+  return TAG_TONES[color ?? 'gray'] ?? TAG_TONES.gray
 }
 
-/** Core surface tokens (raw hex so components are theme-config independent). */
+/** The fixed dark palette the views drew with before the record kit (dark only, theme-blind). */
 export const tokens = {
   text: '#f4f4f5',
   textMuted: '#a1a1aa',
