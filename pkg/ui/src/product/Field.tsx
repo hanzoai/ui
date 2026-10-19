@@ -135,17 +135,35 @@ export function FieldTextArea({
   )
 }
 
+/**
+ * A switch, alone or as a settings row.
+ *
+ * With a `label` it is twenty-ui's SettingsRow (MIT, NOTICE): the whole 32px row
+ * is the switch's `<label>`, so a press anywhere on it toggles, with an optional
+ * leading element and a description after a middle dot, the row's hover rung
+ * and the record row's corner and inset. Without one it is the bare switch it
+ * always was.
+ */
 export function FieldSwitch({
   checked,
   onChange,
   disabled,
+  label,
+  description,
+  start,
 }: {
   checked: boolean
   onChange: (v: boolean) => void
   disabled?: boolean
+  /** The row's words; the switch's accessible name. */
+  label?: ReactNode
+  /** Said after the label, quieter. */
+  description?: ReactNode
+  /** An icon or avatar before the label. */
+  start?: ReactNode
 }) {
   const track = useFieldTrack('FieldSwitch')
-  return (
+  const control = (
     <Switch
       checked={checked}
       onCheckedChange={(v: boolean) => {
@@ -157,6 +175,35 @@ export function FieldSwitch({
     >
       <Switch.Thumb />
     </Switch>
+  )
+  if (label == null) return control
+  return (
+    <XStack
+      {...({ 'data-slot': 'field-switch-row' } as object)}
+      render="label"
+      items="center"
+      gap={8}
+      px={4}
+      minH={32}
+      rounded="$xs"
+      cursor={disabled ? 'default' : 'pointer'}
+      opacity={disabled ? 0.5 : 1}
+      hoverStyle={disabled ? undefined : { bg: '$hover' }}
+    >
+      {start}
+      <XStack flex={1} minW={0} items="center" gap={4}>
+        <Text fontSize="$2" color="$quiet" numberOfLines={1} shrink={0}>
+          {label}
+        </Text>
+        {description ? (
+          <Text fontSize="$2" color="$dim" numberOfLines={1} shrink={1}>
+            {'· '}
+            {description}
+          </Text>
+        ) : null}
+      </XStack>
+      {control}
+    </XStack>
   )
 }
 

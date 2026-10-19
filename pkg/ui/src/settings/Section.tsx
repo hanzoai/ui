@@ -18,6 +18,7 @@ import { SizableText, XStack, YStack } from '@hanzo/gui'
 import type { ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
+import { useDensity } from '../backends/gui/density'
 import { CopyButton } from '../product/CopyButton'
 
 export interface HeadingProps {
@@ -30,21 +31,29 @@ export interface HeadingProps {
   level?: 1 | 2 | 3
 }
 
-/** A section's title, what it is for, and its one action. */
+/**
+ * A section's title, what it is for, and its one action.
+ *
+ * Under a compact `<Density>` it is the record settings header (twenty-ui's
+ * Section, MIT, NOTICE): a 13px semibold title, the description in the quiet
+ * ink on a 20px line 8px under it and clamped to five lines, the action never
+ * shrinking, and 16px before what follows. The regular heading is unchanged.
+ */
 export function Heading({ title, detail, action, level = 2 }: HeadingProps) {
+  const compact = useDensity() === 'compact'
   return (
-    <XStack {...slot('settings-heading')} items="flex-start" gap="$3">
-      <YStack flex={1} minW={0} gap="$1">
-        <SizableText role="heading" aria-level={level} size="$6" color="$ink">
+    <XStack {...slot('settings-heading')} items="flex-start" gap={compact ? '$2' : '$3'} {...(compact ? { mb: '$4' } : null)}>
+      <YStack flex={1} minW={0} gap={compact ? '$2' : '$1'}>
+        <SizableText role="heading" aria-level={level} size={compact ? '$2' : '$6'} {...(compact ? { fontWeight: '600' } : null)} color="$ink">
           {title}
         </SizableText>
         {detail ? (
-          <SizableText size="$2" color="$soft">
+          <SizableText size="$2" color={compact ? '$quiet' : '$soft'} {...(compact ? { lineHeight: 20, numberOfLines: 5 } : null)}>
             {detail}
           </SizableText>
         ) : null}
       </YStack>
-      {action}
+      {compact && action ? <XStack shrink={0}>{action}</XStack> : action}
     </XStack>
   )
 }
