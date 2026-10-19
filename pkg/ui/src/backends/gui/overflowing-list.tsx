@@ -14,7 +14,8 @@
  *
  * Re-expressed from twenty-ui's OverflowingList (MIT, see NOTICE): a 4px gap, a
  * 24px-minimum count on the 12px rung, shown on hover, focus or while open by
- * default; the popup is the package Popover, items wrapping, at least 220 wide.
+ * default; the popup is the package Popover, items wrapping, as wide as the list
+ * and at least 220.
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { Children, isValidElement, useCallback, useMemo, useState, type ComponentProps, type ReactNode } from 'react'
@@ -119,7 +120,7 @@ export function OverflowingList({
       {...props}
     >
       {/* The measuring copy: every item at its natural width, out of flow and unseen. */}
-      <XStack aria-hidden position="absolute" t={0} l={0} opacity={0} pointerEvents="none" gap={GAP} {...({ inert: '' } as object)}>
+      <XStack aria-hidden position="absolute" t={0} l={0} opacity={0} pointerEvents="none" gap={GAP} {...({ inert: true } as object)}>
         {items.map((item, i) => (
           <XStack key={item.key ?? i} shrink={0} onLayout={measure(i)}>
             {item}
@@ -154,7 +155,17 @@ export function OverflowingList({
               <SizableText size="$1" color="$ink">{`+${hidden}`}</SizableText>
             </XStack>
           </PopoverTrigger>
-          <PopoverContent p="$2" width="auto" minW={POPUP_MIN} {...popupProps}>
+          {/* As wide as the list it opens from, and never under 220 — a WIDTH, not
+              a floor, so the items wrap inside it (measured: a floor let the row
+              of every item run 920px wide). The anchor's width is a measured
+              number, so it rides an inline style: as a style prop it would mint
+              one atomic class per width it ever measured. */}
+          <PopoverContent
+            p="$2"
+            minW={POPUP_MIN}
+            style={{ width: Math.max(POPUP_MIN, Math.round(avail ?? 0)) }}
+            {...popupProps}
+          >
             <YStack {...slot('overflowing-list-popup')} maxH={320} overflow="scroll">
               <XStack flexWrap="wrap" gap={GAP}>
                 {items}
