@@ -59,6 +59,20 @@ describe('Avatar', () => {
     expect(markup).toContain('AB')
   })
 
+  it('a number is a box, as it was before the record sizes: the account circle at that size', () => {
+    // hanzo.app's settings draw <Avatar size={32}> and <Avatar size={64}>.
+    const el = tag(
+      html(
+        <Avatar size={64}>
+          <AvatarFallback>AB</AvatarFallback>
+        </Avatar>,
+      ),
+    )
+    expect(el).not.toContain('data-size')
+    expect(el).toMatch(/_width-64px/)
+    expect(el).not.toMatch(/_btlr-c-radius-2x/)
+  })
+
   it.each([
     ['xs', 12],
     ['sm', 14],

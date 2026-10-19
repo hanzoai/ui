@@ -43,9 +43,15 @@ const RECORD: Record<AvatarSize, { box: number; font: string }> = {
 
 const RADIUS: Record<AvatarShape, string> = { square: '$2xs', rounded: '$xs', circle: '$10' }
 
+type GuiSize = ComponentProps<typeof GuiAvatar>['size']
+
 export type AvatarProps = Omit<ComponentProps<typeof GuiAvatar>, 'size'> & {
-  /** A record size. Unset, the 32px account avatar. */
-  size?: AvatarSize
+  /**
+   * A record size (xs…xl), or — as before the record sizes — any box gui's
+   * Avatar takes (`size={64}`), which keeps the circular account look. Unset,
+   * the 32px account avatar.
+   */
+  size?: AvatarSize | GuiSize
   /** Square (default for a record size), rounded, or circle (the default with no size). */
   shape?: AvatarShape
   /** The image. With `name`, the avatar draws its own image and fallback. */
@@ -92,8 +98,9 @@ const Avatar = ({
   style,
   ...props
 }: AvatarProps) => {
-  const record = size ? RECORD[size] : null
-  const box = record?.box ?? SIZE
+  const record = typeof size === 'string' && size in RECORD ? RECORD[size as AvatarSize] : null
+  // A box gui's Avatar takes directly: the account look at that size.
+  const box = record?.box ?? (size != null && !record ? size : SIZE)
   const corner = RADIUS[shape ?? (record ? 'square' : 'circle')]
   const seed = colorSeed ?? name ?? ''
   const { style: hueStyle, tone } = useTone(hueOf(seed), [4, 5, 6, 12])
@@ -127,10 +134,10 @@ const Avatar = ({
   return (
     <GuiAvatar
       data-slot="avatar"
-      {...(size ? { 'data-size': size } : null)}
+      {...(record ? { 'data-size': size } : null)}
       {...(onPress ? press(onPress) : null)}
       circular={corner === '$10'}
-      size={box}
+      size={box as GuiSize}
       {...(record || shape ? { rounded: corner } : null)}
       shrink={0}
       overflow="hidden"
