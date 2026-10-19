@@ -223,12 +223,12 @@ export function Rows() {
 }
 
 /** A record picker: search, a scrollable section of options, actions, an empty line. */
-export function Picker({ autoFocus = false }: { autoFocus?: boolean }) {
+export function Picker({ autoFocus = false, open = true }: { autoFocus?: boolean; open?: boolean }) {
   const [q, setQ] = useState('')
   const all = ['Ada Lovelace', 'Grace Hopper', 'Katherine Johnson', 'Margaret Hamilton', 'Radia Perlman', 'Barbara Liskov', 'Frances Allen']
   const shown = all.filter((n) => n.toLowerCase().includes(q.trim().toLowerCase()))
   return (
-    <DropdownMenu open>
+    <DropdownMenu {...(open ? { open: true } : null)}>
       <DropdownMenuTrigger asChild>
         <Button size="sm" variant="outline">
           Assignee
@@ -256,9 +256,9 @@ export function Picker({ autoFocus = false }: { autoFocus?: boolean }) {
 }
 
 /** View options: pages, a back row, a header with a close. */
-export function Paged() {
+export function Paged({ open = true }: { open?: boolean }) {
   return (
-    <DropdownMenu open defaultPage="options">
+    <DropdownMenu {...(open ? { open: true } : null)} defaultPage="options">
       <DropdownMenuTrigger asChild>
         <Button size="sm" variant="ghost">
           Options
