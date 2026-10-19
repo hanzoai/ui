@@ -97,9 +97,9 @@ const BadgeFrame = styled(XStack, {
   defaultVariants: { variant: 'default' },
 })
 
-/** The record sizes' type: xs on Hanzo's 10px floor, sm and md on the 12px rung. */
+/** The record sizes' type, all on the 12px rung — Hanzo's text floor (twenty-ui's xs is 8px). */
 const TYPE: Record<Exclude<BadgeSize, 'lg'>, Record<string, unknown>> = {
-  xs: { fontSize: 'var(--text-floor, 10px)', lineHeight: 14, fontWeight: '600' },
+  xs: { size: '$1', lineHeight: 14, fontWeight: '600' },
   sm: { size: '$1', lineHeight: 16, fontWeight: '500' },
   md: { size: '$1', lineHeight: 18, fontWeight: '500' },
 }

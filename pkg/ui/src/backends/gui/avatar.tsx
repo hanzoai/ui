@@ -28,10 +28,14 @@ const SIZE = 32
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 export type AvatarShape = 'square' | 'rounded' | 'circle'
 
-/** The record sizes: box, and the initial's rung. xs and sm sit on Hanzo's 10px text floor. */
+/**
+ * The record sizes: box, and the initial's rung. xs and sm sit on Hanzo's text
+ * floor, 12px (design's --text-floor): twenty-ui draws 8 and 10px initials there,
+ * which Hanzo does not render. The box clips, so the glyph never spills.
+ */
 const RECORD: Record<AvatarSize, { box: number; font: string }> = {
-  xs: { box: 12, font: 'var(--text-floor, 10px)' },
-  sm: { box: 14, font: 'var(--text-floor, 10px)' },
+  xs: { box: 12, font: '$1' },
+  sm: { box: 14, font: '$1' },
   md: { box: 16, font: '$1' },
   lg: { box: 24, font: '$2' },
   xl: { box: 40, font: '$4' },
@@ -108,7 +112,7 @@ const Avatar = ({
           : icon
       ) : (
         <SizableText
-          fontSize={(record?.font ?? '$2') as never}
+          fontSize={(record?.font ?? '$2') as '$1'}
           lineHeight={box}
           fontWeight="500"
           color={trimmed ? tone(12) : '$soft'}

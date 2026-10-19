@@ -5,8 +5,8 @@
  *
  * `variant="section"` is the caption over a group of rows — "Favorites",
  * "Workspace", a side panel's group — 12px semibold in the dim ink, and
- * `section-sm` the same on the 10px floor (twenty-ui's internal Label, MIT, see
- * NOTICE: 11 and 9px there, on Hanzo's ramp here).
+ * `section-sm` the same with a tighter line, both on Hanzo's 12px text floor
+ * (twenty-ui's internal Label, MIT, see NOTICE: 11 and 9px there).
  */
 import { Label as GuiLabel } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
@@ -18,7 +18,7 @@ export type LabelProps = ComponentProps<typeof GuiLabel> & {
 
 const SECTION = {
   section: { fontSize: '$1', lineHeight: '$1' },
-  'section-sm': { fontSize: 'var(--text-floor, 10px)' as never, lineHeight: 14 },
+  'section-sm': { fontSize: '$1', lineHeight: 14 },
 } as const
 
 const Label = ({ variant = 'default', ...props }: LabelProps) => (

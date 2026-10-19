@@ -137,7 +137,7 @@ function Parts() {
       </Section>
 
       <Section name="overflowing-list">
-        <OverflowingList maxW={220} showOverflowCount="always">
+        <OverflowingList maxW={220} maxInlineCount={3} showOverflowCount="always">
           {['Lead', 'Customer', 'Partner', 'Investor', 'Press'].map((t, i) => (
             <Tag key={t} color={hues[i * 3]}>
               {t}
