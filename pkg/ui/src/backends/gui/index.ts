@@ -439,3 +439,5 @@ export { STATUS_COLOR, STATUS_PAINT, type FeedbackColor, type FeedbackPaint, typ
 export { SKELETON_HEIGHT, type SkeletonProps, type SkeletonSize } from './skeleton'
 export type { ProgressProps } from './progress'
 export type { JsonHighlight, JsonTreeEntry, JsonTreeLabels, JsonTreeVariant } from './json-tree'
+export { Glyph, IconPicker, loadIcons, useIcons, type GlyphProps, type IconPickerProps } from './icon-picker'
+export { TABLER, CONCEPTS, FIELD_ICONS, resolveIcon, iconWords, type Concept, type IconKind } from './icons'

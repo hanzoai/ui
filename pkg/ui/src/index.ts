@@ -728,6 +728,24 @@ export {
   type JsonTreeVariant,
 } from './backends/gui'
 
+// The record kit's icons: a stored name drawn (Lucide, Tabler names mapped),
+// the picker, and the concept and field-type tables.
+export {
+  Glyph,
+  IconPicker,
+  loadIcons,
+  useIcons,
+  TABLER,
+  CONCEPTS,
+  FIELD_ICONS,
+  resolveIcon,
+  iconWords,
+  type GlyphProps,
+  type IconPickerProps,
+  type Concept,
+  type IconKind,
+} from './backends/gui'
+
 // `Hanzo` — the root, and the only thing an app mounts. It carries the gui
 // config and the generated stylesheet, so `npm i @hanzo/ui` is the whole setup:
 // no gui.config.ts, no CSS import, no generator script.

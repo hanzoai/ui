@@ -22,6 +22,7 @@ import { Compound } from './compound'
 import { Menus } from './menus'
 import { Feedback } from './feedback'
 import { Frames } from './frames'
+import { IconsGallery } from './icons'
 
 const NOOP = () => {}
 
@@ -87,6 +88,7 @@ export function Records() {
       <Menus />
       <Feedback />
       <Frames />
+      <IconsGallery />
     </>
   )
 }
