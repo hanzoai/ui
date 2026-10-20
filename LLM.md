@@ -264,6 +264,7 @@ answer it, so no claim is recorded.
 | `@hanzo/ui/{canvas,dashboard,usage,gitops}` | the optional-peer kits (each re-exports its home package) |
 | `@hanzo/ui/settings` | a settings page (`Settings`) and the parts every section is drawn from (`Heading`, `Group`, `Card`, `Row`, `Field`, `Soft`, `Note`, `Once`) |
 | `@hanzo/ui/catalog` | a catalogue page (`Shelf`) and its cards (`Tiles`, `Tile`, `Featured`, `Add`) — web-only, on `@hanzo/ui/grid` |
+| `@hanzo/ui/masthead` | hanzo.ai's header for every site that wears it (`Masthead`: the name, the company menu, the five menus, ⌘K, Log in ▾, Try Hanzo, the phone sheet) and its tree; `footer()` hands `@hanzo/ui/marketing`'s `Footer` the same six doors. Another host passes `origin="https://hanzo.ai"` and its own `here`. `/masthead/nav` is the tree alone, data. Needs `@hanzogui/shell` |
 | `@hanzo/ui/product/*` · `/primitives/*` | deep imports — one module without its barrel |
 | `@hanzo/ui/product/pure` | the product layer's RULES with none of the layer (below) |
 | `@hanzo/ui/product/theme-toggle-next` | the `@hanzogui/next-theme` binding, off the barrel on purpose (below) |
