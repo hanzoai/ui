@@ -11,12 +11,30 @@
 /** The rate both streaming endpoints take audio at. */
 export const RATE = 16000;
 
+/** The input chosen on this page (`choose`), or null for the system's default. */
+let device: string | null = null;
+
+/**
+ * The microphone every later `capture` opens, by `MediaDeviceInfo.deviceId`;
+ * null is the system's default. A device that has gone falls back to the
+ * default rather than refusing.
+ */
+export function choose(id: string | null): void {
+  device = id || null;
+}
+
 /** The permission ask, and the echo-cancelled stream that comes back. */
 export async function capture(scope: unknown): Promise<MediaStream> {
   const nav = (scope as { navigator?: Navigator })?.navigator ?? globalThis.navigator;
-  return await nav.mediaDevices.getUserMedia({
-    audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-  });
+  const audio = { echoCancellation: true, noiseSuppression: true, autoGainControl: true };
+  if (device) {
+    try {
+      return await nav.mediaDevices.getUserMedia({ audio: { ...audio, deviceId: { exact: device } } });
+    } catch (e) {
+      if (refusal(e) !== "absent") throw e;
+    }
+  }
+  return await nav.mediaDevices.getUserMedia({ audio });
 }
 
 /** getUserMedia's DOMException names, in this package's vocabulary. */

@@ -22,6 +22,7 @@ export { speech, SpeechError } from "./transport.js";
 export type { SpeechConfig } from "./transport.js";
 
 export { capability, blocker, streamBlocker } from "./capability.js";
+export { choose } from "./mic.js";
 export type { Capability } from "./capability.js";
 
 export { listen } from "./listen.js";
