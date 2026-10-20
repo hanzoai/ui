@@ -100,7 +100,6 @@ const PANEL = 'var(--chrome-panel)'
 const DROP = '0 24px 60px -16px color-mix(in srgb, var(--pure-black) 75%, transparent)'
 /** The bar's glass, once the page moves under it. */
 const GLASS = '$background/72'
-const BLUR = 'blur(20px) saturate(1.8)'
 /** The highest z-index there is. The search palette stands in a fixed layer at
  *  it, so nothing fixed to the window draws over an open palette. */
 const TOP = 2147483647
@@ -545,7 +544,8 @@ export function Masthead({
         data-slot="masthead"
         {...BAR}
         bg={lifted ? PANEL : grounded ? GLASS : 'transparent'}
-        backdropFilter={!lifted && grounded ? BLUR : 'none'}
+        // The chrome's own blur, by name: @hanzo/design's one radius, the glass every bar wears.
+        backdropFilter={!lifted && grounded ? 'var(--chrome-blur)' : 'none'}
         transition="quickest"
         // inline-style: custom properties @hanzogui/shell's account menu reads; no prop sets a variable.
         style={INK}
@@ -599,7 +599,7 @@ export function Masthead({
             b={0}
             z="var(--z-base)"
             bg="$black/40"
-            backdropFilter="blur(24px) saturate(1.2)"
+            backdropFilter="var(--chrome-blur)"
           />
         ) : null}
         <Text
