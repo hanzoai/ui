@@ -137,14 +137,19 @@ describe('Grip', () => {
     ui.cleanup()
   })
 
-  it('bar draws a visible handle: 4×48 on an edge, 3×32 between panes', () => {
+  it('bar draws a handle, 4×48 on an edge and 3×32 between panes, only while it is reached for', () => {
     for (const [bar, w, h] of [['edge', 4, 48], ['inline', 3, 32]] as const) {
       const { ui } = one({ bar })
-      const handle = ui.grip.querySelector<HTMLElement>('[data-slot="grip-bar"]')!
-      expect(handle, bar).not.toBeNull()
-      expect(handle.className).toMatch(new RegExp(`_width-${w}px`))
-      expect(handle.className).toMatch(new RegExp(`_height-${h}px`))
-      expect(handle.className).toMatch(/_bg-raised/)
+      const handle = () => ui.grip.querySelector<HTMLElement>('[data-slot="grip-bar"]')!
+      expect(handle(), bar).not.toBeNull()
+      expect(handle().className).toMatch(new RegExp(`_width-${w}px`))
+      expect(handle().className).toMatch(new RegExp(`_height-${h}px`))
+      expect(handle().className).toMatch(/_bg-transparent/)
+      act(() => {
+        ui.grip.dispatchEvent(new MouseEvent('pointerover', { bubbles: true }))
+        ui.grip.dispatchEvent(new MouseEvent('pointerenter', { bubbles: false }))
+      })
+      expect(handle().className).toMatch(/_bg-hint/)
       ui.cleanup()
     }
   })

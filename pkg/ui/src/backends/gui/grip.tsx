@@ -33,12 +33,13 @@
  *
  * Moved here from @hanzo/build, where hanzo.ai's sidebar and asides used it.
  *
- * `bar` draws a handle a person can see before reaching for it (twenty-ui's
- * ResizeHandle, MIT, NOTICE): a pill in the middle of the band, 4×48 on an edge
- * (`edge`) or 3×32 between two panes (`inline`), the raised rung at rest, the
- * soft one under the pointer, and the strong edge while it moves, lengthened by
- * a fifth whenever it is reached for. A drag in progress is cancelled by Escape,
- * which puts the box back where the drag found it. `step` sets the key's step.
+ * `bar` draws a handle instead of the line (twenty-ui's ResizeHandle, MIT,
+ * NOTICE): a pill centred in the band, 4×48 on an edge (`edge`) or 3×32 between
+ * two panes (`inline`). Like the line it is drawn only while it is reached for:
+ * the soft rung under the pointer, the ring's colour for a keyboard's focus, and
+ * the strong edge while it moves, lengthened by a fifth. A drag in progress is
+ * cancelled by Escape, which puts the box back where the drag found it. `step`
+ * sets the key's step.
  *
  * It is THE standalone resizer: the docked side panel's edge, a drawer's width
  * and an editor's height are a Grip; `ResizableHandle` is the separator inside
@@ -234,7 +235,7 @@ export function Grip({
       {...rest}
     >
       {bar ? (
-        // The handle: always drawn, lit as it is reached for and while it moves.
+        // The handle: drawn while it is reached for and while it moves, else nothing.
         <YStack
           data-slot="grip-bar"
           {...(() => {
@@ -243,7 +244,7 @@ export function Grip({
           })()}
           self="center"
           rounded="$10"
-          bg={moving ? '$rim' : keyed ? '$outlineColor' : hovered ? '$hint' : '$raised'}
+          bg={moving ? '$rim' : keyed ? '$outlineColor' : hovered ? '$hint' : 'transparent'}
           // Lengthened, not fattened: the scale runs along the bar.
           {...{ [tall ? 'scaleX' : 'scaleY']: moving || hovered || keyed ? 1.2 : 1 }}
           animation="quickest"
