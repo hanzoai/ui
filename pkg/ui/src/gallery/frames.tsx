@@ -2,15 +2,15 @@
 
 /**
  * The record kit's frames in the gallery: the side panel's record frame (bar,
- * body, footer) at its 400px width, and the command menu as a pane page
- * (the record kit's side panel and command menu frames, MIT, NOTICE).
+ * body, footer) at its 400px width (the record kit's side panel, MIT, NOTICE),
+ * and the command menu on the surface that holds it.
  *
  * The frame is drawn from its parts rather than through an open DetailPane: a
  * pane opens through its API, which a server render never calls, and the parts
  * are exactly what an open docked pane draws. Every field here passes
  * `autoFocus={false}`, as the menus do, so the page is not pulled to it on load.
  */
-import { Building2, Copy, Kanban, Plus, Settings, Users } from '@hanzogui/lucide-icons-2'
+import { Building2, Copy, Plus, Settings, Users } from '@hanzogui/lucide-icons-2'
 import { YStack } from '@hanzo/gui'
 import { Section } from './section'
 import { Button } from '../backends/gui/button'
@@ -24,7 +24,6 @@ const GROUPS: CommandMenuGroup[] = [
   {
     id: 'record',
     label: 'Record',
-    icon: <Building2 size={16} />,
     items: [
       { id: 'create', label: 'Create company', icon: <Plus size={16} />, contextual: 'Companies', onSelect: NOOP },
       { id: 'copy', label: 'Copy link', icon: <Copy size={16} />, shortcut: ['Mod', 'L'], onSelect: NOOP },
@@ -33,7 +32,6 @@ const GROUPS: CommandMenuGroup[] = [
   {
     id: 'go',
     label: 'Go to',
-    icon: <Kanban size={16} />,
     items: [
       { id: 'people', label: 'Go to People', icon: <Users size={16} />, shortcut: [['G'], ['P']], onSelect: NOOP },
       { id: 'settings', label: 'Settings', icon: <Settings size={16} />, submenu: true, onSelect: NOOP },

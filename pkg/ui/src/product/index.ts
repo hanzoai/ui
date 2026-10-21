@@ -168,7 +168,7 @@ export * from './SlideOver'
 // `DetailPane` is the one mount point over `SlideOver` for a descriptor-driven
 // item view: a caller writes `{ title, content, footer? }`, never a drawer.
 export * from './DetailPane'
-// `CommandMenu` is the palette as a pane page: the search is the pane's bar.
+// `CommandMenu` is the palette: a field over grouped rows, on the surface that holds it.
 export * from './CommandMenu'
 export * from './StatusTag'
 export * from './Split'

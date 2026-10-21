@@ -1,45 +1,52 @@
 'use client'
 
 /**
- * CommandMenu — the palette as a side-panel page (the record kit's command menu
- * frame, MIT, NOTICE): the search field IS the top bar, and the commands are
- * grouped rows under it.
+ * CommandMenu — the palette: a field over grouped rows, on ONE surface.
  *
- *   const pane = useDetailPane()
- *   useCommandK(() => pane.open({ title: 'Command menu', bare: true, content: <CommandMenu groups={groups} /> }))
+ *   <DialogContent p={0} showCloseButton={false}>
+ *     <CommandMenu groups={groups} onClose={close} />
+ *   </DialogContent>
  *
- * Layout: the 48px pane bar holds a borderless 24px field ("Type anything…");
- * each group opens on a 32px header row (a 24px icon slot, the label in medium
- * ink, a hairline under it); rows are the record menu row — 32 high, a 16px
- * icon in its well, contextual text, keycaps for the command's shortcut ("G
- * then P"), a chevron when it opens a page — 2 apart, groups 12 apart. A query
- * that matches nothing says so in a 64px status line.
+ * It paints no ground of its own, so the field and the list stand on whatever
+ * holds them, a dialog or a pane, and one hairline parts them. The field has
+ * no box and no ring: the surface is the focus context and the caret is the
+ * focus. At its end a quiet `esc` says how to leave and closes on a press (a
+ * phone, with no Escape key, reads Cancel).
  *
- * The decisions are the palette's own (`command.logic`): `score` keeps and
- * ranks a row against the query, `step` moves the cursor. The view is drawn
- * here as the ARIA combobox it is — the field owns focus and names the active
- * option, the rows are options in grouped listboxes — so a screen reader hears
- * the row the arrows land on while the caret stays in the field.
+ * One grid, so the eye reads straight down: the field's glyph and every row's
+ * icon stand in one 16px column, and the field's text, every group's heading
+ * and every row's label start on one edge after it (`COMMAND.text`). Icons are
+ * bare and muted; the active row is a subtle fill; a row's shortcut is keycaps
+ * (not on a phone, which has no keys) and a row that opens a page ends in a
+ * chevron. Rows are 36 high, 44 on a
+ * phone. The list is as tall as its rows, so a short answer is a short palette,
+ * up to whatever bounds the holder, and scrolls past that.
+ *
+ * The decisions are the palette's own (`command.logic`): `score` keeps a row
+ * against the query, `step` moves the cursor. It is drawn as the ARIA combobox
+ * it is — the field owns focus and names the active option, the rows are
+ * options in grouped listboxes — so a screen reader hears the row the arrows
+ * land on while the caret stays in the field.
  *
  * Keys, from the field: ArrowDown/ArrowUp move (wrapping), Enter runs the
- * active row, Escape clears a query (and on an empty one lets the pane close),
- * Backspace on an empty query goes back a page.
+ * active row, Escape closes (in a pane the pane closes itself), Backspace on an
+ * empty query goes back a page.
  */
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
-import { Input, Text, XStack, YStack } from '@hanzo/gui'
+import { Input, ScrollView, Text, XStack, YStack } from '@hanzo/gui'
+import { ChevronRight, Search } from '@hanzogui/lucide-icons-2'
 
 import { score, step } from '../backends/gui/command.logic'
+import { Kbd } from '../backends/gui/kbd'
 import { Shortcut, type ShortcutKeys } from '../backends/gui/shortcut'
 import { slot } from '../backends/gui/slot'
-import { touch } from '../backends/gui/gesture'
-import { MenuRowContent } from './MenuRow'
-import { PaneBar, PaneBody, usePane } from './DetailPane'
+import { usePane } from './DetailPane'
 
 export type CommandMenuItem = {
   id: string
   label: string
   icon?: ReactNode
-  /** Dimmed text after the label: an object's name, a count. */
+  /** Dimmed text after the label: where it lives, a count. */
   contextual?: string
   /** More words the query matches it by. */
   keywords?: string[]
@@ -54,7 +61,6 @@ export type CommandMenuItem = {
 export type CommandMenuGroup = {
   id: string
   label: string
-  icon?: ReactNode
   items: CommandMenuItem[]
 }
 
@@ -70,19 +76,24 @@ export type CommandMenuProps = {
   onQueryChange?: (query: string) => void
   /** Backspace on an empty query. Default: the pane's `back`, when there is a page under this one. */
   onBack?: () => void
-  /** Escape on an empty query, outside a pane (inside one, the pane closes itself). */
+  /** Escape, or a press on `esc`, outside a pane (inside one, the pane closes itself). */
   onClose?: () => void
   autoFocus?: boolean
 }
 
-/** The frame's measures (the record kit's command menu, MIT). */
-export const COMMAND = { field: 24, header: 32, icon: 24, row: 32, rows: 2, groups: 12, empty: 64, margin: 48 } as const
+/**
+ * The grid. `pad` is the list's inset, `inset` a row's own; the icon column
+ * sits at `pad + inset` from the edge and the text at `text`, the field's and
+ * the headings' as much as the rows'.
+ */
+export const COMMAND = { bar: 52, pad: 8, inset: 8, icon: 16, gap: 12, header: 28, row: 36, phone: 44, empty: 64 } as const
+const TEXT = COMMAND.inset + COMMAND.icon + COMMAND.gap
 
 type Key = { key: string; preventDefault: () => void; stopPropagation: () => void }
 
 export function CommandMenu({
   groups,
-  placeholder = 'Type anything…',
+  placeholder = 'Search or jump to…',
   empty = 'No results found',
   label = 'Commands',
   query: controlled,
@@ -99,6 +110,7 @@ export function CommandMenu({
     if (controlled === undefined) setOwn(q)
     onQueryChange?.(q)
   }
+  const close = pane ? pane.close : onClose
 
   // The rows that survive the query, grouped, in source order.
   const shown = useMemo(
@@ -120,13 +132,12 @@ export function CommandMenu({
   const listId = `${base}-list`
 
   // A cursor the arrows moved is brought into view; the first row of a group
-  // carries a scroll margin, so its header comes with it.
+  // carries a scroll margin, so its heading comes with it.
   const moved = useRef(false)
   useEffect(() => {
     if (!moved.current || !current || typeof document === 'undefined') return
     moved.current = false
-    const el = document.getElementById(optionId(current.id))
-    el?.scrollIntoView?.({ block: 'nearest' })
+    document.getElementById(optionId(current.id))?.scrollIntoView?.({ block: 'nearest' })
   })
 
   const field = useRef<HTMLInputElement | null>(null)
@@ -150,12 +161,7 @@ export function CommandMenu({
       e.preventDefault()
       current.onSelect()
     } else if (e.key === 'Escape') {
-      if (query) {
-        // Clearing the query is this key's whole job: it must not reach the pane.
-        e.preventDefault()
-        e.stopPropagation()
-        setQuery('')
-      } else if (!pane && onClose) {
+      if (!pane && onClose) {
         e.preventDefault()
         onClose()
       }
@@ -169,8 +175,18 @@ export function CommandMenu({
   }
 
   return (
-    <YStack {...slot('command-menu')} flex={1} minH={0}>
-      <PaneBar>
+    <YStack {...slot('command-menu')} shrink={1} minH={0}>
+      <XStack
+        {...slot('command-menu-bar')}
+        height={COMMAND.bar}
+        shrink={0}
+        items="center"
+        gap={COMMAND.gap}
+        px={COMMAND.pad + COMMAND.inset}
+        borderBottomWidth={1}
+        borderColor="$borderColor"
+      >
+        <Search size={COMMAND.icon} color="$hint" aria-hidden />
         <Input
           ref={field as never}
           {...slot('command-menu-input')}
@@ -184,50 +200,53 @@ export function CommandMenu({
           } as object)}
           flex={1}
           minW={0}
-          height={COMMAND.field}
+          height={COMMAND.bar - 2}
           px={0}
           borderWidth={0}
           rounded={0}
           bg="transparent"
+          // The surface is the focus context: no ring, no edge, no hover fill.
+          outlineWidth={0}
+          hoverStyle={{ bg: 'transparent' }}
+          focusStyle={{ outlineWidth: 0 }}
+          focusVisibleStyle={{ outlineWidth: 0 }}
           color="$ink"
-          fontSize="$2"
+          fontSize="$4"
+          // 16px on a phone, so the browser does not zoom to the field.
+          $max-md={{ fontSize: 16 }}
           placeholder={placeholder}
-          placeholderTextColor="$hush"
+          placeholderTextColor="$hint"
           value={query}
           onChangeText={(t: string) => {
             setQuery(t)
             setActive(undefined)
           }}
           onKeyDown={onKey as never}
-          // The bar is the field; its caret is the focus, so the field draws no
-          // ring of its own (inline, to outrank design's :focus-visible rule).
-          style={{ outlineStyle: 'none' }}
         />
-      </PaneBar>
-      <PaneBody padded={false}>
-        <YStack id={listId} {...slot('command-menu-list')} px="$2" pt="$2" pb="$2" gap={COMMAND.groups}>
+        {close ? (
+          <XStack render="button" aria-label="Close" onPress={close} shrink={0} items="center" justify="center" cursor="pointer" opacity={0.7} hoverStyle={{ opacity: 1 }}>
+            {/* A phone has no Escape key: it says Cancel. */}
+            <XStack $max-md={{ display: 'none' }}>
+              <Kbd>esc</Kbd>
+            </XStack>
+            <Text display="none" $max-md={{ display: 'flex' }} fontSize="$4" color="$ink">
+              Cancel
+            </Text>
+          </XStack>
+        ) : null}
+      </XStack>
+      <ScrollView {...slot('command-menu-scroll')} shrink={1} minH={0} style={{ overscrollBehavior: 'contain' } as never}>
+        <YStack id={listId} {...slot('command-menu-list')} p={COMMAND.pad} gap={COMMAND.pad}>
           {shown.map((g) => {
             const head = `${base}-group-${g.id}`
             return (
-              <YStack key={g.id} {...slot('command-menu-group')} gap={COMMAND.rows}>
-                <XStack
-                  id={head}
-                  {...slot('command-menu-heading')}
-                  height={COMMAND.header}
-                  items="center"
-                  gap="$1"
-                  pl="$1"
-                  borderBottomWidth={1}
-                  borderColor="$borderColor"
-                >
-                  <XStack width={COMMAND.icon} height={COMMAND.icon} items="center" justify="center" shrink={0}>
-                    {g.icon}
-                  </XStack>
-                  <Text fontSize="$2" fontWeight="500" color="$ink" numberOfLines={1}>
+              <YStack key={g.id} {...slot('command-menu-group')}>
+                <XStack id={head} {...slot('command-menu-heading')} height={COMMAND.header} items="center" pl={TEXT}>
+                  <Text fontSize="$1" fontWeight="500" color="$hint" numberOfLines={1}>
                     {g.label}
                   </Text>
                 </XStack>
-                <YStack role="listbox" aria-labelledby={head} gap={COMMAND.rows}>
+                <YStack role="listbox" aria-labelledby={head}>
                   {g.items.map((it, i) => {
                     const on = current?.id === it.id
                     return (
@@ -238,28 +257,35 @@ export function CommandMenu({
                         {...({ role: 'option', 'aria-selected': on, 'aria-disabled': it.disabled || undefined } as object)}
                         data-active={on ? '' : undefined}
                         items="center"
-                        gap="$2"
-                        px="$1"
+                        gap={COMMAND.gap}
+                        px={COMMAND.inset}
                         minH={COMMAND.row}
-                        rounded="$xs"
+                        $max-md={{ minH: COMMAND.phone }}
+                        rounded="$3"
                         cursor={it.disabled ? 'default' : 'pointer'}
                         opacity={it.disabled ? 0.5 : 1}
                         bg={on ? '$hover' : 'transparent'}
-                        hoverStyle={it.disabled ? undefined : { bg: '$hover' }}
-                        {...touch(COMMAND.row, 44, 'y')}
                         onHoverIn={it.disabled ? undefined : () => setActive(it.id)}
                         onPress={it.disabled ? undefined : it.onSelect}
-                        style={i === 0 ? { scrollMarginTop: COMMAND.margin } : undefined}
+                        style={i === 0 ? { scrollMarginTop: COMMAND.header + COMMAND.pad } : undefined}
                       >
-                        <MenuRowContent
-                          label={it.label}
-                          icon={it.icon}
-                          iconContainer={it.icon != null}
-                          contextual={it.contextual}
-                          shortcut={it.shortcut ? <Shortcut keys={it.shortcut} /> : undefined}
-                          submenu={it.submenu}
-                          quiet
-                        />
+                        <XStack width={COMMAND.icon} shrink={0} items="center" justify="center" opacity={0.6} aria-hidden>
+                          {it.icon}
+                        </XStack>
+                        <Text flex={1} minW={0} fontSize="$3" color="$ink" numberOfLines={1}>
+                          {it.label}
+                          {it.contextual ? (
+                            <Text fontSize="$3" color="$hint" pl={8}>
+                              {it.contextual}
+                            </Text>
+                          ) : null}
+                        </Text>
+                        {it.shortcut ? (
+                          <XStack $max-md={{ display: 'none' }}>
+                            <Shortcut keys={it.shortcut} />
+                          </XStack>
+                        ) : null}
+                        {it.submenu ? <ChevronRight size={14} color="$hint" /> : null}
                       </XStack>
                     )
                   })}
@@ -270,7 +296,7 @@ export function CommandMenu({
           {shown.length === 0 ? (
             <YStack {...slot('command-menu-empty')} role="status" aria-live="polite" height={COMMAND.empty} items="center" justify="center">
               {typeof empty === 'string' ? (
-                <Text fontSize="$2" color="$hush">
+                <Text fontSize="$3" color="$hint">
                   {empty}
                 </Text>
               ) : (
@@ -279,7 +305,7 @@ export function CommandMenu({
             </YStack>
           ) : null}
         </YStack>
-      </PaneBody>
+      </ScrollView>
     </YStack>
   )
 }

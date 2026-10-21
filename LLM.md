@@ -792,7 +792,10 @@ What the kit adds, by group (all opt-in by prop or by `<Density value="compact">
   CodeEditor frames.
 - Frames: DetailPane `mode="docked"` (an in-layout column, 320–600, width kept
   by `store`) with a page stack (`push`/`back`/`depth`) and PaneBar/PaneBody/
-  PaneFoot; CommandMenu (product) on the Command state machine; RecordsToolbar
+  PaneFoot; CommandMenu (product) on the Command state machine, one surface
+  that paints no ground (the field boxless and ringless, a hairline under it,
+  icons bare, field text, headings and labels on one edge, `esc` or Cancel to
+  close), as tall as its rows; RecordsToolbar
   hands off to ViewBar under compact; RecordCard/BoardView compact cards.
 - @hanzo/data renders every field type through @hanzo/ui (it peers on it), its
   own GuiCustomConfig augmentation is gone (ui's applies once data imports it),

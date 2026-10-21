@@ -1,11 +1,11 @@
 // @vitest-environment jsdom
 
 /**
- * The command menu against a live DOM: grouped rows under 32px headers, the
- * field as a combobox naming the active option, the query filtering with an
- * empty line when nothing survives, the arrows and Enter, Escape clearing a
- * query before it closes anything, Backspace on an empty query going back a
- * page, keycaps for a row's shortcut, and axe.
+ * The command menu against a live DOM: one grid (the headings' text on the
+ * rows' text edge, icons bare), the field as a combobox naming the active
+ * option, the query filtering with an empty line when nothing survives, the
+ * arrows and Enter, Escape and `esc` closing, Backspace on an empty query going
+ * back a page, keycaps for a row's shortcut, and axe.
  */
 import { act, type ReactNode } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
@@ -81,19 +81,24 @@ const type = (text: string) =>
   })
 
 describe('CommandMenu', () => {
-  it('draws each group on a 32px header row and its rows as 32px options', () => {
+  it('draws one grid: headings on the rows\' text edge, 36px rows, a field with no edge of its own', () => {
     const markup = renderToStaticMarkup(
       <GuiProvider config={config} defaultTheme="dark">
         <CommandMenu groups={groups(() => {})} autoFocus={false} />
       </GuiProvider>,
     )
     const head = markup.match(/<[a-z]+[^>]*data-slot="command-menu-heading"[^>]*>/)?.[0] ?? ''
-    expect(head).toMatch(/_height-32px/)
-    expect(head).toMatch(/_borderBottomWidth-1px/)
+    expect(head).toMatch(/_height-28px/)
+    expect(head).toMatch(/_pl-36px/)
+    expect(head).not.toMatch(/_borderBottomWidth/)
     const row = markup.match(/<[a-z]+[^>]*data-slot="command-menu-item"[^>]*>/)?.[0] ?? ''
-    expect(row).toMatch(/_minH-32px/)
-    expect(row).toMatch(/_btlr-c-radius-xs|_btlr-[^ ]*radius/)
-    expect(markup).toContain('placeholder="Type anything…"')
+    expect(row).toMatch(/_minH-36px/)
+    expect(row).toMatch(/_pl-8px/)
+    const input = markup.match(/<input[^>]*data-slot="command-menu-input"[^>]*>/)?.[0] ?? ''
+    expect(input).toMatch(/_outlineWidth-0px/)
+    expect(input).toMatch(/_btw-0px/)
+    expect(input).toMatch(/_outlineWidth-0focus-visible-0px/)
+    expect(markup).toContain('placeholder="Search or jump to…"')
   })
 
   it('is a combobox over grouped listboxes, naming the active option', () => {
@@ -127,15 +132,14 @@ describe('CommandMenu', () => {
     expect(host.querySelector('[data-slot="command-menu-empty"]')?.textContent).toBe('No results found')
   })
 
-  it('Escape clears a query first; on an empty one it closes', () => {
+  it('Escape closes, query or none, and so does a press on esc', () => {
     const onClose = vi.fn()
     mount(<CommandMenu groups={groups(() => {})} autoFocus={false} onClose={onClose} />)
     type('go')
     key('Escape')
-    expect(field().value).toBe('')
-    expect(onClose).not.toHaveBeenCalled()
-    key('Escape')
     expect(onClose).toHaveBeenCalledTimes(1)
+    act(() => (host.querySelector('[aria-label="Close"]') as HTMLElement).click())
+    expect(onClose).toHaveBeenCalledTimes(2)
   })
 
   it('draws a row’s shortcut as keycaps, spoken once', () => {
