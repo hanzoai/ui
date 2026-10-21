@@ -11,7 +11,7 @@
  * overflow hint, and the press area meets the 44px floor through `touch()`,
  * never through padding, so the chip keeps its 20px.
  *
- * Re-expressed from twenty-ui's Chip (MIT, see NOTICE): sm 20 / md 24 tall, a
+ * The record kit's Chip (MIT, see NOTICE): sm 20 / md 24 tall, a
  * 4px gutter and gap, square (4px) or round, an end element behind an optional
  * hairline divider, a max width that shrinks the label and not the padding.
  */

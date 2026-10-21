@@ -35,7 +35,7 @@ export type CrossfadeProps = Omit<ComponentProps<typeof View>, 'children'> & {
  * Two icons in one 14px place, swapped by a scale-and-fade: the pencil that
  * becomes an X, the heart that fills. The hidden one sits at 0 opacity and 85%
  * scale; both move over the fast duration. Reduced motion stops the move, not
- * the swap, by design's own rule. (twenty-ui's AnimatedIconCrossfade, MIT, see
+ * the swap, by design's own rule. (the source kit's AnimatedIconCrossfade, MIT, see
  * NOTICE.)
  */
 export const Crossfade = ({ activeIcon, inactiveIcon, isActive, ...props }: CrossfadeProps) => {

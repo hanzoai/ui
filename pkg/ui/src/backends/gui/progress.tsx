@@ -5,7 +5,7 @@
  * far unknown".
  *
  * Two shapes. `pill` (the default, unchanged) is a rounded bar on the edge
- * track. `line` is the record kit's (twenty-ui's ProgressBar, MIT — NOTICE): no
+ * track. `line` is the record kit's (ProgressBar, MIT — NOTICE): no
  * track unless asked, square ends unless `ends="round"`, the ink as the fill, and a
  * minimum fill of min(12px, 50%) for any value strictly between 0 and 100 — a
  * job 1% done is visibly started, which a 3px sliver is not. Its width eases

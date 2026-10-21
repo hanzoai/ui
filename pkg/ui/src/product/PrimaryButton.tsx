@@ -16,9 +16,9 @@
  * A caller's own `style`/`color` still win (spread last).
  *
  * Under `<Density value="compact">` it is the record surfaces' main action —
- * an onboarding step, an import's next step — as twenty-ui's MainButton draws
+ * an onboarding step, an import's next step — as the source kit's MainButton draws
  * it (MIT, NOTICE): the label at semibold and 12px beside it. A regular surface
- * draws it as it always has. Its lift (twenty-ui's elevated shadow) waits for
+ * draws it as it always has. Its lift (the source kit's elevated shadow) waits for
  * the move onto the canonical Button below: the ladder's first rung is the
  * `elevation-1` class, and gui's Button drops `className` (measured: the
  * server render carries `is_Button` and nothing a caller passed).

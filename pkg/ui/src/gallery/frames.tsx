@@ -3,7 +3,7 @@
 /**
  * The record kit's frames in the gallery: the side panel's record frame (bar,
  * body, footer) at its 400px width, and the command menu as a pane page
- * (twenty-ui's side panel and command menu frames, MIT, NOTICE).
+ * (the record kit's side panel and command menu frames, MIT, NOTICE).
  *
  * The frame is drawn from its parts rather than through an open DetailPane: a
  * pane opens through its API, which a server render never calls, and the parts

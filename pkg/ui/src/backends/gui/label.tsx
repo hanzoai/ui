@@ -6,7 +6,7 @@
  * `variant="section"` is the caption over a group of rows — "Favorites",
  * "Workspace", a side panel's group — 12px semibold in the dim ink, and
  * `section-sm` the same with a tighter line, both on Hanzo's 12px text floor
- * (twenty-ui's internal Label, MIT, see NOTICE: 11 and 9px there).
+ * (the source kit's internal Label, MIT, see NOTICE: 11 and 9px there).
  */
 import { Label as GuiLabel } from '@hanzo/gui'
 import type { ComponentProps } from 'react'

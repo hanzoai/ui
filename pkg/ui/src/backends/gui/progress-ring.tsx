@@ -4,7 +4,7 @@
  * ProgressRing — a small circular progress, for a row that has no room for a
  * bar: the context left in a composer, a sync that is 40% through, a metric.
  *
- * After twenty-ui's ProgressRing (MIT, NOTICE): 14px (`sm`) or 16px (`md`), a
+ * After the source kit's ProgressRing (MIT, NOTICE): 14px (`sm`) or 16px (`md`), a
  * 2px stroke starting at 12 o'clock, the track on the strong edge rung and the
  * indicator on the accent (`--primary`, monochrome until an org picks one).
  * The indicator's dash eases over 300ms with round caps (square at 0%, where a

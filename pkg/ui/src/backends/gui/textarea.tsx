@@ -12,7 +12,7 @@ const MIN_ROWS = 3
 
 /**
  * The line each size sets its text on. The record sizes (`sm`, `xs`) set 13px
- * text on a 16px line, as twenty-ui's Textarea does (MIT, NOTICE); the regular
+ * text on a 16px line, as the source kit's Textarea does (MIT, NOTICE); the regular
  * ones keep the 20px line of the 14px rung.
  */
 const LINE: Record<FieldSize, number> = { default: 20, lg: 20, sm: 16, xs: 16 }

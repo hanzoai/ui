@@ -7,7 +7,7 @@
 // for a date. Each coerces the raw value, emits the next one through `onChange`,
 // and leaves draft and save to the host.
 //
-// The keyboard is the inline-edit contract (twenty-spec FT-100): Enter commits,
+// The keyboard is the inline-edit contract: Enter commits,
 // Escape cancels, Shift+Enter is a new line in long text; picker editors commit on
 // a choice. Controls take their box from the nearest `<Density>` — a CRM sets
 // `compact` once at its shell and every editor is 32px; a host that sets none
@@ -15,7 +15,7 @@
 //
 // The editors' composition (a picker segment at the start of an amount or a
 // number, a searchable option list with a "No value" row, a star row that clears
-// on its own value) follows twenty-ui's field controls (MIT, see NOTICE).
+// on its own value) follows the source kit's field controls (MIT, see NOTICE).
 import { useMemo, useState, type ReactNode } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { Calendar as CalendarIcon, ChevronDown, Upload, X } from '@hanzogui/lucide-icons-2'
@@ -564,7 +564,7 @@ export function DateInput({ field, value, onChange, onSubmit, onCancel, autoFocu
 // ── links (multi-item list) ───────────────────────────────────────────────────
 /**
  * Several links: each a row with its host and a remove button, then an add field
- * where Enter appends. The first is the primary one, as twenty-spec FT-101 says.
+ * where Enter appends. The first is the primary one, as the inline-edit contract says.
  */
 export function LinksInput({ field, value, onChange, onSubmit, onCancel, autoFocus }: FieldInputProps) {
   const links = asLinks(value)

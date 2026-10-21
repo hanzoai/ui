@@ -62,7 +62,7 @@ export const asAddress = (v: unknown): AddressValue => {
   if (typeof v === 'string') return { street1: v }
   const r = v as Record<string, unknown>
   const out: AddressValue = {}
-  // Twenty's composite spells them addressStreet1 … addressCountry; read both.
+  // The composite spells them addressStreet1 … addressCountry; read both.
   const alias: Record<(typeof ADDRESS_PARTS)[number], string> = {
     street1: 'addressStreet1',
     street2: 'addressStreet2',
@@ -125,7 +125,7 @@ export const safeHref = (url: string): string | undefined => {
   }
 }
 
-/** Emails from a string (comma/semicolon separated), a list, or Twenty's `{primaryEmail, additionalEmails}`. */
+/** Emails from a string (comma/semicolon separated), a list, or the composite `{primaryEmail, additionalEmails}`. */
 export const asEmails = (v: unknown): string[] => {
   if (v && typeof v === 'object' && !Array.isArray(v)) {
     const r = v as { primaryEmail?: unknown; additionalEmails?: unknown }
@@ -161,8 +161,8 @@ const BY_CODE: Record<string, string[]> = (() => {
 })()
 
 /**
- * Parts from a stored phone: "+33 6 12 34 56 78", "0612345678", or Twenty's
- * `{ primaryPhoneNumber, primaryPhoneCountryCode, primaryPhoneCallingCode }`.
+ * Parts from a stored phone: "+33 6 12 34 56 78", "0612345678", or the
+ * composite `{ primaryPhoneNumber, primaryPhoneCountryCode, primaryPhoneCallingCode }`.
  * A leading "+" is matched to the longest calling code it starts with.
  */
 export const asPhone = (v: unknown, fallbackCountry?: string): PhoneParts => {

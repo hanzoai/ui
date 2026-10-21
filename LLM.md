@@ -692,22 +692,22 @@ add a second.
 - **A View does not shrink.** RNW Views are `flex-shrink: 0`, so a toolbar's button
   group held its width at 390px; the groups carry `shrink={1} minW={0}` + `flexWrap`.
 
-### The record kit — twenty-ui's MIT parts, merged (8.28)
+### The record kit (8.28)
 
-The parts a CRM, a data table and a settings page are drawn from, merged from
-twenty-ui (MIT, commit dd7099a02f, NOTICE) and re-expressed on gui: no twenty-ui
-source, stylesheet or asset is copied, and Twenty's name appears only in NOTICE.
-A derived file says so in its header. The study that maps every twenty-ui part
-onto its Hanzo target lives outside the repo (`reuse.md`, `twenty-look.md`); the
-decisions it settled are these, and the code follows them:
+The parts a CRM, a data table and a settings page are drawn from, merged from an
+MIT source kit and re-expressed on gui: no source, stylesheet or asset of it is
+copied, and its credit appears only in NOTICE. A derived file says so in its
+header (MIT, see NOTICE). The study that maps every source part onto its Hanzo
+target lives outside the repo; the decisions it settled are these, and the code
+follows them:
 
 - **Chrome stays Hanzo's**: dark first, Zen, monochrome, alpha hairlines, the one
-  `--ring`, near-opaque floating surfaces, tooltips that follow the theme. Twenty's
-  indigo is what an org gets by setting its accent; nothing hard-codes it. Where
-  twenty-ui fills with its accent (a checked box, an on switch), the kit fills
+  `--ring`, near-opaque floating surfaces, tooltips that follow the theme. The source
+  kit's indigo is what an org gets by setting its accent; nothing hard-codes it.
+  Where the source kit fills with its accent (a checked box, an on switch), the kit fills
   with `var(--primary)` / `var(--primary-foreground)`, which @hanzo/appearance
   repaints with the org's accent.
-- **Twenty's density is opt-in**: `<Density value="compact">` (backends/gui/
+- **The record density is opt-in**: `<Density value="compact">` (backends/gui/
   density.tsx) makes every control that names no size take the record box —
   32px, 13px, an 8px gutter, the panel ground. `BOX` (control.ts) has the two
   dense rungs `sm` (32) and `xs` (24) beside `default` (36) and `lg` (46);
@@ -717,12 +717,12 @@ decisions it settled are these, and the code follows them:
 - **Data colour is a palette of its own**: `--data-<hue>-<step>` (thirty 12-step
   scales, @hanzo/tokens `src/data.ts`) for tags, avatars, icon tiles and status
   pills — never chrome. Tag reads steps 3/11, an avatar 4/12 (5/6 outlined), a
-  tile 4/10. `hueOf(seed)` is twenty-ui's string hash, so a record keeps its
+  tile 4/10. `hueOf(seed)` is the source kit's string hash, so a record keeps its
   colour across an import.
 - **Two small radii**: `$xs` (4, a row nested in an 8px panel, a chip, a cell)
   and `$2xs` (2, a mark, a flag), typed in gui-config beside the numbers.
 - **The 12px rung is `$1`**: @hanzo/design 0.5.35 publishes `--text-xs` at 12px,
-  so Twenty's 12px text and its 11px labels both land on `$1`; its 8px band
+  so the source kit's 12px text and its 11px labels both land on `$1`; its 8px band
   labels rise to the 10px floor's nearest rung, `$1`.
 
 theme.css carries what @hanzo/tokens declares and design does not ship yet:
@@ -747,7 +747,7 @@ numbered ramp's rungs 11/10/8, and rung 11 is the high-contrast end in BOTH
 schemes: `$quiet` measures #cccccc on dark and #242424 on light, so a secondary
 line drawn with it is ink on a light page. The kit reads `$aside` (design's
 `--text-secondary`, 78%), `$hint` (`--text-tertiary`, 55%) and `$hush`
-(`--text-disabled`, 30%). twenty-ui's secondary → `$aside`, tertiary → `$hint`;
+(`--text-disabled`, 30%). The source kit's secondary → `$aside`, tertiary → `$hint`;
 its "light" rank → `$hint` for text a person reads (30% is ~2.7:1, under the
 4.5:1 text floor) and `$hush` only for decoration (chevrons, grips, a resting
 icon). Pre-kit default paths keep their old tokens; the merge proved it by

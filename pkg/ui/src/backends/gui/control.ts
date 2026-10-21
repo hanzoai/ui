@@ -61,7 +61,7 @@ export const RISER = (CONTROL_H - 2 - 20) / 2
  *
  * `sm` and `xs` are the record density: 32 and 24 high, an 8px gutter and 13px
  * text, the box a table cell, a filter value and a settings form are drawn at
- * (twenty-ui's md and sm, MIT). They are asked for by name or by a
+ * (the source kit's md and sm, MIT). They are asked for by name or by a
  * `<Density value="compact">` around the control; nothing at 36 moves.
  *
  * The riser is the same arithmetic as `RISER` on each box's own line: a stacked

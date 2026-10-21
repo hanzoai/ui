@@ -12,7 +12,7 @@
  * rule for a subtree — a table turns it `disabled` while it scrolls or edits, so
  * a thousand cells carry no listeners at all.
  *
- * Re-expressed from twenty-ui's OverflowingTextWithTooltip and its mode provider
+ * The record kit's OverflowingTextWithTooltip and its mode provider
  * (MIT, see NOTICE): 500ms delay, bottom placement, a 300px cap on the hint,
  * focusable on request, `alwaysShowTooltip` for a hint that is wanted anyway.
  * The tooltip is this package's own `Tooltip`; its look is the Tooltip's.

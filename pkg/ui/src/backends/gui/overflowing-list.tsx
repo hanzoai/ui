@@ -12,7 +12,7 @@
  * shrink, and keeps room for the count. Measurement rides `onLayout`, which gui
  * gives on web and native alike, so the same list works on both.
  *
- * Re-expressed from twenty-ui's OverflowingList (MIT, see NOTICE): a 4px gap, a
+ * The record kit's OverflowingList (MIT, see NOTICE): a 4px gap, a
  * 24px-minimum count on the 12px rung, shown on hover, focus or while open by
  * default; the popup is the package Popover, items wrapping, as wide as the list
  * and at least 220.

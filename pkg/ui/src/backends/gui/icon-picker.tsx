@@ -11,7 +11,7 @@
  * (icons.ts): a Lucide name, a Tabler name with its pair, a same-name match, or
  * the kind's fallback.
  *
- * The picker is the data-model editor's icon picker (twenty-ui's icon picker,
+ * The picker is the data-model editor's icon picker (the record kit's icon picker,
  * MIT, NOTICE): 176 wide, a search field over the names and the concepts each
  * icon draws, and a grid of 32px cells five across, run by the arrows in two
  * dimensions, Home/End, and Enter. It shows the first 150 matches and says how
@@ -98,7 +98,7 @@ const COLUMNS = 5
 const CELL = 32
 const GAP = 2
 const INSET = 4
-/** Five cells of 32 with 2 between and 4 round: twenty-ui's 176px picker. */
+/** Five cells of 32 with 2 between and 4 round: the source kit's 176px picker. */
 export const PICKER_W = INSET * 2 + COLUMNS * CELL + (COLUMNS - 1) * GAP
 const SHOWN = 150
 

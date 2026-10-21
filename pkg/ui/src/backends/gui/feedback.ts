@@ -3,7 +3,7 @@
  * drawn in. Banner, Alert (the callout) and the toast read it; Status's semantic
  * aliases (success, warning, error, info) are meant to read it too.
  *
- * After twenty-ui's FeedbackStatusColors (MIT, NOTICE): neutral is gray, info is
+ * After the source kit's FeedbackStatusColors (MIT, NOTICE): neutral is gray, info is
  * blue, success green, warning orange, error red. The chrome stays Hanzo's, so
  * the colour a strip, an icon or a solid fill takes is a STATE token wherever
  * one exists — `--state-error`, `--state-warning`, `--state-success` — and info,

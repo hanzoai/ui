@@ -68,8 +68,8 @@ export {
   Text,
 
   // Text a screen reader reads and a screen does not draw: the name of an
-  // icon-only control, a table header, a live line (twenty-ui's VisuallyHidden,
-  // MIT, NOTICE — the same clip pattern, gui's own).
+  // icon-only control, a table header, a live line (the source kit's
+  // VisuallyHidden, MIT, NOTICE — the same clip pattern, gui's own).
   VisuallyHidden,
 } from '@hanzo/gui'
 

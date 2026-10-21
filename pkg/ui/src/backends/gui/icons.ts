@@ -17,14 +17,14 @@
  *   4. else the kind's fallback: an object is a Box, a view a Table, an option
  *      nothing.
  *
- * Names and pairs only: the concept dictionary is twenty-ui's (MIT, NOTICE) and
+ * Names and pairs only: the concept dictionary is the source kit's (MIT, NOTICE) and
  * the pairs map its names onto Lucide's; no glyph of either set is copied. This
  * module imports nothing, so naming a concept costs a string, and the icons are
  * loaded only where one is drawn (`loadIcons` in icon-picker.tsx, one async
  * chunk).
  */
 
-/** Twenty/Tabler names → the Lucide icon that means the same thing (153 pairs). */
+/** Tabler names → the Lucide icon that means the same thing (153 pairs). */
 export const TABLER: Readonly<Record<string, string>> = {
   Icon123: 'Hash',
   IconAddressBook: 'BookUser',

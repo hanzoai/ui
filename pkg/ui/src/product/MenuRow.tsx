@@ -32,7 +32,7 @@
  * declarative rows render it inside gui's own `Menu.Item`, so a menu item and a
  * sheet row are one anatomy with each keeping its own role.
  *
- * `size="row"` is the record geometry (twenty-ui's MenuItem, MIT, NOTICE): 32px,
+ * `size="row"` is the record geometry (the record kit's MenuItem, MIT, NOTICE): 32px,
  * 4px inset, 8px gap, a 4px corner concentric in an 8px panel, the hover tint one
  * rung up, the label in the secondary ink. The default stays the sheet row these
  * screens were drawn with.
@@ -247,7 +247,7 @@ export function MenuRow({
       {...(variant === 'suggestion' ? ({ 'aria-selected': selected } as object) : null)}
       cursor={disabled ? 'default' : 'pointer'}
       items="center"
-      // The sheet row: 8 round, 10 between. The record row: twenty-ui's 32 / 4 / 8.
+      // The sheet row: 8 round, 10 between. The record row: the source kit's 32 / 4 / 8.
       {...(row
         ? { gap: MENU_ROW.gap, px: MENU_ROW.px, minH: MENU_ROW.h, rounded: '$xs' as const, ...touch(MENU_ROW.h, 44, 'y') }
         : { gap: '$2.5' as const, px: '$2' as const, py: '$2' as const, rounded: '$3' as const })}

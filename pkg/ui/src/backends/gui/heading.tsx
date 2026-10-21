@@ -5,8 +5,8 @@
  *
  * Sizes stay gui's own rungs, and the record headings are four of them: a
  * settings section or a widget title is `size="$2"` (13), a group header `$1`
- * (12, also twenty-ui's xs, since 12px is Hanzo's text floor), a dialog or
- * empty-state title `$4` (15) — twenty-ui's xs/sm/md/lg
+ * (12, also the source kit's xs, since 12px is Hanzo's text floor), a dialog or
+ * empty-state title `$4` (15) — the source kit's xs/sm/md/lg
  * (11/12/13/16, MIT, see NOTICE) on Hanzo's ramp. `tone` is the new axis:
  * primary ink, secondary or tertiary, at the heading's own weight. A styled
  * extension rather than a wrapper, so `styled(Heading, …)` in a host still

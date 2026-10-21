@@ -8,7 +8,7 @@
  * a tag in that colour does. `color` paints an explicit fill instead (a colour
  * that is not in the palette), keeping the edge.
  *
- * Re-expressed from twenty-ui's ColorSample (MIT, see NOTICE): a 12×16 capsule,
+ * The record kit's ColorSample (MIT, see NOTICE): a 12×16 capsule,
  * or a 16px circle.
  */
 import { XStack } from '@hanzo/gui'

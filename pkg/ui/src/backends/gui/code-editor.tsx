@@ -27,7 +27,7 @@
  * theme key of its own. Both follow the page into light or dark with nothing to
  * configure.
  *
- * Frame. `variant` is the record kit's three (twenty-ui's CodeEditor and
+ * Frame. `variant` is the record kit's three (its CodeEditor and
  * CodeEditorHeader, MIT — NOTICE; CodeMirror stays, Monaco is not adopted):
  * `default` (bordered, 8px corners), `borderless` (square, no edge, for an
  * editor that IS its pane) and `with-header`, where `title` and `actions` draw

@@ -14,7 +14,7 @@
  *
  * Rows are concentric in the panel: a 4px inset inside an 8px panel takes a 4px
  * row radius (`$xs`). Under `<Density value="compact">` the list takes the
- * record density twenty-ui's Select draws (MIT, NOTICE): 13px rows in the quiet
+ * record density the source kit's Select draws (MIT, NOTICE): 13px rows in the quiet
  * ink on the hover rung, and the density crosses the portal with the list.
  */
 import {

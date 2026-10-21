@@ -16,7 +16,7 @@
  * "other", so a server render and the first client render agree and a Mac
  * swaps Ctrl for ⌘ right after hydration rather than mismatching it.
  *
- * Re-expressed from twenty-ui's Shortcut and formatShortcut (MIT, see NOTICE):
+ * The record kit's Shortcut and formatShortcut (MIT, see NOTICE):
  * keys, text and button variants, a `desktop` visibility that hides it under a
  * coarse pointer, keys 4px apart in a combination.
  */

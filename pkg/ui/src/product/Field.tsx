@@ -138,7 +138,7 @@ export function FieldTextArea({
 /**
  * A switch, alone or as a settings row.
  *
- * With a `label` it is twenty-ui's SettingsRow (MIT, NOTICE): the whole 32px row
+ * With a `label` it is the record kit's SettingsRow (MIT, NOTICE): the whole 32px row
  * is the switch's `<label>`, so a press anywhere on it toggles, with an optional
  * leading element and a description after a middle dot, the row's hover rung
  * and the record row's corner and inset. Without one it is the bare switch it

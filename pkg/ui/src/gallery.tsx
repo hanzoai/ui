@@ -1145,7 +1145,7 @@ export const Gallery = () => (
       <Stepper label="Seats" value={2} min={2} max={150} onChange={NOOP} />
     </Section>
 
-    {/* The record kit — every part merged from twenty-ui, in every variant,
+    {/* The record kit — every part, in every variant,
         regular and compact. One module per group, still this one list. */}
     <Records />
   </div>

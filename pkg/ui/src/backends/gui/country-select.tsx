@@ -10,7 +10,7 @@
  * named in the reader's language (`Intl.DisplayNames` with `type: 'region'`
  * names any ISO code). A list that is empty disables the control.
  *
- * Props and anatomy after twenty-ui's CountrySelect (MIT, NOTICE): a 16px flag
+ * Props and anatomy after the source kit's CountrySelect (MIT, NOTICE): a 16px flag
  * slot holding a crossed circle when there is no country, an optional visible
  * label above in the small semibold caption.
  */

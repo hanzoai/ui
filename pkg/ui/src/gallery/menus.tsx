@@ -2,7 +2,7 @@
 
 /**
  * The record kit's menus, rows and floating surfaces in the gallery: every part
- * merged from twenty-ui's Dropdown, MenuItem, ListItem, Tooltip, Popover and
+ * merged from the source kit's Dropdown, MenuItem, ListItem, Tooltip, Popover and
  * ResizeHandle (MIT, NOTICE), regular and compact.
  *
  * The rows render in place as well as inside open menus. A portalled panel draws

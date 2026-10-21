@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * CommandMenu — the palette as a side-panel page (twenty-ui's command menu
+ * CommandMenu — the palette as a side-panel page (the record kit's command menu
  * frame, MIT, NOTICE): the search field IS the top bar, and the commands are
  * grouped rows under it.
  *
@@ -75,7 +75,7 @@ export type CommandMenuProps = {
   autoFocus?: boolean
 }
 
-/** The frame's measures (twenty-ui's command menu, MIT). */
+/** The frame's measures (the record kit's command menu, MIT). */
 export const COMMAND = { field: 24, header: 32, icon: 24, row: 32, rows: 2, groups: 12, empty: 64, margin: 48 } as const
 
 type Key = { key: string; preventDefault: () => void; stopPropagation: () => void }

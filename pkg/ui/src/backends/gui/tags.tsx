@@ -2,7 +2,7 @@
 
 /**
  * Tags — a wrapping row of removable labels, built on `Badge`, or on `Tag` for
- * an entry that carries a data hue (twenty-ui's select-option tags, MIT, see
+ * an entry that carries a data hue (the record kit's select-option tags, MIT, see
  * NOTICE) — so a list of coloured options and a list of plain labels are one
  * component, and an entry without a colour renders exactly as before.
  *

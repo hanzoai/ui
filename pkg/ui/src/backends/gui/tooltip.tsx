@@ -8,13 +8,13 @@
  * publishes into it — the same split `popover` resolves, for the same reason.
  *
  * The panel FOLLOWS THE THEME — a dark hint on a dark page, a light one on a
- * light page (Hanzo's decision; twenty-ui's is a dark slab in both). It did not
+ * light page (Hanzo's decision; the source kit's is a dark slab in both). It did not
  * before, measured: gui's Tooltip frame carries a `t_Tooltip` sub-theme that
  * inverts the ground, so on the dark page the hint was a light-grey slab
  * (`--background` 85% lightness under glass) with near-black text, and on the
  * light page a dark one. Naming the frame's component `Hint`, which no theme
- * table carries, leaves it in the theme it was opened from. It takes twenty-ui's
- * geometry (MIT, NOTICE): 4×6 padding, 12px text on
+ * table carries, leaves it in the theme it was opened from. It takes the source
+ * kit's geometry (MIT, NOTICE): 4×6 padding, 12px text on
  * a 16px line, 10px clear of its anchor, at most 300 wide, opening after 600ms.
  * A title may lead with a 14px icon and carry a quieter description under it,
  * line breaks kept.

@@ -4,7 +4,7 @@
  * ButtonGroup — buttons joined into one control: "Update view" with its chevron
  * menu, a cell's hover actions, a diagram's zoom pair.
  *
- * Two independent choices, as twenty-ui's ButtonGroup has them (MIT, NOTICE):
+ * Two independent choices, as the source kit's ButtonGroup has them (MIT, NOTICE):
  *
  *   attached (default)  the buttons share their edges — each after the first
  *                       steps 1px back over its neighbour's border, the inner

@@ -48,7 +48,7 @@ import { slot } from './slot'
 import { touch } from './gesture'
 
 /**
- * `tile` is the picker tile (twenty-ui's MenuPicker, MIT, NOTICE): an icon over
+ * `tile` is the picker tile (the record kit's MenuPicker, MIT, NOTICE): an icon over
  * a small label in a 4px-cornered box that fills its grid cell — a chart type,
  * a view layout. The chosen tile takes the accent edge and label; the label is
  * 12px semibold and truncates.

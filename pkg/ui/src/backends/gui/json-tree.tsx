@@ -25,7 +25,7 @@
  * value, whatever is open or filtered. Built from gui primitives only, so it
  * renders wherever gui does.
  *
- * `variant="boxed"` is the record kit's tree (twenty-ui's JsonTree, MIT —
+ * `variant="boxed"` is the record kit's tree (JsonTree, MIT —
  * NOTICE), for workflow runs, tool calls and webhook samples: each disclosure a
  * 24px boxed arrow that turns as it opens, each key a 24px boxed label led by a
  * 16px icon naming its type (Type, Hash, SquareCheck, CircleOff, Brackets, Box),

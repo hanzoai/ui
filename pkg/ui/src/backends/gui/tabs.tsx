@@ -5,7 +5,7 @@
  *
  * Two looks. The default is the segmented pill: a 36px track on the hover rung
  * with the chosen tab lifted onto the ground. `variant="line"` is the record
- * page's strip (twenty-ui's Tabs, MIT, NOTICE): a transparent list over a 1px
+ * page's strip (the record kit's Tabs, MIT, NOTICE): a transparent list over a 1px
  * baseline, 40px tabs whose label sits in an inner box (8×8 at `md`, 4×8 at
  * `sm`, 8px corner) that takes the hover rung under the pointer, and a 1px line
  * in the ink under the chosen tab. A tab takes a `startIcon`, an `endIcon` and a

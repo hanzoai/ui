@@ -143,7 +143,7 @@ New in **`pkg/ui`** (was a bare `src/` staging dir — no package):
 
 ## Clean-room guarantee (preserved)
 
-`pkg/data` audited for GPL/Twenty contamination: **none.** No GPL, no copied license headers/SPDX, no Twenty entity/decorator architecture. The field/record model is an independent `FieldType` union + `FieldDefinition` + runtime `Map` registry (records are plain `Record<string, unknown>`). "Twenty" appears **only as benchmark prose** ("Airtable/Twenty-class polish, clean-room"). License: MIT (repo `LICENSE.md`). `@hanzo/ui` inherits the same posture.
+`pkg/data` audited for copied code: **none.** No copied license headers/SPDX, no borrowed entity/decorator architecture. The field/record model is an independent `FieldType` union + `FieldDefinition` + runtime `Map` registry (records are plain `Record<string, unknown>`). MIT-derived parts are credited in NOTICE. License: MIT (repo `LICENSE.md`). `@hanzo/ui` inherits the same posture.
 
 ---
 

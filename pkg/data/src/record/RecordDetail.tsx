@@ -1,7 +1,7 @@
 'use client'
 
 // RecordDetail (view, optionally inline-editable) + RecordForm (create/edit form)
-// — the single-record views, Twenty-grade.
+// — the single-record views.
 //
 // RecordDetail: a titled panel of label → value fields. When `editable`, clicking
 // a value edits it in place through the field's own editor (dropdown selects on
@@ -13,7 +13,7 @@
 //
 // Drawn with @hanzo/ui's theme rungs: a field's name in the tertiary ink above
 // its value, hairlines between fields, the hover rung on an editable value —
-// the record page's field list as twenty-ui composes it (MIT, see NOTICE).
+// the record page's field list as the source kit composes it (MIT, see NOTICE).
 import { useState, type ReactNode } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import type { FieldDefinition, SelectOption } from '../field/types'

@@ -11,7 +11,7 @@
  * punctuation, not a step — a reader that voices them says "home slash shop
  * slash bag" instead of counting.
  *
- * Drawn on gui props, after twenty-ui's Breadcrumb (MIT, NOTICE): a 32px trail
+ * Drawn on gui props, after the source kit's Breadcrumb (MIT, NOTICE): a 32px trail
  * in 13px quiet ink, steps 4px apart around a "/" held in an 8px slot, the page
  * you are on in full ink and the one step that may shrink, with an ellipsis.
  * It used to compose utility class strings (`gap-1.5 text-sm text-muted-foreground`),

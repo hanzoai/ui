@@ -15,7 +15,7 @@
  * own and never read Item's variant or size, matching the original shape.
  *
  * `size="row"` is the list row a picker, a field list and a member list are
- * made of (twenty-ui's ListItem, MIT, NOTICE): 32px, 4px inset, 8px gap, the 4px
+ * made of (the record kit's ListItem, MIT, NOTICE): 32px, 4px inset, 8px gap, the 4px
  * corner, the hover rung. It takes the parts a list row has around its content —
  * an `indicator` (a trailing check or a leading box), a `shortcut`, trailing
  * `actions` revealed under the pointer or focus, a submenu chevron — and the

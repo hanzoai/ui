@@ -8,8 +8,8 @@
  * flattens its compound parts into the shadcn names and dresses them in the
  * Hanzo tokens, exactly as `dialog.tsx` does for the ordinary modal.
  *
- * `size` gives it the record frame Dialog's `size` does (twenty-ui's
- * AlertDialog, MIT, NOTICE): the same widths less `compact`, the same sections
+ * `size` gives it the record frame Dialog's `size` does (the record
+ * kit's AlertDialog, MIT, NOTICE): the same widths less `compact`, the same sections
  * and scrim, from the one frame definition in dialog.tsx.
  *
  * `AlertDialogContent` mounts its OWN portal + overlay (so callers never wrap

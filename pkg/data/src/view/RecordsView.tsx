@@ -1,6 +1,6 @@
 'use client'
 
-// RecordsView — the one shell that makes any Base collection an Airtable/Twenty-
+// RecordsView — the one shell that makes any Base collection an Airtable-
 // class surface: a toolbar (view switch, search, filter, sort, group) over a
 // DataTable OR a BoardView, driven by a single ViewConfig applied through the pure
 // view/logic. Presentational + data-injected: the host supplies raw records and

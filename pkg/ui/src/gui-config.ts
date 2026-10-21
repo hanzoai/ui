@@ -380,7 +380,7 @@ const STATE = { bad: 'var(--state-error, #ef4444)', good: 'var(--state-success, 
  * `$quiet` is #cccccc on dark and #242424 on light, so a "secondary" line drawn
  * with it is ink on a light page. Design's ranks are the ink at a share, so they
  * keep their distance from the ink in either scheme; the record kit's secondary,
- * tertiary and light text (twenty-ui's three ranks) read these. The literals are
+ * tertiary and light text (the source kit's three ranks) read these. The literals are
  * design's, per scheme, for a host that mounts no token layer.
  */
 const RANK = {

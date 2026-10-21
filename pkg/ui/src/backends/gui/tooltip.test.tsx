@@ -77,7 +77,7 @@ describe('Tooltip offset', () => {
         <TooltipContent>Hint</TooltipContent>
       </Tooltip>,
     )
-    // 10: the hint clears its anchor by twenty-ui's distance (was 4).
+    // 10: the hint clears its anchor by the source kit's distance (was 4).
     expect(first.offset).toBe(10)
   })
 

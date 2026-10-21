@@ -8,7 +8,7 @@
  * and Companies keep the colours a person gave them. The icon is decorative;
  * the row beside it carries the name.
  *
- * Re-expressed from twenty-ui's TintedIconTile (MIT, see NOTICE).
+ * The record kit's TintedIconTile (MIT, see NOTICE).
  */
 import { XStack } from '@hanzo/gui'
 import { cloneElement, isValidElement, type ComponentProps, type ReactElement, type ReactNode } from 'react'

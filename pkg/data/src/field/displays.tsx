@@ -10,7 +10,7 @@
 //
 // The cell vocabulary — tags 20px, pills and record chips on the 4px radius, a
 // "+N" count past what fits, a star row for a rating, an icon and a word for a
-// boolean — is twenty-ui's (MIT, see NOTICE), re-expressed on the kit.
+// boolean — is MIT-derived (see NOTICE), re-expressed on the kit.
 import { Text, XStack, useTheme } from '@hanzo/gui'
 import {
   Bot, Calendar as CalendarIcon, Check, Code, Download, Mail, Paperclip, Star, Upload, Webhook, Workflow, X,

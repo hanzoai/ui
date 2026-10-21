@@ -9,7 +9,7 @@
  * The dot is on by default (it is the whole point of a status pill) and can be
  * turned off for a plain label.
  *
- * `color` draws the record status instead (re-expressed from twenty-ui's
+ * `color` draws the record status instead (the record kit's
  * Status, MIT, see NOTICE): any of the thirty data hues, its step 3 under step
  * 11 ink, a 4px dot in the ink, 20px tall, 13px regular, and a `loading` state
  * that busies the pill. The semantic names stay as aliases onto hues — success

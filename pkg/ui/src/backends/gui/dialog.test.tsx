@@ -171,7 +171,7 @@ describe('DialogContent size', () => {
     expect(overlay()!.className).toMatch(/_o-1/)
   })
 
-  it('its sections take twenty-ui’s insets and centre the title', () => {
+  it('its sections take the source kit’s insets and centre the title', () => {
     sized('sm')
     const header = document.querySelector('[data-slot="dialog-header"]')!.className
     expect(header).toMatch(/_pt-24px/)

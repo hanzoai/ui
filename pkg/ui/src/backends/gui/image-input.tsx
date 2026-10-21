@@ -10,7 +10,7 @@
  * host owns the upload: `onChange` hands it the chosen file, `onAbort` asks it
  * to stop, `onRemove` to clear; the preview shows whatever `src` it is given.
  *
- * Anatomy after twenty-ui's ImageInput (MIT, NOTICE): a 66px preview with an 8px
+ * Anatomy after the source kit's ImageInput (MIT, NOTICE): a 66px preview with an 8px
  * corner and a 20px image-up glyph, a column 16px beside it with 12px between
  * its rows, outline buttons with 14px icons.
  */

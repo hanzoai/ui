@@ -13,7 +13,7 @@
  * the code and the symbol all match. Data-free: the caller passes the
  * currencies, from `Intl.supportedValuesOf('currency')` or its own list.
  *
- * Props and anatomy after twenty-ui's CurrencyPicker (MIT, NOTICE).
+ * Props and anatomy after the source kit's CurrencyPicker (MIT, NOTICE).
  */
 import { SizableText } from '@hanzo/gui'
 import { ChevronDown } from '@hanzogui/lucide-icons-2'

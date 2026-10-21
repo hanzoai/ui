@@ -3,8 +3,8 @@
 /**
  * Avatar keeps its 32px account look when given nothing new, and draws the
  * record avatar — five sizes, three shapes, an initial in the name's hue — when
- * given a size. The hue is twenty-ui's string hash, so a record keeps the colour
- * it had there.
+ * given a size. The hue is the source kit's string hash, so a record keeps the
+ * colour it had there.
  */
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
@@ -18,7 +18,7 @@ const html = (node: React.ReactNode) =>
   renderToStaticMarkup(<GuiProvider config={config} defaultTheme="dark">{node}</GuiProvider>)
 const tag = (markup: string, slot = 'avatar') => markup.match(new RegExp(`<[a-z0-9]+[^>]*data-slot="${slot}"[^>]*>`))?.[0] ?? ''
 
-/** twenty-ui's stringToThemeColor, written out here as the reference. */
+/** The source kit's stringToThemeColor, written out here as the reference. */
 const reference = (s: string) => {
   let hash = 0
   for (let i = 0; i < s.length; i++) hash = s.charCodeAt(i) + ((hash << 5) - hash)
@@ -27,7 +27,7 @@ const reference = (s: string) => {
 
 describe('hueOf', () => {
   it.each(['', 'a', 'Acme', 'Ada Lovelace', '6f1c2d3e-0000-4000-8000-123456789abc', 'x'.repeat(400), 'Ωμέγα 漢字'])(
-    'matches twenty-ui’s formula on %s',
+    'matches the source kit’s formula on %s',
     (seed) => expect(hueOf(seed)).toBe(reference(seed)),
   )
 

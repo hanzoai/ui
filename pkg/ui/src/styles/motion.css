@@ -203,7 +203,7 @@
    with its content does not need one. */
 :where([data-slot='textarea'], [data-slot='composer-field']) { resize: none; }
 
-/* ── The record kit's motion (twenty-ui, MIT — NOTICE) ────────────────────────
+/* ── The record kit's motion (MIT — NOTICE) ───────────────────────────────────
    Appended after the reduced-motion block above, so each rule here restates its
    own: a later `[data-motion]` rule of equal specificity would otherwise win
    over `animation: none`.

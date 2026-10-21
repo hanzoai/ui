@@ -34,7 +34,7 @@ export interface HeadingProps {
 /**
  * A section's title, what it is for, and its one action.
  *
- * Under a compact `<Density>` it is the record settings header (twenty-ui's
+ * Under a compact `<Density>` it is the record settings header (the record kit's
  * Section, MIT, NOTICE): a 13px semibold title, the description in the quiet
  * ink on a 20px line 8px under it and clamped to five lines, the action never
  * shrinking, and 16px before what follows. The regular heading is unchanged.

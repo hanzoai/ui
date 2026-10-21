@@ -16,7 +16,7 @@
  * are lifted from the field through context: the Input reports, the group draws:
  * under focus, its own edge brightened a step and no ring outside it.
  *
- * Structure and states after twenty-ui's InputGroup (MIT, see NOTICE): a row
+ * Structure and states after the source kit's InputGroup (MIT, see NOTICE): a row
  * with a 4px gap on the field box, start and end elements that never shrink,
  * the adornments quiet at rest and lifted while the field has focus.
  */

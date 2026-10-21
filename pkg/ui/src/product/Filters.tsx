@@ -36,7 +36,7 @@ const TRACK = { md: { h: 32, p: 3, item: 24 }, sm: { h: 24, p: 1, item: 20 } } a
 /**
  * A compact segmented pill control — the ONE way filters/ranges/toggles render.
  *
- * `variant="track"` is one choice from a few as a pill track (twenty-ui's
+ * `variant="track"` is one choice from a few as a pill track (the record kit's
  * SegmentedControl, MIT, NOTICE): the options on one panel-ground capsule, the
  * chosen one lifted onto the raised rung in full ink, the rest quiet. Radio
  * semantics, from gui's single ToggleGroup: one tab stop, the arrows move the
@@ -181,7 +181,7 @@ export function Segmented<T extends string>({
 /**
  * A search input with a leading magnifier, on the one field box: an
  * `InputGroup`, so the glyph sits in the row (lifting while the field has focus)
- * and `actions` sit beside the field rather than inside it — twenty-ui's
+ * and `actions` sit beside the field rather than inside it — the record kit's
  * SearchInput (MIT, NOTICE). Regular density keeps the sunken ground it always
  * had; compact takes the group's own.
  */

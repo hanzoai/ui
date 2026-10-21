@@ -8,10 +8,10 @@
  *
  * Two looks, one component. With no `size`, it is the account avatar every
  * Hanzo surface already draws: a 32px circle, its fallback on the edge rung.
- * With a `size` it is a RECORD avatar (re-expressed from twenty-ui's Avatar,
+ * With a `size` it is a RECORD avatar (the record kit's Avatar,
  * MIT, see NOTICE): xs 12 · sm 14 · md 16 · lg 24 · xl 40, square by default
  * (2px), rounded (4px) or a circle, and its initial drawn in the record's own
- * hue — twenty-ui's string hash over `colorSeed` (a record id, so a rename keeps
+ * hue — the source kit's string hash over `colorSeed` (a record id, so a rename keeps
  * the colour) or `name`, the hue's step 12 on step 4 (soft) or on step 5 inside
  * a step 6 edge (outline). Given `src` or `name` directly it draws its own
  * image and fallback; given children it is the compound it always was.
@@ -30,7 +30,7 @@ export type AvatarShape = 'square' | 'rounded' | 'circle'
 
 /**
  * The record sizes: box, and the initial's rung. xs and sm sit on Hanzo's text
- * floor, 12px (design's --text-floor): twenty-ui draws 8 and 10px initials there,
+ * floor, 12px (design's --text-floor): the source kit draws 8 and 10px initials there,
  * which Hanzo does not render. The box clips, so the glyph never spills.
  */
 const RECORD: Record<AvatarSize, { box: number; font: string }> = {

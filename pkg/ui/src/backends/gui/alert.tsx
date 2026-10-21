@@ -12,7 +12,7 @@
  * title and description are four styled parts sharing one `variant` through a
  * styled context — the surface owns the border, the other three own color.
  *
- * ── The callout (twenty-ui's Callout, MIT — NOTICE) ─────────────────────────
+ * ── The callout (the record kit's Callout, MIT — NOTICE) ────────────────────
  * Naming a `status`, a `color`, a `title`, an `action` or an `onDismiss` draws
  * the record kit's callout: a titled card up to 512 wide (`fullWidth` lifts the
  * cap), padding 12 12 8, 8px corners, its colour's faint ground and edge (data

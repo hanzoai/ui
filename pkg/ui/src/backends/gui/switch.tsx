@@ -48,7 +48,7 @@
  * behind them, off and on, exactly as 8.0.57 did. A flat name cannot say "and
  * the opposite of that, one level down", so this file names rungs on purpose.
  *
- * THREE SIZES, and the record two are twenty-ui's (MIT, NOTICE): `md` a 32×20
+ * THREE SIZES, and the record two are the source kit's (MIT, NOTICE): `md` a 32×20
  * pill with a 16px thumb, `sm` 24×16 with a 12px thumb, each with no edge and
  * the thumb 2px in. `default` stays the 36×20 pill with its hairline; under
  * `<Density value="compact">` a switch that names no size is `md`. The tokens do

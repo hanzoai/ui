@@ -9,8 +9,8 @@
  *
  * `variant="cap"` is a keycap that stands on its own lower edge: 18px tall, a
  * 1px strong edge on the panel ground, 4px radius and the keycap underline —
- * the key `Shortcut` draws in a command menu or a help sheet (re-expressed from
- * twenty-ui's Shortcut keys, MIT, see NOTICE). The default stays the flat chip.
+ * the key `Shortcut` draws in a command menu or a help sheet (the record kit's
+ * Shortcut keys, MIT, see NOTICE). The default stays the flat chip.
  */
 import { SizableText, XStack, styled } from '@hanzo/gui'
 import * as React from 'react'
@@ -66,7 +66,7 @@ export function Kbd({ children, variant = 'default', ...props }: KbdProps) {
       {...(variant === 'cap' ? { 'data-variant': 'cap', ...CAP } : null)}
       {...(props as React.ComponentProps<typeof KbdFrame>)}
     >
-      {/* A keycap's legend is the secondary rank (twenty-ui's keys), the flat
+      {/* A keycap's legend is the secondary rank (the source kit's keys), the flat
           chip's stays the ramp's quiet rung it always was. */}
       {ink(children, KbdText, variant === 'cap' ? { color: '$aside' } : {})}
     </KbdFrame>

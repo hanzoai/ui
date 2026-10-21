@@ -33,7 +33,7 @@
  *
  * Moved here from @hanzo/build, where hanzo.ai's sidebar and asides used it.
  *
- * `bar` draws a handle instead of the line (twenty-ui's ResizeHandle, MIT,
+ * `bar` draws a handle instead of the line (the record kit's ResizeHandle, MIT,
  * NOTICE): a pill centred in the band, 4×48 on an edge (`edge`) or 3×32 between
  * two panes (`inline`). Like the line it is drawn only while it is reached for:
  * the soft rung under the pointer, the ring's colour for a keyboard's focus, and

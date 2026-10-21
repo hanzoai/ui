@@ -4,7 +4,7 @@
 // board host; this is the standalone card unit.
 //
 // Under `<Density value="compact">` (a CRM shell) it is the record kit's kanban
-// card (twenty-ui's board card, MIT, NOTICE): the panel ground under a hairline
+// card (MIT, NOTICE): the panel ground under a hairline
 // at a 4px corner; a 32px header holding the record as a chip (its avatar in the
 // record's hue, its name) and a checkbox slot that opens from 0 to 24 on hover
 // or once the card is selected; then the field rows, 2 apart, each a 16px icon
@@ -40,7 +40,7 @@ export interface RecordCardProps {
   drag?: 'source' | 'preview'
 }
 
-/** The card's measures (twenty-ui's board card, MIT). */
+/** The card's measures (the record kit's board card, MIT). */
 export const CARD = { header: 32, check: 24, value: 156, icon: 16, rows: 2 } as const
 
 export function RecordCard(props: RecordCardProps) {

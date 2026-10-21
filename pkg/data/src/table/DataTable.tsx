@@ -1,6 +1,6 @@
 'use client'
 
-// DataTable — the Twenty-grade, metadata-driven record grid. Columns are
+// DataTable — the metadata-driven record grid. Columns are
 // FieldDefinitions, rows are records; every cell renders through FieldDisplay /
 // FieldInput, so the grid understands every field type and a new type needs zero
 // table changes. It adds the record-app essentials on the same one model:
@@ -16,7 +16,7 @@
 // Drawn with @hanzo/ui's record kit and its theme rungs, so it follows the theme.
 // Under `<Density value="compact">` it takes the record density — 32px rows, an
 // 8px cell gutter, a 28px selection column, a framed hover action at a cell's end
-// — the cell geometry twenty-ui's tables are built from (MIT, see NOTICE); a host
+// — the cell geometry the source kit's tables are built from (MIT, see NOTICE); a host
 // that sets no density keeps its 44px rows.
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Spinner, Text, XStack, YStack } from '@hanzo/gui'

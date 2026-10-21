@@ -19,7 +19,7 @@
  * step 11 for the icon — because step 9 is a fill: on the light theme it reads
  * at 1.2:1 for yellow and about 3:1 for blue and green over the step-2 ground.
  *
- * ── The record kit's banner (twenty-ui's Banner and InlineBanner, MIT — NOTICE)
+ * ── The record kit's banner (Banner and InlineBanner, MIT — NOTICE)
  * Naming a `status`, a `color`, an `emphasis`, a `layout` or an `action` draws
  * the other shape: content centred with a 12px gap, a 40px floor, 8px padding,
  * 13px medium on a 1.5 line, the colour from the one status map (feedback.ts) —

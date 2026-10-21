@@ -11,7 +11,7 @@
  * own, and a colour this palette does not know reads as gray rather than as
  * nothing.
  *
- * Re-expressed from twenty-ui's Tag (MIT, see NOTICE): 20px tall, 8px gutter,
+ * The record kit's Tag (MIT, see NOTICE): 20px tall, 8px gutter,
  * 4px gap and radius, 13px text, a 14px start icon, a dashed outline for "no
  * value", string labels truncated with an overflow hint.
  */

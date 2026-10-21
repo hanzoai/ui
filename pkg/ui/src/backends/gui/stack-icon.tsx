@@ -4,7 +4,7 @@
  * StackIcon — an icon with a smaller one pinned over its lower-right quadrant:
  * a provider and its state, an app and its connection.
  *
- * Re-expressed from twenty-ui's StackIcon (MIT, see NOTICE): a 16px box, the
+ * The record kit's StackIcon (MIT, see NOTICE): a 16px box, the
  * stacked icon 8px from the left and 7px from the top. Both are decorative.
  */
 import { XStack } from '@hanzo/gui'

@@ -22,7 +22,7 @@
  * other responsive prop in this codebase is written in.
  *
  * Under `<Density value="compact">` the text leaves take the record density
- * twenty-ui's Field draws (MIT, NOTICE): a 12px semibold label in the light ink
+ * the source kit's Field draws (MIT, NOTICE): a 12px semibold label in the light ink
  * 4px above its control, a 12px light description and a 12px error, the block's
  * gap 4. Regular density draws exactly what it always did.
  *

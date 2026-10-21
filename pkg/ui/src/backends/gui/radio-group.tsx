@@ -30,7 +30,7 @@
  *
  * Two looks. With no `size`, an item is the 16px ring and `$ink` dot it has
  * always been. Naming `size` (sm 16 | md 18), or a `<Density value="compact">`
- * around it, draws twenty-ui's radio (MIT, NOTICE): a quiet ring at rest that
+ * around it, draws the source kit's radio (MIT, NOTICE): a quiet ring at rest that
  * FILLS when checked — the monochrome accent (`--primary`, which an org's accent
  * restates) round a dot in its foreground — a 4px hover halo, and the 32%
  * register of a disabled option.
@@ -118,7 +118,7 @@ const RecordItem = ({ size, disabled, children, ...props }: RadioGroupItemProps 
         backgroundColor="var(--primary)"
         items="center"
         justify="center"
-        // 1.05 at the item's 0.95, as twenty-ui grows a checked radio.
+        // 1.05 at the item's 0.95, as the source kit grows a checked radio.
         scale={1.1}
       >
         <XStack width={dim.dot} height={dim.dot} rounded={1000} bg="var(--primary-foreground)" />

@@ -9,8 +9,8 @@
  * simply go on to the next screen, use `<Card interactive>` instead: that is a
  * button, this is a setting.
  *
- * `indicator` puts a radio in the card's top-end corner, 8px in — twenty-ui's
- * radio card (MIT, NOTICE) — so the choice reads as a radio and not only as an
+ * `indicator` puts a radio in the card's top-end corner, 8px in — the source
+ * kit's radio card (MIT, NOTICE) — so the choice reads as a radio and not only as an
  * edge. Under `<Density value="compact">` the card takes that card's measure:
  * 8px radius, 16 by 12 padding, the panel ground and the hover rung.
  */

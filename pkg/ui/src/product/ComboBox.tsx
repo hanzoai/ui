@@ -12,7 +12,7 @@
  * the panel does NOT steal focus, so typing keeps filtering.
  *
  * Under `<Density value="compact">` it is the record kit's Autocomplete
- * (twenty-ui's, MIT, NOTICE): one 32px field box, the chevron a quiet icon
+ * (MIT, NOTICE): one 32px field box, the chevron a quiet icon
  * button inside its end rather than a control beside it. `limit` caps how many
  * live options the list shows. A regular surface draws the row it always has.
  */

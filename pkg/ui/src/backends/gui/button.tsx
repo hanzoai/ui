@@ -55,8 +55,8 @@ export type ButtonVariant =
   | 'linkMuted'
 
 /**
- * The colour a control speaks in, across its variant: twenty-ui's `color` axis
- * (MIT). Named `tone` because `color` is already the label's colour here.
+ * The colour a control speaks in, across its variant: the source kit's `color`
+ * axis (MIT). Named `tone` because `color` is already the label's colour here.
  *
  * `accent` is the monochrome accent — `--primary`, ink by default and an org's
  * colour once it picks one — never a hue of its own. `danger` and `success` are
@@ -81,7 +81,7 @@ const TOUCH = 44
 /**
  * `xs` (24), `icon-xs` (24) and `icon-2xs` (20) are the record density: the
  * quiet buttons a table cell, a chip, a kanban header and a menu row hold
- * (twenty-ui's sm and xs, MIT). They sit beside 13px text, carry a 14px icon and
+ * (the source kit's sm and xs, MIT). They sit beside 13px text, carry a 14px icon and
  * keep the 44px press area under a coarse pointer like every other size.
  */
 const HEIGHT: Record<ButtonSize, number> = {
@@ -274,7 +274,7 @@ const Frame = styled(GuiButton.Frame, {
     // Lifted off the page: the ladder's first rung (the `elevation-1` class the
     // component adds — lit edge and small drop, owned by glass.css) and, on an
     // outline, the page's ground with the stronger edge, so it reads as raised
-    // rather than as a hole (twenty-ui's `elevated`). Never `--shadow-sm`: that
+    // rather than as a hole (the source kit's `elevated`). Never `--shadow-sm`: that
     // size ramp is common property and glass.test holds the ladder off it.
     elevated: (on: boolean, { props }: { props: Record<string, unknown> }) =>
       on
@@ -477,7 +477,7 @@ const glyph = (icon: ReactNode, size: number, color?: string) => {
 /** The two record sizes whose child IS the icon, so the button draws it at its glyph. */
 const SMALL_ICON = new Set<ButtonSize>(['icon-xs', 'icon-2xs'])
 
-/** How long a pointer rests on a button before its tooltip shows (twenty-ui's 1000ms). */
+/** How long a pointer rests on a button before its tooltip shows (the source kit's 1000ms). */
 const TOOLTIP_DELAY = 1000
 
 function Button({ tooltip, ...props }: ButtonProps) {
@@ -529,7 +529,7 @@ function Pressable({
   const compact = density === 'compact' && size == null && group?.size == null
   const quiet = emphasis === 'subtle' ? { color: '$hint' } : null
   const tint = emphasis === 'subtle' ? '$hint' : toneInk(tone, variant)
-  // The record density's label weight: medium, as twenty-ui sets every button.
+  // The record density's label weight: medium, as the source kit sets every button.
   const weight = density === 'compact' ? { fontWeight: '500' } : null
   // Disabled but focusable: the frame's `disabled` would take pointer events and
   // focus away, so the state is said in ARIA and the press is refused here.

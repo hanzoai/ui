@@ -32,7 +32,7 @@
  *            overlay again, full screen.
  *
  * A docked pane — or any pane under `<Density value="compact">` — draws the
- * record frame (twenty-ui's side panel, MIT, NOTICE): a 48px top bar on the
+ * record frame (the record kit's side panel, MIT, NOTICE): a 48px top bar on the
  * panel ground (back · icon + title · page actions · expand · close), a body
  * that scrolls without chaining, and a footer on the panel ground with its
  * actions at the end. An overlay pane at regular density keeps the header it
@@ -125,7 +125,7 @@ export type DetailPaneProps = {
   store?: string
 }
 
-/** The record frame's measures (twenty-ui's side panel, MIT). */
+/** The record frame's measures (the record kit's side panel, MIT). */
 export const PANE = { w: 400, min: 320, max: 600, bar: 48, icon: 16 } as const
 
 export function DetailPane({ children, zIndex, mode = 'overlay', store = 'hanzo.pane' }: DetailPaneProps) {

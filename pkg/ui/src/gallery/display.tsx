@@ -4,7 +4,7 @@
  * The record kit's display parts in the gallery — tags in every hue, chips,
  * avatars, keycaps, counts, statuses, tiles and swatches — so the sheet holds
  * every rule they render, and the browser suites see them in both themes.
- * twenty-ui's data-display parts (MIT, NOTICE), regular and compact.
+ * The source kit's data-display parts (MIT, NOTICE), regular and compact.
  */
 import { Building2, Heart, Lock, Pencil, Plus, User, X } from '@hanzogui/lucide-icons-2'
 import { hues, neutrals } from '@hanzo/tokens/data'

@@ -30,8 +30,10 @@ dd7099a02f83ddc021231b71d5344d3b83f4cf7d), licensed under MIT:
 
     Copyright (c) 2023-present Twenty.com, PBC
 
-The derived parts are the record kit: every file under pkg/ui/src and
-pkg/data/src whose header names twenty-ui. Each re-expresses a twenty-ui
+The derived parts are the record kit, held in pkg/ui/src/backends/gui (its
+record-density parts), pkg/ui/src/product, pkg/ui/src/settings, the record
+motion in pkg/ui/src/motion.tsx and pkg/ui/src/styles/motion.css,
+pkg/data/src and pkg/tokens/src/data.ts. Each re-expresses a twenty-ui
 component's props, states and measured values on @hanzo/gui; no twenty-ui
 source, stylesheet or asset is copied. "Twenty" and the Twenty logo are
 trademarks of Twenty.com, PBC and are not licensed; neither appears in this

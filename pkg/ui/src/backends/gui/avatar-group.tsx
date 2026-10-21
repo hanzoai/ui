@@ -10,7 +10,7 @@
  * top. A server-side `total` larger than the list supplied still counts the
  * rest. With nothing to show it renders nothing.
  *
- * Re-expressed from twenty-ui's AvatarGroup (MIT, see NOTICE): four visible,
+ * The record kit's AvatarGroup (MIT, see NOTICE): four visible,
  * a 3px overlap, the overflow box on the hover rung behind a ground-coloured
  * edge, 12px medium quiet text.
  */

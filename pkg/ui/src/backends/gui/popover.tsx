@@ -11,11 +11,11 @@
  * — while the compound API spells them on Content, as `sideOffset` and `align`.
  * One value, one owner: the root holds them, Content publishes into it.
  *
- * `size="sm"` is the record panel (twenty-ui's Popover, MIT, NOTICE): an 8px
+ * `size="sm"` is the record panel (the record kit's Popover, MIT, NOTICE): an 8px
  * inset, sized to its content up to the room there is, 8px clear of its anchor.
  * A `<Density value="compact">` makes it the default for a panel that names no
  * size. The default stays the 16px-inset, 288-wide panel every surface has. The
- * fill stays Hanzo's near-opaque panel — not twenty-ui's translucent glass.
+ * fill stays Hanzo's near-opaque panel — not the source kit's translucent glass.
  * `arrow` adds a 12×6 pointer in the panel's own fill and edge.
  */
 import { Popover as GuiPopover } from '@hanzo/gui'

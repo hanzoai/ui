@@ -10,13 +10,13 @@
  * that is not the size of its content is worse than none: the page reflows when
  * the real thing appears, which is the jump the skeleton existed to prevent.
  *
- * After twenty-ui's Skeleton (MIT, NOTICE): the base is the hover rung, the
+ * After the source kit's Skeleton (MIT, NOTICE): the base is the hover rung, the
  * highlight a faint glass band, 4px corners, a 1.5s sweep (`--duration-loop`,
  * stopped under reduced motion), height presets xs 13 / s 16 / m 24 / l 32 /
  * xl 40, and two layouts — `inline` takes a line box of the text around it
  * (it holds a zero-width non-joiner, so it is a line tall with no height
  * given), `block` is a box of its own. The highlight is `--glass` rather than
- * the panel rung: twenty-ui's is 2% black on light and 3% white on dark, and
+ * the panel rung: the source kit's is 2% black on light and 3% white on dark, and
  * the panel rung is a SOLID step that sits darker than the hover rung in the
  * dark theme, which would sweep a shadow instead of a light.
  *

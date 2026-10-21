@@ -7,7 +7,7 @@
  * gui owns the machinery: `@hanzogui/toast/v2`'s observer (`toast()`), its
  * stack, its swipe and its exit animation. This file draws the toast itself, on
  * the composable API (`Toast` → `Viewport` → `List` with a `renderItem`), in the
- * record kit's shape — twenty-ui's Toast and Toaster (MIT, NOTICE):
+ * record kit's shape — its Toast and Toaster (MIT, NOTICE):
  *
  *   · 296 wide on the floating material (`glass(2)`), 8px corners, padding
  *     8 8 4, 8px between toasts, at the bottom-right 12px in; on a phone (≤768)

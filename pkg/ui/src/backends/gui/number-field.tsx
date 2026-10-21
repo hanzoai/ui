@@ -17,7 +17,7 @@
  * optional buttons step the same way and leave the keyboard to the field.
  *
  * gui has no number-field primitive, so the behaviour is written once here.
- * Props, keys and defaults after twenty-ui's NumberField (MIT, NOTICE): step 1,
+ * Props, keys and defaults after the source kit's NumberField (MIT, NOTICE): step 1,
  * smallStep 0.1, largeStep 10, no wheel scrub, out-of-range refused; its buttons
  * are the outline control at the field's height, 4px apart.
  */

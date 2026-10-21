@@ -62,7 +62,7 @@ describe('pills', () => {
     expect(markup).toMatch(/data-slot="chip"/)
   })
 
-  it('several emails, from Twenty’s composite, are several pills', () => {
+  it('several emails, from the composite, are several pills', () => {
     const markup = show('email', { primaryEmail: 'a@x.io', additionalEmails: ['b@x.io'] })
     expect(markup).toContain('mailto:a@x.io')
     expect(markup).toContain('mailto:b@x.io')

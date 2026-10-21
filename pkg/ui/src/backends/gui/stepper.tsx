@@ -6,8 +6,8 @@
  * Both buttons are named for the thing counted (`label`), the count is a live
  * region, and each button disables at its bound instead of silently clamping.
  *
- * `editable` makes the count a field a person can type into, twenty-ui's
- * NumberStepper (MIT, NOTICE): a 64px centred value at the medium weight that
+ * `editable` makes the count a field a person can type into, the source
+ * kit's NumberStepper (MIT, NOTICE): a 64px centred value at the medium weight that
  * commits on Enter or blur — read leniently (grouping stripped, either decimal
  * mark), held to the bounds, rounded to `step` and to `decimals` — and shows
  * Latin digits, grouped only from five digits up. It is on by default under

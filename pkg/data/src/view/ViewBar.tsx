@@ -1,7 +1,7 @@
 'use client'
 
-// ViewBar — the records toolbar in the record kit's look (twenty-ui's view bar,
-// MIT, NOTICE), drawn by RecordsToolbar under `<Density value="compact">`.
+// ViewBar — the records toolbar in the record kit's look (MIT, NOTICE),
+// drawn by RecordsToolbar under `<Density value="compact">`.
 //
 //   top row      39 high on a hairline: the view picker (its layout's icon, the
 //                name held to 130, "· N", a quiet chevron) opening the saved
@@ -75,7 +75,7 @@ import {
   updateFilter,
 } from './logic'
 
-/** The bar's measures (twenty-ui's view bar, MIT). */
+/** The bar's measures (the record kit's view bar, MIT). */
 export const VIEW_BAR = { top: 39, details: 32, chip: 24, remove: 20, name: 130, menu: 200, wide: 240 } as const
 
 const byName = (fields: FieldDefinition[], name: string) => fields.find((f) => f.name === name)
@@ -111,7 +111,7 @@ export function ViewBar(props: RecordsToolbarProps) {
     <YStack {...({ 'data-slot': 'view-bar' } as object)}>
       <XStack
         {...({ 'data-slot': 'view-bar-top' } as object)}
-        // 39 above its hairline, as twenty-ui measures it.
+        // 39 above its hairline, as the source kit measures it.
         minH={VIEW_BAR.top + 1}
         items="center"
         justify="space-between"

@@ -7,7 +7,7 @@
  * re-applies the trigger's resolved theme inside the portal via `PortalTheme` —
  * gui portals re-root the subtree, so React theme context does not flow.
  *
- * `size` is the record dialog (twenty-ui's Dialog, MIT, NOTICE): sm 300, compact
+ * `size` is the record dialog (the record kit's Dialog, MIT, NOTICE): sm 300, compact
  * 360, md 400, lg the larger of 400 and 53% of the viewport, xl 1200 (at most
  * 800 tall), fullscreen. A sized dialog is a frame of three sections — Header
  * (24 all round, title and description centred), Body (24 at the sides and
@@ -154,7 +154,7 @@ const DialogContent = ({
 
 export type DialogSectionProps = ComponentProps<typeof YStack> & { children?: ReactNode }
 
-/** The three sections of a sized frame, as twenty-ui pads them. */
+/** The three sections of a sized frame, as the source kit pads them. */
 export const section = {
   header: { p: PAD, gap: '$2', items: 'center' },
   body: { px: PAD, pb: PAD },

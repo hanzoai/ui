@@ -19,7 +19,7 @@
  * `aria-hidden`, because a spinner is never the message: the thing that is
  * loading says so in text beside it.
  *
- * `variant="dot"` is the record kit's loader (twenty-ui's Loader, MIT — NOTICE):
+ * `variant="dot"` is the record kit's loader (Loader, MIT — NOTICE):
  * a 24×12 pill outline with an 8px dot that travels across it and squashes as
  * it lands, 0.8s a loop (`data-motion="hop"` in styles/motion.css, stopped under
  * reduced motion). It is the quieter one, for a status pill, a button that is

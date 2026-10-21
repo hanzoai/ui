@@ -17,7 +17,7 @@ import type { Microdata } from './microdata'
 const PAD = 24
 
 /**
- * The compact card (twenty-ui's Card, MIT, NOTICE): the settings and record
+ * The compact card (the record kit's Card, MIT, NOTICE): the settings and record
  * frame. No inset of its own and an 8px corner; a Header and a Footer band at
  * 8×16 in 12px medium on the ground, a Content well at 16 on the panel rung,
  * hairlines between them (`divider` on Content, on by default for the Footer).

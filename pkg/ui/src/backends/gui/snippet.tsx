@@ -14,8 +14,8 @@
  * `theme` names a fixed palette for the code surface, independent of the
  * page's own light or dark theme; `size` picks the type scale.
  *
- * `variant="command"` is the record kit's command block (twenty-ui's
- * CommandBlock, MIT — NOTICE): shell lines on the panel ground, 1px hairline,
+ * `variant="command"` is the record kit's command block (CommandBlock,
+ * MIT — NOTICE): shell lines on the panel ground, 1px hairline,
  * 4px corners, 12px padding, each line led by a "> " the reader does not copy
  * or hear, wrapping anywhere, with `actions` (the copy button by default) 12px
  * from the text and never shrinking. It follows the page's theme rather than a

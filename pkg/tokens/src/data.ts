@@ -12,9 +12,9 @@
  * Thirty 12-step scales, light and dark, as sRGB hex. Twenty-four of the
  * twenty-five pickable hues and all five neutrals are Radix Colors 3.0.0 scales
  * (their display-p3 sources are identical, measured; MIT, see NOTICE): `blue` is
- * Radix indigo and `teal` is Radix teal. `gray` is a neutral of Twenty's own
- * (twenty-ui, MIT). The sRGB values are the nearest in-gamut conversion of the
- * display-p3 sources twenty-ui ships.
+ * Radix indigo and `teal` is Radix teal. `gray` is a neutral of the
+ * source kit's own (MIT, see NOTICE). The sRGB values are the nearest in-gamut
+ * conversion of the display-p3 sources that kit ships.
  *
  * The steps keep Radix's meaning, and components read them by role:
  *
@@ -175,8 +175,8 @@ export const next = (hue?: PickHue | null): PickHue => {
 /**
  * The hue a string is drawn in: a rolling hash of `seed` (each step
  * `code + (hash << 5) - hash`), absolute value modulo the twenty-five pickable
- * hues. The same formula as twenty-ui's stringToThemeColor (MIT), so a record
- * imported from Twenty keeps its colour. Seed with a record id rather than a name
+ * hues. The same formula as the source kit's stringToThemeColor (MIT, see
+ * NOTICE), so an imported record keeps its colour. Seed with a record id rather than a name
  * and a rename keeps it too.
  */
 export const hueOf = (seed: string): PickHue => {

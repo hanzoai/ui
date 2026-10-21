@@ -22,7 +22,7 @@
  * menu's page history. gui portals re-root the subtree, so none of the three
  * flows by itself.
  *
- * THE RECORD PARTS (twenty-ui's Dropdown, MIT, NOTICE), re-expressed on gui's
+ * THE RECORD PARTS (the record kit's Dropdown, MIT, NOTICE), re-expressed on gui's
  * Menu rather than on base-ui's:
  *
  *   Search            a borderless field at the top; the app filters. Typing
@@ -42,8 +42,8 @@
  *   Item `actions`    trailing controls beside a row, shown under the pointer
  *                     or focus (always on touch).
  *
- * Typeahead is gui's own, and its buffer is gui's 1000ms where twenty-ui used
- * 500ms: behaviour comes from the primitive, so the difference is recorded, not
+ * Typeahead is gui's own, and its buffer is gui's 1000ms where the source kit
+ * used 500ms: behaviour comes from the primitive, so the difference is recorded, not
  * reimplemented.
  */
 import * as React from "react"
@@ -70,7 +70,7 @@ const ICON = 16
 const PAD = 4
 /** A scrollable section's ceiling: five and a half rows, so the cut shows there is more. */
 const SCROLL_H = 176
-/** The search row and the header row, as twenty-ui draws them. */
+/** The search row and the header row, as the source kit draws them. */
 const SEARCH_H = 36
 const HEADER_H = 33
 const BAND_H = 20
@@ -140,8 +140,8 @@ const PagesContext = /* @__PURE__ */ React.createContext<Pages | null>(null)
 
 /**
  * The trigger's offset: 4 on a regular surface, 8 on a compact one — a record
- * menu hangs a little clear of the 32px control it opens from (twenty-front's
- * menus sit 8 below their trigger).
+ * menu hangs a little clear of the 32px control it opens from (the source
+ * app's menus sit 8 below their trigger).
  */
 const offsetFor = (density: string) => (density === "compact" ? 8 : 4)
 
@@ -1047,7 +1047,7 @@ const DropdownMenuLabel = /* @__PURE__ */ React.forwardRef<
   )
 })
 
-/** A hairline between sections, bled to the panel's edges as twenty-ui draws it. */
+/** A hairline between sections, bled to the panel's edges as the source kit draws it. */
 const DropdownMenuSeparator = /* @__PURE__ */ React.forwardRef<
   GuiElement,
   React.ComponentProps<typeof Menu.Separator>

@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * The record kit in the gallery: the parts merged from twenty-ui (MIT, NOTICE),
+ * The record kit in the gallery: the parts merged from the source kit (MIT, NOTICE),
  * every variant, at both densities.
  *
  * A module of the one gallery rather than a second list: `Gallery` renders it,

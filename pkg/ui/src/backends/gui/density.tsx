@@ -6,7 +6,7 @@
  * `regular` is every Hanzo surface as it is: 36px fields and buttons, 14px text.
  * `compact` is the record density a CRM, a data table or a settings page wants —
  * 32px controls with 13px text and an 8px gutter, the box a cell editor and a
- * filter value are drawn in (twenty-ui's default rung, MIT). It changes what a
+ * filter value are drawn in (the source kit's default rung, MIT). It changes what a
  * control renders when it names no `size`; a control that names one keeps it.
  *
  * A context rather than a prop on each control, because the decision belongs to

@@ -15,7 +15,7 @@ export type FactProps = {
   mono?: boolean
   /**
    * `row` (default) is the property-list row. `metric` is the record kit's
-   * metric row (twenty-ui's MetricRow, MIT — NOTICE): no rule, a 24px floor,
+   * metric row (MetricRow, MIT — NOTICE): no rule, a 24px floor,
    * 12px medium, the label quiet beside an optional icon, the value at the end,
    * and an optional progress ring that the value labels.
    */

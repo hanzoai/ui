@@ -12,7 +12,7 @@
  * The panel is portalled, and a portal does not carry React context across, so
  * the density the trigger sits in is read here and given again inside, as
  * `PortalTheme` does for the theme. Rows are the record row: 32px, 4px corners.
- * After twenty-ui's searchable picker dropdown (MIT, NOTICE).
+ * After the source kit's searchable picker dropdown (MIT, NOTICE).
  */
 import { SizableText, XStack, type GuiElement } from '@hanzo/gui'
 import { Check } from '@hanzogui/lucide-icons-2'

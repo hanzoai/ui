@@ -4,7 +4,7 @@
  * The record kit's feedback in the gallery: skeletons, the dot loader, both
  * progress shapes and the ring, toasts at rest in every status, banners and
  * callouts in every colour and layout, the boxed JSON tree, the metric row,
- * the command block and the headed code editor (twenty-ui, MIT — NOTICE).
+ * the command block and the headed code editor (MIT — NOTICE).
  * Every variant that carries a style of its own is rendered, so its rules ship.
  */
 import { Bot, Sparkles } from '@hanzogui/lucide-icons-2'

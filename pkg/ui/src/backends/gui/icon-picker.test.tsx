@@ -83,7 +83,7 @@ describe('Glyph', () => {
 })
 
 describe('IconPicker', () => {
-  it('is twenty-ui’s 176px picker', () => {
+  it('is the source kit’s 176px picker', () => {
     expect(PICKER_W).toBe(176)
   })
 

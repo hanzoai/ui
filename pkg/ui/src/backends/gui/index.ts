@@ -390,7 +390,7 @@ export { MediaPlayer, type MediaPlayerProps, type MediaPlayerSize, type MediaSou
 export { NavigationBar, type NavigationBarLink, type NavigationBarOption, type NavigationBarPerson, type NavigationBarProps, type NavigationBarVariant } from './navigation-bar'
 
 // THE RECORD KIT — the parts a CRM, a data table and a settings page are drawn
-// from, merged from twenty-ui's MIT packages (NOTICE) and re-expressed on gui.
+// from, merged from MIT packages (NOTICE) and re-expressed on gui.
 // One block, so the merge reads as one change and the root mirrors it as one.
 export { Density, useDensity, fieldSize, type DensityName } from './density'
 export { InputGroup, type InputGroupProps } from './input-group'

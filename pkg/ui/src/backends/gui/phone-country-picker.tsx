@@ -16,7 +16,7 @@
  * countries and their calling codes.
  *
  * Flags are regional-indicator text (`flag`), drawn by the platform. Anatomy
- * after twenty-ui's PhoneCountryPicker (MIT, NOTICE): 8px before the flag and 4
+ * after the source kit's PhoneCountryPicker (MIT, NOTICE): 8px before the flag and 4
  * after the chevron, a 16×12 flag with 2px corners, a globe when none.
  */
 import { SizableText, VisuallyHidden, XStack } from '@hanzo/gui'

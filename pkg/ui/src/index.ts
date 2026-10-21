@@ -602,7 +602,7 @@ export {
 } from './backends/gui'
 
 // The record kit (the backend's last block): the parts a CRM, a data table and a
-// settings page are drawn from, merged from twenty-ui's MIT packages (NOTICE).
+// settings page are drawn from, merged from MIT packages (NOTICE).
 export {
   Density,
   useDensity,

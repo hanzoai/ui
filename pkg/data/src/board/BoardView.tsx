@@ -8,8 +8,8 @@
 // never fabricated. The same FieldDisplay engine as the table, so the card
 // understands every field type. Presentational + data-injected.
 //
-// Under `<Density value="compact">` it is the record kit's board (twenty-ui's
-// kanban, MIT, NOTICE): 200px columns with no ground of their own, each headed
+// Under `<Density value="compact">` it is the record kit's kanban board
+// (MIT, NOTICE): 200px columns with no ground of their own, each headed
 // by its value's Tag (a dashed outline for "No value"), the count in the
 // tertiary ink and a quiet + to add; the kanban card stacked 8 apart; a drop
 // target lit on the hover rung; the dragged card faded at its source and lifted
@@ -27,7 +27,7 @@ import { boardColumns, movePatch, groupKeyOf, NO_VALUE, type BoardColumn } from 
 type Record_ = Record<string, unknown>
 
 const COL_W = 300
-/** The record board's column (twenty-ui's default; resizing 150–400 is the app's). */
+/** The record board's column (the source kit's default; resizing 150–400 is the app's). */
 const RECORD_COL_W = 200
 
 export interface BoardViewProps {

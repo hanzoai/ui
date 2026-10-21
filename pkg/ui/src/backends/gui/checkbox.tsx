@@ -10,7 +10,7 @@
  * edge and an `$ink` tick, never filled. It is what a Checkbox renders when it
  * names nothing else, so no existing caller moves.
  *
- * The record look is twenty-ui's (MIT, NOTICE), asked for by naming any of
+ * The record look is the source kit's (MIT, NOTICE), asked for by naming any of
  * `variant` (solid | outline | soft), `size` (sm 12px | md 18px box), `shape`
  * (square | round), `color` (accent | success | warning) or `hoverable`, or by a
  * `<Density value="compact">` around it. The box FILLS when checked — the
@@ -60,7 +60,7 @@ const DIM = {
   md: { box: 18, edge: 1.5, glyph: 20, pad: 6 },
 } as const
 
-/** The unchecked edge per variant (twenty-ui: inverted, secondary-inverted, medium). */
+/** The unchecked edge per variant (the source kit: inverted, secondary-inverted, medium). */
 const EDGE: Record<Exclude<CheckboxVariant, 'plain'>, string> = {
   solid: '$ink',
   outline: '$hint',

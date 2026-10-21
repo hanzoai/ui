@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest'
 import { STATUS_COLOR, STATUS_PAINT, colorOf, paint } from './feedback'
 
 describe('the feedback status map', () => {
-  it('maps the five statuses onto the five colours, twenty-ui’s way', () => {
+  it('maps the five statuses onto the five colours, the source kit’s way', () => {
     expect(STATUS_COLOR).toEqual({ neutral: 'gray', info: 'blue', success: 'green', warning: 'orange', error: 'red' })
   })
 
