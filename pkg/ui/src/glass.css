@@ -327,7 +327,10 @@
    `:has` is unsupported neither applies and the field keeps drawing its own
    ring, so no browser reaches a state with a focused composer and no indicator
    anywhere. */
-[data-slot='composer']:has([data-slot='composer-field']:focus-visible) {
+/* `:root` first, because gui writes each edge's colour as `:root ._btc-x._btc-x`
+   (0,3,0), injected after this sheet: at equal weight the later rule won and
+   the edge never moved. One more step of weight is the whole fix. */
+:root [data-slot='composer']:has([data-slot='composer-field']:focus-visible) {
   border-color: color-mix(in srgb, var(--foreground) 32%, transparent);
 }
 
