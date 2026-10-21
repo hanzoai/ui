@@ -120,5 +120,20 @@ describe('signOut', () => {
     expect(assign).toHaveBeenCalledWith('/login?from=logout')
     expect(seen).toEqual(['logout_completed'])
     expect(bearer()).toBeNull()
+    expect(calls[2]!.body).not.toContain('everywhere')
+  })
+
+  it('asks IAM to leave every application of the organization when told to', async () => {
+    const calls: { url: string; body: string }[] = []
+    vi.stubGlobal('fetch', async (url: string, init: { body: string }) => {
+      calls.push({ url, body: init.body })
+      return new Response('{}')
+    })
+    Object.defineProperty(window, 'location', { value: { origin: 'https://hanzo.ai', assign: vi.fn() }, writable: true })
+    const iam = { clearTokens: () => localStorage.clear() } as unknown as IAM
+    await signOut(iam, { clientId: 'hanzo-app', everywhere: true })
+    const ended = calls.find((c) => c.url.endsWith('/v1/iam/oauth/logout'))!
+    expect(new URLSearchParams(ended.body).get('everywhere')).toBe('true')
+    expect(new URLSearchParams(ended.body).get('client_id')).toBe('hanzo-app')
   })
 })
