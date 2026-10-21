@@ -13,7 +13,8 @@
  * action can be clicked, and the text never runs under either.
  *
  * gui has no `:focus-within` and no `:has()`, so focus, invalidity and disabling
- * are lifted from the field through context: the Input reports, the group draws.
+ * are lifted from the field through context: the Input reports, the group draws:
+ * under focus, its own edge brightened a step and no ring outside it.
  *
  * Structure and states after twenty-ui's InputGroup (MIT, see NOTICE): a row
  * with a 4px gap on the field box, start and end elements that never shrink,
@@ -46,6 +47,9 @@ export type InputGroupProps = Omit<ComponentProps<typeof XStack>, 'children'> & 
   children?: ReactNode
 }
 
+/** The edge under focus: a third of the ink, in either theme (glass.css says the same for the composer). */
+const LIT = 'color-mix(in srgb, var(--foreground) 32%, transparent)' as `var(--${string})`
+
 /** Quiet at rest, lifted under focus, dimmer still when the field is disabled. */
 const tone = (focused: boolean, disabled: boolean) => (disabled ? 0.4 : focused ? 0.9 : 0.6)
 
@@ -61,7 +65,9 @@ export function InputGroup({ start, end, size, fill = false, children, ...props 
   )
   const ctx = useMemo(() => ({ size: resolved, focus: setFocused, report }), [resolved, report])
 
-  const edge = state.invalid ? (focused ? '$red8' : '$red7') : focused ? '$borderColorFocus' : '$borderColor'
+  // Focus is the box's own edge brightened a step, as the composer's is: one
+  // line in place, never a second ring a gap outside it.
+  const edge = state.invalid ? (focused ? '$red8' : '$red7') : focused ? LIT : '$borderColor'
 
   return (
     <GroupContext.Provider value={ctx}>
@@ -77,11 +83,6 @@ export function InputGroup({ start, end, size, fill = false, children, ...props 
         {...(fill ? FILL : null)}
         borderColor={edge}
         hoverStyle={state.disabled || focused ? undefined : { borderColor: '$borderColorHover' }}
-        // The one ring, round the box: a plain Input rings itself, a grouped one
-        // hands that to its group so the ring does not sit inside the edge.
-        {...(focused
-          ? { outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid', outlineOffset: 2 }
-          : null)}
         items="center"
         gap="$1"
         height={box.h}
