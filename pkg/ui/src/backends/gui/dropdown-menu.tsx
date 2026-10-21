@@ -418,20 +418,33 @@ function Paged({ page, children }: { page: string | null; children: React.ReactN
   )
 }
 
+/**
+ * A submenu stands in a portal of its own, as the menu does, so it opens over
+ * every pane rather than inside the menu that opened it: drawn in place, the
+ * menu's `overflow: hidden` (the corner the rows are cut to) clipped it to
+ * nothing, and a pane beside the menu stood over it. The portal's host takes no
+ * pointer, so the panel takes it back.
+ */
 const DropdownMenuSubContent = /* @__PURE__ */ React.forwardRef<
   GuiElement,
   React.ComponentProps<typeof Menu.SubContent>
 >(function DropdownMenuSubContent(props, ref) {
+  const themeName = useThemeName()
   const density = useDensity()
   return (
-    <Density value={density}>
-      <Menu.SubContent
-        ref={ref}
-        data-slot="dropdown-menu-sub-content"
-        {...panel}
-        {...props}
-      />
-    </Density>
+    <Menu.Portal>
+      <PortalTheme name={themeName}>
+        <Density value={density}>
+          <Menu.SubContent
+            ref={ref}
+            data-slot="dropdown-menu-sub-content"
+            {...panel}
+            pointerEvents="auto"
+            {...props}
+          />
+        </Density>
+      </PortalTheme>
+    </Menu.Portal>
   )
 })
 
