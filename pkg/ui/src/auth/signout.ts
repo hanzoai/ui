@@ -14,6 +14,13 @@ export interface SignOutOptions {
   clientId?: string
   /** `logout_completed` reaches the stream here. */
   track?: (name: string, props?: Record<string, unknown>) => void
+  /**
+   * Leave every application of the client's organization, not only this one:
+   * IAM retires the person's grant to each of them with the session
+   * (`everywhere=true`), so a sign-out on hanzo.ai is one on platform.hanzo.ai
+   * too. An application of another organization keeps its grant.
+   */
+  everywhere?: boolean
 }
 
 /** RFC 7009: hand one token back to IAM's /v1/iam route; a refusal is not the person's problem. */
@@ -36,14 +43,18 @@ async function revoke(origin: string, token: string | null, hint: string, access
  * call @hanzo/iam's `end()` makes; `redirect: manual` keeps a registered
  * post-logout address from being fetched.
  */
-async function end(origin: string, idToken: string | null, clientId?: string) {
+async function end(origin: string, idToken: string | null, clientId?: string, everywhere?: boolean) {
   try {
     await fetch(`${origin}/v1/iam/oauth/logout`, {
       method: 'POST',
       credentials: 'include',
       redirect: 'manual',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ ...(clientId ? { client_id: clientId } : {}), ...(idToken ? { id_token_hint: idToken } : {}) }).toString(),
+      body: new URLSearchParams({
+        ...(clientId ? { client_id: clientId } : {}),
+        ...(idToken ? { id_token_hint: idToken } : {}),
+        ...(everywhere ? { everywhere: 'true' } : {}),
+      }).toString(),
     })
   } catch {
     // The tokens are already revoked and cleared; this machine is signed out.
@@ -56,7 +67,7 @@ async function end(origin: string, idToken: string | null, clientId?: string) {
  * end IAM's session cookie, clear the local session, and land on the site's own
  * `/login?from=logout`. IAM's own logout page is never visited.
  */
-export async function signOut(iam: IAM, { via, to = '/login?from=logout', clientId, track }: SignOutOptions = {}): Promise<void> {
+export async function signOut(iam: IAM, { via, to = '/login?from=logout', clientId, track, everywhere }: SignOutOptions = {}): Promise<void> {
   const origin = via ?? window.location.origin
   const access = bearer()
   const refresh = refresher()
@@ -65,7 +76,7 @@ export async function signOut(iam: IAM, { via, to = '/login?from=logout', client
   try {
     await revoke(origin, refresh, 'refresh_token', access, clientId)
     await revoke(origin, access, 'access_token', access, clientId)
-    await end(origin, idToken, clientId)
+    await end(origin, idToken, clientId, everywhere)
   } finally {
     track?.('logout_completed', {})
     window.location.assign(to)
@@ -75,6 +86,6 @@ export async function signOut(iam: IAM, { via, to = '/login?from=logout', client
 /** `signOut` bound to the page's IAM client. */
 export function useSignOut(options: SignOutOptions = {}): () => Promise<void> {
   const { sdk, config } = useIam()
-  const { via, to, track, clientId = config.clientId } = options
-  return useCallback(() => signOut(sdk, { via, to, track, clientId }), [sdk, via, to, track, clientId])
+  const { via, to, track, clientId = config.clientId, everywhere } = options
+  return useCallback(() => signOut(sdk, { via, to, track, clientId, everywhere }), [sdk, via, to, track, clientId, everywhere])
 }
