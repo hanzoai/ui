@@ -85,6 +85,7 @@
     },
     "./theme.css": "./dist/theme.css",
     "./glass.css": "./dist/glass.css",
+    "./lang.css": "./dist/lang.css",
     "./glass": {
       "types": "./dist/glass.d.ts",
       "import": "./dist/glass.js",
@@ -322,6 +323,7 @@
     "test:responsive": "node scripts/responsive.mjs",
     "test:contain": "node scripts/contain.mjs",
     "test:corner": "node scripts/corner.mjs",
+    "test:rtl": "node scripts/compose-theme.mjs && node scripts/rtl.mjs",
     "test:consumer": "node scripts/consumer-test.mjs",
     "test:unit": "vitest run",
     "test:consumer:webpack": "node scripts/consumer-webpack.mjs"

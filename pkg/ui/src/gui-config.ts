@@ -103,17 +103,20 @@ const FONT_SIZE = {
 } as const
 
 /** Leading, paired 1:1 with the sizes above — and NOT deferred, deliberately.
+ *  `--leading-lang` (lang.css) opens every rung for scripts with tall marks —
+ *  Thai, Burmese, Khmer, Arabic, the Indic scripts, Nastaliq — and is 1 for
+ *  Latin, so these values are unchanged there.
  *  design publishes its own `--leading-*` rhythm and exactly ONE of these
  *  sixteen matches it, so adopting those would re-flow every line box in the
  *  product. These are the values tuned for this ladder; they keep them, and
  *  carry `--type-scale` so leading grows with the text instead of clamping it. */
 const LINE_HEIGHT = {
-  1: `calc(16px * var(--type-scale, 1))`,
-  2: `calc(18px * var(--type-scale, 1))`,
-  3: `calc(20px * var(--type-scale, 1))`,
-  4: `calc(22px * var(--type-scale, 1))`,
-  5: `calc(22px * var(--type-scale, 1))`,
-  6: `calc(24px * var(--type-scale, 1))`,
+  1: `calc(16px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  2: `calc(18px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  3: `calc(20px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  4: `calc(22px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  5: `calc(22px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  6: `calc(24px * var(--type-scale, 1) * var(--leading-lang, 1))`,
   // Display leading TIGHTENS as size grows, which is the whole difference
   // between type that is set and type that is merely large. Measured on
   // hanzo.ai, whose typography this scale is meant to express: 40px sits on 40px
@@ -123,17 +126,17 @@ const LINE_HEIGHT = {
   //
   // The body rungs above are NOT touched: 17px/24px is 1.41 here and 1.40 there,
   // so reading sizes were already right and only the display end had drifted.
-  7: `calc(22px * var(--type-scale, 1))`,
-  8: `calc(28px * var(--type-scale, 1))`,
-  9: `calc(28px * var(--type-scale, 1))`,
-  10: `calc(34px * var(--type-scale, 1))`,
-  11: `calc(42px * var(--type-scale, 1))`,
-  12: `calc(50px * var(--type-scale, 1))`,
-  13: `calc(58px * var(--type-scale, 1))`,
-  14: `calc(66px * var(--type-scale, 1))`,
-  15: `calc(82px * var(--type-scale, 1))`,
-  16: `calc(98px * var(--type-scale, 1))`,
-  true: `calc(20px * var(--type-scale, 1))`,
+  7: `calc(22px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  8: `calc(28px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  9: `calc(28px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  10: `calc(34px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  11: `calc(42px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  12: `calc(50px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  13: `calc(58px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  14: `calc(66px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  15: `calc(82px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  16: `calc(98px * var(--type-scale, 1) * var(--leading-lang, 1))`,
+  true: `calc(20px * var(--type-scale, 1) * var(--leading-lang, 1))`,
 } as const
 
 /**
