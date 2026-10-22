@@ -128,6 +128,8 @@ import {
 } from './settings'
 // A catalogue page — web-only, like the grid its cards lay out on.
 import { Add, Featured, Shelf, Tile, Tiles } from './catalog'
+// Help and preferences — web-only, fixed to the window, off the barrel.
+import { Corner } from './corner'
 import {
   Attachments,
   CHAT,
@@ -1069,6 +1071,16 @@ export const Gallery = () => (
     {/* A catalogue page (@hanzo/ui/catalog): the shelf's tabs chosen and idle,
         Yours/Discover, the search and the Add, and the cards — a featured one,
         and tiles that open and do not, added and not, busy. */}
+    {/* The corner: its trigger is what every page paints first, fixed to the
+        window's bottom start corner, so its classes have to be in the sheet. */}
+    <Section name="corner">
+      <Corner
+        help={[{ label: 'Docs', href: 'https://docs.hanzo.ai', icon: <BookOpen size={18} /> }]}
+        language={{ value: 'en', options: [{ code: 'en', label: 'English' }], onChange: NOOP }}
+        currency={{ value: 'USD', options: [{ code: 'USD', label: 'USD' }], onChange: NOOP }}
+      />
+    </Section>
+
     <Section name="catalog">
       <div data-shelf="demo" style={{ display: 'flex', width: '100%', height: 720 }}>
         <Shelf
