@@ -18,7 +18,7 @@ import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { describe, expect, it } from 'vitest'
 
-import { codeTheme, syntax } from './code-theme'
+import { codeTheme, face, ramp, syntax } from './code-theme'
 import { config, css, monochrome } from './gui-config'
 
 const require = createRequire(import.meta.url)
@@ -744,38 +744,105 @@ describe('the type ladder', () => {
 })
 
 describe('the code theme', () => {
-  it('names shiki\'s Dracula for dark and GitHub Light for light, and nothing else', () => {
+  /**
+   * A code colour as a browser paints it: a ladder step read out of design's own
+   * stylesheet. The ladder is one table, declared on `:root` for both schemes,
+   * which is why the code theme names it and not a scheme-following token.
+   */
+  const paint = (value: string) => {
+    const step = value.match(/^var\(--(neutral-\d+)\)$/)?.[1]
+    if (!step) throw new Error(`${value} is not a step of design's neutral ladder`)
+    return token(step, 'dark')
+  }
+
+  /** OKLCH chroma of an sRGB colour (Björn Ottosson's OKLab). */
+  const chroma = (colour: string) => {
+    const [r, g, b] = parse(colour).slice(0, 3).map((v) => {
+      const c = v / 255
+      return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+    })
+    const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
+    const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
+    const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
+    const A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s
+    const B = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s
+    return Math.hypot(A, B)
+  }
+
+  /** The grounds code is read on: its own ground and band, and every page surface design publishes. */
+  const grounds = (theme: 'dark' | 'light') => ({
+    ground: paint(ramp[theme].ground),
+    line: paint(ramp[theme].line),
+    background: token('background', theme),
+    card: token('card', theme),
+    muted: token('muted', theme),
+    secondary: token('secondary', theme),
+  })
+
+  it('is one theme per scheme in shiki\'s format, and nothing else', () => {
     // A shiki caller passes this object as `themes`, so a third key would be read
     // as a third theme.
-    expect(codeTheme).toEqual({ dark: 'dracula', light: 'github-light' })
+    expect(Object.keys(codeTheme)).toEqual(['dark', 'light'])
+    expect(codeTheme.dark).toMatchObject({ name: 'mono-dark', type: 'dark' })
+    expect(codeTheme.light).toMatchObject({ name: 'mono-light', type: 'light' })
   })
 
-  it.each(['dark', 'light'] as const)('%s: keys, strings, numbers, booleans and null are five colours', (theme) => {
-    const { key, string, number, boolean, null: none } = syntax[theme]
-    expect(new Set([key, string, number, boolean, none].map((c) => c.toLowerCase())).size).toBe(5)
+  it.each(['dark', 'light'] as const)('%s: names no hue — every rung and token is a grey on design\'s ladder', (theme) => {
+    for (const [name, value] of [...Object.entries(ramp[theme]), ...Object.entries(syntax[theme])]) {
+      const [r, g, b] = parse(paint(value))
+      expect([g, b], `${theme} ${name} ${value}: one value on all three channels`).toEqual([r, r])
+      expect(chroma(paint(value)), `${theme} ${name} ${value}: OKLCH chroma`).toBeLessThan(0.001)
+    }
   })
 
-  it.each(['dark', 'light'] as const)('%s: every token reads on the page ground', (theme) => {
-    const ground = token('background', theme)
-    for (const [name, colour] of Object.entries(syntax[theme]))
-      expect(contrast(colour, ground), `${theme} ${name} ${colour} on ${ground}`).toBeGreaterThanOrEqual(4)
+  it.each(['dark', 'light'] as const)('%s: every ink and every token reads at AA on every ground it lands on', (theme) => {
+    const inks = { dim: ramp[theme].dim, ink: ramp[theme].ink, bright: ramp[theme].bright, ...syntax[theme] }
+    for (const [ground, under] of Object.entries(grounds(theme)))
+      for (const [name, value] of Object.entries(inks))
+        expect(contrast(paint(value), under), `${theme} ${name} on ${ground} ${under}`).toBeGreaterThanOrEqual(4.5)
   })
 
-  it.each(['dark', 'light'] as const)('%s: each token is a theme key, so it follows the nearest theme', (theme) => {
-    for (const [name, colour] of Object.entries(syntax[theme]))
-      expect(themed(theme, `code${name[0].toUpperCase()}${name.slice(1)}`)).toBe(colour)
+  it.each(['dark', 'light'] as const)('%s: the inks are three brightnesses, and the band is one step off the ground', (theme) => {
+    const on = (rung: 'dim' | 'ink' | 'bright') => contrast(paint(ramp[theme][rung]), paint(ramp[theme].ground))
+    // Each ink stands a third again past the one below it, so two inks are never
+    // mistaken for one.
+    expect(on('ink') / on('dim')).toBeGreaterThan(1.3)
+    expect(on('bright') / on('ink')).toBeGreaterThan(1.3)
+    const band = contrast(paint(ramp[theme].line), paint(ramp[theme].ground))
+    expect(band).toBeGreaterThan(1.1)
+    expect(band).toBeLessThan(1.5)
+  })
+
+  it('tells a comment by slant and a keyword or a JSON literal by weight, and nothing else by either', () => {
+    expect(face).toEqual({
+      comment: { fontStyle: 'italic' },
+      keyword: { fontWeight: '700' },
+      boolean: { fontWeight: '700' },
+      null: { fontWeight: '700' },
+    })
+    expect(syntax.dark.comment).toBe(ramp.dark.dim)
+    expect(syntax.dark.keyword).toBe(ramp.dark.bright)
+    expect(syntax.dark.string).toBe(ramp.dark.bright)
+    expect(syntax.dark.key).toBe(ramp.dark.ink)
+  })
+
+  it.each(['dark', 'light'] as const)('%s: each rung and token is a theme key, so it follows the nearest theme', (theme) => {
+    for (const [name, value] of [...Object.entries(ramp[theme]), ...Object.entries(syntax[theme])])
+      expect(themed(theme, `code${name[0].toUpperCase()}${name.slice(1)}`)).toBe(value)
   })
 
   it('the keys reach the emitted sheet on both root themes', () => {
-    // gui emits `--codeString:var(--tN)` on the theme block and `--tN:<hex>` once.
+    // gui emits `--codeString:var(--tN)` on the theme block and `--tN:<value>` once.
     const out = css()
     for (const theme of ['dark', 'light'] as const) {
       const block = [...out.matchAll(/([^{}]+)\{([^{}]*)\}/g)].find((m) =>
         m[1].split(',').some((sel) => sel.trim() === `:root.t_${theme}`),
       )
-      const ref = block?.[2].match(/--codeString:var\(--(t\d+)\)/)?.[1]
-      expect(ref, `${theme} root block declares --codeString`).toBeTruthy()
-      expect(out.toLowerCase()).toContain(`--${ref}:${syntax[theme].string}`)
+      for (const [key, value] of [['codeString', syntax[theme].string], ['codeGround', ramp[theme].ground]]) {
+        const ref = block?.[2].match(new RegExp(`--${key}:var\\(--(t\\d+)\\)`))?.[1]
+        expect(ref, `${theme} root block declares --${key}`).toBeTruthy()
+        expect(out).toContain(`--${ref}:${value}`)
+      }
     }
   })
 })

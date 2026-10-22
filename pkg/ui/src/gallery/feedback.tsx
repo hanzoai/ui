@@ -4,7 +4,9 @@
  * The record kit's feedback in the gallery: skeletons, the dot loader, both
  * progress shapes and the ring, toasts at rest in every status, banners and
  * callouts in every colour and layout, the boxed JSON tree, the metric row,
- * the command block and the headed code editor (MIT — NOTICE).
+ * the command block and the headed code editor (MIT — NOTICE), and the code
+ * surfaces at their defaults: CodeBlock with a highlight and a diff, Snippet,
+ * InlineCode, Terminal and the plain JSON tree, in the monochrome code theme.
  * Every variant that carries a style of its own is rendered, so its rules ship.
  */
 import { Bot, Sparkles } from '@hanzogui/lucide-icons-2'
@@ -17,7 +19,9 @@ import { ToastCard } from '../backends/gui/toaster'
 import { Banner, BannerAction } from '../backends/gui/banner'
 import { Alert, AlertDescription, AlertTitle, CalloutAction } from '../backends/gui/alert'
 import { JsonTree } from '../backends/gui/json-tree'
-import { Snippet } from '../backends/gui/snippet'
+import { InlineCode, Snippet } from '../backends/gui/snippet'
+import { CodeBlock } from '../backends/gui/code-block'
+import { Terminal } from '../backends/gui/terminal'
 import { CodeEditor } from '../backends/gui/code-editor'
 import { Button } from '../backends/gui/button'
 import { Fact } from '../product/Fact'
@@ -140,6 +144,26 @@ export function Feedback() {
       <Section name="command-block">
         <Snippet variant="command" code={'npx hanzo mcp add\nhanzo login'} />
         <Snippet variant="command" code="curl https://api.hanzo.ai/v1/models" actions={<Button size="xs" variant="ghost">Run</Button>} />
+      </Section>
+
+      <Section name="code">
+        <CodeBlock
+          code={'// one client, every model\nconst ai = new Hanzo()\nawait ai.chat({ model: "zen" })'}
+          language="typescript"
+          filename="chat.ts"
+          highlightLines={[1]}
+          diff={{ added: [2], removed: [3] }}
+        />
+        <Snippet code="npm i @hanzo/ai" language="bash" showLineNumbers highlightLines={[1]} />
+        <InlineCode>{'hanzo login'}</InlineCode>
+        <Terminal
+          height={180}
+          initialCommands={[
+            { id: 'login', input: 'hanzo login --device', output: 'Signed in', timestamp: new Date(0), type: 'success' },
+            { id: 'deploy', input: 'deploy', output: 'Command not found: deploy', timestamp: new Date(0), type: 'error' },
+          ]}
+        />
+        <JsonTree data={{ model: 'zen', n: 1, stream: true, stop: null }} depth={1} />
       </Section>
 
       <Section name="code-editor-record">

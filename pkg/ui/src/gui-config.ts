@@ -3,7 +3,7 @@ import { defaultConfig } from '@hanzogui/config/v5'
 import { createAnimations } from '@hanzogui/animations-css'
 import { createGui, type CreateGuiProps } from '@hanzo/gui'
 
-import { syntax, type CodeToken } from './code-theme'
+import { ramp, syntax, type CodeRung, type CodeToken } from './code-theme'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // THE ONE SCALE — shared, because a second app that copied it would fork it.
@@ -394,16 +394,16 @@ const RANK = {
 type Alias = Record<(typeof ALIASES)[number], string>
 
 /**
- * The code palette (`code-theme.ts`) as theme keys: `syntax.dark.key` is
- * `$codeKey` on the dark theme. A key on a root theme reaches every sub-theme
- * and a nested theme declares its own, so a highlighted token follows the
- * nearest theme the way `$ink` does. The `code` prefix keeps the eight off
- * design's custom properties and off gui's own props.
+ * The code theme (`code-theme.ts`) as theme keys: `ramp.dark.ground` is
+ * `$codeGround` and `syntax.dark.key` is `$codeKey` on the dark theme. A key on a
+ * root theme reaches every sub-theme and a nested theme declares its own, so a
+ * code surface follows the nearest theme the way `$ink` does. The `code` prefix
+ * keeps the thirteen off design's custom properties and off gui's own props.
  */
-type Code = Record<`code${Capitalize<CodeToken>}`, string>
+type Code = Record<`code${Capitalize<CodeRung | CodeToken>}`, string>
 const code = (s: 'dark' | 'light') =>
   Object.fromEntries(
-    Object.entries(syntax[s]).map(([k, v]) => [`code${k[0].toUpperCase()}${k.slice(1)}`, v]),
+    Object.entries({ ...ramp[s], ...syntax[s] }).map(([k, v]) => [`code${k[0].toUpperCase()}${k.slice(1)}`, v]),
   ) as Code
 
 const SURFACE = {
@@ -850,7 +850,7 @@ type Ramp = Record<
   | 'sunken' | 'panel' | 'hover' | 'edge' | 'raised' | 'rim'
   | 'bound' | 'dim' | 'faint' | 'soft' | 'quiet' | 'ink' | 'bad' | 'good' | 'accentHover'
   | 'aside' | 'hint' | 'hush'
-  | `code${Capitalize<CodeToken>}`,
+  | `code${Capitalize<CodeRung | CodeToken>}`,
   Base['themes']['dark']['color12']
 >
 

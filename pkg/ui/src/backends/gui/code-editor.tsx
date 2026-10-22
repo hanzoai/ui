@@ -23,9 +23,9 @@
  *
  * Colour. The frame's colours are theme rungs over design tokens — the ink, the
  * hairline, the selection and the error state — and the syntax is the code
- * theme (`code-theme.ts`: Dracula on dark, GitHub Light on light), each token a
- * theme key of its own. Both follow the page into light or dark with nothing to
- * configure.
+ * theme (`code-theme.ts`, monochrome: a token is told by brightness, weight and
+ * slant), each token a theme key of its own. Both follow the page into light or
+ * dark with nothing to configure.
  *
  * Frame. `variant` is the record kit's three (its CodeEditor and
  * CodeEditorHeader, MIT — NOTICE; CodeMirror stays, Monaco is not adopted):
@@ -71,8 +71,10 @@ import {
 import { tags } from '@lezer/highlight'
 import * as React from 'react'
 
+import { face, type CodeToken } from '../../code-theme'
 import { Button } from './button'
 import { Grip } from './grip'
+import { ltr } from './dir'
 import { checkJson, formatJson, type JsonCheck } from './json'
 import { Select, SelectContent, SelectItem, SelectTrigger } from './select'
 import { slot } from './slot'
@@ -148,7 +150,9 @@ const MONO = "var(--font-mono, 'Zen Mono', ui-monospace, SFMono-Regular, Menlo, 
  * The editor's surface. Every colour is one of the theme's named rungs — gui emits
  * each as a custom property on the theme class, so it inverts with the page — and
  * those rungs read @hanzo/design's tokens (`--ink` is `--foreground`, `--edge` is
- * `--border`, `--bad` is `--state-error`). The design ladder is NOT read directly:
+ * `--border`, `--bad` is `--state-error`). The gutter, its fold marks and the
+ * placeholder are the code theme's dim ink (`--codeDim`), which clears AA on every
+ * page ground; the ramp's `--dim` measured 4.4:1. The design ladder is NOT read directly:
  * on a host that mounts design's sheet without its light selector, `--text-primary`
  * stays the dark theme's white on a light page.
  */
@@ -171,14 +175,14 @@ const FRAME = /* @__PURE__ */ EditorView.theme({
   '.cm-line': { padding: '0 12px' },
   '.cm-gutters': {
     backgroundColor: 'transparent',
-    color: 'var(--dim)',
+    color: 'var(--codeDim)',
     border: 'none',
-    borderRight: '1px solid var(--edge)',
+    borderInlineEnd: '1px solid var(--edge)',
   },
   '.cm-lineNumbers .cm-gutterElement': { padding: '0 10px 0 12px', minWidth: '28px' },
   '.cm-activeLine': { backgroundColor: 'var(--panel)' },
   '.cm-activeLineGutter': { backgroundColor: 'transparent', color: 'var(--quiet)' },
-  '.cm-cursor, .cm-dropCursor': { borderLeftColor: 'var(--ink)' },
+  '.cm-cursor, .cm-dropCursor': { borderInlineStartColor: 'var(--ink)' },
   '.cm-selectionBackground, &.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, ::selection': {
     backgroundColor: 'var(--raised)',
   },
@@ -188,8 +192,8 @@ const FRAME = /* @__PURE__ */ EditorView.theme({
     outline: 'none',
   },
   '.cm-nonmatchingBracket, &.cm-focused .cm-nonmatchingBracket': { backgroundColor: 'transparent' },
-  '.cm-placeholder': { color: 'var(--dim)' },
-  '.cm-foldGutter .cm-gutterElement': { padding: '0 4px', color: 'var(--dim)', cursor: 'pointer' },
+  '.cm-placeholder': { color: 'var(--codeDim)' },
+  '.cm-foldGutter .cm-gutterElement': { padding: '0 4px', color: 'var(--codeDim)', cursor: 'pointer' },
   '.cm-foldGutter .cm-gutterElement:hover': { color: 'var(--ink)' },
   '.cm-foldPlaceholder': {
     backgroundColor: 'var(--raised)',
@@ -210,16 +214,19 @@ const FRAME = /* @__PURE__ */ EditorView.theme({
   },
 })
 
-/** The syntax in the code theme's colours: one theme key per kind of token, from `code-theme.ts`. */
+/** One kind of token in the code theme: its theme key, and its slant or weight (`face`). */
+const paint = (token: CodeToken) => ({ color: `var(--code${token[0].toUpperCase()}${token.slice(1)})`, ...face[token] })
+
+/** The syntax in the code theme: one theme key per kind of token, from `code-theme.ts`. */
 const SYNTAX = /* @__PURE__ */ HighlightStyle.define([
-  { tag: tags.propertyName, color: 'var(--codeKey)' },
-  { tag: tags.string, color: 'var(--codeString)' },
-  { tag: tags.number, color: 'var(--codeNumber)' },
-  { tag: tags.bool, color: 'var(--codeBoolean)' },
-  { tag: tags.null, color: 'var(--codeNull)' },
-  { tag: [tags.punctuation, tags.separator, tags.brace, tags.squareBracket], color: 'var(--codePunctuation)' },
-  { tag: tags.comment, color: 'var(--codeComment)' },
-  { tag: tags.keyword, color: 'var(--codeKeyword)' },
+  { tag: tags.propertyName, ...paint('key') },
+  { tag: tags.string, ...paint('string') },
+  { tag: tags.number, ...paint('number') },
+  { tag: tags.bool, ...paint('boolean') },
+  { tag: tags.null, ...paint('null') },
+  { tag: [tags.punctuation, tags.separator, tags.brace, tags.squareBracket], ...paint('punctuation') },
+  { tag: tags.comment, ...paint('comment') },
+  { tag: tags.keyword, ...paint('keyword') },
 ])
 
 /**
@@ -280,7 +287,7 @@ const hangs = new Map<number, Decoration>()
 const hangFor = (n: number) => {
   let d = hangs.get(n)
   if (!d) {
-    d = Decoration.line({ attributes: { style: `padding-left: calc(${n}ch + 12px); text-indent: -${n}ch` } })
+    d = Decoration.line({ attributes: { style: `padding-inline-start: calc(${n}ch + 12px); text-indent: -${n}ch` } })
     hangs.set(n, d)
   }
   return d
@@ -687,7 +694,8 @@ export function CodeEditor({
       )}
       {/* The grip measures its parent, so the editor and its grip share one box. */}
       <YStack position="relative" {...(fills && { flex: 1, minH: 0 })}>
-        <YStack ref={host as never} {...slot('code-editor-body')} {...(fills && { flex: 1, minH: 0 })} />
+        {/* Code reads left to right in any language: the editor is an LTR island. */}
+        <YStack ref={host as never} {...slot('code-editor-body')} {...ltr} {...(fills && { flex: 1, minH: 0 })} />
         {resizable && (
           <Grip
             side="top"

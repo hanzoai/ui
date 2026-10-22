@@ -780,8 +780,8 @@ export { Pulse, Caret, Crossfade, type PulseProps, type CaretProps, type Crossfa
 // @hanzo/gui stacks of its own.
 export { config, type Conf } from './gui-config'
 
-// The code theme: shiki's names for it (`codeTheme`) and the colours CodeEditor
-// and JsonTree paint with (`syntax`). A server module (a shiki block rendered in
-// an RSC or at build time) reads the same two from `@hanzo/ui/core`, which is not
-// a client boundary.
-export { codeTheme, syntax, type CodeToken } from './code-theme'
+// The code theme, monochrome: shiki's form of it (`codeTheme`), and the colour
+// (`syntax`) and slant or weight (`face`) CodeEditor and JsonTree paint each kind
+// of token with. A server module (a shiki block rendered in an RSC or at build
+// time) reads the same from `@hanzo/ui/core`, which is not a client boundary.
+export { codeTheme, face, syntax, type CodeTheme, type CodeToken } from './code-theme'

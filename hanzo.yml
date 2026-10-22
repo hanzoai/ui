@@ -49,6 +49,9 @@ test:
       # Corner in a real browser: placement in LTR and RTL, keyboard, theme.
       # It reads dist/theme.css, which the build above wrote.
       pnpm run test:corner
+      # Every code surface in Chromium: grey inks on grey grounds at AA, dark and
+      # light, LTR and RTL. Also reads dist/theme.css.
+      pnpm run test:code
       # Both bundlers. They disagree about css url() asset resolution, and a
       # Vite-only gate is how 8.0.46 shipped a stylesheet pointing at a font
       # file the package does not pack.

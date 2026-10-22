@@ -655,9 +655,9 @@ page looks it up by module name. A new group is a `GROUPS` entry in `catalog.ts`
 footer link.
 Its code — fences in `data/docs`, each example's source, each module's types — is
 highlighted at build by `code.ts`: shiki in `codeTheme` (`@hanzo/ui/core`), every
-token and the block's ground written as `light-dark()`, so the scheme on `<html>`
-picks Dracula or GitHub Light and no stylesheet carries a palette. No highlighter
-ships to the browser.
+token and the block's ground written as `light-dark()` over the code theme's keys,
+each `pre` `dir="ltr"`, and `app.css` reads shiki's per-theme slant and weight
+(`--shiki-dark-font-style|weight`). No highlighter ships to the browser.
 
 ### Code — `CodeEditor` is CodeMirror 6, `JsonTree` is gui, `checkJson` is the one verdict
 
@@ -688,15 +688,9 @@ add a second.
   they read design (`--foreground`, `--border`, `--state-error`). `--text-primary` is
   NOT safe: a host that mounts design's sheet without its light selector (the console)
   keeps the dark theme's white on a light page — measured, the syntax vanished.
-- **Syntax is the code theme** (`src/code-theme.ts`, 8.27.83): `codeTheme` is shiki's
-  names (`dracula` dark, `github-light` light) and `syntax` the eight colours (key,
-  string, number, boolean, null, punctuation, comment, keyword). gui-config publishes
-  each as a theme key (`$codeKey`, `var(--codeKey)` …), so it follows the nearest
-  theme. Shiki paints number, boolean and null alike (and GitHub Light paints a key the
-  same), so those take other colours from the same theme. It was monochrome on purpose
-  before: keys, numbers, booleans and null were all `--ink`, strings `--soft`. Server
-  code (a shiki block in an RSC) imports it from `@hanzo/ui/core`; the root barrel is a
-  client boundary.
+- **Syntax is the code theme** (`src/code-theme.ts`): monochrome since 8.29.11 — see
+  "Code is monochrome" below. Server code (a shiki block in an RSC) imports it from
+  `@hanzo/ui/core`; the root barrel is a client boundary.
 - **The scanner is a loop over an explicit stack**, not a call per nesting level:
   `'['.repeat(20000)` exhausted the call stack and handed the editor a NaN position.
   Under `allowText`, `[` only means JSON when a JSON value follows it, so a log line
@@ -737,6 +731,42 @@ add a second.
   adornment: Input's adornment wrapper holds the field at its intrinsic width.
 - **A View does not shrink.** RNW Views are `flex-shrink: 0`, so a toolbar's button
   group held its width at 390px; the groups carry `shrink={1} minW={0}` + `flexWrap`.
+
+### Code is monochrome (8.29.11)
+
+Every code surface draws one theme with no hue (owner, 2026-10-22). `ramp` in
+`src/code-theme.ts` is ground, band (`line`) and three inks per scheme on
+@hanzo/design's FIXED neutral ladder: dark 900/800/400/300/50, light
+100/200/600/700/950. `syntax` gives each token an ink (comment, punctuation dim;
+key ink; string, number, keyword, JSON literals bright); `face` adds comments
+italic, keywords and `true`/`false`/`null` 700.
+
+- **Ladder steps, not scheme tokens.** gui resolves a theme value once, as `--tN` on
+  `:root`, so `var(--surface-2)` in a theme key is the page's scheme even inside a
+  nested `<Theme>`. And `<Theme name="dark">` is no pin: measured, a CodeBlock under
+  it on a light page kept the light ground. So `theme="dark"|"light"` (CodeBlock,
+  Snippet, Terminal) reads the steps directly (`code-surface.ts` `mono(scheme)`); no
+  `theme` reads the keys `$codeGround|Line|Dim|Ink|Bright` + `$codeKey`… and follows
+  the page. A host re-inks with `--codeString` etc.
+- **`codeTheme` is two shiki theme objects** (`mono-dark`, `mono-light`), so hosts'
+  `themes: codeTheme`, `createHighlighter({ themes: [codeTheme.dark, codeTheme.light] })`
+  and `getTheme(codeTheme.light).bg` still work. Colours are
+  `var(--codeX, var(--neutral-N))`. Ground and ink are `bg`/`fg` only: shiki rewrites
+  `colors['editor.background'|'editor.foreground']` in place, which mutated the export.
+  With two themes shiki emits slant and weight only as `--shiki-<theme>-font-*`; a
+  host that copies just `color` (hanzo.ai `components/code.tsx`) loses italic and bold.
+- **Marks**: band + 2px start edge (ink / bright / dim for highlight / added /
+  removed) + the `+`/`-` sign. The language tag is dim on the band. Terminal: prompt
+  and info dim, command bright, error bright 700, Zen Mono. Named palettes
+  (`dracula`, `nord`, `matrix` …) stay opt-in.
+- **Code is LTR** (`ltr` from `dir.ts`): CodeBlock/Snippet bodies, Terminal,
+  CodeEditor, JsonTree's body; sides are logical. Editor gutter: `--dim` (4.4:1) →
+  `--codeDim`.
+- **Measured** (WCAG 2, dark/light): ground dim 7.1/7.2, ink 12.1/9.5, bright
+  17.2/18.2; dim on the band 6.0/6.2. `gui-config.test.ts` (AA on ground, band and
+  all page surfaces; OKLCH chroma < 0.001), `code-theme.test.ts` (the theme through
+  shiki, the three ways hosts call it), `pnpm test:code` (every computed colour in
+  Chromium, dark/light, 1280/390, LTR/RTL, with screenshots).
 
 ### The record kit (8.28)
 

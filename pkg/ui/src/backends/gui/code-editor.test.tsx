@@ -163,6 +163,15 @@ describe('CodeEditor', () => {
     expect(colour('1')).toBe('var(--codeNumber)')
     expect(colour('true')).toBe('var(--codeBoolean)')
     expect(colour('null')).toBe('var(--codeNull)')
+    // Monochrome: the two JSON literals stand out by weight, the rest at the text's.
+    const weight = (text: string) => {
+      const span = [...ui.host.querySelectorAll('.cm-line span')].find((el) => el.textContent === text)
+      const cls = span?.className.split(/\s+/).find(Boolean)
+      return cls ? rules.match(new RegExp(`\\.${cls}\\s*\\{[^}]*font-weight:\\s*([^;}]+)`))?.[1].trim() : undefined
+    }
+    expect(weight('true')).toBe('700')
+    expect(weight('null')).toBe('700')
+    expect(weight('"v"')).toBeUndefined()
     ui.cleanup()
   })
 

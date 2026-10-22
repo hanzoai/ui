@@ -48,7 +48,7 @@ const SAMPLE = 'const a = 1\nconst b = 2\nconst c = 3'
 const codeLines = (markup: string) =>
   markup.split('data-slot="code-block-line"').slice(1).map((s) => `data-slot="code-block-line"${s}`)
 
-/** The compiled class for one style property on a fragment, e.g. cls(row, 'borderLeftColor'). */
+/** The compiled class for one style property on a fragment, e.g. cls(row, 'borderInlineStartColor'). */
 const cls = (fragment: string, prop: string) =>
   (fragment.match(/class="([^"]*)"/)?.[1] ?? '').split(/\s+/).find((c) => c.startsWith(`_${prop}-`)) ?? ''
 
@@ -78,9 +78,9 @@ describe('CodeBlock', () => {
 
     expect(rows).toHaveLength(3)
     // The compiled left-border color class differs on the highlighted row alone.
-    expect(cls(rows[1], 'borderLeftColor')).not.toBe(cls(rows[0], 'borderLeftColor'))
-    expect(cls(rows[1], 'borderLeftColor')).not.toBe(cls(rows[2], 'borderLeftColor'))
-    expect(cls(rows[0], 'borderLeftColor')).toBe(cls(rows[2], 'borderLeftColor'))
+    expect(cls(rows[1], 'borderInlineStartColor')).not.toBe(cls(rows[0], 'borderInlineStartColor'))
+    expect(cls(rows[1], 'borderInlineStartColor')).not.toBe(cls(rows[2], 'borderInlineStartColor'))
+    expect(cls(rows[0], 'borderInlineStartColor')).toBe(cls(rows[2], 'borderInlineStartColor'))
   })
 
   it('marks diff-added and diff-removed lines with a sign and takes them over a highlight', () => {
@@ -94,7 +94,7 @@ describe('CodeBlock', () => {
     expect(rows[1]).toContain('>+<')
     expect(rows[2]).not.toMatch(/>[+-]</)
     // The removed row's left border is its own color, not the highlight's.
-    expect(cls(rows[0], 'borderLeftColor')).not.toBe(cls(rows[2], 'borderLeftColor'))
+    expect(cls(rows[0], 'borderInlineStartColor')).not.toBe(cls(rows[2], 'borderInlineStartColor'))
   })
 
   it('shows the filename and language, and hides the header entirely without either or a copy button', () => {
@@ -132,12 +132,39 @@ describe('CodeBlock', () => {
     vi.useRealTimers()
   })
 
-  it('renders a distinct background per named theme', () => {
-    const dark = html(<CodeBlock code={SAMPLE} theme="dark" />)
-    const nord = html(<CodeBlock code={SAMPLE} theme="nord" />)
-    const bg = (markup: string) => markup.match(/data-slot="code-block"[^>]*style="([^"]*)"/)?.[1]
+  it('paints with the code theme by default: every colour a code key, the marks told by band and edge', () => {
+    const markup = html(<CodeBlock code={SAMPLE} filename="a.ts" highlightLines={[1]} diff={{ added: [2], removed: [3] }} />)
+    const frame = markup.match(/<[^>]*data-slot="code-block"[^>]*>/)?.[0] ?? ''
+    expect(frame).toContain('_bg-codeGround')
+    // No colour is a literal: no hex class, no inline colour.
+    expect(markup.replace(/<style[\s\S]*?<\/style>/g, '')).not.toMatch(/_(?:bg|col|borderInlineStartColor|btc)-[0-9a-f]{6,8}\b|(?:color|background-color):\s*#/)
+    const rows = codeLines(markup)
+    for (const row of rows) expect(cls(row, 'bg')).toBe('_bg-codeLine')
+    expect([cls(rows[0], 'borderInlineStartColor'), cls(rows[1], 'borderInlineStartColor'), cls(rows[2], 'borderInlineStartColor')]).toEqual([
+      '_borderInlineStartColor-codeInk',
+      '_borderInlineStartColor-codeBright',
+      '_borderInlineStartColor-codeDim',
+    ])
+    expect(markup).toMatch(/_col-codeInk[^>]*>const a = 1</)
+    expect(markup).toMatch(/_col-codeDim[^>]*>1</)
+  })
 
-    expect(bg(dark)).toBeTruthy()
-    expect(bg(dark)).not.toBe(bg(nord))
+  it('pins dark or light to that scheme\'s ladder steps on either page, and draws a named palette in its own colours', () => {
+    const onLight = (node: React.ReactNode) =>
+      renderToStaticMarkup(
+        <GuiProvider config={config} defaultTheme="light">
+          {node}
+        </GuiProvider>,
+      )
+    const frame = (markup: string) => markup.match(/<[^>]*data-slot="code-block"[^>]*>/)?.[0] ?? ''
+    const bg = (markup: string) => cls(frame(markup), 'bg')
+
+    for (const page of [html, onLight]) {
+      expect(bg(page(<CodeBlock code={SAMPLE} theme="light" />))).toBe('_bg-neutral-100')
+      expect(bg(page(<CodeBlock code={SAMPLE} theme="dark" />))).toBe('_bg-neutral-900')
+    }
+    const pinned = codeLines(html(<CodeBlock code={SAMPLE} theme="light" highlightLines={[1]} />))
+    expect([cls(pinned[0], 'bg'), cls(pinned[0], 'borderInlineStartColor')]).toEqual(['_bg-neutral-200', '_borderInlineStartColor-neutral-700'])
+    expect(bg(html(<CodeBlock code={SAMPLE} theme="nord" />))).toMatch(/^_bg-2e3440/)
   })
 })
