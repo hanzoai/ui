@@ -9,6 +9,7 @@
  * placeholder rather than nothing.
  */
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { ink } from './ink'
 import { slot } from './slot'
 
@@ -54,11 +55,12 @@ export type GanttProps = Omit<import('react').ComponentProps<typeof GanttFrame>,
 }
 
 export function Gantt({ tasks = [], ...props }: GanttProps) {
+  const { t } = useI18n()
   return (
     <GanttFrame {...slot('gantt')} {...props}>
       {tasks.length === 0 ? (
         <XStack {...slot('gantt-empty')} items="center" justify="center" p="$8">
-          {ink('No tasks available. Add tasks to display Gantt chart.', SizableText, {
+          {ink(t('No tasks available. Add tasks to display Gantt chart.'), SizableText, {
             size: '$2',
             color: '$quiet',
           })}

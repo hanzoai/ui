@@ -19,6 +19,7 @@
  * widget on screen.
  */
 import { YStack, isWeb, type YStackProps } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 
 export type FinancialsDisplayMode = 'adaptive' | 'regular' | 'compact'
@@ -71,6 +72,7 @@ const Financials = ({
   ...props
 }: FinancialsProps) => {
   const s = settings({ symbol, width, height, colorTheme, isTransparent, displayMode, largeChartUrl })
+  const { t } = useI18n()
   const src = EMBED + encodeURIComponent(locale) + '#' + encodeURIComponent(JSON.stringify(s))
   return (
     <YStack
@@ -90,7 +92,7 @@ const Financials = ({
         <iframe
           key={src}
           src={src}
-          title={`${s.symbol} financials`}
+          title={t('{symbol} financials', { symbol: s.symbol })}
           loading="lazy"
           scrolling="no"
           allowFullScreen

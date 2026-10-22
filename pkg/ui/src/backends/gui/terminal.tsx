@@ -18,6 +18,7 @@
 import { Input as GuiInput, SizableText, Text, XStack, YStack, styled, type YStackProps } from '@hanzo/gui'
 import { Check, Copy } from '@hanzogui/lucide-icons-2'
 import * as React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { face, type CodeToken } from '../../code-theme'
 import { mono } from './code-surface'
 import { ltr } from './dir'
@@ -177,6 +178,7 @@ export function Terminal({
   const [suggestions, setSuggestions] = React.useState<string[]>([])
   const [suggestionIndex, setSuggestionIndex] = React.useState(0)
   const [copied, setCopied] = React.useState<string | null>(null)
+  const { t } = useI18n()
 
   const scroller = React.useRef<HTMLDivElement | null>(null)
   const field = React.useRef<HTMLInputElement | null>(null)
@@ -218,12 +220,12 @@ export function Terminal({
       if (text.toLowerCase() === 'help') {
         line.output = (
           <YStack gap="$1">
-            <Mono color={palette.output as never}>Available commands:</Mono>
+            <Mono color={palette.output as never}>{t('Available commands:')}</Mono>
             <YStack paddingInlineStart="$4" gap="$1">
-              <Mono color={palette.output as never}>• clear - Clear the terminal</Mono>
-              <Mono color={palette.output as never}>• help - Show this help message</Mono>
-              <Mono color={palette.output as never}>• date - Show current date and time</Mono>
-              <Mono color={palette.output as never}>• echo [text] - Print text to terminal</Mono>
+              <Mono color={palette.output as never}>{t('• {command} - Clear the terminal', { command: 'clear' })}</Mono>
+              <Mono color={palette.output as never}>{t('• {command} - Show this help message', { command: 'help' })}</Mono>
+              <Mono color={palette.output as never}>{t('• {command} - Show current date and time', { command: 'date' })}</Mono>
+              <Mono color={palette.output as never}>{t('• {command} - Print text to terminal', { command: 'echo [text]' })}</Mono>
               {autoCompleteCommands.map((cmd) => (
                 <Mono key={cmd} color={palette.output as never}>
                   • {cmd}
@@ -244,11 +246,11 @@ export function Terminal({
           line.output = await onCommand(text)
           line.type = 'success'
         } catch (error) {
-          line.output = `Error: ${error instanceof Error ? error.message : String(error)}`
+          line.output = t('Error: {message}', { message: error instanceof Error ? error.message : String(error) })
           line.type = 'error'
         }
       } else {
-        line.output = `Command not found: ${text}`
+        line.output = t('Command not found: {command}', { command: text })
         line.type = 'error'
       }
 
@@ -260,7 +262,7 @@ export function Terminal({
       setHistoryIndex(-1)
       setSuggestions([])
     },
-    [onCommand, enableHistory, maxHistorySize, autoCompleteCommands, palette.output],
+    [onCommand, enableHistory, maxHistorySize, autoCompleteCommands, palette.output, t],
   )
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -338,7 +340,7 @@ export function Terminal({
           <YStack key={i} width={12} height={12} rounded={999} bg={palette.line as never} />
         ))}
         <Mono size="$1" marginInlineStart="$2" color={palette.prompt as never}>
-          terminal
+          {t('terminal')}
         </Mono>
       </XStack>
 
@@ -355,7 +357,7 @@ export function Terminal({
                 cursor="pointer"
                 opacity={0.7}
                 hoverStyle={{ opacity: 1 }}
-                aria-label="Copy command"
+                aria-label={t('Copy command')}
                 onPress={() => copy(line.input)}
               >
                 {copied === line.input ? (
@@ -396,7 +398,7 @@ export function Terminal({
             onKeyDown={onKeyDown}
             spellCheck={false}
             autoComplete="off"
-            aria-label="Terminal input"
+            aria-label={t('Terminal input')}
             fontFamily="$mono"
             color={palette.input as never}
             style={{ background: 'transparent', border: 'none', outline: 'none' }}
