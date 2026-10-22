@@ -31,6 +31,7 @@ import { Menu, Text, XStack, type GuiElement } from '@hanzo/gui'
 import { Check, ChevronRight, Circle } from '@hanzogui/lucide-icons-2'
 
 import { touch } from './gesture'
+import { ltrText, mirror, rtl } from './dir'
 import { ink } from './ink'
 import { slot } from './slot'
 import { PortalTheme, useThemeName } from '../../product/menu/portal-theme'
@@ -77,11 +78,11 @@ const label = { size: '$2', color: '$ink' } as const
 /** Trigger text style — same type scale, medium weight to read as a menu title. */
 const triggerLabel = { size: '$2', color: '$ink', fontWeight: '500' } as const
 
-/** Left indicator well shared by checkbox + radio rows. */
+/** Leading indicator well shared by checkbox + radio rows. */
 const Indicator = ({ children }: { children: React.ReactNode }) => (
   <XStack
     position="absolute"
-    l={ROW_PX}
+    insetInlineStart={ROW_PX}
     width={INDICATOR_SLOT}
     height={INDICATOR_SLOT}
     items="center"
@@ -138,12 +139,15 @@ function Menubar({ value, defaultValue, onValueChange, children, ...props }: Men
     const at = triggers.indexOf(document.activeElement as HTMLElement)
     if (at === -1) return
     event.preventDefault()
+    // The triggers read in the document's direction: under RTL the next one is
+    // to the left, so ArrowLeft moves forward.
+    const ahead = rtl(root) ? 'ArrowLeft' : 'ArrowRight'
     const next =
       event.key === 'Home'
         ? 0
         : event.key === 'End'
           ? triggers.length - 1
-          : event.key === 'ArrowRight'
+          : event.key === ahead
             ? (at + 1) % triggers.length
             : (at - 1 + triggers.length) % triggers.length
     triggers[next]?.focus()
@@ -295,7 +299,7 @@ const MenubarItem = /* @__PURE__ */ React.forwardRef<GuiElement, MenubarItemProp
         data-variant={variant}
         disabled={disabled}
         {...row}
-        pl={inset ? INSET_PL : ROW_PX}
+        paddingInlineStart={inset ? INSET_PL : ROW_PX}
         theme={variant === 'destructive' ? 'red' : undefined}
         opacity={disabled ? 0.5 : 1}
         cursor={disabled ? 'default' : 'pointer'}
@@ -317,7 +321,7 @@ const MenubarCheckboxItem = /* @__PURE__ */ React.forwardRef<
       {...slot('menubar-checkbox-item')}
       checked={checked}
       {...row}
-      pl={INSET_PL}
+      paddingInlineStart={INSET_PL}
       {...props}
     >
       <Indicator>
@@ -338,7 +342,7 @@ const MenubarRadioItem = /* @__PURE__ */ React.forwardRef<
       {...slot('menubar-radio-item')}
       value={value}
       {...row}
-      pl={INSET_PL}
+      paddingInlineStart={INSET_PL}
       {...props}
     >
       <Indicator>
@@ -359,11 +363,11 @@ const MenubarSubTrigger = /* @__PURE__ */ React.forwardRef<
       {...slot('menubar-sub-trigger')}
       data-inset={inset}
       {...row}
-      pl={inset ? INSET_PL : ROW_PX}
+      paddingInlineStart={inset ? INSET_PL : ROW_PX}
       {...props}
     >
       {ink(children, undefined, label)}
-      <ChevronRight size={ICON} ml="auto" opacity={0.6} />
+      <ChevronRight {...mirror} size={ICON} marginInlineStart="auto" opacity={0.6} />
     </Menu.SubTrigger>
   )
 })
@@ -380,7 +384,7 @@ const MenubarLabel = /* @__PURE__ */ React.forwardRef<
       data-inset={inset}
       px={ROW_PX}
       py={4}
-      pl={inset ? INSET_PL : ROW_PX}
+      paddingInlineStart={inset ? INSET_PL : ROW_PX}
       fontSize="$2"
       fontWeight="500"
       color="$ink"
@@ -407,10 +411,10 @@ const MenubarSeparator = /* @__PURE__ */ React.forwardRef<
   )
 })
 
-/** Right-aligned shortcut hint. gui `Text`, not a raw `<span>`, so it renders on native. */
+/** End-aligned shortcut hint. gui `Text`, not a raw `<span>`, so it renders on native. */
 function MenubarShortcut(props: React.ComponentProps<typeof Text>) {
   return (
-    <Text {...slot('menubar-shortcut')} ml="auto" fontSize="$1" letterSpacing={1} color="$quiet" {...props} />
+    <Text {...slot('menubar-shortcut')} marginInlineStart="auto" fontSize="$1" letterSpacing={1} color="$quiet" {...props} children={ltrText(props.children)} />
   )
 }
 

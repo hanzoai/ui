@@ -23,6 +23,7 @@ import { CodeEditor } from '../backends/gui/code-editor'
 import { slot } from '../backends/gui/slot'
 import { glyph } from './FileTree'
 import { base, language } from './tree'
+import { along } from '../backends/gui/dir'
 
 type Col = Omit<ComponentProps<typeof YStack>, 'children' | 'onChange'>
 
@@ -68,9 +69,10 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
 
   const move = (e: KeyboardEvent, index: number) => {
     const last = files.length - 1
+    const key = along(e)
     const to =
-      e.key === 'ArrowRight' ? Math.min(index + 1, last)
-      : e.key === 'ArrowLeft' ? Math.max(index - 1, 0)
+      key === 'ArrowRight' ? Math.min(index + 1, last)
+      : key === 'ArrowLeft' ? Math.max(index - 1, 0)
       : e.key === 'Home' ? 0
       : e.key === 'End' ? last
       : -1
@@ -118,12 +120,12 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
               onKeyDown={((e: KeyboardEvent) => move(e, index)) as never}
               items="center"
               gap="$1.5"
-              pl="$3"
-              pr={onClose ? '$1.5' : '$3'}
+              paddingInlineStart="$3"
+              paddingInlineEnd={onClose ? '$1.5' : '$3'}
               shrink={0}
               cursor="pointer"
               borderWidth={0}
-              borderRightWidth={1}
+              borderInlineEndWidth={1}
               borderColor="$borderColor"
               borderBottomWidth={2}
               borderBottomColor={on ? '$ink' : 'transparent'}

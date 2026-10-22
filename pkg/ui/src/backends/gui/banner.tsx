@@ -98,7 +98,7 @@ const IconSlot = styled(SizableText, {
   display: 'flex',
   position: 'absolute',
   t: '$3',
-  l: '$4',
+  insetInlineStart: '$4',
   width: ICON,
   height: ICON,
   items: 'center',
@@ -283,8 +283,8 @@ export function Banner({
       ) : null}
       <BannerText
         {...slot('banner-message')}
-        pl={icon ? ICON_GUTTER : 0}
-        pr={onClose ? CLOSE + 12 : 0}
+        paddingInlineStart={icon ? ICON_GUTTER : 0}
+        paddingInlineEnd={onClose ? CLOSE + 12 : 0}
       >
         {body}
       </BannerText>
@@ -300,7 +300,7 @@ export function Banner({
           // hit-area overlay; an absolute box hosts it just as well.
           position="absolute"
           t="$3"
-          r="$4"
+          insetInlineEnd="$4"
           aria-label="Close"
           onPress={onClose}
         >

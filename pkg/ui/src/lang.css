@@ -1,0 +1,143 @@
+/**
+ * @hanzo/ui/lang.css — type for every writing system the interface ships in.
+ *
+ *   import '@hanzo/ui/lang.css'   (theme.css already carries it)
+ *
+ * Driven by the document's language, `<html lang>`, which @hanzo/i18n sets
+ * together with `dir`. Direction itself lives in @hanzo/i18n's rtl.css and in
+ * the components' logical properties; this file is the TYPE half:
+ *
+ *   1. a face per script (`--font-script`). theme.css puts it after the brand
+ *      face, so Latin stays Zen and every glyph Zen lacks falls through to a
+ *      face drawn for its script. Noto first, because it covers every script
+ *      here at one weight axis, then the face each platform ships, so a machine
+ *      without Noto still renders the script as its own people expect.
+ *   2. line height for scripts whose marks stand above or hang below the
+ *      Latin line (`--leading-lang`, a multiplier the type ladder and prose
+ *      read). Latin, Cyrillic, Greek, Hebrew, Georgian, Armenian: 1.
+ *   3. no letter-spacing on connected scripts. Arabic joins letter to letter
+ *      and the Indic headstroke runs across a word; tracking pulls both apart.
+ *   4. no brand tweaks on Arabic-script text: the `ss01` stylistic set and
+ *      `text-transform` are Latin ideas (a single-storey a, capitals).
+ *   5. numerals that line up in tables in every script.
+ *
+ * Every selector is `:lang()`, which matches by prefix: `:lang(fa)` takes fa-IR
+ * and fa-AF, `:lang(pa-Arab)` takes pa-Arab-PK and leaves Gurmukhi pa alone.
+ */
+
+/* ── 1. Faces ──────────────────────────────────────────────────────────── */
+
+/* Arabic script, Naskh: Arabic, Persian (Iran and Afghanistan), Pashto,
+   Sorani Kurdish, Uyghur. Noto Sans Arabic for the interface, Noto Naskh Arabic
+   behind it for the letters Sans lacks. */
+:is(:lang(ar), :lang(fa), :lang(prs), :lang(ps), :lang(ckb), :lang(ku-Arab), :lang(ug), :lang(ks), :lang(bal), :lang(glk), :lang(mzn)) {
+  --font-script: 'Noto Sans Arabic', 'Noto Naskh Arabic', 'SF Arabic', 'Geeza Pro', 'Segoe UI', Tahoma, ui-sans-serif;
+}
+
+/* Sindhi is set in Naskh, whose letter forms it was drawn in; Sans lacks
+   several of its dotted letters. */
+:lang(sd) {
+  --font-script: 'Noto Naskh Arabic', 'Noto Sans Arabic', 'Segoe UI', Tahoma, ui-sans-serif;
+}
+
+/* Nastaliq: Urdu and Shahmukhi Punjabi read in it, and Naskh reads to them as
+   Arabic. Naskh behind it for anything Nastaliq does not cover. */
+:is(:lang(ur), :lang(pa-Arab), :lang(pnb), :lang(skr)) {
+  --font-script: 'Noto Nastaliq Urdu', 'Urdu Typesetting', 'Jameel Noori Nastaleeq', 'Noto Naskh Arabic', 'Noto Sans Arabic', 'Segoe UI', Tahoma, ui-sans-serif;
+}
+
+:is(:lang(he), :lang(yi)) {
+  --font-script: 'Noto Sans Hebrew', 'Arial Hebrew', 'Segoe UI', ui-sans-serif;
+}
+
+:is(:lang(hi), :lang(mr), :lang(ne), :lang(sa), :lang(bho), :lang(mai), :lang(kok), :lang(doi)) {
+  --font-script: 'Noto Sans Devanagari', 'Kohinoor Devanagari', 'Devanagari Sangam MN', 'Nirmala UI', 'Mangal', ui-sans-serif;
+}
+:is(:lang(bn), :lang(as), :lang(mni)) {
+  --font-script: 'Noto Sans Bengali', 'Kohinoor Bangla', 'Bangla Sangam MN', 'Nirmala UI', 'Vrinda', ui-sans-serif;
+}
+:lang(ta) { --font-script: 'Noto Sans Tamil', 'Tamil Sangam MN', 'Nirmala UI', 'Latha', ui-sans-serif; }
+:lang(te) { --font-script: 'Noto Sans Telugu', 'Kohinoor Telugu', 'Telugu Sangam MN', 'Nirmala UI', 'Gautami', ui-sans-serif; }
+:lang(kn) { --font-script: 'Noto Sans Kannada', 'Kannada Sangam MN', 'Nirmala UI', 'Tunga', ui-sans-serif; }
+:lang(ml) { --font-script: 'Noto Sans Malayalam', 'Malayalam Sangam MN', 'Nirmala UI', 'Kartika', ui-sans-serif; }
+:lang(gu) { --font-script: 'Noto Sans Gujarati', 'Kohinoor Gujarati', 'Gujarati Sangam MN', 'Nirmala UI', 'Shruti', ui-sans-serif; }
+/* Gurmukhi is Punjabi's default script; Shahmukhi took pa-Arab above. */
+:is(:lang(pa), :lang(pa-Guru)):not(:lang(pa-Arab)) {
+  --font-script: 'Noto Sans Gurmukhi', 'Gurmukhi Sangam MN', 'Nirmala UI', 'Raavi', ui-sans-serif;
+}
+:lang(si) { --font-script: 'Noto Sans Sinhala', 'Sinhala Sangam MN', 'Nirmala UI', 'Iskoola Pota', ui-sans-serif; }
+:lang(th) { --font-script: 'Noto Sans Thai', 'Thonburi', 'Leelawadee UI', 'Tahoma', ui-sans-serif; }
+:lang(lo) { --font-script: 'Noto Sans Lao', 'Lao Sangam MN', 'Leelawadee UI', 'Lao UI', ui-sans-serif; }
+:lang(km) { --font-script: 'Noto Sans Khmer', 'Khmer Sangam MN', 'Leelawadee UI', 'Khmer UI', ui-sans-serif; }
+:lang(my) { --font-script: 'Noto Sans Myanmar', 'Myanmar Sangam MN', 'Myanmar Text', ui-sans-serif; }
+:is(:lang(bo), :lang(dz)) { --font-script: 'Noto Serif Tibetan', 'Noto Sans Tibetan', 'Kailasa', 'Microsoft Himalaya', ui-sans-serif; }
+:lang(ka) { --font-script: 'Noto Sans Georgian', 'Helvetica Neue', 'Sylfaen', ui-sans-serif; }
+:lang(hy) { --font-script: 'Noto Sans Armenian', 'Mshtakan', 'Sylfaen', ui-sans-serif; }
+:is(:lang(am), :lang(ti), :lang(om-Ethi)) { --font-script: 'Noto Sans Ethiopic', 'Kefa', 'Nyala', 'Ebrima', ui-sans-serif; }
+
+/* Han is unified across Chinese, Japanese and Korean, and each reads the
+   others' forms of the same character as foreign. So the face is chosen by
+   language, never by script alone. */
+:is(:lang(zh-Hans), :lang(zh-CN), :lang(zh-SG), :lang(zh)) {
+  --font-script: 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', ui-sans-serif;
+}
+:is(:lang(zh-Hant), :lang(zh-TW)) {
+  --font-script: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', ui-sans-serif;
+}
+:is(:lang(zh-HK), :lang(zh-MO)) { --font-script: 'Noto Sans HK', 'PingFang HK', 'Microsoft JhengHei', ui-sans-serif; }
+:lang(ja) { --font-script: 'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI', 'Meiryo', ui-sans-serif; }
+:lang(ko) { --font-script: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', ui-sans-serif; }
+
+/* ── 2. Line height ─────────────────────────────────────────────────────── */
+
+/* Marks above and below the line: Arabic harakat, the Indic matras and
+   conjuncts, Thai and Lao tone marks stacked over vowels, Khmer subscripts,
+   Burmese medials, Tibetan stacks. Measured against the Latin ladder, which
+   sets 14px on 20px: these need roughly 1.15x to 1.5x the space to keep one
+   line's marks out of the next. */
+:is(:lang(ar), :lang(fa), :lang(prs), :lang(ps), :lang(ckb), :lang(ku-Arab), :lang(ug), :lang(sd), :lang(ks), :lang(bal), :lang(glk), :lang(mzn)) { --leading-lang: 1.15; }
+:is(:lang(hi), :lang(mr), :lang(ne), :lang(sa), :lang(bho), :lang(mai), :lang(kok), :lang(doi), :lang(bn), :lang(as), :lang(mni), :lang(gu), :lang(pa), :lang(ta), :lang(te), :lang(kn), :lang(ml), :lang(si)) { --leading-lang: 1.2; }
+:is(:lang(th), :lang(lo)) { --leading-lang: 1.25; }
+:is(:lang(km), :lang(my)) { --leading-lang: 1.35; }
+:is(:lang(bo), :lang(dz)) { --leading-lang: 1.4; }
+:is(:lang(zh), :lang(ja), :lang(ko), :lang(am), :lang(ti)) { --leading-lang: 1.1; }
+/* Nastaliq descends along a diagonal baseline; each word steps down from its
+   first letter, so a line needs half again its Latin height. After the Naskh
+   rule so pa-Arab takes this one rather than Gurmukhi's. */
+:is(:lang(ur), :lang(pa-Arab), :lang(pnb), :lang(skr)) { --leading-lang: 1.5; }
+
+/* The body's own leading, for content that arrives as bare tags. Only where a
+   script above asked for more, so a host that brings its own body leading and
+   no tall script keeps it untouched. */
+:root:is(:lang(ar), :lang(fa), :lang(prs), :lang(ps), :lang(ckb), :lang(ku-Arab), :lang(ug), :lang(sd), :lang(ks), :lang(bal), :lang(glk), :lang(mzn), :lang(ur), :lang(pa-Arab), :lang(pnb), :lang(skr), :lang(hi), :lang(mr), :lang(ne), :lang(sa), :lang(bho), :lang(mai), :lang(kok), :lang(doi), :lang(bn), :lang(as), :lang(mni), :lang(gu), :lang(pa), :lang(ta), :lang(te), :lang(kn), :lang(ml), :lang(si), :lang(th), :lang(lo), :lang(km), :lang(my), :lang(bo), :lang(dz), :lang(zh), :lang(ja), :lang(ko), :lang(am), :lang(ti)) body {
+  line-height: calc(var(--leading-base, 1.35rem) * var(--leading-lang));
+}
+
+/* ── 3 and 4. Connected scripts: no tracking, no Latin tweaks ───────────── */
+
+/* !important because the type ladder states its tracking as an atomic class
+   on the element itself (-0.025em on headline rungs), and a class on the
+   element beats anything inherited. Tracking a connected script is never a
+   choice; it breaks the joins. */
+:is(:lang(ar), :lang(fa), :lang(prs), :lang(ps), :lang(ckb), :lang(ku-Arab), :lang(ug), :lang(sd), :lang(ks), :lang(bal), :lang(glk), :lang(mzn), :lang(ur), :lang(pa-Arab), :lang(pnb), :lang(skr), :lang(syr), :lang(nqo), :lang(mn-Mong)) {
+  letter-spacing: 0 !important;
+  /* `ss01` is the brand's single-storey a; in an Arabic face the same tag
+     names an unrelated alternate, or a different letter entirely. */
+  --font-feature-settings: normal;
+  font-feature-settings: normal;
+  text-transform: none !important;
+}
+/* The headstroke of Devanagari, Bengali and Gurmukhi is one line across a
+   word; tracking breaks it into letters. */
+:is(:lang(hi), :lang(mr), :lang(ne), :lang(sa), :lang(bho), :lang(mai), :lang(kok), :lang(doi), :lang(bn), :lang(as), :lang(mni), :lang(pa)) {
+  letter-spacing: 0 !important;
+}
+
+/* ── 5. Numerals ────────────────────────────────────────────────────────── */
+
+/* Tables and counters align digits whatever the language, and Persian and
+   Arabic-Indic digits come in a tabular form in the same faces. Code, URLs and
+   email stay left to right with their own numerals (rtl.css isolates them). */
+:is(:lang(ar), :lang(fa), :lang(prs), :lang(ps), :lang(ckb), :lang(ug), :lang(sd), :lang(ur), :lang(pa-Arab), :lang(pnb), :lang(he)) :where(td, th, data, time, output, meter, .hz-tnum, [data-numeric]) {
+  font-variant-numeric: tabular-nums;
+}

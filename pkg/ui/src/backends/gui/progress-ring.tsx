@@ -67,7 +67,7 @@ export function ProgressRing({
       {...props}
     >
       {children ? (
-        <SizableText id={`${id}-label`} size="$1" color="$ink" numberOfLines={1} textAlign="right">
+        <SizableText id={`${id}-label`} size="$1" color="$ink" numberOfLines={1} textAlign="end">
           {children}
         </SizableText>
       ) : null}

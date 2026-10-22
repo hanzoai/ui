@@ -151,8 +151,8 @@ function Hued({
       items="center"
       gap="$1"
       height={20}
-      pl="$2"
-      pr={loading ? '$1' : '$2'}
+      paddingInlineStart="$2"
+      paddingInlineEnd={loading ? '$1' : '$2'}
       rounded="$10"
       bg={tone(3)}
       maxW="100%"

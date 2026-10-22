@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" class="t_dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>@hanzo/ui right to left</title>
+    <style>
+      /* What @hanzo/i18n's rtl.css carries, which every host imports beside
+         this package: machine-readable text keeps its writing order. */
+      :where(html[dir='rtl']) :where(input[type='email'], input[type='url'], pre, code, [data-i18n-ltr]) {
+        direction: ltr;
+        unicode-bidi: isolate;
+        text-align: start;
+      }
+      body { margin: 0; padding: 24px; background: var(--background); }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      window.process = { env: { NODE_ENV: 'development' } }
+      // The direction and language an i18n layer sets, before anything renders.
+      const q = new URLSearchParams(location.search)
+      document.documentElement.dir = q.get('dir') === 'rtl' ? 'rtl' : 'ltr'
+      document.documentElement.lang = q.get('lang') === 'ar' ? 'ar' : 'en'
+    </script>
+    <script type="module" src="/test/rtl.mount.tsx"></script>
+  </body>
+</html>

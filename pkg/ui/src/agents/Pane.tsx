@@ -317,7 +317,7 @@ export function OrgRail({ orgs, active, onSwitch, onAdd, ...rest }: OrgRailProps
       gap="$2"
       py="$3"
       bg="$background"
-      borderRightWidth={1}
+      borderInlineEndWidth={1}
       borderColor="$borderColor"
       {...rest}
     >

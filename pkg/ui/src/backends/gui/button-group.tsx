@@ -85,10 +85,10 @@ export function ButtonGroup({
         {...(props as object)}
       >
         {items.map((child, i) => (
-          // `ml` and `focusStyle` ride the item into the child (XGroup.Item merges
+          // `marginInlineStart` and `focusStyle` ride the item into the child (XGroup.Item merges
           // its props under the child's own): every button after the first steps
           // back over its neighbour's edge, and the focused one is drawn on top.
-          <XGroup.Item key={child.key ?? i} {...(i > 0 ? { ml: -1 } : null)} focusStyle={{ zIndex: 1 }}>
+          <XGroup.Item key={child.key ?? i} {...(i > 0 ? { marginInlineStart: -1 } : null)} focusStyle={{ zIndex: 1 }}>
             {child}
           </XGroup.Item>
         ))}

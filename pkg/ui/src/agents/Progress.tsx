@@ -37,6 +37,7 @@ import {
 import { useState, type ComponentProps, type ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
+import { mirror } from '../backends/gui/dir'
 
 type Col = Omit<ComponentProps<typeof YStack>, 'children'>
 
@@ -88,7 +89,7 @@ function Row({ step }: { step: Step }) {
           open ? (
             <ChevronDown size={12} opacity={0.5} />
           ) : (
-            <ChevronRight size={12} opacity={0.5} />
+            <ChevronRight {...mirror} size={12} opacity={0.5} />
           )
         ) : null}
       </XStack>
@@ -96,9 +97,9 @@ function Row({ step }: { step: Step }) {
       {/* Indented under the label and hung off a hairline, so a long detail
           reads as belonging to its step rather than as the next one. */}
       {has && open ? (
-        <YStack pl="$4" ml="$1" gap="$0.5" borderLeftWidth={1} borderColor="$borderColor">
+        <YStack paddingInlineStart="$4" marginInlineStart="$1" gap="$0.5" borderInlineStartWidth={1} borderColor="$borderColor">
           {step.detail!.map((line, i) => (
-            <SizableText key={`${step.key}-${i}`} size="$2" color="$soft" pl="$2">
+            <SizableText key={`${step.key}-${i}`} size="$2" color="$soft" paddingInlineStart="$2">
               {line}
             </SizableText>
           ))}

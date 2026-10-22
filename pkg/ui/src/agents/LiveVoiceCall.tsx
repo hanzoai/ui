@@ -112,7 +112,7 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({
 
       {/* Live transcript stream */}
       {transcripts.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 160, overflowY: 'auto', paddingRight: 4 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 160, overflowY: 'auto', paddingInlineEnd: 4 }}>
           {transcripts.map((t, idx) => (
             <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: 2, fontSize: 12 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 11, color: '#737373' }}>

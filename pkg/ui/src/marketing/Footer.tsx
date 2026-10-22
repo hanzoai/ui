@@ -104,7 +104,7 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
           {copyright}
         </Line>
       ) : null}
-      <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8} ml={0} width="100%" $sm={{ ml: 'auto', width: 'auto' }}>
+      <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8} marginInlineStart={0} width="100%" $sm={{ marginInlineStart: 'auto', width: 'auto' }}>
         {legal.map((l) => (
           <Anchor key={l.label} href={l.href} {...open(l.out)} color="$faint" fontSize="$2" lineHeight="$2" textDecorationLine="none" hoverStyle={{ color: '$ink' }}>
             {l.label}

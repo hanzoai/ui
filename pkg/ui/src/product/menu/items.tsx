@@ -128,6 +128,7 @@ export function MenuPanel({
 
 // ── Item — the ONE row ──────────────────────────────────────────────────────────
 import { labelOf, useEmit } from '../instrument'
+import { mirror } from '../../backends/gui/dir'
 
 export function MenuItemView({
   icon,
@@ -202,7 +203,7 @@ export function MenuItemView({
         </Text>
       ) : null}
       {selected ? <Check size={14} color={ACCENT} /> : null}
-      {hasSubmenu ? <ChevronRight size={14} color="var(--hanzo-muted, currentColor)" opacity={0.6} /> : null}
+      {hasSubmenu ? <ChevronRight {...mirror} size={14} color="var(--hanzo-muted, currentColor)" opacity={0.6} /> : null}
     </XStack>
   )
 }

@@ -1547,3 +1547,31 @@ those two exact versions, not a new minor.
 2. Never commit symlinked files (AGENTS.md, CLAUDE.md, etc.)
 3. Knowledge goes in this file, not random root MD files
 4. Anything shadcn-lineage belongs in `hanzoai/shadcn`, not here
+
+## Right to left — sides are logical
+
+Hosts set `<html dir="rtl">` and `<html lang>` through @hanzo/i18n for Arabic,
+Persian, Hebrew, Urdu, Pashto, Sorani, Sindhi, Uyghur and Shahmukhi. gui's rows
+and grids follow `dir`; a side named left or right does not.
+
+- Write `paddingInlineStart/End`, `marginInlineStart/End`, `insetInlineStart/End`,
+  `borderInlineStart*/End*`, `borderStartStartRadius`…; `align('start')` for text
+  (gui's type names only left/right). `src/rtl.test.ts` fails on a physical side
+  that is not on its list of reasons (symmetric, code, mockup, media, logo).
+- `backends/gui/dir.ts` is the one place for what a prop cannot say: `mirror`
+  (an icon that points along the line: back, next, send, drill-in chevron, a
+  sidebar toggle), `ltr` (an LTR island: email/URL field, key chord), `ltrText`
+  (a shortcut string isolated with LRI/PDI, so its element keeps the page's
+  direction for its own auto margin), `along(e)` (a key handler written for LTR,
+  right in both), `rtl(el)` (pointer math). `ltr` on an element that carries a
+  logical margin turns that margin around; that is what `ltrText` is for.
+- Sheet, SlideOver, Grip and MessageDock default to the reading END; `left` and
+  `right` remain as explicit screen sides.
+- `lang.css` (in theme.css, and `@hanzo/ui/lang.css` alone) sets a face per script
+  after Zen (`--font-script`), opens the line for tall marks (`--leading-lang`,
+  read by the type ladder and prose), and takes tracking, `ss01` and
+  `text-transform` off Arabic-script text.
+- `pnpm test:rtl` mounts `test/rtl.tsx` in both directions and fails on any box
+  that is not its own mirror. Against published gui 8.3.5 it reports the tabs,
+  slider and progress fill that only gui's own `useDirection` fix moves; against
+  gui with that fix, 44 of 44.

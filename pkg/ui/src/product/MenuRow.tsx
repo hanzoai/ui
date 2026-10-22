@@ -44,6 +44,7 @@ import { Check, ChevronRight, GripVertical } from '@hanzogui/lucide-icons-2'
 import { press, RING } from '../backends/gui/press'
 import { Shortcut, type ShortcutKeys } from '../backends/gui/shortcut'
 import { touch } from '../backends/gui/gesture'
+import { mirror } from '../backends/gui/dir'
 
 /** The tier hue a row may carry. Monochrome by default — only the genuine states
  *  take a colour (a live network green, a caution amber). */
@@ -128,7 +129,7 @@ export function MenuRowContent({
       lead
     )
   const dim = contextual != null && contextual !== '' ? (
-    <Text fontSize="$2" color="$hint" numberOfLines={1} pl={4} shrink={1}>
+    <Text fontSize="$2" color="$hint" numberOfLines={1} paddingInlineStart={4} shrink={1}>
       {contextual}
     </Text>
   ) : null
@@ -175,7 +176,7 @@ export function MenuRowContent({
           rotate={submenu === 'open' ? '90deg' : '0deg'}
           {...({ 'data-open': submenu === 'open' ? '' : undefined } as object)}
         >
-          <ChevronRight size={MENU_ROW.chevron} color="$hush" />
+          <ChevronRight {...mirror} size={MENU_ROW.chevron} color="$hush" />
         </XStack>
       ) : null}
     </>

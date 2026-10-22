@@ -30,6 +30,7 @@ import { Button } from '../backends/gui/button'
 import { Input } from '../backends/gui/input'
 import { RING } from '../backends/gui/press'
 import { slot } from '../backends/gui/slot'
+import { along } from '../backends/gui/dir'
 
 type Col = Omit<ComponentProps<typeof YStack>, 'children'>
 
@@ -94,11 +95,12 @@ export function Shelf({
   // The strip's one tab stop is the open kind — or the first, when `tab` names
   // none, so the strip is never unreachable from the keyboard.
   const stop = Math.max(0, tabs.findIndex((t) => t.id === tab))
-  const move = (e: { key?: string; preventDefault?: () => void }, index: number) => {
+  const move = (e: { key?: string; currentTarget?: unknown; preventDefault?: () => void }, index: number) => {
     const last = tabs.length - 1
+    const key = along(e)
     const to =
-      e.key === 'ArrowRight' ? (index === last ? 0 : index + 1)
-      : e.key === 'ArrowLeft' ? (index === 0 ? last : index - 1)
+      key === 'ArrowRight' ? (index === last ? 0 : index + 1)
+      : key === 'ArrowLeft' ? (index === 0 ? last : index - 1)
       : e.key === 'Home' ? 0
       : e.key === 'End' ? last
       : -1

@@ -158,7 +158,7 @@ function Launcher({ menu, link, icon, close }: { menu: MeetHanzoMenu; link: Link
         <Text fontSize="$2" color="$quiet">
           {menu.eyebrow}
         </Text>
-        <XStack ml="auto">
+        <XStack marginInlineStart="auto">
           {link({
             href: menu.allProducts.href,
             onNavigate: close,
@@ -301,7 +301,7 @@ export function SiteNav({ header, menu, brand, actions, link = defaultLink, icon
     <YStack ref={root as never} position="relative" bg="$background">
       <XStack items="center" gap="$1" px="$3" height={52} borderBottomWidth={1} borderColor="$borderColor">
         {brand ? (
-          <XStack items="center" pr="$2">
+          <XStack items="center" paddingInlineEnd="$2">
             {brand}
           </XStack>
         ) : null}
@@ -350,7 +350,7 @@ export function SiteNav({ header, menu, brand, actions, link = defaultLink, icon
           ))}
         </XStack>
 
-        <XStack items="center" gap="$2" ml="auto">
+        <XStack items="center" gap="$2" marginInlineStart="auto">
           {actions}
           <Cta action={header.action} link={link} />
           <XStack

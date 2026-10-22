@@ -321,7 +321,7 @@ function DataTable<TData>({
           {hideable.length > 0 && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button {...slot('data-table-view-options')} variant="outline" size="sm" ml="auto">
+                <Button {...slot('data-table-view-options')} variant="outline" size="sm" marginInlineStart="auto">
                   Columns
                   <ChevronDown size={14} />
                 </Button>

@@ -92,6 +92,6 @@ describe('Status in a data hue', () => {
   it('loading busies the pill and narrows its end gutter', () => {
     const el = tag(html(<Status color="teal" loading>x</Status>), 'status')
     expect(el).toContain('aria-busy="true"')
-    expect(el).toMatch(/_pr-c-space-1/)
+    expect(el).toMatch(/_paddingInlineEnd-c-space-1/)
   })
 })

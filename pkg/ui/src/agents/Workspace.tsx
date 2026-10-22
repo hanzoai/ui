@@ -51,6 +51,7 @@ import {
 
 import { Button } from '../backends/gui/button'
 import { slot } from '../backends/gui/slot'
+import { along } from '../backends/gui/dir'
 
 type Col = Omit<ComponentProps<typeof YStack>, 'children'>
 
@@ -139,7 +140,7 @@ export function Workspace({
         </XStack>
       </XStack>
 
-      <XStack flex={1} minH={0} minW={0} gap={0} $md={{ gap: '$3', pr: '$3', pb: '$3' }}>
+      <XStack flex={1} minH={0} minW={0} gap={0} $md={{ gap: '$3', paddingInlineEnd: '$3', pb: '$3' }}>
         <YStack
           {...slot('workspace-chat')}
           render="section"
@@ -217,9 +218,10 @@ export function Views({ views, value, onChange, label, labels = 'active', ...res
   const refs = useRef<(HTMLElement | null)[]>([])
   const move = (e: KeyboardEvent, index: number) => {
     const last = views.length - 1
+    const key = along(e)
     const to =
-      e.key === 'ArrowRight' ? (index === last ? 0 : index + 1)
-      : e.key === 'ArrowLeft' ? (index === 0 ? last : index - 1)
+      key === 'ArrowRight' ? (index === last ? 0 : index + 1)
+      : key === 'ArrowLeft' ? (index === 0 ? last : index - 1)
       : e.key === 'Home' ? 0
       : e.key === 'End' ? last
       : -1
@@ -313,8 +315,8 @@ export function ProjectChip({ name, mark, onPress, ref, ...rest }: ProjectChipPr
       height={CONTROL + 4}
       minW={0}
       shrink={1}
-      pl="$1.5"
-      pr="$2"
+      paddingInlineStart="$1.5"
+      paddingInlineEnd="$2"
       rounded="$3"
       borderWidth={1}
       borderColor="$borderColor"

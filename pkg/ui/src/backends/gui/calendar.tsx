@@ -25,6 +25,7 @@ import { Cell, Grid } from '../../grid'
 import { sx } from '../../sx'
 import { Button } from './button'
 import { slot } from './slot'
+import { along, mirror } from './dir'
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -187,7 +188,8 @@ function Calendar(props: CalendarProps) {
   }
 
   const move = (e: KeyboardEvent<HTMLElement>, from: Date) => {
-    const next = step(e.key, from, weekStartsOn)
+    // Under RTL the week runs right to left, so ArrowLeft is the next day.
+    const next = step(along(e), from, weekStartsOn)
     if (!next) return
     e.preventDefault()
     pending.current = true
@@ -209,7 +211,7 @@ function Calendar(props: CalendarProps) {
                   size="icon-sm"
                   onClick={() => navigate(-1)}
                 >
-                  <ChevronLeft size={16} />
+                  <ChevronLeft {...mirror} size={16} />
                 </Button>
               )}
             </YStack>
@@ -225,7 +227,7 @@ function Calendar(props: CalendarProps) {
                   size="icon-sm"
                   onClick={() => navigate(1)}
                 >
-                  <ChevronRight size={16} />
+                  <ChevronRight {...mirror} size={16} />
                 </Button>
               )}
             </YStack>

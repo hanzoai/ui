@@ -58,6 +58,16 @@
   will-change: transform;
 }
 
+/* Where a panel waits off screen, by the edge it slides from. A translate has no
+   logical form, so the reading edges resolve here: `end` is off the right under
+   LTR and off the left under RTL. */
+[data-slide-from='end'],
+[data-slide-from='right'] { --slide-off: 100%; }
+[data-slide-from='start'],
+[data-slide-from='left'] { --slide-off: -100%; }
+[data-slide-from='end']:dir(rtl) { --slide-off: -100%; }
+[data-slide-from='start']:dir(rtl) { --slide-off: 100%; }
+
 [data-motion='drag'] {
   touch-action: none;
   transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -237,6 +247,16 @@
   animation: sweep var(--duration-loop, 1.5s) ease-in-out infinite;
 }
 
+/* Under RTL the bar starts at the right edge and crosses the way the line reads. */
+@keyframes sweep-rtl {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-400%); }
+}
+
+[data-motion='sweep']:dir(rtl) {
+  animation-name: sweep-rtl;
+}
+
 @keyframes orbit {
   from { transform: rotate(-90deg); }
   to { transform: rotate(270deg); }
@@ -254,6 +274,11 @@
 [data-motion='drain'] {
   transform-origin: left center;
   animation: drain var(--drain, 6000ms) linear forwards;
+}
+
+/* A fill empties toward the inline start: the right edge under RTL. */
+[data-motion='drain']:dir(rtl) {
+  transform-origin: right center;
 }
 
 [data-motion='drain'][data-paused] {

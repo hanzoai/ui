@@ -18,6 +18,7 @@ import { ChevronLeft, ChevronRight, MoreHorizontal } from '@hanzogui/lucide-icon
 
 import { Button, type ButtonSize } from './button'
 import { slot } from './slot'
+import { mirror } from './dir'
 
 const ICON = 16
 
@@ -89,8 +90,8 @@ export const PaginationLink = ({
 export type PaginationPreviousProps = Omit<PaginationLinkProps, 'size' | 'children'>
 
 export const PaginationPrevious = (props: PaginationPreviousProps) => (
-  <PaginationLink aria-label="Go to previous page" size="default" gap="$1" pl="$2.5" {...props}>
-    <ChevronLeft size={ICON} />
+  <PaginationLink aria-label="Go to previous page" size="default" gap="$1" paddingInlineStart="$2.5" {...props}>
+    <ChevronLeft {...mirror} size={ICON} />
     Previous
   </PaginationLink>
 )
@@ -98,9 +99,9 @@ export const PaginationPrevious = (props: PaginationPreviousProps) => (
 export type PaginationNextProps = Omit<PaginationLinkProps, 'size' | 'children'>
 
 export const PaginationNext = (props: PaginationNextProps) => (
-  <PaginationLink aria-label="Go to next page" size="default" gap="$1" pr="$2.5" {...props}>
+  <PaginationLink aria-label="Go to next page" size="default" gap="$1" paddingInlineEnd="$2.5" {...props}>
     Next
-    <ChevronRight size={ICON} />
+    <ChevronRight {...mirror} size={ICON} />
   </PaginationLink>
 )
 

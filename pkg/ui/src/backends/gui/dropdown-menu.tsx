@@ -51,6 +51,7 @@ import { Input as GuiInput, Menu, Spinner, Text, XStack, YStack, isWeb, type Gui
 import { Check, ChevronLeft, ChevronRight, Circle, X } from "@hanzogui/lucide-icons-2"
 
 import { touch } from "./gesture"
+import { ltrText, mirror } from "./dir"
 import { ink } from "./ink"
 import { Density, useDensity } from "./density"
 import type { MenuItemSpec } from "../../product/menu/items"
@@ -107,11 +108,11 @@ const row = {
   pressStyle: { bg: "$raised" },
 } as const
 
-/** Left indicator well shared by checkbox + radio rows. */
+/** Leading indicator well shared by checkbox + radio rows. */
 const Indicator = ({ children }: { children: React.ReactNode }) => (
   <XStack
     position="absolute"
-    l={ROW_PX}
+    insetInlineStart={ROW_PX}
     width={INDICATOR_SLOT}
     height={INDICATOR_SLOT}
     items="center"
@@ -481,7 +482,7 @@ const DropdownMenuItem = /* @__PURE__ */ React.forwardRef<
       data-variant={variant}
       disabled={disabled}
       {...row}
-      pl={inset ? INSET_PL : ROW_PX}
+      paddingInlineStart={inset ? INSET_PL : ROW_PX}
       theme={variant === "destructive" ? "red" : undefined}
       opacity={disabled ? 0.5 : 1}
       cursor={disabled ? "default" : "pointer"}
@@ -503,7 +504,7 @@ const DropdownMenuItem = /* @__PURE__ */ React.forwardRef<
       {opens ? (
         <>
           {ink(children, Text as never, { fontSize: '$2' })}
-          <ChevronRight size={ICON - 2} ml="auto" color="$hush" />
+          <ChevronRight {...mirror} size={ICON - 2} marginInlineStart="auto" color="$hush" />
         </>
       ) : (
         ink(children, Text as never, { fontSize: '$2' })
@@ -554,7 +555,7 @@ const DropdownMenuCheckboxItem = /* @__PURE__ */ React.forwardRef<
       data-slot="dropdown-menu-checkbox-item"
       checked={checked}
       {...row}
-      pl={INSET_PL}
+      paddingInlineStart={INSET_PL}
       {...props}
     >
       <Indicator>
@@ -575,7 +576,7 @@ const DropdownMenuRadioItem = /* @__PURE__ */ React.forwardRef<
       value={value}
       data-slot="dropdown-menu-radio-item"
       {...row}
-      pl={INSET_PL}
+      paddingInlineStart={INSET_PL}
       {...props}
     >
       <Indicator>
@@ -596,11 +597,11 @@ const DropdownMenuSubTrigger = /* @__PURE__ */ React.forwardRef<
       data-slot="dropdown-menu-sub-trigger"
       data-inset={inset}
       {...row}
-      pl={inset ? INSET_PL : ROW_PX}
+      paddingInlineStart={inset ? INSET_PL : ROW_PX}
       {...props}
     >
       {children}
-      <ChevronRight size={ICON} ml="auto" opacity={0.6} />
+      <ChevronRight {...mirror} size={ICON} marginInlineStart="auto" opacity={0.6} />
     </Menu.SubTrigger>
   )
 })
@@ -712,7 +713,7 @@ const DropdownMenuOptionItem = /* @__PURE__ */ React.forwardRef<GuiElement, Drop
         ) : (
           children
         )}
-        {mark === "check" && on ? <Check size={ICON} strokeWidth={2} ml="auto" /> : null}
+        {mark === "check" && on ? <Check size={ICON} strokeWidth={2} marginInlineStart="auto" /> : null}
       </>
     )
     const shared = {
@@ -945,7 +946,7 @@ const DropdownMenuBack = /* @__PURE__ */ React.forwardRef<GuiElement, React.Comp
         }}
         {...props}
       >
-        <ChevronLeft size={ICON} color="$aside" />
+        <ChevronLeft {...mirror} size={ICON} color="$aside" />
         {typeof children === "string" ? (
           <Text fontSize="$2" fontWeight="500" color="$ink" numberOfLines={1} flex={1}>
             {children}
@@ -1037,7 +1038,7 @@ const DropdownMenuLabel = /* @__PURE__ */ React.forwardRef<
       data-inset={inset}
       px={ROW_PX}
       py={4}
-      pl={inset ? INSET_PL : ROW_PX}
+      paddingInlineStart={inset ? INSET_PL : ROW_PX}
       fontSize="$2"
       fontWeight="500"
       color="$ink"
@@ -1065,16 +1066,17 @@ const DropdownMenuSeparator = /* @__PURE__ */ React.forwardRef<
   )
 })
 
-/** Right-aligned shortcut hint. gui `Text`, not a raw `<span>`, so it renders on native. */
+/** End-aligned shortcut hint. gui `Text`, not a raw `<span>`, so it renders on native. */
 function DropdownMenuShortcut(props: React.ComponentProps<typeof Text>) {
   return (
     <Text
       data-slot="dropdown-menu-shortcut"
-      ml="auto"
+      marginInlineStart="auto"
       fontSize="$1"
       letterSpacing={1}
       color="$quiet"
       {...props}
+      children={ltrText(props.children)}
     />
   )
 }

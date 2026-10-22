@@ -19,6 +19,7 @@ import { useDensity } from '../backends/gui/density'
 import type { FieldSize } from '../backends/gui/control'
 
 import { textSize, useEmit } from './instrument'
+import { along } from '../backends/gui/dir'
 
 /** One pill in a segmented control. `icon` leads the label; an icon-only option needs `aria-label`. */
 export type Option<T extends string> = {
@@ -78,8 +79,9 @@ export function Segmented<T extends string>({
     // A radio group: the arrows move the CHOICE, not only the focus (gui's
     // roving focus moves the focus; this moves the value with it).
     const live = options.filter((o) => !o.disabled)
-    const onKeyDown = (e: { key?: string; preventDefault?: () => void }) => {
-      const by = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0
+    const onKeyDown = (e: { key?: string; currentTarget?: unknown; preventDefault?: () => void }) => {
+      const key = along(e)
+      const by = key === 'ArrowRight' || key === 'ArrowDown' ? 1 : key === 'ArrowLeft' || key === 'ArrowUp' ? -1 : 0
       if (!by || disabled || live.length === 0) return
       const at = live.findIndex((o) => o.value === value)
       pick(live[(at + by + live.length) % live.length].value)

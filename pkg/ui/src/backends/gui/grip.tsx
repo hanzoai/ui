@@ -6,10 +6,13 @@
  * resizer: a sidebar, an aside, a split between two panes, and an editor's
  * height all use it.
  *
- *   side      the edge the box is pinned to. `left` grows rightwards (a sidebar,
- *             the first pane of a split), `right` grows leftwards (an aside, a
- *             drawer), `top` grows downwards (an editor, a tree). One control,
- *             the arithmetic reflected.
+ *   side      the edge the box is pinned to. `start` is the reading start (a
+ *             sidebar, the first pane of a split) and `end` the reading end (an
+ *             aside, a drawer): the left and right under LTR, swapped under RTL,
+ *             read off the grip when a gesture or key arrives. `left` and
+ *             `right` pin a screen side whatever the direction; `top` grows
+ *             downwards (an editor, a tree). One control, the arithmetic
+ *             reflected.
  *   span      the box's size now, px, for assistive tech; `floor` and `ceil`
  *             bound it.
  *   onSpan    the size while it moves, at most once a frame.
@@ -47,6 +50,7 @@
  */
 import { YStack, type YStackProps } from '@hanzo/gui'
 import * as React from 'react'
+import { rtl } from './dir'
 
 /** A key's step, px; with Shift, the long one. */
 const STEP = 8
@@ -58,7 +62,7 @@ const SLACK = 48
 /** The grab band's thickness, px; the line drawn inside it is 2. */
 const BAND = 8
 
-export type GripSide = 'left' | 'right' | 'top'
+export type GripSide = 'start' | 'end' | 'left' | 'right' | 'top'
 
 export interface GripProps extends Omit<YStackProps, 'children'> {
   side: GripSide
@@ -97,8 +101,11 @@ export function Grip({
   ...rest
 }: GripProps) {
   const tall = side === 'top'
+  /** The screen side the box is pinned to, for the grip at `el`. */
+  const pinned = (el: unknown) =>
+    side === 'start' ? (rtl(el) ? 'right' : 'left') : side === 'end' ? (rtl(el) ? 'left' : 'right') : side
   /** +1 when the pointer moving away from the pinned edge grows the box. */
-  const grows = side === 'right' ? -1 : 1
+  const grows = React.useRef(1)
   // The pinned edge in client coordinates, taken as the drag begins.
   const held = React.useRef(0)
   // Whether a press holds the pointer and whether it has moved since, the size it
@@ -151,11 +158,12 @@ export function Grip({
     return () => window.removeEventListener('keydown', cancel, true)
   })
 
-  const wider = side === 'left' ? 'ArrowRight' : side === 'right' ? 'ArrowLeft' : 'ArrowDown'
-  const narrower = side === 'left' ? 'ArrowLeft' : side === 'right' ? 'ArrowRight' : 'ArrowUp'
+  // The free edge: opposite the pinned one, a logical side for a logical pin.
+  const free =
+    side === 'start' ? { insetInlineEnd: 0 } : side === 'end' ? { insetInlineStart: 0 } : side === 'left' ? { r: 0 } : { l: 0 }
   const edge = tall
     ? { l: 0, r: 0, b: 0, height: BAND, justify: 'center' as const }
-    : { t: 0, b: 0, width: BAND, items: 'center' as const, ...(side === 'left' ? { r: 0 } : { l: 0 }) }
+    : { t: 0, b: 0, width: BAND, items: 'center' as const, ...free }
 
   return (
     <YStack
@@ -187,7 +195,8 @@ export function Grip({
         e.preventDefault()
         e.currentTarget.setPointerCapture?.(e.pointerId)
         const now = drawn(e.currentTarget)
-        held.current = along(e) - grows * now
+        grows.current = pinned(e.currentTarget) === 'right' ? -1 : 1
+        held.current = along(e) - grows.current * now
         want.current = clamp(now)
         began.current = clamp(now)
         drag.current = 'held'
@@ -196,7 +205,7 @@ export function Grip({
       onPointerMove={(e: React.PointerEvent<HTMLElement>) => {
         if (drag.current === 'none') return
         drag.current = 'moved'
-        const pulled = grows * (along(e) - held.current)
+        const pulled = grows.current * (along(e) - held.current)
         if (onShut && pulled < floor - SLACK) {
           stop()
           e.currentTarget.releasePointerCapture?.(e.pointerId)
@@ -217,6 +226,9 @@ export function Grip({
       onKeyDown={(e: Keyed) => {
         const step = e.shiftKey ? LONG : unit
         const now = drawn(e.currentTarget)
+        const at = pinned(e.currentTarget)
+        const wider = at === 'left' ? 'ArrowRight' : at === 'right' ? 'ArrowLeft' : 'ArrowDown'
+        const narrower = at === 'left' ? 'ArrowLeft' : at === 'right' ? 'ArrowRight' : 'ArrowUp'
         const to =
           e.key === wider
             ? now + step

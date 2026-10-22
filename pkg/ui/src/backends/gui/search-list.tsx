@@ -73,17 +73,17 @@ export const Segment = /* @__PURE__ */ forwardRef<GuiElement, SegmentProps>(func
       // sits under; `aria-expanded` is stated as well for a segment used alone.
       {...({ type: 'button', disabled, 'aria-expanded': !!open, ...(label ? { 'aria-label': label } : null) } as object)}
       height={box.h - 2}
-      ml={group ? -box.gutter : 0}
+      marginInlineStart={group ? -box.gutter : 0}
       shrink={0}
       items="center"
       gap="$1"
       px="$2"
       bg="transparent"
       borderWidth={0}
-      borderRightWidth={1}
+      borderInlineEndWidth={1}
       borderColor="$borderColor"
-      borderTopLeftRadius="$3"
-      borderBottomLeftRadius="$3"
+      borderStartStartRadius="$3"
+      borderEndStartRadius="$3"
       cursor={disabled ? 'not-allowed' : 'pointer'}
       opacity={disabled ? 0.5 : 1}
       hoverStyle={disabled ? undefined : { bg: '$hover' }}

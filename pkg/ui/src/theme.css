@@ -56,7 +56,12 @@
 
 @layer hanzo.font {
   :root {
-    --font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+    /* `--font-script` is the face for the page's writing system, which
+       lang.css sets per :lang() — Arabic, Hebrew, Devanagari, Thai, CJK and the
+       rest. It follows the brand face, so Latin keeps Zen and every glyph Zen
+       lacks falls through to a face drawn for it. Unset, the stack is the one
+       this always was. */
+    --font-sans: var(--font-sans-provided, 'Zen'), var(--font-script, ui-sans-serif), system-ui, sans-serif;
     --font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
   }
 }
@@ -269,14 +274,15 @@
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
   font-size: var(--text-base);
-  line-height: var(--leading-base, var(--leading-normal));
+  /* `--leading-lang` opens the line for scripts with tall marks (lang.css). */
+  line-height: calc(var(--leading-base, var(--leading-normal)) * var(--leading-lang, 1));
 }
 
 [data-slot='prose'] > h1, [data-slot='prose'] > h2, [data-slot='prose'] > h3,
 [data-slot='prose'] > h4, [data-slot='prose'] > h5, [data-slot='prose'] > h6 {
   font-family: var(--font-display, var(--font-sans)), sans-serif;
   font-weight: 606;
-  line-height: var(--leading-tight);
+  line-height: calc(var(--leading-tight) * var(--leading-lang, 1));
   letter-spacing: var(--tracking-tight);
   margin: 0;
 }
@@ -378,3 +384,17 @@
   [data-slot='prose'][data-size='responsive'] > h1 { font-size: var(--text-6xl) }
   [data-slot='prose'][data-size='responsive'] > h2 { font-size: var(--text-5xl) }
 }
+
+/* DIRECTION. Sides are logical properties throughout, so a page follows
+   <html dir="rtl"> with no rule here. An icon whose meaning is a direction along
+   the line (back, forward, next, a drill-in chevron, send) carries
+   `data-i18n-mirror` (the `mirror` helper) and turns with the line. `:dir()`
+   rather than `html[dir]`, so an LTR island inside an RTL page keeps its
+   arrows; the same declaration @hanzo/i18n's rtl.css and @hanzo/gui's base sheet
+   state, so any number of them on one page mirror an icon once. */
+[data-i18n-mirror]:dir(rtl) { transform: scaleX(-1) }
+
+/* Text whose order is not language (a shortcut, a key chord, an email or URL
+   field) carries `data-i18n-ltr` (the `ltr` helper) and stays left to right,
+   isolated so the line around it keeps its own order. */
+[data-i18n-ltr] { direction: ltr; unicode-bidi: isolate }

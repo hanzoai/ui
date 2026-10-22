@@ -165,7 +165,7 @@ export function TableHead({ children, ...props }: TableHeadProps) {
     <TableHeadFrame
       {...slot('table-head')}
       render="th"
-      style={{ display: 'table-cell', textAlign: 'left', verticalAlign: 'middle' }}
+      style={{ display: 'table-cell', textAlign: 'start', verticalAlign: 'middle' }}
       {...props}
     >
       <SizableText size="$2" fontWeight="500" color="$quiet">

@@ -5,7 +5,7 @@
  * attendees, a thread's participants, who has a record open.
  *
  * Each avatar after the first pulls `overlapOffset` over its neighbour on the
- * reading direction's start side (`marginStart`), so the edge item never carries
+ * reading direction's start side (`marginInlineStart`), so the edge item never carries
  * a negative margin in either direction. `overlap` decides which neighbour is on
  * top. A server-side `total` larger than the list supplied still counts the
  * rest. With nothing to show it renders nothing.
@@ -54,7 +54,7 @@ export function AvatarGroup({
         <XStack
           key={i}
           {...slot('avatar-group-item')}
-          {...(i > 0 ? { marginStart: -overlapOffset } : null)}
+          {...(i > 0 ? { marginInlineStart: -overlapOffset } : null)}
           z={overlap === 'right' ? i : shown.length - i}
           position="relative"
         >
@@ -64,7 +64,7 @@ export function AvatarGroup({
       {hidden > 0 ? (
         <XStack
           {...slot('avatar-group-overflow')}
-          {...(shown.length > 0 ? { marginStart: -overlapOffset } : null)}
+          {...(shown.length > 0 ? { marginInlineStart: -overlapOffset } : null)}
           z={overlap === 'right' ? shown.length : 0}
           position="relative"
           self="stretch"

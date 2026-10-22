@@ -160,7 +160,7 @@ export function Palette({
         <CommandList
           maxH={height}
           width={children ? "50%" : "100%"}
-          borderRightWidth={children ? 1 : 0}
+          borderInlineEndWidth={children ? 1 : 0}
           borderColor="$borderColor"
           pt="$1"
           pb="$4"

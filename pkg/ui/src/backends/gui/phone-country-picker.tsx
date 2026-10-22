@@ -96,7 +96,7 @@ export function PhoneCountryPicker({
     keywords: [c.value, c.callingCode, `+${c.callingCode}`],
     disabled: c.disabled,
     start: (
-      <XStack pr="$1">
+      <XStack paddingInlineEnd="$1">
         <Flag iso={c.value} override={c.flag} />
       </XStack>
     ),
@@ -125,8 +125,8 @@ export function PhoneCountryPicker({
           // Named by its hidden text, not an aria-label: the flag says nothing to
           // a screen reader, and the words are the ones a translator sees.
           gap="$0.5"
-          pl="$2"
-          pr="$1"
+          paddingInlineStart="$2"
+          paddingInlineEnd="$1"
         >
           <Flag iso={picked?.value} override={picked?.flag} />
           <ChevronDown size={14} color="$hint" />

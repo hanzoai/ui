@@ -18,6 +18,7 @@
 import { isWeb, XStack, YStack } from '@hanzo/gui'
 import type { GuiElement } from '@hanzo/gui'
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { along, rtl } from '../backends/gui/dir'
 
 export type SplitProps = {
   left: ReactNode
@@ -61,7 +62,9 @@ export function Split({
       const el = container.current
       if (!el || !('getBoundingClientRect' in el)) return
       const box = el.getBoundingClientRect()
-      move(((e.clientX - box.left) / box.width) * 100)
+      // the first pane's share, measured from the edge it starts at
+      const from = rtl(el) ? box.right - e.clientX : e.clientX - box.left
+      move((from / box.width) * 100)
     }
     const onUp = () => setDragging(false)
 
@@ -107,11 +110,14 @@ export function Split({
         {...(isWeb
           ? {
               onKeyDown: ((e: KeyboardEvent) => {
-                if (e.key === 'ArrowLeft') {
+                // the first pane sits at the inline start, so under RTL
+                // ArrowLeft widens it
+                const key = along(e)
+                if (key === 'ArrowLeft') {
                   e.preventDefault()
                   move(split - STEP)
                 }
-                if (e.key === 'ArrowRight') {
+                if (key === 'ArrowRight') {
                   e.preventDefault()
                   move(split + STEP)
                 }

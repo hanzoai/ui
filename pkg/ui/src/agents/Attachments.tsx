@@ -60,8 +60,8 @@ export function Attachments({ items, onRemove, ...rest }: AttachmentsProps) {
             items="center"
             gap="$1.5"
             minH={24}
-            pl="$2"
-            pr={onRemove ? '$1' : '$2'}
+            paddingInlineStart="$2"
+            paddingInlineEnd={onRemove ? '$1' : '$2'}
             rounded="$3"
             borderWidth={1}
             borderColor="$borderColor"

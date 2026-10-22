@@ -49,6 +49,7 @@ import {
 import { loadLinkOptions, makeFieldOptions } from './data'
 import { Action, Actions, ErrorBar, Loading, Panel } from './parts'
 import { useContainerLayout } from './responsive'
+import { mirror } from '../backends/gui/dir'
 
 export interface DocTypeDetailProps {
   client: FrameworkClient
@@ -188,7 +189,7 @@ export function DocTypeDetail({ client, doctype, name, project, onBack, onView }
   }, [client, doctype, onBack, record])
 
   const backButton = (
-    <Action phone={phone} icon={<ArrowLeft size={15} />} onPress={onBack}>
+    <Action phone={phone} icon={<ArrowLeft {...mirror} size={15} />} onPress={onBack}>
       Back
     </Action>
   )
@@ -292,7 +293,7 @@ export function DocTypeDetail({ client, doctype, name, project, onBack, onView }
               {canSubmit ? (
                 <Action
                   phone={phone}
-                  icon={<Send size={15} />}
+                  icon={<Send {...mirror} size={15} />}
                   disabled={busy}
                   onPress={() => run(() => client.records.submit(doctype, String(record!.name)))}
                 >

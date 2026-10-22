@@ -101,7 +101,7 @@ const IconSlot = styled(SizableText, {
   display: 'flex',
   position: 'absolute',
   t: '$4',
-  l: '$4',
+  insetInlineStart: '$4',
   width: ICON,
   height: ICON,
   items: 'center',
@@ -203,7 +203,7 @@ function Callout({
           size="$1"
           lineHeight={17}
           color="$hint"
-          pl={lead ? 24 : 0}
+          paddingInlineStart={lead ? 24 : 0}
           pb={action ? 0 : '$2'}
         >
           {description}
@@ -266,7 +266,7 @@ function Alert({
           {icon}
         </IconSlot>
       ) : null}
-      <YStack pl={icon ? ICON_GUTTER : 0}>{ink(body)}</YStack>
+      <YStack paddingInlineStart={icon ? ICON_GUTTER : 0}>{ink(body)}</YStack>
     </AlertFrame>
   )
 }

@@ -204,8 +204,8 @@ export function Composer({
       borderWidth={1}
       borderColor="$rim"
       bg="$hover"
-      pl="$3"
-      pr="$1.5"
+      paddingInlineStart="$3"
+      paddingInlineEnd="$1.5"
       gap="$1.5"
       {...props}
     >

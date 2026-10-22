@@ -63,7 +63,7 @@ describe('Shortcut', () => {
   it('the button variant dims and leads with a divider', () => {
     const el = tag(html(<Shortcut keys={['Mod', 'Enter']} variant="button" platform="mac" />), 'shortcut')
     expect(el).toMatch(/_o-0--5/)
-    expect(el).toMatch(/_ml-c-space-1/)
+    expect(el).toMatch(/_marginInlineStart-c-space-1/)
   })
 
   it('desktop visibility hides it under a coarse pointer', () => {

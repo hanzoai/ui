@@ -38,6 +38,7 @@ import { ContextMenu as GuiContextMenu, Text, XStack, type GuiElement } from '@h
 import { Check, ChevronRight, Circle } from '@hanzogui/lucide-icons-2'
 
 import { touch } from './gesture'
+import { ltrText, mirror } from './dir'
 import { ink } from './ink'
 import { slot } from './slot'
 import { PortalTheme, useThemeName } from '../../product/menu/portal-theme'
@@ -82,11 +83,11 @@ const row = {
 /** Row text style — free-form children go through `ink()` so a bare string renders on native. */
 const label = { size: '$2', color: '$ink' } as const
 
-/** Left indicator well shared by checkbox + radio rows. */
+/** Leading indicator well shared by checkbox + radio rows. */
 const Indicator = ({ children }: { children: React.ReactNode }) => (
   <XStack
     position="absolute"
-    l={ROW_PX}
+    insetInlineStart={ROW_PX}
     width={INDICATOR_SLOT}
     height={INDICATOR_SLOT}
     items="center"
@@ -177,7 +178,7 @@ const ContextMenuItem = /* @__PURE__ */ React.forwardRef<GuiElement, ContextMenu
         data-variant={variant}
         disabled={disabled}
         {...row}
-        pl={inset ? INSET_PL : ROW_PX}
+        paddingInlineStart={inset ? INSET_PL : ROW_PX}
         theme={variant === 'destructive' ? 'red' : undefined}
         opacity={disabled ? 0.5 : 1}
         cursor={disabled ? 'default' : 'pointer'}
@@ -199,7 +200,7 @@ const ContextMenuCheckboxItem = /* @__PURE__ */ React.forwardRef<
       {...slot('context-menu-checkbox-item')}
       checked={checked}
       {...row}
-      pl={INSET_PL}
+      paddingInlineStart={INSET_PL}
       {...props}
     >
       <Indicator>
@@ -223,7 +224,7 @@ const ContextMenuRadioItem = /* @__PURE__ */ React.forwardRef<
       // required `value` survived it.
       value={value}
       {...row}
-      pl={INSET_PL}
+      paddingInlineStart={INSET_PL}
       {...props}
     >
       <Indicator>
@@ -254,11 +255,11 @@ const ContextMenuSubTrigger = /* @__PURE__ */ React.forwardRef<
       {...slot('context-menu-sub-trigger')}
       data-inset={inset}
       {...row}
-      pl={inset ? INSET_PL : ROW_PX}
+      paddingInlineStart={inset ? INSET_PL : ROW_PX}
       {...props}
     >
       {ink(children, undefined, label)}
-      <ChevronRight size={ICON} ml="auto" opacity={0.6} />
+      <ChevronRight {...mirror} size={ICON} marginInlineStart="auto" opacity={0.6} />
     </SubTriggerBase>
   )
 })
@@ -275,7 +276,7 @@ const ContextMenuLabel = /* @__PURE__ */ React.forwardRef<
       data-inset={inset}
       px={ROW_PX}
       py={4}
-      pl={inset ? INSET_PL : ROW_PX}
+      paddingInlineStart={inset ? INSET_PL : ROW_PX}
       fontSize="$2"
       fontWeight="500"
       color="$ink"
@@ -302,16 +303,17 @@ const ContextMenuSeparator = /* @__PURE__ */ React.forwardRef<
   )
 })
 
-/** Right-aligned shortcut hint. gui `Text`, not a raw `<span>`, so it renders on native. */
+/** End-aligned shortcut hint. gui `Text`, not a raw `<span>`, so it renders on native. */
 function ContextMenuShortcut(props: React.ComponentProps<typeof Text>) {
   return (
     <Text
       {...slot('context-menu-shortcut')}
-      ml="auto"
+      marginInlineStart="auto"
       fontSize="$1"
       letterSpacing={1}
       color="$quiet"
       {...props}
+      children={ltrText(props.children)}
     />
   )
 }

@@ -93,8 +93,8 @@ describe('Alert', () => {
     expect(cls(icon, 'pos')).toBe('_pos-absolute')
     expect(markup.indexOf('data-slot="alert-icon"')).toBeLessThan(markup.indexOf('data-slot="alert-title"'))
     // The column after the icon, and only then, indents past it.
-    expect(elements(markup)).toContain('_pl-28px')
-    expect(elements(html(<Alert><AlertTitle>t</AlertTitle></Alert>))).not.toContain('_pl-28px')
+    expect(elements(markup)).toContain('_paddingInlineStart-28px')
+    expect(elements(html(<Alert><AlertTitle>t</AlertTitle></Alert>))).not.toContain('_paddingInlineStart-28px')
   })
 
   it('treats only the first child as the icon, so a trailing action stays in the flow', () => {
@@ -136,7 +136,7 @@ describe('Alert as the callout', () => {
 
   it('the title is one line, the description indented to clear the icon, the footer holds the action', () => {
     const markup = html(<Alert status="success" title="Verified" description="It answered 200." action={<CalloutAction>Open</CalloutAction>} />)
-    expect(tag(markup, 'alert-description')).toMatch(/_pl-24px/)
+    expect(tag(markup, 'alert-description')).toMatch(/_paddingInlineStart-24px/)
     expect(tag(markup, 'alert-footer')).toMatch(/_justify-flex-end/)
     expect(markup).toContain('Open')
   })
@@ -145,7 +145,7 @@ describe('Alert as the callout', () => {
     const markup = html(<Alert color="gray" title="t" description="d" icon={null} fullWidth />)
     expect(tag(markup, 'alert')).not.toMatch(/_maxW-512px/)
     expect(markup).not.toContain('data-slot="alert-icon"')
-    expect(tag(markup, 'alert-description')).toMatch(/_pl-0px/)
+    expect(tag(markup, 'alert-description')).toMatch(/_paddingInlineStart-0px/)
   })
 
   it('the dismiss button calls onDismiss, and axe finds nothing', async () => {

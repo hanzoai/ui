@@ -136,7 +136,7 @@ const BAR = {
 } as const
 
 /** The name of the place, lit under the pointer and while the company menu is open. */
-const BRAND = { items: 'center', shrink: 0, height: 34, ml: -4, rounded: 999, hoverStyle: { bg: WASH, boxShadow: RING } } as const
+const BRAND = { items: 'center', shrink: 0, height: 34, marginInlineStart: -4, rounded: 999, hoverStyle: { bg: WASH, boxShadow: RING } } as const
 
 /** The wordmark: home, and never dim. */
 const NAME = { display: 'flex', items: 'center', height: '100%', pl: 12, pr: 12, color: 'var(--foreground)', whiteSpace: 'nowrap', textDecorationLine: 'none' } as const
@@ -234,7 +234,7 @@ function Mark({ name, bar = false }: { name: GlyphName; bar?: boolean }) {
 /** ▾, turned over while what it opens is open. */
 function Chevron({ turned, end = false }: { turned: boolean; end?: boolean }) {
   return (
-    <View render="span" aria-hidden display="flex" shrink={0} ml={end ? 'auto' : 0} rotate={turned ? '180deg' : '0deg'} transition="quickest">
+    <View render="span" aria-hidden display="flex" shrink={0} marginInlineStart={end ? 'auto' : 0} rotate={turned ? '180deg' : '0deg'} transition="quickest">
       <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
         <path d="M6 9l6 6 6-6" />
       </svg>
@@ -245,7 +245,7 @@ function Chevron({ turned, end = false }: { turned: boolean; end?: boolean }) {
 /** ↗ — the shell's outbound arrow, riding the label's size and ink. */
 function Out() {
   return (
-    <View render="span" aria-hidden display="flex" ml="calc(0.28em)" opacity={0.7}>
+    <View render="span" aria-hidden display="flex" marginInlineStart="calc(0.28em)" opacity={0.7}>
       <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
         <path d="M7 17 17 7M9 7h8v8" />
       </svg>
@@ -553,7 +553,7 @@ export function Masthead({
         {menu(
           company,
           <XStack render="span" {...BRAND} {...(open === company.id ? { bg: WASH, boxShadow: RING } : {})}>
-            <Anchor href={homeHref} aria-label={`${label} home`} {...NAME} $lg={{ pr: 0 }}>
+            <Anchor href={homeHref} aria-label={`${label} home`} {...NAME} $lg={{ paddingInlineEnd: 0 }}>
               <HanzoWordmark label={label} size={22} />
             </Anchor>
             {/* The name goes home; the chevron beside it is its own stop and opens the company. */}
@@ -570,10 +570,10 @@ export function Masthead({
               width={30}
               height="100%"
               p={0}
-              pr={6}
+              paddingInlineEnd={6}
               borderWidth={0}
-              borderTopRightRadius={999}
-              borderBottomRightRadius={999}
+              borderStartEndRadius={999}
+              borderEndEndRadius={999}
               bg="transparent"
               color="var(--foreground)"
               cursor="pointer"
@@ -610,12 +610,12 @@ export function Masthead({
           justify="center"
           width={44}
           height={44}
-          ml="auto"
-          $lg={{ width: 34, height: 34, ml: 0 }}
+          marginInlineStart="auto"
+          $lg={{ width: 34, height: 34, marginInlineStart: 0 }}
         >
           <MARKS.search size={16} />
         </Text>
-        <XStack items="center" gap={8} $lg={{ ml: 'auto' }}>
+        <XStack items="center" gap={8} $lg={{ marginInlineStart: 'auto' }}>
           {person ? (
             <HanzoIdentity
               auth={{ user: person, onSignOut, items: [{ id: 'account', label: account.label, href: at(account.href, origin, here) }] }}
@@ -641,7 +641,7 @@ export function Masthead({
                   aria-label="Log in"
                   position="absolute"
                   t="calc(100% + 8px)"
-                  r={0}
+                  insetInlineEnd={0}
                   display="grid"
                   gap={2}
                   minW={240}
@@ -700,7 +700,7 @@ export function Masthead({
             width={44}
             height={44}
             p={0}
-            mr={-10}
+            marginInlineEnd={-10}
             borderWidth={0}
             bg="transparent"
             color="var(--foreground)"

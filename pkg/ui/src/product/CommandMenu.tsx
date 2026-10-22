@@ -41,6 +41,7 @@ import { Kbd } from '../backends/gui/kbd'
 import { Shortcut, type ShortcutKeys } from '../backends/gui/shortcut'
 import { slot } from '../backends/gui/slot'
 import { usePane } from './DetailPane'
+import { mirror } from '../backends/gui/dir'
 
 export type CommandMenuItem = {
   id: string
@@ -241,7 +242,7 @@ export function CommandMenu({
             const head = `${base}-group-${g.id}`
             return (
               <YStack key={g.id} {...slot('command-menu-group')}>
-                <XStack id={head} {...slot('command-menu-heading')} height={COMMAND.header} items="center" pl={TEXT}>
+                <XStack id={head} {...slot('command-menu-heading')} height={COMMAND.header} items="center" paddingInlineStart={TEXT}>
                   <Text fontSize="$1" fontWeight="500" color="$hint" numberOfLines={1}>
                     {g.label}
                   </Text>
@@ -275,7 +276,7 @@ export function CommandMenu({
                         <Text flex={1} minW={0} fontSize="$3" color="$ink" numberOfLines={1}>
                           {it.label}
                           {it.contextual ? (
-                            <Text fontSize="$3" color="$hint" pl={8}>
+                            <Text fontSize="$3" color="$hint" paddingInlineStart={8}>
                               {it.contextual}
                             </Text>
                           ) : null}
@@ -285,7 +286,7 @@ export function CommandMenu({
                             <Shortcut keys={it.shortcut} />
                           </XStack>
                         ) : null}
-                        {it.submenu ? <ChevronRight size={14} color="$hint" /> : null}
+                        {it.submenu ? <ChevronRight {...mirror} size={14} color="$hint" /> : null}
                       </XStack>
                     )
                   })}

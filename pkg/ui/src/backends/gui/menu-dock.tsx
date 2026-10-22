@@ -87,7 +87,7 @@ function MenuDockButton({
           {...slot('menu-dock-tooltip')}
           position="absolute"
           {...(orientation === 'vertical'
-            ? { l: '100%', ml: '$2', t: '50%', style: { transform: 'translateY(-50%)' } }
+            ? { insetInlineStart: '100%', marginInlineStart: '$2', t: '50%', style: { transform: 'translateY(-50%)' } }
             : { b: '100%', mb: '$2', self: 'center' as const })}
           px="$2"
           py="$1"

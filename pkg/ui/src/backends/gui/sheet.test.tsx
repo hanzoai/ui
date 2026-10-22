@@ -56,12 +56,12 @@ const open = (props: Record<string, unknown> = {}) => (
 )
 
 describe('which edge it arrives from', () => {
-  it('the right, unless told otherwise — it opens away from the content', () => {
-    expect(mount(open())).toContain('data-side="right"')
+  it('the end, unless told otherwise — it opens away from the content in either direction', () => {
+    expect(mount(open())).toContain('data-side="end"')
   })
 
   it('takes the side it is given', () => {
-    for (const side of ['top', 'bottom', 'left'] as const) {
+    for (const side of ['top', 'bottom', 'left', 'right', 'start'] as const) {
       const m = mount(open({ side }))
       expect(m).toContain(`data-side="${side}"`)
       act(() => root?.unmount())
@@ -89,11 +89,11 @@ describe('it is still a dialog', () => {
 })
 
 describe('its close button', () => {
-  it('sits in the sheet’s top-right corner on every side', () => {
+  it('sits in the sheet’s top end corner on every side', () => {
     // The phone rail drawer is a LEFT sheet, and there the ✕ landed half off the
     // screen: `touch()` writes `position: relative` on web, and spread after the
     // dialog's pin it put the button in flow, 16px left of the sheet's own edge.
-    for (const side of ['left', 'right', 'top', 'bottom'] as const) {
+    for (const side of ['start', 'end', 'left', 'right', 'top', 'bottom'] as const) {
       mount(open({ side }))
       const close = document.querySelector('[data-slot="dialog-close"][aria-label="Close"]') as HTMLElement | null
       expect(close, side).not.toBeNull()
@@ -101,7 +101,7 @@ describe('its close button', () => {
       const style = getComputedStyle(close!)
       expect(style.position, side).toBe('absolute')
       expect(style.top, side).toBe('16px')
-      expect(style.right, side).toBe('16px')
+      expect(close!.className, side).toMatch(/_insetInlineEnd-16px/)
       act(() => root?.unmount())
       host?.remove()
       root = null

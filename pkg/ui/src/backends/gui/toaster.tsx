@@ -169,7 +169,7 @@ export function ToastFace({ t, duration, paused = false, onClose, onHold }: Toas
           {...slot('toast-progress')}
           position="absolute"
           t={0}
-          l={0}
+          insetInlineStart={0}
           b={0}
           bg={p.tint as never}
           style={{ width: `${progress}%`, transition: 'width 300ms linear' }}
@@ -218,7 +218,7 @@ export function ToastFace({ t, duration, paused = false, onClose, onHold }: Toas
         )}
       </XStack>
       {description ? (
-        <SizableText {...slot('toast-description')} size="$1" color="$hint" pl={24} maxW={224} numberOfLines={1} mb="$1">
+        <SizableText {...slot('toast-description')} size="$1" color="$hint" paddingInlineStart={24} maxW={224} numberOfLines={1} mb="$1">
           {description}
         </SizableText>
       ) : null}

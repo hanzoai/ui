@@ -13,6 +13,7 @@ import { Ellipsis, PanelRight, Share2 } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps, ReactNode } from 'react'
 
 import { slot, tip } from '../backends/gui/slot'
+import { mirror } from '../backends/gui/dir'
 
 export interface HeaderProps extends Omit<ComponentProps<typeof XStack>, 'children'> {
   title: string
@@ -142,7 +143,7 @@ export interface AsideToggleProps {
 export function AsideToggle({ label = 'Toggle details panel', onPress }: AsideToggleProps) {
   return (
     <HeaderButton label={label} onPress={onPress}>
-      <PanelRight size={16} />
+      <PanelRight {...mirror} size={16} />
     </HeaderButton>
   )
 }
@@ -168,7 +169,7 @@ export function Aside({ children, width = 320 }: AsideProps) {
       height="100%"
       p="$3"
       gap="$3"
-      borderLeftWidth={1}
+      borderInlineStartWidth={1}
       borderColor="$borderColor"
     >
       {children}

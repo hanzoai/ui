@@ -137,9 +137,9 @@ export const LinkElement = ({
     // `title` is optional: an icon-only link is a legal one.
     return (
       <>
-        {mark && !after && <span style={{ paddingRight: 4 }}>{mark}</span>}
+        {mark && !after && <span style={{ paddingInlineEnd: 4 }}>{mark}</span>}
         {title && <span>{title}</span>}
-        {mark && after && <span style={{ paddingLeft: 4 }}>{mark}</span>}
+        {mark && after && <span style={{ paddingInlineStart: 4 }}>{mark}</span>}
       </>
     )
   }

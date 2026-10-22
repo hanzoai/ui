@@ -160,8 +160,8 @@ const MetaLine = ({ item }: { item: TimelineItem }) => {
   return text ? <Meta {...slot('timeline-meta')}>{text}</Meta> : null
 }
 
-const Body = ({ item, align = 'left' }: { item: TimelineItem; align?: 'left' | 'right' | 'center' }) => (
-  <YStack items={align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start'}>
+const Body = ({ item, align = 'start' }: { item: TimelineItem; align?: 'start' | 'end' | 'center' }) => (
+  <YStack items={align === 'center' ? 'center' : align === 'end' ? 'flex-end' : 'flex-start'}>
     <MetaLine item={item} />
     <Title {...slot('timeline-title')}>{ink(item.title)}</Title>
     {item.description && <Description {...slot('timeline-description')}>{ink(item.description)}</Description>}
@@ -183,7 +183,7 @@ const Horizontal = ({ items, reveal }: Layout) => (
           items="center"
           minW={200}
         >
-          {i < items.length - 1 && <HLine t={20} l="50%" width="calc(100% + 48px)" />}
+          {i < items.length - 1 && <HLine t={20} insetInlineStart="50%" width="calc(100% + 48px)" />}
           <Marker item={item} size={40} />
           <YStack mt="$4">
             <Body item={item} align="center" />
@@ -198,7 +198,7 @@ const Default = ({ items, reveal }: Layout) => (
   <YStack gap="$8">
     {items.map((item, i) => (
       <XStack key={item.id} data-timeline-id={item.id} {...reveal(item.id)} position="relative" gap="$6">
-        {i < items.length - 1 && <VLine l={20} t={40} b={-48} />}
+        {i < items.length - 1 && <VLine insetInlineStart={20} t={40} b={-48} />}
         <Marker item={item} size={40} />
         <YStack flex={1}>
           <CardFrame>
@@ -225,7 +225,7 @@ const Alternate = ({ items, reveal }: Layout) => (
           <YStack width="calc(50% - 2rem)" items={right ? 'flex-start' : 'flex-end'} gap="$2">
             <Marker item={item} size={40} />
             <CardFrame width="100%">
-              <Body item={item} align={right ? 'left' : 'right'} />
+              <Body item={item} align={right ? 'start' : 'end'} />
             </CardFrame>
           </YStack>
         </XStack>
@@ -265,10 +265,10 @@ const Compact = ({ items, reveal }: Layout) => (
 )
 
 const Simple = ({ items, reveal }: Layout) => (
-  <YStack borderLeftWidth={2} borderColor="$borderColor" pl="$6" gap="$6">
+  <YStack borderInlineStartWidth={2} borderColor="$borderColor" paddingInlineStart="$6" gap="$6">
     {items.map((item) => (
       <YStack key={item.id} data-timeline-id={item.id} {...reveal(item.id)} position="relative">
-        <XStack position="absolute" l={-28} t={2}>
+        <XStack position="absolute" insetInlineStart={-28} t={2}>
           <Marker item={item} size={16} />
         </XStack>
         <Body item={item} />

@@ -571,7 +571,14 @@ describe('the type ladder defers to @hanzo/design', () => {
     // Only one of sixteen matched design's --leading-*, so adopting them would
     // re-flow every line box. They stay, and scale.
     for (let k = 1; k <= 16; k++) expect(lval(k)).toMatch(/var\(--type-scale, 1\)/)
-    expect(lval(3)).toBe('calc(20px * var(--type-scale, 1))')
+    expect(lval(3)).toBe('calc(20px * var(--type-scale, 1) * var(--leading-lang, 1))')
+  })
+
+  it('every rung opens for a script with tall marks, and is unchanged for Latin', () => {
+    const lh = config.fonts.body.lineHeight as Record<string, unknown>
+    // lang.css sets --leading-lang per :lang() (Thai 1.25, Nastaliq 1.5, ...);
+    // unset, the fallback 1 leaves the Latin ladder exactly as tuned.
+    for (const v of Object.values(lh)) expect(String(v)).toMatch(/\* var\(--leading-lang, 1\)\)$/)
   })
 })
 

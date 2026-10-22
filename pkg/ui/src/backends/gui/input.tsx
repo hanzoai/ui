@@ -17,6 +17,7 @@ import { BOX, FIELD, FILL, type FieldSize } from './control'
 import { fieldSize, useDensity } from './density'
 import { GroupContext } from './input-group'
 import { invalidOf, useField } from './field'
+import { ltr } from './dir'
 
 /** What an adornment takes past the gutter: its 16px mark and 8 beside it. */
 const MARK = 24
@@ -49,10 +50,10 @@ export type InputProps = Omit<ComponentProps<typeof GuiInput>, 'children' | 'siz
   fill?: boolean
 }
 
-const well = (side: 'l' | 'r', gutter: number) =>
+const well = (side: 'start' | 'end', gutter: number) =>
   ({
     position: 'absolute' as const,
-    [side]: gutter,
+    [side === 'start' ? 'insetInlineStart' : 'insetInlineEnd']: gutter,
     t: 0,
     b: 0,
     items: 'center' as const,
@@ -67,6 +68,7 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
   const density = useDensity()
   const group = useContext(GroupContext)
   const isPassword = type === 'password' || secureTextEntry === true
+  const machine = type === 'email' || type === 'url'
   const toggle = isPassword && reveal
   const box = BOX[group?.size ?? fieldSize(size, density)]
   const inset = box.gutter + MARK
@@ -154,8 +156,8 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       placeholderTextColor="$placeholderColor"
       fontSize={box.font}
       {...(invalid ? { 'aria-invalid': true } : null)}
-      pl={startAdornment ? inset : box.gutter}
-      pr={endAdornment || toggle ? inset : box.gutter}
+      paddingInlineStart={startAdornment ? inset : box.gutter}
+      paddingInlineEnd={endAdornment || toggle ? inset : box.gutter}
       {...props}
     />
   )
@@ -163,9 +165,12 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
   if (!startAdornment && !endAdornment && !toggle) return field
 
   return (
-    <XStack position="relative" width="100%" items="center">
+    // An email or URL reads left to right in any language, and its wells sit
+    // where its text starts and ends: the whole field is one LTR island, or the
+    // text's own padding (LTR) and the wells (the page's RTL) name opposite sides.
+    <XStack position="relative" width="100%" items="center" {...(machine ? ltr : null)}>
       {startAdornment ? (
-        <XStack {...well('l', box.gutter)} pointerEvents="none" opacity={0.6}>
+        <XStack {...well('start', box.gutter)} pointerEvents="none" opacity={0.6}>
           {startAdornment}
         </XStack>
       ) : null}
@@ -174,9 +179,9 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
         <XStack
           // Before `well`: on web `touch` writes `position: relative`, which
           // after the well's `absolute` put the eye in flow beside the input,
-          // 4px past the field's edge instead of inside its right well.
+          // 4px past the field's edge instead of inside its end well.
           {...touch(20)}
-          {...well('r', box.gutter)}
+          {...well('end', box.gutter)}
           cursor="pointer"
           onPress={() => setRevealed((v) => !v)}
           aria-label={revealed ? 'Hide password' : 'Show password'}
@@ -184,7 +189,7 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
           {revealed ? <EyeOff size={16} /> : <Eye size={16} />}
         </XStack>
       ) : endAdornment ? (
-        <XStack {...well('r', box.gutter)} opacity={0.6}>
+        <XStack {...well('end', box.gutter)} opacity={0.6}>
           {endAdornment}
         </XStack>
       ) : null}

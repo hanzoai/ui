@@ -23,6 +23,7 @@ import { ChevronDown, ChevronRight } from '@hanzogui/lucide-icons-2'
 import { useMemo, useState, type ComponentProps, type ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
+import { mirror } from '../backends/gui/dir'
 
 type Col = Omit<ComponentProps<typeof YStack>, 'children'>
 type Scroll = Omit<ComponentProps<typeof ScrollView>, 'children'>
@@ -113,7 +114,7 @@ export function RunRow({ run, depth = 0, active = false, onOpen, trailing, ...re
         px="$2"
         py="$1.5"
         rounded="$3"
-        pl={8 + depth * 16}
+        paddingInlineStart={8 + depth * 16}
         cursor="pointer"
         role="button"
         tabIndex={0}
@@ -139,7 +140,7 @@ export function RunRow({ run, depth = 0, active = false, onOpen, trailing, ...re
               setOpen((v) => !v)
             }}
           >
-            {open ? <ChevronDown size={13} opacity={0.6} /> : <ChevronRight size={13} opacity={0.6} />}
+            {open ? <ChevronDown size={13} opacity={0.6} /> : <ChevronRight {...mirror} size={13} opacity={0.6} />}
           </XStack>
         ) : (
           <YStack width={16} shrink={0} />

@@ -100,7 +100,7 @@ export function SiteFooter({ footer, brand, tagline, meta, link = defaultLink }:
           ))}
         </XStack>
         {meta ? (
-          <XStack ml="auto" items="center" gap="$3">
+          <XStack marginInlineStart="auto" items="center" gap="$3">
             {meta}
           </XStack>
         ) : null}

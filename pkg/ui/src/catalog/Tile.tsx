@@ -30,7 +30,7 @@ import { Grid } from '../grid'
 const MIN = 280
 
 /** A press that holds a card's words reads from the left. */
-const LEFT = { textAlign: 'left' } as const
+const LEFT = { textAlign: 'start' } as const
 
 export interface TilesProps {
   /** Names the list — "Skills to add". */

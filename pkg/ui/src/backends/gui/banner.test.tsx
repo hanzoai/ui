@@ -86,8 +86,8 @@ describe('Banner', () => {
     expect(markup.indexOf('data-slot="banner-icon"')).toBeLessThan(
       markup.indexOf('data-slot="banner-message"'),
     )
-    expect(cls(tag(markup, 'banner-message'), 'pl')).toBe('_pl-28px')
-    expect(cls(tag(html(<Banner>plain</Banner>), 'banner-message'), 'pl')).not.toBe('_pl-28px')
+    expect(cls(tag(markup, 'banner-message'), 'paddingInlineStart')).toBe('_paddingInlineStart-28px')
+    expect(cls(tag(html(<Banner>plain</Banner>), 'banner-message'), 'paddingInlineStart')).not.toBe('_paddingInlineStart-28px')
   })
 
   it('renders no close button without onClose, and a real one with it', () => {

@@ -23,6 +23,7 @@ import { flag } from './flag'
 import { touch } from './gesture'
 import { SearchList, useOpen, type SearchOption } from './search-list'
 import { slot } from './slot'
+import { align } from './dir'
 
 export type CountryOption = {
   /** ISO 3166-1 alpha-2, e.g. "DE". */
@@ -135,7 +136,7 @@ export function CountrySelect({
       {...touch(box.h, 44, 'y')}
     >
       <Mark iso={picked?.value} override={picked?.flag} />
-      <SizableText size={box.font} color={picked ? '$ink' : '$placeholderColor'} flex={1} minW={0} numberOfLines={1} text="left">
+      <SizableText size={box.font} color={picked ? '$ink' : '$placeholderColor'} flex={1} minW={0} numberOfLines={1} {...align('start')}>
         {picked?.label ?? noCountryLabel}
       </SizableText>
       <ChevronDown size={16} opacity={0.5} shrink={0} />

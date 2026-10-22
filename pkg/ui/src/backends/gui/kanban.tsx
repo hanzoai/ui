@@ -490,7 +490,7 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
       <XStack {...slot('kanban-header')} justify="space-between" items="center" p="$4" borderBottomWidth={1} borderColor="$borderColor">
         {ink(board.title, SizableText, { fontSize: '$6', fontWeight: '700' })}
         <XStack position="relative" width={256} items="center">
-          <XStack position="absolute" l="$2" pointerEvents="none">
+          <XStack position="absolute" insetInlineStart="$2" pointerEvents="none">
             <Search size={14} color="$quiet" />
           </XStack>
           <Input
@@ -498,10 +498,10 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
             placeholder="Search cards..."
             value={query}
             onChangeText={setQuery}
-            pl="$7"
+            paddingInlineStart="$7"
           />
           {query ? (
-            <XStack position="absolute" r="$2" cursor="pointer" onPress={() => setQuery('')} aria-label="Clear search">
+            <XStack position="absolute" insetInlineEnd="$2" cursor="pointer" onPress={() => setQuery('')} aria-label="Clear search">
               <X size={14} />
             </XStack>
           ) : null}

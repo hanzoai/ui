@@ -15,6 +15,7 @@
 import { SizableText, XStack, styled } from '@hanzo/gui'
 import * as React from 'react'
 import { ink } from './ink'
+import { ltr } from './dir'
 
 const HEIGHT = 20
 
@@ -63,6 +64,7 @@ export function Kbd({ children, variant = 'default', ...props }: KbdProps) {
   return (
     <KbdFrame
       data-slot="kbd"
+      {...ltr}
       {...(variant === 'cap' ? { 'data-variant': 'cap', ...CAP } : null)}
       {...(props as React.ComponentProps<typeof KbdFrame>)}
     >
@@ -80,6 +82,7 @@ export function KbdGroup({ children, ...props }: KbdGroupProps) {
   return (
     <XStack
       data-slot="kbd-group"
+      {...ltr}
       render="kbd"
       display="inline-flex"
       items="center"

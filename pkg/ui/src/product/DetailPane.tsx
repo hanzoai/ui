@@ -63,6 +63,7 @@ import { Grip } from '../backends/gui/grip'
 import { useSpan } from '../backends/gui/span'
 import { useDensity } from '../backends/gui/density'
 import { slot } from '../backends/gui/slot'
+import { mirror } from '../backends/gui/dir'
 
 export type DetailDescriptor = {
   /** Pane title (the item's name). */
@@ -184,7 +185,7 @@ export function DetailPane({ children, zIndex, mode = 'overlay', store = 'hanzo.
       <SlideOver
         open={isOpen}
         onClose={close}
-        side="right"
+        side="end"
         size={desc?.size ?? (record ? PANE.w : 460)}
         ariaLabel={title}
         zIndex={zIndex}
@@ -283,14 +284,14 @@ function Dock({
         flex={1}
         minH={0}
         bg="$background"
-        borderLeftWidth={1}
+        borderInlineStartWidth={1}
         borderColor="$borderColor"
       >
         {children}
       </YStack>
       {open ? (
         <Grip
-          side="right"
+          side="end"
           span={span.span}
           floor={PANE.min}
           ceil={PANE.max}
@@ -338,7 +339,7 @@ function SheetPage({ desc, close }: { desc: DetailDescriptor; close: () => void 
       {/* Bare-mode layout: fixed header · scroll body · optional sticky footer. */}
       <XStack items="center" gap="$2.5" px="$4" height={56} borderBottomWidth={1} borderColor="$borderColor">
         {pane && pane.depth > 1 ? (
-          <GuiButton size="$2" chromeless icon={<ChevronLeft size={18} />} onPress={pane.back} aria-label="Back" />
+          <GuiButton size="$2" chromeless icon={<ChevronLeft {...mirror} size={18} />} onPress={pane.back} aria-label="Back" />
         ) : null}
         {Icon ? <Icon size={18} color={desc.iconColor ? asColor(desc.iconColor) : undefined} /> : null}
         <YStack flex={1} minW={0}>
@@ -403,7 +404,7 @@ export function PaneBar({ children, actions }: PaneBarProps) {
       <XStack flex={1} minW={0} items="center" gap="$1">
         {pane && pane.depth > 1 ? (
           <Tool tip="Back" onPress={pane.back}>
-            <ChevronLeft />
+            <ChevronLeft {...mirror} />
           </Tool>
         ) : null}
         {children}
