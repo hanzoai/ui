@@ -36,11 +36,12 @@
  */
 import { GuiProvider } from '@hanzo/gui'
 import { TelemetryProvider, type TelemetryConfig } from '@hanzogui/telemetry'
-import type { ReactNode } from 'react'
+import { useMemo, type ReactNode } from 'react'
 
 import { useAppearance, useScheme, type Account, type Preference } from '@hanzo/appearance'
 
 import { config as full, type Conf } from './gui-config'
+import { Look } from './look'
 import './styles.css'
 
 export type HanzoProps = {
@@ -128,12 +129,18 @@ export const Hanzo = ({ children, theme, analytics, config = full, appearance }:
   //
   // This is the MOUNT half only. First paint still wants `bootScript()` in
   // <head>, because no component can run before the document exists.
-  useAppearance(appearance)
+  //
+  // The result is published (`Look`) so a control inside — `Corner`'s theme row
+  // — writes through this call and its layers rather than a second one of its own.
+  const { pref, set } = useAppearance(appearance)
+  const look = useMemo(() => ({ pref, set }), [pref, set])
   const scheme = useScheme()
   const tree = (
-    <GuiProvider config={config} defaultTheme={theme ?? scheme} disableInjectCSS>
-      {children}
-    </GuiProvider>
+    <Look.Provider value={look}>
+      <GuiProvider config={config} defaultTheme={theme ?? scheme} disableInjectCSS>
+        {children}
+      </GuiProvider>
+    </Look.Provider>
   )
   // OUTSIDE the gui provider: capture is delegated at the document, so it does
   // not need to be inside the styled tree, and an app that renders its own

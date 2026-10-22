@@ -263,6 +263,7 @@ answer it, so no claim is recorded.
 | `@hanzo/ui/data` | `@hanzo/data`: RecordsView, DataTable, typed field editors |
 | `@hanzo/ui/{canvas,dashboard,usage,gitops}` | the optional-peer kits (each re-exports its home package) |
 | `@hanzo/ui/settings` | a settings page (`Settings`) and the parts every section is drawn from (`Heading`, `Group`, `Card`, `Row`, `Field`, `Soft`, `Note`, `Once`) |
+| `@hanzo/ui/corner` | `Corner` — help and preferences behind one `?` at the window's bottom start corner (below). Web-only |
 | `@hanzo/ui/catalog` | a catalogue page (`Shelf`) and its cards (`Tiles`, `Tile`, `Featured`, `Add`) — web-only, on `@hanzo/ui/grid` |
 | `@hanzo/ui/masthead` | hanzo.ai's header for every site that wears it (`Masthead`: the name, the company menu, the five menus, ⌘K, Log in ▾, Try Hanzo, the phone sheet) and its tree; `footer()` hands `@hanzo/ui/marketing`'s `Footer` the same six doors. Another host passes `origin="https://hanzo.ai"` and its own `here`. `/masthead/nav` is the tree alone, data. Needs `@hanzogui/shell` |
 | `@hanzo/ui/product/*` · `/primitives/*` | deep imports — one module without its barrel |
@@ -573,6 +574,51 @@ Placement: bars (`UsageMeter`, `PlanUsage`) render on a usage settings page only
 never in a chat surface. A chat draws `LimitedBanner` only when the reader was
 turned away — `notice.fallback` or `notice.refused` — with `onUsage` opening its
 usage settings ("See usage"); it never draws a near note.
+
+### Help and preferences — `Corner` (`@hanzo/ui/corner`)
+
+The one way a surface offers Help, Theme, Language and Currency: a small `?`
+fixed at the window's bottom START corner (left in LTR, right in RTL, clear of
+the safe-area insets, on `--z-dock`), opening one card toward the inside. Lux
+Exchange's HelpContent is the design it was taken from.
+
+```tsx
+<Corner
+  help={[{ label: 'Get help', href, icon }, { label: 'Docs', href }, { label: 'Contact us', href }]}
+  language={{ value, options: [{ code: 'de', label: 'Deutsch', hint: 'German', dir? }], onChange }}
+  currency={{ value, options: [{ code: 'USD', label: 'USD', hint: 'US dollar' }], onChange }}
+  words={{ open, help, preferences, theme, … }}   // the card's own strings, for another language
+/>
+```
+
+- **Theme is the library's, the rest is the host's.** Theme writes
+  `@hanzo/appearance` through `<Hanzo>`'s own `useAppearance` call, which the root
+  publishes as `Look` (`src/look.ts`), so an org's layers and the IAM account sync
+  are kept. Without `<Hanzo>` it writes the device layer and repaints the resolved
+  stack. Language and currency are controlled props: this package depends on no
+  i18n or money library. A row the host passes nothing for is not drawn; no
+  `help` and the card opens on Preferences.
+- A row shows the chosen option's `label` (so currency passes `label: 'USD'`).
+  A list longer than `LONG` (8) gets a search over label, hint and code, accents
+  folded (`find`, `fold` in `corner/logic.ts`, pure). Each language's name is
+  marked `lang` and `dir` so it renders and is read in its own script.
+- A link on another host opens a new tab, carries the outbound mark and says so
+  in its accessible name (`leaves()` from `masthead/nav`, the one rule).
+- Behaviour is the package `Popover`'s (portal, Escape, outside press, focus
+  trap, focus back to the trigger). Escape in a list goes back to the card.
+  Arrows walk the card and the list. Rows are 36px, 44 under `pointer: coarse`;
+  the trigger is 32 drawn with `touch()` taking its target to 44.
+- **gui's popper re-measures when the TRIGGER moves, never when the content
+  resizes** (`hanzoguiAutoUpdate` watches the reference only). A card that swaps
+  to a taller list kept its old top and ran off the window's foot; `Reflow` calls
+  the popper's `update()` from inside the content on every view change, and the
+  list has a fixed height so a search does not shrink the card off its trigger.
+- `scripts/corner.mjs` drives `test/corner.html` (85 languages, Arabic words in
+  RTL) in Chromium at 1280 and 390, dark and light, LTR and RTL: trigger at the
+  start corner, card inward and inside the window, keyboard open/arrows/Escape,
+  focus return, search and choose, theme stored and painted. It writes a
+  screenshot of every case. Needs `dist/theme.css`
+  (`node scripts/compose-theme.mjs`, after `@hanzo/tokens` is built).
 
 ### Settings and catalogue pages — `@hanzo/ui/settings`, `@hanzo/ui/catalog`
 

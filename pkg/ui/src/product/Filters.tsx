@@ -106,6 +106,10 @@ export function Segmented<T extends string>({
         items="center"
         gap="$0.5"
         height={box.h}
+        // Under a finger design's base sheet lifts every button, a segment
+        // included, to the 44px floor; the track grows with its items rather
+        // than letting them hang out of it.
+        $touchable={{ height: 'auto' as never }}
         p={box.p}
         rounded="$10"
         bg="$panel"

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>@hanzo/ui corner</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      window.process = { env: { NODE_ENV: 'development' } }
+      // The page as a host would set it: its direction and language on <html>.
+      var q = new URLSearchParams(location.search)
+      if (q.get('dir') === 'rtl') { document.documentElement.dir = 'rtl'; document.documentElement.lang = 'ar' }
+    </script>
+    <script type="module" src="/test/corner.mount.tsx"></script>
+  </body>
+</html>
