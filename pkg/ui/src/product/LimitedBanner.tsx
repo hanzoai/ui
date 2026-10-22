@@ -8,6 +8,7 @@
  */
 import type { ReactNode } from 'react'
 import { Text, View, XStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { X } from '@hanzogui/lucide-icons-2'
 import { Button } from '../backends/gui/button'
 import { slot } from '../backends/gui/slot'
@@ -66,6 +67,7 @@ export function LimitActions({
 }
 
 export function LimitedBanner({ message, actions = [], onAction, onUsage, onClose }: LimitedBannerProps) {
+  const { t } = useI18n()
   return (
     <XStack
       role="status"
@@ -91,12 +93,12 @@ export function LimitedBanner({ message, actions = [], onAction, onUsage, onClos
       <LimitActions actions={actions} onAction={onAction}>
         {onUsage ? (
           <Button size="sm" variant="link" px="$1.5" data-kind="usage" onPress={onUsage}>
-            See usage
+            {t('See usage')}
           </Button>
         ) : null}
       </LimitActions>
       {onClose ? (
-        <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label="Dismiss" onPress={onClose}>
+        <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={t('Dismiss')} onPress={onClose}>
           <X size={14} />
         </Button>
       ) : null}

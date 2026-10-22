@@ -30,6 +30,7 @@ import {
   Search,
   SquarePen,
 } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 import { useState, type ComponentProps, type ReactNode } from 'react'
 
 import { slot, tip } from '../backends/gui/slot'
@@ -89,6 +90,7 @@ export function SidebarHeader({
   onCollapse,
   ...rest
 }: SidebarHeaderProps) {
+  const { t } = useI18n()
   return (
     <XStack {...slot('sidebar-header')} items="center" gap="$1" px="$1" py="$1.5" {...rest}>
       <XStack
@@ -109,12 +111,12 @@ export function SidebarHeader({
 
       <XStack flex={1} />
       {onSearch ? (
-        <SidebarIconButton label="Search conversations" onPress={onSearch}>
+        <SidebarIconButton label={t('Search conversations')} onPress={onSearch}>
           <Search size={16} />
         </SidebarIconButton>
       ) : null}
       {onCollapse ? (
-        <SidebarIconButton label="Collapse sidebar" onPress={onCollapse}>
+        <SidebarIconButton label={t('Collapse sidebar')} onPress={onCollapse}>
           <PanelLeft {...mirror} size={16} />
         </SidebarIconButton>
       ) : null}
@@ -157,11 +159,13 @@ export function SidebarIconButton({ label, onPress, children, ...rest }: Sidebar
 }
 
 export interface SidebarNewChatProps extends Row {
+  /** Absent, "New chat" in the reader's language. */
   label?: string
   onPress?: () => void
 }
 
-export function SidebarNewChat({ label = 'New chat', onPress, ...rest }: SidebarNewChatProps) {
+export function SidebarNewChat({ label, onPress, ...rest }: SidebarNewChatProps) {
+  const { t } = useI18n()
   return (
     <XStack
       {...slot('sidebar-new-chat')}
@@ -178,7 +182,7 @@ export function SidebarNewChat({ label = 'New chat', onPress, ...rest }: Sidebar
     >
       <SquarePen size={16} />
       <SizableText size="$2" fontWeight="500">
-        {label}
+        {label ?? t('New chat')}
       </SizableText>
     </XStack>
   )
@@ -335,6 +339,7 @@ export interface SidebarUserProps extends Row {
 }
 
 export function SidebarUser({ name, secondary, avatar, onPress, onHelp, ...rest }: SidebarUserProps) {
+  const { t } = useI18n()
   return (
     <XStack
       {...slot('sidebar-user')}
@@ -385,7 +390,7 @@ export function SidebarUser({ name, secondary, avatar, onPress, onHelp, ...rest 
         </YStack>
       </XStack>
       {onHelp ? (
-        <SidebarIconButton label="Help" onPress={onHelp}>
+        <SidebarIconButton label={t('Help')} onPress={onHelp}>
           <CircleHelp size={16} />
         </SidebarIconButton>
       ) : null}

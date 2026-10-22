@@ -16,6 +16,7 @@
  * ↗ by the host's own data (`out`).
  */
 import { Anchor, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import type { ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
@@ -52,7 +53,9 @@ const Door = ({ link }: { link: FooterLink }) => (
   </Anchor>
 )
 
-const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)' }: FooterProps) => (
+const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)' }: FooterProps) => {
+  const { t } = useI18n()
+  return (
   <YStack
     {...slot('footer')}
     render="footer"
@@ -104,7 +107,7 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
           {copyright}
         </Line>
       ) : null}
-      <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8} marginInlineStart={0} width="100%" $sm={{ marginInlineStart: 'auto', width: 'auto' }}>
+      <XStack render="nav" aria-label={t('Terms & Policies')} flexWrap="wrap" gap={16} rowGap={8} marginInlineStart={0} width="100%" $sm={{ marginInlineStart: 'auto', width: 'auto' }}>
         {legal.map((l) => (
           <Anchor key={l.label} href={l.href} {...open(l.out)} color="$faint" fontSize="$2" lineHeight="$2" textDecorationLine="none" hoverStyle={{ color: '$ink' }}>
             {l.label}
@@ -113,6 +116,7 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
       </XStack>
     </XStack>
   </YStack>
-)
+  )
+}
 
 export { Footer }

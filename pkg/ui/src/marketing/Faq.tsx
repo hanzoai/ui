@@ -9,6 +9,7 @@
  * opened, never as it is closed.
  */
 import { YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import type { ReactNode } from 'react'
 
 import { Disclosure } from '../backends/gui/disclosure'
@@ -21,14 +22,17 @@ export type FaqItem = { q: string; a: ReactNode }
 
 export type FaqProps = {
   items: readonly FaqItem[]
+  /** The section's heading; absent, "Questions" in the reader's language. */
   heading?: string
   onOpen?: (question: string) => void
 }
 
-const Faq = ({ items, heading = 'Questions', onOpen }: FaqProps) => (
+const Faq = ({ items, heading, onOpen }: FaqProps) => {
+  const { t } = useI18n()
+  return (
   <YStack {...slot('faq')} render="section" width="100%" maxW={680} mx="auto" gap="$6" px="$6">
     <Line render="h2" align="center" fontSize="$9" lineHeight="$9" fontWeight={500} $md={{ fontSize: '$11', lineHeight: '$11' }} style={TIGHT}>
-      {heading}
+      {heading ?? t('Questions')}
     </Line>
     <YStack borderTopWidth={1} borderColor="$edge">
       {items.map((item) => (
@@ -40,6 +44,7 @@ const Faq = ({ items, heading = 'Questions', onOpen }: FaqProps) => (
       ))}
     </YStack>
   </YStack>
-)
+  )
+}
 
 export { Faq }

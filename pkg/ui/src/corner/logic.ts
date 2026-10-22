@@ -1,8 +1,9 @@
 /**
  * Corner's decisions, as pure functions over plain values: which list gets a
  * search, what a search matches, and the words the panel says. They import
- * nothing, so they are tested in node and a server can load them.
+ * nothing but `phrase`, so they are tested in node and a server can load them.
  */
+import { phrase } from '@hanzo/i18n'
 
 /** One choice a host offers: its code, its name in its own script, and how it is written. */
 export type Option = {
@@ -23,7 +24,7 @@ export type Setting = {
   onChange: (code: string) => void
 }
 
-/** What the panel says. A host that speaks another language passes its own. */
+/** What the panel says, in English; Corner draws each word through the host's @hanzo/i18n `t`. */
 export type Words = {
   /** The trigger's and the panel's name. */
   open: string
@@ -40,25 +41,22 @@ export type Words = {
   close: string
   /** A search that matched nothing. */
   none: string
-  /** Read after a link that opens in a new tab. */
-  leaves: string
 }
 
 export const WORDS: Words = {
-  open: 'Help and preferences',
-  help: 'Help',
-  preferences: 'Preferences',
-  theme: 'Theme',
-  auto: 'Auto',
-  light: 'Light',
-  dark: 'Dark',
-  language: 'Language',
-  currency: 'Currency',
-  search: 'Search',
-  back: 'Back',
-  close: 'Close',
-  none: 'No matches',
-  leaves: 'opens in a new tab',
+  open: phrase('Help and preferences'),
+  help: phrase('Help'),
+  preferences: phrase('Preferences'),
+  theme: phrase('Theme'),
+  auto: phrase('Auto'),
+  light: phrase('Light'),
+  dark: phrase('Dark'),
+  language: phrase('Language'),
+  currency: phrase('Currency'),
+  search: phrase('Search'),
+  back: phrase('Back'),
+  close: phrase('Close'),
+  none: phrase('No matches'),
 }
 
 /** Past this many options a list gets a search field. */

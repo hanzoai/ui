@@ -12,21 +12,24 @@
  * `role="status"` with a label, because the spinner itself is `aria-hidden`.
  */
 import { YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import type { ComponentProps } from 'react'
 
 import { slot } from '../backends/gui/slot'
 import { Spinner } from '../backends/gui/spinner'
 
 export type PageLoadingProps = Omit<ComponentProps<typeof YStack>, 'children'> & {
-  /** What assistive tech hears. */
+  /** What assistive tech hears; absent, "Loading" in the reader's language. */
   label?: string
 }
 
-const PageLoading = ({ label = 'Loading', ...p }: PageLoadingProps) => (
+const PageLoading = ({ label, ...p }: PageLoadingProps) => {
+  const { t } = useI18n()
+  return (
   <YStack
     {...slot('page-loading')}
     role="status"
-    aria-label={label}
+    aria-label={label ?? t('Loading')}
     width="100%"
     minH="100dvh"
     items="center"
@@ -35,6 +38,7 @@ const PageLoading = ({ label = 'Loading', ...p }: PageLoadingProps) => (
   >
     <Spinner size={28} color="var(--quiet, currentColor)" />
   </YStack>
-)
+  )
+}
 
 export { PageLoading }

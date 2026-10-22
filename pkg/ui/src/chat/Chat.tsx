@@ -33,6 +33,7 @@
  * here imports `@hanzo/ai`. `messages` is read structurally, which is what lets
  * that hold while the two packages still compose exactly.
  */
+import { useI18n } from '@hanzo/i18n/react'
 import { YStack } from '@hanzo/gui'
 import { useCallback, useState, type ReactNode } from 'react'
 
@@ -164,6 +165,7 @@ export function Chat({
   onFiles,
   ...thread
 }: ChatProps) {
+  const { t } = useI18n()
   const [draft, setDraft] = useState('')
 
   // The ONE window-level drop, off the shared primitive. Enabled only when a
@@ -241,7 +243,7 @@ export function Chat({
           }}
         >
           <span style={{ fontSize: 15, fontWeight: 600, color: '#34d399' }}>
-            Drop files to attach
+            {t('Drop files to attach')}
           </span>
         </div>
       ) : null}

@@ -17,6 +17,7 @@
  * Group headings are presentation: the option's own label names the group.
  */
 import { Anchor, Input as GuiInput, ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { Check, Search } from '@hanzogui/lucide-icons-2'
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactElement } from 'react'
 
@@ -67,6 +68,7 @@ interface ListProps {
 }
 
 function List({ models, value, onChange, onClose, scope, limits, loading, error, name, sheet, row }: ListProps) {
+  const { t } = useI18n()
   const [q, setQ] = useState('')
   const [at, setAt] = useState(-1)
   const [top, setTop] = useState(0)
@@ -191,11 +193,11 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
           fontSize={sheet ? '$3' : '$2'}
           color="$ink"
           placeholderTextColor="$placeholderColor"
-          placeholder="Search models"
+          placeholder={t('Search models')}
           value={q}
           onChangeText={setQ}
           role="combobox"
-          aria-label="Search models"
+          aria-label={t('Search models')}
           aria-expanded
           aria-controls={listId}
           aria-autocomplete="list"
@@ -205,7 +207,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
           onKeyDown={onField}
         />
         <SizableText {...slot('model-picker-count')} size="$1" color="$soft" shrink={0} aria-live="polite">
-          {loading && !models.length ? 'Loading' : `${total} ${total === 1 ? 'model' : 'models'}`}
+          {loading && !models.length ? t('Loading') : total === 1 ? t('{n} model', { n: total }) : t('{n} models', { n: total })}
         </SizableText>
       </XStack>
 
@@ -266,7 +268,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
             // A model sold against another says by how much, from the two list prices;
             // a router, the ceiling it bills up to.
             const saving = savingOf(m, models)
-            const ceiling = formatCeiling(m)
+            const ceiling = formatCeiling(m, t)
             return (
               <XStack
                 key={m.id}
@@ -277,7 +279,13 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
                 aria-disabled={locked || undefined}
                 aria-setsize={total}
                 aria-posinset={position[i]}
-                aria-label={`${title}, ${groupLabel(m)}${paused ? ', paused' : ''}${locked ? ', research preview' : ''}`}
+                aria-label={
+                  locked
+                    ? t('{model}, {group}, research preview', { model: title, group: groupLabel(m) })
+                    : paused
+                      ? t('{model}, {group}, paused', { model: title, group: groupLabel(m) })
+                      : t('{model}, {group}', { model: title, group: groupLabel(m) })
+                }
                 data-model={m.id}
                 data-class={m.class}
                 data-paused={paused || undefined}
@@ -303,15 +311,15 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
                 {locked || paused || saving || ceiling || kind || ctx ? (
                   <SizableText size="$1" color="$soft" shrink={0} maxW="60%" numberOfLines={1} fontVariant={['tabular-nums']}>
                     {locked
-                      ? 'Research preview'
+                      ? t('Research preview')
                       : paused
-                        ? 'Paused'
+                        ? t('Paused')
                         : saving
-                          ? formatSaving(saving)
+                          ? formatSaving(saving, t)
                           : ceiling
                             ? ceiling
                             : kind
-                              ? CAPABILITY_NAMES[kind]
+                              ? t(CAPABILITY_NAMES[kind])
                               : ctx}
                   </SizableText>
                 ) : null}
@@ -322,7 +330,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
         {rows.length === 0 && !error ? (
           <XStack {...slot('model-picker-empty')} px="$2" py="$2" role="status">
             <SizableText size="$2" color="$soft">
-              {loading ? 'Loading models…' : q ? `No models match “${q}”.` : 'No models to choose from.'}
+              {loading ? t('Loading models…') : q ? t('No models match “{query}”.', { query: q }) : t('No models to choose from.')}
             </SizableText>
           </XStack>
         ) : null}
@@ -331,10 +339,12 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
       {research.length ? (
         <XStack {...slot('model-picker-research')} px="$2" py="$1.5" gap="$1.5" items="center" flexWrap="wrap">
           <SizableText size="$1" color="$soft">
-            {research.map(modelName).join(', ')} {research.length === 1 ? 'is' : 'are'} in research preview.
+            {research.length === 1
+              ? t('{models} is in research preview.', { models: research.map(modelName).join(', ') })
+              : t('{models} are in research preview.', { models: research.map(modelName).join(', ') })}
           </SizableText>
           <Anchor href={research[0]!.request} target="_blank" rel="noopener noreferrer" size="$1" color="$ink" textDecorationLine="underline">
-            Request access
+            {t('Request access')}
           </Anchor>
         </XStack>
       ) : null}

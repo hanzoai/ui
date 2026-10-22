@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Paragraph, SizableText, YStack } from '@hanzo/gui'
 import { BookOpen, GraduationCap, MessagesSquare } from '@hanzogui/lucide-icons-2'
+import { I18nProvider } from '@hanzo/i18n/react'
 
 import '../dist/theme.css'
 import '../src/styles/motion.css'
@@ -39,26 +40,6 @@ function Page() {
         ]}
         language={{ value: language, options: LANGUAGES, onChange: setLanguage }}
         currency={{ value: currency, options: CURRENCIES, onChange: setCurrency }}
-        {...(rtl
-          ? {
-              words: {
-                open: 'المساعدة والتفضيلات',
-                help: 'مساعدة',
-                preferences: 'التفضيلات',
-                theme: 'المظهر',
-                auto: 'تلقائي',
-                light: 'فاتح',
-                dark: 'داكن',
-                language: 'اللغة',
-                currency: 'العملة',
-                search: 'بحث',
-                back: 'رجوع',
-                close: 'إغلاق',
-                none: 'لا توجد نتائج',
-                leaves: 'يفتح في علامة تبويب جديدة',
-              },
-            }
-          : null)}
       />
     </YStack>
   )
@@ -72,8 +53,29 @@ sheet.textContent = config.getCSS()
 document.head.appendChild(sheet)
 document.documentElement.style.setProperty('--hanzo-ui-styles', '1')
 
+/** The card's own words in Arabic, keyed by their English, as a host's catalog carries them. */
+const AR: Record<string, string> = {
+  'Help and preferences': 'المساعدة والتفضيلات',
+  Help: 'مساعدة',
+  Preferences: 'التفضيلات',
+  Theme: 'المظهر',
+  Auto: 'تلقائي',
+  Light: 'فاتح',
+  Dark: 'داكن',
+  Language: 'اللغة',
+  Currency: 'العملة',
+  Search: 'بحث',
+  Back: 'رجوع',
+  Close: 'إغلاق',
+  'No matches': 'لا توجد نتائج',
+  'Search: {list}': 'بحث: {list}',
+  '{link} (opens in a new tab)': '{link} (يفتح في علامة تبويب جديدة)',
+}
+
 createRoot(document.getElementById('root')!).render(
-  <Hanzo>
-    <Page />
-  </Hanzo>,
+  <I18nProvider userId="corner" initialLocale={rtl ? 'ar' : 'en'} loadCatalog={async () => AR}>
+    <Hanzo>
+      <Page />
+    </Hanzo>
+  </I18nProvider>,
 )

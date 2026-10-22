@@ -1,5 +1,6 @@
 'use client'
 
+import { phrase } from '@hanzo/i18n'
 import { useCallback, useEffect, useState } from 'react'
 import { account, acceptTerms, API, preferences, rename, saveProgress } from './api'
 import { chatStep, owesTerms, step, type Accepted, type Policy, type Progress, type Stored } from './state'
@@ -59,7 +60,7 @@ export function useSession(api: string = API): Session {
         await saveProgress(api, patch)
         setError(null)
       } catch (e) {
-        setError(e instanceof Error ? e.message : 'Could not save. Try again.')
+        setError(e instanceof Error ? e.message : phrase('Could not save. Try again.'))
       }
     },
     [api],
