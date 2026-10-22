@@ -198,8 +198,13 @@ const TabsTrigger = (props: TabsTriggerProps) => {
   )
 }
 
+// A panel fills a Tabs given a height, and is as tall as what it holds in one that
+// has none. `flex={1}` set its basis to 0, so in an auto-height column the panel
+// folded to 0px and its content drew over whatever came after the Tabs: every
+// code sample on hanzo.ai/sdks overlapped the next section. Growing from its
+// content's own height does both jobs.
 const TabsContent = ({ children, ...p }: TabsContentProps) => (
-  <GuiTabs.Content {...slot('tabs-content')} flex={1} {...p}>
+  <GuiTabs.Content {...slot('tabs-content')} flexGrow={1} {...p}>
     {ink(children)}
   </GuiTabs.Content>
 )
