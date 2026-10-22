@@ -20,6 +20,7 @@ import type { GuiElement } from '@hanzo/gui'
 import { ChevronLeft, ChevronRight } from '@hanzogui/lucide-icons-2'
 import { useEffect, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Cell, Grid } from '../../grid'
 import { sx } from '../../sx'
@@ -152,6 +153,7 @@ function Calendar(props: CalendarProps) {
     className,
   } = props
 
+  const { t } = useI18n()
   const [own, setOwn] = useState(() => first(defaultMonth ?? new Date()))
   const head = monthProp ? first(monthProp) : own
   const months = Array.from({ length: numberOfMonths }, (_, i) => first(head, i))
@@ -206,7 +208,7 @@ function Calendar(props: CalendarProps) {
               {i === 0 && (
                 <Button
                   {...slot('calendar-nav-previous')}
-                  aria-label="Previous month"
+                  aria-label={t('Previous month')}
                   variant="outline"
                   size="icon-sm"
                   onClick={() => navigate(-1)}
@@ -222,7 +224,7 @@ function Calendar(props: CalendarProps) {
               {i === months.length - 1 && (
                 <Button
                   {...slot('calendar-nav-next')}
-                  aria-label="Next month"
+                  aria-label={t('Next month')}
                   variant="outline"
                   size="icon-sm"
                   onClick={() => navigate(1)}

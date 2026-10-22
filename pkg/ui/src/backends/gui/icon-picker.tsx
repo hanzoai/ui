@@ -28,6 +28,7 @@ import {
   type KeyboardEvent,
   type ReactElement,
 } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Button } from './button'
 import { Density, useDensity } from './density'
 import { iconWords, resolveIcon, type IconKind } from './icons'
@@ -138,11 +139,14 @@ export function IconPicker({
   open: openProp,
   defaultOpen,
   onOpenChange,
-  label = 'Icon',
-  searchLabel = 'Search icons',
-  emptyLabel = 'No icon matches',
+  label: named,
+  searchLabel: searching,
+  emptyLabel,
   disabled,
 }: IconPickerProps) {
+  const { t } = useI18n()
+  const label = named ?? t('Icon')
+  const searchLabel = searching ?? t('Search icons')
   const density = useDensity()
   const [open, setOpen] = useOpen(openProp, defaultOpen, onOpenChange)
   const icons = useIcons()
@@ -205,7 +209,7 @@ export function IconPicker({
             size="icon-sm"
             variant="outline"
             disabled={disabled}
-            aria-label={chosen ? `${label}: ${chosen}` : label}
+            aria-label={chosen ? t('{label}: {value}', { label, value: chosen }) : label}
             {...({ 'aria-haspopup': 'listbox' } as object)}
           >
             {ActiveIcon ? <ActiveIcon size={16} /> : <XStack width={16} height={16} />}
@@ -219,7 +223,7 @@ export function IconPicker({
               <Input
                 size="xs"
                 value={q}
-                onChangeText={(t: string) => setQ(t)}
+                onChangeText={(text: string) => setQ(text)}
                 placeholder={searchLabel}
                 aria-label={searchLabel}
                 aria-controls={id}
@@ -230,11 +234,11 @@ export function IconPicker({
             </XStack>
             {!icons ? (
               <SizableText size="$1" color="$hint" p="$2" role="status" aria-live="polite">
-                Loading…
+                {t('Loading…')}
               </SizableText>
             ) : shown.length === 0 ? (
               <SizableText size="$1" color="$hint" p="$2" role="status" aria-live="polite">
-                {emptyLabel}
+                {emptyLabel ?? t('No icon matches')}
               </SizableText>
             ) : (
               <XStack
@@ -279,7 +283,7 @@ export function IconPicker({
             )}
             {icons && matches.length > SHOWN ? (
               <SizableText size="$1" color="$hint" px="$2" pb="$2" role="status" aria-live="polite">
-                {`${matches.length - SHOWN} more — type to narrow`}
+                {t('{n} more — type to narrow', { n: matches.length - SHOWN })}
               </SizableText>
             ) : null}
           </YStack>

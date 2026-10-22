@@ -28,6 +28,7 @@ import {
   Volume2,
   VolumeX,
 } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Button } from './button'
 import { Slider } from './slider'
@@ -150,6 +151,7 @@ export function MediaPlayer({
   // A player that goes away takes its pending hide with it.
   React.useEffect(() => () => clearTimeout(hideTimer.current), [])
 
+  const { t } = useI18n()
   const [isPlaying, setIsPlaying] = React.useState(false)
   const [currentTime, setCurrentTime] = React.useState(0)
   const [duration, setDuration] = React.useState(0)
@@ -461,7 +463,7 @@ export function MediaPlayer({
             default={track.default ?? index === 0}
           />
         ))}
-        Your browser does not support the video tag.
+        {t('Your browser does not support the video tag.')}
       </video>
 
       {isBuffering && (
@@ -497,7 +499,7 @@ export function MediaPlayer({
         >
           <XStack px="$4" pb="$2">
             <Slider
-              aria-label="Seek"
+              aria-label={t('Seek')}
               value={[duration > 0 ? currentTime : 0]}
               max={duration || 1}
               step={0.1}
@@ -507,30 +509,30 @@ export function MediaPlayer({
 
           <XStack px="$4" pb="$3" items="center" justify="space-between" gap="$2">
             <XStack items="center" gap="$2">
-              <Button {...overlayButton} aria-label="Rewind 10 seconds" onClick={() => skip(-SKIP_SECONDS)}>
+              <Button {...overlayButton} aria-label={t('Rewind 10 seconds')} onClick={() => skip(-SKIP_SECONDS)}>
                 <RotateCcw size={16} />
               </Button>
 
               <Button
                 {...overlayButton}
                 size="icon"
-                aria-label={isPlaying ? 'Pause' : 'Play'}
+                aria-label={isPlaying ? t('Pause') : t('Play')}
                 onClick={togglePlayPause}
               >
                 {isPlaying ? <Pause size={18} /> : <Play size={18} />}
               </Button>
 
-              <Button {...overlayButton} aria-label="Forward 10 seconds" onClick={() => skip(SKIP_SECONDS)}>
+              <Button {...overlayButton} aria-label={t('Forward 10 seconds')} onClick={() => skip(SKIP_SECONDS)}>
                 <SkipForward size={16} />
               </Button>
 
-              <Button {...overlayButton} aria-label={isMuted ? 'Unmute' : 'Mute'} onClick={toggleMute}>
+              <Button {...overlayButton} aria-label={isMuted ? t('Unmute') : t('Mute')} onClick={toggleMute}>
                 {isMuted || volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
               </Button>
 
               <XStack width={80}>
                 <Slider
-                  aria-label="Volume"
+                  aria-label={t('Volume')}
                   value={[isMuted ? 0 : volume]}
                   max={1}
                   step={0.1}
@@ -547,7 +549,7 @@ export function MediaPlayer({
               {subtitles.length > 0 && (
                 <Button
                   {...overlayButton}
-                  aria-label="Toggle captions"
+                  aria-label={t('Toggle captions')}
                   bg={showSubtitles ? 'rgba(255,255,255,0.2)' : undefined}
                   onClick={() => setShowSubtitles((v) => !v)}
                 >
@@ -557,7 +559,7 @@ export function MediaPlayer({
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button {...overlayButton} size="sm" aria-label="Playback speed">
+                  <Button {...overlayButton} size="sm" aria-label={t('Playback speed')}>
                     {playbackSpeed}x
                   </Button>
                 </DropdownMenuTrigger>
@@ -573,7 +575,7 @@ export function MediaPlayer({
               {qualityOptions.length > 1 && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button {...overlayButton} aria-label="Quality">
+                    <Button {...overlayButton} aria-label={t('Quality')}>
                       <Settings size={16} />
                     </Button>
                   </DropdownMenuTrigger>
@@ -590,7 +592,7 @@ export function MediaPlayer({
               {!disablePictureInPicture && (
                 <Button
                   {...overlayButton}
-                  aria-label="Picture in picture"
+                  aria-label={t('Picture in picture')}
                   bg={isPictureInPicture ? 'rgba(255,255,255,0.2)' : undefined}
                   onClick={() => void togglePictureInPicture()}
                 >
@@ -600,7 +602,7 @@ export function MediaPlayer({
 
               <Button
                 {...overlayButton}
-                aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+                aria-label={isFullscreen ? t('Exit fullscreen') : t('Enter fullscreen')}
                 onClick={() => void toggleFullscreen()}
               >
                 {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}

@@ -60,6 +60,7 @@ import {
   type GuiElement,
 } from '@hanzo/gui'
 import { Search as SearchIcon } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { score, step, type CommandFilter } from './command.logic'
 import { ltrText } from './dir'
@@ -321,8 +322,8 @@ export type CommandDialogProps = ComponentProps<typeof Dialog> &
   }
 
 const CommandDialog = ({
-  title = 'Command Palette',
-  description = 'Search for a command to run...',
+  title,
+  description,
   children,
   // Destructured by name so each lands on the component that owns it: these
   // drive the Command, everything left over is the Dialog's. Spreading the lot
@@ -337,33 +338,36 @@ const CommandDialog = ({
   vimBindings,
   disablePointerSelection,
   ...props
-}: CommandDialogProps) => (
-  <Dialog modal {...props}>
-    <DialogPortal>
-      <DialogOverlay key="overlay" bg="rgba(0,0,0,0.5)" />
-      <DialogContent key="content" p={0} width="100%" maxW={640} overflow="hidden">
-        {/* The accessible name/description live INSIDE the dialog, hidden but read. */}
-        <VisuallyHidden>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
-        </VisuallyHidden>
-        <Command
-          value={value}
-          defaultValue={defaultValue}
-          onValueChange={onValueChange}
-          filter={filter}
-          shouldFilter={shouldFilter}
-          loop={loop}
-          label={label}
-          vimBindings={vimBindings}
-          disablePointerSelection={disablePointerSelection}
-        >
-          {children}
-        </Command>
-      </DialogContent>
-    </DialogPortal>
-  </Dialog>
-)
+}: CommandDialogProps) => {
+  const { t } = useI18n()
+  return (
+    <Dialog modal {...props}>
+      <DialogPortal>
+        <DialogOverlay key="overlay" bg="rgba(0,0,0,0.5)" />
+        <DialogContent key="content" p={0} width="100%" maxW={640} overflow="hidden">
+          {/* The accessible name/description live INSIDE the dialog, hidden but read. */}
+          <VisuallyHidden>
+            <DialogTitle>{title ?? t('Command Palette')}</DialogTitle>
+            <DialogDescription>{description ?? t('Search for a command to run...')}</DialogDescription>
+          </VisuallyHidden>
+          <Command
+            value={value}
+            defaultValue={defaultValue}
+            onValueChange={onValueChange}
+            filter={filter}
+            shouldFilter={shouldFilter}
+            loop={loop}
+            label={label}
+            vimBindings={vimBindings}
+            disablePointerSelection={disablePointerSelection}
+          >
+            {children}
+          </Command>
+        </DialogContent>
+      </DialogPortal>
+    </Dialog>
+  )
+}
 
 export type CommandInputProps = Omit<ComponentProps<typeof Input>, 'value' | 'onChangeText'> & {
   value?: string
