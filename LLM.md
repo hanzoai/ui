@@ -629,12 +629,16 @@ Exchange's HelpContent is the design it was taken from.
 ```
 
 - **Theme and the faces are the library's, the rest is the host's.** Theme, Font
-  and (on a page in Arabic script) Arabic font write the same way. Theme writes
-  `@hanzo/appearance` through `<Hanzo>`'s own `useAppearance` call, which the root
-  publishes as `Look` (`src/look.ts`), so an org's layers and the IAM account sync
-  are kept. Without `<Hanzo>` it writes the device layer and repaints the resolved
-  stack. Language and currency are controlled props: this package depends on no
-  i18n or money library. A row the host passes nothing for is not drawn; no
+  and (on a page in Arabic script) Arabic font write the same way: through the
+  root's own `useAppearance` call, published as `Look` (`src/look.ts`), so an
+  org's layers and the IAM account sync are kept. `<Hanzo>` publishes it; a host
+  with its own gui provider that runs that call itself (hanzo.ai, through
+  @hanzo/rooms `useLook`) publishes its result with `Look` from
+  `@hanzo/ui/corner`. With neither, they write the device layer and repaint the
+  resolved stack, and for a signed-in reader the account's older choice wins
+  again on the next load. Language and currency are controlled props: this
+  package depends on no i18n or money library. A row the host passes nothing for
+  is not drawn; no
   `help` and the card opens on Preferences.
 - A row shows the chosen option's `label` (so currency passes `label: 'USD'`).
   A list longer than `LONG` (8) gets a search over label, hint and code, accents
@@ -654,9 +658,12 @@ Exchange's HelpContent is the design it was taken from.
 - `scripts/corner.mjs` drives `test/corner.html` (85 languages, Arabic words in
   RTL) in Chromium at 1280 and 390, dark and light, LTR and RTL: trigger at the
   start corner, card inward and inside the window, keyboard open/arrows/Escape,
-  focus return, search and choose, theme stored and painted. It writes a
-  screenshot of every case. Needs `dist/theme.css`
-  (`node scripts/compose-theme.mjs`, after `@hanzo/tokens` is built).
+  focus return, search and choose, theme stored and painted; then
+  `?host=own`, a signed-in reader whose account holds Light on a host that
+  publishes its own `Look`: Dark chosen in the corner is saved to the account
+  and is still Dark after a reload. It writes a screenshot of every case.
+  Needs `dist/theme.css` (`node scripts/compose-theme.mjs`, after
+  `@hanzo/tokens` is built).
 
 ### Settings and catalogue pages — `@hanzo/ui/settings`, `@hanzo/ui/catalog`
 

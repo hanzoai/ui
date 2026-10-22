@@ -1,20 +1,42 @@
 // The corner, mounted the way a host mounts it: under `<Hanzo>`, on a page with
 // content behind it, given help links, 85 languages and a currency list.
 // `scripts/corner.mjs` drives it in a real browser; it is also the page to open
-// by hand (`?dir=rtl`).
-import { useState } from 'react'
+// by hand (`?dir=rtl`). `?host=own` mounts it the other way a host does: its own
+// gui provider, the person's look resolved by the host, signed in, and published
+// for the corner (`Look`).
+import { useMemo, useState, type ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Paragraph, SizableText, YStack } from '@hanzo/gui'
+import { GuiProvider, Paragraph, SizableText, YStack } from '@hanzo/gui'
+import { useAppearance, useScheme } from '@hanzo/appearance'
 import { BookOpen, GraduationCap, MessagesSquare } from '@hanzogui/lucide-icons-2'
 
 import '../dist/theme.css'
 import '../src/styles/motion.css'
 import { config } from '../src/gui-config'
 import { Hanzo } from '../src/root'
-import { Corner } from '../src/corner'
+import { Corner, Look } from '../src/corner'
 import { CURRENCIES, LANGUAGES } from './corner.data'
 
 const rtl = document.documentElement.dir === 'rtl'
+const own = new URLSearchParams(location.search).get('host') === 'own'
+
+/**
+ * A host with its own gui provider that resolves the person's look itself, with
+ * their IAM account (hanzo.ai does this through @hanzo/rooms `useLook`), and
+ * publishes it. The account's preferences are this origin's, answered by the gate.
+ */
+function Own({ children }: { children: ReactNode }) {
+  const { pref, set } = useAppearance({ account: { base: location.origin, token: 'gate' } })
+  const look = useMemo(() => ({ pref, set }), [pref, set])
+  const scheme = useScheme()
+  return (
+    <Look.Provider value={look}>
+      <GuiProvider config={config} defaultTheme={scheme} disableInjectCSS>
+        {children}
+      </GuiProvider>
+    </Look.Provider>
+  )
+}
 
 function Page() {
   const [language, setLanguage] = useState(rtl ? 'ar' : 'en')
@@ -73,7 +95,13 @@ document.head.appendChild(sheet)
 document.documentElement.style.setProperty('--hanzo-ui-styles', '1')
 
 createRoot(document.getElementById('root')!).render(
-  <Hanzo>
-    <Page />
-  </Hanzo>,
+  own ? (
+    <Own>
+      <Page />
+    </Own>
+  ) : (
+    <Hanzo>
+      <Page />
+    </Hanzo>
+  ),
 )
