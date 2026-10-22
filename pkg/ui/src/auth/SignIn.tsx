@@ -14,6 +14,7 @@ import { Input } from '../backends/gui/input'
 import { Anchor, Heading, Paragraph, SizableText, XStack, YStack } from '../backends/gui/layout'
 import { CreateAccount } from '../onboarding/account'
 import type { Policy } from '../onboarding/state'
+import { mirror } from '../backends/gui/dir'
 
 /**
  * Signing in and signing up, drawn on the host site's own page.
@@ -367,7 +368,7 @@ export function SignIn({
             <YStack render={<form onSubmit={finish} noValidate />} gap="$4">
               <XStack items="center" gap="$2" minW={0}>
                 <Button type="button" variant="ghost" size="icon" aria-label={extras.phone ? 'Use another email or phone' : 'Use another email'} onClick={back}>
-                  <ArrowLeft size={16} />
+                  <ArrowLeft {...mirror} size={16} />
                 </Button>
                 <SizableText size="$2" color="$ink" numberOfLines={1} flex={1} minW={0}>
                   {email.trim()}

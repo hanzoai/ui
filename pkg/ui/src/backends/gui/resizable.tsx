@@ -50,6 +50,7 @@ import {
   type PanelSpec,
   type ResizeDirection,
 } from "./resizable.logic"
+import { along, rtl } from './dir'
 
 export type { ResizeDirection, PanelSpec } from "./resizable.logic"
 
@@ -283,7 +284,9 @@ export function ResizableHandle({
   const boundary = useContext(SlotContext)
   const [state, setState] = useState<"idle" | "hover" | "drag">("idle")
   const [focused, setFocused] = useState(false)
-  const start = useRef<{ pos: number; sizes: number[] } | null>(null)
+  // `sign` is -1 when a horizontal group reads right to left: its first panel
+  // is on the right, so a pointer moving right shrinks it
+  const start = useRef<{ pos: number; sizes: number[]; sign: number } | null>(null)
 
   const axis = group?.direction !== "vertical"
   const off =
@@ -294,7 +297,7 @@ export function ResizableHandle({
   const begin = useCallback(
     (e: DragEvent) => {
       if (off || !group) return
-      start.current = { pos: posOf(e), sizes: group.sizes }
+      start.current = { pos: posOf(e), sizes: group.sizes, sign: axis && rtl(e.currentTarget) ? -1 : 1 }
       setState("drag")
     },
     [group, off, posOf]
@@ -311,7 +314,7 @@ export function ResizableHandle({
           from.sizes,
           group.specs,
           boundary,
-          ((posOf(e) - from.pos) / px) * 100
+          (from.sign * (posOf(e) - from.pos) / px) * 100
         )
       )
     },
@@ -328,10 +331,11 @@ export function ResizableHandle({
     // `key`. On web react-native-web hands the DOM event through.
     (e: any) => {
       if (off || !group) return
+      const key = along(e)
       const dir = axis
-        ? e.key === "ArrowLeft"
+        ? key === "ArrowLeft"
           ? -1
-          : e.key === "ArrowRight"
+          : key === "ArrowRight"
             ? 1
             : 0
         : e.key === "ArrowUp"

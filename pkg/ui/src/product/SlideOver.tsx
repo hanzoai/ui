@@ -1,7 +1,8 @@
 'use client'
 
 /**
- * SlideOver — the ONE right-side (or left) slide-out overlay for the console.
+ * SlideOver — the ONE edge slide-out overlay for the console: from the reading
+ * end by default (the right under LTR, the left under RTL), or the start.
  *
  * It is the single mechanism behind every off-canvas surface: the mobile nav
  * drawer, the item DetailPane, and the account/settings menu. One definition, many
@@ -50,8 +51,12 @@ function unlockScroll() {
 export type SlideOverProps = {
   open: boolean
   onClose: () => void
-  /** Which edge the panel slides from. Default right. */
-  side?: 'right' | 'left'
+  /**
+   * Which edge the panel slides from. `end` (default) and `start` are the
+   * reading edges and follow the document's direction; `right` and `left` are
+   * the screen's.
+   */
+  side?: 'end' | 'start' | 'right' | 'left'
   /** Panel width at lg+ (px). Below lg it is always full-screen. Default 420. */
   size?: number
   /** Optional header title — when set, SlideOver renders a header + a scroll body. */
@@ -59,7 +64,7 @@ export type SlideOverProps = {
   /** Optional header icon (tinted with `iconColor`). */
   icon?: IconLike
   iconColor?: string
-  /** Extra header content, right-aligned before the close button. */
+  /** Extra header content, end-aligned before the close button. */
   headerRight?: ReactNode
   /** Accessible label when no visible title is given. */
   ariaLabel?: string
@@ -73,7 +78,7 @@ import { useEmit } from './instrument'
 export function SlideOver({
   open,
   onClose,
-  side = 'right',
+  side = 'end',
   size = 420,
   title,
   icon: Icon,
@@ -126,8 +131,14 @@ export function SlideOver({
     return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose])
 
-  const offscreen = side === 'right' ? 'translateX(100%)' : 'translateX(-100%)'
-  const edge = side === 'right' ? { r: 0 } : { l: 0 }
+  const edge =
+    side === 'end'
+      ? { insetInlineEnd: 0, borderInlineStartWidth: 1 }
+      : side === 'start'
+        ? { insetInlineStart: 0, borderInlineEndWidth: 1 }
+        : side === 'right'
+          ? { r: 0, borderLeftWidth: 1 }
+          : { l: 0, borderRightWidth: 1 }
 
   return (
     <YStack
@@ -167,8 +178,6 @@ export function SlideOver({
         width="100%"
         $lg={{ width: size, maxW: '100vw' }}
         bg="$sunken"
-        borderLeftWidth={side === 'right' ? 1 : 0}
-        borderRightWidth={side === 'left' ? 1 : 0}
         borderColor="$borderColor"
         // Material paper depth — the drawer reads as a sheet lifted above the dimmed
         // list behind it (real layered shadow, theme-aware), not a flat panel.
@@ -178,12 +187,14 @@ export function SlideOver({
         // rung, which is what a ladder turns into when it is treated as a palette —
         // and the 4th was a hardcoded shadow behind a variable nothing defined.
         data-motion="slide"
+        // motion.css resolves the offscreen offset per edge and direction
+        data-slide-from={side}
         className="elevation-3"
         // Full-height sheet (100dvh — mobile-safe), inset for the notch (top) + home
         // indicator (bottom) so the drawer header + footer actions clear them on
         // notched devices (env insets are 0 elsewhere, so no effect there).
         style={{
-          transform: open ? 'translateX(0)' : offscreen,
+          transform: open ? 'translateX(0)' : 'translateX(var(--slide-off))',
           height: '100dvh',
           paddingTop: 'env(safe-area-inset-top)',
           paddingBottom: 'env(safe-area-inset-bottom)',

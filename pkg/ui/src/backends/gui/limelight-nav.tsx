@@ -21,6 +21,7 @@ import * as React from 'react'
 import { ink } from './ink'
 import { slot } from './slot'
 import { touch } from './gesture'
+import { along } from './dir'
 
 export type LimelightNavItem = {
   id: string
@@ -174,10 +175,11 @@ export function LimelightNav({
   const onKeyDown = (e: React.KeyboardEvent) => {
     const from = items.findIndex((item) => item.id === active)
     if (from < 0) return
+    const key = along(e)
     const to =
-      e.key === 'ArrowRight' || e.key === 'ArrowDown'
+      key === 'ArrowRight' || key === 'ArrowDown'
         ? (from + 1) % items.length
-        : e.key === 'ArrowLeft' || e.key === 'ArrowUp'
+        : key === 'ArrowLeft' || key === 'ArrowUp'
           ? (from - 1 + items.length) % items.length
           : e.key === 'Home'
             ? 0

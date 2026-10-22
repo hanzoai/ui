@@ -89,7 +89,7 @@ describe('CommandMenu', () => {
     )
     const head = markup.match(/<[a-z]+[^>]*data-slot="command-menu-heading"[^>]*>/)?.[0] ?? ''
     expect(head).toMatch(/_height-28px/)
-    expect(head).toMatch(/_pl-36px/)
+    expect(head).toMatch(/_paddingInlineStart-36px/)
     expect(head).not.toMatch(/_borderBottomWidth/)
     const row = markup.match(/<[a-z]+[^>]*data-slot="command-menu-item"[^>]*>/)?.[0] ?? ''
     expect(row).toMatch(/_minH-36px/)

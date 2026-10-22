@@ -55,7 +55,8 @@ type ScrollAreaCtx = {
   type: ScrollAreaType
   /** Scrolling or hovered — what `scroll` and `hover` reveal on. */
   active: boolean
-  rtl: boolean
+  /** The bar's side, when the caller named a direction; unnamed, the inline end. */
+  dir?: "ltr" | "rtl"
   scrollBy: (delta: number) => void
 }
 
@@ -117,7 +118,7 @@ const ScrollBar = /* @__PURE__ */ forwardRef<GuiElement, ScrollBarProps>(
           ? {
               t: 0,
               b: 0,
-              ...(ctx.rtl ? { l: 0 } : { r: 0 }),
+              ...(ctx.dir === "rtl" ? { l: 0 } : ctx.dir === "ltr" ? { r: 0 } : { insetInlineEnd: 0 }),
               width: BAR,
               flexDirection: "column" as const,
             }
@@ -260,7 +261,7 @@ const ScrollArea = /* @__PURE__ */ forwardRef<GuiElement, ScrollAreaProps>(
           {ink(children)}
         </ScrollView>
         <Ctx.Provider
-          value={{ axis, track, type, active, rtl: dir === "rtl", scrollBy }}
+          value={{ axis, track, type, active, dir, scrollBy }}
         >
           <ScrollBar orientation={axis} />
         </Ctx.Provider>

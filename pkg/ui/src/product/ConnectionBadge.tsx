@@ -15,6 +15,7 @@ import { Button, Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { LogOut } from '@hanzogui/lucide-icons-2'
 import type { ReactNode } from 'react'
 import { slot } from '../backends/gui/slot'
+import { mirror } from '../backends/gui/dir'
 
 export type ConnectionBadgeProps = {
   /** How the connection was made — "OAuth", "API key". */
@@ -65,7 +66,7 @@ export function ConnectionBadge({
         </XStack>
         <Button chromeless onPress={onDisconnect} disabled={disconnecting}>
           <XStack items="center" gap="$1">
-            {disconnecting ? <Spinner size="small" /> : <LogOut size={12} />}
+            {disconnecting ? <Spinner size="small" /> : <LogOut {...mirror} size={12} />}
             <Text color="$quiet" fontSize="$1">
               Disconnect
             </Text>

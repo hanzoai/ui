@@ -22,6 +22,7 @@ import { ChevronRight, Search } from '@hanzogui/lucide-icons-2'
 import { FieldDisplay, searchRecords, type FieldDefinition } from '@hanzo/data'
 
 import { Action, Loading, Meta, WRAP_ANYWHERE } from './parts'
+import { mirror } from '../backends/gui/dir'
 
 export interface RecordCardsProps {
   /** The field shown as the card's headline (the DocType's titleField). */
@@ -135,7 +136,7 @@ export function RecordCards({
                   <Text fontSize="$4" fontWeight="700" flex={1} minW={0} numberOfLines={2}>
                     {headline(rec, titleField)}
                   </Text>
-                  {onOpen ? <ChevronRight size={16} opacity={0.5} /> : null}
+                  {onOpen ? <ChevronRight {...mirror} size={16} opacity={0.5} /> : null}
                 </XStack>
 
                 {cardFields.map((f) => (

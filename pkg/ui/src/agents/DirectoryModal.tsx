@@ -138,19 +138,19 @@ export const DirectoryModal: React.FC<DirectoryModalProps> = ({
             </div>
 
             <div style={{ position: 'relative', flex: 1 }}>
-              <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--color9)', pointerEvents: 'none', display: 'flex' }}>
+              <span style={{ position: 'absolute', insetInlineStart: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--color9)', pointerEvents: 'none', display: 'flex' }}>
                 <Search size={14} />
               </span>
               <Input
                 value={query}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
                 placeholder={`Search ${currentTab}...`}
-                style={{ paddingLeft: 32, height: 34, fontSize: 12, borderRadius: 10, backgroundColor: 'var(--color2)', borderColor: 'var(--borderColor)' }}
+                style={{ paddingInlineStart: 32, height: 34, fontSize: 12, borderRadius: 10, backgroundColor: 'var(--color2)', borderColor: 'var(--borderColor)' }}
               />
               {query && (
                 <button
                   onClick={() => setQuery('')}
-                  style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--color9)', cursor: 'pointer', display: 'flex' }}
+                  style={{ position: 'absolute', insetInlineEnd: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--color9)', cursor: 'pointer', display: 'flex' }}
                 >
                   <X size={12} />
                 </button>

@@ -46,6 +46,7 @@ import {
 
 import { slot } from '../backends/gui/slot'
 import { ancestors, type Entry, group, type Listing, put, type Row, rows, step } from './tree'
+import { along, mirror } from '../backends/gui/dir'
 
 type Col = Omit<ComponentProps<typeof YStack>, 'children'>
 
@@ -174,7 +175,7 @@ export function FileTree({
   }
 
   const keyed = (e: KeyboardEvent) => {
-    const move = step(list, at, e.key)
+    const move = step(list, at, along(e))
     if (!move) return
     e.preventDefault()
     if (move.toggle) toggle(move.toggle)
@@ -260,22 +261,22 @@ function Item({
         items="center"
         gap="$1.5"
         minH={28}
-        pr="$2"
+        paddingInlineEnd="$2"
         rounded="$3"
         cursor="pointer"
         bg={chosen ? '$raised' : 'transparent'}
         hoverStyle={{ bg: chosen ? '$raised' : '$hover' }}
         focusVisibleStyle={{ outlineWidth: 2, outlineStyle: 'solid', outlineColor: '$rim', outlineOffset: -2 }}
-        style={{ paddingLeft: 8 + row.depth * 12 }}
+        style={{ paddingInlineStart: 8 + row.depth * 12 }}
         {...({ 'data-path': row.path } as object)}
       >
         {dir ? (
           <>
-            {row.open ? <ChevronDown size={13} opacity={0.6} /> : <ChevronRight size={13} opacity={0.6} />}
+            {row.open ? <ChevronDown size={13} opacity={0.6} /> : <ChevronRight {...mirror} size={13} opacity={0.6} />}
             {row.open ? <FolderOpen size={14} /> : <Folder size={14} />}
           </>
         ) : (
-          <XStack pl={17} items="center">
+          <XStack paddingInlineStart={17} items="center">
             {glyph(row.name)}
           </XStack>
         )}
@@ -287,7 +288,7 @@ function Item({
         <SizableText
           size="$1"
           color={state === 'loading' ? '$soft' : '$bad'}
-          style={{ paddingLeft: 8 + (row.depth + 1) * 12 + 17 }}
+          style={{ paddingInlineStart: 8 + (row.depth + 1) * 12 + 17 }}
           py="$1"
           aria-live="polite"
         >

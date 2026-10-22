@@ -24,6 +24,7 @@ import { SizableText, XStack } from '@hanzo/gui'
 import { useSyncExternalStore, type ComponentProps } from 'react'
 import { Kbd } from './kbd'
 import { slot } from './slot'
+import { ltr, ltrText } from './dir'
 
 export type ShortcutPlatform = 'mac' | 'other'
 /** One combination, or a sequence of combinations pressed one after another. */
@@ -152,14 +153,14 @@ export function Shortcut({
     return (
       <XStack
         {...frame}
-        {...(variant === 'button' ? { gap: 6, ml: '$1', opacity: 0.5 } : null)}
+        {...(variant === 'button' ? { gap: 6, marginInlineStart: '$1', opacity: 0.5 } : null)}
         {...props}
       >
         {variant === 'button' ? (
           <XStack aria-hidden width={1} height={8} opacity={0.4} style={{ backgroundColor: 'currentColor' }} />
         ) : null}
         <SizableText aria-hidden size="$2" {...(variant === 'button' ? { fontWeight: '500' } : null)}>
-          {text}
+          {ltrText(text)}
         </SizableText>
       </XStack>
     )
@@ -168,6 +169,8 @@ export function Shortcut({
   const combos = combinations(keys)
   return (
     <XStack {...frame} gap="$1" {...props}>
+      {/* The chord reads left to right in any language: Ctrl, then B. */}
+      <XStack {...ltr} display="inline-flex" items="center" gap="$1">
       {combos.map((combo, i) => (
         <XStack key={i} aria-hidden display="inline-flex" items="center" gap="$1">
           {i > 0 ? (
@@ -182,6 +185,7 @@ export function Shortcut({
           ))}
         </XStack>
       ))}
+      </XStack>
     </XStack>
   )
 }

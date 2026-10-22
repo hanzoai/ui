@@ -59,8 +59,9 @@ export const StepIndicator = ({
                 style={{
                   height: 2,
                   top: `calc(${dot} / 2 - 1px)`,
-                  left: '50%',
-                  right: '-50%',
+                  // toward the next step, which sits at the inline end
+                  insetInlineStart: '50%',
+                  insetInlineEnd: '-50%',
                 }}
               />
             )}

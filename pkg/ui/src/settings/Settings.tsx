@@ -84,7 +84,7 @@ export function Settings<E extends Entry>({
         width={NAV}
         shrink={0}
         minH={0}
-        borderRightWidth={1}
+        borderInlineEndWidth={1}
         borderColor="$borderColor"
         $max-md={{ display: 'none' }}
       >

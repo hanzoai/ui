@@ -4,6 +4,7 @@ import { createContext, useContext, type ReactNode } from 'react'
 import { HanzoMark } from '@hanzogui/shell'
 import { ArrowLeft } from '@hanzogui/lucide-icons-2'
 import { Button } from '../backends/gui/button'
+import { mirror } from '../backends/gui/dir'
 import { Card, CardContent } from '../backends/gui/card'
 import { Heading, Paragraph, SizableText, XStack, YStack } from '../backends/gui/layout'
 import { Spinner } from '../backends/gui/spinner'
@@ -54,8 +55,8 @@ export function Page({
   return (
     <YStack render={brand ? 'main' : 'div'} aria-busy={busy || undefined} bg="$background" minH="100vh" items="center" justify={center ? 'center' : 'flex-start'} gap="$4" pt={center ? 96 : 28} pb={96} px="$4">
       {back ? (
-        <Button type="button" variant="ghost" size="icon-lg" aria-label="Back" position="absolute" t={20} l={20} rounded="$10" onClick={back}>
-          <ArrowLeft size={18} />
+        <Button type="button" variant="ghost" size="icon-lg" aria-label="Back" position="absolute" t={20} insetInlineStart={20} rounded="$10" onClick={back}>
+          <ArrowLeft {...mirror} size={18} />
         </Button>
       ) : null}
       {brand ? (

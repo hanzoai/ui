@@ -3,7 +3,7 @@
 /**
  * ButtonGroup and the Button axes it hands down, read off the server render:
  * gui compiles each style to an atomic class, so a class here IS the style a
- * browser receives (`_ml--1px`, `_btlr-0px`, `_btc-red7`).
+ * browser receives (`_marginInlineStart--1px`, `_btlr-0px`, `_btc-red7`).
  */
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
@@ -54,9 +54,9 @@ describe('ButtonGroup, attached', () => {
   })
 
   it('steps every button after the first back over its neighbour’s edge', () => {
-    expect(first).not.toMatch(/_ml--1px/)
-    expect(middle).toMatch(/_ml--1px/)
-    expect(last).toMatch(/_ml--1px/)
+    expect(first).not.toMatch(/_marginInlineStart--1px/)
+    expect(middle).toMatch(/_marginInlineStart--1px/)
+    expect(last).toMatch(/_marginInlineStart--1px/)
   })
 
   it('draws the focused button above its neighbours', () => {
@@ -73,7 +73,7 @@ describe('ButtonGroup, unattached and framed', () => {
       </ButtonGroup>,
     )
     expect(tags(markup, 'button-group')[0]).toMatch(/_gap-c-space-0--5/)
-    for (const b of tags(markup, 'button')) expect(b).not.toMatch(/_btlr-0px|_ml--1px/)
+    for (const b of tags(markup, 'button')) expect(b).not.toMatch(/_btlr-0px|_marginInlineStart--1px/)
   })
 
   it('a frame: $rim edge, 4px corner, 2px padding, panel ground; buttons cut to 1px', () => {

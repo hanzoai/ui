@@ -26,6 +26,7 @@ import { Box } from '../../box'
 import { cn } from '../../core/cn'
 import { sx } from '../../sx'
 import { Button } from './button'
+import { mirror } from './dir'
 
 export type CarouselOptions = {
   /** Past the last slide, go to the first — and the reverse. */
@@ -344,7 +345,7 @@ type ArrowProps = Omit<React.ComponentProps<typeof Button>, 'onPress' | 'onClick
  */
 const arrow = (
   name: string,
-  side: string,
+  side: 'start' | 'end',
   Icon: typeof ChevronLeft,
   move: (a: CarouselApi) => void,
   can: (a: CarouselApi) => boolean,
@@ -370,10 +371,13 @@ const arrow = (
         // it forwards `className` to the DOM untouched, where `absolute` is a
         // name no stylesheet serves. The arrows rendered, and sat in the flow
         // BELOW the carousel instead of over it.
-        {...sx('absolute top-1/2 -translate-y-1/2 rounded-full', side, className)}
+        {...sx('absolute top-1/2 -translate-y-1/2 rounded-full', className)}
+        // The reading edges: Previous sits at the start, the left under LTR and
+        // the right under RTL, and its chevron points that way.
+        {...(side === 'start' ? { insetInlineStart: 0 } : { insetInlineEnd: 0 })}
         {...props}
       >
-        <Icon size={16} />
+        <Icon {...mirror} size={16} />
       </Button>
     )
   }
@@ -383,7 +387,7 @@ const arrow = (
 
 export const CarouselPrevious = arrow(
   'Previous slide',
-  'left-0',
+  'start',
   ChevronLeft,
   (a) => a.scrollPrev(),
   (a) => a.canScrollPrev(),
@@ -391,7 +395,7 @@ export const CarouselPrevious = arrow(
 
 export const CarouselNext = arrow(
   'Next slide',
-  'right-0',
+  'end',
   ChevronRight,
   (a) => a.scrollNext(),
   (a) => a.canScrollNext(),

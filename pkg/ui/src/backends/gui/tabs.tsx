@@ -76,7 +76,7 @@ const TabsList = (p: TabsListProps) => {
       <GuiTabs.List
         {...slot('tabs-list')}
         {...(vertical
-          ? { flexDirection: 'column', borderRightWidth: 1, items: 'stretch' }
+          ? { flexDirection: 'column', borderInlineEndWidth: 1, items: 'stretch' }
           : { flexDirection: 'row', borderBottomWidth: 1, items: 'flex-end' })}
         borderColor="$borderColor"
         bg="transparent"
@@ -150,7 +150,7 @@ const LineTab = ({ children, startIcon, endIcon, badge, size = 'md', highlighted
           {...slot('tabs-indicator')}
           position="absolute"
           bg="$ink"
-          {...(vertical ? { r: -1, t: 0, b: 0, width: 1 } : { b: -1, l: 0, r: 0, height: 1 })}
+          {...(vertical ? { insetInlineEnd: -1, t: 0, b: 0, width: 1 } : { b: -1, l: 0, r: 0, height: 1 })}
         />
       ) : null}
     </GuiTabs.Tab>

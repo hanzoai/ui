@@ -2,7 +2,9 @@
 
 /**
  * MessageDock — a fixed stack of dismissable status cards, anchored to a
- * corner or edge of the viewport (`top`, `bottom`, `top-right`, `bottom-right`).
+ * corner or edge of the viewport (`top`, `bottom`, `top-end`, `bottom-end`, and
+ * the physical `top-right`, `bottom-right`). `end` is the reading edge: the
+ * right under LTR, the left under RTL.
  *
  * Unlike `Toaster` (a queue driven through an imperative `toast()` call), a
  * dock is fully controlled: the caller owns the `messages` array and decides
@@ -29,7 +31,7 @@ export type MessageDockMessage = {
   description?: string
 }
 
-export type MessageDockPosition = 'top' | 'bottom' | 'top-right' | 'bottom-right'
+export type MessageDockPosition = 'top' | 'bottom' | 'top-end' | 'bottom-end' | 'top-right' | 'bottom-right'
 
 const CLOSE = 24
 const CARD_MIN_WIDTH = 300
@@ -51,12 +53,14 @@ const DockFrame = styled(YStack, {
     anchor: {
       top: { t: '$4', l: '50%', style: { transform: 'translateX(-50%)' } },
       bottom: { b: '$4', l: '50%', style: { transform: 'translateX(-50%)' } },
+      'top-end': { t: '$4', insetInlineEnd: '$4' },
+      'bottom-end': { b: '$4', insetInlineEnd: '$4' },
       'top-right': { t: '$4', r: '$4' },
       'bottom-right': { b: '$4', r: '$4' },
     },
   } as const,
 
-  defaultVariants: { anchor: 'bottom-right' },
+  defaultVariants: { anchor: 'bottom-end' },
 })
 
 const CardFrame = styled(YStack, {
@@ -134,8 +138,8 @@ export type MessageDockProps = Omit<ComponentProps<typeof DockFrame>, 'anchor' |
   position?: MessageDockPosition | null
 }
 
-function MessageDock({ messages, onClose, position = 'bottom-right', ...props }: MessageDockProps) {
-  const resolved = position ?? 'bottom-right'
+function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: MessageDockProps) {
+  const resolved = position ?? 'bottom-end'
   return (
     <DockFrame {...slot('message-dock')} data-position={resolved} anchor={resolved} {...props}>
       {messages.map((message) => {
@@ -150,7 +154,7 @@ function MessageDock({ messages, onClose, position = 'bottom-right', ...props }:
             role="status"
           >
             <XStack items="flex-start" justify="space-between" gap="$4">
-              <YStack flex={1} pr={onClose ? CLOSE : 0}>
+              <YStack flex={1} paddingInlineEnd={onClose ? CLOSE : 0}>
                 <CardTitle type={type} {...slot('message-dock-card-title')}>
                   {ink(message.title)}
                 </CardTitle>
@@ -170,7 +174,7 @@ function MessageDock({ messages, onClose, position = 'bottom-right', ...props }:
                   {...touch(CLOSE)}
                   position="absolute"
                   t="$3"
-                  r="$3"
+                  insetInlineEnd="$3"
                   aria-label="Close"
                   onPress={() => onClose(message.id)}
                 >

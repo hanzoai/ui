@@ -42,6 +42,7 @@ import {
   type SocialApi,
   type SocialSummary,
 } from './api'
+import { mirror } from '../../backends/gui/dir'
 
 type Async<T> =
   | { phase: 'loading' }
@@ -130,7 +131,7 @@ function PostDetail({ api, post, onChanged }: { api: SocialApi; post: Post; onCh
         </Text>
       ) : null}
       {canPublish ? (
-        <PrimaryButton onPress={publish} disabled={publishing} icon={<Send size={16} />}>
+        <PrimaryButton onPress={publish} disabled={publishing} icon={<Send {...mirror} size={16} />}>
           {publishing ? 'Publishing…' : 'Publish now'}
         </PrimaryButton>
       ) : null}
@@ -285,7 +286,7 @@ export function SocialResource({
           <YStack gap="$3">
             <XStack items="center" justify="space-between" gap="$2" flexWrap="wrap">
               <XStack items="center" gap="$2">
-                <Send size={16} />
+                <Send {...mirror} size={16} />
                 <Text fontSize="$5" fontWeight="500">
                   Posts
                 </Text>

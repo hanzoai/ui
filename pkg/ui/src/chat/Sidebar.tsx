@@ -33,6 +33,7 @@ import {
 import { useState, type ComponentProps, type ReactNode } from 'react'
 
 import { slot, tip } from '../backends/gui/slot'
+import { mirror } from '../backends/gui/dir'
 
 /** The props of the primitive each part is built on, minus what the part names. */
 type Row = Omit<ComponentProps<typeof XStack>, 'children'>
@@ -64,7 +65,7 @@ export function Sidebar({ children, width = WIDTH, ...rest }: SidebarProps) {
       gap="$1"
       p="$2"
       bg="$panel"
-      borderRightWidth={1}
+      borderInlineEndWidth={1}
       borderColor="$borderColor"
       {...rest}
     >
@@ -114,7 +115,7 @@ export function SidebarHeader({
       ) : null}
       {onCollapse ? (
         <SidebarIconButton label="Collapse sidebar" onPress={onCollapse}>
-          <PanelLeft size={16} />
+          <PanelLeft {...mirror} size={16} />
         </SidebarIconButton>
       ) : null}
     </XStack>
@@ -308,7 +309,7 @@ export function SidebarFolder({
         {open ? (
           <ChevronDown size={14} opacity={0.6} />
         ) : (
-          <ChevronRight size={14} opacity={0.6} />
+          <ChevronRight {...mirror} size={14} opacity={0.6} />
         )}
         <Folder size={16} opacity={0.7} />
         <SizableText size="$2" numberOfLines={1} flex={1} color="$quiet">
@@ -316,7 +317,7 @@ export function SidebarFolder({
         </SizableText>
       </XStack>
       {open ? (
-        <YStack pl="$4" gap="$0.5">
+        <YStack paddingInlineStart="$4" gap="$0.5">
           {children}
         </YStack>
       ) : null}

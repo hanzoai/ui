@@ -30,8 +30,8 @@ describe('AvatarGroup', () => {
   it('the first item carries no overlap; the rest pull 3px on the start side', () => {
     const markup = html(<AvatarGroup avatars={six.slice(0, 2)} />)
     const items = [...markup.matchAll(/<div[^>]*data-slot="avatar-group-item"[^>]*>/g)].map((m) => m[0])
-    expect(items[0]).not.toMatch(/marginStart|_ms-/)
-    expect(items[1]).toMatch(/-3px/)
+    expect(items[0]).not.toMatch(/marginInlineStart|_ms-/)
+    expect(items[1]).toMatch(/_marginInlineStart--3px/)
   })
 
   it('renders nothing with nothing to show', () => {

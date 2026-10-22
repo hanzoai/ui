@@ -393,3 +393,8 @@
    arrows; the same declaration @hanzo/i18n's rtl.css and @hanzo/gui's base sheet
    state, so any number of them on one page mirror an icon once. */
 [data-i18n-mirror]:dir(rtl) { transform: scaleX(-1) }
+
+/* Text whose order is not language (a shortcut, a key chord, an email or URL
+   field) carries `data-i18n-ltr` (the `ltr` helper) and stays left to right,
+   isolated so the line around it keeps its own order. */
+[data-i18n-ltr] { direction: ltr; unicode-bidi: isolate }

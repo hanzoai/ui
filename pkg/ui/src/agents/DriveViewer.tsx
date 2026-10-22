@@ -13,6 +13,7 @@ import {
   RefreshCw,
 } from '@hanzogui/lucide-icons-2'
 import { Text } from '../index'
+import { mirror } from '../backends/gui/dir'
 
 export interface StorageBucket {
   name: string
@@ -108,7 +109,7 @@ export const DriveViewer: React.FC<DriveViewerProps> = ({
 
           {currentBucket && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--color10)' }}>
-              <ChevronRight size={14} />
+              <ChevronRight {...mirror} size={14} />
               <button
                 onClick={() => onNavigatePrefix('')}
                 style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0 }}
@@ -120,7 +121,7 @@ export const DriveViewer: React.FC<DriveViewerProps> = ({
                 const isLast = idx === segments.length - 1
                 return (
                   <React.Fragment key={stepPrefix}>
-                    <ChevronRight size={12} />
+                    <ChevronRight {...mirror} size={12} />
                     <button
                       disabled={isLast}
                       onClick={() => onNavigatePrefix(stepPrefix)}
@@ -196,13 +197,13 @@ export const DriveViewer: React.FC<DriveViewerProps> = ({
             <Text style={{ fontSize: 12, color: 'var(--color10)', marginTop: 8 }}>This folder is empty.</Text>
           </div>
         ) : (
-          <table style={{ width: '100%', textAlign: 'left', fontSize: 12, borderCollapse: 'collapse' }}>
+          <table style={{ width: '100%', textAlign: 'start', fontSize: 12, borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--borderColor)', color: 'var(--color9)' }}>
                 <th style={{ padding: '10px 16px', fontWeight: 500 }}>Name</th>
-                <th style={{ padding: '10px 16px', fontWeight: 500, width: 110, textAlign: 'right' }}>Size</th>
-                <th style={{ padding: '10px 16px', fontWeight: 500, width: 140, textAlign: 'right' }}>Modified</th>
-                <th style={{ padding: '10px 16px', fontWeight: 500, width: 80, textAlign: 'right' }}>Actions</th>
+                <th style={{ padding: '10px 16px', fontWeight: 500, width: 110, textAlign: 'end' }}>Size</th>
+                <th style={{ padding: '10px 16px', fontWeight: 500, width: 140, textAlign: 'end' }}>Modified</th>
+                <th style={{ padding: '10px 16px', fontWeight: 500, width: 80, textAlign: 'end' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -229,15 +230,15 @@ export const DriveViewer: React.FC<DriveViewerProps> = ({
                         </div>
                       )}
                     </td>
-                    <td style={{ padding: '10px 16px', textAlign: 'right', color: 'var(--color9)', fontFamily: 'monospace', fontSize: 11 }}>
+                    <td style={{ padding: '10px 16px', textAlign: 'end', color: 'var(--color9)', fontFamily: 'monospace', fontSize: 11 }}>
                       {entry.isDir ? '—' : weigh(entry.size)}
                     </td>
-                    <td style={{ padding: '10px 16px', textAlign: 'right', color: 'var(--color9)', fontSize: 11 }}>
+                    <td style={{ padding: '10px 16px', textAlign: 'end', color: 'var(--color9)', fontSize: 11 }}>
                       {entry.lastModified
                         ? new Date(entry.lastModified).toLocaleDateString()
                         : '—'}
                     </td>
-                    <td style={{ padding: '10px 16px', textAlign: 'right' }}>
+                    <td style={{ padding: '10px 16px', textAlign: 'end' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4 }}>
                         {!entry.isDir && onDownloadFile && (
                           <button

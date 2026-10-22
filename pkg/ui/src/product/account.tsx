@@ -20,6 +20,7 @@ import { useEmit } from './instrument'
 import { menuKeyDown } from './menu/roving'
 import { MenuLabel, MenuRow } from './MenuRow'
 import { displayName } from './name'
+import { mirror } from '../backends/gui/dir'
 
 /** One row. `id` names it in analytics; the label is what the person reads. */
 export type UserMenuItem = {
@@ -147,7 +148,7 @@ export function Account({ name, email, groups = [], theme, onSignOut, signOutLab
         <>
           <Rule />
           <Row
-            item={{ id: 'sign-out', label: signOutLabel, icon: <LogOut size={16} />, onPress: onSignOut }}
+            item={{ id: 'sign-out', label: signOutLabel, icon: <LogOut {...mirror} size={16} />, onPress: onSignOut }}
             onDone={onDone}
             component={component}
           />

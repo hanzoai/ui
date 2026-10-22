@@ -56,7 +56,7 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({
         )}
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 224, overflowY: 'auto', paddingRight: 4 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 224, overflowY: 'auto', paddingInlineEnd: 4 }}>
         {members.map((m) => (
           <div
             key={m.id}
@@ -68,7 +68,7 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({
                   {m.name.charAt(0)}
                 </div>
                 {m.status === 'online' && (
-                  <span style={{ position: 'absolute', bottom: 0, right: 0, width: 8, height: 8, borderRadius: '50%', backgroundColor: '#34d399', border: '1px solid #171717' }} />
+                  <span style={{ position: 'absolute', bottom: 0, insetInlineEnd: 0, width: 8, height: 8, borderRadius: '50%', backgroundColor: '#34d399', border: '1px solid #171717' }} />
                 )}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>

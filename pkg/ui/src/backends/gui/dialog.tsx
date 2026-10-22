@@ -136,7 +136,7 @@ const DialogContent = ({
                 {...touch(16)}
                 position="absolute"
                 t={16}
-                r={16}
+                insetInlineEnd={16}
                 cursor="pointer"
                 opacity={0.7}
                 hoverStyle={{ opacity: 1 }}

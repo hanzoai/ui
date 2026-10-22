@@ -67,7 +67,7 @@ describe('Chip markup', () => {
 
   it('the end element sits behind a hairline when asked', () => {
     const el = tag(html(<Chip label="x" endElement={<i />} endElementDivider />), 'chip-end')
-    expect(el).toMatch(/_borderLeftWidth-1px/)
+    expect(el).toMatch(/_borderInlineStartWidth-1px/)
   })
 })
 

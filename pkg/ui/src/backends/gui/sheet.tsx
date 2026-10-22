@@ -40,7 +40,12 @@ export const SheetTitle = DialogTitle
 export const SheetDescription = DialogDescription
 export const SheetFooter = DialogFooter
 
-export type SheetSide = 'top' | 'right' | 'bottom' | 'left'
+/**
+ * `start` and `end` are the reading edges: `end` is the right under LTR and the
+ * left under RTL, which is where a panel that sits "after" the page belongs in
+ * either. `left` and `right` stay, and mean the screen's sides.
+ */
+export type SheetSide = 'top' | 'end' | 'bottom' | 'start' | 'right' | 'left'
 
 /**
  * Where the sheet sits, per side.
@@ -54,6 +59,14 @@ export type SheetSide = 'top' | 'right' | 'bottom' | 'left'
  * shows a sliver of page through them at the screen edge.
  */
 const PLACE: Record<SheetSide, Record<string, unknown>> = {
+  end: {
+    t: 0, b: 0, insetInlineEnd: 0, height: '100%', width: '100%', maxW: 384,
+    borderStartStartRadius: '$5', borderEndStartRadius: '$5', borderStartEndRadius: 0, borderEndEndRadius: 0,
+  },
+  start: {
+    t: 0, b: 0, insetInlineStart: 0, height: '100%', width: '100%', maxW: 384,
+    borderStartEndRadius: '$5', borderEndEndRadius: '$5', borderStartStartRadius: 0, borderEndStartRadius: 0,
+  },
   right: { t: 0, b: 0, r: 0, height: '100%', width: '100%', maxW: 384, btlr: '$5', bblr: '$5', btrr: 0, bbrr: 0 },
   left: { t: 0, b: 0, l: 0, height: '100%', width: '100%', maxW: 384, btrr: '$5', bbrr: '$5', btlr: 0, bblr: 0 },
   top: { t: 0, l: 0, r: 0, width: '100%', maxW: '100%', maxH: '80%', bblr: '$5', bbrr: '$5', btlr: 0, btrr: 0 },
@@ -64,7 +77,7 @@ export type SheetContentProps = DialogContentProps & {
   side?: SheetSide
 }
 
-export const SheetContent = ({ side = 'right', className, ...props }: SheetContentProps) => (
+export const SheetContent = ({ side = 'end', className, ...props }: SheetContentProps) => (
   <DialogContent
     {...slot(side)}
     // The dialog centres itself; a sheet is pinned, so the placement above has

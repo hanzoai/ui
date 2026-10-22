@@ -21,6 +21,7 @@ import { Badge } from './badge'
 import { Button } from './button'
 import { DropdownMenu } from './dropdown-menu'
 import { ink } from './ink'
+import { mirror } from './dir'
 
 export type NavigationBarLink = {
   label: string
@@ -102,13 +103,13 @@ const IconButton = ({
 const Avatars = ({ people, max = 3 }: { people: NavigationBarPerson[]; max?: number }) => (
   <XStack items="center">
     {people.slice(0, max).map((p, i) => (
-      <Avatar key={p.name + i} ml={i > 0 ? -8 : 0} borderWidth={2} borderColor="$background">
+      <Avatar key={p.name + i} marginInlineStart={i > 0 ? -8 : 0} borderWidth={2} borderColor="$background">
         <AvatarImage src={p.avatar} />
         <AvatarFallback>{p.name.slice(0, 1)}</AvatarFallback>
       </Avatar>
     ))}
     {people.length > max ? (
-      <Avatar ml={-8} borderWidth={2} borderColor="$background">
+      <Avatar marginInlineStart={-8} borderWidth={2} borderColor="$background">
         <AvatarFallback>+{people.length - max}</AvatarFallback>
       </Avatar>
     ) : null}
@@ -184,7 +185,7 @@ export function NavigationBar({
         <List items="center" gap="$2" flex={1}>
           {items.map((item, i) => (
             <ListItem key={item.href ?? item.label} items="center" gap="$2">
-              {i > 0 ? <ChevronRight size={14} opacity={0.6} /> : null}
+              {i > 0 ? <ChevronRight {...mirror} size={14} opacity={0.6} /> : null}
               <Link item={item} />
             </ListItem>
           ))}
@@ -246,7 +247,7 @@ export function NavigationBar({
                 <Badge
                   data-slot="navigation-bar-cart-count"
                   variant="default"
-                  style={{ position: 'absolute', top: -4, right: -4 }}
+                  style={{ position: 'absolute', top: -4, insetInlineEnd: -4 }}
                 >
                   {cartCount}
                 </Badge>

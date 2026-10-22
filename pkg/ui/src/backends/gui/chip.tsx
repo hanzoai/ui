@@ -139,7 +139,7 @@ export function Chip({
           shrink={0}
           items="center"
           self="stretch"
-          {...(endElementDivider ? { borderLeftWidth: 1, borderColor: '$borderColor', pl: '$1' } : null)}
+          {...(endElementDivider ? { borderInlineStartWidth: 1, borderColor: '$borderColor', paddingInlineStart: '$1' } : null)}
         >
           {endElement}
         </XStack>

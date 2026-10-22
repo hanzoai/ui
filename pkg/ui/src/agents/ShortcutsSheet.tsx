@@ -82,7 +82,7 @@ export const ShortcutsSheet: React.FC<ShortcutsSheetProps> = ({
           )}
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxHeight: 384, overflowY: 'auto', paddingRight: 4 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxHeight: 384, overflowY: 'auto', paddingInlineEnd: 4 }}>
           {categories.map((cat) => (
             <div key={cat} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <h3 style={{ fontSize: 11, fontWeight: 600, color: '#a3a3a3', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>

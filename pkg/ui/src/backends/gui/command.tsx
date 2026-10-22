@@ -62,6 +62,7 @@ import {
 import { Search as SearchIcon } from '@hanzogui/lucide-icons-2'
 
 import { score, step, type CommandFilter } from './command.logic'
+import { ltrText } from './dir'
 
 export type { CommandFilter }
 
@@ -542,11 +543,12 @@ export type CommandShortcutProps = ComponentProps<typeof SizableText>
 const CommandShortcut = (props: CommandShortcutProps) => (
   <SizableText
     data-slot="command-shortcut"
-    ml="auto"
+    marginInlineStart="auto"
     size="$1"
     color="$quiet"
     letterSpacing={1.5}
     {...props}
+    children={ltrText(props.children)}
   />
 )
 

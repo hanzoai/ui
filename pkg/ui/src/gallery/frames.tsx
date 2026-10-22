@@ -44,7 +44,7 @@ export function Frames() {
   return (
     <>
       <Section name="pane-record">
-        <YStack width={400} height={320} bg="$background" borderLeftWidth={1} borderColor="$borderColor">
+        <YStack width={400} height={320} bg="$background" borderInlineStartWidth={1} borderColor="$borderColor">
           <PaneBar
             actions={
               <Button size="icon-xs" variant="ghost" emphasis="subtle" aria-label="Copy link">
@@ -73,10 +73,10 @@ export function Frames() {
         </YStack>
       </Section>
       <Section name="command-menu">
-        <YStack width={400} height={360} bg="$background" borderLeftWidth={1} borderColor="$borderColor">
+        <YStack width={400} height={360} bg="$background" borderInlineStartWidth={1} borderColor="$borderColor">
           <CommandMenu groups={GROUPS} autoFocus={false} />
         </YStack>
-        <YStack width={400} height={160} bg="$background" borderLeftWidth={1} borderColor="$borderColor">
+        <YStack width={400} height={160} bg="$background" borderInlineStartWidth={1} borderColor="$borderColor">
           <CommandMenu groups={GROUPS} query="zzzz" autoFocus={false} />
         </YStack>
       </Section>

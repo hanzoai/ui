@@ -36,6 +36,7 @@ function openHref(href: string): void {
 }
 
 import { useEmit } from './instrument'
+import { mirror } from '../backends/gui/dir'
 
 export function EmptyState({
   icon: Icon,
@@ -109,7 +110,7 @@ export function EmptyState({
           {primary ? (
             <PrimaryButton
               icon={primary.icon}
-              iconAfter={primary.href ? <ExternalLink size={16} /> : <ArrowRight size={16} />}
+              iconAfter={primary.href ? <ExternalLink size={16} /> : <ArrowRight {...mirror} size={16} />}
               onPress={() => {
                 track({ component: 'EmptyState', action: 'click', id: title, value: primary.label })
                 if (primary.href) openHref(primary.href)

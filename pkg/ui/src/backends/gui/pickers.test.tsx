@@ -69,8 +69,8 @@ describe('the start segment, server-rendered', () => {
 
   it('takes the group’s inside height, flush with its start, a hairline on its end', () => {
     expect(segment).toMatch(/_height-30px/)
-    expect(segment).toMatch(/_ml--8px/)
-    expect(segment).toMatch(/_brw-1px/)
+    expect(segment).toMatch(/_marginInlineStart--8px/)
+    expect(segment).toMatch(/_borderInlineEndWidth-1px/)
     expect(segment).toMatch(/_bg-0hover-hover/)
     expect(markup).toContain('>EUR<')
   })

@@ -195,7 +195,7 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy', brand = 'Hanzo' }: Cons
           </a>
         </Paragraph>
       </YStack>
-      <XStack gap="$2" ml="auto" items="center">
+      <XStack gap="$2" marginInlineStart="auto" items="center">
         <Button type="button" size="sm" variant="link" onClick={choose}>
           Choose
         </Button>

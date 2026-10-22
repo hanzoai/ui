@@ -56,6 +56,7 @@ import { Sheet, SheetContent, SheetTitle } from '../backends/gui/sheet'
 import { slot, tip } from '../backends/gui/slot'
 import { Account, type UserMenuGroup } from '../product/account'
 import { Sidebar, SidebarIconButton } from './Sidebar'
+import { mirror } from '../backends/gui/dir'
 
 type Col = Omit<ComponentProps<typeof YStack>, 'children'>
 type Row = Omit<ComponentProps<typeof XStack>, 'children'>
@@ -449,7 +450,7 @@ function Contents({
             height={36}
             onPress={() => onCollapse?.(false)}
           >
-            {mark ?? <PanelLeft size={16} />}
+            {mark ?? <PanelLeft {...mirror} size={16} />}
           </SidebarIconButton>
           {onSearch ? (
             <Item label={searchLabel} icon={<Search size={16} />} onPress={onSearch} rail data="rail-search" />
@@ -531,7 +532,7 @@ function Contents({
         <YStack flex={1} />
       ) : (
         <YStack {...slot('rail-recents')} flex={1} minH={0} mt="$5">
-          <XStack items="center" justify="space-between" height={28} pl="$2" pr="$1" shrink={0}>
+          <XStack items="center" justify="space-between" height={28} paddingInlineStart="$2" paddingInlineEnd="$1" shrink={0}>
             <SizableText id={headId} size="$2" color="$soft">
               {recentsLabel}
             </SizableText>
@@ -603,7 +604,7 @@ function Contents({
         {account ? <Who account={account} rail={rail} /> : <XStack flex={1} />}
         {onCollapse && !rail ? (
           <SidebarIconButton label="Collapse sidebar" onPress={() => onCollapse(!collapsed)}>
-            <PanelLeft size={16} />
+            <PanelLeft {...mirror} size={16} />
           </SidebarIconButton>
         ) : null}
       </XStack>

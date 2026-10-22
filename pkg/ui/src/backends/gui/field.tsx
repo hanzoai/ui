@@ -296,7 +296,7 @@ function fieldErrorContent(
     // as utility strings, as the props they compiled to.
     <YStack
       render="ul"
-      ml={16}
+      marginInlineStart={16}
       display="flex"
       flexDirection="column"
       gap={4}

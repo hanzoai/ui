@@ -171,8 +171,8 @@ const SelectItem = ({ children, value, ...props }: SelectItemProps) => {
       justify="flex-start"
       gap="$2"
       minH={ROW_H}
-      pl={compact ? "$1" : "$2"}
-      pr="$7"
+      paddingInlineStart={compact ? "$1" : "$2"}
+      paddingInlineEnd="$7"
       // Concentric: the panel is 8, its inset 4, so a row is 4.
       rounded="$xs"
       cursor="pointer"
@@ -184,7 +184,7 @@ const SelectItem = ({ children, value, ...props }: SelectItemProps) => {
       <GuiSelect.ItemText {...(compact ? { fontSize: "$2", color: "$aside" } : null)}>{children}</GuiSelect.ItemText>
       <XStack
         position="absolute"
-        r="$2"
+        insetInlineEnd="$2"
         items="center"
         justify="center"
         pointerEvents="none"

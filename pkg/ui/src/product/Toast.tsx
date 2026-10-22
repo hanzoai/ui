@@ -90,8 +90,8 @@ function ToastCard({ t, onClose }: { t: Toast; onClose: () => void }) {
       bg="$panel"
       borderWidth={1}
       borderColor="$borderColor"
-      borderLeftWidth={3}
-      borderLeftColor={accent}
+      borderInlineStartWidth={3}
+      borderInlineStartColor={accent}
       rounded="$4"
       elevation="$2"
     >
@@ -123,7 +123,7 @@ function ToastViewport({ toasts, dismiss }: { toasts: Toast[]; dismiss: (id: num
   useEffect(() => setMounted(true), [])
   if (!mounted || typeof document === 'undefined') return null
   return createPortal(
-    <div style={{ position: 'fixed', top: 16, right: 16, zIndex: 100000, pointerEvents: 'none' }}>
+    <div style={{ position: 'fixed', top: 16, insetInlineEnd: 16, zIndex: 100000, pointerEvents: 'none' }}>
       <YStack gap="$2" items="flex-end">
         {toasts.map((t) => (
           <YStack key={t.id} pointerEvents="auto">

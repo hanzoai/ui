@@ -98,7 +98,7 @@ describe('DialogContent’s overlay', () => {
 const close = () => document.querySelector('[data-slot="dialog-close"][aria-label="Close"]') as HTMLElement | null
 
 describe('DialogContent’s close button', () => {
-  it('is pinned to the top-right corner, not dropped into the flow', () => {
+  it('is pinned to the top end corner, not dropped into the flow', () => {
     mount(
       <Dialog open>
         <DialogContent>
@@ -115,8 +115,10 @@ describe('DialogContent’s close button', () => {
     const style = getComputedStyle(el!)
     expect(style.position).toBe('absolute')
     expect(style.top).toBe('16px')
-    expect(style.right).toBe('16px')
-    expect(style.left).toBe('auto')
+    // The end corner: the right under LTR, the left under RTL. jsdom resolves
+    // no logical property, so the class is read for the side.
+    expect(el!.className).toMatch(/_insetInlineEnd-16px/)
+    expect(el!.className).not.toMatch(/_(l|r|left|right)-/)
     expect(style.bottom).toBe('auto')
   })
 

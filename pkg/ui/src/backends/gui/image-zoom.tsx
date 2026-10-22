@@ -30,7 +30,7 @@ const Glyph = styled(XStack, {
   name: 'ImageZoomGlyph',
   position: 'absolute',
   t: '$2',
-  r: '$2',
+  insetInlineEnd: '$2',
   p: '$1.5',
   rounded: 1000,
   bg: 'rgba(0,0,0,0.5)',

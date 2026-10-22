@@ -48,7 +48,7 @@ function CornerMark({ selected }: { selected: boolean }) {
       {...slot('choice-mark')}
       position="absolute"
       t={8}
-      r={8}
+      insetInlineEnd={8}
       width={16}
       height={16}
       rounded={9999}
@@ -83,7 +83,7 @@ export function ChoiceCard({ selected, onSelect, indicator = false, children, ..
       tabIndex={0}
       selected={selected}
       {...(compact ? { compact: true } : null)}
-      {...(indicator ? { position: 'relative', pr: 32 } : null)}
+      {...(indicator ? { position: 'relative', paddingInlineEnd: 32 } : null)}
       onPress={onSelect}
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onKeyDown={(e: any) => {

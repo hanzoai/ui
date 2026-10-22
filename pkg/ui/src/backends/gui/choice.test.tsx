@@ -69,13 +69,13 @@ describe('ChoiceCard, the radio card', () => {
     const on = mark(html(<ChoiceCard indicator selected onSelect={() => {}}>x</ChoiceCard>))
     expect(on).toMatch(/_pos-absolute/)
     expect(on).toMatch(/_t-8px/)
-    expect(on).toMatch(/_r-8px/)
+    expect(on).toMatch(/_insetInlineEnd-8px/)
     expect(on).toMatch(/_bg-primary/)
     expect(on).toContain('aria-hidden="true"')
     const off = mark(html(<ChoiceCard indicator selected={false} onSelect={() => {}}>x</ChoiceCard>))
     expect(off).toMatch(/_bg-transparent/)
     // The text clears the mark.
-    expect(card(html(<ChoiceCard indicator selected onSelect={() => {}}>x</ChoiceCard>))).toMatch(/_pr-32px/)
+    expect(card(html(<ChoiceCard indicator selected onSelect={() => {}}>x</ChoiceCard>))).toMatch(/_paddingInlineEnd-32px/)
   })
 
   it('compact: 8px radius, 16 by 12 padding, the panel ground', () => {

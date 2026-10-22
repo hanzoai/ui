@@ -76,12 +76,14 @@ describe('MessageDock', () => {
     expect(tag(markup, 'message-dock-card', 0)).toContain('data-type="default"')
   })
 
-  it('anchors to the requested corner via data-position, defaulting to bottom-right', () => {
-    const bottomRight = html(<MessageDock messages={messages} />)
+  it('anchors to the requested corner via data-position, defaulting to the bottom reading end', () => {
+    const bottomEnd = html(<MessageDock messages={messages} />)
     const topLeft = html(<MessageDock messages={messages} position="top" />)
+    const bottomRight = html(<MessageDock messages={messages} position="bottom-right" />)
 
-    expect(tag(bottomRight, 'message-dock')).toContain('data-position="bottom-right"')
+    expect(tag(bottomEnd, 'message-dock')).toContain('data-position="bottom-end"')
     expect(tag(topLeft, 'message-dock')).toContain('data-position="top"')
+    expect(tag(bottomRight, 'message-dock')).toContain('data-position="bottom-right"')
   })
 
   it('shows the title and, when given, the description', () => {

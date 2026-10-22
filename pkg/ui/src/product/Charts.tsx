@@ -22,6 +22,7 @@
  */
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Text, XStack, YStack, useTheme } from '@hanzo/gui'
+import { align } from '../backends/gui/dir'
 
 /** Distinct hues for categorical series (e.g. spend-by-model donut), dark-tuned. */
 export const CHART_PALETTE = [
@@ -459,7 +460,7 @@ export function BarRows({ bars }: { bars: Slice[] }) {
     <YStack gap="$2.5">
       {bars.map((b) => (
         <XStack key={b.label} gap="$3" items="center">
-          <Text width={64} fontSize="$2" color="$quiet" text="right">
+          <Text width={64} fontSize="$2" color="$quiet" {...align('end')}>
             {b.label}
           </Text>
           <YStack flex={1} height={10} bg="$hover" rounded="$2" overflow="hidden">

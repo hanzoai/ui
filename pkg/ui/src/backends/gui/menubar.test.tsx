@@ -242,7 +242,8 @@ describe('Menubar', () => {
     )
     act(() => void fireEvent.click(triggers()[0]))
 
-    expect(document.querySelector('[data-slot="menubar-shortcut"]')?.textContent).toBe('⌘T')
+    // isolated left to right, so ⌘T keeps its order inside an RTL row
+    expect(document.querySelector('[data-slot="menubar-shortcut"]')?.textContent).toBe('\u2066⌘T\u2069')
   })
 
   it('is a controlled component when given value + onValueChange', () => {

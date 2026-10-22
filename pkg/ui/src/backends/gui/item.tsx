@@ -29,6 +29,7 @@ import { Check, ChevronRight } from '@hanzogui/lucide-icons-2'
 import { useState, type ComponentProps, type ReactNode } from 'react'
 import { Separator } from './layout'
 import { ink } from './ink'
+import { mirror } from './dir'
 import { RING } from './press'
 import { touch } from './gesture'
 import { Kbd, KbdGroup } from './kbd'
@@ -193,7 +194,7 @@ export function Item({
           ) : null}
           {hasSubmenu ? (
             <XStack shrink={0} opacity={disabled ? 0 : 1}>
-              <ChevronRight size={14} color="$hush" />
+              <ChevronRight {...mirror} size={14} color="$hush" />
             </XStack>
           ) : null}
         </>
