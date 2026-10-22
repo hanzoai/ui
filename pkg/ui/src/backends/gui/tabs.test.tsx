@@ -113,3 +113,15 @@ describe('Tabs variant line', () => {
     expect(list).toMatch(/_height-36px/)
   })
 })
+
+describe('Tabs content height', () => {
+  // A panel with a basis of 0 folds to nothing in a Tabs whose height is its
+  // content's, and the sample inside it draws over the next section.
+  it('grows from its content rather than from zero', () => {
+    const tag = html(three()).match(/<[a-z0-9]+[^>]*data-slot="tabs-content"[^>]*>/)?.[0] ?? ''
+    const cls = classesOf(tag)
+    expect(tag).not.toBe('')
+    expect([...cls].some((c) => /^_grow-1$/.test(c)), 'it fills a Tabs given a height').toBe(true)
+    expect([...cls].filter((c) => /^_fb-/.test(c)), 'no zero basis').toEqual([])
+  })
+})
