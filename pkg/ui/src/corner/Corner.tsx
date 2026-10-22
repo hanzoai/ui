@@ -16,9 +16,10 @@
  * three settings a visitor is most likely to want are where they look when they
  * want the page to explain itself, on every surface, in the same place.
  *
- * Theme is the library's own: `@hanzo/appearance`, written through `<Hanzo>`'s
- * resolved stack when there is one (`Look`), so it is stored, painted before
- * first paint and carried across origins exactly as the settings panel does.
+ * Theme is the library's own: `@hanzo/appearance`, written through the root's
+ * resolved stack when one is published (`Look`: `<Hanzo>`'s, or a host's own),
+ * so it is stored, painted before first paint and carried across origins
+ * exactly as the settings panel does.
  * Language and currency are the HOST's — this package depends on no i18n or
  * money library, so it draws the value it is handed and reports a choice. A row
  * the host passes nothing for is not drawn.
@@ -94,10 +95,10 @@ const STOPS = '[data-corner-stop], [data-slot="segmented-item"][data-state="chec
 /**
  * The theme, as the person chose it, and the one way to change it.
  *
- * Under `<Hanzo>` it writes through the root's `useAppearance` (its org,
- * install and account layers). Under a host's own gui provider it writes the
- * device's layer and repaints the resolved stack, which is what `useAppearance`
- * would do there. Nobody chose yet: the row marks what the document shows.
+ * Under a published `Look` it writes through the root's `useAppearance` (its
+ * org, install and account layers). With none it writes the device's layer and
+ * repaints the resolved stack, which is what `useAppearance` would do there.
+ * Nobody chose yet: the row marks what the document shows.
  */
 function useTheme(): [Scheme, (theme: Scheme) => void] {
   const look = useContext(Look)

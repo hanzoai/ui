@@ -2,7 +2,8 @@
 // opens, that it stays inside the window, that the keyboard reaches everything,
 // and that the theme row writes the library's own preference. Every case runs at
 // 1280 and 390 wide, dark and light, left-to-right and right-to-left, and writes
-// a screenshot of each so a person can look.
+// a screenshot of each so a person can look. Then a signed-in reader on a host
+// that publishes its own `Look`: a theme chosen here outlives a reload.
 //
 // Run: node scripts/corner.mjs [out-dir]   (needs dist/theme.css: `node scripts/compose-theme.mjs`)
 //
@@ -201,6 +202,55 @@ for (const width of [1280, 390])
       check(oops.length === 0, `${name}: page errors: ${oops.join(' | ')}`)
       await ctx.close()
     }
+
+// A signed-in reader whose IAM account holds Light, on a host that resolves the
+// look itself and publishes it (`?host=own`): Dark chosen in the corner is saved
+// to the account, so after a reload, when the account is read again and wins
+// over the device, the page is still Dark. A corner that wrote only the device
+// lost the choice to the account here.
+{
+  const name = 'account'
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, colorScheme: 'dark' })
+  const tab = await ctx.newPage()
+  const oops = []
+  tab.on('pageerror', (e) => oops.push(String(e)))
+  let kept = { appearance: { theme: 'light' } }
+  const saved = []
+  await tab.route('**/v1/iam/preferences', async (route) => {
+    const patch = route.request().postDataJSON() ?? {}
+    if (patch.appearance) saved.push(patch.appearance)
+    kept = { ...kept, ...patch }
+    await route.fulfill({ json: { status: 'ok', data: kept } })
+  })
+  const read = () => tab.waitForResponse((r) => r.url().endsWith('/v1/iam/preferences'))
+  const painted = (t) => tab.waitForFunction((t) => document.documentElement.classList.contains(t), t, { timeout: 10_000 }).catch(() => {})
+  const is = (t) => tab.evaluate((t) => document.documentElement.classList.contains(t), t)
+
+  let answered = read()
+  await tab.goto(`${base}?host=own`)
+  await tab.waitForSelector('[data-slot="corner-trigger"]', { timeout: 60_000 })
+  await answered
+  await painted('light')
+  check(await is('light'), `${name}: the account's Light paints a device that prefers dark`)
+
+  await tab.click('[data-slot="corner-trigger"]')
+  await tab.waitForSelector('[data-slot="corner-card"]')
+  await tab.click('[data-slot="corner-theme"] [role="radio"]:nth-child(3)')
+  await painted('dark')
+  check(await is('dark'), `${name}: choosing Dark paints the document`)
+  for (let i = 0; i < 50 && !saved.some((a) => a.theme === 'dark'); i++) await tab.waitForTimeout(100)
+  check(saved.some((a) => a.theme === 'dark'), `${name}: Dark is saved to the account (${JSON.stringify(saved)})`)
+
+  answered = read()
+  await tab.reload()
+  await tab.waitForSelector('[data-slot="corner-trigger"]', { timeout: 60_000 })
+  await answered
+  await tab.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done))))
+  check((await is('dark')) && !(await is('light')), `${name}: still Dark after a reload, the account read again`)
+  await tab.screenshot({ path: join(OUT, `${name}-reloaded.png`) })
+  check(oops.length === 0, `${name}: page errors: ${oops.join(' | ')}`)
+  await ctx.close()
+}
 
 await browser.close()
 await server.close()

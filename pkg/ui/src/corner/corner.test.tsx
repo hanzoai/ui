@@ -15,7 +15,7 @@ import { GuiProvider } from '@hanzo/gui'
 import config from '../gui-config'
 import { audit } from '../../test/axe'
 import { Look } from '../look'
-import { Corner, type CornerProps, type Option } from '.'
+import { Corner, Look as Published, type CornerProps, type Option } from '.'
 
 declare global {
   // eslint-disable-next-line no-var
@@ -268,6 +268,21 @@ describe('theme', () => {
     expect(radio('Auto').getAttribute('aria-checked')).toBe('true')
     act(() => radio('Light').click())
     expect(set).toHaveBeenCalledWith({ theme: 'light' })
+  })
+
+  it('under a host’s own root, published from @hanzo/ui/corner, writes through it and not the device', () => {
+    expect(Published, 'the context <Hanzo> publishes').toBe(Look)
+    const set = vi.fn()
+    mount(
+      <Published.Provider value={{ pref: { theme: 'light' }, set }}>
+        <Corner />
+      </Published.Provider>,
+    )
+    open()
+    expect(radio('Light').getAttribute('aria-checked')).toBe('true')
+    act(() => radio('Dark').click())
+    expect(set).toHaveBeenCalledWith({ theme: 'dark' })
+    expect(localStorage.getItem('hanzo.appearance'), 'the root saves it, not the corner').toBeNull()
   })
 
   it('without a root, stores the person’s choice where the library keeps it and paints the document', () => {
