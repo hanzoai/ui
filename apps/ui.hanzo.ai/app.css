@@ -30,6 +30,13 @@ a {
   tab-size: 2;
 }
 
+/* The code theme tells a comment by slant and a keyword by weight. shiki states
+   both per theme as custom properties, the same in each, so a token reads them. */
+.code span {
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+}
+
 /* A docs page's running text: what Markdown emits that no primitive draws. */
 .doc {
   font-size: var(--text-base, 14px);

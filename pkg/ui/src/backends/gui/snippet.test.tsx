@@ -161,13 +161,15 @@ describe('Snippet', () => {
     vi.useRealTimers()
   })
 
-  it('renders a distinct background per named theme', () => {
-    const dark = html(<Snippet code={SAMPLE} theme="dark" />)
-    const retro = html(<Snippet code={SAMPLE} theme="retro" />)
-    const bg = (markup: string) => markup.match(/data-slot="snippet"[^>]*style="([^"]*)"/)?.[1]
-
-    expect(bg(dark)).toBeTruthy()
-    expect(bg(dark)).not.toBe(bg(retro))
+  it('paints with the code theme by default and pins dark or light; a named palette keeps its own ground', () => {
+    const frame = (markup: string) => markup.match(/<[^>]*data-slot="snippet"[^>]*>/)?.[0] ?? ''
+    const shown = html(<Snippet code={SAMPLE} filename="a.ts" highlightLines={[2]} showLineNumbers />)
+    expect(frame(shown)).toContain('_bg-codeGround')
+    expect(shown.replace(/<style[\s\S]*?<\/style>/g, '')).not.toMatch(/_(?:bg|col|borderInlineStartColor)-[0-9a-f]{6,8}\b|(?:color|background-color):\s*#/)
+    expect(shown).toMatch(/data-line="2"[^>]*_bg-codeLine/)
+    expect(frame(html(<Snippet code={SAMPLE} theme="light" />))).toContain('_bg-neutral-100')
+    expect(frame(html(<InlineCode>{'npm i'}</InlineCode>))).toMatch(/_col-codeInk[\s\S]*_bg-codeGround/)
+    expect(frame(html(<Snippet code={SAMPLE} theme="retro" />))).toMatch(/_bg-fffbeb/)
   })
 })
 
@@ -182,6 +184,8 @@ describe('Snippet, command', () => {
     const lines = [...markup.matchAll(/data-slot="snippet-line"/g)]
     expect(lines).toHaveLength(2)
     expect(markup).toMatch(/aria-hidden="true"[^>]*>&gt; </)
+    // The prompt mark is the code theme's dim ink, quieter than the command it leads.
+    expect(markup).toMatch(/aria-hidden="true"[^>]*_col-codeDim[^>]*>&gt; </)
   })
 
   it('takes actions in place of the copy button', () => {

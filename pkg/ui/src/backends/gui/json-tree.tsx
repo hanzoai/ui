@@ -9,7 +9,7 @@
  * The first `depth` levels open on first paint. A row is a button (Enter and
  * Space toggle it, `aria-expanded` says which way), so the tree reads with a
  * keyboard and a screen reader as well as a pointer. Keys and values take the
- * code theme's colours (`code-theme.ts`), the same theme keys `CodeEditor`
+ * code theme's inks and weights (`code-theme.ts`), the same theme keys `CodeEditor`
  * paints with, and a count reads as a comment. A long value wraps anywhere, so
  * a hash never widens the page.
  *
@@ -53,7 +53,9 @@ import {
 } from '@hanzogui/lucide-icons-2'
 import * as React from 'react'
 
+import { face, type CodeToken } from '../../code-theme'
 import { Button } from './button'
+import { ltr } from './dir'
 import { Grip } from './grip'
 import { Input } from './input'
 import { slot } from './slot'
@@ -380,6 +382,7 @@ export function JsonTree({
       <YStack position="relative">
         <YStack
           {...slot('json-tree-body')}
+          {...ltr}
           py="$2"
           px="$2"
           {...(fixed ? { height } : maxHeight !== undefined ? { maxH: maxHeight } : null)}
@@ -411,7 +414,7 @@ export function JsonTree({
   )
 }
 
-/** A leaf's colour: the code theme's key for its JSON type. */
+/** A leaf's colour: the code theme's key for its JSON type; `face` adds its weight. */
 const INK = {
   string: '$codeString',
   number: '$codeNumber',
@@ -455,6 +458,7 @@ function Leaf({ value, dotted, mark, ctx }: { value: unknown; dotted: string; ma
       size="$2"
       fontFamily="$mono"
       color={(hue ?? (boxed ? '$hint' : (INK[type as keyof typeof INK] ?? '$codePunctuation'))) as never}
+      {...(boxed ? null : face[type as CodeToken])}
       shrink={1}
       minW={0}
       {...(boxed ? { lineHeight: 24 } : null)}
@@ -588,7 +592,7 @@ function Node({
 
   if (!b) {
     return (
-      <XStack {...slot('json-tree-row')} data-highlight={mark ?? undefined} items="flex-start" gap={gap} pl={indent} py={boxed ? 0 : 1}>
+      <XStack {...slot('json-tree-row')} data-highlight={mark ?? undefined} items="flex-start" gap={gap} paddingInlineStart={indent} py={boxed ? 0 : 1}>
         {boxed ? null : <XStack width={14} shrink={0} />}
         {key}
         <Leaf value={value} dotted={dotted} mark={mark} ctx={ctx} />
@@ -611,7 +615,7 @@ function Node({
           } as object))}
         items="center"
         gap={gap}
-        pl={indent}
+        paddingInlineStart={indent}
         py={boxed ? 0 : 1}
         rounded="$2"
         cursor={empty ? undefined : 'pointer'}

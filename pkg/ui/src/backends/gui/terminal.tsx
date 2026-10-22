@@ -5,14 +5,22 @@
  * one input line. Enter runs a line through `onCommand` (after the built-ins
  * `clear`, `help`, `date`, `echo …`); arrow keys walk the command history; Tab
  * completes from `autoCompleteCommands`; hovering a past command reveals a
- * button that copies it. Four literal palettes (`dark`, `light`, `matrix`,
- * `dracula`) paint the surface — a terminal's colours are the emulator's own,
- * not the host app's theme — and a small set of syntax rules colour strings,
- * keywords, numbers and flags in every line.
+ * button that copies it.
+ *
+ * With no `theme` the surface is the code theme (`code-theme.ts`), monochrome,
+ * and follows the page; `dark` or `light` pins it to that scheme, and `matrix`
+ * or `dracula` is that fixed palette. A line is told by brightness and weight,
+ * never by hue: the prompt and an info line dim, a command bright, output in the
+ * ink, an error bright and bold. A small set of rules brightens strings, numbers
+ * and flags in every line and sets keywords and literals bold. Every line is set
+ * in the mono face, left to right under any `dir`.
  */
-import { Input as GuiInput, SizableText, XStack, YStack, type YStackProps } from '@hanzo/gui'
+import { Input as GuiInput, SizableText, Text, XStack, YStack, styled, type YStackProps } from '@hanzo/gui'
 import { Check, Copy } from '@hanzogui/lucide-icons-2'
 import * as React from 'react'
+import { face, type CodeToken } from '../../code-theme'
+import { mono } from './code-surface'
+import { ltr } from './dir'
 import { slot } from './slot'
 
 export type TerminalTheme = 'dark' | 'light' | 'matrix' | 'dracula'
@@ -54,31 +62,13 @@ type Palette = {
   success: string
   info: string
   border: string
+  line: string
+  /** Each kind of token's ink; a named palette has none and draws them in `input`. */
+  tokens?: Record<CodeToken, string>
 }
 
-const PALETTE: Record<TerminalTheme, Palette> = {
-  dark: {
-    bg: '#111827',
-    fg: '#f3f4f6',
-    prompt: '#4ade80',
-    input: '#ffffff',
-    output: '#d1d5db',
-    error: '#f87171',
-    success: '#4ade80',
-    info: '#60a5fa',
-    border: '#1f2937',
-  },
-  light: {
-    bg: '#ffffff',
-    fg: '#111827',
-    prompt: '#2563eb',
-    input: '#111827',
-    output: '#374151',
-    error: '#dc2626',
-    success: '#16a34a',
-    info: '#2563eb',
-    border: '#e5e7eb',
-  },
+/** The named palettes, opt-in by name and fixed whatever the page's theme. */
+const PALETTE = {
   matrix: {
     bg: '#000000',
     fg: '#4ade80',
@@ -101,32 +91,64 @@ const PALETTE: Record<TerminalTheme, Palette> = {
     info: '#8be9fd',
     border: '#44475a',
   },
+} as const satisfies Record<Exclude<TerminalTheme, 'dark' | 'light'>, Omit<Palette, 'line' | 'tokens'>>
+
+/**
+ * The palette a `theme` names. With none, `dark` or `light` it is the code theme
+ * (`code-surface.ts`): the prompt and an info line in the dim ink, a command and an
+ * error in the bright one, output and a success in the ink.
+ */
+const paletteOf = (theme: TerminalTheme | undefined): Palette => {
+  if (theme === 'matrix' || theme === 'dracula') return { ...PALETTE[theme], line: PALETTE[theme].border }
+  const s = mono(theme)
+  return {
+    bg: s.bg,
+    fg: s.fg,
+    prompt: s.muted,
+    input: s.strong,
+    output: s.fg,
+    error: s.strong,
+    success: s.fg,
+    info: s.muted,
+    border: s.border,
+    line: s.line,
+    tokens: s.tokens,
+  }
 }
 
-/** One colour rule per syntax class, matched left to right, first pattern wins. */
-const SYNTAX: { regex: RegExp; color: string }[] = [
-  { regex: /"[^"]*"|'[^']*'/, color: '#facc15' },
-  { regex: /\b(?:true|false|null|undefined)\b/, color: '#fb923c' },
-  { regex: /\b\d+\b/, color: '#c084fc' },
-  { regex: /\b(?:function|const|let|var|if|else|for|while|return)\b/, color: '#f472b6' },
-  { regex: /--?\w+/, color: '#22d3ee' },
+/**
+ * One rule per kind of token, matched left to right, first pattern wins. A flag is
+ * a literal a person typed, so it takes the bright ink as one does.
+ */
+const SYNTAX: { regex: RegExp; token?: CodeToken }[] = [
+  { regex: /"[^"]*"|'[^']*'/, token: 'string' },
+  { regex: /\b(?:true|false|null|undefined)\b/, token: 'boolean' },
+  { regex: /\b\d+\b/, token: 'number' },
+  { regex: /\b(?:function|const|let|var|if|else|for|while|return)\b/, token: 'keyword' },
+  { regex: /--?\w+/ },
 ]
+
+/** A token's ink: its own on the code theme, the input ink on a named palette or for a flag. */
+const tint = (token: CodeToken | undefined, palette: Palette) => (token && palette.tokens?.[token]) || palette.input
+
+/** The terminal's text: the mono face, every line. */
+const Mono = styled(SizableText, { name: 'TerminalText', fontFamily: '$mono' })
 
 const COMBINED = /* @__PURE__ */ new RegExp(SYNTAX.map((s) => `(${s.regex.source})`).join('|'), 'g')
 
-/** Colours a line's strings, keywords, numbers and flags; everything else passes through. */
-const highlight = (text: string): React.ReactNode => {
+/** Brightens a line's strings, numbers and flags and sets its keywords and literals bold; everything else passes through. */
+const highlight = (text: string, palette: Palette): React.ReactNode => {
   const parts: React.ReactNode[] = []
   let last = 0
   let key = 0
   for (const match of text.matchAll(COMBINED)) {
     const start = match.index ?? 0
     if (start > last) parts.push(text.slice(last, start))
-    const group = match.slice(1).findIndex((g) => g !== undefined)
+    const { token } = SYNTAX[match.slice(1).findIndex((g) => g !== undefined)] ?? {}
     parts.push(
-      <span key={key++} style={{ color: SYNTAX[group]?.color }}>
+      <Text key={key++} color={tint(token, palette) as never} {...(token ? face[token] : null)}>
         {match[0]}
-      </span>,
+      </Text>,
     )
     last = start + match[0].length
   }
@@ -141,7 +163,7 @@ export function Terminal({
   prompt = '$',
   initialCommands = [],
   onCommand,
-  theme = 'dark',
+  theme,
   enableHistory = true,
   enableAutoComplete = true,
   autoCompleteCommands = DEFAULT_COMMANDS,
@@ -158,7 +180,7 @@ export function Terminal({
 
   const scroller = React.useRef<HTMLDivElement | null>(null)
   const field = React.useRef<HTMLInputElement | null>(null)
-  const palette = PALETTE[theme]
+  const palette = paletteOf(theme)
 
   React.useEffect(() => {
     const el = scroller.current
@@ -196,16 +218,16 @@ export function Terminal({
       if (text.toLowerCase() === 'help') {
         line.output = (
           <YStack gap="$1">
-            <SizableText style={{ color: palette.output }}>Available commands:</SizableText>
-            <YStack pl="$4" gap="$1">
-              <SizableText style={{ color: palette.output }}>• clear - Clear the terminal</SizableText>
-              <SizableText style={{ color: palette.output }}>• help - Show this help message</SizableText>
-              <SizableText style={{ color: palette.output }}>• date - Show current date and time</SizableText>
-              <SizableText style={{ color: palette.output }}>• echo [text] - Print text to terminal</SizableText>
+            <Mono color={palette.output as never}>Available commands:</Mono>
+            <YStack paddingInlineStart="$4" gap="$1">
+              <Mono color={palette.output as never}>• clear - Clear the terminal</Mono>
+              <Mono color={palette.output as never}>• help - Show this help message</Mono>
+              <Mono color={palette.output as never}>• date - Show current date and time</Mono>
+              <Mono color={palette.output as never}>• echo [text] - Print text to terminal</Mono>
               {autoCompleteCommands.map((cmd) => (
-                <SizableText key={cmd} style={{ color: palette.output }}>
+                <Mono key={cmd} color={palette.output as never}>
                   • {cmd}
-                </SizableText>
+                </Mono>
               ))}
             </YStack>
           </YStack>
@@ -299,50 +321,59 @@ export function Terminal({
     <YStack
       ref={scroller as never}
       {...slot('terminal')}
+      {...ltr}
       data-theme={theme}
       rounded="$3"
       borderWidth={1}
       p="$4"
       overflow="scroll"
-      style={{ backgroundColor: palette.bg, borderColor: palette.border }}
+      bg={palette.bg as never}
+      borderColor={palette.border as never}
       onClick={() => field.current?.focus()}
       onPaste={onPaste}
       {...props}
     >
       <XStack {...slot('terminal-header')} items="center" gap="$2" mb="$4">
-        <YStack width={12} height={12} rounded={999} style={{ backgroundColor: '#ef4444' }} />
-        <YStack width={12} height={12} rounded={999} style={{ backgroundColor: '#eab308' }} />
-        <YStack width={12} height={12} rounded={999} style={{ backgroundColor: '#22c55e' }} />
-        <SizableText size="$1" opacity={0.5} ml="$2" style={{ color: palette.fg }}>
+        {[0, 1, 2].map((i) => (
+          <YStack key={i} width={12} height={12} rounded={999} bg={palette.line as never} />
+        ))}
+        <Mono size="$1" marginInlineStart="$2" color={palette.prompt as never}>
           terminal
-        </SizableText>
+        </Mono>
       </XStack>
 
       <YStack {...slot('terminal-history')} gap="$2">
         {lines.map((line) => (
           <YStack key={line.id} {...slot('terminal-command')}>
             <XStack items="flex-start" gap="$2">
-              <SizableText style={{ color: palette.prompt }}>{prompt}</SizableText>
-              <SizableText flex={1} style={{ color: palette.input }}>
-                {highlight(line.input)}
-              </SizableText>
+              <Mono color={palette.prompt as never}>{prompt}</Mono>
+              <Mono flex={1} color={palette.input as never}>
+                {highlight(line.input, palette)}
+              </Mono>
               <XStack
                 {...slot('terminal-copy')}
                 cursor="pointer"
-                opacity={0.5}
+                opacity={0.7}
                 hoverStyle={{ opacity: 1 }}
                 aria-label="Copy command"
                 onPress={() => copy(line.input)}
               >
-                {copied === line.input ? <Check size={12} /> : <Copy size={12} />}
+                {copied === line.input ? (
+                  <Check size={12} color={palette.input as never} />
+                ) : (
+                  <Copy size={12} color={palette.prompt as never} />
+                )}
               </XStack>
             </XStack>
             {line.output !== '' && line.output != null && (
-              <YStack pl="$4" mt="$1">
+              <YStack paddingInlineStart="$4" mt="$1">
                 {typeof line.output === 'string' ? (
-                  <SizableText style={{ color: outputColor(line.type, palette) }}>
-                    {highlight(line.output)}
-                  </SizableText>
+                  <Mono
+                    color={outputColor(line.type, palette) as never}
+                    {...(line.type === 'error' ? { fontWeight: '700' as const } : null)}
+                  >
+                    {highlight(line.output, palette)}
+                  </Mono>
                 ) : (
                   line.output
                 )}
@@ -354,7 +385,7 @@ export function Terminal({
 
       <YStack {...slot('terminal-input-row')} position="relative" mt="$2">
         <XStack items="center" gap="$2">
-          <SizableText style={{ color: palette.prompt }}>{prompt}</SizableText>
+          <Mono color={palette.prompt as never}>{prompt}</Mono>
           <GuiInput
             ref={field as never}
             {...slot('terminal-input')}
@@ -366,7 +397,9 @@ export function Terminal({
             spellCheck={false}
             autoComplete="off"
             aria-label="Terminal input"
-            style={{ color: palette.input, background: 'transparent', border: 'none', outline: 'none' }}
+            fontFamily="$mono"
+            color={palette.input as never}
+            style={{ background: 'transparent', border: 'none', outline: 'none' }}
           />
         </XStack>
 
@@ -374,14 +407,15 @@ export function Terminal({
           <YStack
             {...slot('terminal-suggestions')}
             position="absolute"
-            l={0}
+            insetInlineStart={0}
             t="100%"
             mt="$1"
             rounded="$2"
             borderWidth={1}
             p="$1"
             z={10}
-            style={{ backgroundColor: palette.bg, borderColor: palette.border }}
+            bg={palette.bg as never}
+            borderColor={palette.border as never}
           >
             {suggestions.map((suggestion, index) => (
               <YStack
@@ -392,14 +426,14 @@ export function Terminal({
                 px="$2"
                 py="$1"
                 cursor="pointer"
-                style={{ backgroundColor: index === suggestionIndex ? palette.border : 'transparent' }}
+                bg={(index === suggestionIndex ? palette.line : 'transparent') as never}
                 onPress={() => {
                   setValue(suggestion)
                   setSuggestions([])
                   field.current?.focus()
                 }}
               >
-                <SizableText style={{ color: palette.fg }}>{suggestion}</SizableText>
+                <Mono color={palette.fg as never}>{suggestion}</Mono>
               </YStack>
             ))}
           </YStack>

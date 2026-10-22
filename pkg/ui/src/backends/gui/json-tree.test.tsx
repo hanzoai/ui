@@ -78,18 +78,20 @@ describe('JsonTree', () => {
     ui.cleanup()
   })
 
-  it('paints keys and each JSON type with its own code-theme key', () => {
+  it('paints keys and each JSON type with its own code-theme key, the two literals bold', () => {
     const ui = mount(<JsonTree data={{ s: 'x', n: 1, b: true, z: null }} />)
     const colour = (el: Element) => [...el.classList].find((c) => c.startsWith('_col-'))
+    const bold = (el: Element) => el.classList.contains('_fw-700')
     const values = [...ui.host.querySelectorAll('[data-slot="json-tree-value"]')].map((v) => [
       v.getAttribute('data-type'),
       colour(v),
+      bold(v),
     ])
     expect(values).toEqual([
-      ['string', '_col-codeString'],
-      ['number', '_col-codeNumber'],
-      ['boolean', '_col-codeBoolean'],
-      ['null', '_col-codeNull'],
+      ['string', '_col-codeString', false],
+      ['number', '_col-codeNumber', false],
+      ['boolean', '_col-codeBoolean', true],
+      ['null', '_col-codeNull', true],
     ])
     expect(colour(ui.slot('json-tree-key')!)).toBe('_col-codeKey')
     ui.cleanup()
@@ -213,7 +215,7 @@ describe('JsonTree, boxed', () => {
     expect(keys.map((k) => k.textContent)).toEqual(['a', 'b', 'n'])
     expect(keys.every((k) => k.querySelector('svg'))).toBe(true)
     const rows = [...ui.host.querySelectorAll<HTMLElement>('[data-slot="json-tree-row"]')]
-    expect(rows[1].className).toMatch(/_pl-32px/)
+    expect(rows[1].className).toMatch(/_paddingInlineStart-32px/)
     ui.cleanup()
   })
 

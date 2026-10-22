@@ -179,6 +179,34 @@ describe('Terminal', () => {
     view.cleanup()
   })
 
+  it('paints with the code theme by default, in the mono face, a line told by brightness and weight', () => {
+    const view = mount(
+      <Terminal
+        initialCommands={[
+          { id: '1', input: 'echo "hi" --verbose 2', output: 'const x = true', timestamp: new Date(0), type: 'success' },
+          { id: '2', input: 'boom', output: 'Command not found: boom', timestamp: new Date(0), type: 'error' },
+        ]}
+      />,
+    )
+    const surface = view.host.querySelector('[data-slot="terminal"]')!
+    expect(surface.className).toContain('_bg-codeGround')
+    expect(view.host.innerHTML).not.toMatch(/_(?:bg|col)-[0-9a-f]{6,8}\b|(?:color|background-color):\s*#/)
+    const texts = [...view.host.querySelectorAll('[data-slot="terminal-text"]')]
+    expect(texts.length).toBeGreaterThan(4)
+    for (const t of texts) expect(t.className).toContain('font_mono')
+    const [first, second] = view.commands()
+    const spans = (el: Element) => [...el.querySelectorAll('span')].map((s) => [s.textContent, s.className] as const)
+    const cls = (el: Element, text: string) => spans(el).find(([t]) => t === text)?.[1] ?? ''
+    expect(cls(first, '$')).toContain('_col-codeDim')
+    expect(cls(first, '"hi"')).toContain('_col-codeString')
+    expect(cls(first, '--verbose')).toContain('_col-codeBright')
+    expect(cls(first, 'const')).toMatch(/_col-codeKeyword[\s\S]*_fw-700|_fw-700[\s\S]*_col-codeKeyword/)
+    expect(cls(first, 'true')).toMatch(/_fw-700/)
+    expect(cls(second, 'Command not found: boom')).toMatch(/_col-codeBright/)
+    expect(cls(second, 'Command not found: boom')).toMatch(/_fw-700/)
+    view.cleanup()
+  })
+
   it('accepts every documented theme', () => {
     for (const theme of ['dark', 'light', 'matrix', 'dracula'] as const) {
       const view = mount(<Terminal theme={theme} />)
