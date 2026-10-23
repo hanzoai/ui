@@ -591,7 +591,8 @@ Exchange's HelpContent is the design it was taken from.
 />
 ```
 
-- **Theme is the library's, the rest is the host's.** Theme writes
+- **Theme and the faces are the library's, the rest is the host's.** Theme, Font
+  and (on a page in Arabic script) Arabic font write the same way. Theme writes
   `@hanzo/appearance` through `<Hanzo>`'s own `useAppearance` call, which the root
   publishes as `Look` (`src/look.ts`), so an org's layers and the IAM account sync
   are kept. Without `<Hanzo>` it writes the device layer and repaints the resolved
@@ -1029,7 +1030,8 @@ One chain, one writer per step:
       -> dist/colors.css, copied by @hanzo/design's gen on every build
     @hanzo/design  tokens/*.css — ramps that read the knobs:
                    --type-scale --type-ratio --density --radius-scale,
-                   the --primary / --accent family
+                   --font-sans, --font-arabic (first in every stack), the
+                   --primary / --accent family
                    vars(pref) — a preference as those properties
     @hanzo/appearance
                    apply(pref) — properties inline on <html>, the theme as
@@ -1050,6 +1052,14 @@ The workspace rooms that consume all of this ship as `@hanzo/rooms`
 What a host does: `bootScript()` in `<head>`, `<Hanzo appearance={…}>` (or
 `useAppearance()` + `defaultTheme={useScheme()}` beside its own gui provider),
 and nothing else — no next-themes, no class mirror, no theme toggle of its own.
+
+Arabic is its own axis (`arabic`: `kufi` | `sans`, design 0.5.37). Zen draws no
+Arabic; design names `--font-arabic` first in the sans, mono and serif stacks and
+the companion covers the Arabic blocks only, so one property sets Arabic under any
+face and an English page fetches nothing new. `companion()` reads which companion
+the document draws, for a control to mark when nobody chose. The Corner's Font row
+is always drawn; its Arabic font row only for a page in Arabic script
+(`arabic(tag)`: `Intl.Locale(tag).maximize().script === 'Arab'`).
 
 An accent is a family. `vars({ accent })` writes the fill, the ink that reads on
 it (design's `#0a0a0a` or `#fafafa`, whichever contrasts more) and a hover

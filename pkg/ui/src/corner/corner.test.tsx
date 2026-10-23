@@ -289,6 +289,64 @@ describe('theme', () => {
   })
 })
 
+describe('faces', () => {
+  const chosen = () => JSON.parse(localStorage.getItem('hanzo.appearance') ?? '{}')
+  const pick = (kind: string, label: string) => {
+    act(() => row(kind)!.click())
+    act(() => options().find((o) => o.textContent?.startsWith(label))!.click())
+  }
+
+  it('draws Font on every page, and Arabic font only on a page in Arabic script', () => {
+    mount(<Corner language={{ value: 'en', options: LANGS, onChange: () => {} }} />)
+    open()
+    expect(row('font')?.textContent).toBe('FontSans')
+    expect(row('arabic')).toBeNull()
+    act(() => root.unmount())
+    root = createRoot(host)
+    mount(<Corner language={{ value: 'ar', options: LANGS, onChange: () => {} }} />)
+    open()
+    expect(row('arabic')).not.toBeNull()
+    act(() => root.unmount())
+    root = createRoot(host)
+    mount(<Corner language={{ value: 'he', options: LANGS, onChange: () => {} }} />)
+    open()
+    expect(row('arabic'), 'Hebrew is right to left and not Arabic script').toBeNull()
+  })
+
+  it('without a root, stores the face and paints it by reference', () => {
+    localStorage.setItem('hanzo.appearance', JSON.stringify({ type: 1.15, theme: 'dark' }))
+    mount(<Corner />)
+    open()
+    pick('font', 'Serif')
+    expect(chosen()).toEqual({ type: 1.15, theme: 'dark', font: 'serif' })
+    expect(document.documentElement.style.getPropertyValue('--font-sans')).toBe('var(--font-serif)')
+    expect(row('font')?.textContent).toBe('FontSerif')
+  })
+
+  it('sets Arabic on its own axis, and the face stays where it was', () => {
+    localStorage.setItem('hanzo.appearance', JSON.stringify({ font: 'mono' }))
+    mount(<Corner language={{ value: 'fa', options: LANGS, onChange: () => {} }} />)
+    open()
+    pick('arabic', 'Sans')
+    expect(chosen()).toEqual({ font: 'mono', arabic: 'sans' })
+    expect(document.documentElement.style.getPropertyValue('--font-arabic')).toBe('var(--font-arabic-sans)')
+    expect(document.documentElement.style.getPropertyValue('--font-sans')).toBe('var(--font-mono)')
+  })
+
+  it('under <Hanzo>, writes the face through the root’s appearance', () => {
+    const set = vi.fn()
+    mount(
+      <Look.Provider value={{ pref: { arabic: 'kufi' }, set }}>
+        <Corner language={{ value: 'ar', options: LANGS, onChange: () => {} }} />
+      </Look.Provider>,
+    )
+    open()
+    expect(row('arabic')?.textContent).toBe('Arabic fontKufi')
+    pick('font', 'Mono')
+    expect(set).toHaveBeenCalledWith({ font: 'mono' })
+  })
+})
+
 describe('words', () => {
   it('speaks the host’s language', () => {
     mount(

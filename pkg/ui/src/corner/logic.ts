@@ -35,6 +35,15 @@ export type Words = {
   dark: string
   language: string
   currency: string
+  /** The face the page is set in, and its four answers. */
+  font: string
+  sans: string
+  system: string
+  serif: string
+  mono: string
+  /** The face Arabic is set in, and its two answers (`sans` names the other). */
+  arabic: string
+  kufi: string
   search: string
   back: string
   close: string
@@ -54,6 +63,13 @@ export const WORDS: Words = {
   dark: 'Dark',
   language: 'Language',
   currency: 'Currency',
+  font: 'Font',
+  sans: 'Sans',
+  system: 'System',
+  serif: 'Serif',
+  mono: 'Mono',
+  arabic: 'Arabic font',
+  kufi: 'Kufi',
   search: 'Search',
   back: 'Back',
   close: 'Close',
@@ -80,6 +96,20 @@ export function find(options: readonly Option[], q: string): Option[] {
   const needle = fold(q.trim())
   if (!needle) return options.slice()
   return options.filter((o) => fold(o.label).includes(needle) || fold(o.hint ?? '').includes(needle) || fold(o.code).includes(needle))
+}
+
+/**
+ * Whether a language is written in Arabic script — Arabic, Persian, Urdu,
+ * Pashto, Sindhi, Sorani, Uyghur, Shahmukhi Punjabi — by the script its
+ * likeliest subtags name. A malformed tag is not.
+ */
+export function arabic(tag: string | undefined): boolean {
+  if (!tag) return false
+  try {
+    return new Intl.Locale(tag).maximize().script === 'Arab'
+  } catch {
+    return false
+  }
 }
 
 /** The label of the chosen option, or its code when the host did not list it. */
