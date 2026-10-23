@@ -31,7 +31,7 @@ import { TYPE_MIN, TYPE_MAX } from '@hanzo/design'
 
 import type { Corner, Face, Measure, Scheme } from '@hanzo/design'
 
-import { DEFAULT, apply, current, read, write, type Preference } from './state'
+import { COMPANIONS, DEFAULT, apply, companion, current, read, write, type Preference } from './state'
 import { layerFor, type Layer, type Resolved, type Scope } from './scope'
 
 /** The named type steps. Inside design's clamp, so none can be refused. */
@@ -85,6 +85,20 @@ const FACES: Array<{ label: string; value: Face; preview?: string }> = [
   { label: 'Serif', value: 'serif', preview: 'var(--font-serif)' },
   { label: 'Mono', value: 'mono', preview: 'var(--font-mono)' },
 ]
+
+/**
+ * The face Arabic is set in. Zen draws no Arabic, so this is its own row, and
+ * each option shows a word of Arabic in the face it names, ahead of Zen the way
+ * the page's own stack puts it. The families are the token file's
+ * (`--font-arabic-*`), named by reference so a brand that redefines one follows.
+ */
+export const ARABICS: Array<{ label: string; value: (typeof COMPANIONS)[number] }> = [
+  { label: 'Kufi', value: 'kufi' },
+  { label: 'Sans', value: 'sans' },
+]
+
+/** A word of Arabic, so each option shows its face rather than naming it. */
+const SAMPLE = 'عربي'
 
 /** How far the page runs before it wraps — the measure, not the window. */
 const MEASURES: Array<{ label: string; value: Measure }> = [
@@ -395,7 +409,8 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
   const ground = useScheme()
   const touched =
     type !== 1 || ratio !== 1 || pref.modular !== undefined || (pref.density ?? 'default') !== 'default' ||
-    (pref.font ?? 'default') !== 'default' || (pref.width ?? 'default') !== 'default' || !!pref.accent ||
+    (pref.font ?? 'default') !== 'default' || (pref.arabic ?? 'default') !== 'default' ||
+    (pref.width ?? 'default') !== 'default' || !!pref.accent ||
     !!pref.theme || (pref.radius ?? 'default') !== 'default'
   const here = orgName || org
 
@@ -473,6 +488,24 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
             style={{ fontFamily: f.preview }}
           >
             {f.label}
+          </Choice>
+        ))}
+      </Row>
+
+      {/* Nobody chose: mark the companion the page is drawing, as Theme does. */}
+      <Row label="Arabic" by={from.arabic} scope={scope} org={here}>
+        {ARABICS.map((a) => (
+          <Choice
+            key={a.value}
+            on={(pref.arabic && pref.arabic !== 'default' ? pref.arabic : companion()) === a.value}
+            onSelect={() => set({ arabic: a.value })}
+            title={`Arabic in ${a.label}`}
+            style={{ fontFamily: `var(--font-arabic-${a.value}), var(--font-sans)` }}
+          >
+            {a.label}{' '}
+            <span lang="ar" dir="rtl">
+              {SAMPLE}
+            </span>
           </Choice>
         ))}
       </Row>
