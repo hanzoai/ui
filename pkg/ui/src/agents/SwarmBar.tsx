@@ -1,4 +1,5 @@
 import React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 export interface AgentDescriptor {
   id: string
@@ -26,6 +27,7 @@ export const SwarmBar: React.FC<SwarmBarProps> = ({
   className = '',
   style,
 }) => {
+  const { t } = useI18n()
   return (
     <div
       style={{
@@ -38,7 +40,7 @@ export const SwarmBar: React.FC<SwarmBarProps> = ({
         borderRadius: 16,
         ...style,
       }}
-      aria-label="Multi-Agent Swarm Bar"
+      aria-label={t('Multi-Agent Swarm Bar')}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, overflowX: 'auto' }}>
         {agents.map((agent) => {
@@ -80,9 +82,9 @@ export const SwarmBar: React.FC<SwarmBarProps> = ({
               color: '#a3a3a3',
               cursor: 'pointer',
             }}
-            title="Add Agent to Swarm"
+            title={t('Add Agent to Swarm')}
           >
-            + Add
+            {t('+ Add')}
           </button>
         )}
       </div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 export interface LiveVoiceCallProps {
   title?: string
@@ -12,7 +13,7 @@ export interface LiveVoiceCallProps {
 }
 
 export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({
-  title = 'AI Voice Call',
+  title,
   status = 'connected',
   onEndCall,
   onToggleMute,
@@ -23,6 +24,7 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [muted, setMuted] = useState(isMuted)
+  const { t } = useI18n()
 
   // Animated visualizer
   useEffect(() => {
@@ -76,12 +78,12 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({
 
   const statusText =
     status === 'speaking'
-      ? 'Agent is speaking...'
+      ? t('Agent is speaking...')
       : status === 'listening'
-      ? 'Listening to you...'
+      ? t('Listening to you...')
       : status === 'connecting'
-      ? 'Connecting stream...'
-      : 'Call active'
+      ? t('Connecting stream...')
+      : t('Call active')
 
   return (
     <div
@@ -95,12 +97,12 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({
         borderRadius: 16,
         ...style,
       }}
-      aria-label="Live Voice Call"
+      aria-label={t('Live Voice Call')}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#34d399' }} />
-          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#ffffff', margin: 0 }}>{title}</h3>
+          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#ffffff', margin: 0 }}>{title ?? t('AI Voice Call')}</h3>
         </div>
         <span style={{ fontSize: 12, color: '#a3a3a3', fontFamily: 'monospace' }}>{statusText}</span>
       </div>
@@ -140,7 +142,7 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({
             color: muted ? '#fda4af' : '#d4d4d4',
           }}
         >
-          {muted ? 'Unmute Mic' : 'Mute Mic'}
+          {muted ? t('Unmute Mic') : t('Mute Mic')}
         </button>
 
         {onEndCall && (
@@ -148,7 +150,7 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({
             onClick={onEndCall}
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 16px', backgroundColor: '#e11d48', color: '#ffffff', fontSize: 12, fontWeight: 600, borderRadius: 12, border: 'none', cursor: 'pointer' }}
           >
-            End Call
+            {t('End Call')}
           </button>
         )}
       </div>

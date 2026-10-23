@@ -79,7 +79,7 @@ export function Shelf({
   tabs,
   tab,
   onTab,
-  views: given,
+  views = HALVES,
   view,
   onView,
   search,
@@ -92,7 +92,6 @@ export function Shelf({
   ...rest
 }: ShelfProps) {
   const { t } = useI18n()
-  const views = given ?? HALVES.map((v) => ({ ...v, label: t(v.label) }))
   const refs = useRef<(HTMLElement | null)[]>([])
   const id = useId()
   const panel = `${id}-panel`

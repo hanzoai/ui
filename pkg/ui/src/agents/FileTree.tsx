@@ -43,6 +43,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { slot } from '../backends/gui/slot'
 import { ancestors, type Entry, group, type Listing, put, type Row, rows, step } from './tree'
@@ -111,10 +112,11 @@ export function FileTree({
   load,
   value = null,
   onSelect,
-  label = 'Files',
+  label,
   empty,
   ...rest
 }: FileTreeProps) {
+  const { t } = useI18n()
   const [loaded, setLoaded] = useState<Listing>(() => new Map())
   const [reads, setReads] = useState<Map<string, Read>>(() => new Map())
   const [open, setOpen] = useState<Set<string>>(() => new Set(value ? ancestors(value) : []))
@@ -139,7 +141,7 @@ export function FileTree({
       },
       (e: unknown) => {
         asked.current.delete(dir)
-        setReads((m) => new Map(m).set(dir, { error: e instanceof Error ? e.message : 'Could not read this folder' }))
+        setReads((m) => new Map(m).set(dir, { error: e instanceof Error ? e.message : t('Could not read this folder') }))
       },
     )
   }
@@ -190,10 +192,10 @@ export function FileTree({
       <YStack {...slot('file-tree')} flex={1} minH={0} items="center" justify="center" p="$4" {...rest}>
         <SizableText size="$2" color="$soft" text="center">
           {root === 'loading'
-            ? 'Reading files…'
+            ? t('Reading files…')
             : root && typeof root === 'object'
               ? root.error
-              : (empty ?? 'No files yet.')}
+              : (empty ?? t('No files yet.'))}
         </SizableText>
       </YStack>
     )
@@ -201,7 +203,7 @@ export function FileTree({
 
   return (
     <ScrollView {...slot('file-tree')} flex={1} minH={0} {...(rest as object)}>
-      <YStack role="tree" aria-label={label} py="$1.5" px="$1.5" onKeyDown={keyed as never}>
+      <YStack role="tree" aria-label={label ?? t('Files')} py="$1.5" px="$1.5" onKeyDown={keyed as never}>
         {list.map((row, index) => (
           <Item
             key={`${row.kind}:${row.path}`}
@@ -246,6 +248,7 @@ function Item({
   onPress: () => void
 }) {
   const dir = row.kind === 'dir'
+  const { t } = useI18n()
   return (
     <>
       <XStack
@@ -292,7 +295,7 @@ function Item({
           py="$1"
           aria-live="polite"
         >
-          {state === 'loading' ? 'Reading…' : state.error}
+          {state === 'loading' ? t('Reading…') : state.error}
         </SizableText>
       ) : null}
     </>

@@ -12,6 +12,7 @@ import {
   Minimize2,
   Trash2,
 } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 import { Text } from '../index'
 
 export interface TerminalTab {
@@ -46,6 +47,7 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({
   const [commandInput, setCommandInput] = useState('')
   const [copied, setCopied] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
+  const { t } = useI18n()
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const activeTab = tabs.find((t) => t.id === activeTabId) || tabs[0]
@@ -122,7 +124,7 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({
             <button
               onClick={onNewTab}
               style={{ padding: '4px 8px', fontSize: 12, color: '#888892', background: 'none', border: 'none', cursor: 'pointer' }}
-              title="New Terminal"
+              title={t('New Terminal')}
             >
               +
             </button>
@@ -135,7 +137,7 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({
             <button
               onClick={() => onClearOutput(activeTab.id)}
               style={{ padding: 4, color: '#888892', background: 'none', border: 'none', cursor: 'pointer', display: 'flex' }}
-              title="Clear output"
+              title={t('Clear output')}
             >
               <Trash2 size={14} />
             </button>
@@ -143,14 +145,14 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({
           <button
             onClick={handleCopy}
             style={{ padding: 4, color: '#888892', background: 'none', border: 'none', cursor: 'pointer', display: 'flex' }}
-            title="Copy terminal output"
+            title={t('Copy terminal output')}
           >
             {copied ? <Check size={14} /> : <Copy size={14} />}
           </button>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             style={{ padding: 4, color: '#888892', background: 'none', border: 'none', cursor: 'pointer', display: 'flex' }}
-            title={isExpanded ? 'Minimize' : 'Maximize'}
+            title={isExpanded ? t('Minimize') : t('Maximize')}
           >
             {isExpanded ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
           </button>
@@ -161,12 +163,12 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({
       <div style={{ flex: 1, padding: 16, overflowY: 'auto', fontSize: 12, lineHeight: 1.5 }}>
         {activeTab?.cwd && (
           <div style={{ color: '#6e6e7c', fontSize: 11, marginBottom: 8, fontFamily: 'sans-serif' }}>
-            Working directory: <code style={{ fontFamily: 'monospace', color: '#a0a0b0' }}>{activeTab.cwd}</code>
+            {t('Working directory: {path}', { path: <code style={{ fontFamily: 'monospace', color: '#a0a0b0' }}>{activeTab.cwd}</code> })}
           </div>
         )}
 
         {activeTab?.output?.length === 0 ? (
-          <div style={{ color: '#555562', fontStyle: 'italic' }}>Terminal ready. Type a command below.</div>
+          <div style={{ color: '#555562', fontStyle: 'italic' }}>{t('Terminal ready. Type a command below.')}</div>
         ) : (
           activeTab?.output.map((line, idx) => {
             const isCmd = line.startsWith('>') || line.startsWith('$')
@@ -203,7 +205,7 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({
             type="text"
             value={commandInput}
             onChange={(e) => setCommandInput(e.target.value)}
-            placeholder="Type shell command..."
+            placeholder={t('Type shell command...')}
             style={{ flex: 1, background: 'transparent', fontSize: 12, color: '#ffffff', outline: 'none', border: 'none', fontFamily: 'monospace' }}
           />
           {activeTab.status === 'running' && onKillCommand && (
@@ -213,7 +215,7 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({
               style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 8px', fontSize: 11, fontFamily: 'sans-serif', fontWeight: 600, color: '#fda4af', backgroundColor: 'rgba(76, 5, 25, 0.6)', border: '1px solid rgba(159, 18, 57, 0.5)', borderRadius: 4, cursor: 'pointer' }}
             >
               <Square size={12} />
-              <span>Stop</span>
+              <span>{t('Stop')}</span>
             </button>
           )}
         </form>

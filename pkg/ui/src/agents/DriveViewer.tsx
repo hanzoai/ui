@@ -12,6 +12,7 @@ import {
   HardDrive,
   RefreshCw,
 } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 import { Text } from '../index'
 import { mirror } from '../backends/gui/dir'
 
@@ -72,6 +73,7 @@ export const DriveViewer: React.FC<DriveViewerProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [newFolderName, setNewFolderName] = useState('')
   const [isCreatingFolder, setIsCreatingFolder] = useState(false)
+  const { t } = useI18n()
 
   const segments = prefix.split('/').filter(Boolean)
 
@@ -114,7 +116,7 @@ export const DriveViewer: React.FC<DriveViewerProps> = ({
                 onClick={() => onNavigatePrefix('')}
                 style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0 }}
               >
-                root
+                {t('root')}
               </button>
               {segments.map((seg, idx) => {
                 const stepPrefix = segments.slice(0, idx + 1).join('/') + '/'
@@ -141,7 +143,7 @@ export const DriveViewer: React.FC<DriveViewerProps> = ({
             <button
               onClick={onRefresh}
               style={{ padding: 6, borderRadius: 6, border: '1px solid var(--borderColor)', background: 'none', color: 'var(--color10)', cursor: 'pointer', display: 'flex' }}
-              title="Refresh"
+              title={t('Refresh')}
             >
               <RefreshCw size={14} />
             </button>
@@ -166,7 +168,7 @@ export const DriveViewer: React.FC<DriveViewerProps> = ({
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 10px', borderRadius: 8, backgroundColor: 'var(--color12)', color: 'var(--background)', fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer', opacity: uploading ? 0.5 : 1 }}
               >
                 <Upload size={14} />
-                <span>{uploading ? 'Uploading...' : 'Upload'}</span>
+                <span>{uploading ? t('Uploading...') : t('Upload')}</span>
               </button>
             </>
           )}
@@ -179,7 +181,7 @@ export const DriveViewer: React.FC<DriveViewerProps> = ({
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 200, textAlign: 'center', padding: 16 }}>
             <Text style={{ fontSize: 12, color: 'var(--red10)', marginBottom: 4 }}>{error}</Text>
             <Text style={{ fontSize: 12, color: 'var(--color9)' }}>
-              Ensure you have sufficient storage permissions.
+              {t('Ensure you have sufficient storage permissions.')}
             </Text>
           </div>
         ) : loading && entries.length === 0 ? (
@@ -194,16 +196,16 @@ export const DriveViewer: React.FC<DriveViewerProps> = ({
         ) : entries.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 200, textAlign: 'center' }}>
             <Folder size={32} />
-            <Text style={{ fontSize: 12, color: 'var(--color10)', marginTop: 8 }}>This folder is empty.</Text>
+            <Text style={{ fontSize: 12, color: 'var(--color10)', marginTop: 8 }}>{t('This folder is empty.')}</Text>
           </div>
         ) : (
           <table style={{ width: '100%', textAlign: 'start', fontSize: 12, borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--borderColor)', color: 'var(--color9)' }}>
-                <th style={{ padding: '10px 16px', fontWeight: 500 }}>Name</th>
-                <th style={{ padding: '10px 16px', fontWeight: 500, width: 110, textAlign: 'end' }}>Size</th>
-                <th style={{ padding: '10px 16px', fontWeight: 500, width: 140, textAlign: 'end' }}>Modified</th>
-                <th style={{ padding: '10px 16px', fontWeight: 500, width: 80, textAlign: 'end' }}>Actions</th>
+                <th style={{ padding: '10px 16px', fontWeight: 500 }}>{t('Name')}</th>
+                <th style={{ padding: '10px 16px', fontWeight: 500, width: 110, textAlign: 'end' }}>{t('Size')}</th>
+                <th style={{ padding: '10px 16px', fontWeight: 500, width: 140, textAlign: 'end' }}>{t('Modified')}</th>
+                <th style={{ padding: '10px 16px', fontWeight: 500, width: 80, textAlign: 'end' }}>{t('Actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -244,7 +246,7 @@ export const DriveViewer: React.FC<DriveViewerProps> = ({
                           <button
                             onClick={() => onDownloadFile(entry)}
                             style={{ padding: 4, borderRadius: 4, background: 'none', border: 'none', color: 'var(--color10)', cursor: 'pointer' }}
-                            title="Download"
+                            title={t('Download')}
                           >
                             <Download size={14} />
                           </button>
@@ -253,7 +255,7 @@ export const DriveViewer: React.FC<DriveViewerProps> = ({
                           <button
                             onClick={() => onDeleteEntry(entry)}
                             style={{ padding: 4, borderRadius: 4, background: 'none', border: 'none', color: 'var(--color10)', cursor: 'pointer' }}
-                            title="Delete"
+                            title={t('Delete')}
                           >
                             <Trash2 size={14} />
                           </button>
