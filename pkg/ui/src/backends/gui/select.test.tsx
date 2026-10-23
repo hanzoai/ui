@@ -96,6 +96,27 @@ describe('Picker', () => {
     expect(el).toMatch(/_lh-16px/)
     expect(el).toMatch(/_bg-panel/)
   })
+
+  it('gives each choosable option the field’s own ink, and leaves a disabled hint the select’s', () => {
+    const out = html(
+      <Picker aria-label="x" value="" color="$placeholderColor" onChange={() => {}}>
+        <option value="" disabled>
+          Choose
+        </option>
+        {['a', 'b'].map((v) => (
+          <option key={v} value={v}>
+            {v.toUpperCase()}
+          </option>
+        ))}
+      </Picker>,
+    )
+    const options = [...out.matchAll(/<option[^>]*>[^<]*<\/option>/g)].map((m) => m[0])
+    expect(options).toHaveLength(3)
+    expect(options[0]).not.toMatch(/_col-/)
+    expect(options[1]).toMatch(/value="a"[^>]*_col-color|_col-color[^>]*value="a"/)
+    expect(options[2]).toMatch(/>B<\/option>/)
+    expect(options[2]).toMatch(/_col-color/)
+  })
 })
 
 describe('the open list', () => {
