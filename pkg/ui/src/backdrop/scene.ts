@@ -1,7 +1,10 @@
+
+import { phrase } from '@hanzo/i18n'
 /**
  * What paints behind a conversation, and the pure rules that read it.
  *
- * No React and no imports: every rule about what can play, what a link means and
+ * No React, and no import but `phrase`, which marks the presets' names for
+ * translation: every rule about what can play, what a link means and
  * what a typed command does is decidable from data alone, so it is decidable in
  * a test without rendering anything — and a surface can read a stored value
  * before it has mounted anything.
@@ -116,9 +119,9 @@ export interface Preset {
  * read in one glance, with the whole rest of the web one paste away.
  */
 export const PRESETS: readonly Preset[] = [
-  { id: 'cetaceans', label: 'Cetaceans', url: 'https://www.youtube.com/watch?v=UY5YH6B4A9o' },
-  { id: 'reef', label: 'Reef', url: 'https://www.youtube.com/watch?v=6lZ3CookYNg' },
-  { id: 'deep', label: 'Deep water', url: 'https://www.youtube.com/watch?v=7Exxd2ievAw' },
+  { id: 'cetaceans', label: phrase('Cetaceans'), url: 'https://www.youtube.com/watch?v=UY5YH6B4A9o' },
+  { id: 'reef', label: phrase('Reef'), url: 'https://www.youtube.com/watch?v=6lZ3CookYNg' },
+  { id: 'deep', label: phrase('Deep water'), url: 'https://www.youtube.com/watch?v=7Exxd2ievAw' },
 ]
 
 /**

@@ -24,6 +24,8 @@
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { Plus } from '@hanzogui/lucide-icons-2'
 import { useId, useRef, type ComponentProps, type ReactNode } from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Views, type View } from '../agents/Workspace'
 import { Button } from '../backends/gui/button'
@@ -39,8 +41,8 @@ const MEASURE = 1080
 
 /** What a shelf shows by default: the org's own, and what it can add. */
 const HALVES: readonly View[] = [
-  { id: 'yours', label: 'Yours' },
-  { id: 'discover', label: 'Discover' },
+  { id: 'yours', label: phrase('Yours') },
+  { id: 'discover', label: phrase('Discover') },
 ]
 
 export interface ShelfProps extends Col {
@@ -77,7 +79,7 @@ export function Shelf({
   tabs,
   tab,
   onTab,
-  views = HALVES,
+  views: given,
   view,
   onView,
   search,
@@ -89,6 +91,8 @@ export function Shelf({
   children,
   ...rest
 }: ShelfProps) {
+  const { t } = useI18n()
+  const views = given ?? HALVES.map((v) => ({ ...v, label: t(v.label) }))
   const refs = useRef<(HTMLElement | null)[]>([])
   const id = useId()
   const panel = `${id}-panel`
@@ -200,7 +204,7 @@ export function Shelf({
           gap="$4"
         >
         <XStack items="center" gap="$2">
-          <Views views={views} value={view} onChange={onView} label="Show" labels="all" />
+          <Views views={views} value={view} onChange={onView} label={t('Show')} labels="all" />
           <XStack flex={1} />
           {add && onAdd ? (
             <Button size="sm" onPress={onAdd}>
