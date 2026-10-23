@@ -52,6 +52,9 @@ const DATA = new Set(
         // fails rather than the page. `tw` and `sx` are the same function under
         // other names, and `types` is a vocabulary with no runtime at all.
         'core/cn',
+        // English for the words a pure module builds without a `t` — the limit
+        // notices and the framework builder call it from server code.
+        'core/english',
         'tw',
         'sx',
         'css',

@@ -11,11 +11,9 @@
 // are English by default; a component passes its `t` to have them in the
 // reader's language.
 
-import { phrase, translate } from '@hanzo/i18n'
+import { phrase } from '@hanzo/i18n'
 import type { Say } from '@hanzo/i18n/react'
-
-/** English, for a caller with no `t`. */
-const english = ((source: string, values?: Readonly<Record<string, string | number>>) => translate({}, source, values)) as Say
+import { english } from '../core/english'
 
 export type LimitState = 'ok' | 'near' | 'limited'
 export type LimitClass = 'premium' | 'ours' | 'free'
