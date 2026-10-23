@@ -189,7 +189,7 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy', brand = 'Hanzo' }: Cons
   // the line fits beside them and the buttons drop under it where it does not,
   // so a phone shows the line over one row of buttons and nothing breaks mid-control.
   return (
-    <XStack {...frame} aria-label={t('Cookie preferences')} style={FIT} maxW={960} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
+    <XStack {...frame} aria-label={t('Cookie preferences')} $platform-web={FIT} maxW={960} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
       <YStack shrink={1} minW={0}>
         <Paragraph size="$2" color="$ink" m={0}>
           {`${t('Cookies measure visits and ads once you accept.')} `}
