@@ -7,11 +7,11 @@
 // `near` from 80 to 99 %, and `limited` when the class is used up and nothing
 // else pays.
 //
-// No React, no gui: this loads in Node and in a server component. The words
-// are English by default; a component passes its `t` to have them in the
-// reader's language.
+// No React, no gui and no import: this loads in Node and in a server
+// component. The words are English by default; a component passes its `t` to
+// have them in the reader's language. Each word a reader is shown is a literal
+// `t` call, so the extractor finds it without a `phrase` import.
 
-import { phrase } from '@hanzo/i18n'
 import type { Say } from '@hanzo/i18n/react'
 import { english } from '../core/english'
 
@@ -120,27 +120,33 @@ export interface LimitNotice {
 export const CLASSES: readonly LimitClass[] = ['premium', 'ours', 'free']
 
 export const CLASS_LABEL: Record<LimitClass, string> = {
-  premium: phrase('Premium models'),
-  ours: phrase('Hanzo models'),
-  free: phrase('Free models'),
+  premium: 'Premium models',
+  ours: 'Hanzo models',
+  free: 'Free models',
 }
 
-/** A class's name inside a list ("Premium and Hanzo models"). */
-const CLASS_NAME: Record<LimitClass, string> = {
-  premium: phrase('Premium'),
-  ours: 'Hanzo',
-  free: phrase('Free'),
-}
+/** A class's name inside a list ("Premium and Hanzo models"). Hanzo is a name. */
+const className = (c: LimitClass, t: Say): string => (c === 'premium' ? t('Premium') : c === 'ours' ? 'Hanzo' : t('Free'))
 
 const STATES: readonly LimitState[] = ['ok', 'near', 'limited']
 const PAYERS: readonly LimitPayer[] = ['plan', 'credits', 'free', 'none']
 const KINDS: readonly LimitActionKind[] = ['upgrade', 'topup', 'credits', 'switch']
 const LABEL: Record<LimitActionKind, string> = {
-  upgrade: phrase('Upgrade'),
-  topup: phrase('Add prepaid credit'),
-  credits: phrase('Continue with credits'),
-  switch: phrase('Switch model'),
+  upgrade: 'Upgrade',
+  topup: 'Add prepaid credit',
+  credits: 'Continue with credits',
+  switch: 'Switch model',
 }
+
+/** `LABEL` in the reader's language. */
+const labelSays = (kind: LimitActionKind, t: Say): string =>
+  kind === 'upgrade'
+    ? t('Upgrade')
+    : kind === 'topup'
+      ? t('Add prepaid credit')
+      : kind === 'credits'
+        ? t('Continue with credits')
+        : t('Switch model')
 const RANK: Record<LimitState, number> = { ok: 0, near: 1, limited: 2 }
 
 const text = (v: unknown): string | null => (typeof v === 'string' ? v : null)
@@ -321,7 +327,7 @@ const earliest = (all: (string | null)[]): string | null =>
 
 /** "Premium models", "Premium and Hanzo models". */
 export function classesLabel(classes: LimitClass[], t: Say = english): string {
-  const [a, b, c] = CLASSES.filter((k) => classes.includes(k)).map((k) => t(CLASS_NAME[k]))
+  const [a, b, c] = CLASSES.filter((k) => classes.includes(k)).map((k) => className(k, t))
   if (!a) return t('Models')
   if (!b) return t('{a} models', { a })
   if (!c) return t('{a} and {b} models', { a, b })
@@ -341,11 +347,15 @@ export function when(iso: string | null | undefined, now: number = Date.now()): 
     : d.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })
 }
 
-const PLAIN: Record<string, string> = {
-  paid_plan_required: phrase('This model needs a paid plan.'),
-  free_plan_cap: phrase("You've used the free plan's usage for now."),
-  insufficient_balance: phrase('Your credits have run out.'),
-}
+/** The plain sentence for a reason the server sent no message for. */
+const plainSays = (reason: string, t: Say): string | undefined =>
+  reason === 'paid_plan_required'
+    ? t('This model needs a paid plan.')
+    : reason === 'free_plan_cap'
+      ? t("You've used the free plan's usage for now.")
+      : reason === 'insufficient_balance'
+        ? t('Your credits have run out.')
+        : undefined
 
 /** A paused model as a sentence names it: a glob reads as its family ("claude-opus models"). */
 const modelWords = (model: string, name: (id: string) => string, t: Say): string =>
@@ -395,7 +405,6 @@ export function noticeOf(
     : earliest([...list.map((c) => resetOf(limits?.classes[c])), refusal?.resets_at ?? null])
   const paused = reason === 'plan_allowance_used' || (!reason && list.length > 0)
   const until = when(resets, now)
-  const plain = PLAIN[reason]
   const said = capped
     ? pausedSays(t, modelWords(capped.model, name, t), capped.model.endsWith('*'), until)
     : paused
@@ -404,7 +413,7 @@ export function noticeOf(
         limits?.limited?.message ||
         (reason === 'paid_plan_required' && list.length
           ? t('{classes} need a paid plan.', { classes: classesLabel(list, t) })
-          : plain && t(plain)) ||
+          : plainSays(reason, t)) ||
         t('Usage is paused for now.')
   // A refusal names what is possible for the call it refused; the limits name the general case.
   const actions = refusal?.actions.length ? refusal.actions : (limits?.actions ?? [])
@@ -413,7 +422,7 @@ export function noticeOf(
     classes: list,
     message: fallback ? `${said} ${t("You're chatting on {model}.", { model: name(fallback) })}` : said,
     // The words this module supplied are said in the reader's language; the server's stand as sent.
-    actions: actions.map((a) => (a.label === LABEL[a.kind] ? { ...a, label: t(a.label) } : a)),
+    actions: actions.map((a) => (a.label === LABEL[a.kind] ? { ...a, label: labelSays(a.kind, t) } : a)),
     resets_at: resets,
     fallback,
     refused: refusal !== null,

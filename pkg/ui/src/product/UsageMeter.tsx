@@ -10,7 +10,7 @@ import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 import { Progress } from '../backends/gui/progress'
 import { slot } from '../backends/gui/slot'
-import { CLASSES, CLASS_LABEL, when, type ClassLimit, type LimitClass, type LimitState, type LimitWindow, type Limits } from './limits'
+import { CLASSES, classesLabel, when, type ClassLimit, type LimitClass, type LimitState, type LimitWindow, type Limits } from './limits'
 
 /** The status rung each state paints its bar in. */
 export const STATE_COLOR = { ok: '$good', near: '$yellow10', limited: '$bad' } as const satisfies Record<LimitState, string>
@@ -67,7 +67,7 @@ export function UsageMeter({ limits, classes = CLASSES, size = 'md', now }: Usag
   return (
     <YStack gap={sm ? '$2.5' : '$5'} width="100%" minW={0} {...slot('usage-meter')}>
       {rows.map(({ c, k }) => {
-        const label = t(CLASS_LABEL[c])
+        const label = classesLabel([c], t)
         const resets = when(k.resets_at, now)
         const note = caption(k)
         return (
