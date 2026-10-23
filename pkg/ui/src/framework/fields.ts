@@ -10,6 +10,8 @@
  * imports are `import type`, erased at build, so the unit test runs in plain Node).
  */
 import type { FieldDefinition, FieldType, SelectOption } from '@hanzo/data'
+import type { Say } from '@hanzo/i18n/react'
+import { english } from '../core/english'
 import type { DocField, DocType, FrameworkDoc } from './types'
 import { DRAFT, REDACTED_MARKER } from './types'
 
@@ -230,11 +232,11 @@ export function isDraft(record: Record<string, unknown> | null | undefined): boo
 }
 
 /** A record's human title — the DocType's titleField, else its name. */
-export function titleOf(doc: Record<string, unknown>, dt: DocType): string {
+export function titleOf(doc: Record<string, unknown>, dt: DocType, t: Say = english): string {
   if (dt.titleField && typeof doc[dt.titleField] === 'string' && doc[dt.titleField]) {
     return String(doc[dt.titleField])
   }
-  return typeof doc.name === 'string' && doc.name ? doc.name : '(untitled)'
+  return typeof doc.name === 'string' && doc.name ? doc.name : t('(untitled)')
 }
 
 /**
