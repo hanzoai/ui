@@ -13,13 +13,11 @@
  * Its words are English, marked (`phrase`) or taking the caller's @hanzo/i18n
  * `t`, so a host draws them in the reader's language; names are names.
  */
-import { phrase, translate } from '@hanzo/i18n'
+import { phrase } from '@hanzo/i18n'
 import type { Say } from '@hanzo/i18n/react'
 
+import { english } from '../core/english'
 import type { PausedModel } from '../product/limits'
-
-/** `t` with no catalog: the English, its arguments filled. */
-const english = ((source: string, values?: Readonly<Record<string, string | number>>) => translate({}, source, values)) as Say
 
 /** The class a model is sold in, as the usage policy reads it. */
 export type ModelClass = 'premium' | 'ours' | 'free'

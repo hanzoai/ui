@@ -37,7 +37,10 @@ export type FooterProps = {
 
 const open = (out?: boolean) => (out ? { target: '_blank', rel: 'noreferrer' } : {})
 
-const Door = ({ link }: { link: FooterLink }) => (
+/** A door. Its words are the host's, drawn through `t`: a label marked where it is written (masthead's `footer()`) says the reader's language, any other its own. */
+const Door = ({ link }: { link: FooterLink }) => {
+  const { t } = useI18n()
+  return (
   <Anchor
     href={link.href}
     {...open(link.out)}
@@ -48,10 +51,11 @@ const Door = ({ link }: { link: FooterLink }) => (
     textDecorationLine="none"
     hoverStyle={{ color: '$ink' }}
   >
-    {link.label}
+    {t(link.label)}
     {link.out ? ' ↗' : ''}
   </Anchor>
-)
+  )
+}
 
 const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)' }: FooterProps) => {
   const { t } = useI18n()
@@ -74,7 +78,7 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
     ) : null}
     <XStack flexWrap="wrap" gap={28} $sm={{ gap: 40 }}>
       {columns.map((c) => (
-        <YStack key={c.id} render="nav" aria-label={c.title} flexBasis="40%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
+        <YStack key={c.id} render="nav" aria-label={t(c.title)} flexBasis="40%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
           {c.href ? (
             <Anchor
               href={c.href}
@@ -86,12 +90,12 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
               pb={10}
               textDecorationLine="none"
             >
-              {c.title}
+              {t(c.title)}
               {c.out ? ' ↗' : ''}
             </Anchor>
           ) : (
             <Line size="sm" weight="600" pb={10}>
-              {c.title}
+              {t(c.title)}
             </Line>
           )}
           {c.links.map((l) => (
@@ -110,7 +114,7 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
       <XStack render="nav" aria-label={t('Terms & Policies')} flexWrap="wrap" gap={16} rowGap={8} marginInlineStart={0} width="100%" $sm={{ marginInlineStart: 'auto', width: 'auto' }}>
         {legal.map((l) => (
           <Anchor key={l.label} href={l.href} {...open(l.out)} color="$faint" fontSize="$2" lineHeight="$2" textDecorationLine="none" hoverStyle={{ color: '$ink' }}>
-            {l.label}
+            {t(l.label)}
           </Anchor>
         ))}
       </XStack>

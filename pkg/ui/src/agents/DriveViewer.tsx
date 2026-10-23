@@ -46,7 +46,11 @@ export interface DriveViewerProps {
   onRefresh?: () => void
 }
 
-/** A header cell: a table cell as the browser draws one, in the row's ink, padded 10 by 16. */
+/**
+ * A header cell: a table cell as the browser draws one, in the row's ink, padded
+ * 10 by 16. gui types neither `table-cell` nor `content-box`, so the set is
+ * spread untyped, as `align` is.
+ */
 const HEAD = {
   display: 'table-cell',
   boxSizing: 'content-box',
@@ -54,7 +58,7 @@ const HEAD = {
   py: 10,
   px: 16,
   fontWeight: '500',
-} as const
+} as object
 
 const weigh = (bytes: number): string => {
   if (!bytes) return ''
