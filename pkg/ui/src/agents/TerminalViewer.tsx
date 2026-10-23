@@ -163,12 +163,20 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({
       <div style={{ flex: 1, padding: 16, overflowY: 'auto', fontSize: 12, lineHeight: 1.5 }}>
         {activeTab?.cwd && (
           <div style={{ color: '#6e6e7c', fontSize: 11, marginBottom: 8, fontFamily: 'sans-serif' }}>
-            {t('Working directory: {path}', { path: <code style={{ fontFamily: 'monospace', color: '#a0a0b0' }}>{activeTab.cwd}</code> })}
+            {t('Working directory: {path}', {
+              path: (
+                <Text render="code" color={'#a0a0b0' as never}>
+                  {activeTab.cwd}
+                </Text>
+              ),
+            })}
           </div>
         )}
 
         {activeTab?.output?.length === 0 ? (
-          <div style={{ color: '#555562', fontStyle: 'italic' }}>{t('Terminal ready. Type a command below.')}</div>
+          <Text render="div" display="block" color={'#555562' as never} fontStyle="italic">
+            {t('Terminal ready. Type a command below.')}
+          </Text>
         ) : (
           activeTab?.output.map((line, idx) => {
             const isCmd = line.startsWith('>') || line.startsWith('$')

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Text } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
 
 export interface ChannelNotesProps {
@@ -96,7 +97,11 @@ export const ChannelNotes: React.FC<ChannelNotesProps> = ({
         />
       ) : (
         <div style={{ padding: 12, backgroundColor: 'rgba(10, 10, 10, 0.4)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 12, fontSize: 12, color: '#d4d4d4', whiteSpace: 'pre-wrap', fontFamily: 'monospace', maxHeight: 240, overflowY: 'auto', lineHeight: 1.5 }}>
-          {content || <span style={{ color: '#737373', fontStyle: 'italic' }}>{t('No notes recorded yet for this channel.')}</span>}
+          {content || (
+            <Text color={'#737373' as never} fontStyle="italic">
+              {t('No notes recorded yet for this channel.')}
+            </Text>
+          )}
         </div>
       )}
     </div>

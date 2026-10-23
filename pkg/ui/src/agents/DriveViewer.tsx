@@ -14,7 +14,7 @@ import {
 } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 import { Text } from '../index'
-import { mirror } from '../backends/gui/dir'
+import { align, mirror } from '../backends/gui/dir'
 
 export interface StorageBucket {
   name: string
@@ -45,6 +45,16 @@ export interface DriveViewerProps {
   onDeleteEntry?: (entry: StorageEntry) => Promise<void> | void
   onRefresh?: () => void
 }
+
+/** A header cell: a table cell as the browser draws one, in the row's ink, padded 10 by 16. */
+const HEAD = {
+  display: 'table-cell',
+  boxSizing: 'content-box',
+  color: 'inherit',
+  py: 10,
+  px: 16,
+  fontWeight: '500',
+} as const
 
 const weigh = (bytes: number): string => {
   if (!bytes) return ''
@@ -196,16 +206,26 @@ export const DriveViewer: React.FC<DriveViewerProps> = ({
         ) : entries.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 200, textAlign: 'center' }}>
             <Folder size={32} />
-            <Text style={{ fontSize: 12, color: 'var(--color10)', marginTop: 8 }}>{t('This folder is empty.')}</Text>
+            <Text fontSize={12} color="$color10" mt={8}>
+              {t('This folder is empty.')}
+            </Text>
           </div>
         ) : (
           <table style={{ width: '100%', textAlign: 'start', fontSize: 12, borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--borderColor)', color: 'var(--color9)' }}>
-                <th style={{ padding: '10px 16px', fontWeight: 500 }}>{t('Name')}</th>
-                <th style={{ padding: '10px 16px', fontWeight: 500, width: 110, textAlign: 'end' }}>{t('Size')}</th>
-                <th style={{ padding: '10px 16px', fontWeight: 500, width: 140, textAlign: 'end' }}>{t('Modified')}</th>
-                <th style={{ padding: '10px 16px', fontWeight: 500, width: 80, textAlign: 'end' }}>{t('Actions')}</th>
+                <Text render="th" {...HEAD}>
+                  {t('Name')}
+                </Text>
+                <Text render="th" {...HEAD} width={110} {...align('end')}>
+                  {t('Size')}
+                </Text>
+                <Text render="th" {...HEAD} width={140} {...align('end')}>
+                  {t('Modified')}
+                </Text>
+                <Text render="th" {...HEAD} width={80} {...align('end')}>
+                  {t('Actions')}
+                </Text>
               </tr>
             </thead>
             <tbody>

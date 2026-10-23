@@ -1,4 +1,5 @@
 import React from 'react'
+import { Text } from '@hanzo/gui'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 
@@ -82,7 +83,9 @@ export const ShortcutsSheet: React.FC<ShortcutsSheetProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 18 }}>⌨️</span>
-            <h2 style={{ fontSize: 14, fontWeight: 600, color: '#ffffff', margin: 0 }}>{t('Keyboard Shortcuts')}</h2>
+            <Text render="h2" fontSize={14} fontWeight="600" color={'#ffffff' as never} m={0}>
+              {t('Keyboard Shortcuts')}
+            </Text>
           </div>
           {onClose && (
             <button

@@ -111,7 +111,9 @@ export const DirectoryModal: React.FC<DirectoryModalProps> = ({
         <div style={{ padding: 20, borderBottom: '1px solid var(--borderColor)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <div>
-              <DialogTitle style={{ fontSize: 18, fontWeight: 600, letterSpacing: '-0.02em', margin: 0 }}>{t('Directory')}</DialogTitle>
+              <DialogTitle fontSize={18} fontWeight="600" letterSpacing={-0.36} m={0}>
+                {t('Directory')}
+              </DialogTitle>
               <Text style={{ fontSize: 12, color: 'var(--color10)', marginTop: 2 }}>
                 {t('Extend your workspace with integrations, channels, plugins, and skills.')}
               </Text>

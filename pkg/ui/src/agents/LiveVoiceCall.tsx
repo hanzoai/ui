@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { Text } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
 
 export interface LiveVoiceCallProps {
@@ -102,7 +103,9 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#34d399' }} />
-          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#ffffff', margin: 0 }}>{title ?? t('AI Voice Call')}</h3>
+          <Text render="h3" fontSize={14} fontWeight="600" color={'#ffffff' as never} m={0}>
+            {title ?? t('AI Voice Call')}
+          </Text>
         </div>
         <span style={{ fontSize: 12, color: '#a3a3a3', fontFamily: 'monospace' }}>{statusText}</span>
       </div>
