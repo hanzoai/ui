@@ -16,9 +16,11 @@
  * failure surfaced verbatim (a 503 carries the exact missing OAuth-app credentials).
  */
 import { TABULAR } from '../figures'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { Share2, Send, Link2, Plus, RefreshCw } from '@hanzogui/lucide-icons-2'
+import { phrase } from '@hanzo/i18n'
+import { useI18n, type Say } from '@hanzo/i18n/react'
 
 import { BackendStateCard, classifyBackend, type BackendState } from '../BackendState'
 import { DataTable, type Column } from '../DataTable'
@@ -51,17 +53,20 @@ type Async<T> =
 
 type Data = { summary: SocialSummary; posts: Post[]; accounts: Account[]; providers: ProviderCapability[] }
 
+/** Columns with their headers in the reader's language. */
+const said = <T,>(columns: Column<T>[], t: Say): Column<T>[] => columns.map((c) => ({ ...c, header: t(c.header) }))
+
 const POST_COLUMNS: Column<Post>[] = [
-  { key: 'content', header: 'Post', render: (p) => postPreview(p.content) },
-  { key: 'channel', header: 'Channel', render: (p) => p.channel || '—' },
-  { key: 'status', header: 'Status', render: (p) => <StatusTag status={p.status} /> },
-  { key: 'scheduleAt', header: 'Scheduled', render: (p) => formatPostTime(p.scheduleAt) },
+  { key: 'content', header: phrase('Post'), render: (p) => postPreview(p.content) },
+  { key: 'channel', header: phrase('Channel'), render: (p) => p.channel || '—' },
+  { key: 'status', header: phrase('Status'), render: (p) => <StatusTag status={p.status} /> },
+  { key: 'scheduleAt', header: phrase('Scheduled'), render: (p) => formatPostTime(p.scheduleAt) },
 ]
 
 const ACCOUNT_COLUMNS: Column<Account>[] = [
-  { key: 'handle', header: 'Account', render: (a) => a.handle || '—' },
-  { key: 'provider', header: 'Network', render: (a) => a.provider || '—' },
-  { key: 'status', header: 'Status', render: (a) => <StatusTag status={a.status} /> },
+  { key: 'handle', header: phrase('Account'), render: (a) => a.handle || '—' },
+  { key: 'provider', header: phrase('Network'), render: (a) => a.provider || '—' },
+  { key: 'status', header: phrase('Status'), render: (a) => <StatusTag status={a.status} /> },
 ]
 
 /** The post detail drawer — full content + publish results + a real Publish action. */
@@ -69,6 +74,7 @@ function PostDetail({ api, post, onChanged }: { api: SocialApi; post: Post; onCh
   const [publishing, setPublishing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const canPublish = post.status === 'draft' || post.status === 'scheduled' || post.status === 'failed'
+  const { t } = useI18n()
 
   const publish = async () => {
     setPublishing(true)
@@ -78,7 +84,7 @@ function PostDetail({ api, post, onChanged }: { api: SocialApi; post: Post; onCh
       onChanged()
     } catch (e) {
       // A 503 (not configured) carries the exact missing credentials — show it verbatim.
-      setError(classifyBackend(e).message || 'Publish failed.')
+      setError(classifyBackend(e).message || t('Publish failed.'))
     } finally {
       setPublishing(false)
     }
@@ -86,22 +92,22 @@ function PostDetail({ api, post, onChanged }: { api: SocialApi; post: Post; onCh
 
   return (
     <YStack gap="$3" p="$4">
-      <FieldRow label="Content">
+      <FieldRow label={t('Content')}>
         <Text fontSize="$3">{post.content || '—'}</Text>
       </FieldRow>
-      <FieldRow label="Channel">
+      <FieldRow label={t('Channel')}>
         <Text fontSize="$3">{post.channel}</Text>
       </FieldRow>
-      <FieldRow label="Status">
+      <FieldRow label={t('Status')}>
         <StatusTag status={post.status} />
       </FieldRow>
       {post.scheduleAt > 0 ? (
-        <FieldRow label="Scheduled">
+        <FieldRow label={t('Scheduled')}>
           <Text fontSize="$3">{formatPostTime(post.scheduleAt)}</Text>
         </FieldRow>
       ) : null}
       {post.media.length > 0 ? (
-        <FieldRow label="Media">
+        <FieldRow label={t('Media')}>
           <YStack gap="$1">
             {post.media.map((m) => (
               <Text key={m} fontSize="$2" color="$quiet">
@@ -112,14 +118,14 @@ function PostDetail({ api, post, onChanged }: { api: SocialApi; post: Post; onCh
         </FieldRow>
       ) : null}
       {post.externalId ? (
-        <FieldRow label="External id">
+        <FieldRow label={t('External id')}>
           <Text fontSize="$3" {...TABULAR}>
             {post.externalId}
           </Text>
         </FieldRow>
       ) : null}
       {post.error ? (
-        <FieldRow label="Last error">
+        <FieldRow label={t('Last error')}>
           <Text fontSize="$2" color="$red10">
             {post.error}
           </Text>
@@ -132,7 +138,7 @@ function PostDetail({ api, post, onChanged }: { api: SocialApi; post: Post; onCh
       ) : null}
       {canPublish ? (
         <PrimaryButton onPress={publish} disabled={publishing} icon={<Send {...mirror} size={16} />}>
-          {publishing ? 'Publishing…' : 'Publish now'}
+          {publishing ? t('Publishing…') : t('Publish now')}
         </PrimaryButton>
       ) : null}
     </YStack>
@@ -153,6 +159,7 @@ function ConnectAccount({
   const [handle, setHandle] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { t } = useI18n()
 
   const submit = async () => {
     setSaving(true)
@@ -161,7 +168,7 @@ function ConnectAccount({
       await api.accounts.create({ provider, handle: handle.trim(), status: 'connected' })
       onCreated()
     } catch (e) {
-      setError(classifyBackend(e).message || 'Failed to connect account.')
+      setError(classifyBackend(e).message || t('Failed to connect account.'))
     } finally {
       setSaving(false)
     }
@@ -171,10 +178,10 @@ function ConnectAccount({
     <YStack gap="$4" p="$4">
       <ProviderReadinessList providers={providers} />
       <YStack gap="$3">
-        <FieldRow label="Network">
+        <FieldRow label={t('Network')}>
           <FieldSelect value={provider} options={[...PROVIDERS]} onChange={setProvider} disabled={saving} />
         </FieldRow>
-        <FieldRow label="Handle">
+        <FieldRow label={t('Handle')}>
           <FieldText value={handle} onChange={setHandle} placeholder="@hanzo" disabled={saving} />
         </FieldRow>
         {error ? (
@@ -183,7 +190,7 @@ function ConnectAccount({
           </Text>
         ) : null}
         <PrimaryButton onPress={submit} disabled={saving}>
-          {saving ? 'Connecting…' : 'Connect account'}
+          {saving ? t('Connecting…') : t('Connect account')}
         </PrimaryButton>
       </YStack>
     </YStack>
@@ -192,14 +199,17 @@ function ConnectAccount({
 
 export function SocialResource({
   api,
-  title = 'Publish',
-  subtitle = 'Compose, schedule and publish your content across networks — per org, over the native /v1/social engine.',
+  title,
+  subtitle,
 }: {
   /** The bound `/v1/social` client — `createSocialApi(<host transport>)`. */
   api: SocialApi
   title?: string
   subtitle?: string
 }) {
+  const { t } = useI18n()
+  const postColumns = useMemo(() => said(POST_COLUMNS, t), [t])
+  const accountColumns = useMemo(() => said(ACCOUNT_COLUMNS, t), [t])
   const [state, setState] = useState<Async<Data>>({ phase: 'loading' })
   const [view, setView] = useState<PostView>('list')
   const [composing, setComposing] = useState(false)
@@ -238,9 +248,9 @@ export function SocialResource({
   const submitDraft = async (draft: PostDraft, mode: ComposeMode): Promise<string | null> => {
     try {
       const created = await api.posts.create(draft)
-      if (mode === 'now' && created.status === 'failed') return created.error || 'Publish failed.'
+      if (mode === 'now' && created.status === 'failed') return created.error || t('Publish failed.')
     } catch (e) {
-      return classifyBackend(e).message || 'Failed to create post.'
+      return classifyBackend(e).message || t('Failed to create post.')
     }
     setComposing(false)
     void load()
@@ -250,18 +260,18 @@ export function SocialResource({
   return (
     <YStack gap="$4" p="$4">
       <PageHeader
-        title={title}
-        subtitle={subtitle}
+        title={title ?? t('Publish')}
+        subtitle={subtitle ?? t('Compose, schedule and publish your content across networks — per org, over the native /v1/social engine.')}
         actions={
           <>
             <PrimaryButton onPress={() => setComposing(true)} icon={<Plus size={16} />}>
-              New post
+              {t('New post')}
             </PrimaryButton>
             <PrimaryButton onPress={() => setConnecting(true)} icon={<Link2 size={16} />}>
-              Connect account
+              {t('Connect account')}
             </PrimaryButton>
             <PrimaryButton onPress={() => void load()} icon={<RefreshCw size={16} />}>
-              Refresh
+              {t('Refresh')}
             </PrimaryButton>
           </>
         }
@@ -274,9 +284,9 @@ export function SocialResource({
           {state.phase === 'ready' ? <SocialSummaryBar summary={state.data.summary} /> : null}
           <EmptyState
             icon={Share2}
-            title="No posts or accounts yet"
-            description="Connect a social account, then compose, schedule and publish across X, Instagram, LinkedIn, TikTok and more."
-            primary={{ label: 'New post', onPress: () => setComposing(true) }}
+            title={t('No posts or accounts yet')}
+            description={t('Connect a social account, then compose, schedule and publish across X, Instagram, LinkedIn, TikTok and more.')}
+            primary={{ label: t('New post'), onPress: () => setComposing(true) }}
           />
         </YStack>
       ) : (
@@ -288,7 +298,7 @@ export function SocialResource({
               <XStack items="center" gap="$2">
                 <Send {...mirror} size={16} />
                 <Text fontSize="$5" fontWeight="500">
-                  Posts
+                  {t('Posts')}
                 </Text>
               </XStack>
               <ViewToggle view={view} onChange={setView} />
@@ -296,10 +306,10 @@ export function SocialResource({
 
             {view === 'list' ? (
               <DataTable<Post>
-                columns={POST_COLUMNS}
+                columns={postColumns}
                 rows={posts}
                 loading={state.phase === 'loading'}
-                empty="No posts yet."
+                empty={t('No posts yet.')}
                 rowKey={(p) => p.id}
                 onRowPress={(p) => setOpenPost(p)}
               />
@@ -312,29 +322,29 @@ export function SocialResource({
             <XStack items="center" gap="$2">
               <Link2 size={16} />
               <Text fontSize="$5" fontWeight="500">
-                Accounts
+                {t('Accounts')}
               </Text>
             </XStack>
             <DataTable<Account>
-              columns={ACCOUNT_COLUMNS}
+              columns={accountColumns}
               rows={accounts}
               loading={state.phase === 'loading'}
-              empty="No accounts connected yet."
+              empty={t('No accounts connected yet.')}
               rowKey={(a) => a.id}
             />
           </YStack>
         </YStack>
       )}
 
-      <SlideOver open={composing} onClose={() => setComposing(false)} title="New post" icon={Send} ariaLabel="New post">
+      <SlideOver open={composing} onClose={() => setComposing(false)} title={t('New post')} icon={Send} ariaLabel={t('New post')}>
         <PostComposer channels={[...PROVIDERS]} providers={providers} onSubmit={submitDraft} />
       </SlideOver>
       <SlideOver
         open={connecting}
         onClose={() => setConnecting(false)}
-        title="Connect account"
+        title={t('Connect account')}
         icon={Link2}
-        ariaLabel="Connect account"
+        ariaLabel={t('Connect account')}
       >
         <ConnectAccount
           api={api}
@@ -345,7 +355,7 @@ export function SocialResource({
           }}
         />
       </SlideOver>
-      <SlideOver open={openPost !== null} onClose={() => setOpenPost(null)} title="Post" icon={Send} ariaLabel="Post detail">
+      <SlideOver open={openPost !== null} onClose={() => setOpenPost(null)} title={t('Post')} icon={Send} ariaLabel={t('Post detail')}>
         {openPost ? (
           <PostDetail
             api={api}

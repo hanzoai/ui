@@ -16,6 +16,7 @@
 import { SizableText, YStack } from '@hanzo/gui'
 import { Code } from '@hanzogui/lucide-icons-2'
 import { useCallback, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { ChipSelect, type ChipAction, type ChipPlacement } from './ChipSelect'
 import type { ChipItem, ChipPage } from './chipSelect.logic'
@@ -119,15 +120,17 @@ export function RepoSelect({
   onChange,
   load,
   troubleshoot,
-  note = 'Not all repositories are shown. Type to search.',
+  note: given,
   connect,
   action,
-  placeholder = 'Repository',
+  placeholder,
   placement,
   disabled,
   open,
   onOpenChange,
 }: RepoSelectProps) {
+  const { t } = useI18n()
+  const note = given ?? t('Not all repositories are shown. Type to search.')
   const pages = useCallback(
     async (q: string, after?: string | null): Promise<ChipPage<RepoItem>> => {
       const page = await load(q, after)
@@ -146,14 +149,14 @@ export function RepoSelect({
 
   return (
     <ChipSelect<RepoItem>
-      name="Repository"
+      name={t('Repository')}
       icon={<Code size={12} color="$soft" />}
-      label={value ? value.name : placeholder}
+      label={value ? value.name : (placeholder ?? t('Repository'))}
       chosen={value ? item(value) : null}
       onChange={(i) => onChange(i.repo)}
       load={pages}
-      placeholder="Search repositories…"
-      empty="No repositories match."
+      placeholder={t('Search repositories…')}
+      empty={t('No repositories match.')}
       cta={connect}
       action={act}
       placement={placement}

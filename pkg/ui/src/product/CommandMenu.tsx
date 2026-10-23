@@ -35,6 +35,7 @@
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Input, ScrollView, Text, XStack, YStack } from '@hanzo/gui'
 import { ChevronRight, Search } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { score, step } from '../backends/gui/command.logic'
 import { Kbd } from '../backends/gui/kbd'
@@ -94,15 +95,19 @@ type Key = { key: string; preventDefault: () => void; stopPropagation: () => voi
 
 export function CommandMenu({
   groups,
-  placeholder = 'Search or jump to…',
-  empty = 'No results found',
-  label = 'Commands',
+  placeholder: hint,
+  empty: none,
+  label: named,
   query: controlled,
   onQueryChange,
   onBack,
   onClose,
   autoFocus = true,
 }: CommandMenuProps) {
+  const { t } = useI18n()
+  const placeholder = hint ?? t('Search or jump to…')
+  const empty = none ?? t('No results found')
+  const label = named ?? t('Commands')
   const pane = usePane()
   const base = useId()
   const [own, setOwn] = useState('')
@@ -218,20 +223,20 @@ export function CommandMenu({
           placeholder={placeholder}
           placeholderTextColor="$hint"
           value={query}
-          onChangeText={(t: string) => {
-            setQuery(t)
+          onChangeText={(text: string) => {
+            setQuery(text)
             setActive(undefined)
           }}
           onKeyDown={onKey as never}
         />
         {close ? (
-          <XStack render="button" aria-label="Close" onPress={close} shrink={0} items="center" justify="center" cursor="pointer" opacity={0.7} hoverStyle={{ opacity: 1 }}>
+          <XStack render="button" aria-label={t('Close')} onPress={close} shrink={0} items="center" justify="center" cursor="pointer" opacity={0.7} hoverStyle={{ opacity: 1 }}>
             {/* A phone has no Escape key: it says Cancel. */}
             <XStack $max-md={{ display: 'none' }}>
               <Kbd>esc</Kbd>
             </XStack>
             <Text display="none" $max-md={{ display: 'flex' }} fontSize="$4" color="$ink">
-              Cancel
+              {t('Cancel')}
             </Text>
           </XStack>
         ) : null}
