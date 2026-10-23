@@ -28,8 +28,8 @@ catalogs:
       specifier: ^21.2.2
       version: 21.2.2
     '@hanzo/appearance':
-      specifier: 0.2.7
-      version: 0.2.7
+      specifier: 0.2.11
+      version: 0.2.11
     '@hanzo/brand':
       specifier: 1.4.8
       version: 1.4.8
@@ -1245,7 +1245,7 @@ importers:
         version: 6.43.13
       '@hanzo/appearance':
         specifier: 'catalog:'
-        version: 0.2.7(react@19.2.8)
+        version: 0.2.11(react@19.2.8)
       '@hanzo/brand':
         specifier: 'catalog:'
         version: 1.4.8(react@19.2.8)
@@ -2807,6 +2807,11 @@ packages:
     peerDependenciesMeta:
       react:
         optional: true
+
+  '@hanzo/appearance@0.2.11':
+    resolution: {integrity: sha512-Uuqb7YfrRls8YNQ7dkwg9mZFGHSdKE5TU3/C3F8hnF8M5BbfSNBOAPWiwMYoOYl4KcGKQ8sfAvlqtPzf03bqNQ==}
+    peerDependencies:
+      react: 19.2.8
 
   '@hanzo/appearance@0.2.2':
     resolution: {integrity: sha512-HsH2wT82EbjHF1zY/TWubUQv7N5tBolVyBtXuQD8I+3E7xQ+Qoy7u79Xz1lw0EVkBESM2dr6VMaPWWThnytzZg==}
@@ -11848,9 +11853,14 @@ snapshots:
     optionalDependencies:
       react: 19.2.8
 
+  '@hanzo/appearance@0.2.11(react@19.2.8)':
+    dependencies:
+      '@hanzo/design': 0.5.37
+      react: 19.2.8
+
   '@hanzo/appearance@0.2.2(react@19.2.8)':
     dependencies:
-      '@hanzo/design': 0.5.35
+      '@hanzo/design': 0.5.37
       react: 19.2.8
 
   '@hanzo/appearance@0.2.7(react@19.2.8)':

@@ -12,11 +12,12 @@
  * A small `?` sits at the bottom START corner of the window (bottom-left in a
  * left-to-right page, bottom-right in a right-to-left one), clear of the notch
  * and the home indicator. Pressing it opens one card that opens toward the
- * inside: the host's help links first, then Theme, Language and Currency. The
- * three settings a visitor is most likely to want are where they look when they
- * want the page to explain itself, on every surface, in the same place.
+ * inside: the host's help links first, then Theme, Language, Font (and Arabic
+ * font, on a page in Arabic script) and Currency. The settings a visitor is most
+ * likely to want are where they look when they want the page to explain itself,
+ * on every surface, in the same place.
  *
- * Theme is the library's own: `@hanzo/appearance`, written through `<Hanzo>`'s
+ * Theme and the faces are the library's own: `@hanzo/appearance`, written through `<Hanzo>`'s
  * resolved stack when there is one (`Look`), so it is stored, painted before
  * first paint and carried across origins exactly as the settings panel does.
  * Language and currency are the HOST's — this package depends on no i18n or
@@ -35,7 +36,7 @@
  */
 import { Anchor, Input as GuiInput, SizableText, XStack, YStack, usePopperContextSlow } from '@hanzo/gui'
 import { Check, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, Moon, Search, Sun, X } from '@hanzogui/lucide-icons-2'
-import { apply, current, read, useScheme, write, type Scheme } from '@hanzo/appearance'
+import { COMPANIONS, apply, companion, current, read, useScheme, write, type Preference, type Scheme } from '@hanzo/appearance'
 import { useCallback, useContext, useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui/popover'
@@ -47,7 +48,7 @@ import { move, type Move } from '../product/chipSelect.logic'
 import { Segmented } from '../product/Filters'
 import { useEmit } from '../product/instrument'
 import { Look } from '../look'
-import { LONG, WORDS, find, shown, type Option, type Setting, type Words } from './logic'
+import { LONG, WORDS, arabic, find, shown, type Option, type Setting, type Words } from './logic'
 
 export type { Option, Setting, Words } from './logic'
 
@@ -65,7 +66,10 @@ export type CornerProps = {
   words?: Partial<Words>
 }
 
-type View = 'main' | 'language' | 'currency'
+type View = 'main' | 'language' | 'currency' | 'font' | 'arabic'
+
+/** The rows that open a list, in the order the card draws them. */
+const LISTS = ['language', 'font', 'arabic', 'currency'] as const
 
 /**
  * The trigger's distance from the window's foot and its start edge: 10px, or the
@@ -92,30 +96,31 @@ const MOVES = new Set<Move>(['ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 
 const STOPS = '[data-corner-stop], [data-slot="segmented-item"][data-state="checked"]'
 
 /**
- * The theme, as the person chose it, and the one way to change it.
+ * One appearance axis — theme, face or Arabic face — as the person chose it,
+ * and the one way to change it.
  *
  * Under `<Hanzo>` it writes through the root's `useAppearance` (its org,
  * install and account layers). Under a host's own gui provider it writes the
  * device's layer and repaints the resolved stack, which is what `useAppearance`
- * would do there. Nobody chose yet: the row marks what the document shows.
+ * would do there. Nobody chose yet: undefined, and the row says what the
+ * document shows.
  */
-function useTheme(): [Scheme, (theme: Scheme) => void] {
+function useAxis<K extends 'theme' | 'font' | 'arabic'>(axis: K): [Preference[K], (value: NonNullable<Preference[K]>) => void] {
   const look = useContext(Look)
-  const ground = useScheme()
-  const [own, setOwn] = useState<Scheme | undefined>(undefined)
+  const [own, setOwn] = useState<Preference[K]>(undefined)
   useEffect(() => {
-    if (!look) setOwn(read().theme)
-  }, [look])
+    if (!look) setOwn(read()[axis])
+  }, [look, axis])
   const set = useCallback(
-    (theme: Scheme) => {
-      if (look) return look.set({ theme })
-      write({ ...read(), theme })
+    (value: NonNullable<Preference[K]>) => {
+      if (look) return look.set({ [axis]: value })
+      write({ ...read(), [axis]: value })
       apply(current().pref)
-      setOwn(theme)
+      setOwn(value)
     },
-    [look],
+    [look, axis],
   )
-  return [(look ? look.pref.theme : own) ?? ground, set]
+  return [look ? look.pref[axis] : own, set]
 }
 
 export function Corner({ help = [], language, currency, words }: CornerProps) {
@@ -125,12 +130,32 @@ export function Corner({ help = [], language, currency, words }: CornerProps) {
   // Which row opened a list, so going back puts focus where it was.
   const [from, setFrom] = useState<View>('main')
   const [rtl, setRtl] = useState(false)
-  const [theme, setTheme] = useTheme()
+  const ground = useScheme()
+  const [scheme, setTheme] = useAxis('theme')
+  const theme = scheme ?? ground
+  const [face, setFace] = useAxis('font')
+  const [arabicFace, setArabic] = useAxis('arabic')
   const emit = useEmit()
   const trigger = useRef<HTMLElement | null>(null)
   const panel = useRef<HTMLElement | null>(null)
 
-  const settings = { language, currency }
+  // The faces are the library's own, like the theme, and drawn the way the
+  // host's lists are. The Arabic row only for a page in Arabic script: anywhere
+  // else it is a choice about letters the reader cannot see.
+  const font: Setting = {
+    value: face ?? 'default',
+    options: (['default', 'system', 'serif', 'mono'] as const).map((code) => ({ code, label: w[code === 'default' ? 'sans' : code] })),
+    onChange: (code) => setFace(code as NonNullable<Preference['font']>),
+  }
+  const lang = language?.value ?? (typeof document !== 'undefined' ? document.documentElement.lang : '')
+  const script: Setting | undefined = arabic(lang)
+    ? {
+        value: arabicFace && arabicFace !== 'default' ? arabicFace : (companion() ?? ''),
+        options: COMPANIONS.map((code) => ({ code, label: w[code] })),
+        onChange: (code) => setArabic(code as NonNullable<Preference['arabic']>),
+      }
+    : undefined
+  const settings: Record<Exclude<View, 'main'>, Setting | undefined> = { language, currency, font, arabic: script }
 
   // Focus follows the view: a list puts it on its search or its options, the
   // card on the row the list was opened from.
@@ -161,7 +186,7 @@ export function Corner({ help = [], language, currency, words }: CornerProps) {
 
   const back = () => setView('main')
 
-  const choose = (kind: 'language' | 'currency', code: string) => {
+  const choose = (kind: Exclude<View, 'main'>, code: string) => {
     const s = settings[kind]
     if (!s) return
     if (code !== s.value) {
@@ -293,7 +318,7 @@ export function Corner({ help = [], language, currency, words }: CornerProps) {
                   ]}
                 />
               </XStack>
-              {(['language', 'currency'] as const).map((kind) => {
+              {LISTS.map((kind) => {
                 const s = settings[kind]
                 if (!s) return null
                 const chosen = s.options.find((o) => o.code === s.value)
@@ -462,7 +487,7 @@ function List({
   onBack,
   onChoose,
 }: {
-  kind: 'language' | 'currency'
+  kind: Exclude<View, 'main'>
   setting: Setting
   title: string
   words: Words

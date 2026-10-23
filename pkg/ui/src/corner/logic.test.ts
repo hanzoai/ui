@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { LONG, WORDS, find, fold, shown, type Option } from './logic'
+import { LONG, WORDS, arabic, find, fold, shown, type Option } from './logic'
 
 const LANGS: Option[] = [
   { code: 'de', label: 'Deutsch', hint: 'German' },
@@ -55,5 +55,16 @@ describe('the words and the threshold', () => {
   })
   it('searches a list once it is longer than a screen of rows', () => {
     expect(LONG).toBe(8)
+  })
+})
+
+describe('arabic', () => {
+  it('knows a language by the script it is written in, not by its direction', () => {
+    for (const tag of ['ar', 'ar-EG', 'fa', 'fa-AF', 'ur', 'ps', 'sd', 'ckb', 'ug', 'pa-PK']) expect(arabic(tag), tag).toBe(true)
+    for (const tag of ['en', 'he', 'pa', 'tr', 'ku', '']) expect(arabic(tag), tag || 'empty').toBe(false)
+  })
+  it('refuses a malformed tag rather than throwing', () => {
+    expect(arabic('not a tag')).toBe(false)
+    expect(arabic(undefined)).toBe(false)
   })
 })
