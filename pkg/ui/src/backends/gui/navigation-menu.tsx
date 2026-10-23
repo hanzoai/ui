@@ -14,6 +14,7 @@
 import * as React from 'react'
 
 import { Text, XStack, styled } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Box, type BoxProps } from '../../box'
 import { cn } from '../../core/cn'
@@ -36,14 +37,17 @@ const both =
     theirs?.(e)
   }
 
-export const NavigationMenu = ({ className, ...props }: React.ComponentProps<typeof Box>) => (
-  <Box
-    tag="nav"
-    aria-label="Main"
-    className={cn('relative grid justify-center', className)}
-    {...props}
-  />
-)
+export const NavigationMenu = ({ className, ...props }: React.ComponentProps<typeof Box>) => {
+  const { t } = useI18n()
+  return (
+    <Box
+      tag="nav"
+      aria-label={t('Main')}
+      className={cn('relative grid justify-center', className)}
+      {...props}
+    />
+  )
+}
 
 export const NavigationMenuList = ({ className, ...props }: React.ComponentProps<typeof Box>) => (
   <Box

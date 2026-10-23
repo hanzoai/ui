@@ -9,7 +9,14 @@
  * `inputs`, `outputs`, `supports_*`, `pricing`. Nothing is read from an id's
  * spelling. A field the gateway leaves out is absent here too: a model with no
  * price has no price, never a price of zero.
+ *
+ * Its words are English, marked (`phrase`) or taking the caller's @hanzo/i18n
+ * `t`, so a host draws them in the reader's language; names are names.
  */
+import { phrase } from '@hanzo/i18n'
+import type { Say } from '@hanzo/i18n/react'
+
+import { english } from '../core/english'
 import type { PausedModel } from '../product/limits'
 
 /** The class a model is sold in, as the usage policy reads it. */
@@ -196,10 +203,11 @@ export const FAMILIES: readonly { id: ModelFamily; label: string }[] = [
   { id: 'zoo', label: 'Zoo' },
 ]
 
+/** A class's name; Premium and Free are words (draw them through `t`), Hanzo a name. */
 export const CLASS_NAMES: Record<ModelClass, string> = {
-  premium: 'Premium',
+  premium: phrase('Premium'),
   ours: 'Hanzo',
-  free: 'Free',
+  free: phrase('Free'),
 }
 
 /** The makers whose name is not their id capitalized. */
@@ -324,18 +332,19 @@ export function can(m: ModelCatalogEntry, c: Capability): boolean {
   return capabilitiesOf(m).includes(c)
 }
 
+/** What a capability is called, in English; draw it through `t`. */
 export const CAPABILITY_NAMES: Record<Capability, string> = {
-  chat: 'Chat',
-  vision: 'Vision',
-  embeddings: 'Embeddings',
-  rerank: 'Rerank',
-  image: 'Image',
-  video: 'Video',
-  audio: 'Speech',
-  transcription: 'Transcription',
-  decision: 'Decision',
-  tools: 'Tools',
-  reasoning: 'Reasoning',
+  chat: phrase('Chat'),
+  vision: phrase('Vision'),
+  embeddings: phrase('Embeddings'),
+  rerank: phrase('Rerank'),
+  image: phrase('Image'),
+  video: phrase('Video'),
+  audio: phrase('Speech'),
+  transcription: phrase('Transcription'),
+  decision: phrase('Decision'),
+  tools: phrase('Tools'),
+  reasoning: phrase('Reasoning'),
 }
 
 /** What `isPaused` reads of the payer's plan usage (`Limits` from `@hanzo/ui/product/limits`). */
@@ -456,18 +465,20 @@ export function savingOf(m: ModelCatalogEntry, models: readonly ModelCatalogEntr
   return { percent, against: modelName(other) }
 }
 
-/** "50% less than Jev". */
-export const formatSaving = (s: Saving): string => `${s.percent}% less than ${s.against}`
+/** "50% less than Jev", in the language of `t`. */
+export const formatSaving = (s: Saving, t: Say = english): string => t('{percent}% less than {model}', { percent: s.percent, model: s.against })
 
 /**
  * A router's price in words: "Up to $0.042 / 1M · billed at the model that
  * serves it", from its input ceiling; the clause alone when it states none.
- * "" for a model with a price of its own.
+ * "" for a model with a price of its own. In the language of `t`.
  */
-export function formatCeiling(m: ModelCatalogEntry): string {
+export function formatCeiling(m: ModelCatalogEntry, t: Say = english): string {
   if (!m.pricing?.variable) return ''
   const top = m.pricing.input_per_million
-  return top ? `Up to ${formatPrice(top)} / 1M · billed at the model that serves it` : 'Billed at the model that serves it'
+  return top
+    ? t('Up to {price} / 1M · billed at the model that serves it', { price: formatPrice(top, t) })
+    : t('Billed at the model that serves it')
 }
 
 // ── how a figure reads ───────────────────────────────────────────────────────
@@ -483,11 +494,11 @@ export function formatContext(n: number | undefined): string {
 /**
  * "$3.00" per 1M tokens, "Free" at zero, "" when the catalog lists no price.
  * Under a dollar, a price that is not whole cents keeps two significant digits:
- * "$0.042", never a rounded "$0.04".
+ * "$0.042", never a rounded "$0.04". "Free" in the language of `t`.
  */
-export function formatPrice(n: number | undefined): string {
+export function formatPrice(n: number | undefined, t: Say = english): string {
   if (n === undefined) return ''
-  if (n === 0) return 'Free'
+  if (n === 0) return t('Free')
   const cents = n * 100
   return n >= 1 || Math.abs(cents - Math.round(cents)) < 1e-9 ? `$${n.toFixed(2)}` : `$${+n.toPrecision(2)}`
 }

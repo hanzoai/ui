@@ -2,6 +2,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
+import { I18nProvider } from '@hanzo/i18n/react'
 
 import config from '../gui-config'
 import { Consent, ConsentLink } from './Consent'
@@ -112,5 +113,32 @@ describe('Consent, on a first visit', () => {
     await m.done()
     if (gpc) Object.defineProperty(Navigator.prototype, 'globalPrivacyControl', gpc)
     else delete (Navigator.prototype as { globalPrivacyControl?: boolean }).globalPrivacyControl
+  })
+
+  it('asks in the reader’s language, the brand and the policy link kept', async () => {
+    const FR: Record<string, string> = {
+      'Cookies measure visits and ads once you accept.': 'Les cookies mesurent les visites et les publicités une fois acceptés.',
+      'Privacy policy': 'Politique de confidentialité',
+      'Reject all': 'Tout refuser',
+      'Accept all': 'Tout accepter',
+      Choose: 'Choisir',
+      'Cookie preferences': 'Préférences de cookies',
+      'Choose what {brand} may measure and share.': 'Choisissez ce que {brand} peut mesurer et partager.',
+    }
+    const m = await mount(
+      <I18nProvider userId="reader" initialLocale="fr" loadCatalog={async () => FR}>
+        <Consent brand="Lux" />
+      </I18nProvider>,
+    )
+    await m.act(async () => new Promise((r) => setTimeout(r, 0)))
+    const bar = m.host.querySelector('[data-slot="consent"]')!
+    expect(bar.getAttribute('aria-label')).toBe('Préférences de cookies')
+    expect(bar.textContent).toContain('Les cookies mesurent les visites et les publicités une fois acceptés. Politique de confidentialité')
+    expect([...bar.querySelectorAll('button')].map((b) => b.textContent)).toEqual(['Choisir', 'Tout refuser', 'Tout accepter'])
+    const { openConsent } = await import('./Consent')
+    await m.act(async () => openConsent())
+    // A sentence the catalog lacks stays English; a brand stays itself.
+    expect(m.host.textContent).toContain('Choisissez ce que Lux peut mesurer et partager. You can change this at any time.')
+    await m.done()
   })
 })

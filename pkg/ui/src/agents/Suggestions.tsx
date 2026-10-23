@@ -15,6 +15,7 @@
 import { ScrollView, SizableText, XStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Button } from '../backends/gui/button'
 import { slot } from '../backends/gui/slot'
@@ -33,8 +34,10 @@ export interface SuggestionsProps extends Row {
   label?: string
 }
 
-export function Suggestions({ items, onPick, onDismiss, label = 'Suggestions', ...rest }: SuggestionsProps) {
+export function Suggestions({ items, onPick, onDismiss, label: named, ...rest }: SuggestionsProps) {
+  const { t } = useI18n()
   if (items.length === 0) return null
+  const label = named ?? t('Suggestions')
   return (
     <XStack {...slot('suggestions')} role="group" aria-label={label} items="center" gap="$1.5" minW={0} {...rest}>
       <ScrollView horizontal flex={1} minW={0} showsHorizontalScrollIndicator={false}>
@@ -65,8 +68,8 @@ export function Suggestions({ items, onPick, onDismiss, label = 'Suggestions', .
           size="icon-sm"
           minHeight={24}
           minWidth={24}
-          aria-label={`Hide ${label.toLowerCase()}`}
-          title={`Hide ${label.toLowerCase()}`}
+          aria-label={t('Hide {label}', { label: label.toLowerCase() })}
+          title={t('Hide {label}', { label: label.toLowerCase() })}
           onClick={onDismiss}
         >
           <X size={13} />

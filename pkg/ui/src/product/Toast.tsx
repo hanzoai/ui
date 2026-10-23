@@ -15,6 +15,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { createPortal } from 'react-dom'
 import { Button, Card, Text, XStack, YStack } from '@hanzo/gui'
 import { CircleCheck, CircleX, Info, TriangleAlert, X } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { useEmit } from './instrument'
 
@@ -79,6 +80,8 @@ const DURATION: Record<ToastKind, number> = {
 }
 
 function ToastCard({ t, onClose }: { t: Toast; onClose: () => void }) {
+  // `t` is the toast here, so the translator is reached through the context.
+  const i18n = useI18n()
   const Icon = ICON[t.kind]
   const accent = ACCENT[t.kind]
   return (
@@ -111,7 +114,7 @@ function ToastCard({ t, onClose }: { t: Toast; onClose: () => void }) {
             </Text>
           ) : null}
         </YStack>
-        <Button size="$1" chromeless icon={<X size={14} />} onPress={onClose} aria-label="Dismiss" />
+        <Button size="$1" chromeless icon={<X size={14} />} onPress={onClose} aria-label={i18n.t('Dismiss')} />
       </XStack>
     </Card>
   )

@@ -18,6 +18,7 @@
  */
 import { SizableText, XStack, YStack, styled, type GuiElement } from '@hanzo/gui'
 import * as React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { ink } from './ink'
 import { slot } from './slot'
 import { touch } from './gesture'
@@ -132,6 +133,7 @@ export function LimelightNav({
   variant = 'floating',
   ...props
 }: LimelightNavProps) {
+  const { t } = useI18n()
   const [own, setOwn] = React.useState(defaultValue ?? items[0]?.id)
   const active = value ?? own
 
@@ -194,7 +196,7 @@ export function LimelightNav({
   }
 
   return (
-    <Rail ref={railRef} {...slot('limelight-nav')} role="tablist" aria-label={props['aria-label'] ?? 'Navigation'} variant={variant}>
+    <Rail ref={railRef} {...slot('limelight-nav')} role="tablist" aria-label={props['aria-label'] ?? t('Navigation')} variant={variant}>
       {variant === 'floating' && (
         <Beam
           {...slot('limelight-nav-beam')}

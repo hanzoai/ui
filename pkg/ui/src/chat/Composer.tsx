@@ -19,6 +19,8 @@
  * the field. `rows` is the floor, `maxHeight` the ceiling.
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 import { ArrowUp, ChevronDown, CornerDownLeft, Square } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps, ReactNode } from 'react'
 
@@ -60,8 +62,9 @@ const MARK = 28
  * the person rather than describing the mechanism, and being one constant string
  * it never has to be recomputed or re-announced when the model or endpoint
  * changes — which is what a model-named placeholder forces a surface to do.
+ * English, drawn in the reader's language through @hanzo/i18n's `t`.
  */
-export const ASK = 'Ask anything'
+export const ASK = phrase('Ask anything')
 
 export interface ComposerProps extends Stack {
   value: string
@@ -124,7 +127,7 @@ export function Composer({
   onStop,
   busy = false,
   disabled = false,
-  placeholder = ASK,
+  placeholder: asked,
   rows = MIN_ROWS,
   maxHeight = CEILING,
   children,
@@ -137,6 +140,10 @@ export function Composer({
   inline = false,
   ...props
 }: ComposerProps) {
+  const { t } = useI18n()
+  // A host's own placeholder is drawn as given; the resting one in the reader's language.
+  const placeholder = asked ?? t(ASK)
+  const action = busy ? t('Stop') : t('Send')
   const sendable = ready(value, busy, disabled)
 
   const keyed = (e: { nativeEvent?: Mods & { key?: string }; key?: string } & Mods) => {
@@ -215,10 +222,10 @@ export function Composer({
       {send ?? (
         <XStack
           {...slot('composer-send')}
-          {...tip(busy ? 'Stop' : 'Send')}
+          {...tip(action)}
           role="button"
           tabIndex={busy ? (onStop ? 0 : -1) : sendable ? 0 : -1}
-          aria-label={busy ? 'Stop' : 'Send'}
+          aria-label={action}
           aria-disabled={busy ? !onStop : !sendable}
           width={MARK}
           height={MARK}
@@ -264,7 +271,7 @@ export function Composer({
             size="sm"
             disabled={busy ? !onStop : !sendable}
             onPress={busy ? onStop : onSend}
-            aria-label={busy ? 'Stop' : 'Send'}
+            aria-label={action}
             // A circle, and the room's one primary control. The height is the
             // size's; `aspectRatio` takes the width from it, so no second number
             // is written down. `--primary` is the accent a reader picks, and at

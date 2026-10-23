@@ -51,6 +51,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { slot } from '../backends/gui/slot'
 import { accept, type FrameCommand, type FrameEvent, web } from './bridge'
@@ -93,7 +94,7 @@ export interface PreviewFrameProps extends Col {
 
 export function PreviewFrame({
   src,
-  title = 'Preview',
+  title,
   device = 'desktop',
   empty,
   toolbar,
@@ -103,6 +104,7 @@ export function PreviewFrame({
   ...rest
 }: PreviewFrameProps) {
   const frame = useRef<HTMLIFrameElement | null>(null)
+  const { t } = useI18n()
   const [loading, setLoading] = useState(true)
   const [nonce, setNonce] = useState(0)
 
@@ -170,10 +172,10 @@ export function PreviewFrame({
         {empty ?? (
           <YStack items="center" gap="$1.5" maxW={360}>
             <SizableText size="$4" fontWeight="600" color="$ink" text="center">
-              {src ? 'This address cannot be previewed.' : 'Nothing deployed yet.'}
+              {src ? t('This address cannot be previewed.') : t('Nothing deployed yet.')}
             </SizableText>
             <SizableText size="$2" color="$soft" text="center">
-              {src ? 'Only http and https pages open here.' : 'Describe what to build and the running app appears here.'}
+              {src ? t('Only http and https pages open here.') : t('Describe what to build and the running app appears here.')}
             </SizableText>
           </YStack>
         )}
@@ -210,7 +212,7 @@ export function PreviewFrame({
           key={`${url.href}#${nonce}`}
           ref={frame}
           src={url.href}
-          title={title}
+          title={title ?? t('Preview')}
           sandbox={sandbox}
           referrerPolicy="strict-origin-when-cross-origin"
           onLoad={() => {
@@ -235,7 +237,7 @@ export function PreviewFrame({
           >
             <Spinner size="small" maxW={16} maxH={16} />
             <SizableText size="$2" color="$soft">
-              Loading preview…
+              {t('Loading preview…')}
             </SizableText>
           </XStack>
         ) : null}

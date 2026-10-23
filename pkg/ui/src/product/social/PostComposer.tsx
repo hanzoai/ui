@@ -9,6 +9,8 @@
 import { useState } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { AlertTriangle } from '@hanzogui/lucide-icons-2'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 import { FieldRow, FieldSelect, FieldText, FieldTextArea } from '../Field'
 import { PrimaryButton } from '../PrimaryButton'
 import { parsePostTime } from './format'
@@ -18,9 +20,9 @@ import type { ProviderCapability } from './api'
 export const COMPOSE_MODES = ['draft', 'schedule', 'now'] as const
 export type ComposeMode = (typeof COMPOSE_MODES)[number]
 const COMPOSE_LABEL: Record<ComposeMode, string> = {
-  draft: 'Save draft',
-  schedule: 'Schedule',
-  now: 'Publish now',
+  draft: phrase('Save draft'),
+  schedule: phrase('Schedule'),
+  now: phrase('Publish now'),
 }
 
 /** The writable fields of a new post — what the intent above encodes. */
@@ -54,13 +56,14 @@ export function PostComposer({
   const [scheduleAt, setScheduleAt] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { t } = useI18n()
 
   const cap = providers.find((p) => p.provider === channel)
   const unconfigured = (mode === 'now' || mode === 'schedule') && !!cap && !cap.credentialsConfigured
 
   const submit = async () => {
     if (!content.trim()) {
-      setError('Content is required.')
+      setError(t('Content is required.'))
       return
     }
     let status = 'draft'
@@ -68,7 +71,7 @@ export function PostComposer({
     if (mode === 'schedule') {
       at = parsePostTime(scheduleAt)
       if (at <= Math.floor(Date.now() / 1000)) {
-        setError('Pick a future date and time to schedule.')
+        setError(t('Pick a future date and time to schedule.'))
         return
       }
       status = 'scheduled'
@@ -88,13 +91,13 @@ export function PostComposer({
 
   return (
     <YStack gap="$3" p="$4">
-      <FieldRow label="Content">
+      <FieldRow label={t('Content')}>
         <FieldTextArea value={content} onChange={setContent} disabled={saving} />
       </FieldRow>
-      <FieldRow label="Channel">
+      <FieldRow label={t('Channel')}>
         <FieldSelect value={channel} options={channels} onChange={setChannel} disabled={saving} />
       </FieldRow>
-      <FieldRow label="When">
+      <FieldRow label={t('When')}>
         <FieldSelect
           value={mode}
           options={[...COMPOSE_MODES]}
@@ -103,7 +106,7 @@ export function PostComposer({
         />
       </FieldRow>
       {mode === 'schedule' ? (
-        <FieldRow label="Schedule at">
+        <FieldRow label={t('Schedule at')}>
           <FieldText
             value={scheduleAt}
             onChange={setScheduleAt}
@@ -116,8 +119,10 @@ export function PostComposer({
         <XStack items="flex-start" gap="$2">
           <AlertTriangle size={14} color="var(--yellow10)" />
           <Text fontSize="$1" color="$soft">
-            {channel} isn’t configured to publish yet — needs {cap?.missingCredentials.join(', ')}. The post is saved and
-            marked failed on publish until credentials are supplied.
+            {t('{channel} isn’t configured to publish yet — needs {credentials}. The post is saved and marked failed on publish until credentials are supplied.', {
+              channel,
+              credentials: cap?.missingCredentials.join(', ') ?? '',
+            })}
           </Text>
         </XStack>
       ) : null}
@@ -127,7 +132,7 @@ export function PostComposer({
         </Text>
       ) : null}
       <PrimaryButton onPress={submit} disabled={saving}>
-        {saving ? 'Working…' : COMPOSE_LABEL[mode]}
+        {saving ? t('Working…') : t(COMPOSE_LABEL[mode])}
       </PrimaryButton>
     </YStack>
   )

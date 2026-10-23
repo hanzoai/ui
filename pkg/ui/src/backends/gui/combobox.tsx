@@ -11,6 +11,7 @@
 import { useId, useState, type ComponentProps, type ComponentType } from 'react'
 import { XStack } from '@hanzo/gui'
 import { Check, ChevronsUpDown } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Button } from './button'
 import {
@@ -42,15 +43,16 @@ function Combobox({
   options,
   value,
   onChange,
-  placeholder = 'Select option...',
-  searchPlaceholder = 'Search...',
-  emptyText = 'No option found.',
+  placeholder,
+  searchPlaceholder,
+  emptyText,
   disabled,
   width = 200,
   ...contentProps
 }: ComboboxProps) {
   const [open, setOpen] = useState(false)
   const id = useId()
+  const { t } = useI18n()
   const selected = options.find((option) => option.value === value)
 
   return (
@@ -66,15 +68,15 @@ function Combobox({
           width={width}
           justify="space-between"
         >
-          {selected ? selected.label : placeholder}
+          {selected ? selected.label : (placeholder ?? t('Select option...'))}
           <ChevronsUpDown size={16} opacity={0.5} shrink={0} />
         </Button>
       </PopoverTrigger>
       <PopoverContent id={id} data-slot="combobox-content" p={0} width={width} {...contentProps}>
         <Command>
-          <CommandInput placeholder={searchPlaceholder} />
+          <CommandInput placeholder={searchPlaceholder ?? t('Search...')} />
           <CommandList>
-            <CommandEmpty>{emptyText}</CommandEmpty>
+            <CommandEmpty>{emptyText ?? t('No option found.')}</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
                 <CommandItem
@@ -113,15 +115,16 @@ function ComboboxWithIcons({
   options,
   value,
   onChange,
-  placeholder = 'Select option...',
-  searchPlaceholder = 'Search...',
-  emptyText = 'No option found.',
+  placeholder,
+  searchPlaceholder,
+  emptyText,
   disabled,
   width = 200,
   ...contentProps
 }: ComboboxWithIconsProps) {
   const [open, setOpen] = useState(false)
   const id = useId()
+  const { t } = useI18n()
   const selected = options.find((option) => option.value === value)
   const SelectedIcon = selected?.icon
 
@@ -144,15 +147,15 @@ function ComboboxWithIcons({
               {selected.label}
             </XStack>
           ) : (
-            placeholder
+            (placeholder ?? t('Select option...'))
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent id={id} data-slot="combobox-content" p={0} width={width} {...contentProps}>
         <Command>
-          <CommandInput placeholder={searchPlaceholder} />
+          <CommandInput placeholder={searchPlaceholder ?? t('Search...')} />
           <CommandList>
-            <CommandEmpty>{emptyText}</CommandEmpty>
+            <CommandEmpty>{emptyText ?? t('No option found.')}</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
                 const Icon = option.icon

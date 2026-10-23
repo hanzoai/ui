@@ -18,6 +18,7 @@
 import { SizableText } from '@hanzo/gui'
 import { ChevronDown } from '@hanzogui/lucide-icons-2'
 import { useState, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { SearchList, Segment, useOpen, type SearchOption } from './search-list'
 
 export type CurrencyOption = {
@@ -74,10 +75,12 @@ export function CurrencyPicker({
   defaultOpen,
   onOpenChange,
   disabled = false,
-  label: name = 'Currency',
-  searchLabel = 'Search currencies',
-  emptyLabel = 'No currency found',
+  label: named,
+  searchLabel,
+  emptyLabel,
 }: CurrencyPickerProps) {
+  const { t } = useI18n()
+  const name = named ?? t('Currency')
   const [own, setOwn] = useState<string | null>(defaultValue)
   const code = value !== undefined ? value : own
   const [shown, setShown] = useOpen(open, defaultOpen, onOpenChange)
@@ -98,8 +101,8 @@ export function CurrencyPicker({
       onOpenChange={(next) => setShown(disabled ? false : next)}
       options={options}
       value={code}
-      searchLabel={searchLabel}
-      emptyLabel={emptyLabel}
+      searchLabel={searchLabel ?? t('Search currencies')}
+      emptyLabel={emptyLabel ?? t('No currency found')}
       onPick={(next) => {
         if (value === undefined) setOwn(next)
         if (next !== code) onValueChange?.(next)
@@ -110,7 +113,7 @@ export function CurrencyPicker({
           {...({ 'data-slot': 'currency-picker' } as object)}
           disabled={disabled}
           open={shown}
-          label={picked ? `${name}: ${picked.name}` : name}
+          label={picked ? t('{label}: {value}', { label: name, value: picked.name }) : name}
         >
           {renderValue ? (
             renderValue(picked)

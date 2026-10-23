@@ -14,6 +14,7 @@
  * defers its cookie until playback starts.
  */
 import * as React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Box } from '../../box'
 
 export type VideoPlayerProps = Omit<React.ComponentPropsWithoutRef<'video'>, 'src'> & {
@@ -72,6 +73,7 @@ export const YouTubeEmbed = ({
   className,
 }: YouTubeEmbedProps) => {
   const [playing, setPlaying] = React.useState(false)
+  const { t } = useI18n()
 
   if (playing) {
     // autoplay is honoured because the iframe mounts inside a click.
@@ -84,7 +86,7 @@ export const YouTubeEmbed = ({
           src={`https://www.youtube-nocookie.com/embed/${youtubeID}${q}`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
-          title={title || 'YouTube video'}
+          title={title || t('YouTube video')}
           style={{ aspectRatio: '16 / 9', width: '100%', height: '100%', border: 0, padding: 0 }}
         />
       </Box>
@@ -96,7 +98,7 @@ export const YouTubeEmbed = ({
       <button
         type="button"
         onClick={() => setPlaying(true)}
-        aria-label={title ? `Play ${title}` : 'Play video'}
+        aria-label={title ? t('Play {title}', { title }) : t('Play video')}
         style={{
           position: 'relative',
           aspectRatio: '16 / 9',

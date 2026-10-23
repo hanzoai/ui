@@ -17,6 +17,7 @@
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { ChevronDown, CircleOff } from '@hanzogui/lucide-icons-2'
 import { useId, useState, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { BOX, FIELD, type FieldSize } from './control'
 import { fieldSize, useDensity } from './density'
 import { flag } from './flag'
@@ -81,15 +82,17 @@ export function CountrySelect({
   onValueChange,
   label,
   'aria-label': ariaLabel,
-  noCountryLabel = 'No country',
-  searchLabel = 'Search',
-  noResultsLabel = 'No results',
+  noCountryLabel: noCountry,
+  searchLabel,
+  noResultsLabel,
   size,
   open,
   defaultOpen,
   onOpenChange,
   disabled: off = false,
 }: CountrySelectProps) {
+  const { t } = useI18n()
+  const noCountryLabel = noCountry ?? t('No country')
   const density = useDensity()
   const box = BOX[fieldSize(size, density)]
   const id = useId()

@@ -38,6 +38,7 @@ catalog:
   '@hanzo/events': '0.3.1'
   '@hanzo/font': '1.9.2'
   '@hanzo/gui': '8.3.5'
+  '@hanzo/i18n': '0.4.0'
   '@hanzo/iam': '0.21.21'
   '@hanzo/pay': '0.1.1'
   '@hanzo/plans': '1.8.1'

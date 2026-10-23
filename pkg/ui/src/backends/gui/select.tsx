@@ -283,6 +283,24 @@ const SelectSeparator = (props: SelectSeparatorProps) => (
 /** The select's own inset: Chromium pads a select's text 4px inside its box. */
 const INSET = 4
 
+/**
+ * The open list's ink. The platform draws a select's list, and an `<option>`
+ * inherits the select's ink — the dim hint while nothing is chosen — so each
+ * choosable option states the field's own ink and the list reads at full
+ * strength whatever the closed select shows. A disabled one (a "Choose" hint)
+ * keeps the inherited ink.
+ */
+const inked = (children: ReactNode): ReactNode =>
+  Children.map(children, (c) => {
+    if (!isValidElement<ComponentProps<"option">>(c) || c.type !== "option" || c.props.disabled) return c
+    const { children: words, ...own } = c.props
+    return (
+      <Text render={<option {...own} />} color="$color">
+        {words}
+      </Text>
+    )
+  })
+
 /** The select's own attributes, which reach the `<select>`; its `<option>`s are its children. */
 type Native = Pick<
   ComponentProps<"select">,
@@ -357,7 +375,7 @@ const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(functi
       cursor="pointer"
       {...props}
     >
-      {children}
+      {inked(children)}
     </Text>
   )
 })

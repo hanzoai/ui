@@ -22,6 +22,7 @@
 import { SizableText, VisuallyHidden, XStack } from '@hanzo/gui'
 import { ChevronDown, Globe } from '@hanzogui/lucide-icons-2'
 import { useState, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { flag } from './flag'
 import { SearchList, Segment, useOpen, type SearchOption } from './search-list'
 
@@ -81,10 +82,12 @@ export function PhoneCountryPicker({
   defaultOpen,
   onOpenChange,
   disabled = false,
-  label: name = 'Country calling code',
-  searchLabel = 'Search countries',
-  emptyLabel = 'No country found',
+  label: named,
+  searchLabel,
+  emptyLabel,
 }: PhoneCountryPickerProps) {
+  const { t } = useI18n()
+  const name = named ?? t('Country calling code')
   const [own, setOwn] = useState<string | null>(defaultValue)
   const iso = value !== undefined ? value : own
   const [shown, setShown] = useOpen(open, defaultOpen, onOpenChange)
@@ -109,8 +112,8 @@ export function PhoneCountryPicker({
       onOpenChange={(next) => setShown(disabled ? false : next)}
       options={options}
       value={iso}
-      searchLabel={searchLabel}
-      emptyLabel={emptyLabel}
+      searchLabel={searchLabel ?? t('Search countries')}
+      emptyLabel={emptyLabel ?? t('No country found')}
       width={280}
       onPick={(next) => {
         if (value === undefined) setOwn(next)
@@ -130,7 +133,7 @@ export function PhoneCountryPicker({
         >
           <Flag iso={picked?.value} override={picked?.flag} />
           <ChevronDown size={14} color="$hint" />
-          <VisuallyHidden>{picked ? `${name}: ${picked.label} +${picked.callingCode}` : name}</VisuallyHidden>
+          <VisuallyHidden>{picked ? t('{label}: {country} +{code}', { label: name, country: picked.label, code: picked.callingCode }) : name}</VisuallyHidden>
         </Segment>
       }
     />

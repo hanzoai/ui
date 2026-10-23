@@ -17,6 +17,7 @@
  * the same frame (`frame`, `scrim`, `Sized`).
  */
 import { Dialog as GuiDialog, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { X } from '@hanzogui/lucide-icons-2'
 import { createContext, useContext, type ComponentProps, type ReactNode } from 'react'
 import { PortalTheme, useThemeName } from '../../product/menu/portal-theme'
@@ -106,6 +107,7 @@ const DialogContent = ({
   ...props
 }: DialogContentProps) => {
   const themeName = useThemeName()
+  const { t } = useI18n()
   return (
     <GuiDialog.Portal>
       <PortalTheme name={themeName}>
@@ -140,7 +142,7 @@ const DialogContent = ({
                 cursor="pointer"
                 opacity={0.7}
                 hoverStyle={{ opacity: 1 }}
-                aria-label="Close"
+                aria-label={t('Close')}
               >
                 <X size={16} />
               </XStack>

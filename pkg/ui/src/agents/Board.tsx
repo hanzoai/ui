@@ -21,6 +21,7 @@
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { ChevronDown, ChevronRight } from '@hanzogui/lucide-icons-2'
 import { useMemo, useState, type ComponentProps, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { slot } from '../backends/gui/slot'
 import { mirror } from '../backends/gui/dir'
@@ -105,6 +106,7 @@ export interface RunRowProps extends Col {
 export function RunRow({ run, depth = 0, active = false, onOpen, trailing, ...rest }: RunRowProps) {
   const kids = run.children ?? []
   const [open, setOpen] = useState(true)
+  const { t } = useI18n()
 
   return (
     <YStack {...slot('run-row')} {...rest}>
@@ -134,7 +136,7 @@ export function RunRow({ run, depth = 0, active = false, onOpen, trailing, ...re
             role="button"
             tabIndex={0}
             aria-expanded={open}
-            aria-label={open ? 'Hide sub-agents' : 'Show sub-agents'}
+            aria-label={open ? t('Hide sub-agents') : t('Show sub-agents')}
             onPress={(e: { stopPropagation?: () => void }) => {
               e.stopPropagation?.()
               setOpen((v) => !v)
@@ -163,7 +165,7 @@ export function RunRow({ run, depth = 0, active = false, onOpen, trailing, ...re
         {/* Collapsed, the count is the only thing saying a fan-out is here. */}
         {kids.length && !open ? (
           <SizableText size="$1" color="$soft">
-            {kids.length} sub-agent{kids.length === 1 ? '' : 's'}
+            {kids.length === 1 ? t('1 sub-agent') : t('{n} sub-agents', { n: kids.length })}
           </SizableText>
         ) : null}
 
@@ -208,17 +210,19 @@ export function AgentBoard({
   active,
   onOpen,
   empty,
-  otherLabel = 'Other work',
+  otherLabel,
   ...rest
 }: AgentBoardProps) {
-  const groups = useMemo(() => group(runs, otherLabel), [runs, otherLabel])
+  const { t } = useI18n()
+  const other = otherLabel ?? t('Other work')
+  const groups = useMemo(() => group(runs, other), [runs, other])
 
   if (!runs.length) {
     return (
       <YStack {...slot('agent-board')} p="$4" {...(rest as Col)}>
         {empty ?? (
           <SizableText size="$2" color="$soft">
-            Nothing running.
+            {t('Nothing running.')}
           </SizableText>
         )}
       </YStack>

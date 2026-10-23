@@ -25,6 +25,8 @@ import {
 } from '@hanzogui/lucide-icons-2'
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import type { ReactNode } from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 import { touch } from './gesture'
 
@@ -69,9 +71,9 @@ const ToolbarButton = styled(XStack, {
 export type SafariToolbarItem = 'favorites' | 'reading-list' | 'history'
 
 const TOOLBAR_ITEMS: { item: SafariToolbarItem; label: string; icon: typeof Star }[] = [
-  { item: 'favorites', label: 'Favorites', icon: Star },
-  { item: 'reading-list', label: 'Reading List', icon: Bookmark },
-  { item: 'history', label: 'History', icon: Clock },
+  { item: 'favorites', label: phrase('Favorites'), icon: Star },
+  { item: 'reading-list', label: phrase('Reading List'), icon: Bookmark },
+  { item: 'history', label: phrase('History'), icon: Clock },
 ]
 
 export type SafariProps = {
@@ -106,6 +108,7 @@ export function Safari({
   onMenu,
   onToolbarItemPress,
 }: SafariProps) {
+  const { t } = useI18n()
   return (
     <YStack
       {...slot('safari')}
@@ -140,7 +143,7 @@ export function Safari({
             {...slot('safari-back')}
             onPress={onBack}
             {...touch(24, 44, 'both')}
-            aria-label="Go back"
+            aria-label={t('Go back')}
             role="button"
           >
             <ChevronLeft size={ICON} color="$quiet" />
@@ -149,7 +152,7 @@ export function Safari({
             {...slot('safari-forward')}
             onPress={onForward}
             {...touch(24, 44, 'both')}
-            aria-label="Go forward"
+            aria-label={t('Go forward')}
             role="button"
           >
             <ChevronRight size={ICON} color="$quiet" />
@@ -177,7 +180,7 @@ export function Safari({
             height={22}
             onPress={onReload}
             {...touch(22, 44, 'both')}
-            aria-label="Reload page"
+            aria-label={t('Reload page')}
             role="button"
           >
             <RotateCw size={14} color="$quiet" />
@@ -189,7 +192,7 @@ export function Safari({
             {...slot('safari-share')}
             onPress={onShare}
             {...touch(24, 44, 'both')}
-            aria-label="Share"
+            aria-label={t('Share')}
             role="button"
           >
             <Share2 size={ICON} color="$quiet" />
@@ -198,7 +201,7 @@ export function Safari({
             {...slot('safari-new-tab')}
             onPress={onNewTab}
             {...touch(24, 44, 'both')}
-            aria-label="New tab"
+            aria-label={t('New tab')}
             role="button"
           >
             <Plus size={ICON} color="$quiet" />
@@ -207,7 +210,7 @@ export function Safari({
             {...slot('safari-menu')}
             onPress={onMenu}
             {...touch(24, 44, 'both')}
-            aria-label="Menu"
+            aria-label={t('Menu')}
             role="button"
           >
             <Menu size={ICON} color="$quiet" />
@@ -232,12 +235,12 @@ export function Safari({
               {...slot(`safari-toolbar-${item}`)}
               onPress={() => onToolbarItemPress?.(item)}
               {...touch(20, 44, 'y')}
-              aria-label={label}
+              aria-label={t(label)}
               role="button"
             >
               <Icon size={14} color="$quiet" />
               <SizableText size="$2" color="$quiet">
-                {label}
+                {t(label)}
               </SizableText>
             </ToolbarButton>
           ))}

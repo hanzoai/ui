@@ -13,6 +13,7 @@
 import { XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps, ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Button } from './button'
 import { ink } from './ink'
 import { slot } from './slot'
@@ -33,6 +34,7 @@ export type DialogStackProps = ComponentProps<typeof YStack> & {
 }
 
 export function DialogStack({ dialogs, onClose, children, ...props }: DialogStackProps) {
+  const { t } = useI18n()
   return (
     <YStack {...slot('dialog-stack')} position="relative" {...props}>
       {dialogs.map((dialog, index) => (
@@ -63,7 +65,7 @@ export function DialogStack({ dialogs, onClose, children, ...props }: DialogStac
               minH={CLOSE}
               minW={CLOSE}
               {...touch(CLOSE)}
-              aria-label="Close"
+              aria-label={t('Close')}
               onPress={() => onClose?.(dialog.id)}
             >
               <X size={16} />

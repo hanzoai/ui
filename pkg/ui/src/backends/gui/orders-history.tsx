@@ -13,6 +13,8 @@
  */
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import * as React from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n, type Say } from '@hanzo/i18n/react'
 import { Badge } from './badge'
 import { Button } from './button'
 import { Cell, Grid } from '../../grid'
@@ -59,6 +61,22 @@ type Filter = (typeof FILTERS)[number]
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
+/** How a filter, a status, a side and an order type read. */
+const WORD: Record<string, string> = {
+  all: phrase('All'),
+  open: phrase('Open'),
+  filled: phrase('Filled'),
+  cancelled: phrase('Cancelled'),
+  pending: phrase('Pending'),
+  market: phrase('Market'),
+  limit: phrase('Limit'),
+  buy: phrase('BUY'),
+  sell: phrase('SELL'),
+}
+
+/** A value's word, or the value itself capitalised when it is not one of ours. */
+const word = (t: Say, value: string) => (Object.hasOwn(WORD, value) ? t(WORD[value]!) : cap(value))
+
 /** The ticker half of an exchange-qualified symbol, e.g. `NASDAQ:AAPL` -> `AAPL`. */
 const ticker = (symbol: string) => symbol.split(':')[1] || symbol
 
@@ -83,6 +101,7 @@ function OrderRow({
   onCancelOrder?: (orderId: string) => void
   onOrderClick?: (order: Order) => void
 }) {
+  const { t } = useI18n()
   return (
     <RowFrame
       {...slot('orders-history-row')}
@@ -103,15 +122,15 @@ function OrderRow({
           variant="outline"
           style={{ borderColor: STATUS_COLOR[order.status], color: STATUS_COLOR[order.status] }}
         >
-          {cap(order.status)}
+          {word(t, order.status)}
         </Badge>
       </XStack>
 
       <Grid columns={3} gap="$2">
         <Cell>
           <YStack gap="$1">
-            {ink('Side', SizableText, { size: '$1', color: '$quiet' })}
-            {ink(order.type.toUpperCase(), SizableText, {
+            {ink(t('Side'), SizableText, { size: '$1', color: '$quiet' })}
+            {ink(Object.hasOwn(WORD, order.type) ? t(WORD[order.type]!) : order.type.toUpperCase(), SizableText, {
               size: '$1',
               fontWeight: '500',
               color: SIDE_COLOR[order.type],
@@ -120,14 +139,14 @@ function OrderRow({
         </Cell>
         <Cell>
           <YStack gap="$1">
-            {ink('Shares', SizableText, { size: '$1', color: '$quiet' })}
+            {ink(t('Shares'), SizableText, { size: '$1', color: '$quiet' })}
             {ink(String(order.shares), SizableText, { size: '$1', fontWeight: '500' })}
           </YStack>
         </Cell>
         <Cell>
           <YStack gap="$1">
-            {ink('Price', SizableText, { size: '$1', color: '$quiet' })}
-            {ink(order.price > 0 ? `$${order.price.toFixed(2)}` : 'Market', SizableText, {
+            {ink(t('Price'), SizableText, { size: '$1', color: '$quiet' })}
+            {ink(order.price > 0 ? `$${order.price.toFixed(2)}` : t('Market'), SizableText, {
               size: '$1',
               fontWeight: '500',
             })}
@@ -137,8 +156,8 @@ function OrderRow({
 
       {order.orderType ? (
         <XStack gap="$1">
-          {ink('Type:', SizableText, { size: '$1', color: '$quiet' })}
-          {ink(cap(order.orderType), SizableText, { size: '$1', fontWeight: '500' })}
+          {ink(t('Type:'), SizableText, { size: '$1', color: '$quiet' })}
+          {ink(word(t, order.orderType), SizableText, { size: '$1', fontWeight: '500' })}
         </XStack>
       ) : null}
 
@@ -152,7 +171,7 @@ function OrderRow({
             onCancelOrder(order.id)
           }}
         >
-          Cancel Order
+          {t('Cancel Order')}
         </Button>
       ) : null}
     </RowFrame>
@@ -166,6 +185,7 @@ export function OrdersHistory({
   showFilters = true,
 }: OrdersHistoryProps) {
   const [filter, setFilter] = React.useState<Filter>('all')
+  const { t } = useI18n()
   const shown = filter === 'all' ? orders : orders.filter((order) => order.status === filter)
 
   return (
@@ -181,7 +201,7 @@ export function OrdersHistory({
               onClick={() => setFilter(f)}
               style={{ cursor: 'pointer' }}
             >
-              {cap(f)}
+              {word(t, f)}
             </Badge>
           ))}
         </XStack>
@@ -189,7 +209,7 @@ export function OrdersHistory({
 
       {shown.length === 0 ? (
         <YStack {...slot('orders-history-empty')} items="center" py="$8">
-          {ink('No orders yet', SizableText, { size: '$2', color: '$quiet' })}
+          {ink(t('No orders yet'), SizableText, { size: '$2', color: '$quiet' })}
         </YStack>
       ) : (
         <YStack gap="$2">

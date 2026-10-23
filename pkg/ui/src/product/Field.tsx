@@ -18,6 +18,7 @@ import {
   XStack,
   YStack,
 } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { textSize, useEmit, type UiEvent } from './instrument'
 import { masked } from '../backends/gui/mask'
@@ -257,7 +258,7 @@ export function FieldSelect({
   options,
   onChange,
   disabled,
-  placeholder = 'Select…',
+  placeholder: hint,
 }: {
   value: string
   options: string[]
@@ -268,6 +269,8 @@ export function FieldSelect({
   // When the current value isn't one of the options (empty/unset), show the
   // placeholder as a selected-but-disabled row so the control reads honestly.
   const track = useFieldTrack('FieldSelect')
+  const { t } = useI18n()
+  const placeholder = hint ?? t('Select…')
   const showPlaceholder = value === '' || !options.includes(value)
   return (
     <select

@@ -19,9 +19,11 @@
  * Theme is the library's own: `@hanzo/appearance`, written through `<Hanzo>`'s
  * resolved stack when there is one (`Look`), so it is stored, painted before
  * first paint and carried across origins exactly as the settings panel does.
- * Language and currency are the HOST's — this package depends on no i18n or
- * money library, so it draws the value it is handed and reports a choice. A row
- * the host passes nothing for is not drawn.
+ * Language and currency are the HOST's — this package depends on no money
+ * library and holds no language of its own, so it draws the value it is handed
+ * and reports a choice. A row the host passes nothing for is not drawn. The
+ * card's own words are the reader's language through the host's @hanzo/i18n
+ * provider (English without one).
  *
  * Behaviour is the package `Popover`'s: portalled, dismissed by Escape and an
  * outside press, focus trapped while open and handed back to the trigger on
@@ -36,6 +38,7 @@
 import { Anchor, Input as GuiInput, SizableText, XStack, YStack, usePopperContextSlow } from '@hanzo/gui'
 import { Check, ChevronLeft, ChevronRight, CircleHelp, ExternalLink, Moon, Search, Sun, X } from '@hanzogui/lucide-icons-2'
 import { apply, current, read, useScheme, write, type Scheme } from '@hanzo/appearance'
+import { useI18n } from '@hanzo/i18n/react'
 import { useCallback, useContext, useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui/popover'
@@ -49,7 +52,7 @@ import { useEmit } from '../product/instrument'
 import { Look } from '../look'
 import { LONG, WORDS, find, shown, type Option, type Setting, type Words } from './logic'
 
-export type { Option, Setting, Words } from './logic'
+export type { Option, Setting } from './logic'
 
 /** A help link. `icon` leads the label; an address on another host opens in a new tab with the outbound mark. */
 export type Link = { label: string; href: string; icon?: ReactNode }
@@ -61,8 +64,6 @@ export type CornerProps = {
   language?: Setting
   /** The page's display currency, owned by the host. Absent, the row is not drawn. */
   currency?: Setting
-  /** The panel's own words, for a host that speaks another language. */
-  words?: Partial<Words>
 }
 
 type View = 'main' | 'language' | 'currency'
@@ -118,8 +119,9 @@ function useTheme(): [Scheme, (theme: Scheme) => void] {
   return [(look ? look.pref.theme : own) ?? ground, set]
 }
 
-export function Corner({ help = [], language, currency, words }: CornerProps) {
-  const w = { ...WORDS, ...words }
+export function Corner({ help = [], language, currency }: CornerProps) {
+  const { t } = useI18n()
+  const w = Object.fromEntries(Object.entries(WORDS).map(([k, said]) => [k, t(said)])) as Words
   const [open, setOpen] = useState(false)
   const [view, setView] = useState<View>('main')
   // Which row opened a list, so going back puts focus where it was.
@@ -268,7 +270,7 @@ export function Corner({ help = [], language, currency, words }: CornerProps) {
                   <Head title={w.help} close={w.close} onClose={() => toggle(false)} />
                   <YStack {...slot('corner-help')} role="list" aria-label={w.help}>
                     {help.map((link) => (
-                      <Item key={link.href + link.label} link={link} leaving={w.leaves} onPress={() => emit({ component: 'Corner', action: 'click', id: link.label })} />
+                      <Item key={link.href + link.label} link={link} onPress={() => emit({ component: 'Corner', action: 'click', id: link.label })} />
                     ))}
                   </YStack>
                   <YStack height={1} bg="$borderColor" my="$1" aria-hidden />
@@ -404,7 +406,8 @@ function Icon({ label, glyph, onPress }: { label: string; glyph: ReactNode; onPr
 }
 
 /** One help link. A link that leaves the site opens a new tab and says so, to the eye and to a screen reader. */
-function Item({ link, leaving, onPress }: { link: Link; leaving: string; onPress: () => void }) {
+function Item({ link, onPress }: { link: Link; onPress: () => void }) {
+  const { t } = useI18n()
   const out = typeof location !== 'undefined' && leaves(link.href, location.origin)
   return (
     <XStack role="listitem">
@@ -414,7 +417,7 @@ function Item({ link, leaving, onPress }: { link: Link; leaving: string; onPress
         href={link.href}
         target={out ? '_blank' : undefined}
         rel={out ? 'noopener noreferrer' : undefined}
-        aria-label={out ? `${link.label} (${leaving})` : undefined}
+        aria-label={out ? t('{link} (opens in a new tab)', { link: link.label }) : undefined}
         onPress={onPress}
         display="flex"
         flexDirection="row"
@@ -470,6 +473,7 @@ function List({
   onBack: () => void
   onChoose: (code: string) => void
 }) {
+  const { t } = useI18n()
   const [q, setQ] = useState('')
   const rows = find(setting.options, q)
   const [at, setAt] = useState(() => Math.max(0, rows.findIndex((o) => o.code === setting.value)))
@@ -550,7 +554,7 @@ function List({
             value={q}
             onChangeText={setQ}
             role="combobox"
-            aria-label={`${words.search}: ${title}`}
+            aria-label={t('Search: {list}', { list: title })}
             aria-expanded
             aria-controls={listId}
             aria-autocomplete="list"

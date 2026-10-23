@@ -19,6 +19,8 @@
  */
 import { Paragraph, XStack, YStack } from '@hanzo/gui'
 import { acceptAll, asks, declined, POLICY_EVENT, readConsent, rejectAll, saveConsent, type Choice } from '@hanzo/event'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '../backends/gui/button'
@@ -32,12 +34,12 @@ export const openConsent = (): void => {
   if (typeof window !== 'undefined') window.dispatchEvent(new Event(OPEN))
 }
 
-const kinds = (brand: string) =>
-  [
-    { key: 'analytics', title: 'Analytics', body: `Counts visits and finds what is broken, so ${brand} can get better.` },
-    { key: 'marketing', title: 'Marketing', body: 'Lets ad platforms measure the sign-ups and orders their ads led to.' },
-    { key: 'ads', title: 'Personalized ads', body: 'Lets those platforms use your visit to show you ads elsewhere.' },
-  ] as const
+/** The three kinds of measuring, in the reader's language where they are drawn; `{brand}` is who is asking. */
+const KINDS = [
+  { key: 'analytics', title: phrase('Analytics'), body: phrase('Counts visits and finds what is broken, so {brand} can get better.') },
+  { key: 'marketing', title: phrase('Marketing'), body: phrase('Lets ad platforms measure the sign-ups and orders their ads led to.') },
+  { key: 'ads', title: phrase('Personalized ads'), body: phrase('Lets those platforms use your visit to show you ads elsewhere.') },
+] as const
 
 /** The banner's inset from the window's foot and sides: 16px, or the device's inset and 8px where that is wider. */
 const EDGE = {
@@ -55,7 +57,6 @@ const EDGE = {
 const frame = {
   ...slot('consent'),
   role: 'dialog',
-  'aria-label': 'Cookie preferences',
   position: 'fixed',
   b: EDGE.bottom,
   l: EDGE.left,
@@ -87,6 +88,7 @@ export type ConsentProps = {
 }
 
 const Consent = ({ privacy = 'https://hanzo.ai/privacy', brand = 'Hanzo' }: ConsentProps) => {
+  const { t } = useI18n()
   const [shown, setShown] = useState(false)
   const [choosing, setChoosing] = useState(false)
   const [draft, setDraft] = useState<Choice>({ analytics: false, marketing: false, ads: false })
@@ -134,36 +136,37 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy', brand = 'Hanzo' }: Cons
       // The choices are taller than a landscape phone: they keep under the header and scroll.
       <YStack
         {...frame}
+        aria-label={t('Cookie preferences')}
         maxW={440}
         gap="$3"
         maxH={`calc(100dvh - var(--safe-top, env(safe-area-inset-top, 0px)) - var(--header, 0px) - ${EDGE.bottom} - 16px)` as `var(--${string})`}
         overflowY="auto"
       >
         <Paragraph size="$2" color="$ink" m={0}>
-          {`Choose what ${brand} may measure and share. You can change this at any time. `}
+          {`${t('Choose what {brand} may measure and share.', { brand })} ${t('You can change this at any time.')} `}
           <a href={privacy} style={INLINE}>
-            Privacy policy
+            {t('Privacy policy')}
           </a>
         </Paragraph>
         {locked ? (
           <Paragraph size="$2" color="$soft" m={0}>
-            Your browser asks sites not to track you, so all of these stay off.
+            {t('Your browser asks sites not to track you, so all of these stay off.')}
           </Paragraph>
         ) : null}
-        {kinds(brand).map((k) => {
+        {KINDS.map((k) => {
           const off = locked
           return (
             <XStack key={k.key} gap="$3" items="center" justify="space-between">
               <YStack flex={1}>
                 <Paragraph size="$2" color="$ink" fontWeight="500" m={0}>
-                  {k.title}
+                  {t(k.title)}
                 </Paragraph>
                 <Paragraph size="$1" color="$soft" m={0}>
-                  {k.body}
+                  {t(k.body, { brand })}
                 </Paragraph>
               </YStack>
               <Switch
-                aria-label={k.title}
+                aria-label={t(k.title)}
                 disabled={off}
                 checked={off ? false : draft[k.key]}
                 onCheckedChange={(v: boolean) => setDraft({ ...draft, [k.key]: v === true })}
@@ -173,10 +176,10 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy', brand = 'Hanzo' }: Cons
         })}
         <XStack gap="$2" justify="flex-end">
           <Button type="button" size="sm" variant="secondary" onClick={done(rejectAll)}>
-            Reject all
+            {t('Reject all')}
           </Button>
           <Button type="button" size="sm" onClick={done(() => saveConsent(draft))}>
-            Save choices
+            {t('Save choices')}
           </Button>
         </XStack>
       </YStack>
@@ -186,35 +189,38 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy', brand = 'Hanzo' }: Cons
   // the line fits beside them and the buttons drop under it where it does not,
   // so a phone shows the line over one row of buttons and nothing breaks mid-control.
   return (
-    <XStack {...frame} style={FIT} maxW={960} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
+    <XStack {...frame} aria-label={t('Cookie preferences')} $platform-web={FIT} maxW={960} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
       <YStack shrink={1} minW={0}>
         <Paragraph size="$2" color="$ink" m={0}>
-          {'Cookies measure visits and ads once you accept. '}
+          {`${t('Cookies measure visits and ads once you accept.')} `}
           <a href={privacy} style={INLINE}>
-            Privacy policy
+            {t('Privacy policy')}
           </a>
         </Paragraph>
       </YStack>
       <XStack gap="$2" marginInlineStart="auto" items="center">
         <Button type="button" size="sm" variant="link" onClick={choose}>
-          Choose
+          {t('Choose')}
         </Button>
         <Button type="button" size="sm" variant="secondary" onClick={done(rejectAll)}>
-          Reject all
+          {t('Reject all')}
         </Button>
         <Button type="button" size="sm" onClick={done(acceptAll)}>
-          Accept all
+          {t('Accept all')}
         </Button>
       </XStack>
     </XStack>
   )
 }
 
-/** The footer link that reopens the choices, in every footer and every region. */
-const ConsentLink = ({ label = 'Cookie settings' }: { label?: string }) => (
-  <Button {...slot('consent-link')} type="button" variant="link" size="sm" px={0} minH={0} onClick={openConsent}>
-    {label}
-  </Button>
-)
+/** The footer link that reopens the choices, in every footer and every region. A host's own `label` is drawn as given. */
+const ConsentLink = ({ label }: { label?: string }) => {
+  const { t } = useI18n()
+  return (
+    <Button {...slot('consent-link')} type="button" variant="link" size="sm" px={0} minH={0} onClick={openConsent}>
+      {label ?? t('Cookie settings')}
+    </Button>
+  )
+}
 
 export { Consent, ConsentLink }
