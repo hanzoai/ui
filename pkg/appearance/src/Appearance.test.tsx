@@ -39,6 +39,8 @@ const press = (label: string | RegExp) => {
 }
 
 const prop = (name: string) => document.documentElement.style.getPropertyValue(name)
+const pressed = (name: string) =>
+  [...host.querySelectorAll('button')].find((b) => b.getAttribute('aria-label') === name)?.getAttribute('aria-pressed')
 const stored = (key: string) => JSON.parse(localStorage.getItem(key) || '{}')
 
 /**
@@ -169,6 +171,29 @@ describe('the panel', () => {
     // Code stays monospaced whatever the page is set in.
     expect(prop('--font-mono')).toBe('')
     expect(stored(KEY)).toEqual({ font: 'serif' })
+  })
+
+  it('sets Arabic on its own axis, by reference, leaving the face alone', () => {
+    render(<Appearance />)
+    press('Serif')
+    press('Arabic in Sans')
+    expect(prop('--font-arabic')).toBe('var(--font-arabic-sans)')
+    expect(prop('--font-sans')).toBe('var(--font-serif)')
+    expect(stored(KEY)).toEqual({ font: 'serif', arabic: 'sans' })
+    press('Arabic in Kufi')
+    expect(prop('--font-arabic')).toBe('var(--font-arabic-kufi)')
+  })
+
+  it('marks the companion the page draws when nobody chose', () => {
+    // The token file's default, as a stylesheet states it: the panel reads the
+    // computed answer rather than assuming which companion is the default.
+    const sheet = document.createElement('style')
+    sheet.textContent = ':root{--font-arabic-kufi:"Noto Kufi Arabic";--font-arabic-sans:"Noto Sans Arabic";--font-arabic:"Noto Sans Arabic"}'
+    document.head.append(sheet)
+    render(<Appearance />)
+    expect(pressed('Arabic in Sans')).toBe('true')
+    expect(pressed('Arabic in Kufi')).toBe('false')
+    sheet.remove()
   })
 
   it('moves the measure without touching the column count', () => {

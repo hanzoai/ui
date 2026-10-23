@@ -10,10 +10,10 @@
  * No React here on purpose. A server render, a browser extension and an embedded
  * preview all need to apply a preference, and only one of them has hooks.
  */
-import { vars, css, type Preference, type Scheme } from '@hanzo/design'
+import { vars, css, type Arabic, type Preference, type Scheme } from '@hanzo/design'
 import { resolve, type Layers, type Scope } from './scope'
 
-export type { Preference, Scheme }
+export type { Arabic, Preference, Scheme }
 
 /** One key, one shape. Namespaced because a surface's localStorage is shared. */
 export const KEY = 'hanzo.appearance'
@@ -43,6 +43,27 @@ export interface At {
 export const DEFAULT: Preference = { type: 1, density: 'default' }
 
 const isBrowser = () => typeof document !== 'undefined'
+
+/**
+ * The Arabic companions design names, each as `--font-arabic-<name>` — the
+ * values a person can choose besides `default`.
+ */
+export const COMPANIONS = ['kufi', 'sans'] as const satisfies readonly Arabic[]
+
+/**
+ * The companion the document draws Arabic in: `--font-arabic` against each
+ * `--font-arabic-<name>`, computed. It is what a control marks when nobody chose,
+ * read off the page rather than assumed, so the mark follows the token file's
+ * default wherever it moves. Undefined without a document or the tokens.
+ */
+export function companion(
+  root: HTMLElement | undefined = isBrowser() ? document.documentElement : undefined,
+): (typeof COMPANIONS)[number] | undefined {
+  if (!root) return undefined
+  const css = getComputedStyle(root)
+  const now = css.getPropertyValue('--font-arabic').trim()
+  return now ? COMPANIONS.find((c) => css.getPropertyValue(`--font-arabic-${c}`).trim() === now) : undefined
+}
 
 /**
  * What this device has CHOSEN — and nothing else.
@@ -79,6 +100,7 @@ export function read({ scope = 'everywhere', org, store = safeStore() }: At = {}
       ...(typeof p.modular === 'number' && Number.isFinite(p.modular) ? { modular: p.modular } : {}),
       ...(p.density === 'compact' || p.density === 'comfortable' || p.density === 'default' ? { density: p.density } : {}),
       ...(p.font === 'default' || p.font === 'system' || p.font === 'serif' || p.font === 'mono' ? { font: p.font } : {}),
+      ...(p.arabic === 'default' || COMPANIONS.includes(p.arabic as never) ? { arabic: p.arabic } : {}),
       ...(p.width === 'narrow' || p.width === 'default' || p.width === 'wide' ? { width: p.width } : {}),
       ...(typeof p.accent === 'string' ? { accent: p.accent } : {}),
       ...(p.theme === 'system' || p.theme === 'light' || p.theme === 'dark' ? { theme: p.theme } : {}),
@@ -220,7 +242,7 @@ function follow(theme: Scheme | undefined): void {
  * reset. A name design emits is a name this removes, by construction.
  */
 export const KNOBS: readonly string[] = Object.keys(
-  vars({ type: 1, ratio: 1, modular: 1.25, density: 'compact', font: 'serif', width: 'wide', accent: '#000', radius: 'round' }),
+  vars({ type: 1, ratio: 1, modular: 1.25, density: 'compact', font: 'serif', arabic: 'sans', width: 'wide', accent: '#000', radius: 'round' }),
 )
 
 /**

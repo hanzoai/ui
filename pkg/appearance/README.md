@@ -1,7 +1,7 @@
 # @hanzo/appearance
 
-The one appearance panel: theme, text size, scale, density, face, width, corners
-and accent, stored per person and applied to the whole product.
+The one appearance panel: theme, text size, scale, density, face, Arabic face,
+width, corners and accent, stored per person and applied to the whole product.
 
 ```tsx
 import { Appearance } from '@hanzo/appearance'
@@ -25,9 +25,15 @@ theme the document shows. A host that mounts its own gui provider calls
 ## Knobs, not themes
 
 `@hanzo/design` publishes `--type-scale`, `--type-ratio`, `--density`,
-`--radius-scale` and the `--primary` / `--accent` family, and every ramp in
+`--radius-scale`, `--font-sans`, `--font-arabic` and the `--primary` / `--accent`
+family, and every ramp in
 `tokens/*.css` reads them. A preference sets a few numbers and one colour rather
 than restating a scale, so rungs added later are covered for free.
+
+Arabic is its own axis (`arabic`: `kufi` or `sans`) because Zen draws no Arabic.
+It writes `--font-arabic`, which design's sans, mono and serif stacks all name
+first, so the companion it names sets every Arabic letter under whichever face
+was chosen, and Latin never touches it.
 
 An accent is a family: the fill, the ink that reads on it (design's black or
 white, whichever contrasts more) and the hover that deepens it, all derived from

@@ -40,8 +40,8 @@ describe('read', () => {
 
   it('round-trips what write stored', () => {
     const s = memory()
-    write({ type: 1.15, density: 'compact', accent: '#808000', theme: 'light', radius: 'round' }, { store: s })
-    expect(read({ store: s })).toEqual({ type: 1.15, density: 'compact', accent: '#808000', theme: 'light', radius: 'round' })
+    write({ type: 1.15, density: 'compact', arabic: 'sans', accent: '#808000', theme: 'light', radius: 'round' }, { store: s })
+    expect(read({ store: s })).toEqual({ type: 1.15, density: 'compact', arabic: 'sans', accent: '#808000', theme: 'light', radius: 'round' })
   })
 
   it('never throws when storage is blocked — an unreadable preference is an unset one', () => {
@@ -51,8 +51,9 @@ describe('read', () => {
 
   it('drops values it does not recognise rather than passing them to CSS', () => {
     const s = memory()
-    s.setItem(KEY, JSON.stringify({ type: 'huge', density: 'roomy', theme: 'sepia', radius: 'pill', evil: '</style>' }))
+    s.setItem(KEY, JSON.stringify({ type: 'huge', density: 'roomy', theme: 'sepia', radius: 'pill', arabic: 'Comic Sans', evil: '</style>' }))
     const p = read({ store: s }) as Record<string, unknown>
+    expect(p.arabic).toBeUndefined()
     expect(p.type).toBeUndefined()
     expect(p.density).toBeUndefined()
     expect(p.theme).toBeUndefined()
@@ -87,11 +88,13 @@ describe('apply', () => {
 
   it('REMOVES an axis that is cleared, instead of writing a neutral value', () => {
     // Writing `1` looks identical and silently outranks a brand that set its own.
-    apply({ type: 1.3, accent: '#808000' }, root)
+    apply({ type: 1.3, accent: '#808000', arabic: 'sans' }, root)
     expect(root.style.getPropertyValue('--type-scale')).toBe('1.3')
     expect(root.style.getPropertyValue('--primary')).toBe('#808000')
+    expect(root.style.getPropertyValue('--font-arabic')).toBe('var(--font-arabic-sans)')
 
     apply({}, root)
+    expect(root.style.getPropertyValue('--font-arabic')).toBe('')
     expect(root.style.getPropertyValue('--type-scale')).toBe('')
     expect(root.style.getPropertyValue('--primary')).toBe('')
     expect(root.style.getPropertyValue('--accent')).toBe('')
