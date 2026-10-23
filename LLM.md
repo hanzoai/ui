@@ -587,7 +587,6 @@ Exchange's HelpContent is the design it was taken from.
   help={[{ label: 'Get help', href, icon }, { label: 'Docs', href }, { label: 'Contact us', href }]}
   language={{ value, options: [{ code: 'de', label: 'Deutsch', hint: 'German', dir? }], onChange }}
   currency={{ value, options: [{ code: 'USD', label: 'USD', hint: 'US dollar' }], onChange }}
-  words={{ open, help, preferences, theme, … }}   // the card's own strings, for another language
 />
 ```
 
@@ -595,9 +594,11 @@ Exchange's HelpContent is the design it was taken from.
   `@hanzo/appearance` through `<Hanzo>`'s own `useAppearance` call, which the root
   publishes as `Look` (`src/look.ts`), so an org's layers and the IAM account sync
   are kept. Without `<Hanzo>` it writes the device layer and repaints the resolved
-  stack. Language and currency are controlled props: this package depends on no
-  i18n or money library. A row the host passes nothing for is not drawn; no
-  `help` and the card opens on Preferences.
+  stack. Language and currency are controlled props: the host owns the locale
+  and the money. The card's own words are drawn through the host's @hanzo/i18n
+  provider (`WORDS` in `corner/logic.ts`, marked with `phrase`); there is no
+  `words` prop. A row the host passes nothing for is not drawn; no `help` and the
+  card opens on Preferences.
 - A row shows the chosen option's `label` (so currency passes `label: 'USD'`).
   A list longer than `LONG` (8) gets a search over label, hint and code, accents
   folded (`find`, `fold` in `corner/logic.ts`, pure). Each language's name is
@@ -1577,6 +1578,24 @@ those two exact versions, not a new minor.
 2. Never commit symlinked files (AGENTS.md, CLAUDE.md, etc.)
 3. Knowledge goes in this file, not random root MD files
 4. Anything shadcn-lineage belongs in `hanzoai/shadcn`, not here
+
+## Words — every one the package authors is the reader's language
+
+@hanzo/i18n is a required peer (`>=0.4.0`): ONE provider context, the host's.
+Without a provider `useI18n()` answers English, so a host that mounts none is
+unchanged.
+
+- A component says its words with `const { t } = useI18n()` and
+  `t('One sentence.', { n })`. One sentence, one key; a link or a figure inside it
+  is a `{placeholder}` whose value is the element or the number.
+- Copy held as data is `phrase('…')` where it is written and `t(value)` where it
+  is drawn (Corner's `WORDS`, the onboarding roles, the consent kinds).
+- A pure module that builds a sentence (limits, the model formatters) takes the
+  caller's `t` last and falls back to `core/english.ts`, which imports nothing, so
+  `@hanzo/ui/product/pure` still depends on nothing.
+- A default label prop keeps the caller's words as given and translates only the
+  default (`label ?? t('Close')`). Names, API text, user content and figures are
+  never translated; number and date formatting is left as it is.
 
 ## Right to left — sides are logical
 
