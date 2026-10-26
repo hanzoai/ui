@@ -1333,7 +1333,12 @@ preferences). `openConsent()`, `ConsentLink` and any same-origin link to
 `#choices` (FOOT_LINE's Privacy choices) open the sheet. Policy links are props
 (`cookies`, `privacy`, `terms`, default hanzo.ai); Lux and Zoo pass their own.
 Withdrawing forgets measurement ids only — `consent.test.ts` holds that sign-in,
-the choice itself, CSRF and cart state survive `rejectAll()`.
+the choice itself, CSRF and cart state survive `rejectAll()`. Its buttons read
+design's button tokens for every state (`--primary`/`--secondary`, their `-hover`
+under the pointer and pressed, `--ring` for the keyboard), never the Button's own
+hover, which put dark ink on a dark fill; 13px type on a 36px floor, a
+`--radius-lg` corner in a `--radius-xl` card. Strictly Necessary counts our own
+stream and GA4's and the Pixel's page views; the switches are the rest of theirs.
 
 ### One way — supersessions (no divergent telemetry client)
 

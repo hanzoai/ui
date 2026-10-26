@@ -3,10 +3,11 @@
 /**
  * Consent — the one cookie banner every Hanzo, Lux and Zoo site mounts.
  *
- * It draws the choice; @hanzo/event stores it (`hz_consent`) and acts on it: no
- * Google Analytics, no Meta pixel and no ad personalization before Accept, and
- * Google Consent Mode v2 starts denied. The brand's own first-party analytics is
- * strictly necessary and runs for every visitor; the choice does not govern it.
+ * It draws the choice; @hanzo/event stores it (`hz_consent`) and acts on it. The
+ * brand's own first-party analytics and the page-view count Google Analytics and
+ * the Meta pixel keep are strictly necessary and run for every visitor; Google's
+ * other events, Meta's conversion measurement and ad personalization wait for
+ * Accept, and Google Consent Mode v2 starts denied.
  *
  *  - every visitor, wherever they are, is asked: a bar with Manage preferences,
  *    Accept all and a ×, until they have chosen. Nothing optional loads first.
@@ -51,25 +52,25 @@ const kinds = (brand: string): Kind[] => [
   {
     id: 'necessary',
     title: 'Strictly Necessary Cookies',
-    body: `These are needed for the site to work, so they are always on. They keep you signed in and your session secure, protect forms against cross-site request forgery, spread traffic across servers, remember the choice you make here, and keep what you have typed into a form. They include ${brand}'s own first-party analytics, which counts visits and finds what is broken for ${brand} alone and is never sold or shared.`,
+    body: `These are needed for the site to work, so they are always on. They keep you signed in and your session secure, protect forms against cross-site request forgery, spread traffic across servers, remember the choice you make here, and keep what you have typed into a form. They include ${brand}'s own first-party analytics, which is never sold or shared, and basic page-view counting by Google Analytics and Meta: page loads only, with no ad personalization.`,
   },
   {
     id: 'analytics',
     key: 'analytics',
     title: 'Performance Cookies',
-    body: `Google Analytics: lets Google measure visits to ${brand} with its own cookies.`,
+    body: `Google Analytics events beyond page views: the clicks, scrolls and other actions it measures on ${brand}'s pages.`,
   },
   {
     id: 'marketing',
     key: 'marketing',
     title: 'Marketing Cookies',
-    body: `The Meta pixel: lets Meta measure the sign-ups and orders ${brand}'s ads led to.`,
+    body: `Meta's conversion and event measurement: lets Meta measure the sign-ups and orders ${brand}'s ads led to.`,
   },
   {
     id: 'ads',
     key: 'ads',
     title: 'Sell, Share, or Use Your Data for Targeted Advertising',
-    body: 'Lets Google and Meta use your visit to choose the ads they show you on other sites and apps. Some US state privacy laws call this a “sale” or “sharing” of your personal information, or “targeted advertising”, and give you the right to opt out: it stays off unless you turn it on.',
+    body: 'Lets Google and Meta use your visits to personalize the ads they show you and to match you with their audiences on other sites and apps. Some US state privacy laws call this a “sale” or “sharing” of your personal information, or “targeted advertising”, and give you the right to opt out: it stays off unless you turn it on.',
   },
 ]
 
@@ -81,12 +82,19 @@ const EDGE = {
   right: 'max(16px, calc(var(--safe-right, env(safe-area-inset-right, 0px)) + 8px))',
 } as const
 
-/** The panel both wear: the card's ground, edge, corner (`$6`, the sign-in card's) and floating shadow. */
+/**
+ * Corners from design's ladder (radius.css), one step apart so the buttons sit
+ * concentric in their card: a button on `--radius-lg` (12px), the bar and the
+ * sheet on `--radius-xl` (16px). Both follow `--radius-scale`; neither is a pill.
+ */
+const ROUND = { button: 'var(--radius-lg, 12px)', card: 'var(--radius-xl, 16px)' } as const
+
+/** The panel both wear: the card's ground, edge, corner and floating shadow. */
 const PANEL = {
   bg: '$background',
   borderWidth: 1,
   borderColor: '$borderColor',
-  rounded: '$6',
+  rounded: ROUND.card,
   shadowColor: 'rgba(0,0,0,0.25)',
   shadowRadius: 24,
   shadowOffset: { width: 0, height: 8 },
@@ -111,15 +119,54 @@ const frame = {
   z: 'var(--z-banner, 50)',
   py: '$3',
   paddingInlineStart: '$4',
-  // Clear of the × in the corner: its 32px, and 12px either side.
+  // Clear of the × in the corner: its 36px, 12px outside it and 8px before it.
   paddingInlineEnd: 56,
 } as const
 
 /** The bar is as wide as its line and buttons, up to the window less its inset. */
 const FIT = { width: 'fit-content' } as const
 
-/** The one filled control in the bar and in the sheet: the ink, as the sign-in card's Continue. */
-const ACT = { bg: '$ink', color: '$background', borderColor: '$ink', hoverStyle: { opacity: 0.92 } } as const
+/** The keyboard's mark on any control here: design's focus ring, outside the control. */
+const RING = { outlineColor: 'var(--ring)', outlineStyle: 'solid', outlineWidth: 2, outlineOffset: 2 } as const
+
+/**
+ * A button's every state from design's button tokens (colors.css), so it follows
+ * the theme and an org's accent: at rest the fill, under the pointer and pressed
+ * its `-hover` step, focused by keyboard the ring. Each state names its fill and
+ * a clear edge outright, because a state that leaves one out takes the Button's
+ * own (the frame's hover is a near-black fill and a grey edge, which put dark
+ * text on dark under the cursor). 13px type on the 36px floor.
+ */
+const button = (fill: string, hover: string, ink: string) =>
+  ({
+    size: 'sm',
+    minH: 36,
+    rounded: ROUND.button,
+    bg: fill,
+    color: ink,
+    borderColor: 'transparent',
+    hoverStyle: { bg: hover, borderColor: 'transparent', opacity: 1 },
+    pressStyle: { bg: hover, borderColor: 'transparent', opacity: 1 },
+    focusStyle: { borderColor: 'transparent' },
+    focusVisibleStyle: RING,
+  }) as const
+
+/** The one filled control: Accept all in the bar, Save preferences in the sheet. */
+const PRIMARY = button('var(--primary)', 'var(--primary-hover)', 'var(--primary-foreground)')
+
+/** Beside it: Manage preferences in the bar, Accept all in the sheet. */
+const SECONDARY = button('var(--secondary)', 'var(--secondary-hover)', 'var(--secondary-foreground)')
+
+/** A ×: no fill at rest, the secondary surface under the pointer. */
+const CLOSE = {
+  rounded: ROUND.button,
+  bg: 'transparent',
+  borderColor: 'transparent',
+  hoverStyle: { bg: 'var(--secondary)', borderColor: 'transparent', opacity: 1 },
+  pressStyle: { bg: 'var(--secondary-hover)', borderColor: 'transparent', opacity: 1 },
+  focusStyle: { borderColor: 'transparent' },
+  focusVisibleStyle: RING,
+} as const
 
 /** A link in the sheet's intro: the line's own ink, underlined, never broken across lines. */
 const INLINE = { color: 'inherit', textDecoration: 'underline', whiteSpace: 'nowrap' } as const
@@ -323,7 +370,7 @@ const Consent = ({
             <Text render="h2" id={`${id}-title`} m={0} fontSize="$6" lineHeight="$6" fontWeight="600" color="$ink">
               Cookie Preferences
             </Text>
-            <Button type="button" size="icon-sm" variant="ghost" aria-label="Close" onClick={close}>
+            <Button type="button" size="icon" {...CLOSE} aria-label="Close" onClick={close}>
               <X size={16} />
             </Button>
           </XStack>
@@ -404,11 +451,12 @@ const Consent = ({
           <XStack flexWrap="wrap" gap="$2" px="$5" py="$4" borderTopWidth={1} borderColor="$borderColor">
             {/* A browser that refused cannot accept here: there is nothing to accept. */}
             {locked ? null : (
-              <Button type="button" variant="secondary" grow={1} onClick={done(acceptAll)}>
+              <Button type="button" {...SECONDARY} grow={1} onClick={done(acceptAll)}>
                 Accept all
               </Button>
             )}
-            <Button type="button" {...ACT} grow={1} onClick={done(() => saveConsent(draft))}>
+            {/* The sheet's answer: what the switches say, essential only when none is on. */}
+            <Button type="button" {...PRIMARY} grow={1} onClick={done(() => saveConsent(draft))}>
               Save preferences
             </Button>
           </XStack>
@@ -427,18 +475,18 @@ const Consent = ({
         </Paragraph>
       </YStack>
       <XStack gap="$2" marginInlineStart="auto" items="center" flexWrap="wrap">
-        <Button ref={manage as never} type="button" size="sm" variant="secondary" onClick={choose}>
+        <Button ref={manage as never} type="button" {...SECONDARY} onClick={choose}>
           Manage preferences
         </Button>
-        <Button type="button" size="sm" {...ACT} onClick={done(acceptAll)}>
+        <Button type="button" {...PRIMARY} onClick={done(acceptAll)}>
           Accept all
         </Button>
       </XStack>
       {/* Essential cookies only: the refusal, as easy to give as Accept all. */}
       <Button
         type="button"
-        size="icon-sm"
-        variant="ghost"
+        size="icon"
+        {...CLOSE}
         aria-label="Close and use essential cookies only"
         position="absolute"
         t="$3"
