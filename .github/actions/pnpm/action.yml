@@ -39,7 +39,7 @@ runs:
       env:
         KMS_CLIENT_ID: ${{ inputs.kms-client-id }}
         KMS_CLIENT_SECRET: ${{ inputs.kms-client-secret }}
-        CI_SHA: 2e112912bb1dab9ee413609425827c2302fb6d5a
+        CI_SHA: a8f3ee4ab02fff20a28cbae5d0dbf1f26f1a671a
       run: |
         set +e   # an accelerator: nothing in this step may fail the job
         set -uo pipefail
