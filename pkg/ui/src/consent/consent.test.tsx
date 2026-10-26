@@ -60,12 +60,19 @@ const chosen = () => {
 const rule = (mode: 'eu' | 'us_privacy' | 'global', more: Record<string, unknown> = {}) =>
   serveConsent({ region: 'XX', mode, version: 2, refused: false, defaults: {}, ...more })
 
+/** The browser's Global Privacy Control, on until the test ends, failed or not. */
+const gpcWas = Object.getOwnPropertyDescriptor(Navigator.prototype, 'globalPrivacyControl')
+const sendGPC = () => Object.defineProperty(Navigator.prototype, 'globalPrivacyControl', { get: () => true, configurable: true })
+
 /** A frame or two: the component looks for the page's own links once a frame. */
 const frames = () => new Promise((done) => setTimeout(done, 40))
 
 afterEach(async () => {
   for (const done of [...live]) await done()
   vi.useRealTimers()
+  vi.restoreAllMocks()
+  if (gpcWas) Object.defineProperty(Navigator.prototype, 'globalPrivacyControl', gpcWas)
+  else delete (Navigator.prototype as { globalPrivacyControl?: boolean }).globalPrivacyControl
   serveConsent(null)
   try {
     sessionStorage.clear()
@@ -174,6 +181,43 @@ describe('Consent, under us_privacy', () => {
     await n.done()
   })
 
+  it('an opt-out outlives the page', async () => {
+    const m = await mount(<Consent />)
+    await m.act(frames)
+    await m.act(async () => m.button('Your Privacy Choices').click())
+    await m.act(async () => m.sheet()!.querySelector<HTMLElement>('[role="switch"][aria-label="Sell, Share, or Use Your Data for Targeted Advertising"]')!.click())
+    await m.done()
+    const n = await mount(<Consent />)
+    await n.act(frames)
+    await n.act(async () => n.button('Your Privacy Choices').click())
+    expect(n.sheet()!.querySelector('[role="switch"][aria-label="Sell, Share, or Use Your Data for Targeted Advertising"]')!.getAttribute('aria-checked')).toBe('false')
+    await n.done()
+  })
+
+  it('closing the sheet gives focus back to the link that opened it', async () => {
+    const m = await mount(<Consent />)
+    await m.act(frames)
+    const link = m.button('Your Privacy Choices')
+    link.focus()
+    await m.act(async () => link.click())
+    expect(m.sheet()).not.toBeNull()
+    await m.act(async () => m.key('Escape'))
+    expect(m.sheet()).toBeNull()
+    expect(document.activeElement, 'the same link, still mounted').toBe(link)
+    await m.done()
+  })
+
+  it("another site's #choices is not this page's link", async () => {
+    const a = document.createElement('a')
+    a.href = 'https://example.com/#choices'
+    document.body.appendChild(a)
+    const m = await mount(<Consent />)
+    await m.act(frames)
+    expect(m.host.querySelector('[data-slot="consent-choices"]')).not.toBeNull()
+    a.remove()
+    await m.done()
+  })
+
   it('Global Privacy Control holds the sale and sharing off, and leaves the rest', async () => {
     const m = await mount(<Consent />)
     await m.act(async () => void rule('us_privacy', { refused: true }))
@@ -200,6 +244,7 @@ describe('Consent, under global', () => {
     await m.act(async () => m.button('Close').click())
     await m.act(frames)
     expect(noticed(), 'the notice is recorded as seen').toBe(true)
+    expect(document.cookie, 'and grants or refuses nothing').not.toMatch(/hz_consent=/)
     expect(m.host.querySelector('[aria-label="Cookie notice"]')).toBeNull()
     expect(m.host.querySelector('[data-slot="consent-choices"]'), 'the choices stay one press away').not.toBeNull()
     await m.done()
@@ -364,20 +409,43 @@ describe('Consent, opened by the visitor', () => {
 })
 
 describe('Consent, when cloud answers after the sheet opened', () => {
-  beforeEach(() => void rule('eu'))
+  it('a rule that changes under the open sheet redraws its switches and its words', async () => {
+    // A first page opened at #choices: the sheet opens before cloud has answered.
+    history.replaceState(null, '', '/#choices')
+    const m = await mount(<Consent />)
+    const on = () => [...m.sheet()!.querySelectorAll('[role="switch"]')].map((x) => x.getAttribute('aria-checked'))
+    expect(on(), 'the strict rule meanwhile').toEqual(['false', 'false', 'false'])
+    await m.act(async () => void rule('us_privacy'))
+    expect(on(), "us_privacy's defaults, not eu's").toEqual(['true', 'true', 'true'])
+    expect(m.sheet()!.textContent).toContain('run on this site by default')
+    expect([...m.sheet()!.querySelectorAll('button')].map((b) => b.textContent).slice(-1)).toEqual(['Done'])
+    await m.done()
+  })
+
+  it('a switch moved before the rule arrives is the answer an opt-out rule saves', async () => {
+    history.replaceState(null, '', '/#choices')
+    const m = await mount(<Consent />)
+    const ads = () => m.sheet()!.querySelector<HTMLElement>('[role="switch"][aria-label="Marketing Cookies"]')!
+    await m.act(async () => ads().click())
+    await m.act(async () => void rule('global'))
+    expect(document.cookie, 'what the visitor set, saved under the opt-out rule').toMatch(/hz_consent=marketing(;|$)/)
+    await m.done()
+  })
 
   it('a new policy version turns off the switches an old choice filled', async () => {
+    rule('eu')
     chosen()
     const m = await mount(<Consent />)
     await m.act(async () => openConsent())
     const on = () => [...m.sheet()!.querySelectorAll('[role="switch"]')].map((x) => x.getAttribute('aria-checked'))
     expect(on(), 'the stored choice, under v2').toEqual(['true', 'false', 'false'])
     await m.act(async () => void rule('eu', { version: 4, floor: 4 }))
-    expect(on(), 'v3 asks again: nothing is pre-ticked').toEqual(['false', 'false', 'false'])
+    expect(on(), 'a newer policy asks again: nothing is pre-ticked').toEqual(['false', 'false', 'false'])
     await m.done()
   })
 
   it('a refusal cloud saw (Sec-GPC) locks an open sheet', async () => {
+    rule('eu')
     const m = await mount(<Consent />)
     await m.act(async () => m.button('Manage preferences').click())
     expect(m.sheet()!.querySelector('[role="switch"][disabled]')).toBeNull()
@@ -388,6 +456,7 @@ describe('Consent, when cloud answers after the sheet opened', () => {
   })
 
   it('opening it again keeps what the visitor switched and where focus returns', async () => {
+    rule('eu')
     chosen()
     const m = await mount(<Consent />)
     await m.act(async () => openConsent())
@@ -404,7 +473,7 @@ describe('Consent, on a first visit', () => {
 
   it('asks every visitor, whatever the clock says, and the × stores essential cookies only', async () => {
     const zone = Intl.DateTimeFormat.prototype.resolvedOptions
-    const us = vi.spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions').mockImplementation(function (this: Intl.DateTimeFormat) {
+    vi.spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions').mockImplementation(function (this: Intl.DateTimeFormat) {
       return { ...zone.call(this), timeZone: 'America/Los_Angeles' }
     })
     const m = await mount(<Consent brand="Lux" />)
@@ -424,13 +493,12 @@ describe('Consent, on a first visit', () => {
     expect(document.cookie).toMatch(/hz_consent_v=3/)
     expect(m.host.querySelector('[data-slot="consent"]')).toBeNull()
     await m.done()
-    us.mockRestore()
   })
 
   it('Manage preferences opens the sheet with everything off, and closing it asks again', async () => {
     const m = await mount(<Consent />)
     await m.act(async () => m.button('Manage preferences').click())
-    expect(m.bar(), 'the sheet replaces the bar').toBeNull()
+    expect(m.sheet(), 'the sheet opens over the bar').not.toBeNull()
     for (const sw of m.sheet()!.querySelectorAll('[role="switch"]')) expect(sw.getAttribute('aria-checked'), 'nothing optional before a choice').toBe('false')
     await m.act(async () => m.button('Close').click())
     expect(m.sheet()).toBeNull()
@@ -441,8 +509,7 @@ describe('Consent, on a first visit', () => {
   })
 
   it('does not ask a browser that sends Global Privacy Control, and locks every switch', async () => {
-    const gpc = Object.getOwnPropertyDescriptor(Navigator.prototype, 'globalPrivacyControl')
-    Object.defineProperty(Navigator.prototype, 'globalPrivacyControl', { get: () => true, configurable: true })
+    sendGPC()
     const m = await mount(<Consent brand="Zoo" />)
     expect(m.host.querySelector('[data-slot="consent"]')).toBeNull()
     await m.act(async () => openConsent())
@@ -458,7 +525,5 @@ describe('Consent, on a first visit', () => {
     await m.act(async () => m.button('Save preferences').click())
     expect(document.cookie, 'saving under GPC stores a refusal').toMatch(/hz_consent=(;|$)/)
     await m.done()
-    if (gpc) Object.defineProperty(Navigator.prototype, 'globalPrivacyControl', gpc)
-    else delete (Navigator.prototype as { globalPrivacyControl?: boolean }).globalPrivacyControl
   })
 })

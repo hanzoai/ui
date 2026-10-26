@@ -10,9 +10,9 @@
  * serves a `mode` with the site's tag config (`consentPolicy()`).
  *
  *  - `eu`: opt-in. A bar with Manage preferences, Accept all and a ×, until the
- *    visitor has chosen; nothing of the third parties loads first. The × is a
- *    choice, not a dismissal: essential cookies only, so refusing is one press,
- *    exactly as accepting is.
+ *    visitor has chosen; what a third party may do meanwhile is @hanzo/event's
+ *    rule (consent.ts, tags.ts). The × is a choice, not a dismissal: essential
+ *    cookies only, so refusing is one press, exactly as accepting is.
  *  - `us_privacy`: opt-out. No bar; Google Analytics and Meta run by default, and
  *    "Your Privacy Choices" opens the sheet, where turning a switch off saves at
  *    once. The advertising switch is the sale and sharing opt-out.
@@ -48,7 +48,7 @@ import {
   type Choice,
   type Mode,
 } from '@hanzo/event'
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 
 import { Button } from '../backends/gui/button'
 import { align } from '../backends/gui/dir'
@@ -97,10 +97,19 @@ function hold(): () => void {
   }
 }
 
-/** Whether the page draws a way to the sheet: a ConsentLink, or a link to #choices (a footer's). */
+/** Whether the page draws a way to the sheet: a ConsentLink, or a link on this site to #choices (a footer's). */
 function linked(): boolean {
   const g = globalThis as unknown as Record<symbol, number | undefined>
-  return (g[LINKS] ?? 0) > 0 || document.querySelector(`a[href$="${HASH}"]`) !== null
+  if ((g[LINKS] ?? 0) > 0) return true
+  for (const a of document.querySelectorAll(`a[href*="${HASH}"]`)) {
+    try {
+      const to = new URL(a.getAttribute('href') ?? '', document.baseURI)
+      if (to.hash === HASH && to.origin === window.location.origin) return true
+    } catch {
+      /* an address that does not parse leads nowhere */
+    }
+  }
+  return false
 }
 
 type Kind = { id: string; key?: keyof Choice; title: string; body: string }
@@ -285,6 +294,9 @@ const Consent = ({
   const [shown, setShown] = useState(false)
   const [choosing, setChoosing] = useState(false)
   const [draft, setDraft] = useState<Choice>({ analytics: false, marketing: false, ads: false })
+  // The switches as they stand, for a handler registered once.
+  const latest = useRef(draft)
+  latest.current = draft
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
   // Whether the page draws its own way to the sheet; if not, the component draws one.
   const [hosted, setHosted] = useState(true)
@@ -301,6 +313,8 @@ const Consent = ({
   const opened = useRef(false)
   // The switches were filled from a stored choice, not left at the rule's defaults.
   const seeded = useRef(false)
+  // The visitor has moved a switch since the sheet opened.
+  const touched = useRef(false)
   const id = useId()
   // The browser refused, as the page sees it or as cloud saw the request. State,
   // so cloud's answer redraws an open sheet.
@@ -315,6 +329,7 @@ const Consent = ({
     const at = document.activeElement
     back.current = at instanceof HTMLElement && at !== document.body ? at : null
     asked.current = true
+    touched.current = false
     setLocked(declined())
     seeded.current = storedConsent()
     setDraft(readConsent())
@@ -340,9 +355,16 @@ const Consent = ({
       }
     }
     const decide = (m: Mode) => {
+      const changed = rule.current !== m
       rule.current = m
       setMode(m)
       sync()
+      // A rule that changes under an open sheet changes what its switches mean.
+      // Untouched, they show the new rule's defaults; moved, they are the
+      // visitor's answer, which an opt-out rule takes as said.
+      if (!changed || !asked.current) return
+      if (!touched.current) setDraft(readConsent())
+      else if (m !== 'eu') saveConsent(latest.current)
     }
     // Cloud answered on this page: its rule, whether or not it placed the visitor.
     const policy = () => decide(consentPolicy().mode)
@@ -459,6 +481,8 @@ const Consent = ({
     setChoosing(false)
   }
 
+  // The sheet, drawn over whatever opened it, which stays mounted so focus can go back to it.
+  let panel: ReactNode = null
   if (choosing) {
     // A sheet opened before cloud answered speaks the strict rule.
     const strict = (mode ?? 'eu') === 'eu'
@@ -466,11 +490,12 @@ const Consent = ({
     const held = (key: keyof Choice) => locked && (strict || key === 'ads')
     // Under eu the switches wait for Save preferences; elsewhere each one is an opt-out, saved as it moves.
     const flip = (key: keyof Choice, on: boolean) => {
+      touched.current = true
       const next = { ...draft, [key]: on }
       setDraft(next)
       if (!strict) saveConsent(next)
     }
-    return (
+    panel = (
       <YStack
         {...slot('consent-sheet')}
         {...COVER}
@@ -602,7 +627,7 @@ const Consent = ({
     )
   }
 
-  if (!mode) return null
+  if (!mode) return panel
 
   // The way to the sheet on a page that draws none: small, quiet, at the foot of the window.
   const own =
@@ -626,11 +651,11 @@ const Consent = ({
       </XStack>
     ) : null
 
-  if (!shown) return own
+  let surface: ReactNode = own
 
   // The global notice: one line, the way to the choices, and a × that records it as seen.
-  if (mode === 'global')
-    return (
+  if (shown && mode === 'global')
+    surface = (
       <XStack {...frame} role="region" aria-label="Cookie notice" style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
         <YStack shrink={1} minW={0}>
           <Paragraph size="$2" color="$ink" m={0}>
@@ -658,7 +683,8 @@ const Consent = ({
   // The eu bar: the line, then the buttons. They share a row where the line fits
   // beside them and the buttons drop under it where it does not, so a phone shows
   // the line over one row of buttons and nothing breaks mid-control.
-  return (
+  else if (shown && mode === 'eu')
+    surface = (
     <XStack {...frame} role="dialog" aria-label="Cookie preferences" style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$3">
       <YStack shrink={1} minW={0}>
         <Paragraph size="$2" color="$ink" m={0}>
@@ -687,6 +713,13 @@ const Consent = ({
         <X size={16} />
       </Button>
     </XStack>
+    )
+
+  return (
+    <>
+      {surface}
+      {panel}
+    </>
   )
 }
 
