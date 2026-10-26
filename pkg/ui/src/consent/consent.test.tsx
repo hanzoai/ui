@@ -64,6 +64,9 @@ const rule = (mode: 'eu' | 'us_privacy' | 'global', more: Record<string, unknown
 const gpcWas = Object.getOwnPropertyDescriptor(Navigator.prototype, 'globalPrivacyControl')
 const sendGPC = () => Object.defineProperty(Navigator.prototype, 'globalPrivacyControl', { get: () => true, configurable: true })
 
+/** Whether @hanzo/event holds the sheet open (its page slot, which `consentSheet` writes). */
+const consentOpen = () => (globalThis as unknown as Record<symbol, { sheet?: boolean } | undefined>)[Symbol.for('hanzo.event.consent')]?.sheet === true
+
 /** A frame or two: the component looks for the page's own links once a frame. */
 const frames = () => new Promise((done) => setTimeout(done, 40))
 
@@ -194,6 +197,16 @@ describe('Consent, under us_privacy', () => {
     await n.done()
   })
 
+  it('tells @hanzo/event the sheet is open, so a withdrawal waits for it to close', async () => {
+    const m = await mount(<Consent />)
+    await m.act(frames)
+    await m.act(async () => m.button('Your Privacy Choices').click())
+    expect(consentOpen(), 'open').toBe(true)
+    await m.act(async () => m.button('Done').click())
+    expect(consentOpen(), 'closed').toBe(false)
+    await m.done()
+  })
+
   it('closing the sheet gives focus back to the link that opened it', async () => {
     const m = await mount(<Consent />)
     await m.act(frames)
@@ -218,15 +231,15 @@ describe('Consent, under us_privacy', () => {
     await m.done()
   })
 
-  it('Global Privacy Control holds the sale and sharing off, and leaves the rest', async () => {
+  it('Global Privacy Control holds every switch off here too', async () => {
     const m = await mount(<Consent />)
     await m.act(async () => void rule('us_privacy', { refused: true }))
     await m.act(async () => openConsent())
     const sheet = m.sheet()!
     const switches = [...sheet.querySelectorAll('[role="switch"]')]
-    expect(switches.map((x) => x.hasAttribute('disabled'))).toEqual([false, false, true])
-    expect(switches[2]!.getAttribute('aria-checked')).toBe('false')
-    expect(sheet.textContent).toContain('your data is not sold or shared for targeted advertising')
+    expect(switches.map((x) => x.hasAttribute('disabled')), 'every switch, under every rule').toEqual([true, true, true])
+    expect(switches.map((x) => x.getAttribute('aria-checked'))).toEqual(['false', 'false', 'false'])
+    expect(sheet.textContent).toContain('so all of these stay off')
     await m.done()
   })
 })

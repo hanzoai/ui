@@ -18,9 +18,8 @@
  *    once. The advertising switch is the sale and sharing opt-out.
  *  - `global`: a notice. One line and a × that records it as seen; the same
  *    opt-out sheet stays one press away.
- *  - Global Privacy Control or Do Not Track is an answer already: in `eu` every
- *    switch is held off and the visitor is not asked; elsewhere the sale and
- *    sharing for targeted advertising is held off.
+ *  - Global Privacy Control or Do Not Track is an answer already, under every
+ *    rule: every switch is held off and the visitor is not asked.
  *  - Until cloud answers, nothing is drawn: the answer this tab was last served
  *    (@hanzo/event keeps it) is used at once, and with none by 1.5s the strict
  *    `eu` rule applies.
@@ -37,6 +36,7 @@ import {
   acceptAll,
   asks,
   consentPolicy,
+  consentSheet,
   declined,
   notice,
   noticed,
@@ -148,11 +148,8 @@ const intro = (strict: boolean) =>
     ? 'We use cookies and similar technologies to provide our services, measure performance, and support advertising. Essential cookies are required for the site to work and cannot be turned off. You can allow or reject optional cookies below. Learn more in our '
     : 'We use cookies and similar technologies to provide our services, measure performance, and support advertising. Google Analytics and the Meta pixel run on this site by default. Turn either off below, or turn off the last switch to opt out of the sale or sharing of your personal information for targeted advertising; each switch is saved as soon as you change it. Essential cookies are required for the site to work and cannot be turned off. Learn more in our '
 
-/** What a browser that sends Global Privacy Control or Do Not Track holds off, by rule. */
-const refusal = (strict: boolean) =>
-  strict
-    ? 'Your browser asks sites not to track you, so all of these stay off.'
-    : 'Your browser asks sites not to track you, so your data is not sold or shared for targeted advertising.'
+/** What a browser that sends Global Privacy Control or Do Not Track holds off, under every rule. */
+const REFUSAL = 'Your browser asks sites not to track you, so all of these stay off.'
 
 /** The bar's and the sheet's inset from the window's edges: 16px, or the device's inset and 8px where that is wider. */
 const EDGE = {
@@ -434,6 +431,13 @@ const Consent = ({
     }
   }, [])
 
+  // @hanzo/event holds a withdrawal's reload while the sheet is open, and reloads once when it closes.
+  useEffect(() => {
+    if (!choosing) return
+    consentSheet(true)
+    return () => consentSheet(false)
+  }, [choosing])
+
   // Focus moves into the sheet when it opens, stays inside it while it is open,
   // and returns to what opened it (or the bar's Manage preferences) when it closes.
   useEffect(() => {
@@ -486,8 +490,6 @@ const Consent = ({
   if (choosing) {
     // A sheet opened before cloud answered speaks the strict rule.
     const strict = (mode ?? 'eu') === 'eu'
-    // eu holds every switch off for a browser that refused; elsewhere only the sale and sharing.
-    const held = (key: keyof Choice) => locked && (strict || key === 'ads')
     // Under eu the switches wait for Save preferences; elsewhere each one is an opt-out, saved as it moves.
     const flip = (key: keyof Choice, on: boolean) => {
       touched.current = true
@@ -545,7 +547,7 @@ const Consent = ({
             </Paragraph>
             {locked ? (
               <Paragraph size="$2" color="$ink" m={0} pb="$3">
-                {refusal(strict)}
+                {REFUSAL}
               </Paragraph>
             ) : null}
             {kinds(brand, strict).map((k) => {
@@ -582,8 +584,9 @@ const Consent = ({
                       <Switch
                         aria-label={k.title}
                         aria-describedby={body}
-                        disabled={held(k.key)}
-                        checked={held(k.key) ? false : draft[k.key]}
+                        // A browser that refused holds every switch off, under every rule.
+                        disabled={locked}
+                        checked={locked ? false : draft[k.key]}
                         onCheckedChange={(v: boolean) => flip(k.key as keyof Choice, v === true)}
                       />
                     ) : (

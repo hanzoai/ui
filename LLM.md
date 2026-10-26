@@ -1325,15 +1325,16 @@ silence and correctness look identical in a network panel.
 
 **The consent UI is `@hanzo/ui/consent`, and no site draws its own.** `Consent`
 mounts once and draws the rule cloud serves per visitor (`consentPolicy().mode`,
-@hanzo/event >= 0.3.62): `eu` is the bar (Manage preferences, Accept all, and a ×
+@hanzo/event >= 0.3.63): `eu` is the bar (Manage preferences, Accept all, and a ×
 that stores essential-only) over the opt-in sheet; `us_privacy` is no bar, Google
 Analytics and Meta on by default, and an opt-out sheet whose switches save as they
 move (Ads off is the sale and sharing opt-out); `global` is a one-line notice whose
 × calls `notice()`, and the same opt-out sheet. Nothing is drawn until a rule is
 known (this page's answer, or the tab's cached one, which carries a region); with
-none by 1.5s `eu` applies. GPC or DNT holds every switch off in `eu` and Ads off
-elsewhere. The way back to the sheet is "Your Privacy Choices" with California's
-privacy options icon (`consent/icon.tsx`, § 7015(b)): `ConsentLink`, any link to
+none by 1.5s `eu` applies. GPC or DNT holds every switch off under every rule.
+The sheet tells @hanzo/event it is open (`consentSheet`), so a withdrawal's reload
+waits for it to close. The way back to the sheet is "Your Privacy Choices" with
+California's privacy options icon (`consent/icon.tsx`, § 7015(b)): `ConsentLink`, any link to
 `#choices` (FOOT_LINE; `Footer` draws the icon beside it), or, on a page with
 neither, a small link `Consent` fixes to the foot of the window. Policy links are
 props (`cookies`, `privacy`, `terms`, default hanzo.ai). Withdrawing forgets
