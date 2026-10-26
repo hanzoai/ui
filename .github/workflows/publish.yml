@@ -121,10 +121,11 @@ jobs:
     needs: detect-changes
     if: needs.detect-changes.outputs.legs != '[]'
     name: test ${{ matrix.package }} ${{ matrix.shard }}/${{ matrix.of }}
-    # Six cores of a node, one leg a node: an ordinary runner asks 1.5, the
-    # scheduler places a dozen on an 8-core node, and a sixth of @hanzo/ui's
-    # suite ran 453 s there against 657 s for the whole suite alone.
-    runs-on: [heavy-linux-amd64]
+    # Ordinary runners. A heavy one asks six cores of a node no other heavy job
+    # holds, and the CI pool is eight 8-core nodes (universe infra/aws/pool.tf):
+    # once ordinary jobs hold a few cores of every node, a heavy leg waits for
+    # a node that never empties, measured at 25 minutes and counting.
+    runs-on: [linux-amd64]
     strategy:
       fail-fast: false
       matrix:
@@ -178,8 +179,7 @@ jobs:
     needs: detect-changes
     if: needs.detect-changes.outputs.packages != '[]'
     name: publish ${{ matrix.package }}
-    # Heavy for the same reason as a test leg: it builds and typechecks.
-    runs-on: [heavy-linux-amd64]
+    runs-on: [linux-amd64]
     strategy:
       fail-fast: false
       matrix:
