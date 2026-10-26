@@ -552,7 +552,7 @@ export const FOOT_LINE: Link[] = [
   { label: 'Terms', href: '/terms' },
   { label: 'Privacy', href: '/privacy' },
   { label: 'Usage policy', href: '/aup' },
-  { label: 'Privacy choices', href: '#choices' },
+  { label: 'Your Privacy Choices', href: '#choices' },
 ]
 
 /** A footer door, as `@hanzo/ui/marketing`'s `Footer` takes it. */

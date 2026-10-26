@@ -1325,20 +1325,25 @@ to ZERO. Whenever you touch this registry, read `enabled` off the live client
 silence and correctness look identical in a network panel.
 
 **The consent UI is `@hanzo/ui/consent`, and no site draws its own.** `Consent`
-mounts once: a bar (Manage preferences, Accept all, and a × that stores
-essential-only, so refusing is one press) and the Cookie Preferences sheet
-(Strictly Necessary always on; Performance = `analytics`, Marketing =
-`marketing`, Sell/Share/Targeted Advertising = `ads`; Accept all, Save
-preferences). `openConsent()`, `ConsentLink` and any same-origin link to
-`#choices` (FOOT_LINE's Privacy choices) open the sheet. Policy links are props
-(`cookies`, `privacy`, `terms`, default hanzo.ai); Lux and Zoo pass their own.
-Withdrawing forgets measurement ids only — `consent.test.ts` holds that sign-in,
-the choice itself, CSRF and cart state survive `rejectAll()`. Its buttons read
-design's button tokens for every state (`--primary`/`--secondary`, their `-hover`
-under the pointer and pressed, `--ring` for the keyboard), never the Button's own
-hover, which put dark ink on a dark fill; 13px type on a 36px floor, a
-`--radius-lg` corner in a `--radius-xl` card. Strictly Necessary counts our own
-stream and GA4's and the Pixel's page views; the switches are the rest of theirs.
+mounts once and draws the rule cloud serves per visitor (`consentPolicy().mode`,
+@hanzo/event >= 0.3.62): `eu` is the bar (Manage preferences, Accept all, and a ×
+that stores essential-only) over the opt-in sheet; `us_privacy` is no bar, Google
+Analytics and Meta on by default, and an opt-out sheet whose switches save as they
+move (Ads off is the sale and sharing opt-out); `global` is a one-line notice whose
+× calls `notice()`, and the same opt-out sheet. Nothing is drawn until a rule is
+known (this page's answer, or the tab's cached one, which carries a region); with
+none by 1.5s `eu` applies. GPC or DNT holds every switch off in `eu` and Ads off
+elsewhere. The way back to the sheet is "Your Privacy Choices" with California's
+privacy options icon (`consent/icon.tsx`, § 7015(b)): `ConsentLink`, any link to
+`#choices` (FOOT_LINE; `Footer` draws the icon beside it), or, on a page with
+neither, a small link `Consent` fixes to the foot of the window. Policy links are
+props (`cookies`, `privacy`, `terms`, default hanzo.ai). Withdrawing forgets
+measurement ids only — `consent.test.ts` holds that sign-in, the choice itself,
+CSRF and cart state survive `rejectAll()`. Its buttons read design's button tokens
+for every state (`--primary`/`--secondary`, their `-hover` under the pointer and
+pressed, `--ring` for the keyboard), never the Button's own hover, which put dark
+ink on a dark fill; 13px type on a 36px floor, a `--radius-lg` corner in a
+`--radius-xl` card.
 
 ### One way — supersessions (no divergent telemetry client)
 

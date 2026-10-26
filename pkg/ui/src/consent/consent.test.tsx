@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
-import { serveConsent } from '@hanzo/event'
+import { noticed, serveConsent } from '@hanzo/event'
 
 import config from '../gui-config'
 import { Consent, ConsentLink, openConsent } from './Consent'
@@ -13,6 +13,9 @@ const html = (node: React.ReactNode) =>
       {node}
     </GuiProvider>,
   )
+
+/** Every mounted root, unmounted after each test even when it failed, so none leaves listeners behind. */
+const live = new Set<() => Promise<void>>()
 
 const mount = async (node: React.ReactNode) => {
   const { createRoot } = await import('react-dom/client')
@@ -30,6 +33,12 @@ const mount = async (node: React.ReactNode) => {
   })
   const button = (name: string) => [...host.querySelectorAll('button')].find((b) => b.textContent === name || b.getAttribute('aria-label') === name)!
   const key = (k: string, shiftKey = false) => document.dispatchEvent(new KeyboardEvent('keydown', { key: k, shiftKey, bubbles: true }))
+  const done = async () => {
+    if (!live.delete(done)) return
+    await act(async () => root.unmount())
+    host.remove()
+  }
+  live.add(done)
   return {
     host,
     act,
@@ -37,10 +46,7 @@ const mount = async (node: React.ReactNode) => {
     key,
     sheet: () => host.querySelector<HTMLElement>('[role="dialog"][aria-modal="true"]'),
     bar: () => host.querySelector<HTMLElement>('[role="dialog"]:not([aria-modal])'),
-    done: async () => {
-      await act(async () => root.unmount())
-      host.remove()
-    },
+    done,
   }
 }
 
@@ -50,24 +56,167 @@ const chosen = () => {
   document.cookie = 'hz_consent_v=2; Path=/'
 }
 
-afterEach(() => {
+/** Cloud's answer: the rule the visitor is under. */
+const rule = (mode: 'eu' | 'us_privacy' | 'global', more: Record<string, unknown> = {}) =>
+  serveConsent({ region: 'XX', mode, version: 2, refused: false, defaults: {}, ...more })
+
+/** A frame or two: the component looks for the page's own links once a frame. */
+const frames = () => new Promise((done) => setTimeout(done, 40))
+
+afterEach(async () => {
+  for (const done of [...live]) await done()
+  vi.useRealTimers()
   serveConsent(null)
-  document.cookie = 'hz_consent=; Max-Age=0; Path=/'
-  document.cookie = 'hz_consent_v=; Max-Age=0; Path=/'
+  try {
+    sessionStorage.clear()
+  } catch {
+    /* no storage */
+  }
+  for (const c of document.cookie.split('; ')) if (c) document.cookie = `${c.slice(0, c.indexOf('='))}=; Max-Age=0; Path=/`
 })
 
 describe('Consent', () => {
   it('draws nothing until the visitor is asked', () => {
     expect(html(<Consent />)).not.toMatch(/data-slot="consent"/)
   })
-  it('the footer link is a labelled control that opens the cookie settings', () => {
+  it('the footer link reads Your Privacy Choices, beside California’s privacy options icon', () => {
     const out = html(<ConsentLink />)
     expect(out).toMatch(/data-slot="consent-link"/)
-    expect(out).toMatch(/Cookie settings/)
+    expect(out).toMatch(/Your Privacy Choices/)
+    expect(out).toMatch(/<svg[^>]*viewBox="0 0 30 14"[^>]*aria-hidden="true"/)
+  })
+})
+
+describe('Consent, before cloud answers', () => {
+  it('draws nothing, then the strict eu bar when no rule has come in 1.5s', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
+    const m = await mount(<Consent />)
+    expect(m.host.querySelector('[data-slot="consent"]'), 'nothing while cloud is asked').toBeNull()
+    expect(m.host.querySelector('[data-slot="consent-choices"]')).toBeNull()
+    await m.act(async () => void vi.advanceTimersByTime(1600))
+    expect(m.bar()?.getAttribute('aria-label'), 'no answer is the strict answer').toBe('Cookie preferences')
+    vi.useRealTimers()
+    await m.done()
+  })
+
+  it('a tab already served a rule uses it at once', async () => {
+    rule('us_privacy')
+    serveConsent(null)
+    const m = await mount(<Consent />)
+    await m.act(frames)
+    expect(m.bar(), 'no bar under us_privacy').toBeNull()
+    expect(m.host.querySelector('[data-slot="consent-choices"]'), 'the way to the choices, at once').not.toBeNull()
+    await m.done()
+  })
+
+  it('draws the rule cloud serves the moment it arrives', async () => {
+    const m = await mount(<Consent />)
+    expect(m.host.querySelector('[aria-label="Cookie notice"]')).toBeNull()
+    await m.act(async () => void rule('global'))
+    expect(m.host.querySelector('[aria-label="Cookie notice"]')).not.toBeNull()
+    await m.done()
+  })
+})
+
+describe('Consent, under us_privacy', () => {
+  beforeEach(() => void rule('us_privacy'))
+
+  it('asks nothing, and draws Your Privacy Choices where the page has no link of its own', async () => {
+    const m = await mount(<Consent brand="Lux" />)
+    await m.act(frames)
+    expect(m.bar(), 'no banner').toBeNull()
+    const own = m.host.querySelector('[data-slot="consent-choices"]')!
+    expect(own.textContent).toBe('Your Privacy Choices')
+    expect(own.querySelector('svg')?.getAttribute('viewBox'), 'with the privacy options icon').toBe('0 0 30 14')
+    await m.act(async () => m.button('Your Privacy Choices').click())
+    const sheet = m.sheet()!
+    expect(sheet.textContent, 'says what runs by default').toContain('Google Analytics and the Meta pixel run on this site by default')
+    expect(sheet.textContent).toContain('turn this off to opt out')
+    expect([...sheet.querySelectorAll('[role="switch"]')].map((x) => x.getAttribute('aria-checked')), 'on until turned off').toEqual(['true', 'true', 'true'])
+    await m.done()
+  })
+
+  it('opting out of the sale and sharing saves as the switch moves, and the link reads the same after', async () => {
+    const m = await mount(<Consent />)
+    await m.act(frames)
+    await m.act(async () => m.button('Your Privacy Choices').click())
+    const ads = m.sheet()!.querySelector<HTMLElement>('[role="switch"][aria-label="Sell, Share, or Use Your Data for Targeted Advertising"]')!
+    await m.act(async () => ads.click())
+    expect(document.cookie, 'saved at once: no Save step').toMatch(/hz_consent=analytics%2Cmarketing(;|$)/)
+    expect([...m.sheet()!.querySelectorAll('button')].map((b) => b.textContent).slice(-1), 'nothing left to save').toEqual(['Done'])
+    await m.act(async () => m.button('Done').click())
+    await m.act(frames)
+    expect(m.sheet()).toBeNull()
+    expect(m.host.querySelector('[data-slot="consent-choices"]')?.textContent).toBe('Your Privacy Choices')
+    await m.done()
+  })
+
+  it('draws no second link where the page mounts ConsentLink, or links to #choices', async () => {
+    const m = await mount(
+      <>
+        <Consent />
+        <ConsentLink />
+      </>,
+    )
+    await m.act(frames)
+    expect(m.host.querySelectorAll('[data-slot="consent-choices"]').length).toBe(0)
+    expect([...m.host.querySelectorAll('button')].filter((b) => b.textContent === 'Your Privacy Choices').length, 'one link').toBe(1)
+    await m.done()
+    const a = document.createElement('a')
+    a.href = '#choices'
+    document.body.appendChild(a)
+    const n = await mount(<Consent />)
+    await n.act(frames)
+    expect(n.host.querySelector('[data-slot="consent-choices"]'), "a footer's link to #choices is the page's own").toBeNull()
+    a.remove()
+    await n.act(frames)
+    expect(n.host.querySelector('[data-slot="consent-choices"]'), 'and the component draws its own once that is gone').not.toBeNull()
+    await n.done()
+  })
+
+  it('Global Privacy Control holds the sale and sharing off, and leaves the rest', async () => {
+    const m = await mount(<Consent />)
+    await m.act(async () => void rule('us_privacy', { refused: true }))
+    await m.act(async () => openConsent())
+    const sheet = m.sheet()!
+    const switches = [...sheet.querySelectorAll('[role="switch"]')]
+    expect(switches.map((x) => x.hasAttribute('disabled'))).toEqual([false, false, true])
+    expect(switches[2]!.getAttribute('aria-checked')).toBe('false')
+    expect(sheet.textContent).toContain('your data is not sold or shared for targeted advertising')
+    await m.done()
+  })
+})
+
+describe('Consent, under global', () => {
+  beforeEach(() => void rule('global'))
+
+  it('shows the notice with no choice to make, and its × records it as seen', async () => {
+    const m = await mount(<Consent />)
+    await m.act(frames)
+    const bar = m.host.querySelector<HTMLElement>('[role="region"][aria-label="Cookie notice"]')!
+    expect(bar.textContent).toContain('We use cookies to improve your experience. By continuing to browse, you agree.')
+    expect([...bar.querySelectorAll('button')].map((b) => b.textContent || b.getAttribute('aria-label'))).toEqual(['Your Privacy Choices', 'Close'])
+    expect(m.host.textContent).not.toContain('Accept all')
+    await m.act(async () => m.button('Close').click())
+    await m.act(frames)
+    expect(noticed(), 'the notice is recorded as seen').toBe(true)
+    expect(m.host.querySelector('[aria-label="Cookie notice"]')).toBeNull()
+    expect(m.host.querySelector('[data-slot="consent-choices"]'), 'the choices stay one press away').not.toBeNull()
+    await m.done()
+  })
+
+  it('opens the opt-out sheet from the notice', async () => {
+    const m = await mount(<Consent />)
+    await m.act(frames)
+    await m.act(async () => m.button('Your Privacy Choices').click())
+    expect(m.sheet()!.textContent).toContain('Google Analytics and the Meta pixel run on this site by default')
+    await m.done()
   })
 })
 
 describe('Consent, opened by the visitor', () => {
+  beforeEach(() => void rule('eu'))
+
   it('stays open when the policy arrives after it was asked for', async () => {
     chosen()
     const m = await mount(<Consent />)
@@ -136,14 +285,13 @@ describe('Consent, opened by the visitor', () => {
     await m.act(async () => toggle.click())
     expect(toggle.getAttribute('aria-expanded')).toBe('true')
     expect(getComputedStyle(body).display).not.toBe('none')
-    expect(body.textContent).toContain("Google Analytics events beyond page views: the clicks, scrolls and other actions it measures on Lux's pages")
+    expect(body.textContent).toContain('Google Analytics: lets Google measure visits to Lux')
     // Strictly Necessary names the brand's own first-party analytics; the copy names
     // Google and Meta and no other platform, and claims nothing it does not do.
     expect(sheet.textContent).toContain("Lux's own first-party analytics")
     expect(sheet.textContent).toContain('never sold or shared')
-    expect(sheet.textContent, 'the base tags are counted as necessary, page loads only').toContain('basic page-view counting by Google Analytics and Meta: page loads only, with no ad personalization')
-    expect(sheet.textContent).toContain("Meta's conversion and event measurement")
-    expect(sheet.textContent).toContain('to personalize the ads they show you and to match you')
+    expect(sheet.textContent).toContain('The Meta pixel')
+    expect(sheet.textContent, 'opt-in: off until turned on').toContain('it stays off unless you turn it on')
     for (const w of ['LinkedIn', 'TikTok', 'Pinterest', 'Reddit', 'aggregated']) expect(sheet.textContent).not.toContain(w)
     const foot = [...sheet.querySelectorAll('button')].slice(-2).map((x) => x.textContent)
     expect(foot, 'Accept all and Save preferences, and no Reject all').toEqual(['Accept all', 'Save preferences'])
@@ -216,13 +364,15 @@ describe('Consent, opened by the visitor', () => {
 })
 
 describe('Consent, when cloud answers after the sheet opened', () => {
+  beforeEach(() => void rule('eu'))
+
   it('a new policy version turns off the switches an old choice filled', async () => {
     chosen()
     const m = await mount(<Consent />)
     await m.act(async () => openConsent())
     const on = () => [...m.sheet()!.querySelectorAll('[role="switch"]')].map((x) => x.getAttribute('aria-checked'))
     expect(on(), 'the stored choice, under v2').toEqual(['true', 'false', 'false'])
-    await m.act(async () => serveConsent({ region: 'DE', mode: 'opt-in', version: 3, refused: false, defaults: {} }))
+    await m.act(async () => void rule('eu', { version: 4, floor: 4 }))
     expect(on(), 'v3 asks again: nothing is pre-ticked').toEqual(['false', 'false', 'false'])
     await m.done()
   })
@@ -231,7 +381,7 @@ describe('Consent, when cloud answers after the sheet opened', () => {
     const m = await mount(<Consent />)
     await m.act(async () => m.button('Manage preferences').click())
     expect(m.sheet()!.querySelector('[role="switch"][disabled]')).toBeNull()
-    await m.act(async () => serveConsent({ region: 'US', mode: 'opt-in', version: 2, refused: true, defaults: {} }))
+    await m.act(async () => void rule('eu', { refused: true }))
     for (const sw of m.sheet()!.querySelectorAll('[role="switch"]')) expect(sw.hasAttribute('disabled')).toBe(true)
     expect(m.sheet()!.textContent).toContain('Your browser asks sites not to track you')
     await m.done()
@@ -250,6 +400,8 @@ describe('Consent, when cloud answers after the sheet opened', () => {
 })
 
 describe('Consent, on a first visit', () => {
+  beforeEach(() => void rule('eu'))
+
   it('asks every visitor, whatever the clock says, and the × stores essential cookies only', async () => {
     const zone = Intl.DateTimeFormat.prototype.resolvedOptions
     const us = vi.spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions').mockImplementation(function (this: Intl.DateTimeFormat) {
@@ -269,7 +421,7 @@ describe('Consent, on a first visit', () => {
     expect(m.host.textContent, 'no Reject all: the × is the refusal').not.toContain('Reject')
     await m.act(async () => m.button('Close and use essential cookies only').click())
     expect(document.cookie, 'the × is a choice: essential only, stored').toMatch(/hz_consent=(;|$)/)
-    expect(document.cookie).toMatch(/hz_consent_v=2/)
+    expect(document.cookie).toMatch(/hz_consent_v=3/)
     expect(m.host.querySelector('[data-slot="consent"]')).toBeNull()
     await m.done()
     us.mockRestore()
@@ -294,7 +446,7 @@ describe('Consent, on a first visit', () => {
     const m = await mount(<Consent brand="Zoo" />)
     expect(m.host.querySelector('[data-slot="consent"]')).toBeNull()
     await m.act(async () => openConsent())
-    expect(m.host.textContent).toContain("on Zoo's pages")
+    expect(m.host.textContent).toContain('measure visits to Zoo')
     expect(m.host.textContent).toContain('Your browser asks sites not to track you')
     const switches = [...m.host.querySelectorAll('[role="switch"]')]
     expect(switches.length).toBe(3)

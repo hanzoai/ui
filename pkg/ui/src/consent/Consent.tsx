@@ -4,37 +4,57 @@
  * Consent — the one cookie banner every Hanzo, Lux and Zoo site mounts.
  *
  * It draws the choice; @hanzo/event stores it (`hz_consent`) and acts on it. The
- * brand's own first-party analytics and the page-view count Google Analytics and
- * the Meta pixel keep are strictly necessary and run for every visitor; Google's
- * other events, Meta's conversion measurement and ad personalization wait for
- * Accept, and Google Consent Mode v2 starts denied.
+ * brand's own first-party analytics is strictly necessary and runs for every
+ * visitor. What the third parties (Google Analytics, the Meta pixel, their ad
+ * personalization) may do is regional: cloud places the visitor by GeoIP and
+ * serves a `mode` with the site's tag config (`consentPolicy()`).
  *
- *  - every visitor, wherever they are, is asked: a bar with Manage preferences,
- *    Accept all and a ×, until they have chosen. Nothing optional loads first.
- *  - the bar's × is a choice, not a dismissal: it stores essential cookies only
- *    and closes, so refusing is one press, exactly as accepting is.
- *  - Manage preferences opens the Cookie Preferences sheet: a modal with one
- *    section per category, Strictly Necessary always on, the rest switches that
- *    start off until chosen, and the policy links.
- *  - Global Privacy Control or Do Not Track is the visitor's answer already: they
- *    are not asked, nothing optional runs, and the switches are locked off.
- *  - cloud serves the policy with the site's tag config; the bar redraws when it
- *    arrives, and asks again when the policy version changes.
+ *  - `eu`: opt-in. A bar with Manage preferences, Accept all and a ×, until the
+ *    visitor has chosen; nothing of the third parties loads first. The × is a
+ *    choice, not a dismissal: essential cookies only, so refusing is one press,
+ *    exactly as accepting is.
+ *  - `us_privacy`: opt-out. No bar; Google Analytics and Meta run by default, and
+ *    "Your Privacy Choices" opens the sheet, where turning a switch off saves at
+ *    once. The advertising switch is the sale and sharing opt-out.
+ *  - `global`: a notice. One line and a × that records it as seen; the same
+ *    opt-out sheet stays one press away.
+ *  - Global Privacy Control or Do Not Track is an answer already: in `eu` every
+ *    switch is held off and the visitor is not asked; elsewhere the sale and
+ *    sharing for targeted advertising is held off.
+ *  - Until cloud answers, nothing is drawn: the answer this tab was last served
+ *    (@hanzo/event keeps it) is used at once, and with none by 1.5s the strict
+ *    `eu` rule applies.
  *
  * `Consent` mounts once near the root. `openConsent()`, `ConsentLink` and any
- * link to `#choices` (the footer's Privacy choices) open the sheet from anywhere.
- * `brand` names who is asking; `cookies`, `privacy` and `terms` are the brand's
- * own policies.
+ * link to `#choices` (the footer's Your Privacy Choices) open the sheet from
+ * anywhere. A page with no such link in it gets a small one, fixed to the foot of
+ * the window, so the choices are always one press away. `brand` names who is
+ * asking; `cookies`, `privacy` and `terms` are the brand's own policies.
  */
 import { Paragraph, Text, XStack, YStack } from '@hanzo/gui'
 import { ChevronDown, X } from '@hanzogui/lucide-icons-2'
-import { acceptAll, asks, declined, POLICY_EVENT, readConsent, rejectAll, saveConsent, storedConsent, type Choice } from '@hanzo/event'
+import {
+  acceptAll,
+  asks,
+  consentPolicy,
+  declined,
+  notice,
+  noticed,
+  POLICY_EVENT,
+  readConsent,
+  rejectAll,
+  saveConsent,
+  storedConsent,
+  type Choice,
+  type Mode,
+} from '@hanzo/event'
 import { useEffect, useId, useRef, useState } from 'react'
 
 import { Button } from '../backends/gui/button'
 import { align } from '../backends/gui/dir'
 import { Switch } from '../backends/gui/switch'
 import { slot } from '../backends/gui/slot'
+import { PrivacyChoicesIcon } from './icon'
 
 const OPEN = 'hzconsent-open'
 
@@ -46,33 +66,84 @@ export const openConsent = (): void => {
   if (typeof window !== 'undefined') window.dispatchEvent(new Event(OPEN))
 }
 
+/** How long a page waits for cloud's rule before the strict one applies. */
+const WAIT = 1500
+
+/**
+ * The rule, once one has been served: on this page, or to this tab before (then
+ * it carries the region cloud placed the visitor in). `consentPolicy()` answers
+ * `eu` before either, which is the rule to wait out rather than draw.
+ */
+const served = (): Mode | undefined => {
+  const p = consentPolicy()
+  return p.region ? p.mode : undefined
+}
+
+/*
+ * The links a page draws to the sheet, counted on the page (not in module scope,
+ * since a bundle may carry two copies of this module), so the component draws its
+ * own only where the page has none.
+ */
+const LINKS = Symbol.for('hanzo.ui.consent.links')
+const LINKS_EVENT = 'hzconsent-links'
+
+function hold(): () => void {
+  const g = globalThis as unknown as Record<symbol, number | undefined>
+  g[LINKS] = (g[LINKS] ?? 0) + 1
+  window.dispatchEvent(new Event(LINKS_EVENT))
+  return () => {
+    g[LINKS] = Math.max(0, (g[LINKS] ?? 1) - 1)
+    window.dispatchEvent(new Event(LINKS_EVENT))
+  }
+}
+
+/** Whether the page draws a way to the sheet: a ConsentLink, or a link to #choices (a footer's). */
+function linked(): boolean {
+  const g = globalThis as unknown as Record<symbol, number | undefined>
+  return (g[LINKS] ?? 0) > 0 || document.querySelector(`a[href$="${HASH}"]`) !== null
+}
+
 type Kind = { id: string; key?: keyof Choice; title: string; body: string }
 
-const kinds = (brand: string): Kind[] => [
+const kinds = (brand: string, strict: boolean): Kind[] => [
   {
     id: 'necessary',
     title: 'Strictly Necessary Cookies',
-    body: `These are needed for the site to work, so they are always on. They keep you signed in and your session secure, protect forms against cross-site request forgery, spread traffic across servers, remember the choice you make here, and keep what you have typed into a form. They include ${brand}'s own first-party analytics, which is never sold or shared, and basic page-view counting by Google Analytics and Meta: page loads only, with no ad personalization.`,
+    body: `These are needed for the site to work, so they are always on. They keep you signed in and your session secure, protect forms against cross-site request forgery, spread traffic across servers, remember the choice you make here, and keep what you have typed into a form. They include ${brand}'s own first-party analytics, which counts visits and finds what is broken for ${brand} alone and is never sold or shared.`,
   },
   {
     id: 'analytics',
     key: 'analytics',
     title: 'Performance Cookies',
-    body: `Google Analytics events beyond page views: the clicks, scrolls and other actions it measures on ${brand}'s pages.`,
+    body: `Google Analytics: lets Google measure visits to ${brand} with its own cookies.`,
   },
   {
     id: 'marketing',
     key: 'marketing',
     title: 'Marketing Cookies',
-    body: `Meta's conversion and event measurement: lets Meta measure the sign-ups and orders ${brand}'s ads led to.`,
+    body: `The Meta pixel: lets Meta measure the sign-ups and orders ${brand}'s ads led to.`,
   },
   {
     id: 'ads',
     key: 'ads',
     title: 'Sell, Share, or Use Your Data for Targeted Advertising',
-    body: 'Lets Google and Meta use your visits to personalize the ads they show you and to match you with their audiences on other sites and apps. Some US state privacy laws call this a “sale” or “sharing” of your personal information, or “targeted advertising”, and give you the right to opt out: it stays off unless you turn it on.',
+    body: `Lets Google and Meta use your visits to choose the ads they show you on other sites and apps. Some US state privacy laws call this a “sale” or “sharing” of your personal information, or “targeted advertising”, and give you the right to opt out: ${
+      strict ? 'it stays off unless you turn it on.' : 'turn this off to opt out.'
+    }`,
   },
 ]
+
+/** The sheet's opening line, by rule: what runs before the visitor does anything, and how to change it. */
+const intro = (strict: boolean) =>
+  strict
+    ? 'We use cookies and similar technologies to provide our services, measure performance, and support advertising. Essential cookies are required for the site to work and cannot be turned off. You can allow or reject optional cookies below. Learn more in our '
+    : 'We use cookies and similar technologies to provide our services, measure performance, and support advertising. Google Analytics and the Meta pixel run on this site by default. Turn either off below, or turn off the last switch to opt out of the sale or sharing of your personal information for targeted advertising; each switch is saved as soon as you change it. Essential cookies are required for the site to work and cannot be turned off. Learn more in our '
+
+/** What a browser that sends Global Privacy Control or Do Not Track holds off, by rule. */
+const refusal = (strict: boolean) =>
+  strict
+    ? 'Your browser asks sites not to track you, so all of these stay off.'
+    : 'Your browser asks sites not to track you, so your data is not sold or shared for targeted advertising.'
 
 /** The bar's and the sheet's inset from the window's edges: 16px, or the device's inset and 8px where that is wider. */
 const EDGE = {
@@ -109,8 +180,6 @@ const PANEL = {
 const frame = {
   ...slot('consent'),
   ...PANEL,
-  role: 'dialog',
-  'aria-label': 'Cookie preferences',
   position: 'fixed',
   b: EDGE.bottom,
   l: EDGE.left,
@@ -151,7 +220,7 @@ const button = (fill: string, hover: string, ink: string) =>
     focusVisibleStyle: RING,
   }) as const
 
-/** The one filled control: Accept all in the bar, Save preferences in the sheet. */
+/** The one filled control: Accept all in the bar, Save preferences (or Done) in the sheet. */
 const PRIMARY = button('var(--primary)', 'var(--primary-hover)', 'var(--primary-foreground)')
 
 /** Beside it: Manage preferences in the bar, Accept all in the sheet. */
@@ -166,6 +235,19 @@ const CLOSE = {
   pressStyle: { bg: 'var(--secondary-hover)', borderColor: 'transparent', opacity: 1 },
   focusStyle: { borderColor: 'transparent' },
   focusVisibleStyle: RING,
+} as const
+
+/** "Your Privacy Choices" as a footer draws a link: the icon, then the words, quiet until pointed at. */
+const CHOICES = {
+  type: 'button',
+  variant: 'link',
+  size: 'sm',
+  px: 0,
+  minH: 0,
+  color: '$aside',
+  hoverStyle: { color: '$ink' },
+  focusVisibleStyle: RING,
+  startIcon: <PrivacyChoicesIcon />,
 } as const
 
 /** A link in the sheet's intro: the line's own ink, underlined, never broken across lines. */
@@ -197,10 +279,17 @@ const Consent = ({
   terms = 'https://hanzo.ai/terms',
   brand = 'Hanzo',
 }: ConsentProps) => {
+  // The rule in force: undefined until cloud (or this tab) has said, and nothing is drawn meanwhile.
+  const [mode, setMode] = useState<Mode | undefined>()
+  // The bar (eu) or the notice (global) at the foot of the window.
   const [shown, setShown] = useState(false)
   const [choosing, setChoosing] = useState(false)
   const [draft, setDraft] = useState<Choice>({ analytics: false, marketing: false, ads: false })
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
+  // Whether the page draws its own way to the sheet; if not, the component draws one.
+  const [hosted, setHosted] = useState(true)
+  // The rule, read by handlers registered once.
+  const rule = useRef<Mode | undefined>(undefined)
   // The choices are open because the visitor asked for them. A policy that
   // arrives after (cloud answers ~150ms into a page opened at #choices) redraws
   // the bar's question, and must not close what was asked for.
@@ -210,12 +299,15 @@ const Consent = ({
   const sheet = useRef<HTMLElement | null>(null)
   const manage = useRef<HTMLElement | null>(null)
   const opened = useRef(false)
-  // The switches were filled from a stored choice, not left off.
+  // The switches were filled from a stored choice, not left at the rule's defaults.
   const seeded = useRef(false)
   const id = useId()
   // The browser refused, as the page sees it or as cloud saw the request. State,
   // so cloud's answer redraws an open sheet.
   const [locked, setLocked] = useState(false)
+
+  /** What stands at the foot of the window under a rule: the eu bar until a choice, the global notice until seen. */
+  const front = (m = rule.current): boolean => (m === 'eu' ? asks() : m === 'global' ? !noticed() : false)
 
   const choose = () => {
     // Already open: the visitor's unsaved switches and the focus to return stay as they are.
@@ -227,31 +319,54 @@ const Consent = ({
     seeded.current = storedConsent()
     setDraft(readConsent())
     setChoosing(true)
-    setShown(true)
   }
 
-  // Closing without a choice: a visitor who has not chosen is asked again by the bar.
+  // Closing without a choice: under eu a visitor who has not chosen is asked again by the bar.
   const close = () => {
     asked.current = false
     setChoosing(false)
-    setShown(asks())
+    setShown(front())
   }
 
   useEffect(() => {
     const sync = () => {
-      setShown(asks() || asked.current)
+      setShown(front())
       setLocked(declined())
       // A policy version the stored choice was not made under: the switches the
-      // sheet opened with were an old grant, and are off until chosen again.
+      // sheet opened with were an old grant, and fall back to the rule's own.
       if (asked.current && seeded.current && !storedConsent()) {
         seeded.current = false
         setDraft(readConsent())
       }
     }
-    sync()
+    const decide = (m: Mode) => {
+      rule.current = m
+      setMode(m)
+      sync()
+    }
+    // Cloud answered on this page: its rule, whether or not it placed the visitor.
+    const policy = () => decide(consentPolicy().mode)
+    const known = served()
+    if (known) decide(known)
+    // No answer in time is the strict answer.
+    const wait = known ? undefined : window.setTimeout(() => rule.current ?? decide('eu'), WAIT)
+
+    // The page's own links to the sheet, looked for again as it changes, once a frame.
+    let frameId = 0
+    const look = () => {
+      if (frameId) return
+      frameId = window.requestAnimationFrame(() => {
+        frameId = 0
+        setHosted(linked())
+      })
+    }
+    look()
+    const watch = new MutationObserver(look)
+    watch.observe(document.body, { childList: true, subtree: true })
+
     // `#choices` opens the sheet: on arrival, on a hash change, and on a press of
-    // any link on this site to it, so the footer's Privacy choices and a link in
-    // a page are the same control.
+    // any link on this site to it, so the footer's Your Privacy Choices and a link
+    // in a page are the same control.
     const hash = () => {
       if (window.location.hash !== HASH) return
       // The router's own entry state is kept: only the address loses its hash. A
@@ -281,12 +396,17 @@ const Consent = ({
     }
     hash()
     window.addEventListener(OPEN, choose)
-    window.addEventListener(POLICY_EVENT, sync)
+    window.addEventListener(POLICY_EVENT, policy)
+    window.addEventListener(LINKS_EVENT, look)
     window.addEventListener('hashchange', hash)
     document.addEventListener('click', press, { capture: true })
     return () => {
+      window.clearTimeout(wait)
+      window.cancelAnimationFrame(frameId)
+      watch.disconnect()
       window.removeEventListener(OPEN, choose)
-      window.removeEventListener(POLICY_EVENT, sync)
+      window.removeEventListener(POLICY_EVENT, policy)
+      window.removeEventListener(LINKS_EVENT, look)
       window.removeEventListener('hashchange', hash)
       document.removeEventListener('click', press, { capture: true })
     }
@@ -332,16 +452,24 @@ const Consent = ({
     return () => document.removeEventListener('keydown', keys)
   }, [choosing])
 
-  if (!shown) return null
-
   const done = (fn: () => void) => () => {
     fn()
     asked.current = false
-    setShown(false)
+    setShown(front())
     setChoosing(false)
   }
 
-  if (choosing)
+  if (choosing) {
+    // A sheet opened before cloud answered speaks the strict rule.
+    const strict = (mode ?? 'eu') === 'eu'
+    // eu holds every switch off for a browser that refused; elsewhere only the sale and sharing.
+    const held = (key: keyof Choice) => locked && (strict || key === 'ads')
+    // Under eu the switches wait for Save preferences; elsewhere each one is an opt-out, saved as it moves.
+    const flip = (key: keyof Choice, on: boolean) => {
+      const next = { ...draft, [key]: on }
+      setDraft(next)
+      if (!strict) saveConsent(next)
+    }
     return (
       <YStack
         {...slot('consent-sheet')}
@@ -376,7 +504,7 @@ const Consent = ({
           </XStack>
           <YStack shrink={1} minH={0} overflowY="auto" px="$5" pb="$2" style={{ overscrollBehavior: 'contain' }}>
             <Paragraph size="$2" color="$aside" m={0} pb="$3">
-              {'We use cookies and similar technologies to provide our services, measure performance, and support advertising. Essential cookies are required for the site to work and cannot be turned off. You can allow or reject optional cookies below. Learn more in our '}
+              {intro(strict)}
               <a href={cookies} style={INLINE}>
                 Cookie Policy
               </a>
@@ -392,10 +520,10 @@ const Consent = ({
             </Paragraph>
             {locked ? (
               <Paragraph size="$2" color="$ink" m={0} pb="$3">
-                Your browser asks sites not to track you, so all of these stay off.
+                {refusal(strict)}
               </Paragraph>
             ) : null}
-            {kinds(brand).map((k) => {
+            {kinds(brand, strict).map((k) => {
               const open = expanded[k.id] === true
               const body = `${id}-${k.id}`
               return (
@@ -429,9 +557,9 @@ const Consent = ({
                       <Switch
                         aria-label={k.title}
                         aria-describedby={body}
-                        disabled={locked}
-                        checked={locked ? false : draft[k.key]}
-                        onCheckedChange={(v: boolean) => setDraft({ ...draft, [k.key as keyof Choice]: v === true })}
+                        disabled={held(k.key)}
+                        checked={held(k.key) ? false : draft[k.key]}
+                        onCheckedChange={(v: boolean) => flip(k.key as keyof Choice, v === true)}
                       />
                     ) : (
                       <Text fontSize="$2" fontWeight="600" color="$ink" whiteSpace="nowrap">
@@ -449,26 +577,89 @@ const Consent = ({
             })}
           </YStack>
           <XStack flexWrap="wrap" gap="$2" px="$5" py="$4" borderTopWidth={1} borderColor="$borderColor">
-            {/* A browser that refused cannot accept here: there is nothing to accept. */}
-            {locked ? null : (
-              <Button type="button" {...SECONDARY} grow={1} onClick={done(acceptAll)}>
-                Accept all
+            {strict ? (
+              <>
+                {/* A browser that refused cannot accept here: there is nothing to accept. */}
+                {locked ? null : (
+                  <Button type="button" {...SECONDARY} grow={1} onClick={done(acceptAll)}>
+                    Accept all
+                  </Button>
+                )}
+                {/* The sheet's answer: what the switches say, essential only when none is on. */}
+                <Button type="button" {...PRIMARY} grow={1} onClick={done(() => saveConsent(draft))}>
+                  Save preferences
+                </Button>
+              </>
+            ) : (
+              // Each switch saved as it moved: nothing is left to save.
+              <Button type="button" {...PRIMARY} grow={1} onClick={close}>
+                Done
               </Button>
             )}
-            {/* The sheet's answer: what the switches say, essential only when none is on. */}
-            <Button type="button" {...PRIMARY} grow={1} onClick={done(() => saveConsent(draft))}>
-              Save preferences
-            </Button>
           </XStack>
         </YStack>
       </YStack>
     )
+  }
 
-  // One bar: the line, then the buttons. They share a row where the line fits
+  if (!mode) return null
+
+  // The way to the sheet on a page that draws none: small, quiet, at the foot of the window.
+  const own =
+    !hosted && !shown ? (
+      <XStack
+        {...slot('consent-choices')}
+        position="fixed"
+        b={EDGE.bottom}
+        l={EDGE.left}
+        z="var(--z-banner, 50)"
+        px="$2.5"
+        py="$1"
+        bg="$background"
+        borderWidth={1}
+        borderColor="$borderColor"
+        rounded={ROUND.button}
+      >
+        <Button {...CHOICES} onClick={choose}>
+          Your Privacy Choices
+        </Button>
+      </XStack>
+    ) : null
+
+  if (!shown) return own
+
+  // The global notice: one line, the way to the choices, and a × that records it as seen.
+  if (mode === 'global')
+    return (
+      <XStack {...frame} role="region" aria-label="Cookie notice" style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
+        <YStack shrink={1} minW={0}>
+          <Paragraph size="$2" color="$ink" m={0}>
+            We use cookies to improve your experience. By continuing to browse, you agree.
+          </Paragraph>
+        </YStack>
+        <Button {...CHOICES} onClick={choose}>
+          Your Privacy Choices
+        </Button>
+        <Button
+          type="button"
+          size="icon"
+          {...CLOSE}
+          aria-label="Close"
+          position="absolute"
+          t="$3"
+          insetInlineEnd="$3"
+          onClick={done(notice)}
+        >
+          <X size={16} />
+        </Button>
+      </XStack>
+    )
+
+  // The eu bar: the line, then the buttons. They share a row where the line fits
   // beside them and the buttons drop under it where it does not, so a phone shows
   // the line over one row of buttons and nothing breaks mid-control.
   return (
-    <XStack {...frame} style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$3">
+    <XStack {...frame} role="dialog" aria-label="Cookie preferences" style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$3">
       <YStack shrink={1} minW={0}>
         <Paragraph size="$2" color="$ink" m={0}>
           {`Essential cookies keep ${brand} running. With your OK, optional cookies help us measure performance and ads.`}
@@ -499,11 +690,17 @@ const Consent = ({
   )
 }
 
-/** The footer link that reopens the choices, in every footer and every region. */
-const ConsentLink = ({ label = 'Cookie settings' }: { label?: string }) => (
-  <Button {...slot('consent-link')} type="button" variant="link" size="sm" px={0} minH={0} onClick={openConsent}>
-    {label}
-  </Button>
-)
+/**
+ * "Your Privacy Choices" with California's privacy options icon: the link to the
+ * sheet, for a footer. A page that mounts one gets no second link from `Consent`.
+ */
+const ConsentLink = ({ label = 'Your Privacy Choices' }: { label?: string }) => {
+  useEffect(() => hold(), [])
+  return (
+    <Button {...slot('consent-link')} {...CHOICES} onClick={openConsent}>
+      {label}
+    </Button>
+  )
+}
 
 export { Consent, ConsentLink }

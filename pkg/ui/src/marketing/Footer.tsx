@@ -20,6 +20,7 @@ import type { ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
 import { Line } from './type'
+import { PrivacyChoicesIcon } from '../consent/icon'
 
 export type FooterLink = { label: string; href: string; out?: boolean }
 export type FooterColumn = { id: string; title: string; href?: string; out?: boolean; links: readonly FooterLink[] }
@@ -35,6 +36,9 @@ export type FooterProps = {
 }
 
 const open = (out?: boolean) => (out ? { target: '_blank', rel: 'noreferrer' } : {})
+
+/** The link to the consent sheet (`#choices`) carries California's privacy options icon before its words. */
+const CHOICES = { display: 'inline-flex', alignItems: 'center', gap: 6 } as const
 
 const Door = ({ link }: { link: FooterLink }) => (
   <Anchor
@@ -106,7 +110,18 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
       ) : null}
       <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8} marginInlineStart={0} width="100%" $sm={{ marginInlineStart: 'auto', width: 'auto' }}>
         {legal.map((l) => (
-          <Anchor key={l.label} href={l.href} {...open(l.out)} color="$faint" fontSize="$2" lineHeight="$2" textDecorationLine="none" hoverStyle={{ color: '$ink' }}>
+          <Anchor
+            key={l.label}
+            href={l.href}
+            {...open(l.out)}
+            color="$faint"
+            fontSize="$2"
+            lineHeight="$2"
+            textDecorationLine="none"
+            hoverStyle={{ color: '$ink' }}
+            {...(l.href.endsWith('#choices') ? CHOICES : null)}
+          >
+            {l.href.endsWith('#choices') ? <PrivacyChoicesIcon /> : null}
             {l.label}
           </Anchor>
         ))}
