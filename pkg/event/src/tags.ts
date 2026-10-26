@@ -227,7 +227,15 @@ function loadGoogle(ids: string[]): void {
 
 // ── The other pixels ────────────────────────────────────────────────────
 
-function loadMeta(id: string, c: Choice): void {
+/**
+ * Meta's pixels, every one the site reports to (one per brand): fbevents loads once,
+ * Limited Data Use is stated once before the first init, and each pixel is init'ed.
+ * fbq('track') reaches every pixel init'ed on the page, so the pass sends ONE PageView,
+ * and an event fires once (mirror) under one eventID every pixel dedupes on.
+ */
+function loadMeta(ids: string[], c: Choice): void {
+  const fresh = ids.filter((id) => !loaded.has(`meta:${id}`))
+  if (!fresh.length) return
   const p = page()
   if (!p.fbq) {
     const n = (p.fbq = function (...a: unknown[]) {
@@ -241,8 +249,14 @@ function loadMeta(id: string, c: Choice): void {
     n.queue = []
     script('https://connect.facebook.net/en_US/fbevents.js')
   }
-  if (!c.ads) p.fbq('dataProcessingOptions', ['LDU'], 1, 1000)
-  p.fbq('init', id)
+  if (!loaded.has('meta')) {
+    loaded.add('meta')
+    if (!c.ads) p.fbq('dataProcessingOptions', ['LDU'], 1, 1000)
+  }
+  for (const id of fresh) {
+    p.fbq('init', id)
+    loaded.add(`meta:${id}`)
+  }
   p.fbq('track', 'PageView')
 }
 
@@ -325,11 +339,11 @@ function apply(): void {
     loaded.add('consent')
     loadGoogle(ids)
   }
+  loadMeta(on.filter((t) => t.type === 'meta').map((t) => t.id), c)
   for (const t of on) {
     const k = `${t.type}:${t.id}`
-    if (loaded.has(k)) continue
-    if (t.type === 'meta') loadMeta(t.id, c)
-    else if (t.type === 'linkedin') loadLinkedIn(t.id)
+    if (loaded.has(k) || t.type === 'meta') continue
+    if (t.type === 'linkedin') loadLinkedIn(t.id)
     else if (t.type === 'x') loadX(t.id)
     else if (t.type === 'tiktok') loadTikTok(t.id)
     else continue
@@ -506,8 +520,11 @@ export function mirror(name: string, params: Record<string, unknown>, id: string
   const test = params.test === true
   if (test) params = unpriced(params)
   const transaction = typeof params.order_id === 'string' ? { transaction_id: params.order_id } : {}
+  // Meta's track reaches all of its pixels on the page: it is called once.
+  let meta = false
   for (const t of tags) {
-    if (!on.has(t.type)) continue
+    if (!on.has(t.type) || (t.type === 'meta' && meta)) continue
+    if (t.type === 'meta') meta = true
     const rule = t.events?.[name]
     if (t.type === 'ga') {
       for (const n of ga4) {

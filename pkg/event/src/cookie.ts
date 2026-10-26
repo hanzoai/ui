@@ -61,16 +61,17 @@ export function setOwn(name: string, value: string, days: number): void {
 }
 
 /**
- * Forgets cookies: each name given, and every cookie whose name starts with one of
- * `prefixes`, wherever it was set — on this host, on our brand domain, and on the
- * registrable-looking domain a third-party library (gtag, the Pixel) writes to. A
- * deletion the browser does not apply is a no-op.
+ * Forgets cookies: each name given, and every cookie whose name one of `patterns`
+ * matches, wherever it was set — on this host, on our brand domain, and on every
+ * domain above the host, since a third-party library (gtag, the Pixel) writes to the
+ * registrable domain, .example.co.uk as readily as .example.com. A deletion the
+ * browser does not apply (a public suffix) is a no-op.
  */
-export function forget(names: readonly string[], prefixes: readonly string[] = []): void {
+export function forget(names: readonly string[], patterns: readonly RegExp[] = []): void {
   if (typeof document === 'undefined' || typeof document.cookie !== 'string') return
   const held = document.cookie.split('; ').map((c) => c.slice(0, c.indexOf('=')))
-  const gone = new Set([...names, ...held.filter((n) => prefixes.some((p) => n.startsWith(p)))])
-  const h = window.location.hostname
-  const scopes = new Set(['', domain(), `; Domain=.${h.split('.').slice(-2).join('.')}`])
+  const gone = new Set([...names, ...held.filter((n) => patterns.some((p) => p.test(n)))])
+  const labels = window.location.hostname.split('.')
+  const scopes = new Set(['', domain(), ...labels.slice(0, -1).map((_, i) => `; Domain=.${labels.slice(i).join('.')}`)])
   for (const n of gone) for (const scope of scopes) document.cookie = `${n}=; Max-Age=0; Path=/${scope}`
 }

@@ -308,6 +308,25 @@ describe('withdrawing', () => {
     expect([...store.keys()]).toEqual(['other'])
   })
 
+  it("forgets every pixel's first-party cookie, on the host and every domain above it, and nothing spelled alike", () => {
+    const b = browser('Europe/London', { cookie: 'analytics,marketing,ads', href: 'https://www.example.co.uk/' })
+    const lines: string[] = []
+    const d = g.document as { cookie: string }
+    const own = Object.getOwnPropertyDescriptor(d, 'cookie')!
+    Object.defineProperty(d, 'cookie', { get: own.get, set: (l: string) => (lines.push(l), own.set!.call(d, l)) })
+    const measured = [
+      '_ga', '_ga_ABC123', '_gid', '_gat', '_gat_UA_1', '_fbp', '_fbc', '_gcl_au', '_gac_UA_1', '_uetsid', '_uetvid', '_ttp', 'ttcsid', 'ttcsid_C4ABC',
+      '_tt_enable_cookie', '_twclid', 'li_fat_id', '_pin_unauth', '_epik', '_derived_epik', '_rdt_uuid', '_rdt_cid',
+    ]
+    const alike = ['_gateway_session', '_gatekeeper', '_uetoken', 'ttcsid_app', '_gaming']
+    for (const k of [...measured, ...alike]) b.jar.set(k, 'x')
+    rejectAll()
+    expect([...b.jar.keys()].sort()).toEqual([...alike, CONSENT_COOKIE, CONSENT_VERSION_COOKIE].sort())
+    for (const scope of ['', '; Domain=.www.example.co.uk', '; Domain=.example.co.uk', '; Domain=.co.uk']) {
+      expect(lines).toContain(`_ga=; Max-Age=0; Path=/${scope}`)
+    }
+  })
+
   it('never forgets what the site needs to work: sign-in, the choice itself, security and what a form holds', () => {
     const b = browser('Europe/Paris', { cookie: 'analytics,marketing,ads' })
     // IAM's session and federation binding, the signed-in-before hint, CSRF tokens, a cart.

@@ -1,5 +1,14 @@
 # @hanzo/event
 
+## 0.3.60
+
+### Patch Changes
+
+- Every Meta pixel a site reports to (one per brand): fbevents loads once, Limited Data Use is stated once before the first init, each pixel is init'ed, and ONE PageView goes, since `fbq('track')` reaches every pixel on the page. Each event fires to Meta once, under one eventID.
+- Withdrawing Marketing also forgets the Pinterest and Reddit pixels' first-party cookies (`_pin_unauth`, `_epik`, `_derived_epik`, `_rdt_uuid`, `_rdt_cid`).
+- Withdrawal matches cookies by exact name or a platform's numbered form (`_gat` and `_gat_<tracker>`, `_ga_<container>`, `_uetsid` / `_uetvid`, `ttcsid` and `ttcsid_<pixel>`), so a site's own `_gateway_session`, `_uetoken` or `ttcsid_app` is never deleted.
+- A withdrawn cookie is deleted on the host and on every domain above it, so one a library set on `.example.co.uk` goes too.
+
 ## 0.3.58
 
 ### Patch Changes

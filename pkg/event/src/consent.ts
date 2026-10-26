@@ -180,24 +180,32 @@ export function save(c: Choice): void {
   if (typeof window !== 'undefined') window.dispatchEvent(new Event(CONSENT_EVENT))
 }
 
-/** What a category keeps on the device: cookies, cookie-name prefixes, and storage keys. */
-type Kept = { cookies: readonly string[]; prefixes: readonly string[]; storage: readonly string[] }
+/**
+ * What a category keeps on the device: cookies by exact name, the numbered forms a
+ * platform writes (`_ga_<container>`, `_gat_<tracker>`, `ttcsid_<pixel>`), and storage
+ * keys. A name merely spelled alike — `_gateway_session`, `_uetoken`, `ttcsid_app` — is
+ * the site's own and is never matched.
+ */
+type Kept = { cookies: readonly string[]; patterns: readonly RegExp[]; storage: readonly string[] }
 
 const ANALYTICS: Kept = {
-  cookies: ['iam-anon-id', 'hz_anon_id', 'hz_id', 'hz_cid', '_ga', '_gid', 'hz_internal'],
-  prefixes: ['_ga_', '_gat'],
+  cookies: ['iam-anon-id', 'hz_anon_id', 'hz_id', 'hz_cid', '_ga', '_gid', '_gat', 'hz_internal'],
+  patterns: [/^_ga_[A-Z0-9]+$/, /^_gat_[\w-]+$/],
   storage: ['iam-anon-id', 'hz_anon_id', 'hz_id', 'hz_session', 'hz_first_touch', 'hz_last_touch', 'hz_cohort'],
 }
 
 const MARKETING: Kept = {
-  cookies: ['hz_touch', '_fbp', '_fbc', '_ttp', '_tt_enable_cookie', '_twclid', 'li_fat_id', 'li_giant'],
-  prefixes: ['_gcl_', '_gac_', '_uet', 'ttcsid'],
+  cookies: [
+    'hz_touch', '_fbp', '_fbc', '_ttp', '_tt_enable_cookie', 'ttcsid', '_twclid', 'li_fat_id', 'li_giant',
+    '_uetsid', '_uetvid', '_pin_unauth', '_epik', '_derived_epik', '_rdt_uuid', '_rdt_cid',
+  ],
+  patterns: [/^_gcl_[a-z]+$/, /^_gac_[\w-]+$/, /^ttcsid_[A-Z0-9]+$/],
   storage: [],
 }
 
 /** Forgets what a withdrawn category kept. */
 function withdraw(k: Kept): void {
-  forget(k.cookies, k.prefixes)
+  forget(k.cookies, k.patterns)
   if (typeof window === 'undefined') return
   try {
     for (const key of k.storage) window.localStorage?.removeItem(key)

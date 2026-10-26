@@ -452,3 +452,44 @@ describe('a paid order the server also states', () => {
     expect(fbq.map((a) => (a[3] as { eventID: string }).eventID)).toEqual(['sub_1', 'sub_1'])
   })
 })
+
+describe('every Meta pixel', () => {
+  it.each([
+    [['1790308611893001', '758250658033751', '366194547064903']],
+    [['111']],
+  ])('%j: fbevents once, each pixel init\'ed, one PageView, one track per event', async (ids) => {
+    const b = browser('America/New_York', accepted())
+    put('fetch', async (url: string) => {
+      b.requests.push(url)
+      return { ok: true, json: async () => ({ tags: ids.map((id) => ({ platform: 'meta', type: 'meta', id })) }) }
+    })
+    const { startTags, track } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    const fbq = (g.window as { fbq: { queue: unknown[][] } }).fbq
+    const calls = () => fbq.queue.map((a) => Array.from(a as ArrayLike<unknown>))
+    expect(b.scripts.filter((s) => s.includes('fbevents'))).toHaveLength(1)
+    expect(calls().filter((a) => a[0] === 'init').map((a) => a[1])).toEqual(ids)
+    expect(calls().filter((a) => a[0] === 'track' && a[1] === 'PageView')).toHaveLength(1)
+    expect(calls().findIndex((a) => a[0] === 'track')).toBeGreaterThan(calls().map((a) => a[0]).lastIndexOf('init'))
+    track({ capture: () => undefined } as never, 'signup_completed', {})
+    await tick()
+    const sent = calls().filter((a) => a[0] === 'track' && a[1] !== 'PageView')
+    expect(sent).toHaveLength(1)
+    expect((sent[0][3] as { eventID: string }).eventID).toBeTruthy()
+  })
+
+  it('states Limited Data Use once, before the first init', async () => {
+    const b = browser('America/New_York', new Map([['__Host-hz_consent', 'analytics,marketing'], ['__Host-hz_consent_v', '2']]))
+    put('fetch', async (url: string) => {
+      b.requests.push(url)
+      return { ok: true, json: async () => ({ tags: ['1', '2', '3'].map((id) => ({ platform: 'meta', type: 'meta', id })) }) }
+    })
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    const calls = (g.window as { fbq: { queue: unknown[][] } }).fbq.queue.map((a) => Array.from(a as ArrayLike<unknown>))
+    expect(calls.filter((a) => a[0] === 'dataProcessingOptions')).toHaveLength(1)
+    expect(calls.findIndex((a) => a[0] === 'dataProcessingOptions')).toBeLessThan(calls.findIndex((a) => a[0] === 'init'))
+  })
+})
