@@ -1,0 +1,78 @@
+name: pnpm workspace
+description: >-
+  pnpm and Node at the versions this repo pins, and the workspace's node_modules
+  from this org's store (hanzoai/ci bin/cache) before `pnpm install`, which then
+  has nothing to fetch. Every job in publish.yml starts here.
+inputs:
+  kms-client-id:
+    required: true
+  kms-client-secret:
+    required: true
+  save:
+    description: "'true' writes node_modules back on a miss. One job of a run saves, so legs never race one key."
+    default: 'false'
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@v4
+
+    # 24, because this repo runs pnpm 11 (packageManager) and pnpm 11 imports
+    # node:sqlite. Node 20 has no such module, so `pnpm install` died on
+    # ERR_UNKNOWN_BUILTIN_MODULE before it read a single manifest — every
+    # release since sat unpublished while npmjs served an older one.
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 24
+        registry-url: 'https://registry.npmjs.org'
+
+    # node_modules and not the pnpm store: restored as the install that saved it
+    # left it, node_modules needs no install at all, where the store still has to
+    # be linked from (hanzo-inc/app measured the store at 49 s to restore plus 16 s
+    # to install, against 33 s from the registry). The name is what an archive is
+    # valid for, Node and the architecture; the key is the lockfile. A key that
+    # misses restores the newest one saved, and the install brings it to the
+    # lockfile. The IAM token goes to bin/cache alone, never to GITHUB_ENV: the
+    # build runs every package's scripts.
+    - name: Restore node_modules (this org's store)
+      id: cache
+      shell: bash
+      env:
+        KMS_CLIENT_ID: ${{ inputs.kms-client-id }}
+        KMS_CLIENT_SECRET: ${{ inputs.kms-client-secret }}
+        CI_SHA: 2e112912bb1dab9ee413609425827c2302fb6d5a
+      run: |
+        set +e   # an accelerator: nothing in this step may fail the job
+        set -uo pipefail
+        if ! curl -fsSL -m 60 "https://raw.githubusercontent.com/hanzoai/ci/$CI_SHA/bin/cache" -o "$RUNNER_TEMP/cache"; then
+          echo "::notice::hanzoai/ci@$CI_SHA bin/cache did not download, so this job installs cold"; exit 0
+        fi
+        chmod +x "$RUNNER_TEMP/cache"
+        name="node-$(node -p process.version)-$(uname -m)"
+        key=$(git ls-tree HEAD -- pnpm-lock.yaml | sha256sum | cut -c1-32)
+        printf 'name=%s\nkey=%s\n' "$name" "$key" >> "$GITHUB_OUTPUT"
+        T=$(printf '{"clientId":"%s","clientSecret":"%s"}' "$KMS_CLIENT_ID" "$KMS_CLIENT_SECRET" \
+          | curl -sS -m 30 https://api.hanzo.ai/v1/kms/auth/login -H 'Content-Type: application/json' -d @- \
+          | jq -r '.accessToken // empty' 2>/dev/null)
+        if [ -n "$T" ]; then echo "::add-mask::$T"; else echo "::notice::KMS gave no IAM token, so the org store is not used"; fi
+        HANZO_API_TOKEN=$T "$RUNNER_TEMP/cache" restore "$name" "$key" modules=node_modules
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install
+
+    - name: Save node_modules (this org's store)
+      if: inputs.save == 'true' && steps.cache.outputs.key != '' && steps.cache.outputs.hit != 'exact'
+      shell: bash
+      env:
+        KMS_CLIENT_ID: ${{ inputs.kms-client-id }}
+        KMS_CLIENT_SECRET: ${{ inputs.kms-client-secret }}
+        NAME: ${{ steps.cache.outputs.name }}
+        KEY: ${{ steps.cache.outputs.key }}
+      run: |
+        set +e
+        set -uo pipefail
+        T=$(printf '{"clientId":"%s","clientSecret":"%s"}' "$KMS_CLIENT_ID" "$KMS_CLIENT_SECRET" \
+          | curl -sS -m 30 https://api.hanzo.ai/v1/kms/auth/login -H 'Content-Type: application/json' -d @- \
+          | jq -r '.accessToken // empty' 2>/dev/null)
+        [ -n "$T" ] && echo "::add-mask::$T"
+        HANZO_API_TOKEN=$T "$RUNNER_TEMP/cache" save "$NAME" "$KEY" modules=node_modules
