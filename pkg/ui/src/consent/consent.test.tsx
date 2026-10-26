@@ -240,6 +240,7 @@ describe('Consent, under us_privacy', () => {
     expect(switches.map((x) => x.hasAttribute('disabled')), 'every switch, under every rule').toEqual([true, true, true])
     expect(switches.map((x) => x.getAttribute('aria-checked'))).toEqual(['false', 'false', 'false'])
     expect(sheet.textContent).toContain('so all of these stay off')
+    expect(sheet.textContent, 'and claims nothing runs by default').not.toContain('run on this site by default')
     await m.done()
   })
 })
@@ -260,6 +261,15 @@ describe('Consent, under global', () => {
     expect(document.cookie, 'and grants or refuses nothing').not.toMatch(/hz_consent=/)
     expect(m.host.querySelector('[aria-label="Cookie notice"]')).toBeNull()
     expect(m.host.querySelector('[data-slot="consent-choices"]'), 'the choices stay one press away').not.toBeNull()
+    await m.done()
+  })
+
+  it('shows a browser that sends Global Privacy Control no notice, only the way to its choices', async () => {
+    sendGPC()
+    const m = await mount(<Consent />)
+    await m.act(frames)
+    expect(m.host.querySelector('[aria-label="Cookie notice"]'), 'it agreed to nothing by browsing').toBeNull()
+    expect(m.host.querySelector('[data-slot="consent-choices"]')).not.toBeNull()
     await m.done()
   })
 
@@ -435,13 +445,28 @@ describe('Consent, when cloud answers after the sheet opened', () => {
     await m.done()
   })
 
-  it('a switch moved before the rule arrives is the answer an opt-out rule saves', async () => {
+  it('a switch moved before an opt-out rule arrives keeps the move and the rule decides the rest', async () => {
     history.replaceState(null, '', '/#choices')
     const m = await mount(<Consent />)
-    const ads = () => m.sheet()!.querySelector<HTMLElement>('[role="switch"][aria-label="Marketing Cookies"]')!
-    await m.act(async () => ads().click())
+    const marketing = () => m.sheet()!.querySelector<HTMLElement>('[role="switch"][aria-label="Marketing Cookies"]')!
+    await m.act(async () => marketing().click())
     await m.act(async () => void rule('global'))
-    expect(document.cookie, 'what the visitor set, saved under the opt-out rule').toMatch(/hz_consent=marketing(;|$)/)
+    expect(document.cookie, 'no opt-out the visitor never made').toMatch(/hz_consent=analytics%2Cmarketing%2Cads(;|$)/)
+    await m.done()
+  })
+
+  it('an opt-out sheet that turns eu arrives with nothing pre-ticked, the opt-out kept', async () => {
+    rule('us_privacy')
+    serveConsent(null)
+    const m = await mount(<Consent />)
+    await m.act(frames)
+    await m.act(async () => m.button('Your Privacy Choices').click())
+    const on = () => [...m.sheet()!.querySelectorAll('[role="switch"]')].map((x) => x.getAttribute('aria-checked'))
+    expect(on()).toEqual(['true', 'true', 'true'])
+    await m.act(async () => m.sheet()!.querySelector<HTMLElement>('[role="switch"][aria-label="Sell, Share, or Use Your Data for Targeted Advertising"]')!.click())
+    await m.act(async () => void rule('eu'))
+    expect(on(), 'eu asks: nothing pre-ticked').toEqual(['false', 'false', 'false'])
+    expect([...m.sheet()!.querySelectorAll('button')].map((b) => b.textContent).slice(-2)).toEqual(['Accept all', 'Save preferences'])
     await m.done()
   })
 

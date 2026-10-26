@@ -114,7 +114,7 @@ function linked(): boolean {
 
 type Kind = { id: string; key?: keyof Choice; title: string; body: string }
 
-const kinds = (brand: string, strict: boolean): Kind[] => [
+const kinds = (brand: string, strict: boolean, locked: boolean): Kind[] => [
   {
     id: 'necessary',
     title: 'Strictly Necessary Cookies',
@@ -137,14 +137,16 @@ const kinds = (brand: string, strict: boolean): Kind[] => [
     key: 'ads',
     title: 'Sell, Share, or Use Your Data for Targeted Advertising',
     body: `Lets Google and Meta use your visits to choose the ads they show you on other sites and apps. Some US state privacy laws call this a “sale” or “sharing” of your personal information, or “targeted advertising”, and give you the right to opt out: ${
-      strict ? 'it stays off unless you turn it on.' : 'turn this off to opt out.'
+      locked ? 'your browser’s signal keeps it off.' : strict ? 'it stays off unless you turn it on.' : 'turn this off to opt out.'
     }`,
   },
 ]
 
 /** The sheet's opening line, by rule: what runs before the visitor does anything, and how to change it. */
-const intro = (strict: boolean) =>
-  strict
+const intro = (strict: boolean, locked: boolean) =>
+  locked
+    ? 'We use cookies and similar technologies to provide our services. Essential cookies are required for the site to work and cannot be turned off. Learn more in our '
+    : strict
     ? 'We use cookies and similar technologies to provide our services, measure performance, and support advertising. Essential cookies are required for the site to work and cannot be turned off. You can allow or reject optional cookies below. Learn more in our '
     : 'We use cookies and similar technologies to provide our services, measure performance, and support advertising. Google Analytics and the Meta pixel run on this site by default. Turn either off below, or turn off the last switch to opt out of the sale or sharing of your personal information for targeted advertising; each switch is saved as soon as you change it. Essential cookies are required for the site to work and cannot be turned off. Learn more in our '
 
@@ -310,15 +312,36 @@ const Consent = ({
   const opened = useRef(false)
   // The switches were filled from a stored choice, not left at the rule's defaults.
   const seeded = useRef(false)
-  // The visitor has moved a switch since the sheet opened.
-  const touched = useRef(false)
+  // The switches the visitor has moved since the sheet opened.
+  const moved = useRef(new Set<keyof Choice>())
   const id = useId()
   // The browser refused, as the page sees it or as cloud saw the request. State,
   // so cloud's answer redraws an open sheet.
   const [locked, setLocked] = useState(false)
 
-  /** What stands at the foot of the window under a rule: the eu bar until a choice, the global notice until seen. */
-  const front = (m = rule.current): boolean => (m === 'eu' ? asks() : m === 'global' ? !noticed() : false)
+  /**
+   * What stands at the foot of the window under a rule: the eu bar until a
+   * choice, the global notice until seen (and never to a browser that refused,
+   * which agreed to nothing by browsing).
+   */
+  const front = (m = rule.current): boolean => (m === 'eu' ? asks() : m === 'global' ? !noticed() && !declined() : false)
+
+  /**
+   * The switches under rule `m`: the rule's own state, with the visitor's moves
+   * kept. Under eu only a move to off carries, so nothing arrives pre-ticked.
+   */
+  const merged = (m: Mode): Choice => {
+    const next = readConsent()
+    for (const k of moved.current) if (m !== 'eu' || !latest.current[k]) next[k] = latest.current[k]
+    return next
+  }
+
+  /** Redraws the open sheet's switches under rule `m`; an opt-out rule saves what they say. */
+  const redraw = (m: Mode) => {
+    const next = merged(m)
+    setDraft(next)
+    if (m !== 'eu' && moved.current.size) saveConsent(next)
+  }
 
   const choose = () => {
     // Already open: the visitor's unsaved switches and the focus to return stay as they are.
@@ -326,7 +349,7 @@ const Consent = ({
     const at = document.activeElement
     back.current = at instanceof HTMLElement && at !== document.body ? at : null
     asked.current = true
-    touched.current = false
+    moved.current = new Set()
     setLocked(declined())
     seeded.current = storedConsent()
     setDraft(readConsent())
@@ -348,7 +371,7 @@ const Consent = ({
       // sheet opened with were an old grant, and fall back to the rule's own.
       if (asked.current && seeded.current && !storedConsent()) {
         seeded.current = false
-        setDraft(readConsent())
+        redraw(rule.current ?? 'eu')
       }
     }
     const decide = (m: Mode) => {
@@ -356,12 +379,9 @@ const Consent = ({
       rule.current = m
       setMode(m)
       sync()
-      // A rule that changes under an open sheet changes what its switches mean.
-      // Untouched, they show the new rule's defaults; moved, they are the
-      // visitor's answer, which an opt-out rule takes as said.
-      if (!changed || !asked.current) return
-      if (!touched.current) setDraft(readConsent())
-      else if (m !== 'eu') saveConsent(latest.current)
+      // A rule that changes under an open sheet changes what its switches mean:
+      // they show the new rule's state, with the visitor's moves kept.
+      if (changed && asked.current) redraw(m)
     }
     // Cloud answered on this page: its rule, whether or not it placed the visitor.
     const policy = () => decide(consentPolicy().mode)
@@ -447,7 +467,7 @@ const Consent = ({
       const el = back.current
       back.current = null
       if (el?.isConnected) el.focus()
-      else manage.current?.focus()
+      else (manage.current ?? document.querySelector<HTMLElement>('[data-slot="consent-choices"] button'))?.focus()
       return
     }
     opened.current = true
@@ -492,7 +512,7 @@ const Consent = ({
     const strict = (mode ?? 'eu') === 'eu'
     // Under eu the switches wait for Save preferences; elsewhere each one is an opt-out, saved as it moves.
     const flip = (key: keyof Choice, on: boolean) => {
-      touched.current = true
+      moved.current.add(key)
       const next = { ...draft, [key]: on }
       setDraft(next)
       if (!strict) saveConsent(next)
@@ -531,7 +551,7 @@ const Consent = ({
           </XStack>
           <YStack shrink={1} minH={0} overflowY="auto" px="$5" pb="$2" style={{ overscrollBehavior: 'contain' }}>
             <Paragraph size="$2" color="$aside" m={0} pb="$3">
-              {intro(strict)}
+              {intro(strict, locked)}
               <a href={cookies} style={INLINE}>
                 Cookie Policy
               </a>
@@ -550,7 +570,7 @@ const Consent = ({
                 {REFUSAL}
               </Paragraph>
             ) : null}
-            {kinds(brand, strict).map((k) => {
+            {kinds(brand, strict, locked).map((k) => {
               const open = expanded[k.id] === true
               const body = `${id}-${k.id}`
               return (
@@ -720,7 +740,10 @@ const Consent = ({
 
   return (
     <>
-      {surface}
+      {/* Under the modal sheet, out of reach of the keyboard and assistive technology. */}
+      <div inert={choosing || undefined} style={{ display: 'contents' }}>
+        {surface}
+      </div>
       {panel}
     </>
   )
