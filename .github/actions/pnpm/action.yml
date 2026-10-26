@@ -25,21 +25,25 @@ runs:
         node-version: 24
         registry-url: 'https://registry.npmjs.org'
 
-    # node_modules and not the pnpm store: restored as the install that saved it
-    # left it, node_modules needs no install at all, where the store still has to
-    # be linked from (hanzo-inc/app measured the store at 49 s to restore plus 16 s
-    # to install, against 33 s from the registry). The name is what an archive is
-    # valid for, Node and the architecture; the key is the lockfile. A key that
-    # misses restores the newest one saved, and the install brings it to the
-    # lockfile. The IAM token goes to bin/cache alone, never to GITHUB_ENV: the
-    # build runs every package's scripts.
+    # Every package's node_modules and not the pnpm store: restored as the
+    # install that saved it left it, node_modules needs no install at all, where
+    # the store still has to be linked from (hanzo-inc/app measured the store at
+    # 49 s to restore plus 16 s to install, against 33 s from the registry). Each
+    # workspace package's own node_modules travels beside the root's: with the
+    # root's alone pnpm answers "Already up to date", links nothing, and a package
+    # resolves from the root's hoisted copies — @hanzo/ui then failed to
+    # typecheck. The name is what an archive is valid for, Node and the
+    # architecture; the key is the lockfile. A key that misses restores the
+    # newest one saved, and the install brings it to the lockfile. The IAM token
+    # goes to bin/cache alone, never to GITHUB_ENV: the build runs every
+    # package's scripts.
     - name: Restore node_modules (this org's store)
       id: cache
       shell: bash
       env:
         KMS_CLIENT_ID: ${{ inputs.kms-client-id }}
         KMS_CLIENT_SECRET: ${{ inputs.kms-client-secret }}
-        CI_SHA: a8f3ee4ab02fff20a28cbae5d0dbf1f26f1a671a
+        CI_SHA: c07458b2b77a46a79402f174dc70358e426dcf38
       run: |
         set +e   # an accelerator: nothing in this step may fail the job
         set -uo pipefail
@@ -47,14 +51,18 @@ runs:
           echo "::notice::hanzoai/ci@$CI_SHA bin/cache did not download, so this job installs cold"; exit 0
         fi
         chmod +x "$RUNNER_TEMP/cache"
-        name="node-$(node -p process.version)-$(uname -m)"
+        name="node_modules-$(node -p process.version)-$(uname -m)"
         key=$(git ls-tree HEAD -- pnpm-lock.yaml | sha256sum | cut -c1-32)
-        printf 'name=%s\nkey=%s\n' "$name" "$key" >> "$GITHUB_OUTPUT"
+        # One label per workspace package (the root's is m_root), the way
+        # hanzoai/ci bin/jscache names them.
+        dirs=$(find . -maxdepth 3 -name package.json -not -path '*/node_modules/*' | sort \
+          | awk '{d = substr($0, 3); sub(/\/?package\.json$/, "", d); l = (d == "") ? "root" : d; gsub(/[^A-Za-z0-9._-]/, "_", l); print "m_" l "=" ((d == "") ? "" : d "/") "node_modules"}' | tr '\n' ' ')
+        printf 'name=%s\nkey=%s\ndirs=%s\n' "$name" "$key" "$dirs" >> "$GITHUB_OUTPUT"
         T=$(printf '{"clientId":"%s","clientSecret":"%s"}' "$KMS_CLIENT_ID" "$KMS_CLIENT_SECRET" \
           | curl -sS -m 30 https://api.hanzo.ai/v1/kms/auth/login -H 'Content-Type: application/json' -d @- \
           | jq -r '.accessToken // empty' 2>/dev/null)
         if [ -n "$T" ]; then echo "::add-mask::$T"; else echo "::notice::KMS gave no IAM token, so the org store is not used"; fi
-        HANZO_API_TOKEN=$T "$RUNNER_TEMP/cache" restore "$name" "$key" modules=node_modules
+        HANZO_API_TOKEN=$T "$RUNNER_TEMP/cache" restore "$name" "$key" $dirs
 
     - name: Install dependencies
       shell: bash
@@ -68,6 +76,7 @@ runs:
         KMS_CLIENT_SECRET: ${{ inputs.kms-client-secret }}
         NAME: ${{ steps.cache.outputs.name }}
         KEY: ${{ steps.cache.outputs.key }}
+        DIRS: ${{ steps.cache.outputs.dirs }}
       run: |
         set +e
         set -uo pipefail
@@ -75,4 +84,4 @@ runs:
           | curl -sS -m 30 https://api.hanzo.ai/v1/kms/auth/login -H 'Content-Type: application/json' -d @- \
           | jq -r '.accessToken // empty' 2>/dev/null)
         [ -n "$T" ] && echo "::add-mask::$T"
-        HANZO_API_TOKEN=$T "$RUNNER_TEMP/cache" save "$NAME" "$KEY" modules=node_modules
+        HANZO_API_TOKEN=$T "$RUNNER_TEMP/cache" save "$NAME" "$KEY" $DIRS
