@@ -54,11 +54,14 @@ jobs:
       # The trailing `...` is load-bearing: it builds each package's WORKSPACE
       # DEPENDENCIES first, in topological order. Without it the siblings have no
       # `dist/`, type themselves through `"types": "dist/index.d.ts"`, and come
-      # back as missing modules that name the wrong package. @hanzo/ui's own
-      # build is needed too: its dist, next and styles suites read dist/.
+      # back as missing modules that name the wrong package. A split suite's
+      # package is built once, in leg 1, which runs the files that name its
+      # dist (Test, below); the other legs build only what it builds on (`^...`),
+      # and @hanzo/ui's own build is a minute of each.
       - name: Build the packages and what they build on
         run: |
-          mapfile -t f < <(jq -r '.[] | "--filter", . + "..."' <<<"$PACKAGES")
+          own=...; [ "$OF" -gt 1 ] && [ "$SHARD" -gt 1 ] && own=^...
+          mapfile -t f < <(jq -r --arg o "$own" '.[] | "--filter", . + $o' <<<"$PACKAGES")
           pnpm "${f[@]}" build
 
       # A build EMITS; it does not check. tsup and tsc -p both stop at the files
@@ -82,14 +85,21 @@ jobs:
             npm install -g bun && bun --version
           fi
 
-      # A split suite runs its own share of the files; a whole one runs each
-      # package's test script, `--if-present` so a package with none is skipped
-      # rather than failing.
+      # A split suite runs its own share of the files, less the ones that name
+      # `dist`, which leg 1 runs as well as its share because only leg 1 built
+      # the package. A whole one runs each package's test script, `--if-present`
+      # so a package with none is skipped rather than failing.
       - name: Test
         run: |
           mapfile -t f < <(jq -r '.[] | "--filter", .' <<<"$PACKAGES")
           if [ "$OF" -gt 1 ]; then
-            pnpm "${f[@]}" exec vitest run --shard="$SHARD/$OF"
+            dir=$(pnpm "${f[@]}" exec pwd | tail -1)
+            mapfile -t built < <(cd "$dir" && grep -rlw --include='*.test.*' --include='*.spec.*' --exclude-dir=node_modules dist . | sed 's|^\./||' | sort)
+            ex=(); for t in "${built[@]}"; do ex+=(--exclude "$t"); done
+            pnpm "${f[@]}" exec vitest run --shard="$SHARD/$OF" "${ex[@]}"
+            if [ "$SHARD" = 1 ] && [ ${#built[@]} -gt 0 ]; then
+              pnpm "${f[@]}" exec vitest run "${built[@]}"
+            fi
           else
             pnpm "${f[@]}" run --if-present test
           fi
