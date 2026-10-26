@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 import { noticed, serveConsent } from '@hanzo/event'
+import { I18nProvider } from '@hanzo/i18n/react'
 
 import config from '../gui-config'
 import { Consent, ConsentLink, openConsent } from './Consent'
@@ -562,6 +563,38 @@ describe('Consent, on a first visit', () => {
     expect(m.sheet()!.textContent, 'nothing to accept: the browser refused').not.toContain('Accept all')
     await m.act(async () => m.button('Save preferences').click())
     expect(document.cookie, 'saving under GPC stores a refusal').toMatch(/hz_consent=(;|$)/)
+    await m.done()
+  })
+
+  it('asks in the reader’s language, the brand kept', async () => {
+    const FR: Record<string, string> = {
+      'Cookie preferences': 'Préférences de cookies',
+      'Essential cookies keep {brand} running. With your OK, optional cookies help us measure performance and ads.':
+        'Les cookies essentiels font fonctionner {brand}. Avec votre accord, des cookies facultatifs nous aident à mesurer les performances et les publicités.',
+      'Manage preferences': 'Gérer les préférences',
+      'Accept all': 'Tout accepter',
+      'Close and use essential cookies only': 'Fermer et n’utiliser que les cookies essentiels',
+      'Cookie Preferences': 'Préférences de cookies',
+      'Save preferences': 'Enregistrer les préférences',
+    }
+    const m = await mount(
+      <I18nProvider userId="reader" initialLocale="fr" loadCatalog={async () => FR}>
+        <Consent brand="Lux" />
+      </I18nProvider>,
+    )
+    await m.act(async () => new Promise((r) => setTimeout(r, 0)))
+    const bar = m.bar()!
+    expect(bar.getAttribute('aria-label')).toBe('Préférences de cookies')
+    expect(bar.textContent).toContain('Les cookies essentiels font fonctionner Lux.')
+    expect([...bar.querySelectorAll('button')].map((b) => b.textContent || b.getAttribute('aria-label'))).toEqual([
+      'Gérer les préférences',
+      'Tout accepter',
+      'Fermer et n’utiliser que les cookies essentiels',
+    ])
+    await m.act(async () => m.button('Gérer les préférences').click())
+    // A sentence the catalog lacks stays English; the brand stays itself.
+    expect(m.sheet()!.textContent).toContain('Préférences de cookies')
+    expect(m.sheet()!.textContent).toContain('measure visits to Lux')
     await m.done()
   })
 })

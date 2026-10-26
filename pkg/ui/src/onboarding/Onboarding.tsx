@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { useSignOut } from '../auth/signout'
 import { API } from './api'
 import { Checkout } from './Checkout'
@@ -72,6 +73,7 @@ export interface OnboardingProps {
 type View = 'account' | 'pro' | 'use' | 'plans' | 'team' | 'seats' | 'enterprise' | 'checkout'
 
 export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, termsPath = '/terms', aupPath = '/aup', upgrade = null, open, from, onClose, onTeam, policy, prepare, checkout, org: billed }: OnboardingProps) {
+  const { t } = useI18n()
   const session = useSession(api)
   // A different email is a fresh sign-in: end this session and land on /login.
   const other = useSignOut({ to: '/login', track })
@@ -130,7 +132,7 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
       return
     }
     void begin().catch((e: unknown) => {
-      setWrong(e instanceof Error ? e.message : 'Could not get your account ready. Reload to try again.')
+      setWrong(e instanceof Error ? e.message : `${t('Could not get your account ready.')} ${t('Reload to try again.')}`)
       setView('pro')
     })
     // Once, when the answer arrives.
@@ -143,7 +145,7 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view])
 
-  if (catalog === false) return <Page site={site} title="Plans could not be loaded just now" lede="That is ours to fix. Reload to try again." center />
+  if (catalog === false) return <Page site={site} title={t('Plans could not be loaded just now')} lede={`${t('That is ours to fix.')} ${t('Reload to try again.')}`} center />
   if (!view) return <Page site={site} title="" busy />
 
   const org = team ?? billed ?? session.progress.team
@@ -166,7 +168,7 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
             track?.('terms_accepted', { method: 'signed-in' })
             await begin()
           } catch (e) {
-            setWrong(e instanceof Error ? e.message : 'Could not create the account. Try again.')
+            setWrong(e instanceof Error ? e.message : `${t('Could not create the account.')} ${t('Try again.')}`)
           }
           setBusy(false)
         }}
@@ -176,8 +178,8 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
 
   if (view === 'pro') {
     return (
-      <Page site={site} title="Do more with Hanzo Pro" width={340}>
-        {wrong ? <Paragraph size="$2" color="$quiet" text="center" m={0}>{wrong}</Paragraph> : null}
+      <Page site={site} title={t('Do more with Hanzo Pro')} width={340}>
+        {wrong ? <Paragraph size="$2" color="$quiet" text="center" m={0}>{t(wrong)}</Paragraph> : null}
         <Pro
           interval={interval}
           setInterval={(i) => {
@@ -201,7 +203,7 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
 
   if (view === 'use') {
     return (
-      <Page site={site} title={`How are you planning to use ${site}?`} center width={720}>
+      <Page site={site} title={t('How are you planning to use {site}?', { site })} center width={720}>
         <UseCards
           onPick={(use) => {
             track?.('usage_selected', { use })
@@ -218,7 +220,7 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
 
   if (view === 'plans') {
     return (
-      <Page site={site} title="Plans that grow with you" width={1140} back={open === 'plans' ? onClose : () => setView('pro')}>
+      <Page site={site} title={t('Plans that grow with you')} width={1140} back={open === 'plans' ? onClose : () => setView('pro')}>
         <Plans
           interval={interval}
           setInterval={(i) => {
@@ -242,7 +244,13 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
 
   if (view === 'team') {
     return (
-      <Page site={site} title="Let’s create your team" start back={open === 'team' && onClose ? onClose : () => setView('use')} lede="Team plans are best for groups up to 150 people. Choose a team name that invited members will easily recognize.">
+      <Page
+        site={site}
+        title={t('Let’s create your team')}
+        start
+        back={open === 'team' && onClose ? onClose : () => setView('use')}
+        lede={`${t('Team plans are best for groups up to {n} people.', { n: 150 })} ${t('Choose a team name that invited members will easily recognize.')}`}
+      >
         <TeamName
           api={api}
           onCreated={async (handle) => {
@@ -260,7 +268,13 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
 
   if (view === 'seats') {
     return (
-      <Page site={site} title="Choose your seats and plan" lede={`Team plans have a minimum of ${MIN_SEATS} seats. Pick your seat types below`} start back={() => setView('team')}>
+      <Page
+        site={site}
+        title={t('Choose your seats and plan')}
+        lede={`${t('Team plans have a minimum of {n} seats.', { n: MIN_SEATS })} ${t('Pick your seat types below')}`}
+        start
+        back={() => setView('team')}
+      >
         <Seats
           interval={interval}
           setInterval={(i) => {
@@ -286,7 +300,13 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
 
   if (view === 'enterprise') {
     return (
-      <Page site={site} title="Talk to our sales team" lede={`For ${ENTERPRISE_FROM} or more people. Pooled usage, advanced admin and security controls.`} start back={() => setView('use')}>
+      <Page
+        site={site}
+        title={t('Talk to our sales team')}
+        lede={`${t('For {n} or more people.', { n: ENTERPRISE_FROM })} ${t('Pooled usage, advanced admin and security controls.')}`}
+        start
+        back={() => setView('use')}
+      >
         <Enterprise
           api={api}
           onSent={() => {

@@ -11,6 +11,7 @@ import { act, useState } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { GuiProvider } from '@hanzo/gui'
+import { I18nProvider } from '@hanzo/i18n/react'
 
 import config from '../gui-config'
 import { audit } from '../../test/axe'
@@ -363,14 +364,14 @@ describe('faces', () => {
 })
 
 describe('words', () => {
-  it('speaks the host’s language', () => {
+  it('speaks the reader’s language through the host’s provider', async () => {
+    const DE = { 'Help and preferences': 'Hilfe und Einstellungen', Help: 'Hilfe', Preferences: 'Einstellungen', Theme: 'Design', Language: 'Sprache' }
     mount(
-      <Corner
-        help={[{ label: 'Hilfe', href: '/hilfe' }]}
-        language={{ value: 'de', options: LANGS, onChange: () => {} }}
-        words={{ open: 'Hilfe und Einstellungen', help: 'Hilfe', preferences: 'Einstellungen', theme: 'Design', language: 'Sprache' }}
-      />,
+      <I18nProvider userId="reader" initialLocale="de" loadCatalog={async () => DE}>
+        <Corner help={[{ label: 'Hilfe', href: '/hilfe' }]} language={{ value: 'de', options: LANGS, onChange: () => {} }} />
+      </I18nProvider>,
     )
+    await settle()
     expect(trigger().getAttribute('aria-label')).toBe('Hilfe und Einstellungen')
     open()
     expect(card()?.textContent).toContain('Einstellungen')

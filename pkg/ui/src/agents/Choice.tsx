@@ -18,6 +18,7 @@
 import { SizableText, XStack } from '@hanzo/gui'
 import { ChevronDown } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps, ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Button } from '../backends/gui/button'
 import { DropdownMenu } from '../backends/gui/dropdown-menu'
@@ -107,8 +108,9 @@ export interface ModeSelectProps extends Chosen, Trigger {
 }
 
 /** The composer's mode chip — v2's Build ⌄. Opens upward: it sits at the bottom. */
-export function ModeSelect({ modes, label = 'Mode', placement = 'top-start', ...rest }: ModeSelectProps) {
-  return <Choice part="mode-select" field={false} options={modes} label={label} placement={placement} {...rest} />
+export function ModeSelect({ modes, label, placement = 'top-start', ...rest }: ModeSelectProps) {
+  const { t } = useI18n()
+  return <Choice part="mode-select" field={false} options={modes} label={label ?? t('Mode')} placement={placement} {...rest} />
 }
 
 export interface PageSelectProps extends Chosen, Trigger {
@@ -118,8 +120,9 @@ export interface PageSelectProps extends Chosen, Trigger {
 }
 
 /** The bar's page selector — v2's wide "Homepage ⌄" field. */
-export function PageSelect({ pages, label = 'Page', placement = 'bottom', ...rest }: PageSelectProps) {
+export function PageSelect({ pages, label, placement = 'bottom', ...rest }: PageSelectProps) {
+  const { t } = useI18n()
   return (
-    <Choice part="page-select" field options={pages} label={label} placement={placement} minW={140} maxW={200} {...rest} />
+    <Choice part="page-select" field options={pages} label={label ?? t('Page')} placement={placement} minW={140} maxW={200} {...rest} />
   )
 }

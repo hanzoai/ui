@@ -23,6 +23,7 @@ import { useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { sx } from '../sx'
 import { Popover, Text, XStack } from '@hanzo/gui'
 import { ChevronsUpDown, UserRound } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Account, type UserMenuGroup } from './account'
 import { useEmit } from './instrument'
@@ -90,7 +91,7 @@ export function UserMenu({
   groups = [],
   theme,
   onSignOut,
-  signOutLabel = 'Sign out',
+  signOutLabel,
   children,
   label = true,
   height = 44,
@@ -106,6 +107,7 @@ export function UserMenu({
   // through a trigger ref that an `asChild` stack never fills, so it is ours.
   const trigger = useRef<HTMLElement | null>(null)
   const track = useEmit()
+  const { t } = useI18n()
   const shown = displayName(name, email)
   const close = () => setOpen(false)
 
@@ -138,7 +140,7 @@ export function UserMenu({
           role="button"
           tabIndex={0}
           data-testid={testId}
-          aria-label={aria ?? (shown ? `${shown} · account` : 'Account')}
+          aria-label={aria ?? (shown ? t('{name} · account', { name: shown }) : t('Account'))}
           aria-haspopup="menu"
           aria-expanded={open}
           // gui opens a stack-drawn trigger on a press only; Enter and Space are
@@ -152,7 +154,7 @@ export function UserMenu({
           {/* The person wears the same mark treatment as a workspace — an image
               when there is one, a monogram when there is not. */}
           {avatar || shown ? (
-            <OrgMark org={{ name: shown || 'Account', logo: avatar }} size={30} />
+            <OrgMark org={{ name: shown || t('Account'), logo: avatar }} size={30} />
           ) : (
             <UserRound size={18} />
           )}

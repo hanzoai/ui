@@ -10,6 +10,7 @@
  */
 import { Button, Text, XStack } from '@hanzo/gui'
 import { ChevronLeft, ChevronRight } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { useEmit } from './instrument'
 import { GAP, pages } from './pages'
@@ -29,6 +30,7 @@ export type PaginationProps = {
 
 export function Pagination({ page, count, onChange, around = 1 }: PaginationProps) {
   const track = useEmit()
+  const { t } = useI18n()
   if (count <= 1) return null
 
   const go = (to: number) => {
@@ -45,7 +47,7 @@ export function Pagination({ page, count, onChange, around = 1 }: PaginationProp
         icon={<ChevronLeft {...mirror} size={16} />}
         onPress={() => go(page - 1)}
         disabled={page <= 1}
-        aria-label="Previous page"
+        aria-label={t('Previous page')}
       />
       {pages(page, count, around).map((slot, i) =>
         slot === GAP ? (
@@ -58,7 +60,7 @@ export function Pagination({ page, count, onChange, around = 1 }: PaginationProp
             size="$2"
             chromeless={slot !== page}
             onPress={() => go(slot)}
-            aria-label={`Page ${slot}`}
+            aria-label={t('Page {n}', { n: slot })}
             aria-current={slot === page ? 'page' : undefined}
             bg={slot === page ? '$edge' : undefined}
           >
@@ -72,7 +74,7 @@ export function Pagination({ page, count, onChange, around = 1 }: PaginationProp
         icon={<ChevronRight {...mirror} size={16} />}
         onPress={() => go(page + 1)}
         disabled={page >= count}
-        aria-label="Next page"
+        aria-label={t('Next page')}
       />
     </XStack>
   )

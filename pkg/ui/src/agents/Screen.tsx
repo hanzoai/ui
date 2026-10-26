@@ -22,6 +22,8 @@
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { useCallback, useEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { slot } from '../backends/gui/slot'
 
@@ -38,9 +40,14 @@ export interface Ticket {
 /** How a run's screen is served, for the label a viewer reads. */
 export type ScreenKind = 'sandbox' | 'browser'
 
-const NAMES: Record<ScreenKind, string> = {
-  sandbox: 'sandbox',
-  browser: 'browser',
+/** What the frame says while a view is minted, and the frame's own name, per kind. */
+const OPENING: Record<ScreenKind, string> = {
+  sandbox: phrase('Opening the sandbox…'),
+  browser: phrase('Opening the browser…'),
+}
+const LIVE: Record<ScreenKind, string> = {
+  sandbox: phrase('Live sandbox'),
+  browser: phrase('Live browser'),
 }
 
 export interface ScreenProps extends Col {
@@ -73,6 +80,7 @@ const EARLY = 0.8
 
 export function Screen({ sessionId, kind, mint, empty, title, ...rest }: ScreenProps) {
   const [state, setState] = useState<State>({ phase: 'idle' })
+  const { t } = useI18n()
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const live = useRef(true)
 
@@ -91,10 +99,10 @@ export function Screen({ sessionId, kind, mint, empty, title, ...rest }: ScreenP
       if (!live.current) return
       setState({
         phase: 'failed',
-        message: err instanceof Error ? err.message : 'Could not open this screen.',
+        message: err instanceof Error ? err.message : t('Could not open this screen.'),
       })
     }
-  }, [mint, kind, sessionId])
+  }, [mint, kind, sessionId, t])
 
   useEffect(() => {
     live.current = true
@@ -110,7 +118,7 @@ export function Screen({ sessionId, kind, mint, empty, title, ...rest }: ScreenP
       <Frame title={title} {...rest}>
         {empty ?? (
           <SizableText size="$2" color="$soft">
-            This run has no screen.
+            {t('This run has no screen.')}
           </SizableText>
         )}
       </Frame>
@@ -121,7 +129,7 @@ export function Screen({ sessionId, kind, mint, empty, title, ...rest }: ScreenP
     return (
       <Frame title={title} {...rest}>
         <SizableText size="$2" color="$soft">
-          Watching is not wired up on this surface.
+          {t('Watching is not wired up on this surface.')}
         </SizableText>
       </Frame>
     )
@@ -142,7 +150,7 @@ export function Screen({ sessionId, kind, mint, empty, title, ...rest }: ScreenP
             tabIndex={0}
             onPress={() => void open()}
           >
-            Try again
+            {t('Try again')}
           </SizableText>
         </YStack>
       </Frame>
@@ -153,7 +161,7 @@ export function Screen({ sessionId, kind, mint, empty, title, ...rest }: ScreenP
     return (
       <Frame title={title} {...rest}>
         <SizableText size="$2" color="$soft">
-          Opening the {NAMES[kind]}…
+          {t(OPENING[kind])}
         </SizableText>
       </Frame>
     )
@@ -170,7 +178,7 @@ export function Screen({ sessionId, kind, mint, empty, title, ...rest }: ScreenP
       */}
       <iframe
         src={state.url}
-        title={title ?? `Live ${NAMES[kind]}`}
+        title={title ?? t(LIVE[kind])}
         sandbox="allow-scripts allow-same-origin allow-forms"
         referrerPolicy="no-referrer"
         allow="clipboard-read; clipboard-write"

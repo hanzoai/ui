@@ -26,6 +26,7 @@
 import { Children, isValidElement, type ComponentProps, type ReactNode } from 'react'
 import { SizableText, XStack, YStack, createStyledContext, styled } from '@hanzo/gui'
 import { CircleHelp, X } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 import { ink } from './ink'
 import { slot } from './slot'
 import { Button, type ButtonProps } from './button'
@@ -154,11 +155,12 @@ function Callout({
   icon,
   action,
   onDismiss,
-  closeLabel = 'Dismiss',
+  closeLabel,
   fullWidth = false,
   children,
   ...props
 }: Omit<AlertProps, 'variant'>) {
+  const { t } = useI18n()
   const hue = colorOf(status ?? 'info', color)
   const lead = icon === undefined ? <CircleHelp size={16} color={step9(hue) as never} /> : icon
   return (
@@ -191,7 +193,7 @@ function Callout({
           {title}
         </SizableText>
         {onDismiss ? (
-          <Button {...slot('alert-dismiss')} variant="ghost" size="icon-xs" emphasis="subtle" aria-label={closeLabel} onPress={onDismiss}>
+          <Button {...slot('alert-dismiss')} variant="ghost" size="icon-xs" emphasis="subtle" aria-label={closeLabel ?? t('Dismiss')} onPress={onDismiss}>
             <X />
           </Button>
         ) : null}

@@ -15,6 +15,7 @@
 import type { KeyboardEvent, ReactNode } from 'react'
 import { Separator, Text, XStack, YStack } from '@hanzo/gui'
 import { LogOut } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { useEmit } from './instrument'
 import { menuKeyDown } from './menu/roving'
@@ -85,7 +86,8 @@ function Row({ item, onDone, component }: { item: UserMenuItem; onDone: () => vo
 /** A rule between groups — never above the first thing in the menu. */
 const Rule = () => <Separator borderColor="$borderColor" my="$1" />
 
-export function Account({ name, email, groups = [], theme, onSignOut, signOutLabel = 'Sign out', onDone, component }: AccountProps) {
+export function Account({ name, email, groups = [], theme, onSignOut, signOutLabel, onDone, component }: AccountProps) {
+  const { t } = useI18n()
   const shown = displayName(name, email)
   const filled = groups.filter((g) => itemsOf(g).length > 0)
   return (
@@ -137,7 +139,7 @@ export function Account({ name, email, groups = [], theme, onSignOut, signOutLab
           <Rule />
           <XStack items="center" gap="$2.5" px="$2" py="$1" rounded="$3">
             <Text flex={1} fontSize="$2" color="$ink">
-              Theme
+              {t('Theme')}
             </Text>
             {theme}
           </XStack>
@@ -148,7 +150,7 @@ export function Account({ name, email, groups = [], theme, onSignOut, signOutLab
         <>
           <Rule />
           <Row
-            item={{ id: 'sign-out', label: signOutLabel, icon: <LogOut {...mirror} size={16} />, onPress: onSignOut }}
+            item={{ id: 'sign-out', label: signOutLabel ?? t('Sign out'), icon: <LogOut {...mirror} size={16} />, onPress: onSignOut }}
             onDone={onDone}
             component={component}
           />

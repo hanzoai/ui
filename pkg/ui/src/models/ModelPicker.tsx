@@ -22,6 +22,7 @@
  * popover. Styling is gui props and tokens only.
  */
 import { SizableText, XStack, useMedia } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { ChevronsUpDown } from '@hanzogui/lucide-icons-2'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -57,8 +58,9 @@ export interface ModelPickerProps {
   /** The plain look, for a picker in a row of words (a composer): no fill, no hairline. */
   quiet?: boolean
   size?: 'sm' | 'md'
+  /** Absent, "Choose a model" in the reader's language. */
   placeholder?: string
-  /** What it chooses, for its accessible name. */
+  /** What it chooses, for its accessible name; absent, "Model" in the reader's language. */
   name?: string
   /** The accessible name whole, in the reader's language, where `name: model` is not how they say it. */
   describe?: string
@@ -80,14 +82,16 @@ export function ModelPicker({
   disabled = false,
   quiet = false,
   size = 'md',
-  placeholder = 'Choose a model',
-  name = 'Model',
+  placeholder,
+  name: named,
   describe,
   granted,
   onUpgrade,
   open: openProp,
   onOpenChange,
 }: ModelPickerProps) {
+  const { t } = useI18n()
+  const name = named ?? t('Model')
   const [own, setOwn] = useState(false)
   const open = openProp ?? own
   const setOpen = useCallback(
@@ -105,7 +109,7 @@ export function ModelPicker({
   const trigger = useRef<HTMLElement | null>(null)
 
   const selected = value ? models.find((m) => m.id === value) : undefined
-  const label = selected ? modelName(selected) : value || placeholder
+  const label = selected ? modelName(selected) : value || (placeholder ?? t('Choose a model'))
 
   const close = useCallback(() => {
     setOpen(false)
@@ -137,7 +141,7 @@ export function ModelPicker({
       {...slot('model-picker')}
       role="button"
       tabIndex={disabled ? -1 : 0}
-      aria-label={describe ?? `${name}: ${label}`}
+      aria-label={describe ?? t('{name}: {model}', { name, model: label })}
       aria-haspopup="listbox"
       aria-expanded={open}
       aria-disabled={disabled || undefined}

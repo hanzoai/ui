@@ -8,12 +8,14 @@
 import { useMemo } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { Calendar } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 import { EmptyState } from '../EmptyState'
 import { StatusTag } from '../StatusTag'
 import { formatPostTime, postDayBucket, postPreview } from './format'
 import type { Post } from './api'
 
 export function PostAgenda({ posts, onOpen }: { posts: Post[]; onOpen: (p: Post) => void }) {
+  const { t } = useI18n()
   const days = useMemo(() => {
     const timed = posts
       .filter((p) => (p.scheduleAt ?? 0) > 0)
@@ -37,8 +39,8 @@ export function PostAgenda({ posts, onOpen }: { posts: Post[]; onOpen: (p: Post)
     return (
       <EmptyState
         icon={Calendar}
-        title="Nothing on the calendar"
-        description="Scheduled and timed posts appear here, grouped by day. Compose a post and pick Schedule to plan ahead."
+        title={t('Nothing on the calendar')}
+        description={t('Scheduled and timed posts appear here, grouped by day. Compose a post and pick Schedule to plan ahead.')}
       />
     )
   }

@@ -2,6 +2,8 @@
 
 import React, { useMemo, useState } from 'react'
 import { ArrowUpRight, Check, Search, X } from '@hanzogui/lucide-icons-2'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 import {
   Dialog,
   DialogContent,
@@ -41,11 +43,31 @@ export interface DirectoryModalProps {
 }
 
 const TABS: { id: DirectoryTab; label: string }[] = [
-  { id: 'apps', label: 'Apps' },
-  { id: 'channels', label: 'Channels' },
-  { id: 'plugins', label: 'Plugins' },
-  { id: 'skills', label: 'Skills' },
+  { id: 'apps', label: phrase('Apps') },
+  { id: 'channels', label: phrase('Channels') },
+  { id: 'plugins', label: phrase('Plugins') },
+  { id: 'skills', label: phrase('Skills') },
 ]
+
+/** What each tab's search, sign-in wall and empty result say. */
+const SEARCH: Record<DirectoryTab, string> = {
+  apps: phrase('Search apps...'),
+  channels: phrase('Search channels...'),
+  plugins: phrase('Search plugins...'),
+  skills: phrase('Search skills...'),
+}
+const WALL: Record<DirectoryTab, string> = {
+  apps: phrase('Sign in required to manage apps'),
+  channels: phrase('Sign in required to manage channels'),
+  plugins: phrase('Sign in required to manage plugins'),
+  skills: phrase('Sign in required to manage skills'),
+}
+const NONE: Record<DirectoryTab, string> = {
+  apps: phrase('No apps match "{query}".'),
+  channels: phrase('No channels match "{query}".'),
+  plugins: phrase('No plugins match "{query}".'),
+  skills: phrase('No skills match "{query}".'),
+}
 
 export const DirectoryModal: React.FC<DirectoryModalProps> = ({
   open,
@@ -64,11 +86,12 @@ export const DirectoryModal: React.FC<DirectoryModalProps> = ({
   const [tab, setTab] = useState<DirectoryTab>(activeTab)
   const [query, setQuery] = useState('')
   const [acting, setActing] = useState<string | null>(null)
+  const { t } = useI18n()
 
   const currentTab = onTabChange ? activeTab : tab
-  const handleTabChange = (t: DirectoryTab) => {
-    if (onTabChange) onTabChange(t)
-    else setTab(t)
+  const handleTabChange = (next: DirectoryTab) => {
+    if (onTabChange) onTabChange(next)
+    else setTab(next)
   }
 
   const filtered = useMemo(() => {
@@ -88,9 +111,11 @@ export const DirectoryModal: React.FC<DirectoryModalProps> = ({
         <div style={{ padding: 20, borderBottom: '1px solid var(--borderColor)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <div>
-              <DialogTitle style={{ fontSize: 18, fontWeight: 600, letterSpacing: '-0.02em', margin: 0 }}>Directory</DialogTitle>
+              <DialogTitle fontSize={18} fontWeight="600" letterSpacing={-0.36} m={0}>
+                {t('Directory')}
+              </DialogTitle>
               <Text style={{ fontSize: 12, color: 'var(--color10)', marginTop: 2 }}>
-                Extend your workspace with integrations, channels, plugins, and skills.
+                {t('Extend your workspace with integrations, channels, plugins, and skills.')}
               </Text>
             </div>
             <a
@@ -116,10 +141,10 @@ export const DirectoryModal: React.FC<DirectoryModalProps> = ({
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{ display: 'flex', padding: 4, backgroundColor: 'var(--color3)', borderRadius: 10, border: '1px solid var(--borderColor)' }}>
-              {TABS.map((t) => (
+              {TABS.map((item) => (
                 <button
-                  key={t.id}
-                  onClick={() => handleTabChange(t.id)}
+                  key={item.id}
+                  onClick={() => handleTabChange(item.id)}
                   style={{
                     padding: '4px 12px',
                     fontSize: 12,
@@ -127,12 +152,12 @@ export const DirectoryModal: React.FC<DirectoryModalProps> = ({
                     borderRadius: 6,
                     border: 'none',
                     cursor: 'pointer',
-                    backgroundColor: currentTab === t.id ? 'var(--background)' : 'transparent',
-                    color: currentTab === t.id ? 'var(--color12)' : 'var(--color10)',
-                    boxShadow: currentTab === t.id ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                    backgroundColor: currentTab === item.id ? 'var(--background)' : 'transparent',
+                    color: currentTab === item.id ? 'var(--color12)' : 'var(--color10)',
+                    boxShadow: currentTab === item.id ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                   }}
                 >
-                  {t.label}
+                  {t(item.label)}
                 </button>
               ))}
             </div>
@@ -144,7 +169,7 @@ export const DirectoryModal: React.FC<DirectoryModalProps> = ({
               <Input
                 value={query}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
-                placeholder={`Search ${currentTab}...`}
+                placeholder={t(SEARCH[currentTab])}
                 style={{ paddingInlineStart: 32, height: 34, fontSize: 12, borderRadius: 10, backgroundColor: 'var(--color2)', borderColor: 'var(--borderColor)' }}
               />
               {query && (
@@ -163,17 +188,17 @@ export const DirectoryModal: React.FC<DirectoryModalProps> = ({
           {authRequired ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 260, textAlign: 'center' }}>
               <Text style={{ fontSize: 14, fontWeight: 500, color: 'var(--color11)' }}>
-                Sign in required to manage {currentTab}
+                {t(WALL[currentTab])}
               </Text>
               <Text style={{ fontSize: 12, color: 'var(--color9)', maxWidth: 320, marginTop: 4, marginBottom: 16 }}>
-                Access your organization's custom plugins, connected accounts and private skills.
+                {t("Access your organization's custom plugins, connected accounts and private skills.")}
               </Text>
               {onSignIn && (
                 <button
                   onClick={onSignIn}
                   style={{ padding: '8px 16px', fontSize: 12, fontWeight: 600, borderRadius: 8, backgroundColor: 'var(--color12)', color: 'var(--background)', border: 'none', cursor: 'pointer' }}
                 >
-                  Sign In
+                  {t('Sign In')}
                 </button>
               )}
             </div>
@@ -190,13 +215,13 @@ export const DirectoryModal: React.FC<DirectoryModalProps> = ({
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 260, textAlign: 'center' }}>
               <Text style={{ fontSize: 12, color: 'var(--red10)', marginBottom: 8 }}>{error}</Text>
               <Text style={{ fontSize: 12, color: 'var(--color9)' }}>
-                Check console connection or network availability.
+                {t('Check console connection or network availability.')}
               </Text>
             </div>
           ) : filtered.length === 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 260, textAlign: 'center' }}>
               <Text style={{ fontSize: 12, color: 'var(--color10)' }}>
-                No {currentTab} match "{query}".
+                {t(NONE[currentTab], { query })}
               </Text>
             </div>
           ) : (
@@ -237,7 +262,7 @@ export const DirectoryModal: React.FC<DirectoryModalProps> = ({
                         </span>
                       </div>
                       <div style={{ fontSize: 11, color: 'var(--color9)', marginBottom: 4 }}>
-                        by {item.publisher}
+                        {t('by {publisher}', { publisher: item.publisher })}
                       </div>
                       <p style={{ fontSize: 12, color: 'var(--color10)', margin: 0, lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {item.description}
@@ -246,18 +271,18 @@ export const DirectoryModal: React.FC<DirectoryModalProps> = ({
 
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 12, paddingTop: 10, borderTop: '1px solid var(--borderColor)' }}>
                       <span style={{ fontSize: 11, color: 'var(--color9)' }}>
-                        {item.installs !== undefined ? `${item.installs.toLocaleString()} installs` : ''}
+                        {item.installs !== undefined ? t('{n} installs', { n: item.installs.toLocaleString() }) : ''}
                       </span>
 
                       {item.connected ? (
                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--green11)', fontWeight: 600 }}>
                           <Check size={14} />
-                          <span>Connected</span>
+                          <span>{t('Connected')}</span>
                         </span>
                       ) : item.installed ? (
                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--color11)', fontWeight: 600 }}>
                           <Check size={14} />
-                          <span>Installed</span>
+                          <span>{t('Installed')}</span>
                         </span>
                       ) : (
                         <button
@@ -283,7 +308,7 @@ export const DirectoryModal: React.FC<DirectoryModalProps> = ({
                             opacity: isWorking ? 0.5 : 1,
                           }}
                         >
-                          {isWorking ? 'Adding...' : currentTab === 'apps' ? 'Connect' : 'Install'}
+                          {isWorking ? t('Adding...') : currentTab === 'apps' ? t('Connect') : t('Install')}
                         </button>
                       )}
                     </div>

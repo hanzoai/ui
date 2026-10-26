@@ -7,6 +7,7 @@
  */
 import { Card, Text, XStack, YStack, Button } from '@hanzo/gui'
 import { Pencil, Trash2 } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 import { StatusTag } from '../StatusTag'
 import { ChannelBadge } from './ChannelBadge'
 import { formatPostTime } from './format'
@@ -25,6 +26,7 @@ export function PostCard({
   onDelete?: (p: Post) => void
 }) {
   const mediaCount = post.media?.length ?? 0
+  const { t } = useI18n()
   return (
     <Card p="$3" gap="$2.5" borderWidth={1} borderColor="$borderColor" width="100%">
       <XStack items="center" justify="space-between" gap="$2">
@@ -56,7 +58,7 @@ export function PostCard({
         )}
         {mediaCount ? (
           <Text fontSize="$1" color="$soft">
-            {mediaCount} media
+            {t('{n} media', { n: mediaCount })}
           </Text>
         ) : null}
       </XStack>

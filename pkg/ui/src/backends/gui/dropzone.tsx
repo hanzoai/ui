@@ -13,6 +13,7 @@
 import { SizableText, XStack, YStack, isWeb, styled } from '@hanzo/gui'
 import { File as FileIcon, Upload, X } from '@hanzogui/lucide-icons-2'
 import { useId, useRef, useState, type DragEvent as ReactDragEvent, type KeyboardEvent } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { ink } from './ink'
 import { slot } from './slot'
 import { sx } from '../../sx'
@@ -116,6 +117,7 @@ export function Dropzone({
 }: DropzoneProps) {
   const [files, setFiles] = useState<File[]>([])
   const [active, setActive] = useState(false)
+  const { t } = useI18n()
   const inputRef = useRef<HTMLInputElement>(null)
   const inputId = useId()
 
@@ -181,11 +183,11 @@ export function Dropzone({
         />
         <Upload size={32} color="$quiet" />
         <YStack gap="$1" items="center">
-          {ink(active ? 'Drop files here' : 'Drag & drop files here', SizableText, {
+          {ink(active ? t('Drop files here') : t('Drag & drop files here'), SizableText, {
             fontWeight: '500',
           })}
           {ink(
-            `or click to browse (max ${maxFiles} files, ${Math.round(maxSize / 1024 / 1024)}MB each)`,
+            t('or click to browse (max {n} files, {size}MB each)', { n: maxFiles, size: Math.round(maxSize / 1024 / 1024) }),
             SizableText,
             { fontSize: '$1', color: '$quiet' },
           )}
@@ -217,7 +219,7 @@ export function Dropzone({
               {ink(formatSize(file.size), SizableText, { fontSize: '$1', color: '$quiet' })}
               <XStack
                 {...slot('dropzone-item-remove')}
-                aria-label={`Remove ${file.name}`}
+                aria-label={t('Remove {name}', { name: file.name })}
                 items="center"
                 justify="center"
                 rounded="$2"

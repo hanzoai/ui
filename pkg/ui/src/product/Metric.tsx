@@ -19,6 +19,7 @@
 import { FIGURES } from './figures'
 import type { ReactElement, ReactNode } from 'react'
 import { Button, Card, Text, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 
 /** Distinct, theme-neutral series colors (mid-saturation reads on dark + light). */
 export const SERIES = ['#6ea8fe', '#7ee787', '#f0a868', '#c792ea', '#56d4c4', '#e879a6', '#d6c15a', '#8b9bb4'] as const
@@ -47,6 +48,7 @@ export function Sparkline({
   height?: number
   color?: string
 }): ReactElement | null {
+  const { t } = useI18n()
   if (!points || points.length < 2) return null
   const min = Math.min(...points)
   const max = Math.max(...points)
@@ -55,7 +57,7 @@ export function Sparkline({
   const y = (v: number) => height - 2 - ((v - min) / span) * (height - 4)
   const d = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${(i * stepX).toFixed(1)},${y(p).toFixed(1)}`).join(' ')
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label="trend">
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={t('trend')}>
       <path d={d} fill="none" stroke={color} strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
     </svg>
   )
@@ -73,12 +75,13 @@ export function MiniBars({
   height?: number
   color?: string
 }): ReactElement | null {
+  const { t } = useI18n()
   if (!bars.length) return null
   const max = Math.max(...bars.map((b) => b.value), 1)
   const gap = 4
   const bw = (width - gap * (bars.length - 1)) / bars.length
   return (
-    <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" role="img" aria-label="bars">
+    <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" role="img" aria-label={t('bars')}>
       {bars.map((b, i) => {
         const h = Math.max(1, (b.value / max) * (height - 2))
         return (

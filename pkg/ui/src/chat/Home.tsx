@@ -18,6 +18,7 @@
  * way.
  */
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import type { ComponentProps, ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
@@ -41,7 +42,8 @@ export interface HomeProps extends Scroll {
   children?: ReactNode
 }
 
-export function Home({ title = NEXT, mark, column = COLUMN, level = 1, children, ...rest }: HomeProps) {
+export function Home({ title, mark, column = COLUMN, level = 1, children, ...rest }: HomeProps) {
+  const { t } = useI18n()
   return (
     // A scroller, not a stack told to overflow: `overflow: scroll` on a stack
     // scrolls nothing on native. Its content grows to at least the pane and
@@ -74,7 +76,7 @@ export function Home({ title = NEXT, mark, column = COLUMN, level = 1, children,
             color="$ink"
             text="center"
           >
-            {title}
+            {title ?? t(NEXT)}
           </SizableText>
         </XStack>
         {children ? <YStack gap="$2">{children}</YStack> : null}

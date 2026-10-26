@@ -11,6 +11,7 @@
  */
 import { SizableText, YStack } from '@hanzo/gui'
 import { useState } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Grid, Cell } from '../../grid'
 import { Button } from './button'
 import { Input } from './input'
@@ -52,6 +53,7 @@ function OrderEntry({
   const [orderSide, setOrderSide] = useState<OrderSide>('buy')
   const [shares, setShares] = useState('')
   const [limitPrice, setLimitPrice] = useState('')
+  const { t } = useI18n()
 
   const canSubmit = !disabled && !!shares && (orderType !== 'limit' || !!limitPrice)
 
@@ -72,7 +74,7 @@ function OrderEntry({
     <YStack {...slot('order-entry')} p="$4" gap="$4">
       <YStack {...slot('order-entry-balance')} bg="$hover" rounded="$3" p="$3">
         <SizableText size="$1" color="$quiet" mb="$1">
-          Buying Power
+          {t('Buying Power')}
         </SizableText>
         <SizableText size="$5" fontWeight="600" color="$ink">
           ${accountBalance.toLocaleString()}
@@ -96,14 +98,14 @@ function OrderEntry({
               hoverStyle={orderSide === side ? { bg: SIDE_ON[side] } : { bg: '$edge' }}
               fontWeight="600"
             >
-              {side === 'buy' ? 'Buy' : 'Sell'}
+              {side === 'buy' ? t('Buy') : t('Sell')}
             </Button>
           </Cell>
         ))}
       </Grid>
 
       <YStack {...slot('order-entry-type')} gap="$2">
-        <Label>Order Type</Label>
+        <Label>{t('Order Type')}</Label>
         <Grid columns={2} gap="$2">
           {(['market', 'limit'] as const).map((kind) => (
             <Cell key={kind}>
@@ -121,7 +123,7 @@ function OrderEntry({
                 color={orderType === kind ? '$ink' : '$quiet'}
                 hoverStyle={orderType === kind ? { bg: '$rim' } : { bg: '$edge' }}
               >
-                {kind === 'market' ? 'Market' : 'Limit'}
+                {kind === 'market' ? t('Market') : t('Limit')}
               </Button>
             </Cell>
           ))}
@@ -129,7 +131,7 @@ function OrderEntry({
       </YStack>
 
       <YStack {...slot('order-entry-shares')} gap="$2">
-        <Label htmlFor="order-entry-shares-input">Shares</Label>
+        <Label htmlFor="order-entry-shares-input">{t('Shares')}</Label>
         <Input
           id="order-entry-shares-input"
           type="number"
@@ -142,7 +144,7 @@ function OrderEntry({
 
       {orderType === 'limit' && (
         <YStack {...slot('order-entry-limit-price')} gap="$2">
-          <Label htmlFor="order-entry-limit-price-input">Limit Price</Label>
+          <Label htmlFor="order-entry-limit-price-input">{t('Limit Price')}</Label>
           <Input
             id="order-entry-limit-price-input"
             type="number"
@@ -167,7 +169,7 @@ function OrderEntry({
         fontWeight="600"
         hoverStyle={{ bg: SIDE_ON[orderSide], opacity: 0.9 }}
       >
-        {orderSide === 'buy' ? 'Buy' : 'Sell'} {ticker(symbol)}
+        {orderSide === 'buy' ? t('Buy {symbol}', { symbol: ticker(symbol) }) : t('Sell {symbol}', { symbol: ticker(symbol) })}
       </Button>
     </YStack>
   )

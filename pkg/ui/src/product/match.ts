@@ -10,6 +10,7 @@
  * more than a preference.
  */
 import type { ReactNode } from 'react'
+import { phrase } from '@hanzo/i18n'
 
 import { score } from '../backends/gui/command.logic'
 
@@ -59,7 +60,7 @@ export const SAFE = 'GET'
  * so the string is asserted equal by test rather than shared by import.
  */
 export const ASK = 'ask'
-export const ASK_GROUP = 'Ask'
+export const ASK_GROUP = phrase('Ask')
 export const askOp = (question: string): Op => ({
   id: ASK,
   group: ASK_GROUP,

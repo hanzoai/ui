@@ -26,6 +26,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Button, Card, Text, XStack, YStack } from '@hanzo/gui'
 import { Image as ImageIcon, Trash2, Upload } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { EmptyState } from '../product/EmptyState'
 import { classifyBackend } from '../product/BackendState'
@@ -67,6 +68,7 @@ export function MediaGrid({
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(null)
   const [error, setError] = useState<string | null>(null)
   const { phone, onLayout } = useContainerLayout()
+  const { t } = useI18n()
 
   const upload = useCallback(
     async (files: FileList | File[]) => {
@@ -102,7 +104,11 @@ export function MediaGrid({
     <input ref={inputRef} type="file" multiple accept={accept} style={{ display: 'none' }} onChange={onInput} />
   )
 
-  const uploadLabel = busy ? (progress ? `Uploading ${progress.done}/${progress.total}…` : 'Uploading…') : 'Upload'
+  const uploadLabel = busy
+    ? progress
+      ? t('Uploading {done}/{total}…', { done: progress.done, total: progress.total })
+      : t('Uploading…')
+    : t('Upload')
 
   if (docs.length === 0) {
     return (
@@ -117,8 +123,8 @@ export function MediaGrid({
         <DropZone busy={busy} onDrop={upload}>
           <EmptyState
             icon={ImageIcon}
-            title="No media yet"
-            description="Drag files here, or upload — images and files go to your organization's object storage and become reusable media you can attach to any record."
+            title={t('No media yet')}
+            description={t("Drag files here, or upload — images and files go to your organization's object storage and become reusable media you can attach to any record.")}
             primary={{ label: uploadLabel, onPress: pick }}
           />
         </DropZone>
@@ -191,8 +197,9 @@ function MediaCard({
 }) {
   const [url, setUrl] = useState('')
   const [confirming, setConfirming] = useState(false)
+  const { t } = useI18n()
   const raw = String(doc[fileField] ?? '')
-  const title = titleOf(doc, dt)
+  const title = titleOf(doc, dt, t)
 
   useEffect(() => {
     let cancelled = false
@@ -240,7 +247,7 @@ function MediaCard({
           {title}
         </Text>
         <XStack justify="space-between" items="center" gap="$2">
-          <Meta>{String(doc.mime ?? 'file')}</Meta>
+          <Meta>{doc.mime != null ? String(doc.mime) : t('file')}</Meta>
           {confirming ? (
             <XStack gap="$1">
               <Button
@@ -253,10 +260,10 @@ function MediaCard({
                   void onDelete()
                 }}
               >
-                Delete
+                {t('Delete')}
               </Button>
               <Button size={phone ? '$3' : '$1'} minH={phone ? TAP : undefined} disabled={disabled} onPress={() => setConfirming(false)}>
-                No
+                {t('No')}
               </Button>
             </XStack>
           ) : (
@@ -266,7 +273,7 @@ function MediaCard({
               chromeless
               minW={phone ? TAP : undefined}
               minH={phone ? TAP : undefined}
-              aria-label={`Delete ${title}`}
+              aria-label={t('Delete {name}', { name: title })}
               icon={<Trash2 size={phone ? 16 : 13} />}
               disabled={disabled}
               onPress={() => setConfirming(true)}

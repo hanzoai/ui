@@ -14,6 +14,8 @@
 import { SizableText, XStack, YStack, isWeb, styled } from '@hanzo/gui'
 import { Calendar, MoreHorizontal, Plus, Search, User, X } from '@hanzogui/lucide-icons-2'
 import * as React from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 import { Badge } from './badge'
 import { Button } from './button'
 import {
@@ -72,6 +74,13 @@ const PRIORITY_COLOR: Record<KanbanPriority, string> = {
   medium: '$yellow9',
   high: '$orange9',
   urgent: '$red9',
+}
+
+const PRIORITY_WORD: Record<KanbanPriority, string> = {
+  low: phrase('low'),
+  medium: phrase('medium'),
+  high: phrase('high'),
+  urgent: phrase('urgent'),
 }
 
 type Drag = { cardId: string; columnId: string }
@@ -167,6 +176,7 @@ function KanbanCardView({
   onEdit: () => void
   onDelete: () => void
 }) {
+  const { t } = useI18n()
   return (
     <CardFrame
       {...slot('kanban-card')}
@@ -190,13 +200,13 @@ function KanbanCardView({
         {ink(card.title, SizableText, { fontWeight: '600', fontSize: '$3', flex: 1 })}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button {...slot('kanban-card-menu')} variant="ghost" size="icon-sm" aria-label="Card actions">
+            <Button {...slot('kanban-card-menu')} variant="ghost" size="icon-sm" aria-label={t('Card actions')}>
               <MoreHorizontal size={14} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onSelect={onEdit}>Edit</DropdownMenuItem>
-            <DropdownMenuItem variant="destructive" onSelect={onDelete}>Delete</DropdownMenuItem>
+            <DropdownMenuItem onSelect={onEdit}>{t('Edit')}</DropdownMenuItem>
+            <DropdownMenuItem variant="destructive" onSelect={onDelete}>{t('Delete')}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </XStack>
@@ -221,7 +231,7 @@ function KanbanCardView({
         <XStack gap="$2" items="center">
           {card.priority ? (
             <Badge {...slot('kanban-card-priority')} variant="outline" style={{ borderColor: PRIORITY_COLOR[card.priority], color: PRIORITY_COLOR[card.priority] }}>
-              {card.priority}
+              {t(PRIORITY_WORD[card.priority])}
             </Badge>
           ) : null}
           {card.assignee ? (
@@ -262,6 +272,7 @@ function KanbanColumnView({
   onDeleteCard: (cardId: string) => void
 }) {
   const full = column.limit != null && column.cards.length >= column.limit
+  const { t } = useI18n()
 
   return (
     <ColumnFrame
@@ -285,7 +296,7 @@ function KanbanColumnView({
           {...slot('kanban-add-card')}
           variant="ghost"
           size="icon-sm"
-          aria-label={`Add card to ${column.title}`}
+          aria-label={t('Add card to {column}', { column: column.title })}
           disabled={full}
           onPress={onAddCard}
         >
@@ -329,6 +340,7 @@ function KanbanCardDialog({
   const [priority, setPriority] = React.useState<KanbanPriority>(card?.priority ?? 'low')
   const [assignee, setAssignee] = React.useState(card?.assignee ?? '')
   const [dueDate, setDueDate] = React.useState(card?.dueDate ?? '')
+  const { t } = useI18n()
 
   React.useEffect(() => {
     setTitle(card?.title ?? '')
@@ -349,53 +361,53 @@ function KanbanCardDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent {...slot('kanban-card-dialog')}>
         <DialogHeader>
-          <DialogTitle>{card ? 'Edit Card' : 'Create Card'}</DialogTitle>
+          <DialogTitle>{card ? t('Edit Card') : t('Create Card')}</DialogTitle>
           <DialogDescription>
-            {card ? 'Update the card details below.' : 'Create a new card for your kanban board.'}
+            {card ? t('Update the card details below.') : t('Create a new card for your kanban board.')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={submit}>
           <YStack gap="$3">
             <YStack gap="$1">
-              <Label htmlFor="kanban-title">Title</Label>
-              <Input id="kanban-title" value={title} onChangeText={setTitle} placeholder="Card title" />
+              <Label htmlFor="kanban-title">{t('Title')}</Label>
+              <Input id="kanban-title" value={title} onChangeText={setTitle} placeholder={t('Card title')} />
             </YStack>
             <YStack gap="$1">
-              <Label htmlFor="kanban-description">Description</Label>
+              <Label htmlFor="kanban-description">{t('Description')}</Label>
               <Textarea id="kanban-description" value={description} onChangeText={setDescription} rows={3} />
             </YStack>
             <XStack gap="$3">
               <YStack gap="$1" flex={1}>
-                <Label>Priority</Label>
+                <Label>{t('Priority')}</Label>
                 <Select value={priority} onValueChange={(v: string) => setPriority(v as KanbanPriority)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="urgent">Urgent</SelectItem>
+                    <SelectItem value="low">{t('Low')}</SelectItem>
+                    <SelectItem value="medium">{t('Medium')}</SelectItem>
+                    <SelectItem value="high">{t('High')}</SelectItem>
+                    <SelectItem value="urgent">{t('Urgent')}</SelectItem>
                   </SelectContent>
                 </Select>
               </YStack>
               <YStack gap="$1" flex={1}>
-                <Label htmlFor="kanban-assignee">Assignee</Label>
-                <Input id="kanban-assignee" value={assignee} onChangeText={setAssignee} placeholder="Assign to..." />
+                <Label htmlFor="kanban-assignee">{t('Assignee')}</Label>
+                <Input id="kanban-assignee" value={assignee} onChangeText={setAssignee} placeholder={t('Assign to...')} />
               </YStack>
             </XStack>
             <YStack gap="$1">
-              <Label htmlFor="kanban-due">Due date</Label>
+              <Label htmlFor="kanban-due">{t('Due date')}</Label>
               <Input id="kanban-due" type="date" value={dueDate} onChangeText={setDueDate} />
             </YStack>
           </YStack>
 
           <DialogFooter mt="$4">
             <Button type="button" variant="outline" onPress={() => onOpenChange(false)}>
-              Cancel
+              {t('Cancel')}
             </Button>
-            <Button type="submit">{card ? 'Update' : 'Create'} Card</Button>
+            <Button type="submit">{card ? t('Update Card') : t('Create Card')}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
@@ -412,6 +424,7 @@ export type KanbanBoardProps = {
 export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProps) {
   const [query, setQuery] = React.useState('')
   const [drag, setDrag] = React.useState<Drag | null>(null)
+  const { t } = useI18n()
   const [dialogOpen, setDialogOpen] = React.useState(false)
   const [editingCard, setEditingCard] = React.useState<KanbanCard | undefined>(undefined)
   const [targetColumnId, setTargetColumnId] = React.useState('')
@@ -495,13 +508,13 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
           </XStack>
           <Input
             {...slot('kanban-search')}
-            placeholder="Search cards..."
+            placeholder={t('Search cards...')}
             value={query}
             onChangeText={setQuery}
             paddingInlineStart="$7"
           />
           {query ? (
-            <XStack position="absolute" insetInlineEnd="$2" cursor="pointer" onPress={() => setQuery('')} aria-label="Clear search">
+            <XStack position="absolute" insetInlineEnd="$2" cursor="pointer" onPress={() => setQuery('')} aria-label={t('Clear search')}>
               <X size={14} />
             </XStack>
           ) : null}

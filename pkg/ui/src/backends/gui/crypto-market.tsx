@@ -22,6 +22,7 @@
  * without the key a changed `tabs` would leave the old table on screen.
  */
 import { YStack, isWeb, type YStackProps } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 
 export interface MarketOverviewSymbol {
@@ -176,12 +177,13 @@ const MarketOverview = ({
     width,
     height,
   })
+  const { t } = useI18n()
   const src = `${EMBED}${s.locale}#${encodeURIComponent(JSON.stringify(s))}`
-  const titles = s.tabs.map((t) => t.title).join(', ')
+  const titles = s.tabs.map((tab) => tab.title).join(', ')
   return (
     <YStack
       {...slot('market-overview')}
-      data-tabs={s.tabs.map((t) => t.title).join(',')}
+      data-tabs={s.tabs.map((tab) => tab.title).join(',')}
       data-color-theme={s.colorTheme}
       // The documented size is TradingView's — a number or a percent string —
       // and gui declares a narrower one; on web both reach CSS as written.
@@ -196,7 +198,7 @@ const MarketOverview = ({
         <iframe
           key={src}
           src={src}
-          title={`${titles} market overview`}
+          title={t('{titles} market overview', { titles })}
           loading="lazy"
           scrolling="no"
           style={{ display: 'block', width: '100%', height: '100%', border: 0 }}

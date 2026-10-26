@@ -10,6 +10,7 @@
  * them) so turning one on shifts no layout in a table of fifty rows.
  */
 import { Text } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { TONE, tone } from './tone'
 
@@ -21,6 +22,8 @@ export type StatusTagProps = {
 
 export function StatusTag({ status, tone: override }: StatusTagProps) {
   const t = TONE[override ?? tone(status ?? '')]
+  // `t` is the tone here, so the translator is reached through the context.
+  const i18n = useI18n()
   return (
     <Text
       fontSize="$1"
@@ -32,7 +35,7 @@ export function StatusTag({ status, tone: override }: StatusTagProps) {
       bg={t.bg}
       color={t.color}
     >
-      {status || 'unknown'}
+      {status || i18n.t('unknown')}
     </Text>
   )
 }
