@@ -196,9 +196,11 @@ export interface AnalyticsConfig {
   batchSize?: number
   /** Auto-flush cadence in ms. */
   flushIntervalMs?: number
-  /** Turn the client off entirely. Defaults to enabled. In a browser the client
-   *  also sends nothing but errors until the visitor allows Analytics (consent.ts),
-   *  whatever this says. */
+  /** Turn the client off entirely: for a surface that must send nothing, such as a
+   *  test or a preview build. Defaults to enabled. It is not a consent switch: the
+   *  stream is first-party analytics and runs for every visitor whatever they chose
+   *  (core.ts), so a site does not pass `enabled: consent.analytics`. Consent gates
+   *  the third parties alone (startTags). */
   enabled?: boolean
   /** Auto-capture unhandled errors + promise rejections (window.onerror,
    *  unhandledrejection). Browser-only, defaults to enabled. */

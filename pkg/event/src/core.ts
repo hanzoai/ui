@@ -25,13 +25,14 @@
 //
 // The wire is the canonical `Event` (== the cloud CaptureEvent).
 //
-// CONSENT IS THE CLIENT'S OWN RULE in a browser (consent.ts): until the visitor
-// allows Analytics it sends no pageview, event, identify or group, and writes no
-// identifier, session or attribution to the device. An error still goes, because a
-// broken page is ours to fix, but as a stranger: an id held in memory for this page
-// alone, no session, no attribution, nothing stored. When the visitor accepts, the
-// client takes up what it held — the visit's attribution and the view in hand — and
-// runs as before. Every browser event states the consent it was sent under.
+// THE STREAM IS FIRST PARTY. Every page view, event, identify, group and error goes
+// for every visitor, under the anonymous id, the session and the visit's attribution,
+// whatever they chose and under Global Privacy Control or Do Not Track alike: it is
+// the site's own analytics, never sold or shared. Consent (consent.ts) governs the
+// third parties only — Google Analytics, the Meta pixel and ad personalization, loaded
+// by startTags (tags.ts) and forwarded by cloud. Every browser event states the
+// grants it was sent under, which is what cloud may forward it under, and a grant
+// withdrawn while it waits is taken off it before it goes.
 
 import {
   parseAttribution,
@@ -44,7 +45,6 @@ import { scrubText, withoutFragment } from './scrub'
 import { framesFromStack, normalizeError as normalizeThrowable } from './throwable'
 import {
   adoptAnonId,
-  forgetAnonId,
   adoptSession,
   anonId,
   sessionId,
@@ -58,7 +58,7 @@ import {
 import { uuidv7 } from './uid'
 import { internal } from './automated'
 import { linkUrl, readLink, stripLink, type LinkState } from './link'
-import { CONSENT_EVENT, honour, read as readConsent, render as renderConsent } from './consent'
+import { honour, read as readConsent, render as renderConsent } from './consent'
 import type {
   AnalyticsConfig,
   Attribution,
@@ -126,32 +126,13 @@ const viewport = (): Record<string, string> =>
 
 const isBrowser = () => typeof window !== 'undefined' && typeof document !== 'undefined'
 
-/** An address with its query and fragment taken off. */
-function withoutQuery(href: string): string {
-  try {
-    const u = new URL(href)
-    return u.origin + u.pathname
-  } catch {
-    return ''
-  }
-}
-
-/** Whether the choice in force still covers the one an event was stamped with. */
-function covered(e: WireEvent): boolean {
-  if (!isBrowser()) return true
+/** An event as it may be forwarded now: the grants it was stamped with, less any the
+ *  visitor withdrew since — here or in another tab. The event itself always goes. */
+function narrowed(e: WireEvent): WireEvent {
+  if (!isBrowser()) return e
   const now = new Set(renderConsent(readConsent()).split(',').filter(Boolean))
-  return String(e.properties?.consent ?? '').split(',').filter(Boolean).every((k) => now.has(k))
-}
-
-/** Takes the query and fragment off every address in free text — any scheme, or a
- *  path — keeping the :line:column a stack puts after one. */
-function bare(s: string | undefined): string | undefined {
-  return s?.replace(/(^|[\s('"@<[=])((?:[a-z][a-z0-9+.-]*:\/\/|\/)[^\s)'"\]>]+)/gi, (_m, pre: string, a: string) => {
-    const at = /(?::\d+)+$/.exec(a)?.[0] ?? ''
-    const base = a.slice(0, a.length - at.length)
-    const i = base.search(/[?#]/)
-    return pre + (i < 0 ? base : base.slice(0, i)) + at
-  })
+  const consent = String(e.properties?.consent ?? '').split(',').filter((k) => now.has(k)).join(',')
+  return { ...e, properties: { ...e.properties, consent } }
 }
 
 /** serializeBatch stringifies a batch, salvaging what it can. `properties` is
@@ -277,20 +258,6 @@ export class Analytics {
   private lastUtm?: Attribution['utm']
   private cohort: Cohort = {}
   private started = false
-  /** What this page arrived with — the link's identity and the landing's
-   *  attribution — held in memory until the visitor allows Analytics. */
-  private linked: LinkState = {}
-  private landing: Attribution = { utm: {} }
-  /** The held state has been taken up: the visitor allowed Analytics. */
-  private settled = false
-  /** The view a pageview was asked for while the visitor had not allowed Analytics. */
-  private held?: { path?: string; properties?: Record<string, unknown> }
-  /** The traits an identify was asked for while the visitor had not allowed Analytics. */
-  private traits?: Record<string, unknown>
-  /** The cohort a setCohort was asked for while the visitor had not allowed Analytics. */
-  private patch?: Cohort
-  /** Who an error is filed under before consent: this page alone, never stored. */
-  private stranger = uuidv7()
   /** The view pageview() last counted — path + location. */
   private counted?: string
   /** Guards against an error thrown *inside* the error path re-entering it. */
@@ -338,19 +305,18 @@ export class Analytics {
     if (config.getToken && !this.cfg.getToken) this.cfg.getToken = config.getToken
   }
 
-  /** init is idempotent and browser-only for its side effects: read what the page
-   *  arrived with, take it up once the visitor allows Analytics (now, or when they
-   *  accept), register the unload flush, and (unless opted out) auto-capture
+  /** init is idempotent and browser-only for its side effects: take up what the page
+   *  arrived with, register the unload flush, and (unless opted out) auto-capture
    *  unhandled errors. Safe to call from a React effect on every render. */
   init(): void {
     if (this.started || !this.cfg.enabled) return
     this.started = true
     if (!isBrowser()) return
 
-    // A link from another Hanzo host carries the visitor with it. It is read, and
-    // taken off the address, now; it is adopted with the visitor's consent, so the
-    // first pageview after it is already the same person, session and first touch.
-    this.linked = readLink(window.location.search)
+    // A link from another Hanzo host carries the visitor with it. It is read, taken
+    // off the address and adopted now, so the first pageview after it is already the
+    // same person, session and first touch.
+    const linked = readLink(window.location.search)
     const clean = stripLink(window.location.href)
     if (clean !== undefined) {
       try {
@@ -359,20 +325,9 @@ export class Analytics {
         /* a sandboxed frame may refuse; the params are then simply visible */
       }
     }
-    this.landing = parseAttribution(window.location.search, document.referrer)
+    this.settle(linked, parseAttribution(window.location.search, document.referrer))
     // A browser that refuses now, over a grant stored on an earlier page, withdraws it.
     honour()
-    this.settle()
-    window.addEventListener(CONSENT_EVENT, () => {
-      if (!this.allowed()) this.forgetVisitor()
-      this.settle()
-    })
-    // A withdrawal made in another tab is taken up when this page is shown again.
-    const shown = () => {
-      if (document.visibilityState !== 'hidden' && !this.allowed()) this.forgetVisitor()
-    }
-    window.addEventListener('pageshow', shown)
-    window.addEventListener('visibilitychange', shown)
 
     const flushHidden = () => {
       if (document.visibilityState === 'hidden') this.flush(true)
@@ -391,14 +346,9 @@ export class Analytics {
     }
   }
 
-  /** settle takes up what the page arrived with once the visitor allows
-   *  Analytics: the link's identity, the first touch, the last touch, the cohort,
-   *  and the identify and the view asked for before the choice. Before that
-   *  nothing is written; after it, once is enough. */
-  private settle(): void {
-    if (this.settled || !this.started || !isBrowser() || !this.allowed()) return
-    this.settled = true
-    const { linked, landing } = this
+  /** settle takes up what the page arrived with: the link's identity, the first
+   *  touch, the last touch and the cohort. */
+  private settle(linked: LinkState, landing: Attribution): void {
     if (linked.anonId) adoptAnonId(linked.anonId)
     if (linked.sessionId) adoptSession(linked.sessionId)
     // The first touch the link carries is the visit's real origin. Without it this
@@ -413,38 +363,14 @@ export class Analytics {
       channel: this.attribution.channel ?? deriveChannel(this.attribution),
       refCode: this.attribution.refCode,
     })
-    if (this.patch) this.cohort = mergeCohort(this.patch)
-    this.patch = undefined
-    const { held, traits } = this
-    this.held = this.traits = undefined
-    if (traits && this.personId) this.identify(this.personId, Object.keys(traits).length ? traits : undefined)
-    if (held) this.pageview(held.path, held.properties)
-  }
-
-  /** forgetVisitor runs when the visitor no longer allows Analytics: the page
-   *  forgets the visitor it held, so a later yes is a new visitor. What was queued
-   *  under the old grant is held back at send (flush). */
-  private forgetVisitor(): void {
-    this.queue = this.queue.filter(covered)
-    forgetAnonId()
-    this.settled = false
-    this.linked = {}
-  }
-
-  /** allowed is whether this client may send and store: off a browser always, in
-   *  one only once the visitor allows Analytics. */
-  private allowed(): boolean {
-    return !isBrowser() || readConsent().analytics
   }
 
   /** link returns `url` carrying this visitor's anonymous id, session and first
    *  touch when the destination is a Hanzo-owned host, so the journey continues
-   *  across the hop. Any other URL comes back unchanged, and so does every URL
-   *  before the visitor allows Analytics: there is no visitor to carry yet. */
+   *  across the hop. Any other URL comes back unchanged. */
   link(url: string): string {
     if (!isBrowser()) return url
     if (!this.started) this.init()
-    if (!this.allowed()) return url
     return linkUrl(
       url,
       { anonId: anonId(), sessionId: sessionId(), firstTouch: this.attribution },
@@ -462,15 +388,9 @@ export class Analytics {
     return out
   }
 
-  /** identify binds the current visitor to a stable person id (post-login). Before
-   *  the visitor allows Analytics the binding is held, and stated when they accept. */
+  /** identify binds the current visitor to a stable person id (post-login). */
   identify(personId: string, traits?: Record<string, unknown>): void {
     this.personId = personId
-    if (this.cfg.enabled && !this.allowed()) {
-      if (!this.started) this.init()
-      this.traits = traits ?? {}
-      return
-    }
     this.enqueue('identify', undefined, { properties: traits })
   }
 
@@ -493,12 +413,6 @@ export class Analytics {
     // several emitters that each correctly believe they count the first view —
     // the provider's autoPageview, a router hook, a nav autocapture — and per
     // emitter state cannot see the others. On the stream they are one page.
-    if (this.cfg.enabled && !this.allowed()) {
-      // The view in hand is counted when the visitor accepts, on this page.
-      if (!this.started) this.init()
-      this.held = { path, properties }
-      return
-    }
     const view = (p ?? '') + '\0' + (isBrowser() ? window.location.href : '')
     if (view === this.counted) return
     this.counted = view
@@ -546,15 +460,8 @@ export class Analytics {
   }
 
   /** setCohort persists cohort dimensions (e.g. signupWeek at signup) so they ride
-   *  every subsequent event. Before the visitor allows Analytics they are held, and
-   *  stored when they accept. */
+   *  every subsequent event. */
   setCohort(patch: Cohort): void {
-    if (isBrowser() && !(this.settled && this.allowed())) {
-      this.patch = { ...this.patch, ...patch }
-      this.cohort = { ...this.cohort, ...patch }
-      this.settle()
-      return
-    }
     this.cohort = mergeCohort(patch)
   }
 
@@ -571,10 +478,8 @@ export class Analytics {
    */
   flush(beacon = false): void {
     if (!this.cfg.enabled || this.queue.length === 0) return
-    // An event goes only under a choice that still covers the one it was stamped
-    // with: a grant withdrawn since — here or in another tab — takes what was
-    // queued under it.
-    const batch = this.queue.filter(covered)
+    // Every event goes, forwardable under no more than the choice now allows.
+    const batch = this.queue.map(narrowed)
     this.queue = []
     this.clearTimer()
     if (batch.length === 0) return
@@ -605,33 +510,29 @@ export class Analytics {
   private enqueue(kind: EventKind, event: string | undefined, extra: Partial<WireEvent>): void {
     if (!this.cfg.enabled) return
     if (!this.started) this.init()
-    // Before consent only an error goes, and it goes as a stranger (build).
-    const known = this.allowed()
-    if (!known && kind !== 'error') return
-    this.queue.push(this.build(kind, event, extra, known))
+    this.queue.push(this.build(kind, event, extra))
     if (this.queue.length >= this.cfg.batchSize) this.flush()
     else this.schedule()
   }
 
-  private build(kind: EventKind, event: string | undefined, extra: Partial<WireEvent>, known = true): WireEvent {
-    if (known) this.settle()
-    const anon = known ? anonId() : this.stranger
+  private build(kind: EventKind, event: string | undefined, extra: Partial<WireEvent>): WireEvent {
+    const anon = anonId()
     const wire: WireEvent = {
       messageId: uuidv7(),
       type: kind,
       event,
       timestamp: new Date().toISOString(),
-      distinctId: known ? (this.personId ?? anon) : anon,
+      distinctId: this.personId ?? anon,
       anonymousId: anon,
-      personId: known ? this.personId : undefined,
-      sessionId: known ? sessionId() : undefined,
+      personId: this.personId,
+      sessionId: sessionId(),
       product: this.cfg.product,
-      referrer: known ? this.attribution.referrer : undefined,
-      utm: known ? this.attribution.utm : undefined,
-      lastUtm: known ? this.lastUtm : undefined,
-      refCode: known ? (this.cohort.refCode ?? this.attribution.refCode) : undefined,
-      channel: known ? (this.cohort.channel ?? this.attribution.channel) : undefined,
-      signupWeek: known ? this.cohort.signupWeek : undefined,
+      referrer: this.attribution.referrer,
+      utm: this.attribution.utm,
+      lastUtm: this.lastUtm,
+      refCode: this.cohort.refCode ?? this.attribution.refCode,
+      channel: this.cohort.channel ?? this.attribution.channel,
+      signupWeek: this.cohort.signupWeek,
       // Where the event happened, stamped for every kind rather than only for
       // pageviews. An interaction is reported against the page it happened on,
       // and autocapture ($click/$input/$change) reaches the wire through
@@ -644,9 +545,7 @@ export class Analytics {
       // Before `...extra`: pageview() passes an explicit path for route
       // changes that fire before window.location has caught up, and that value
       // has to win over the one read here.
-      // A stranger's error names the page, never its query: the campaign and the
-      // ad click the address carries wait for the visitor's choice.
-      url: isBrowser() ? (known ? window.location.href : withoutQuery(window.location.href)) : undefined,
+      url: isBrowser() ? window.location.href : undefined,
       path: isBrowser() ? window.location.pathname : undefined,
       library: '@hanzo/event',
       libraryVersion: VERSION,
@@ -680,21 +579,9 @@ export class Analytics {
     if (wire.url) wire.url = scrubText(withoutFragment(wire.url), capturePII)
     if (wire.path) wire.path = scrubText(withoutFragment(wire.path), capturePII)
     if (wire.referrer) wire.referrer = scrubText(withoutFragment(wire.referrer), capturePII)
-    // A stranger's error names its pages without their queries, in its message and
-    // stack too, and carries none of the caller's properties.
-    if (!known) wire.properties = undefined
-    if (!known && wire.error) {
-      const e = wire.error
-      wire.error = {
-        ...e,
-        message: bare(e.message) ?? e.message,
-        stack: bare(e.stack),
-        frames: e.frames?.map((f) => (f.file ? { ...f, file: bare(f.file) } : f)),
-      }
-    }
     if (internal()) wire.properties = { ...wire.properties, internal: true }
-    // The consent the event was sent under, as the cookie spells it: cloud holds
-    // every reader to it.
+    // The grants the event was sent under, as the cookie spells it: what cloud may
+    // forward it to Google and Meta under.
     if (isBrowser()) wire.properties = { ...wire.properties, consent: renderConsent(readConsent()) }
     return wire
   }

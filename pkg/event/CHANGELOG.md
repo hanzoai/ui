@@ -1,5 +1,14 @@
 # @hanzo/event
 
+## 0.3.61
+
+### Patch Changes
+
+- The stream is first-party analytics and runs for every visitor: page views, events, identifies, groups and errors go under the anonymous id, the session and the visit's attribution, whatever the visitor chose and under Global Privacy Control or Do Not Track alike. Nothing is held for Accept, and there is no stranger's error.
+- Consent governs the third parties alone: Google Analytics (`analytics`), the Meta pixel (`marketing`) and ad personalization (`ads`), loaded by `startTags` and forwarded by cloud. Each event states the grants it was sent under; a grant withdrawn while an event waits is taken off it before it goes, and the event still goes.
+- Withdrawing a category forgets only what its third party kept (Google Analytics' cookies and `hz_cid`; the ad click and the ad platforms' browser ids). The anonymous id, session, touches, cohort and `hz_internal` are the stream's and stay.
+- `enabled` is not a consent switch: it turns the client off entirely. A site no longer passes `enabled: consent.analytics` to `AnalyticsProvider`.
+
 ## 0.3.60
 
 ### Patch Changes

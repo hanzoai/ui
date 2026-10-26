@@ -3,9 +3,10 @@
 /**
  * Consent — the one cookie banner every Hanzo, Lux and Zoo site mounts.
  *
- * It draws the choice; @hanzo/event stores it (`hz_consent`) and acts on it:
- * nothing from an ad platform, no Google, and no event on our own stream before
- * Accept, and Google Consent Mode v2 starts denied.
+ * It draws the choice; @hanzo/event stores it (`hz_consent`) and acts on it: no
+ * Google Analytics, no Meta pixel and no ad personalization before Accept, and
+ * Google Consent Mode v2 starts denied. The brand's own first-party analytics is
+ * strictly necessary and runs for every visitor; the choice does not govern it.
  *
  *  - every visitor, wherever they are, is asked: a bar with Manage preferences,
  *    Accept all and a ×, until they have chosen. Nothing optional loads first.
@@ -50,25 +51,25 @@ const kinds = (brand: string): Kind[] => [
   {
     id: 'necessary',
     title: 'Strictly Necessary Cookies',
-    body: 'These cookies are needed for the site to work, so they are always on. They keep you signed in and your session secure, protect forms against cross-site request forgery, spread traffic across servers, remember the choice you make here, and keep what you have typed into a form. They are not used to track you, and they store no personally identifiable tracking information.',
+    body: `These are needed for the site to work, so they are always on. They keep you signed in and your session secure, protect forms against cross-site request forgery, spread traffic across servers, remember the choice you make here, and keep what you have typed into a form. They include ${brand}'s own first-party analytics, which counts visits and finds what is broken for ${brand} alone and is never sold or shared.`,
   },
   {
     id: 'analytics',
     key: 'analytics',
     title: 'Performance Cookies',
-    body: `These cookies count visits and where they come from, so ${brand} can measure and improve how the site performs: which pages are used most and least, how visitors move around, and what is broken. What they collect is aggregated.`,
+    body: `Google Analytics: lets Google measure visits to ${brand} with its own cookies.`,
   },
   {
     id: 'marketing',
     key: 'marketing',
     title: 'Marketing Cookies',
-    body: `These cookies let advertising platforms measure the sign-ups and orders their ads led to, so ${brand} can tell which ads work. The platforms set them through this site, and they remember the ad you arrived from.`,
+    body: `The Meta pixel: lets Meta measure the sign-ups and orders ${brand}'s ads led to.`,
   },
   {
     id: 'ads',
     key: 'ads',
     title: 'Sell, Share, or Use Your Data for Targeted Advertising',
-    body: 'Some US state privacy laws treat letting advertising platforms use what they learn from your visit to show you ads on other sites and apps as a “sale” or “sharing” of your personal information, or as “targeted advertising”, and give you the right to opt out. On, those platforms may use your visit to choose the ads you see elsewhere. It stays off unless you turn it on; to opt out, move this toggle to the left and select Save preferences.',
+    body: 'Lets Google and Meta use your visit to choose the ads they show you on other sites and apps. Some US state privacy laws call this a “sale” or “sharing” of your personal information, or “targeted advertising”, and give you the right to opt out: it stays off unless you turn it on.',
   },
 ]
 

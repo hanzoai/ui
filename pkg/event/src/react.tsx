@@ -27,7 +27,9 @@ import { CONSENT_EVENT, POLICY_EVENT, read, render, type Choice } from './consen
 const Ctx = createContext<Analytics | null>(null)
 
 export interface AnalyticsProviderProps {
-  /** Provide a pre-built client, or a config to build one. */
+  /** Provide a pre-built client, or a config to build one. `config.enabled` turns the
+   *  client off entirely and is not a consent switch: the stream is first party and
+   *  runs for every visitor, so a site no longer passes `enabled: consent.analytics`. */
   client?: Analytics
   config?: AnalyticsConfig
   /** Fire a pageview for the initial load (default true). */
@@ -134,8 +136,8 @@ const listen = (on: () => void) => {
 
 /**
  * The visitor's consent, live: nothing until they choose, then what they chose,
- * re-rendering the moment they do. The client itself sends nothing but errors
- * before Analytics is allowed, and starts on Accept with no reload.
+ * re-rendering the moment they do. It governs the third parties (startTags); the
+ * client's own first-party stream runs whatever it says.
  */
 export function useConsent(): Choice {
   const kept = useSyncExternalStore(listen, () => render(read()), () => '')

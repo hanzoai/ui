@@ -136,7 +136,13 @@ describe('Consent, opened by the visitor', () => {
     await m.act(async () => toggle.click())
     expect(toggle.getAttribute('aria-expanded')).toBe('true')
     expect(getComputedStyle(body).display).not.toBe('none')
-    expect(body.textContent).toContain('so Lux can measure')
+    expect(body.textContent).toContain('Google Analytics: lets Google measure visits to Lux')
+    // Strictly Necessary names the brand's own first-party analytics; the copy names
+    // Google and Meta and no other platform, and claims nothing it does not do.
+    expect(sheet.textContent).toContain("Lux's own first-party analytics")
+    expect(sheet.textContent).toContain('never sold or shared')
+    expect(sheet.textContent).toContain('The Meta pixel')
+    for (const w of ['LinkedIn', 'TikTok', 'Pinterest', 'Reddit', 'aggregated']) expect(sheet.textContent).not.toContain(w)
     const foot = [...sheet.querySelectorAll('button')].slice(-2).map((x) => x.textContent)
     expect(foot, 'Accept all and Save preferences, and no Reject all').toEqual(['Accept all', 'Save preferences'])
     expect(sheet.textContent).not.toContain('Reject')
@@ -286,7 +292,7 @@ describe('Consent, on a first visit', () => {
     const m = await mount(<Consent brand="Zoo" />)
     expect(m.host.querySelector('[data-slot="consent"]')).toBeNull()
     await m.act(async () => openConsent())
-    expect(m.host.textContent).toContain('so Zoo can measure')
+    expect(m.host.textContent).toContain('measure visits to Zoo')
     expect(m.host.textContent).toContain('Your browser asks sites not to track you')
     const switches = [...m.host.querySelectorAll('[role="switch"]')]
     expect(switches.length).toBe(3)

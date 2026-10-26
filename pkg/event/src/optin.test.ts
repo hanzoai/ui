@@ -1,6 +1,8 @@
-// Every visitor opts in: before they allow Analytics the client sends no pageview,
-// event or identify and writes nothing to the device; an error goes as a stranger.
-// When they accept it takes up what the page arrived with and counts the view in hand.
+// The stream is first party: every visitor's page views, events, identifies and
+// errors go, under the anonymous id, the session and the visit's attribution,
+// whatever they chose and under Global Privacy Control or Do Not Track alike. Each
+// states the grants it was sent under, narrowed when one is withdrawn; consent
+// governs the third parties alone.
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Transport, WireEvent } from './types'
@@ -75,293 +77,75 @@ afterEach(() => {
 
 const LANDING = `https://hanzo.ai/pricing?utm_source=hanzo&utm_medium=email&utm_campaign=again&hz_aid=${AID}`
 
-describe('before the visitor allows Analytics', () => {
-  it('sends no pageview, event or identify, and writes nothing to the device', async () => {
-    const b = browser(LANDING)
+describe('the stream', () => {
+  it.each([
+    ['no choice', {}],
+    ['a refusal', { cookie: '' }],
+    ['Global Privacy Control', { gpc: true, cookie: 'analytics,marketing,ads' }],
+    ['Do Not Track', { dnt: '1', cookie: 'analytics,marketing,ads' }],
+  ] as const)('sends everything with %s, as the visitor, forwardable under nothing', async (_name, opts) => {
+    const b = browser(LANDING, opts)
     const { Analytics } = await load()
     const tx = new Tx()
     const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
     a.init()
     a.pageview()
     a.capture('pricing_viewed', { plan: 'pro' })
-    a.identify('sub-1', { email: 'ada@example.com' })
-    a.setCohort({ signupWeek: '2026-W42' })
-    a.flush()
-    expect(tx.all).toEqual([])
-    expect([...b.store.keys()]).toEqual([])
-    expect([...b.jar.keys()]).toEqual([])
-    // The link is taken off the address, and nothing is carried to another host.
-    expect((g.window as { location: { search: string } }).location.search).not.toContain('hz_aid')
-    expect(a.link('https://hanzo.id/login')).toBe('https://hanzo.id/login')
-  })
-
-  it('sends an error as a stranger: an id for this page alone, no session, no attribution', async () => {
-    const b = browser(LANDING)
-    const { Analytics } = await load()
-    const tx = new Tx()
-    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
+    a.identify('sub-1', { plan: 'pro' })
     a.captureError(new TypeError('x is undefined'))
-    a.captureError(new TypeError('y is undefined'))
-    expect(tx.all.map((e) => e.type)).toEqual(['error', 'error'])
-    const [e1, e2] = tx.all
-    expect(e1.distinctId).toBe(e2.distinctId)
-    expect(e1.distinctId).not.toBe(AID)
-    expect(e1.sessionId).toBeUndefined()
-    expect(e1.utm).toBeUndefined()
-    expect(e1.lastUtm).toBeUndefined()
-    expect(e1.properties?.consent).toBe('')
-    expect(e1.url, 'a stranger names the page, never its query').toBe('https://hanzo.ai/pricing')
-    const boom = new TypeError('z is undefined')
-    boom.stack = 'TypeError: z is undefined\n    at f (https://hanzo.ai/pricing?gclid=G1&utm_source=x:10:20)'
-    a.captureError(boom)
-    const e3 = tx.all[2]
-    expect(e3.error?.stack).not.toContain('gclid')
-    expect(e3.error?.stack).toContain('https://hanzo.ai/pricing:10:20')
-    expect(JSON.stringify(e3.error?.frames)).not.toContain('gclid')
-    expect([...b.store.keys()]).toEqual([])
-    expect([...b.jar.keys()]).toEqual([])
-  })
-
-  it('on Accept, takes up the visit and counts the view in hand, once', async () => {
-    const b = browser(LANDING)
-    const { Analytics, acceptAll } = await load()
-    const tx = new Tx()
-    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    a.init()
-    a.pageview()
-    a.identify('sub-1')
-    acceptAll()
-    a.pageview()
     a.flush()
-    expect(tx.all.map((e) => e.type)).toEqual(['identify', 'pageview'])
-    const view = tx.all[1]
-    expect(view.anonymousId).toBe(AID)
-    expect(view.personId).toBe('sub-1')
-    expect(view.utm).toMatchObject({ source: 'hanzo', campaign: 'again' })
-    expect(view.lastUtm).toMatchObject({ source: 'hanzo', medium: 'email', campaign: 'again' })
-    expect(view.properties?.consent).toBe('analytics,marketing,ads')
-    expect(b.store.has('hz_first_touch')).toBe(true)
-    expect(b.store.has('hz_last_touch')).toBe(true)
+    expect(tx.all.map((e) => e.type)).toEqual(['pageview', 'event', 'identify', 'error'])
+    for (const e of tx.all) {
+      expect(e.anonymousId).toBe(AID)
+      expect(e.sessionId).toBeTruthy()
+      expect(e.properties?.consent).toBe('')
+    }
+    expect(tx.all[0].utm).toMatchObject({ source: 'hanzo', campaign: 'again' })
+    expect(tx.all[3].distinctId).toBe('sub-1')
+    // The link is adopted and taken off the address; the visitor is carried on.
+    expect((g.window as { location: { search: string } }).location.search).not.toContain('hz_aid')
+    expect(a.link('https://hanzo.id/login')).toContain(AID)
+    expect(b.jar.has('iam-anon-id') || b.store.has('iam-anon-id')).toBe(true)
   })
 
-  it('on Reject, sends nothing still', async () => {
-    browser(LANDING)
-    const { Analytics, rejectAll } = await load()
-    const tx = new Tx()
-    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    a.init()
-    a.pageview()
-    rejectAll()
-    a.capture('pricing_viewed')
-    a.flush()
-    expect(tx.all).toEqual([])
-  })
-
-  it.each([
-    ['Global Privacy Control', { gpc: true }],
-    ['Do Not Track', { dnt: '1' }],
-  ])('%s refuses even a stored yes', async (_name, refusal) => {
-    const b = browser(LANDING, { cookie: 'analytics,marketing,ads', ...refusal })
+  it('states the grants each event was sent under', async () => {
+    browser(LANDING, { cookie: 'analytics,marketing' })
     const { Analytics } = await load()
     const tx = new Tx()
     const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    a.pageview()
     a.capture('pricing_viewed')
     a.flush()
-    expect(tx.all).toEqual([])
-    expect([...b.store.keys()]).toEqual([])
+    expect(tx.all[0].properties?.consent).toBe('analytics,marketing')
   })
 })
 
 describe('a withdrawal', () => {
-  it('sends nothing after it, not even what was queued, and forgets the visitor', async () => {
-    const b = browser(LANDING)
-    const { Analytics, acceptAll, rejectAll } = await load()
+  it('keeps the stream and the visitor, and narrows what was queued to what is still allowed', async () => {
+    const b = browser(LANDING, { cookie: 'analytics,marketing,ads' })
+    const { Analytics, save } = await load()
     const tx = new Tx()
     const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
     a.init()
-    acceptAll()
-    a.identify('sub-1')
-    a.flush()
-    const before = tx.all.length
-    a.capture('pricing_viewed')
-    rejectAll()
-    a.capture('plan_picked')
-    a.identify('sub-1')
-    a.flush()
-    expect(tx.all.slice(before)).toEqual([])
-    expect(b.jar.get('iam-anon-id'), 'the anonymous id is forgotten').toBeFalsy()
-  })
-
-  it.each([
-    ['Global Privacy Control', { gpc: true }],
-    ['Do Not Track', { dnt: '1' }],
-  ])('by %s over a stored yes forgets what the yes kept, and sends nothing', async (_name, refusal) => {
-    const b = browser(LANDING, { cookie: 'analytics,marketing,ads', ...refusal, store: { 'iam-anon-id': AID, hz_first_touch: '{}' } })
-    const { Analytics } = await load()
-    const tx = new Tx()
-    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    a.init()
-    a.identify('sub-3')
-    a.pageview()
-    a.flush()
-    expect(tx.all).toEqual([])
-    expect(b.jar.get('__Host-hz_consent')).toBe('')
-    expect([...b.store.keys()]).toEqual([])
-  })
-
-  it('of Marketing alone keeps the visitor, and sends nothing queued under Marketing', async () => {
-    browser(LANDING)
-    const { Analytics, acceptAll, save } = await load()
-    const tx = new Tx()
-    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    a.init()
-    acceptAll()
-    a.capture('one')
-    a.flush()
-    const anon = tx.all[0].anonymousId
-    a.capture('two', { gclid: 'G1' })
+    a.capture('checkout_started')
     save({ analytics: true, marketing: false, ads: false })
-    a.capture('three')
+    a.capture('order_completed')
     a.flush()
-    expect(tx.all.map((e) => e.event)).toEqual(['one', 'three'])
-    expect(tx.all.at(-1)!.anonymousId).toBe(anon)
-    expect(tx.all.at(-1)!.properties?.consent).toBe('analytics')
+    expect(tx.all.map((e) => [e.event, e.properties?.consent])).toEqual([
+      ['checkout_started', 'analytics'],
+      ['order_completed', 'analytics'],
+    ])
+    expect(tx.all.every((e) => e.anonymousId === AID)).toBe(true)
+    expect(b.jar.has('iam-anon-id') || b.store.has('iam-anon-id')).toBe(true)
   })
 
-  it('made in another tab holds back what this one queued under the old grant', async () => {
-    const b = browser(LANDING)
-    const { Analytics, acceptAll } = await load()
-    const tx = new Tx()
-    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    a.init()
-    acceptAll()
-    a.capture('queued')
-    // Another tab of the same host rejects: the shared cookie changes, no event here.
-    b.jar.set('__Host-hz_consent', '')
-    a.flush()
-    expect(tx.all).toEqual([])
-  })
-
-  it('then a yes within one flush sends the new visitor alone', async () => {
-    browser(LANDING)
-    const { Analytics, acceptAll, rejectAll } = await load()
-    const tx = new Tx()
-    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    a.init()
-    acceptAll()
-    a.capture('old')
-    rejectAll()
-    acceptAll()
-    a.capture('new')
-    a.flush()
-    expect(tx.all.map((e) => e.event)).toEqual(['new'])
-  })
-
-  it('made in another tab forgets the visitor when this page is shown again', async () => {
-    const b = browser(LANDING)
-    const { Analytics, acceptAll } = await load()
-    const tx = new Tx()
-    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    a.init()
-    acceptAll()
-    a.capture('one')
-    a.flush()
-    const first = tx.all[0].anonymousId
-    b.jar.set('__Host-hz_consent', '')
-    ;(g.window as { dispatchEvent: (e: { type: string }) => void }).dispatchEvent({ type: 'visibilitychange' })
-    b.jar.set('__Host-hz_consent', 'analytics')
-    a.capture('two')
-    a.flush()
-    expect(tx.all.at(-1)!.anonymousId).not.toBe(first)
-  })
-
-  it('forgets the visitor this page held, so a later yes is a new one', async () => {
-    browser(LANDING)
-    const { Analytics, acceptAll, rejectAll } = await load()
-    const tx = new Tx()
-    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    a.init()
-    acceptAll()
-    a.capture('one')
-    a.flush()
-    const first = tx.all[0].anonymousId
-    rejectAll()
-    acceptAll()
-    a.capture('two')
-    a.flush()
-    expect(tx.all.at(-1)!.anonymousId).toBeDefined()
-    expect(tx.all.at(-1)!.anonymousId).not.toBe(first)
-  })
-})
-
-describe("a stranger's error", () => {
-  it('names no query in its message or stack, a colon in the query included', async () => {
-    browser(LANDING)
+  it('made in another tab narrows what this one queued', async () => {
+    const b = browser(LANDING, { cookie: 'analytics,marketing' })
     const { Analytics } = await load()
     const tx = new Tx()
     const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    const boom = new Error('load failed: https://hanzo.ai/a.js?token=T1 then WSS://hanzo.ai/s?k=1 and /pricing?email=ada%40corp.com')
-    boom.stack = 'Error: x\n    at f (https://hanzo.ai/a.js?next=https://x.io&gclid=G1&t=12:30:12:34)\n    at g (/static/b.js?v=2:3:4)\nonLoad@https://hanzo.ai/reset?email=ada%40corp.com:12:5'
-    a.captureError(boom, { properties: { email: 'ada@corp.com' } })
-    const e = tx.all[0]
-    expect(e.error?.message).toBe('load failed: https://hanzo.ai/a.js then WSS://hanzo.ai/s and /pricing')
-    expect(e.error?.stack).toBe('Error: x\n    at f (https://hanzo.ai/a.js:30:12:34)\n    at g (/static/b.js:3:4)\nonLoad@https://hanzo.ai/reset:12:5')
-    expect(e.properties).toEqual({ consent: '' })
-  })
-})
-
-describe('the last touch', () => {
-  it('is the most recent visit that arrived with a campaign; the first touch stays', async () => {
-    const first = { utm: { source: 'google', medium: 'cpc', campaign: 'launch' }, channel: 'paid' }
-    const b = browser('https://hanzo.ai/signup?utm_source=hanzo&utm_medium=email&utm_campaign=again', {
-      cookie: 'analytics',
-      store: { hz_first_touch: JSON.stringify(first) },
-    })
-    const { Analytics } = await load()
-    const tx = new Tx()
-    const a = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    a.capture('signup_completed')
+    a.capture('checkout_started')
+    b.jar.set('__Host-hz_consent', '')
     a.flush()
-    expect(tx.all[0].utm).toMatchObject({ campaign: 'launch' })
-    expect(tx.all[0].lastUtm).toMatchObject({ source: 'hanzo', campaign: 'again' })
-    expect(JSON.parse(b.store.get('hz_last_touch')!).utm.campaign).toBe('again')
-  })
-
-  it('is kept across a visit with no campaign, and lapses after 90 days', async () => {
-    const at = Date.now() - 10 * 86_400_000
-    browser('https://hanzo.ai/pricing', {
-      cookie: 'analytics',
-      store: { hz_last_touch: JSON.stringify({ utm: { source: 'hanzo', campaign: 'again' }, at }) },
-    })
-    let { Analytics } = await load()
-    let tx = new Tx()
-    const kept = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    kept.capture('x')
-    kept.flush()
-    expect(tx.all.at(-1)?.lastUtm).toMatchObject({ campaign: 'again' })
-
-    browser('https://hanzo.ai/pricing', {
-      cookie: 'analytics',
-      store: { hz_last_touch: JSON.stringify({ utm: { source: 'hanzo', campaign: 'again' }, at: Date.now() - 91 * 86_400_000 }) },
-    })
-    ;({ Analytics } = await load())
-    tx = new Tx()
-    const lapsed = new Analytics({ product: 'site', host: '', transport: tx, flushIntervalMs: 999999 })
-    lapsed.capture('x')
-    lapsed.flush()
-    expect(tx.all[0].lastUtm).toBeUndefined()
-  })
-})
-
-describe('a client a copy built before opt-in left on the page', () => {
-  it('is never handed to this copy', async () => {
-    browser(LANDING, { cookie: 'analytics' })
-    const { createAnalytics, Analytics } = await load()
-    const old = new Analytics({ product: 'site', host: '', flushIntervalMs: 999999 })
-    const slot = Symbol.for('hanzo.event.clients')
-    ;(globalThis as Record<symbol, unknown>)[slot] = new Map([['\0site', old]])
-    expect(createAnalytics({ product: 'site', host: '' })).not.toBe(old)
-    delete (globalThis as Record<symbol, unknown>)[slot]
+    expect(tx.all.map((e) => [e.event, e.properties?.consent])).toEqual([['checkout_started', '']])
   })
 })

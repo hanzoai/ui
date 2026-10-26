@@ -1,15 +1,16 @@
-// Cookie consent: what a visitor lets a site measure and share.
+// Cookie consent: what a visitor lets the THIRD PARTIES measure and share. The site's
+// own first-party analytics (the stream, core.ts) is essential, never sold or shared,
+// and is not governed by it: it runs for every visitor, whatever they chose.
 //
-// Three categories. Analytics is our own stream and GA4. Marketing is the ad
-// platforms measuring the conversions they bought (Google Ads, Meta, LinkedIn,
-// X, TikTok) and every server-side send. Ads is those platforms using the visit
-// for audiences; off, Google's ad_personalization is denied and Meta runs under
-// Limited Data Use.
+// Three categories. Analytics is Google Analytics. Marketing is the Meta pixel
+// measuring the ads it was bought for, and every server-side send to an ad platform.
+// Ads is Google and Meta using the visit to choose the ads they show elsewhere; off,
+// Google's ad_personalization is denied and Meta runs under Limited Data Use.
 //
 // EVERY VISITOR OPTS IN, wherever they are. A visitor with no stored choice has
-// allowed nothing: no ad platform, no Google, and no event on our own stream, until
-// they accept. Global Privacy Control and Do Not Track are a refusal of all three,
-// whatever is stored, and a browser that sends either is not asked.
+// allowed no third party until they accept. Global Privacy Control and Do Not Track
+// are a refusal of all three, whatever is stored, and a browser that sends either is
+// not asked.
 //
 // cloud serves the policy with the site's tag config (`GET /v1/project/tags`); what
 // a page reads from it is its version, and whether the request carried GPC or DNT.
@@ -18,19 +19,18 @@
 // again. Until cloud answers, the version in force is the one this client was built
 // under (CONSENT_VERSION), so an old choice never counts in the meantime.
 //
-// Withdrawing a category forgets what it kept: Analytics the anonymous id, the
-// session, the first and last touch, the cohort and Google Analytics' cookies;
-// Marketing the ad click and the platforms' browser ids. A browser that starts
-// refusing (GPC or DNT) after a grant withdraws it the same way. A sale cloud
-// states server-side is sent under the choice the buyer's checkout states, never
-// one stored from an earlier page.
+// Withdrawing a category forgets what its third party kept: Analytics Google
+// Analytics' cookies, Marketing the ad click and the platforms' browser ids. The
+// first-party id, session, touches and cohort stay: they are the stream's. A browser
+// that starts refusing (GPC or DNT) after a grant withdraws it the same way. A sale
+// cloud states server-side is sent under the choice the buyer's checkout states,
+// never one stored from an earlier page.
 //
 // The choice is a first-party cookie only this host may write, `__Host-hz_consent`
 // (cookie.ts own), for 13 months: the granted categories, comma separated. No
 // sibling subdomain can set or shadow it, so another tenant's app or a shared page
-// never answers for this site; each host asks for itself. It is the one piece of
-// state a page keeps before a choice, because it is the choice. cloud reads the
-// same string off each event's `consent` property.
+// never answers for this site; each host asks for itself. cloud reads the same
+// string off each event's `consent` property.
 //
 // The policy cloud served is kept on the PAGE, under a `Symbol.for` slot, not in
 // module scope: `@hanzo/event` and `@hanzo/event/react` are separate bundles that
@@ -188,10 +188,11 @@ export function save(c: Choice): void {
  */
 type Kept = { cookies: readonly string[]; patterns: readonly RegExp[]; storage: readonly string[] }
 
+// Google Analytics' cookies, and `hz_cid`, the client id kept for forwarding to it.
 const ANALYTICS: Kept = {
-  cookies: ['iam-anon-id', 'hz_anon_id', 'hz_id', 'hz_cid', '_ga', '_gid', '_gat', 'hz_internal'],
+  cookies: ['_ga', '_gid', '_gat', 'hz_cid'],
   patterns: [/^_ga_[A-Z0-9]+$/, /^_gat_[\w-]+$/],
-  storage: ['iam-anon-id', 'hz_anon_id', 'hz_id', 'hz_session', 'hz_first_touch', 'hz_last_touch', 'hz_cohort'],
+  storage: [],
 }
 
 const MARKETING: Kept = {
