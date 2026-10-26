@@ -19,6 +19,8 @@ export { Pair, type PairProps } from './pair'
 export { Pager, type PagerProps } from './pager'
 export { Document, type DocumentProps } from './document'
 export { Run, type RunProps } from './run'
+export { Heatmap, Sparkline, cuts, shade, span, weeks, type HeatmapProps, type SparklineProps } from './heat'
+export { Counts, Faces, Languages, Repo, initials, type CountsProps, type FacesProps, type LanguagesProps, type RepoProps } from './repo'
 export {
   PageHeader,
   Section,
