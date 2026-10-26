@@ -1,15 +1,16 @@
 name: pnpm workspace
 description: >-
-  pnpm and Node at the versions this repo pins, and the workspace's node_modules
-  from this org's store (hanzoai/ci bin/cache) before `pnpm install`, which then
-  has nothing to fetch. Every job in publish.yml starts here.
+  pnpm and Node at the versions this repo pins, the pnpm store from this org's
+  store (hanzoai/ci bin/cache), then `pnpm install --frozen-lockfile
+  --prefer-offline`, which links node_modules from it. Every job in publish.yml
+  starts here.
 inputs:
   kms-client-id:
     required: true
   kms-client-secret:
     required: true
   save:
-    description: "'true' writes node_modules back on a miss. One job of a run saves, so legs never race one key."
+    description: "'true' writes the store back on a miss. One job of a run saves, so legs never race one key."
     default: 'false'
 runs:
   using: composite
@@ -25,19 +26,24 @@ runs:
         node-version: 24
         registry-url: 'https://registry.npmjs.org'
 
-    # Every package's node_modules and not the pnpm store: restored as the
-    # install that saved it left it, node_modules needs no install at all, where
-    # the store still has to be linked from (hanzo-inc/app measured the store at
-    # 49 s to restore plus 16 s to install, against 33 s from the registry). Each
-    # workspace package's own node_modules travels beside the root's: with the
-    # root's alone pnpm answers "Already up to date", links nothing, and a package
-    # resolves from the root's hoisted copies — @hanzo/ui then failed to
-    # typecheck. The name is what an archive is valid for, Node and the
-    # architecture; the key is the lockfile. A key that misses restores the
-    # newest one saved, and the install brings it to the lockfile. The IAM token
-    # goes to bin/cache alone, never to GITHUB_ENV: the build runs every
-    # package's scripts.
-    - name: Restore node_modules (this org's store)
+    # The STORE and pnpm's metadata cache, never node_modules. The install below
+    # always runs and lays node_modules out from the lockfile; the store only
+    # spares it the downloads. A restored node_modules is a layout pnpm trusts
+    # without relinking ("Already up to date"), so its hoisting is whatever the
+    # saving install chose: one hoisted the react-native 0.86.2 copy of
+    # @hanzo/gui into .pnpm/node_modules, and tsc typed @hanzo/ui against it.
+    #
+    # The metadata cache carries pnpm's lockfile verification log
+    # (lockfile-verified.jsonl): a lockfile already checked against the
+    # supply-chain policies is not re-fetched from npmjs, which cost 16 s to
+    # 1 m 43 s a job. Only the default branch writes the org store.
+    #
+    # The key is the lockfile: the store is content-addressed and node_modules is
+    # rebuilt from the lockfile every time, so nothing else decides what a store
+    # must hold. A key that misses restores the newest store saved, and the
+    # install fetches only what it lacks. The IAM token goes to bin/cache alone,
+    # never to GITHUB_ENV: the build runs every package's scripts.
+    - name: Restore the pnpm store (this org's store)
       id: cache
       shell: bash
       env:
@@ -51,24 +57,21 @@ runs:
           echo "::notice::hanzoai/ci@$CI_SHA bin/cache did not download, so this job installs cold"; exit 0
         fi
         chmod +x "$RUNNER_TEMP/cache"
-        name="node_modules-$(node -p process.version)-$(uname -m)"
+        name="pnpm-store-$(pnpm --version)-$(uname -m)"
         key=$(git ls-tree HEAD -- pnpm-lock.yaml | sha256sum | cut -c1-32)
-        # One label per workspace package (the root's is m_root), the way
-        # hanzoai/ci bin/jscache names them.
-        dirs=$(find . -maxdepth 3 -name package.json -not -path '*/node_modules/*' | sort \
-          | awk '{d = substr($0, 3); sub(/\/?package\.json$/, "", d); l = (d == "") ? "root" : d; gsub(/[^A-Za-z0-9._-]/, "_", l); print "m_" l "=" ((d == "") ? "" : d "/") "node_modules"}' | tr '\n' ' ')
+        dirs="store=$(pnpm store path) meta=$(pnpm cache path)"
         printf 'name=%s\nkey=%s\ndirs=%s\n' "$name" "$key" "$dirs" >> "$GITHUB_OUTPUT"
         T=$(printf '{"clientId":"%s","clientSecret":"%s"}' "$KMS_CLIENT_ID" "$KMS_CLIENT_SECRET" \
           | curl -sS -m 30 https://api.hanzo.ai/v1/kms/auth/login -H 'Content-Type: application/json' -d @- \
           | jq -r '.accessToken // empty' 2>/dev/null)
         if [ -n "$T" ]; then echo "::add-mask::$T"; else echo "::notice::KMS gave no IAM token, so the org store is not used"; fi
-        HANZO_API_TOKEN=$T "$RUNNER_TEMP/cache" restore "$name" "$key" $dirs
+        HANZO_API_TOKEN=$T "$RUNNER_TEMP/cache" restore "$name" "$key" $dirs || echo "::notice::the store did not restore, so this job installs cold"
 
     - name: Install dependencies
       shell: bash
-      run: pnpm install
+      run: pnpm install --frozen-lockfile --prefer-offline
 
-    - name: Save node_modules (this org's store)
+    - name: Save the pnpm store (this org's store)
       if: inputs.save == 'true' && steps.cache.outputs.key != '' && steps.cache.outputs.hit != 'exact'
       shell: bash
       env:
@@ -84,4 +87,4 @@ runs:
           | curl -sS -m 30 https://api.hanzo.ai/v1/kms/auth/login -H 'Content-Type: application/json' -d @- \
           | jq -r '.accessToken // empty' 2>/dev/null)
         [ -n "$T" ] && echo "::add-mask::$T"
-        HANZO_API_TOKEN=$T "$RUNNER_TEMP/cache" save "$NAME" "$KEY" $DIRS
+        HANZO_API_TOKEN=$T "$RUNNER_TEMP/cache" save "$NAME" "$KEY" $DIRS || echo "::notice::the store was not saved"
