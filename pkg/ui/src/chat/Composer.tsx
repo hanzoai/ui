@@ -38,6 +38,7 @@ import { useEffect, useRef, useState, type ComponentProps, type ReactNode } from
 
 import { Textarea } from '../backends/gui'
 import { slot } from '../backends/gui/slot'
+import { glass } from '../glass'
 import type { PauseSource } from '../models/catalog'
 import { Dial } from './Dial'
 import { Dictation } from './Dictation'
@@ -67,13 +68,13 @@ export const GAP = 20
 /** The composer's width under a thread: the measure less its 0.75rem gutters, centred, so its edges are the text's. */
 export const measure = { width: 'calc(100% - 1.5rem)', maxW: `calc(${MEASURE} - 1.5rem)`, mx: 'auto' } as const
 
-/** The round controls' box, px, and a phone's, a finger's width: `+`, the effort, the mic, its chevron and send all take it, so they share one centreline. */
-export const ROUND = 36
-const TAP = 44
+/** The round controls' box, px, and a phone's, a thumb's width kept small so the frame is a slim glass bar: `+`, the effort, the mic, its chevron and send all take it, so they share one centreline. */
+export const ROUND = 32
+const TAP = 36
 
-/** The frame's corner, px: 12 on a laptop, 22 on a phone. */
+/** The frame's corner, px: 12 on a laptop; on a phone the inset plus a control's radius, so the send's circle and the frame's corner are concentric. */
 const CORNER = 12
-const CORNER_PHONE = 22
+const CORNER_PHONE = 24
 
 /** How tall the field grows before it scrolls, px. */
 const CEILING = 200
@@ -404,11 +405,10 @@ export function Composer({
         width="100%"
         rounded={CORNER}
         borderWidth={1}
-        borderColor="$borderColor"
-        bg="$edge"
-        p={8}
-        pt={pills ? 8 : 12}
-        gap={6}
+        {...glass(2)}
+        p={6}
+        pt={pills ? 6 : 10}
+        gap={4}
         $max-sm={{ rounded: CORNER_PHONE }}
         {...(framed ? { boxShadow: 'var(--shadow-sheet-1)' } : null)}
       >
