@@ -279,7 +279,7 @@ export function Faces({ people, max = 5 }: FacesProps) {
           borderWidth={2}
           borderColor="var(--background)"
           {...fill('var(--secondary)')}
-          ml={i ? -8 : 0}
+          marginInlineStart={i ? -8 : 0}
           {...{ title: p.name }}
         >
           <Text
@@ -297,7 +297,7 @@ export function Faces({ people, max = 5 }: FacesProps) {
           fontFamily="$mono"
           fontSize="$1"
           color="var(--muted-foreground)"
-          ml={8}
+          marginInlineStart={8}
         >
           +{group(more)}
         </Text>
