@@ -135,8 +135,8 @@ const listen = (on: () => void) => {
 }
 
 /**
- * The visitor's consent, live: nothing until they choose, then what they chose,
- * re-rendering the moment they do. It governs the third parties (startTags); the
+ * The visitor's consent, live: the region's default until they choose, then what
+ * they chose, re-rendering the moment they do or cloud's rule arrives. It governs the third parties (startTags); the
  * client's own first-party stream runs whatever it says.
  */
 export function useConsent(): Choice {

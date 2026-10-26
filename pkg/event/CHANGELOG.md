@@ -1,5 +1,17 @@
 # @hanzo/event
 
+## 0.3.62
+
+### Patch Changes
+
+- The rule is the visitor's region, decided by cloud per request and served with the tag config (`consent.mode`): `eu` (EU, EEA, UK, Switzerland, and any visitor cloud cannot place), `us_privacy` (a US state with a privacy law, or a US visitor with no attested state) or `global`. `consentPolicy()` answers `{ mode, refused, version, region }` at once: cloud's answer, the one it last served this tab (sessionStorage), or `eu`.
+- `eu`: Google Analytics loads for everyone under Consent Mode v2 with all four flags denied and `wait_for_update: 500` (cookieless pings), upgraded on a choice; Meta is init'ed after `fbq('consent','revoke')`, and fbevents is fetched, consent granted and the PageView sent only under Marketing; every other platform waits for Marketing. `asks()` is true here alone, before a choice.
+- `us_privacy` and `global`: Google Analytics and Meta (and every connected platform) run at once under Consent Mode granted. Ads saved off is the sale-or-sharing opt-out, exactly `fbq('dataProcessingOptions',['LDU'],0,0)` and `gtag('consent','update',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'})`; any category saved off is an opt-out. `notice()` records the global notice closed (`hz_consent_notice`), `noticed()` reads it; it grants nothing.
+- Global Privacy Control or Do Not Track sets `refused` everywhere: in `eu` it refuses all three, elsewhere it is the opt-out (Ads off) and Google Analytics and Meta keep running.
+- Policy version 3 with floor 2: a choice made under version 2 still counts. Withdrawing Ads forgets Google's ad cookies (`_gcl_*`, `_gac_*`); Marketing the ad platforms' ids and the ad click; Analytics Google Analytics' cookies.
+- Google gets each change through Consent Mode and Meta through consent and Limited Data Use, with no reload; only a withdrawn library that cannot be told (Google Analytics outside `eu`, the other ad platforms) reloads the page. A GA4 event is addressed to its own measurement id (`send_to`).
+- `region()` and the `Region` type are gone; the rule is `consentPolicy().mode` (type `Mode`).
+
 ## 0.3.61
 
 ### Patch Changes

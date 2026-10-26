@@ -1,5 +1,6 @@
-// The tag manager: nothing loads before consent, everything loads after, and an
-// event reaches each platform under one id and the names the platform table gives.
+// The tag manager: the region's rule decides what loads before a choice and what a
+// choice changes, and an event reaches each platform under one id and the names the
+// platform table gives.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -70,64 +71,187 @@ const tick = () => new Promise((r) => setTimeout(r, 10))
 /** The cookie jar of a visitor who accepted everything. */
 const accepted = () => new Map([['__Host-hz_consent', 'analytics,marketing,ads'], ['__Host-hz_consent_v', '2']])
 
-describe('before consent', () => {
-  it('an EU visitor makes no request to any platform', async () => {
+/** Cloud answers the tag set under one region's rule. */
+const under = (b: ReturnType<typeof browser>, mode: string, o: Record<string, unknown> = {}) =>
+  put('fetch', async (url: string) => {
+    b.requests.push(url)
+    return { ok: true, json: async () => ({ ...TAGS, consent: { region: '', mode, version: 3, floor: 2, refused: false, defaults: {}, ...o } }) }
+  })
+const layer = () => ((g.window as { dataLayer?: IArguments[] }).dataLayer ?? []).map((a) => Array.from(a))
+const fbq = () => ((g.window as { fbq?: { queue: IArguments[] } }).fbq?.queue ?? []).map((a) => Array.from(a))
+const hosts = (b: ReturnType<typeof browser>) => b.scripts.map((s) => new URL(s).hostname).sort()
+const consents = () => layer().filter((a) => a[0] === 'consent')
+const views = () => fbq().filter((a) => a[0] === 'track' && a[1] === 'PageView').length
+const EVERY = ['analytics.tiktok.com', 'connect.facebook.net', 'snap.licdn.com', 'static.ads-twitter.com', 'www.googletagmanager.com'].sort()
+const OPT_OUT = { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' }
+
+describe('eu', () => {
+  it.each([
+    ['no choice', {}],
+    ['GPC over a stored yes', { gpc: true }],
+    ['DNT over a stored yes', { dnt: '1' }],
+  ])('%s: Google Analytics loads cookieless, Meta is held revoked, nothing else is fetched', async (_, o: { gpc?: boolean; dnt?: string }) => {
+    const b = browser('America/New_York', o.gpc || o.dnt ? accepted() : undefined)
+    put('navigator', { globalPrivacyControl: o.gpc === true, doNotTrack: o.dnt, userAgent: 'UA' })
+    under(b, 'eu')
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(hosts(b)).toEqual(['www.googletagmanager.com'])
+    expect(consents()[0]).toEqual(['consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', wait_for_update: 500 }])
+    expect(consents().every((a) => Object.values(a[2] as object).every((v) => v !== 'granted'))).toBe(true)
+    const q = fbq()
+    expect(q.findIndex((a) => a[0] === 'consent' && a[1] === 'revoke')).toBe(0)
+    expect(q.findIndex((a) => a[0] === 'init')).toBeGreaterThan(0)
+    expect(views()).toBe(0)
+  })
+
+  it('a visitor cloud does not answer for is eu', async () => {
+    const b = browser('America/Los_Angeles')
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(hosts(b)).toEqual(['www.googletagmanager.com'])
+    expect(fbq()[0]).toEqual(['consent', 'revoke'])
+  })
+
+  it('accepting upgrades Google, grants Meta, fetches fbevents and sends one PageView, with no reload', async () => {
     const b = browser('Europe/Berlin')
+    const reload = vi.fn()
+    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
+    under(b, 'eu', { region: 'DE' })
+    const { startTags, acceptAll } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    acceptAll()
+    await tick()
+    expect(consents().at(-1)).toEqual(['consent', 'update', { analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' }])
+    const q = fbq()
+    expect(q.findIndex((a) => a[0] === 'consent' && a[1] === 'grant')).toBeGreaterThan(q.findIndex((a) => a[0] === 'init'))
+    expect(views()).toBe(1)
+    expect(hosts(b)).toEqual(EVERY)
+    expect(reload).not.toHaveBeenCalled()
+  })
+
+  it('a moment before the answer waits for it; after a refusal it reaches Google Analytics, cookieless, and never Meta', async () => {
+    const b = browser('Europe/Berlin')
+    under(b, 'eu')
+    const { startTags, track, rejectAll } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    track(undefined, 'order_completed', { order_id: 'o-1', value: 5 })
+    expect(layer().filter((a) => a[0] === 'event')).toEqual([])
+    rejectAll()
+    await tick()
+    expect(layer().filter((a) => a[0] === 'event').map((a) => (a[2] as { send_to: string }).send_to)).toEqual(['G-TEST'])
+    expect(fbq().filter((a) => a[0] === 'track' || a[0] === 'trackCustom')).toEqual([])
+  })
+
+  it('a caller naming Meta itself reaches it only under Marketing', async () => {
+    const b = browser('Europe/Berlin')
+    under(b, 'eu')
+    const { startTags, mirror } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    mirror('order_completed', { value: 5 }, 'e-1', 'ga,meta')
+    expect(fbq().filter((a) => a[0] === 'track' || a[0] === 'trackCustom')).toEqual([])
+  })
+})
+
+describe('us_privacy', () => {
+  it('everything loads at once under Consent Mode granted, Meta live, no banner', async () => {
+    const b = browser('America/Los_Angeles')
+    under(b, 'us_privacy', { region: 'US-CA' })
+    const { startTags, asks } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(hosts(b)).toEqual(EVERY)
+    expect(consents()[0]).toEqual(['consent', 'default', { analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' }])
+    expect(fbq().some((a) => a[0] === 'consent' || a[0] === 'dataProcessingOptions')).toBe(false)
+    expect(views()).toBe(1)
+    expect(asks()).toBe(false)
+  })
+
+  it('the opt-out is exactly LDU and the three ad flags denied, with no reload; opting back in lifts both', async () => {
+    const b = browser('America/Los_Angeles')
+    const reload = vi.fn()
+    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
+    under(b, 'us_privacy')
+    const { startTags, saveConsent, acceptAll } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    saveConsent({ analytics: true, marketing: true, ads: false })
+    await tick()
+    expect(fbq().at(-1)).toEqual(['dataProcessingOptions', ['LDU'], 0, 0])
+    expect(consents().at(-1)).toEqual(['consent', 'update', OPT_OUT])
+    expect(fbq().some((a) => a[0] === 'consent')).toBe(false)
+    expect(reload).not.toHaveBeenCalled()
+    acceptAll()
+    await tick()
+    expect(fbq().at(-1)).toEqual(['dataProcessingOptions', []])
+    expect(consents().at(-1)?.[2]).toEqual({ ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' })
+  })
+
+  it.each([{ gpc: true }, { dnt: '1' }])('%o is the opt-out from the first call, and Google Analytics and Meta still run', async (o) => {
+    const b = browser('America/Denver')
+    put('navigator', { globalPrivacyControl: o.gpc === true, doNotTrack: (o as { dnt?: string }).dnt, userAgent: 'UA' })
+    under(b, 'us_privacy', { region: 'US-CO', refused: true })
     const { startTags } = await import('./index')
     startTags({ key: 'pk-x' })
     await tick()
-    expect(b.requests).toHaveLength(1)
-    expect(b.requests[0]).toContain('/v1/project/tags')
-    expect(b.scripts).toEqual([])
+    expect(hosts(b)).toEqual(EVERY)
+    expect(fbq().findIndex((a) => a[0] === 'dataProcessingOptions')).toBeLessThan(fbq().findIndex((a) => a[0] === 'init'))
+    expect(fbq().find((a) => a[0] === 'dataProcessingOptions')).toEqual(['dataProcessingOptions', ['LDU'], 0, 0])
+    expect(consents()[1]).toEqual(['consent', 'update', OPT_OUT])
+    expect(views()).toBe(1)
   })
+})
 
-  it('a US visitor makes no request to any platform either: the clock presumes nothing', async () => {
-    const b = browser('America/New_York')
+describe('global', () => {
+  it('everything loads at once, as in us_privacy', async () => {
+    const b = browser('Asia/Tokyo')
+    under(b, 'global', { region: 'JP' })
     const { startTags } = await import('./index')
     startTags({ key: 'pk-x' })
     await tick()
-    expect(b.requests).toHaveLength(1)
-    expect(b.scripts).toEqual([])
+    expect(hosts(b)).toEqual(EVERY)
+    expect(views()).toBe(1)
   })
 
-  it('nor does a visitor whose cloud answer names an opt-out region', async () => {
-    const b = browser('America/New_York')
-    put('fetch', async (url: string) => {
-      b.requests.push(url)
-      return { ok: true, json: async () => ({ ...TAGS, consent: { region: 'US', mode: 'opt-out', version: 1, defaults: { analytics: true, marketing: true, ads: true } } }) }
-    })
-    const { startTags } = await import('./index')
+  it('Analytics saved off stops Google Analytics and reloads; Marketing saved off revokes Meta', async () => {
+    const b = browser('Asia/Tokyo')
+    const reload = vi.fn()
+    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
+    under(b, 'global')
+    const { startTags, saveConsent } = await import('./index')
     startTags({ key: 'pk-x' })
     await tick()
-    expect(b.scripts).toEqual([])
+    saveConsent({ analytics: false, marketing: false, ads: true })
+    await tick()
+    expect((g.window as Record<string, unknown>)['ga-disable-G-TEST']).toBe(true)
+    expect(fbq()).toContainEqual(['consent', 'revoke'])
+    expect(reload).toHaveBeenCalledTimes(1)
   })
 
-  it('a browser that sends Global Privacy Control loads nothing, even with a stored yes', async () => {
-    const b = browser('America/New_York', accepted())
+  it('GPC is the opt-out', async () => {
+    const b = browser('Asia/Tokyo')
     put('navigator', { globalPrivacyControl: true, userAgent: 'UA' })
+    under(b, 'global')
     const { startTags } = await import('./index')
     startTags({ key: 'pk-x' })
     await tick()
-    expect(b.scripts).toEqual([])
+    expect(fbq().find((a) => a[0] === 'dataProcessingOptions')).toEqual(['dataProcessingOptions', ['LDU'], 0, 0])
+    expect(consents()[1]).toEqual(['consent', 'update', OPT_OUT])
   })
+})
 
-  it('a browser that sends Do Not Track loads nothing, even with a stored yes', async () => {
-    const b = browser('Europe/Berlin', accepted())
-    put('navigator', { globalPrivacyControl: false, doNotTrack: '1', userAgent: 'UA' })
-    const { startTags } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    expect(b.scripts).toEqual([])
-  })
-
+describe('before consent', () => {
   it('a visitor who accepted loads every tag', async () => {
     const b = browser('America/New_York', accepted())
     const { startTags } = await import('./index')
     startTags({ key: 'pk-x' })
     await tick()
-    expect(b.scripts.map((s) => new URL(s).hostname).sort()).toEqual(
-      ['analytics.tiktok.com', 'connect.facebook.net', 'snap.licdn.com', 'static.ads-twitter.com', 'www.googletagmanager.com'].sort(),
-    )
+    expect(hosts(b)).toEqual(EVERY)
   })
 })
 
@@ -255,7 +379,6 @@ describe('after accepting', () => {
     const { startTags, acceptAll } = await import('./index')
     startTags({ key: 'pk-x' })
     await tick()
-    expect(b.scripts).toEqual([])
     acceptAll()
     await tick()
     const layer = (g.window as { dataLayer: IArguments[] }).dataLayer.map((a) => Array.from(a))
@@ -264,7 +387,7 @@ describe('after accepting', () => {
     expect(dflt).toBeGreaterThanOrEqual(0)
     expect(dflt).toBeLessThan(js)
     expect(layer[dflt][2]).toMatchObject({ analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' })
-    const update = layer.find((a) => a[0] === 'consent' && a[1] === 'update')
+    const update = layer.filter((a) => a[0] === 'consent' && a[1] === 'update').at(-1)
     expect(update?.[2]).toMatchObject({ analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' })
   })
 
@@ -303,7 +426,8 @@ describe('after accepting', () => {
     ;(g.window as { dispatchEvent: (e: { type: string }) => void }).dispatchEvent({ type: 'visibilitychange' })
     await tick()
     expect(reload).toHaveBeenCalledTimes(1)
-    expect((g.window as Record<string, unknown>)['ga-disable-G-TEST']).toBe(true)
+    expect((g.window as Record<string, unknown>)['ga-disable-AW-1']).toBe(true)
+    expect((g.window as Record<string, unknown>)['ga-disable-G-TEST']).toBeUndefined()
   })
 
   it('withdrawing Personalized ads alone keeps Meta, under Limited Data Use', async () => {
@@ -318,7 +442,7 @@ describe('after accepting', () => {
     saveConsent({ analytics: true, marketing: true, ads: false })
     await tick()
     const fbq = (g.window as { fbq: { queue: IArguments[] } }).fbq
-    expect(fbq.queue.map((a) => Array.from(a)).at(-1)).toEqual(['dataProcessingOptions', ['LDU'], 1, 1000])
+    expect(fbq.queue.map((a) => Array.from(a)).at(-1)).toEqual(['dataProcessingOptions', ['LDU'], 0, 0])
     expect(reload).not.toHaveBeenCalled()
   })
 

@@ -1,7 +1,7 @@
-// Consent: every visitor opts in, wherever they are; GPC and DNT refuse everything.
+// Consent: the visitor's region is the rule (eu, us_privacy, global); GPC and DNT refuse.
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { CONSENT_COOKIE as BARE, CONSENT_VERSION_COOKIE as BARE_V, acceptAll, asks, policy, read, region, rejectAll, save, serve } from './consent'
+import { CONSENT_COOKIE as BARE, CONSENT_VERSION_COOKIE as BARE_V, acceptAll, asks, notice, noticed, policy, read, rejectAll, save, serve } from './consent'
 import { touch, capture } from './touch'
 
 // On a secure page the choice is kept under names only the host may write.
@@ -45,7 +45,7 @@ function browser(zone: string, opts: { gpc?: boolean; dnt?: string; cookie?: str
       else jar.set(name, value)
     },
   }
-  return { jar, fired }
+  return { jar, fired, window: g.window }
 }
 
 afterEach(() => {
@@ -55,43 +55,145 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-describe('region', () => {
-  it.each(['Europe/Berlin', 'America/New_York', 'America/Los_Angeles', 'Pacific/Honolulu', 'Asia/Tokyo', ''])(
-    '%s is opt-in: the clock decides nothing',
-    (zone) => {
-      browser(zone)
-      expect(region()).toBe('opt-in')
-    },
-  )
+const rule = (mode: string, o: Record<string, unknown> = {}) => ({ region: '', mode, version: 3, floor: 2, refused: false, defaults: {}, ...o })
+const NONE = { analytics: false, marketing: false, ads: false }
+const ALL = { analytics: true, marketing: true, ads: true }
+
+describe('the rule before cloud answers', () => {
+  it.each(['Europe/Berlin', 'America/New_York', 'America/Los_Angeles', 'Asia/Tokyo', ''])('is eu in %s: the clock decides nothing', (zone) => {
+    browser(zone)
+    expect(policy()).toEqual({ mode: 'eu', refused: false, version: 3, region: '' })
+    expect(read()).toEqual(NONE)
+    expect(asks()).toBe(true)
+  })
+
+  it('is the one cloud last served this tab, at once', async () => {
+    const b = browser('America/Los_Angeles')
+    const tab = new Map<string, string>()
+    ;(b.window as Record<string, unknown>).sessionStorage = { getItem: (k: string) => tab.get(k) ?? null, setItem: (k: string, v: string) => void tab.set(k, v) }
+    serve(rule('us_privacy', { region: 'US-CA' }))
+    serve(null)
+    vi.resetModules()
+    const next = await import('./consent')
+    expect(next.policy()).toEqual({ mode: 'us_privacy', refused: false, version: 3, region: 'US-CA' })
+    expect(next.read()).toEqual(ALL)
+  })
+
+  it('a tab whose store refuses reads eu', () => {
+    const b = browser('America/Chicago')
+    ;(b.window as Record<string, unknown>).sessionStorage = { getItem: () => { throw new Error('denied') }, setItem: () => { throw new Error('denied') } }
+    expect(() => serve(rule('global'))).not.toThrow()
+    serve(null)
+    expect(policy().mode).toBe('eu')
+  })
 })
 
-describe('the default before a choice', () => {
-  it.each(['Europe/Paris', 'America/Chicago', 'America/Los_Angeles', 'Asia/Tokyo'])('allows nothing in %s and asks', (zone) => {
-    browser(zone)
-    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
+describe('eu', () => {
+  it('allows nothing before a choice, and asks', () => {
+    browser('Europe/Paris')
+    serve(rule('eu', { region: 'FR' }))
+    expect(read()).toEqual(NONE)
     expect(asks()).toBe(true)
   })
 
   it('Global Privacy Control refuses everything, and the visitor is not asked', () => {
-    browser('America/Denver', { gpc: true })
-    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
+    browser('Europe/Paris', { gpc: true })
+    serve(rule('eu'))
+    expect(read()).toEqual(NONE)
+    expect(policy().refused).toBe(true)
     expect(asks()).toBe(false)
   })
 
   it('Do Not Track refuses everything, and the visitor is not asked', () => {
     browser('Europe/Paris', { dnt: '1' })
-    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
+    expect(read()).toEqual(NONE)
     expect(asks()).toBe(false)
   })
 
-  it('GPC wins over a stored yes', () => {
-    browser('America/Denver', { gpc: true, cookie: 'analytics,marketing,ads' })
-    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
+  it('GPC and DNT win over a stored yes', () => {
+    browser('Europe/Paris', { gpc: true, cookie: 'analytics,marketing,ads' })
+    expect(read()).toEqual(NONE)
+    browser('Europe/Paris', { dnt: '1', cookie: 'analytics,marketing,ads' })
+    expect(read()).toEqual(NONE)
   })
 
-  it('DNT wins over a stored yes', () => {
-    browser('America/Denver', { dnt: '1', cookie: 'analytics,marketing,ads' })
-    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
+  it('an unknown mode is eu', () => {
+    browser('America/New_York')
+    serve(rule('opt-out'))
+    expect(policy().mode).toBe('eu')
+    expect(asks()).toBe(true)
+  })
+
+  it('a closed notice grants nothing', () => {
+    const b = browser('Europe/Paris')
+    b.jar.set('__Host-hz_consent_notice', '1')
+    serve(rule('eu'))
+    expect(read()).toEqual(NONE)
+    expect(asks()).toBe(true)
+  })
+})
+
+describe('us_privacy', () => {
+  it('runs everything by default and never asks', () => {
+    browser('America/Los_Angeles')
+    serve(rule('us_privacy', { region: 'US-CA' }))
+    expect(read()).toEqual(ALL)
+    expect(asks()).toBe(false)
+  })
+
+  it('Ads saved off is the opt-out: Google’s ad cookies go, Meta’s and Google Analytics’ stay', () => {
+    const b = browser('America/Los_Angeles')
+    for (const k of ['_ga', '_fbp', '_fbc', '_gcl_au', '_gac_UA_1']) b.jar.set(k, 'x')
+    serve(rule('us_privacy'))
+    save({ ...ALL, ads: false })
+    expect(read()).toEqual({ analytics: true, marketing: true, ads: false })
+    expect(['_ga', '_fbp', '_fbc'].every((k) => b.jar.has(k))).toBe(true)
+    expect(b.jar.has('_gcl_au') || b.jar.has('_gac_UA_1')).toBe(false)
+  })
+
+  it.each([{ gpc: true }, { dnt: '1' }])('%o is the opt-out: Ads off, Google Analytics and Meta kept', (o) => {
+    browser('America/Los_Angeles', o)
+    serve(rule('us_privacy'))
+    expect(read()).toEqual({ analytics: true, marketing: true, ads: false })
+    expect(policy().refused).toBe(true)
+    expect(asks()).toBe(false)
+  })
+
+  it('a refusal cloud saw is the opt-out too, over a stored yes', () => {
+    const b = browser('America/Denver', { cookie: 'analytics,marketing,ads' })
+    serve(rule('us_privacy', { refused: true }))
+    expect(read()).toEqual({ analytics: true, marketing: true, ads: false })
+    expect(b.jar.get(CONSENT_COOKIE)).toBe('analytics,marketing')
+  })
+})
+
+describe('global', () => {
+  it('runs everything by default; the notice is open until closed, and closing it grants nothing new', () => {
+    const b = browser('Asia/Tokyo')
+    serve(rule('global', { region: 'JP' }))
+    expect(read()).toEqual(ALL)
+    expect(asks()).toBe(false)
+    expect(noticed()).toBe(false)
+    notice()
+    expect(noticed()).toBe(true)
+    expect(b.jar.get('__Host-hz_consent_notice')).toBe('1')
+    expect(b.jar.has(CONSENT_COOKIE)).toBe(false)
+    expect(b.fired).toContain('hzconsent')
+  })
+
+  it('any category saved off is an opt-out', () => {
+    browser('Asia/Tokyo')
+    serve(rule('global'))
+    save({ analytics: false, marketing: true, ads: true })
+    expect(read()).toEqual({ analytics: false, marketing: true, ads: true })
+    rejectAll()
+    expect(read()).toEqual(NONE)
+  })
+
+  it('GPC is the opt-out: Ads off', () => {
+    browser('Asia/Tokyo', { gpc: true })
+    serve(rule('global'))
+    expect(read()).toEqual({ analytics: true, marketing: true, ads: false })
   })
 })
 
@@ -107,21 +209,24 @@ describe('a stored choice', () => {
     acceptAll()
     expect(b.jar.get(CONSENT_COOKIE)).toBe('analytics,marketing,ads')
     expect(b.fired).toEqual(['hzconsent'])
-    expect(read()).toEqual({ analytics: true, marketing: true, ads: true })
+    expect(read()).toEqual(ALL)
   })
 
   it('rejecting stores an empty choice, which is a choice', () => {
     const b = browser('America/New_York')
     rejectAll()
     expect(b.jar.get(CONSENT_COOKIE)).toBe('')
-    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
+    expect(read()).toEqual(NONE)
     expect(asks()).toBe(false)
   })
 
-  it('saving under GPC stores a refusal', () => {
+  it('saving under GPC stores what the refusal leaves', () => {
     const b = browser('Europe/Paris', { gpc: true })
-    save({ analytics: true, marketing: true, ads: true })
+    save(ALL)
     expect(b.jar.get(CONSENT_COOKIE)).toBe('')
+    serve(rule('global'))
+    save(ALL)
+    expect(b.jar.get(CONSENT_COOKIE)).toBe('analytics,marketing')
   })
 })
 
@@ -148,68 +253,75 @@ describe('click ids', () => {
 })
 
 describe('the policy cloud serves', () => {
-  const rule = (version = 1, mode = 'opt-in') => ({
-    region: 'US',
-    mode,
-    version,
-    refused: false,
-    defaults: { analytics: true, marketing: true, ads: true },
-  })
-
-  it('presumes nothing, whatever mode or defaults an answer names', () => {
+  it('is the rule, exactly as the contract names it', () => {
     browser('America/New_York')
-    serve(rule(1, 'opt-out'))
-    expect(region()).toBe('opt-in')
-    expect(asks()).toBe(true)
-    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
-    expect(policy()?.defaults).toEqual({ analytics: false, marketing: false, ads: false })
+    serve(rule('us_privacy', { region: 'US-NY' }))
+    expect(policy()).toEqual({ mode: 'us_privacy', refused: false, version: 3, region: 'US-NY' })
   })
 
   it('tells the page when it arrives, so a banner drawn early redraws', () => {
     const b = browser('Europe/Berlin')
-    serve(rule())
+    serve(rule('eu'))
     expect(b.fired).toContain('hzpolicy')
   })
 
-  it('a choice made under an older policy is asked again', () => {
+  it('a choice made under the version before still counts: the bump kept the floor', () => {
     const b = browser('Europe/Berlin', { cookie: 'analytics' })
-    serve(rule(2))
+    expect(b.jar.get(CONSENT_VERSION_COOKIE)).toBe('2')
+    serve(rule('eu'))
     expect(asks()).toBe(false)
-    serve(rule(3))
+    expect(read().analytics).toBe(true)
+  })
+
+  it('a choice under a version past the floor is asked again', () => {
+    const b = browser('Europe/Berlin', { cookie: 'analytics' })
+    b.jar.set(CONSENT_VERSION_COOKIE, '1')
+    expect(asks()).toBe(true)
+    b.jar.set(CONSENT_VERSION_COOKIE, '3')
+    serve(rule('eu', { version: 4, floor: 4 }))
     expect(asks()).toBe(true)
     expect(read().analytics).toBe(false)
-    expect(b.jar.get(CONSENT_VERSION_COOKIE)).toBe('2')
   })
 
   it('a policy older than the one this client was built under never revives a choice', () => {
     const b = browser('Europe/Berlin', { cookie: 'analytics' })
     b.jar.set(CONSENT_VERSION_COOKIE, '1')
-    serve(rule(1))
+    serve(rule('eu', { version: 1, floor: 1 }))
+    b.jar.set(CONSENT_VERSION_COOKIE, '4')
     expect(asks()).toBe(true)
-    expect(read().analytics).toBe(false)
   })
 
-  it('a choice is stored with the version it was made under', () => {
+  it('a choice is stored with the version in force', () => {
     const b = browser('Europe/Berlin')
-    serve(rule(3))
     acceptAll()
     expect(b.jar.get(CONSENT_VERSION_COOKIE)).toBe('3')
+    serve(rule('eu', { version: 4 }))
+    acceptAll()
+    expect(b.jar.get(CONSENT_VERSION_COOKIE)).toBe('4')
     expect(asks()).toBe(false)
   })
 
   it('every copy of this module reads the one the page was served', async () => {
     browser('Europe/Berlin', { cookie: 'analytics' })
-    serve(rule(4))
+    serve(rule('global', { version: 4, floor: 4 }))
     vi.resetModules()
     const copy = await import('./consent')
-    expect(copy.policy()?.version).toBe(4)
-    expect(copy.asks()).toBe(true)
+    expect(copy.policy().version).toBe(4)
+    expect(copy.policy().mode).toBe('global')
+    expect(copy.read()).toEqual(ALL)
   })
 
   it('ignores an answer that is not a policy', () => {
     browser('Europe/Berlin')
     serve({ tags: [] })
-    expect(policy()).toBeUndefined()
+    expect(policy()).toEqual({ mode: 'eu', refused: false, version: 3, region: '' })
+  })
+
+  it('a refusal cloud saw counts in eu when the page cannot see it', () => {
+    browser('Europe/Paris', { cookie: 'analytics,marketing,ads' })
+    serve(rule('eu', { region: 'DE', refused: true }))
+    expect(read()).toEqual(NONE)
+    expect(asks()).toBe(false)
   })
 })
 
@@ -266,32 +378,6 @@ describe('where the choice is kept', () => {
     b.jar.set(BARE_V, '2')
     expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
     expect(asks()).toBe(true)
-  })
-})
-
-describe('the policy version before cloud answers', () => {
-  it('a choice made under an older version counts for nothing in the meantime', () => {
-    const b = browser('Europe/Paris', { cookie: 'analytics,marketing,ads' })
-    b.jar.set(CONSENT_VERSION_COOKIE, '1')
-    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
-    expect(asks()).toBe(true)
-  })
-
-  it('a choice made before cloud answers is kept under the version in force', () => {
-    const b = browser('Europe/Paris')
-    acceptAll()
-    expect(b.jar.get(CONSENT_VERSION_COOKIE)).toBe('2')
-    serve({ region: 'DE', mode: 'opt-in', version: 2, refused: false, defaults: {} })
-    expect(asks()).toBe(false)
-  })
-})
-
-describe('a refusal cloud saw', () => {
-  it('counts when the page cannot see it', () => {
-    browser('Europe/Paris', { cookie: 'analytics,marketing,ads' })
-    serve({ region: 'DE', mode: 'opt-in', version: 2, refused: true, defaults: {} })
-    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
-    expect(asks()).toBe(false)
   })
 })
 

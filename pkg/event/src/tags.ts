@@ -15,15 +15,17 @@
 // Google Ads, LinkedIn and X name conversions by rule, not by event, and an
 // event with no rule there is not sent to that platform.
 //
-// WHAT LOADS WHEN. Nothing loads before consent. Analytics allows GA4;
-// Marketing allows Google Ads, Meta, LinkedIn, X and TikTok. A visitor who has
-// not chosen has allowed nothing, wherever they are (consent.ts), so their page
-// makes no request to any platform until they accept; GPC or DNT is a refusal.
-// Google's Consent Mode v2 is set denied before gtag.js is fetched and updated on
-// every choice. A choice that allows more loads the rest with no reload. A choice
-// that withdraws what a running library was loaded under tells Google and Meta at
-// once, then reloads the page: a library that has run cannot be unloaded, and
-// only a fresh page is sure to hold none of them.
+// WHAT LOADS WHEN is the visitor's region (consent.ts). In eu, Google Analytics
+// loads for everyone under Consent Mode v2 with all four flags denied (cookieless
+// pings) and is updated as the visitor chooses; Meta's pixels are init'ed held
+// revoked, and fbevents is fetched and the PageView sent only once Marketing allows
+// them; every other platform waits for Marketing. In us_privacy and global everything
+// loads at once under Consent Mode granted; Ads off (the visitor's opt-out, or GPC or
+// DNT) is exactly `fbq('dataProcessingOptions', ['LDU'], 0, 0)` and Google's ad_storage,
+// ad_user_data and ad_personalization denied. A choice that allows more loads the rest
+// with no reload. Google hears every change through Consent Mode and Meta through
+// consent and Limited Data Use; a choice that withdraws any other library reloads the
+// page, since a library that has run cannot be unloaded.
 //
 // WHO IS ASKING. Cloud classifies the visitor (`audience` on the tag config), and
 // the page adds what only a browser sees (automated.ts): a program — automation, a
@@ -43,7 +45,7 @@
 // reads the same table.
 
 import { namesOn } from '@hanzo/events'
-import { asks, CONSENT_EVENT, read, render, serve, type Choice } from './consent'
+import { asks, CONSENT_EVENT, policy, read, render, serve, type Choice } from './consent'
 import { siteKey } from './org'
 import { capture, touch } from './touch'
 import type { Analytics } from './core'
@@ -179,25 +181,29 @@ function gtagStub(): Call {
 
 const g = (on: boolean) => (on ? 'granted' : 'denied')
 
-/** Google Consent Mode v2: denied until said otherwise, then the visitor's choice. */
+const eu = (): boolean => policy().mode === 'eu'
+
+/**
+ * Google Consent Mode v2. The default is the region's: in eu all four flags denied,
+ * waiting 500 ms for an update, so Google Analytics sends cookieless pings; elsewhere
+ * all granted. The update is the visitor's choice: Ads governs the three ad flags
+ * everywhere, Analytics the storage flag in eu (elsewhere Google Analytics with
+ * Analytics off does not load).
+ */
 function consentMode(c: Choice, first: boolean): void {
   const gtag = gtagStub()
-  const state = {
-    analytics_storage: g(c.analytics),
-    ad_storage: g(c.marketing),
-    ad_user_data: g(c.marketing),
-    ad_personalization: g(c.marketing && c.ads),
-  }
   if (first) {
+    const d = g(!eu())
     gtag('consent', 'default', {
-      analytics_storage: 'denied',
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied',
-      wait_for_update: 500,
+      analytics_storage: d,
+      ad_storage: d,
+      ad_user_data: d,
+      ad_personalization: d,
+      ...(eu() ? { wait_for_update: 500 } : {}),
     })
   }
-  gtag('consent', 'update', state)
+  const ads = { ad_storage: g(c.ads), ad_user_data: g(c.ads), ad_personalization: g(c.ads) }
+  gtag('consent', 'update', eu() ? { analytics_storage: g(c.analytics), ...ads } : ads)
 }
 
 function loadGoogle(ids: string[]): void {
@@ -227,37 +233,70 @@ function loadGoogle(ids: string[]): void {
 
 // ── The other pixels ────────────────────────────────────────────────────
 
+/** Limited Data Use, the sale-or-sharing opt-out: on while Ads is off. */
+function ldu(c: Choice): void {
+  const p = page()
+  if (c.ads) p.fbq!('dataProcessingOptions', [])
+  else p.fbq!('dataProcessingOptions', ['LDU'], 0, 0)
+}
+
+/** Meta's state on this page: held revoked, and whether its library and the PageView went. */
+const meta = { revoked: false, fetched: false, viewed: false }
+
 /**
- * Meta's pixels, every one the site reports to (one per brand): fbevents loads once,
- * Limited Data Use is stated once before the first init, and each pixel is init'ed.
- * fbq('track') reaches every pixel init'ed on the page, so the pass sends ONE PageView,
- * and an event fires once (mirror) under one eventID every pixel dedupes on.
+ * Meta's pixels, every one the site reports to (one per brand). The stub is built
+ * once; before the first init Meta is told its consent (revoked without Marketing)
+ * and Limited Data Use (on without Ads), and each pixel is init'ed. Only under
+ * Marketing (live) is fbevents fetched and the PageView sent, once: fbq('track')
+ * reaches every pixel init'ed on the page, and an event fires once (mirror) under
+ * one eventID every pixel dedupes on. Without Marketing nothing reaches Meta.
  */
 function loadMeta(ids: string[], c: Choice): void {
   const fresh = ids.filter((id) => !loaded.has(`meta:${id}`))
-  if (!fresh.length) return
   const p = page()
-  if (!p.fbq) {
-    const n = (p.fbq = function (...a: unknown[]) {
-      if (n.callMethod) n.callMethod(...a)
-      else n.queue!.push(a)
-    } as NonNullable<Page['fbq']>)
-    if (!p._fbq) p._fbq = n
-    n.push = n
-    n.loaded = true
-    n.version = '2.0'
-    n.queue = []
+  if (fresh.length) {
+    if (!p.fbq) {
+      const n = (p.fbq = function (...a: unknown[]) {
+        if (n.callMethod) n.callMethod(...a)
+        else n.queue!.push(a)
+      } as NonNullable<Page['fbq']>)
+      if (!p._fbq) p._fbq = n
+      n.push = n
+      n.loaded = true
+      n.version = '2.0'
+      n.queue = []
+    }
+    if (!loaded.has('meta')) {
+      loaded.add('meta')
+      if (!c.marketing) {
+        p.fbq('consent', 'revoke')
+        meta.revoked = true
+      }
+      if (!c.ads) ldu(c)
+    }
+    for (const id of fresh) {
+      p.fbq('init', id)
+      loaded.add(`meta:${id}`)
+    }
+  }
+  if (loaded.has('meta') && c.marketing) live()
+}
+
+/** Meta, allowed: fbevents fetched, consent granted if it was held, the PageView sent once. */
+function live(): void {
+  const p = page()
+  if (!meta.fetched) {
+    meta.fetched = true
     script('https://connect.facebook.net/en_US/fbevents.js')
   }
-  if (!loaded.has('meta')) {
-    loaded.add('meta')
-    if (!c.ads) p.fbq('dataProcessingOptions', ['LDU'], 1, 1000)
+  if (meta.revoked) {
+    p.fbq!('consent', 'grant')
+    meta.revoked = false
   }
-  for (const id of fresh) {
-    p.fbq('init', id)
-    loaded.add(`meta:${id}`)
+  if (!meta.viewed) {
+    meta.viewed = true
+    p.fbq!('track', 'PageView')
   }
-  p.fbq('track', 'PageView')
 }
 
 function loadLinkedIn(id: string): void {
@@ -320,8 +359,16 @@ const NEEDS: Record<string, keyof Choice> = {
   tiktok: 'marketing',
 }
 
-/** Each tag waits for its own category: GA4 for Analytics, every ad platform for Marketing. */
-const allowed = (t: BrowserTag, c: Choice): boolean => Boolean(NEEDS[t.type] && c[NEEDS[t.type]])
+/**
+ * Whether a tag's library is on the page under a choice: Google Analytics in eu for
+ * everyone (Consent Mode keeps it cookieless) and elsewhere under Analytics, Meta's
+ * stub always (held revoked without Marketing), every other platform under Marketing.
+ */
+const loads = (t: BrowserTag, c: Choice): boolean =>
+  t.type === 'meta' || (t.type === 'ga' && eu()) || Boolean(NEEDS[t.type] && c[NEEDS[t.type]])
+
+/** Whether an event reaches a tag under a choice: Meta's under Marketing, every other's as it loads. */
+const allowed = (t: BrowserTag, c: Choice): boolean => (t.type === 'meta' ? c.marketing : loads(t, c))
 
 function apply(): void {
   if (typeof window === 'undefined' || !configured) return
@@ -332,10 +379,11 @@ function apply(): void {
   capture(c)
   // A program loads no platform's pixel; the site's own team loads Google
   // Analytics only, tagged internal.
-  const on = bot() ? [] : tags.filter((t) => allowed(t, c) && (t.type === 'ga' || !team()))
+  const on = bot() ? [] : tags.filter((t) => loads(t, c) && (t.type === 'ga' || !team()))
   const ids = on.filter((t) => t.type === 'ga' || t.type === 'gads').map((t) => t.id)
   if (ids.length) {
-    consentMode(c, !loaded.has('consent'))
+    // Set once, before gtag.js is fetched; a later choice reaches it through withdrawn.
+    if (!loaded.has('consent')) consentMode(c, true)
     loaded.add('consent')
     loadGoogle(ids)
   }
@@ -356,20 +404,26 @@ function apply(): void {
 const running = (t: BrowserTag): boolean => loaded.has(t.type === 'ga' || t.type === 'gads' ? t.id : `${t.type}:${t.id}`)
 
 /**
- * A choice that withdraws what a running library was loaded under: Google hears
- * the denied state and Meta a revoke at once, and the page reloads so none of
- * them runs on. Says whether it did.
+ * A changed choice reaches what is running at once: Google through Consent Mode, Meta
+ * through Limited Data Use and a revoke when Marketing is withdrawn. A choice that
+ * withdraws any other running library reloads the page so it does not run on. Says
+ * whether it did.
  */
 function withdrawn(c: Choice, was: string): boolean {
   const p = page()
-  // Personalized ads withdrawn with Marketing kept: Meta runs on under Limited Data Use.
-  if (p.fbq && !c.ads && was.split(',').includes('ads')) p.fbq('dataProcessingOptions', ['LDU'], 1, 1000)
-  const gone = tags.filter((t) => running(t) && !allowed(t, c))
+  const before = was.split(',')
+  if (render(c) !== was && loaded.has('consent')) consentMode(c, false)
+  if (loaded.has('meta')) {
+    if (c.ads !== before.includes('ads')) ldu(c)
+    if (!c.marketing && !meta.revoked) {
+      p.fbq!('consent', 'revoke')
+      meta.revoked = true
+    }
+  }
+  const gone = tags.filter((t) => t.type !== 'meta' && running(t) && !loads(t, c))
   if (!gone.length) return false
-  if (loaded.has('consent')) consentMode(c, false)
   // gtag stops measuring this page at once, before the reload lets it go.
   for (const t of gone) if (t.type === 'ga' || t.type === 'gads') (window as unknown as Record<string, boolean>)[`ga-disable-${t.id}`] = true
-  if (p.fbq && !c.marketing) p.fbq('consent', 'revoke')
   setTimeout(() => window.location.reload(), 0)
   return true
 }
@@ -452,12 +506,7 @@ export function reach(): string {
   const to: string[] = []
   for (const t of tags) {
     if (!allowed(t, c)) continue
-    const running =
-      t.type === 'ga'
-        ? google === 'loaded' && c.analytics
-        : t.type === 'gads'
-          ? google === 'loaded' && c.marketing
-          : loaded.has(`${t.type}:${t.id}`)
+    const running = t.type === 'ga' || t.type === 'gads' ? google === 'loaded' : loaded.has(`${t.type}:${t.id}`)
     if (running && !to.includes(t.type)) to.push(t.type)
   }
   return to.join(',')
@@ -515,20 +564,21 @@ function unpriced(p: Record<string, unknown>): Record<string, unknown> {
  */
 export function mirror(name: string, params: Record<string, unknown>, id: string, to = reach()): void {
   const p = page()
+  const c = read()
   const on = new Set(to.split(',').filter(Boolean))
   const ga4 = namesOn(name, 'ga4')
   const test = params.test === true
   if (test) params = unpriced(params)
   const transaction = typeof params.order_id === 'string' ? { transaction_id: params.order_id } : {}
   // Meta's track reaches all of its pixels on the page: it is called once.
-  let meta = false
+  let once = false
   for (const t of tags) {
-    if (!on.has(t.type) || (t.type === 'meta' && meta)) continue
-    if (t.type === 'meta') meta = true
+    if (!on.has(t.type) || !allowed(t, c) || (t.type === 'meta' && once)) continue
+    if (t.type === 'meta') once = true
     const rule = t.events?.[name]
     if (t.type === 'ga') {
       for (const n of ga4) {
-        p.gtag?.('event', n, { ...params, ...transaction, event_id: id, transport_type: 'beacon', ...(test ? { debug_mode: true } : {}) })
+        p.gtag?.('event', n, { ...params, ...transaction, event_id: id, send_to: t.id, transport_type: 'beacon', ...(test ? { debug_mode: true } : {}) })
       }
     } else if (t.type === 'gads' && rule) {
       p.gtag?.('event', 'conversion', {

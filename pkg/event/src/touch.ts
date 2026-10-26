@@ -13,8 +13,8 @@
 // browser id. `cid` is GA4's client id: the last two fields of `_ga`, or a
 // first-party `hz_cid` of the same shape when gtag.js never ran.
 //
-// Nothing here runs without consent: the click and the Meta ids need Marketing,
-// the client id needs Analytics.
+// Nothing here runs without its grant: the click and the Meta ids need Marketing,
+// the client id needs Analytics. Outside eu both are on until the visitor opts out.
 
 import type { Choice } from './consent'
 import { get, set } from './cookie'
