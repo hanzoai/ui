@@ -45,6 +45,9 @@ describe('the org that owns a host', () => {
       'hanzo.codes',
       'hanzoskills.com',
       'hanzo.ventures',
+      'hanzo.help',
+      'hanzo.community',
+      'hanzo.computer',
     ]) {
       expect(orgOf(host)).toBe('hanzo')
       expect(keyFor(host)).toBe(ORG_KEY.hanzo)
