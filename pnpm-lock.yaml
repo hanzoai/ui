@@ -43,8 +43,8 @@ catalogs:
       specifier: 0.5.37
       version: 0.5.37
     '@hanzo/event':
-      specifier: 0.3.39
-      version: 0.3.39
+      specifier: ^0.3.58
+      version: 0.3.58
     '@hanzo/events':
       specifier: 0.3.1
       version: 0.3.1
@@ -969,7 +969,7 @@ importers:
     dependencies:
       '@hanzo/event':
         specifier: 'catalog:'
-        version: 0.3.39(react@19.2.8)
+        version: 0.3.58(react@19.2.8)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -997,7 +997,7 @@ importers:
     dependencies:
       '@hanzo/event':
         specifier: 'catalog:'
-        version: 0.3.39(react@19.2.8)
+        version: 0.3.58(react@19.2.8)
       '@hanzo/observe':
         specifier: 'catalog:'
         version: 0.1.11(react@19.2.8)
@@ -1037,7 +1037,7 @@ importers:
     dependencies:
       '@hanzo/event':
         specifier: 'catalog:'
-        version: 0.3.39(react@19.2.8)
+        version: 0.3.58(react@19.2.8)
       '@hanzo/observe':
         specifier: 'catalog:'
         version: 0.1.11(react@19.2.8)
