@@ -338,10 +338,15 @@ jobs:
           curl -fsS "https://registry.npmjs.org/$(printf %s "$NAME" | sed 's|/|%2F|')" \
             >/dev/null 2>&1 || FIRST=1
 
+          # The guard runs here, by name, and the publish runs no scripts: the
+          # build above is what ships, and `prepack` would rebuild it (four
+          # minutes for @hanzo/ui) inside the publish.
+          pnpm --filter "$PKG" run --if-present prepublishOnly || exit 1
+
           # Idempotent on purpose: the desired state is "npmjs holds this
           # version", and a version already there satisfies it. Versions are
           # immutable, so a conflict means the release already happened.
-          OUT=$(pnpm --filter "$PKG" publish --no-git-checks --access public 2>&1)
+          OUT=$(pnpm --filter "$PKG" publish --no-git-checks --ignore-scripts --access public 2>&1)
           PUB=$?
           echo "$OUT"
           case "$OUT" in
@@ -389,7 +394,7 @@ jobs:
           } > "$NPMRC"
           out=$(npm_config_userconfig="$NPMRC" \
                 pnpm --filter "$PKG" publish \
-                  --no-git-checks --access public --registry "$REG" 2>&1) || true
+                  --no-git-checks --ignore-scripts --access public --registry "$REG" 2>&1) || true
           echo "$out"
           case "$out" in
             *EPUBLISHCONFLICT*|*"cannot publish over"*|*"already exists"*)

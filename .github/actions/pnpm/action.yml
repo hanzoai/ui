@@ -1,90 +1,90 @@
 name: pnpm workspace
 description: >-
-  pnpm and Node at the versions this repo pins, the pnpm store from this org's
-  store (hanzoai/ci bin/cache), then `pnpm install --frozen-lockfile
-  --prefer-offline`, which links node_modules from it. Every job in publish.yml
-  starts here.
+  pnpm at the version this repo pins, Node from the runner's tool cache, and
+  `pnpm install --frozen-lockfile`, which lays node_modules out from the
+  lockfile, with the verdict of the lockfile's supply-chain check carried from
+  the run that reached it. Every job that installs the workspace starts here.
 inputs:
   kms-client-id:
     required: true
   kms-client-secret:
     required: true
   save:
-    description: "'true' writes the store back on a miss. One job of a run saves, so legs never race one key."
+    description: "'true' writes the verdict back on a miss. One job of a run saves, so legs never race one key."
     default: 'false'
 runs:
   using: composite
   steps:
     - uses: pnpm/action-setup@v4
 
-    # 24, because this repo runs pnpm 11 (packageManager) and pnpm 11 imports
-    # node:sqlite. Node 20 has no such module, so `pnpm install` died on
-    # ERR_UNKNOWN_BUILTIN_MODULE before it read a single manifest — every
-    # release since sat unpublished while npmjs served an older one.
+    # 22, the major the runner image carries in its tool cache, so this resolves
+    # in a second instead of downloading Node for 40. pnpm 11 imports
+    # node:sqlite, which Node 22 serves.
     - uses: actions/setup-node@v4
       with:
-        node-version: 24
+        node-version: 22
         registry-url: 'https://registry.npmjs.org'
 
-    # The STORE and pnpm's metadata cache, never node_modules. The install below
-    # always runs and lays node_modules out from the lockfile; the store only
-    # spares it the downloads. A restored node_modules is a layout pnpm trusts
-    # without relinking ("Already up to date"), so its hoisting is whatever the
-    # saving install chose: one hoisted the react-native 0.86.2 copy of
-    # @hanzo/gui into .pnpm/node_modules, and tsc typed @hanzo/ui against it.
+    # pnpm 11 checks the lockfile against its supply-chain policies before an
+    # install, fetching a packument per entry from npmjs: 16 s to 1 m 43 s a
+    # job, measured. It records each lockfile that passed in its metadata cache
+    # (lockfile-verified.jsonl, keyed by the lockfile's content and the policy),
+    # and an install that finds the record skips the fetch. That record is what
+    # travels, under the lockfile's hash; only the default branch writes it.
     #
-    # The metadata cache carries pnpm's lockfile verification log
-    # (lockfile-verified.jsonl): a lockfile already checked against the
-    # supply-chain policies is not re-fetched from npmjs, which cost 16 s to
-    # 1 m 43 s a job. Only the default branch writes the org store.
-    #
-    # The key is the lockfile: the store is content-addressed and node_modules is
-    # rebuilt from the lockfile every time, so nothing else decides what a store
-    # must hold. A key that misses restores the newest store saved, and the
-    # install fetches only what it lacks. The IAM token goes to bin/cache alone,
-    # never to GITHUB_ENV: the build runs every package's scripts.
-    - name: Restore the pnpm store (this org's store)
-      id: cache
+    # Not node_modules and not the store. A restored node_modules is a layout
+    # pnpm trusts without relinking, so its hoisting is whatever the saving
+    # install chose (one hoisted the react-native 0.86.2 copy of @hanzo/gui, and
+    # tsc typed @hanzo/ui against it). The store is 552 MiB that took 275 s to
+    # save, against an install that downloads it in about a minute.
+    - name: Locate pnpm's metadata cache
+      id: where
       shell: bash
-      env:
-        KMS_CLIENT_ID: ${{ inputs.kms-client-id }}
-        KMS_CLIENT_SECRET: ${{ inputs.kms-client-secret }}
-        CI_SHA: c07458b2b77a46a79402f174dc70358e426dcf38
       run: |
-        set +e   # an accelerator: nothing in this step may fail the job
-        set -uo pipefail
-        if ! curl -fsSL -m 60 "https://raw.githubusercontent.com/hanzoai/ci/$CI_SHA/bin/cache" -o "$RUNNER_TEMP/cache"; then
-          echo "::notice::hanzoai/ci@$CI_SHA bin/cache did not download, so this job installs cold"; exit 0
-        fi
-        chmod +x "$RUNNER_TEMP/cache"
-        name="pnpm-store-$(pnpm --version)-$(uname -m)"
-        key=$(git ls-tree HEAD -- pnpm-lock.yaml | sha256sum | cut -c1-32)
-        dirs="store=$(pnpm store path) meta=$(pnpm cache path)"
-        printf 'name=%s\nkey=%s\ndirs=%s\n' "$name" "$key" "$dirs" >> "$GITHUB_OUTPUT"
-        T=$(printf '{"clientId":"%s","clientSecret":"%s"}' "$KMS_CLIENT_ID" "$KMS_CLIENT_SECRET" \
-          | curl -sS -m 30 https://api.hanzo.ai/v1/kms/auth/login -H 'Content-Type: application/json' -d @- \
-          | jq -r '.accessToken // empty' 2>/dev/null)
-        if [ -n "$T" ]; then echo "::add-mask::$T"; else echo "::notice::KMS gave no IAM token, so the org store is not used"; fi
-        HANZO_API_TOKEN=$T "$RUNNER_TEMP/cache" restore "$name" "$key" $dirs || echo "::notice::the store did not restore, so this job installs cold"
+        {
+          echo "name=pnpm-verified-$(pnpm --version)"
+          echo "key=$(git ls-tree HEAD -- pnpm-lock.yaml | sha256sum | cut -c1-32)"
+          echo "cache=$(pnpm cache path)"
+          echo "carry=$RUNNER_TEMP/pnpm-verified"
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Restore the lockfile verdict (this org's store)
+      id: cache
+      uses: ./.github/actions/cache
+      with:
+        kms-client-id: ${{ inputs.kms-client-id }}
+        kms-client-secret: ${{ inputs.kms-client-secret }}
+        command: restore
+        name: ${{ steps.where.outputs.name }}
+        key: ${{ steps.where.outputs.key }}
+        dirs: verified=${{ steps.where.outputs.carry }}
 
     - name: Install dependencies
       shell: bash
-      run: pnpm install --frozen-lockfile --prefer-offline
+      env:
+        CACHE: ${{ steps.where.outputs.cache }}
+        CARRY: ${{ steps.where.outputs.carry }}
+      run: |
+        if [ -f "$CARRY/lockfile-verified.jsonl" ]; then
+          mkdir -p "$CACHE" && cp "$CARRY/lockfile-verified.jsonl" "$CACHE/"
+        fi
+        pnpm install --frozen-lockfile
 
-    - name: Save the pnpm store (this org's store)
-      if: inputs.save == 'true' && steps.cache.outputs.key != '' && steps.cache.outputs.hit != 'exact'
+    - name: Keep the lockfile verdict
+      if: inputs.save == 'true' && steps.cache.outputs.hit != 'exact'
       shell: bash
       env:
-        KMS_CLIENT_ID: ${{ inputs.kms-client-id }}
-        KMS_CLIENT_SECRET: ${{ inputs.kms-client-secret }}
-        NAME: ${{ steps.cache.outputs.name }}
-        KEY: ${{ steps.cache.outputs.key }}
-        DIRS: ${{ steps.cache.outputs.dirs }}
-      run: |
-        set +e
-        set -uo pipefail
-        T=$(printf '{"clientId":"%s","clientSecret":"%s"}' "$KMS_CLIENT_ID" "$KMS_CLIENT_SECRET" \
-          | curl -sS -m 30 https://api.hanzo.ai/v1/kms/auth/login -H 'Content-Type: application/json' -d @- \
-          | jq -r '.accessToken // empty' 2>/dev/null)
-        [ -n "$T" ] && echo "::add-mask::$T"
-        HANZO_API_TOKEN=$T "$RUNNER_TEMP/cache" save "$NAME" "$KEY" $DIRS || echo "::notice::the store was not saved"
+        CACHE: ${{ steps.where.outputs.cache }}
+        CARRY: ${{ steps.where.outputs.carry }}
+      run: mkdir -p "$CARRY" && cp "$CACHE/lockfile-verified.jsonl" "$CARRY/" 2>/dev/null || true
+
+    - name: Save the lockfile verdict (this org's store)
+      if: inputs.save == 'true' && steps.cache.outputs.hit != 'exact'
+      uses: ./.github/actions/cache
+      with:
+        kms-client-id: ${{ inputs.kms-client-id }}
+        kms-client-secret: ${{ inputs.kms-client-secret }}
+        command: save
+        name: ${{ steps.where.outputs.name }}
+        key: ${{ steps.where.outputs.key }}
+        dirs: verified=${{ steps.where.outputs.carry }}
