@@ -1324,6 +1324,17 @@ to ZERO. Whenever you touch this registry, read `enabled` off the live client
 (`globalThis[Symbol.for('hanzo.event.clients')]`), not just the request count:
 silence and correctness look identical in a network panel.
 
+**The consent UI is `@hanzo/ui/consent`, and no site draws its own.** `Consent`
+mounts once: a bar (Manage preferences, Accept all, and a × that stores
+essential-only, so refusing is one press) and the Cookie Preferences sheet
+(Strictly Necessary always on; Performance = `analytics`, Marketing =
+`marketing`, Sell/Share/Targeted Advertising = `ads`; Accept all, Save
+preferences). `openConsent()`, `ConsentLink` and any same-origin link to
+`#choices` (FOOT_LINE's Privacy choices) open the sheet. Policy links are props
+(`cookies`, `privacy`, `terms`, default hanzo.ai); Lux and Zoo pass their own.
+Withdrawing forgets measurement ids only — `consent.test.ts` holds that sign-in,
+the choice itself, CSRF and cart state survive `rejectAll()`.
+
 ### One way — supersessions (no divergent telemetry client)
 
 | Package | Status | Note |

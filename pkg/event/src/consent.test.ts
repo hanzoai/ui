@@ -307,4 +307,18 @@ describe('withdrawing', () => {
     expect([...b.jar.keys()].sort()).toEqual([CONSENT_COOKIE, CONSENT_VERSION_COOKIE].sort())
     expect([...store.keys()]).toEqual(['other'])
   })
+
+  it('never forgets what the site needs to work: sign-in, the choice itself, security and what a form holds', () => {
+    const b = browser('Europe/Paris', { cookie: 'analytics,marketing,ads' })
+    // IAM's session and federation binding, the signed-in-before hint, CSRF tokens, a cart.
+    const essential = ['__Host-hanzo_session', '__Host-hanzo_fed', 'hz_known', '__Host-csrf', 'csrf_token', 'hz_cart']
+    const measured = ['_ga', '_ga_ABC', '_gid', '_gat_UA1', '_fbp', '_fbc', '_gcl_au', '_gcl_aw', '_uetsid', 'iam-anon-id', 'hz_touch']
+    for (const k of [...essential, ...measured]) b.jar.set(k, 'x')
+    const kept = ['hanzo_iam_access_token', 'hz_prompt', 'hz_cart']
+    const store = new Map([...kept, 'hz_session', 'hz_first_touch'].map((k) => [k, 'x']))
+    ;(g.window as Record<string, unknown>).localStorage = { removeItem: (k: string) => store.delete(k) }
+    rejectAll()
+    expect([...b.jar.keys()].sort()).toEqual([...essential, CONSENT_COOKIE, CONSENT_VERSION_COOKIE].sort())
+    expect([...store.keys()].sort()).toEqual([...kept].sort())
+  })
 })
