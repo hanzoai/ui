@@ -24,8 +24,9 @@ export { EVENTS, EXCEPTION, PAGEVIEW } from './events'
 export { exceptionEntry, exceptionProperties, fingerprint, digest } from './exception'
 export type { EventName } from './events'
 export {
-  CONSENT_COOKIE, CONSENT_EVENT, CONSENT_FLOOR, CONSENT_VERSION, CONSENT_VERSION_COOKIE, NOTICE_COOKIE, POLICY_EVENT, acceptAll, asks, declined, gpc, notice, noticed,
-  policy as consentPolicy, serve as serveConsent, read as readConsent, refused, rejectAll, render as renderConsent, save as saveConsent, stored as storedConsent,
+  CONSENT_COOKIE, CONSENT_EVENT, CONSENT_FLOOR, CONSENT_VERSION, CONSENT_VERSION_COOKIE, NOTICE_COOKIE, POLICY_EVENT, RULE_COOKIE, acceptAll, asks, declined, gpc, notice,
+  noticed, policy as consentPolicy, serve as serveConsent, read as readConsent, refused, rejectAll, render as renderConsent, save as saveConsent, sheet as consentSheet,
+  stored as storedConsent,
 } from './consent'
 export type { Choice, Mode, Policy as ConsentRule } from './consent'
 export { CLICK_IDS, capture as captureClick, touch } from './touch'

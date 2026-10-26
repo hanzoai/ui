@@ -20,9 +20,9 @@
 // pings) and is updated as the visitor chooses; Meta's pixels are init'ed held
 // revoked, and fbevents is fetched and the PageView sent only once Marketing allows
 // them; every other platform waits for Marketing. In us_privacy and global everything
-// loads at once under Consent Mode granted; Ads off (the visitor's opt-out, or GPC or
-// DNT) is exactly `fbq('dataProcessingOptions', ['LDU'], 0, 0)` and Google's ad_storage,
-// ad_user_data and ad_personalization denied. A choice that allows more loads the rest
+// loads at once under Consent Mode granted; Ads off (the visitor's opt-out) is exactly
+// `fbq('dataProcessingOptions', ['LDU'], 0, 0)` and Google's ad_storage, ad_user_data
+// and ad_personalization denied. Under GPC or DNT no platform loads, in any region. A choice that allows more loads the rest
 // with no reload. Google hears every change through Consent Mode and Meta through
 // consent and Limited Data Use; a choice that withdraws any other library reloads the
 // page, since a library that has run cannot be unloaded.
@@ -45,7 +45,7 @@
 // reads the same table.
 
 import { namesOn } from '@hanzo/events'
-import { asks, CONSENT_EVENT, policy, read, render, serve, type Choice } from './consent'
+import { asks, CONSENT_EVENT, open, policy, read, render, serve, type Choice } from './consent'
 import { siteKey } from './org'
 import { capture, touch } from './touch'
 import type { Analytics } from './core'
@@ -240,6 +240,9 @@ function ldu(c: Choice): void {
   else p.fbq!('dataProcessingOptions', ['LDU'], 0, 0)
 }
 
+/** The page's reload is on its way. */
+let reloading = false
+
 /** Meta's state on this page: held revoked, and whether its library and the PageView went. */
 const meta = { revoked: false, fetched: false, viewed: false }
 
@@ -360,12 +363,13 @@ const NEEDS: Record<string, keyof Choice> = {
 }
 
 /**
- * Whether a tag's library is on the page under a choice: Google Analytics in eu for
- * everyone (Consent Mode keeps it cookieless) and elsewhere under Analytics, Meta's
- * stub always (held revoked without Marketing), every other platform under Marketing.
+ * Whether a tag's library is on the page under a choice. Under GPC or DNT nothing.
+ * Else Google Analytics in eu for everyone (Consent Mode keeps it cookieless) and
+ * elsewhere under Analytics, Meta's stub always (held revoked without Marketing), every
+ * other platform under Marketing.
  */
 const loads = (t: BrowserTag, c: Choice): boolean =>
-  t.type === 'meta' || (t.type === 'ga' && eu()) || Boolean(NEEDS[t.type] && c[NEEDS[t.type]])
+  !policy().refused && (t.type === 'meta' || (t.type === 'ga' && eu()) || Boolean(NEEDS[t.type] && c[NEEDS[t.type]]))
 
 /** Whether an event reaches a tag under a choice: Meta's under Marketing, every other's as it loads. */
 const allowed = (t: BrowserTag, c: Choice): boolean => (t.type === 'meta' ? c.marketing : loads(t, c))
@@ -406,8 +410,8 @@ const running = (t: BrowserTag): boolean => loaded.has(t.type === 'ga' || t.type
 /**
  * A changed choice reaches what is running at once: Google through Consent Mode, Meta
  * through Limited Data Use and a revoke when Marketing is withdrawn. A choice that
- * withdraws any other running library reloads the page so it does not run on. Says
- * whether it did.
+ * withdraws any other running library reloads the page so it does not run on — once,
+ * when the consent sheet closes, if it is open. Says whether a reload is due.
  */
 function withdrawn(c: Choice, was: string): boolean {
   const p = page()
@@ -424,7 +428,10 @@ function withdrawn(c: Choice, was: string): boolean {
   if (!gone.length) return false
   // gtag stops measuring this page at once, before the reload lets it go.
   for (const t of gone) if (t.type === 'ga' || t.type === 'gads') (window as unknown as Record<string, boolean>)[`ga-disable-${t.id}`] = true
-  setTimeout(() => window.location.reload(), 0)
+  if (!open() && !reloading) {
+    reloading = true
+    setTimeout(() => window.location.reload(), 0)
+  }
   return true
 }
 

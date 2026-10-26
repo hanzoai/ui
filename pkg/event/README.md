@@ -46,8 +46,8 @@ It honours the same consent sources the bundled stack does: the visitor's region
 cloud decides it (`eu`: nothing optional before a choice; `us_privacy` and `global`:
 everything on by default, Ads off being the sale-or-sharing opt-out), a stored choice
 (`__Host-hz_consent` on a secure page, the key the Hanzo consent banner writes) as the
-visitor's word, and Global Privacy Control or Do Not Track as a refusal: everything in
-`eu`, the opt-out elsewhere. A React app does not need this file — mount `<Hanzo analytics>` from
+visitor's word, and Global Privacy Control or Do Not Track as a refusal in
+every region: no platform loads at all. A React app does not need this file — mount `<Hanzo analytics>` from
 `@hanzo/ui`, which wires this client and the capture engine together.
 
 > The tag used to live in `hanzoai/analytics` and post a **bare JSON array** of

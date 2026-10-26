@@ -1,5 +1,14 @@
 # @hanzo/event
 
+## 0.3.63
+
+### Patch Changes
+
+- A choice is stored beside the rule it was made under (`hz_consent_rule`). eu counts only a choice made under eu, or under policy version 2: an opt-out made under us_privacy or global is no eu yes.
+- The policy floor gates grants, never opt-outs. A choice below the floor keeps what it refused and loses what it allowed: in eu the visitor is asked again, elsewhere the default stands for it. A choice that allowed nothing is never asked again.
+- Global Privacy Control or Do Not Track loads no platform in any region, Google Analytics included, and reads and saves as a refusal of all three. Consent Mode ADVANCED stays in eu for every other visitor.
+- `consentSheet(open)` says the consent sheet is open; a withdrawal that needs the page reloaded waits for it to close and then reloads once. A switch turned off and on before it closes reloads nothing.
+
 ## 0.3.62
 
 ### Patch Changes

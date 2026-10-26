@@ -85,14 +85,39 @@ const views = () => fbq().filter((a) => a[0] === 'track' && a[1] === 'PageView')
 const EVERY = ['analytics.tiktok.com', 'connect.facebook.net', 'snap.licdn.com', 'static.ads-twitter.com', 'www.googletagmanager.com'].sort()
 const OPT_OUT = { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' }
 
-describe('eu', () => {
+describe('a browser that refuses', () => {
   it.each([
-    ['no choice', {}],
-    ['GPC over a stored yes', { gpc: true }],
-    ['DNT over a stored yes', { dnt: '1' }],
-  ])('%s: Google Analytics loads cookieless, Meta is held revoked, nothing else is fetched', async (_, o: { gpc?: boolean; dnt?: string }) => {
-    const b = browser('America/New_York', o.gpc || o.dnt ? accepted() : undefined)
+    ['eu', { gpc: true }],
+    ['eu', { dnt: '1' }],
+    ['us_privacy', { gpc: true }],
+    ['us_privacy', { dnt: '1' }],
+    ['global', { gpc: true }],
+  ])('%s %o loads no platform, Google Analytics included, even over a stored yes', async (mode, o: { gpc?: boolean; dnt?: string }) => {
+    const b = browser('America/New_York', accepted())
     put('navigator', { globalPrivacyControl: o.gpc === true, doNotTrack: o.dnt, userAgent: 'UA' })
+    under(b, mode)
+    const { startTags, track } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    track(undefined, 'order_completed', { order_id: 'o-1', value: 5 })
+    expect(b.scripts).toEqual([])
+    expect(layer()).toEqual([])
+    expect(fbq()).toEqual([])
+  })
+
+  it('a refusal cloud saw loads nothing either', async () => {
+    const b = browser('America/Los_Angeles')
+    under(b, 'us_privacy', { refused: true })
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(b.scripts).toEqual([])
+  })
+})
+
+describe('eu', () => {
+  it.each([['no choice', {}]])('%s: Google Analytics loads cookieless, Meta is held revoked, nothing else is fetched', async () => {
+    const b = browser('America/New_York')
     under(b, 'eu')
     const { startTags } = await import('./index')
     startTags({ key: 'pk-x' })
@@ -192,10 +217,9 @@ describe('us_privacy', () => {
     expect(consents().at(-1)?.[2]).toEqual({ ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' })
   })
 
-  it.each([{ gpc: true }, { dnt: '1' }])('%o is the opt-out from the first call, and Google Analytics and Meta still run', async (o) => {
-    const b = browser('America/Denver')
-    put('navigator', { globalPrivacyControl: o.gpc === true, doNotTrack: (o as { dnt?: string }).dnt, userAgent: 'UA' })
-    under(b, 'us_privacy', { region: 'US-CO', refused: true })
+  it('a stored opt-out is the opt-out from the first call', async () => {
+    const b = browser('America/Denver', new Map([['__Host-hz_consent', 'analytics,marketing'], ['__Host-hz_consent_v', '3'], ['__Host-hz_consent_rule', 'us_privacy']]))
+    under(b, 'us_privacy', { region: 'US-CO' })
     const { startTags } = await import('./index')
     startTags({ key: 'pk-x' })
     await tick()
@@ -233,15 +257,42 @@ describe('global', () => {
     expect(reload).toHaveBeenCalledTimes(1)
   })
 
-  it('GPC is the opt-out', async () => {
+  it('a withdrawal made while the sheet is open reloads once, when it closes', async () => {
     const b = browser('Asia/Tokyo')
-    put('navigator', { globalPrivacyControl: true, userAgent: 'UA' })
+    const reload = vi.fn()
+    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
     under(b, 'global')
-    const { startTags } = await import('./index')
+    const { startTags, saveConsent, consentSheet } = await import('./index')
     startTags({ key: 'pk-x' })
     await tick()
-    expect(fbq().find((a) => a[0] === 'dataProcessingOptions')).toEqual(['dataProcessingOptions', ['LDU'], 0, 0])
-    expect(consents()[1]).toEqual(['consent', 'update', OPT_OUT])
+    consentSheet(true)
+    saveConsent({ analytics: false, marketing: true, ads: true })
+    await tick()
+    saveConsent({ analytics: false, marketing: false, ads: true })
+    await tick()
+    expect(reload).not.toHaveBeenCalled()
+    expect((g.window as Record<string, unknown>)['ga-disable-G-TEST']).toBe(true)
+    consentSheet(false)
+    await tick()
+    expect(reload).toHaveBeenCalledTimes(1)
+  })
+
+  it('a switch turned off and on again before the sheet closes reloads nothing', async () => {
+    const b = browser('Asia/Tokyo')
+    const reload = vi.fn()
+    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
+    under(b, 'global')
+    const { startTags, saveConsent, consentSheet } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    consentSheet(true)
+    saveConsent({ analytics: true, marketing: false, ads: true })
+    await tick()
+    saveConsent({ analytics: true, marketing: true, ads: true })
+    await tick()
+    consentSheet(false)
+    await tick()
+    expect(reload).not.toHaveBeenCalled()
   })
 })
 

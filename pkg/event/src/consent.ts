@@ -11,23 +11,27 @@
 // country and US state and served with the site's tag config (`GET /v1/project/tags`):
 //
 //   eu          the EU, the EEA, the UK and Switzerland, and any visitor cloud cannot
-//               place: nothing optional before the visitor chooses. Google Analytics
-//               runs under Consent Mode with every flag denied (cookieless) and Meta is
-//               held revoked; the banner asks.
+//               place. Before a choice Google Analytics runs, under Consent Mode with
+//               every flag denied (cookieless pings, no cookie); Meta's pixels are init'ed
+//               held revoked and send nothing; no other platform loads; the banner asks.
 //   us_privacy  a US state with a privacy law (or a US visitor with no attested state):
 //               everything on by default, no banner, and a persistent "Your Privacy
 //               Choices" link to the sheet, where turning Ads off is the opt-out.
 //   global      everywhere else: everything on by default, and a notice the visitor
 //               closes (notice / noticed); any category saved off is an opt-out.
 //
-// Global Privacy Control or Do Not Track is `refused`, everywhere: in eu it refuses
-// all three and locks the switches off; elsewhere it is the opt-out (Ads off) while
-// Google Analytics and Meta keep running. Until cloud answers, the rule is the one it
-// last served this tab (sessionStorage), else eu.
+// Global Privacy Control or Do Not Track is `refused`, everywhere: it refuses all three,
+// locks the switches off, and no third party loads in any region, Google Analytics
+// included. Until cloud answers, the rule is the one it last served this tab
+// (sessionStorage), else eu.
 //
-// A choice is stored beside the version it was made under (`hz_consent_v`). A choice
-// counts when that version is between the policy's floor and its version: a version
-// bump that keeps the floor keeps every choice, one that raises it asks again.
+// A choice is stored beside the version it was made under (`hz_consent_v`) and the
+// rule it was made under (`hz_consent_rule`). eu counts only a choice made under eu
+// (or under policy version 2, when every visitor opted in): an opt-out made where
+// everything was on is no eu yes. The policy's floor gates GRANTS, never opt-outs: a
+// choice made under a version below it keeps what it refused, and only what it allowed
+// is void — in eu the visitor is asked again, elsewhere the default stands for it. A
+// choice that allowed nothing is never asked again.
 //
 // Withdrawing a category forgets what its third party kept: Analytics Google
 // Analytics' cookies, Marketing the ad click and the platforms' browser ids, Ads
@@ -52,6 +56,9 @@ export const CONSENT_COOKIE = 'hz_consent'
 
 /** The policy version the stored choice was made under. */
 export const CONSENT_VERSION_COOKIE = 'hz_consent_v'
+
+/** The rule the stored choice was made under. */
+export const RULE_COOKIE = 'hz_consent_rule'
 
 /** The global notice, closed. */
 export const NOTICE_COOKIE = 'hz_consent_notice'
@@ -95,7 +102,7 @@ const CACHE = 'hz_consent_policy'
 const SLOT = Symbol.for('hanzo.event.consent')
 
 type Served = Policy & { floor: number }
-type Slot = { served?: Served }
+type Slot = { served?: Served; sheet?: boolean }
 
 function slot(): Slot {
   const g = globalThis as unknown as Record<symbol, Slot | undefined>
@@ -179,42 +186,63 @@ const version = (): number => Math.max(slot().served?.version ?? 0, CONSENT_VERS
 /** Whether the visitor's browser refused, as the page sees it or as cloud saw the request. */
 export const declined = (): boolean => policy().refused
 
-/** Whether the visitor has stored a choice that counts under the policy in force. */
-export function stored(): boolean {
+/** The stored choice that counts under the rule in force, and whether its version is current. */
+function kept(): { held: Choice; current: boolean } | undefined {
+  const c = get(own(CONSENT_COOKIE))
+  if (c === undefined) return undefined
   const v = Number(get(own(CONSENT_VERSION_COOKIE)))
-  return get(own(CONSENT_COOKIE)) !== undefined && v >= served().floor && v <= version()
+  const rule = get(own(RULE_COOKIE))
+  if (policy().mode === 'eu' && !(rule === 'eu' || (rule === undefined && v === 2))) return undefined
+  const on = c.split(',')
+  return {
+    held: { analytics: on.includes('analytics'), marketing: on.includes('marketing'), ads: on.includes('ads') },
+    current: v >= served().floor && v <= version(),
+  }
 }
 
-/** The grants the cookie holds, under whatever policy they were made. */
-function held(): Choice {
-  const on = (get(own(CONSENT_COOKIE)) ?? '').split(',')
-  return { analytics: on.includes('analytics'), marketing: on.includes('marketing'), ads: on.includes('ads') }
+const any = (c: Choice): boolean => c.analytics || c.marketing || c.ads
+
+/** Whether the visitor has stored a choice that stops the asking: a current one, or one that allowed nothing. */
+export function stored(): boolean {
+  const k = kept()
+  return k !== undefined && (k.current || !any(k.held))
 }
 
-/** What a refusal leaves of a choice: nothing in eu, everything but Ads elsewhere. */
-function limit(c: Choice, p: Policy): Choice {
-  if (!p.refused) return c
-  return p.mode === 'eu' ? { ...NONE } : { ...c, ads: false }
-}
-
-/** The visitor's choice: the stored one, else the region's default (nothing in eu, everything elsewhere), limited by GPC or DNT. */
+/** The visitor's choice: nothing at all under GPC or DNT; else the stored one, its grants void when made under a version below the floor; else the region's default (nothing in eu, everything elsewhere). */
 export function read(): Choice {
   const p = policy()
-  return limit(stored() ? held() : p.mode === 'eu' ? { ...NONE } : { ...ALL }, p)
+  if (p.refused) return { ...NONE }
+  const base = p.mode === 'eu' ? NONE : ALL
+  const k = kept()
+  if (!k) return { ...base }
+  if (k.current) return { ...k.held }
+  return { analytics: base.analytics && k.held.analytics, marketing: base.marketing && k.held.marketing, ads: base.ads && k.held.ads }
 }
 
 /** A browser that refuses now, over a grant stored before, withdraws that grant. */
 export function honour(): void {
-  if (!declined() || !stored()) return
-  if (render(read()) !== render(held())) save(held())
+  const k = kept()
+  if (declined() && k && any(k.held)) save({ ...NONE })
 }
 
-/** Whether the consent banner must ask: eu, no choice stored, and a browser that has not refused. */
+/** Whether the consent banner must ask: eu, no choice that stops the asking, and a browser that has not refused. */
 export function asks(): boolean {
   if (typeof document === 'undefined') return false
   const p = policy()
   return p.mode === 'eu' && !p.refused && !stored()
 }
+
+/**
+ * Says the consent sheet is open or closed. While it is open a withdrawal that needs
+ * the page reloaded waits (tags.ts); closing it reloads the page once if one does.
+ */
+export function sheet(open: boolean): void {
+  slot().sheet = open
+  if (!open && typeof window !== 'undefined') window.dispatchEvent(new Event(CONSENT_EVENT))
+}
+
+/** Whether the consent sheet is open. */
+export const open = (): boolean => slot().sheet === true
 
 /** Records that the visitor closed the global notice. It grants nothing. */
 export function notice(): void {
@@ -231,15 +259,18 @@ export function render(c: Choice): string {
 }
 
 /**
- * Stores a choice and tells the page. A category just allowed loads its libraries
- * with no reload, Google's consent state and Meta's consent and Limited Data Use are
- * updated at once, and a choice that withdraws a library that cannot be told reloads
- * the page (tags.ts). A browser that refused stores what the refusal leaves.
+ * Stores a choice beside the version and the rule in force, and tells the page. A
+ * category just allowed loads its libraries with no reload, Google's consent state and
+ * Meta's consent and Limited Data Use are updated at once, and a choice that withdraws
+ * a library that cannot be told reloads the page (tags.ts). A browser that refused
+ * stores a refusal.
  */
 export function save(c: Choice): void {
-  const out = limit({ analytics: c.analytics, marketing: c.marketing, ads: c.ads }, policy())
+  const p = policy()
+  const out: Choice = p.refused ? { ...NONE } : { analytics: c.analytics, marketing: c.marketing, ads: c.ads }
   setOwn(CONSENT_COOKIE, render(out), 395)
   setOwn(CONSENT_VERSION_COOKIE, String(version()), 395)
+  setOwn(RULE_COOKIE, p.mode, 395)
   if (!out.analytics) withdraw(ANALYTICS)
   if (!out.marketing) withdraw(MARKETING)
   if (!out.ads) withdraw(ADS)
