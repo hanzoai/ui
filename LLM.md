@@ -1131,8 +1131,8 @@ Every job fits five minutes; a suite that does not is split into legs.
 One way: bump a package's `version` and merge to `main`. publish.yml's plan asks
 npmjs what it serves; every public `@hanzo/*` whose version is ahead (forward
 only) is released by this run, and nothing else builds. Each released package
-gets its own legs (one per 50 vitest files, at most eight, heavy runners for a
-split suite) and its own publish job in group `publish-<name>`, never cancelled:
+gets its own legs (one per 35 vitest files, at most eight; a leg that builds
+`@hanzo/ui` runs on a heavy runner) and its own publish job in group `publish-<name>`, never cancelled:
 a release waits on its own suite and on no other package. The publish job runs
 the guard (`prepublishOnly`) and publishes with `--ignore-scripts`, so what ships
 is what it built. npmjs's token is read from KMS at run time. It mirrors the same
@@ -1142,11 +1142,12 @@ best-effort.
 ## The gate
 
 cicd.yml, superseded by a newer push to the same ref. Its plan diffs the change
-(a PR's merge commit against its base, a push against `before`): a path in a
+(a PR's merge commit against its base; a push against the last commit a gate on
+that branch ran to the end, so a cancelled gate's commits are tested next): a path in a
 package is that package, a root build input (lockfile, workspace, shared
 tsconfigs, `scripts/`) is every package, anything else is none; then every
-workspace package that depends on those. One-leg packages share legs, six to a
-leg. On a push to main, what the push releases is tested by its publish run
+workspace package that depends on those. One-leg packages share legs, four to a
+leg, grouped by runner. On a push to main, what the push releases is tested by its publish run
 (which nothing cancels) and the gate's `released` job waits for those legs.
 The consumer suites (`ui browser`: corner + code in Chromium; `ui vite`;
 `ui webpack`) run only when what `@hanzo/ui` packs, or a package it builds on,

@@ -24,7 +24,7 @@ jobs:
   leg:
     name: ${{ matrix.name }} ${{ matrix.shard }}/${{ matrix.of }}
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 10
+    timeout-minutes: 8
     strategy:
       fail-fast: false
       matrix:

@@ -31,6 +31,7 @@ jobs:
       waits: ${{ steps.plan.outputs.waits }}
       surface: ${{ steps.plan.outputs.surface }}
       runner: ${{ steps.plan.outputs.runner }}
+      heavy: ${{ steps.plan.outputs.heavy }}
     steps:
       # Two commits: a pull request's merge commit and its base.
       - uses: actions/checkout@v4
@@ -61,7 +62,8 @@ jobs:
     needs: plan
     if: needs.plan.outputs.surface == 'true'
     name: ui ${{ matrix.suite }}
-    runs-on: ${{ needs.plan.outputs.runner }}
+    # Each builds @hanzo/ui, which takes 74 to 210 s on an ordinary runner.
+    runs-on: ${{ needs.plan.outputs.heavy }}
     timeout-minutes: 10
     strategy:
       fail-fast: false
@@ -73,6 +75,10 @@ jobs:
       # the job's own Chromium goes where the job may write. The image already
       # carries Chromium's libraries.
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/pkg/ui/.cache/ms-playwright
+      # The bundler suites `npm i` the tarball into a stranger's app: about 170 s
+      # from the registry. Their npm cache travels (below), and this has npm
+      # take a cached document as it is rather than ask again.
+      npm_config_prefer_offline: 'true'
     steps:
       - uses: actions/checkout@v4
 
@@ -87,10 +93,35 @@ jobs:
         run: |
           if [ "$SUITE" = browser ]; then pnpm --filter "@hanzo/ui..." build; else pnpm --filter "@hanzo/ui^..." build; fi
 
+      # Headless only: every suite launches Chromium headless, which is the
+      # shell, so the full browser is not downloaded.
       - name: Chromium
         if: matrix.suite != 'webpack'
         working-directory: pkg/ui
-        run: pnpm exec playwright install chromium
+        run: pnpm exec playwright install --only-shell chromium
+
+      # Keyed by what decides what the stranger's app installs: @hanzo/ui's
+      # dependency ranges and the suite's own app.
+      - name: Locate npm's cache
+        id: npm
+        if: matrix.suite != 'browser'
+        run: |
+          {
+            echo "key=$(jq -c '[.dependencies, .peerDependencies, .optionalDependencies]' pkg/ui/package.json | cat - pkg/ui/test/consumer*/package.json | sha256sum | cut -c1-32)"
+            echo "dir=$(npm config get cache)/_cacache"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Restore npm's cache (this org's store)
+        id: npmcache
+        if: matrix.suite != 'browser'
+        uses: ./.github/actions/cache
+        with:
+          kms-client-id: ${{ secrets.KMS_CLIENT_ID }}
+          kms-client-secret: ${{ secrets.KMS_CLIENT_SECRET }}
+          command: restore
+          name: npm-${{ matrix.suite }}
+          key: ${{ steps.npm.outputs.key }}
+          dirs: cacache=${{ steps.npm.outputs.dir }}
 
       - name: Test
         working-directory: pkg/ui
@@ -100,6 +131,17 @@ jobs:
             vite) pnpm run test:consumer ;;
             webpack) pnpm run test:consumer:webpack ;;
           esac
+
+      - name: Save npm's cache (this org's store)
+        if: matrix.suite != 'browser' && steps.npmcache.outputs.hit != 'exact'
+        uses: ./.github/actions/cache
+        with:
+          kms-client-id: ${{ secrets.KMS_CLIENT_ID }}
+          kms-client-secret: ${{ secrets.KMS_CLIENT_SECRET }}
+          command: save
+          name: npm-${{ matrix.suite }}
+          key: ${{ steps.npm.outputs.key }}
+          dirs: cacache=${{ steps.npm.outputs.dir }}
 
   # On main, the suites of what this push releases run in its publish run; this
   # job holds the gate until they pass there.

@@ -24,6 +24,9 @@ outputs:
   runner:
     description: The runner label for this run's ordinary jobs.
     value: ${{ steps.plan.outputs.runner }}
+  heavy:
+    description: The runner label for this run's jobs that build @hanzo/ui.
+    value: ${{ steps.plan.outputs.heavy }}
 runs:
   using: composite
   steps:
@@ -107,10 +110,11 @@ runs:
           tested=$released
         else
           # What this change touched: a pull request's merge commit against its
-          # first parent; a push against the last commit this gate passed on the
-          # branch, because a gate a newer push cancelled tested nothing, and its
-          # commits are this one's to test. A tag, a dispatch, a branch the gate
-          # never passed or an unreadable base tests everything.
+          # first parent; a push against the last commit a gate on this branch
+          # ran to the end, pass or fail, because a gate a newer push cancelled
+          # tested nothing and its commits are this one's to test. A tag, a
+          # dispatch, a branch with no such gate or an unreadable base tests
+          # everything.
           range=
           case "$EVENT" in
             pull_request*) range="HEAD^1 HEAD" ;;
@@ -118,8 +122,8 @@ runs:
               base=
               if [ -n "$BRANCH" ]; then
                 base=$(curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' \
-                  "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/cicd.yml/runs?branch=$BRANCH&event=push&status=success&per_page=1" \
-                  | jq -r '.workflow_runs[0].head_sha // empty') || base=
+                  "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/cicd.yml/runs?branch=$BRANCH&event=push&status=completed&per_page=30" \
+                  | jq -r '[.workflow_runs[] | select(.conclusion == "success" or .conclusion == "failure")][0].head_sha // empty') || base=
               fi
               if [ -n "$base" ] && git fetch -q --depth=1 origin "$base" 2>/dev/null; then range="$base HEAD"; fi ;;
           esac
@@ -149,21 +153,27 @@ runs:
           jq -e --argjson ws "$ws" "$closure"' | index("@hanzo/ui")' <<<"$shipped" >/dev/null && surface=true
         fi
 
-        # One leg per 50 test files of a vitest suite, at most eight, on heavy
-        # runners (six cores each), so the longest suite takes about as long as the
-        # shortest. A package that does not test with `vitest run` runs its test
-        # script whole, in one leg. Leg 1 of a package also typechecks it.
-        runner=linux-amd64
-        [ "$FORK" = true ] && runner=ephemeral-linux-amd64
+        # One leg per 35 test files of a vitest suite, at most eight, so the
+        # longest suite takes about as long as the shortest: @hanzo/ui's 259 run
+        # about 150 s a leg on six cores. A package that does not test with
+        # `vitest run` runs its test script whole, in one leg. Leg 1 of a package
+        # also typechecks it. A leg that builds @hanzo/ui runs on a heavy runner
+        # (six cores): on an ordinary one its build alone took 74 to 210 s.
+        runner=linux-amd64 heavy=heavy-linux-amd64
+        [ "$FORK" = true ] && runner=ephemeral-linux-amd64 heavy=ephemeral-linux-amd64
+        # What each package builds on, to a fixed point.
+        below=$(jq -c '(map({key: .name, value: .deps}) | from_entries) as $d
+          | def down: (. + [.[] | $d[.][]] | map(select($d[.] != null)) | unique);
+          map({key: .name, value: ([.name] | until(down == .; down))}) | from_entries' <<<"$ws")
         legs=$(jq -r --argjson t "$tested" '.[] | select(.name as $n | $t | index($n)) | [.name, .dir, .test, .unit] | @tsv' <<<"$ws" \
           | while IFS=$'\t' read -r name dir test unit; do
               n=1
               if [[ $test =~ (^|"&& ")("vitest run"|"pnpm run test:unit")$ ]] && [ "${unit:-vitest run}" = "vitest run" ]; then
                 files=$(find "$dir" -path '*/node_modules' -prune -o -type f -regex '.*\.\(test\|spec\)\.[cm]?[jt]sx?' -print | wc -l)
-                n=$(( (files + 49) / 50 )); [ "$n" -lt 1 ] && n=1; [ "$n" -gt 8 ] && n=8
+                n=$(( (files + 34) / 35 )); [ "$n" -lt 1 ] && n=1; [ "$n" -gt 8 ] && n=8
               fi
               on=$runner
-              [ "$n" -gt 1 ] && [ "$FORK" != true ] && on=heavy-linux-amd64
+              jq -e --arg p "$name" '.[$p] | index("@hanzo/ui")' <<<"$below" >/dev/null && on=$heavy
               for i in $(seq 1 "$n"); do
                 jq -nc --arg p "$name" --argjson i "$i" --argjson n "$n" --arg r "$on" '{name:$p, packages:[$p], shard:$i, of:$n, runner:$r}'
               done
@@ -178,12 +188,12 @@ runs:
             waits=$(jq -c --argjson r "$released" '[.[] | select(.name as $p | $r | index($p))]' <<<"$legs")
             legs=$(jq -c --argjson r "$released" '[.[] | select(.name as $p | $r | index($p) | not)]' <<<"$legs")
           fi
-          # The gate's verdict is one, so its one-leg packages share legs, six to
-          # a leg: one install and one build of their common dependencies, not one
-          # pod each. The publish lane keeps one package per leg, so a release
-          # waits on its own suite and no other.
-          legs=$(jq -c --arg r "$runner" '[.[] | select(.of > 1)] + ([.[] | select(.of == 1) | .name] | [range(0; length; 6) as $i | .[$i:$i + 6]]
-            | map({name: (if length > 1 then "\(.[0]) +\(length - 1)" else .[0] end), packages: ., shard: 1, of: 1, runner: $r}))' <<<"$legs")
+          # The gate's verdict is one, so its one-leg packages share legs, four to
+          # a leg and grouped by runner: one install and one build of their
+          # common dependencies, not one pod each. The publish lane keeps one
+          # package per leg, so a release waits on its own suite and no other.
+          legs=$(jq -c '[.[] | select(.of > 1)] + ([.[] | select(.of == 1)] | group_by(.runner) | map(. as $g | [range(0; length; 4) as $i | $g[$i:$i + 4]]
+            | map({name: (if length > 1 then "\(.[0].name) +\(length - 1)" else .[0].name end), packages: map(.name), shard: 1, of: 1, runner: .[0].runner})) | add // [])' <<<"$legs")
         fi
 
         {
@@ -192,6 +202,7 @@ runs:
           echo "waits=$waits"
           echo "surface=$surface"
           echo "runner=$runner"
+          echo "heavy=$heavy"
         } >> "$GITHUB_OUTPUT"
         {
           echo "**$LANE** · released: \`$released\` · surface: $surface"
