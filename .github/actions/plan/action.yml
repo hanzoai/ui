@@ -1,0 +1,201 @@
+name: plan
+description: >-
+  What this run tests, and on what. `released` is every public @hanzo/*
+  package whose version is ahead of what npmjs serves. The publish lane tests
+  those; the gate tests the packages this change touched and every workspace
+  package that depends on them. Each tested package is one or more legs.
+inputs:
+  lane:
+    description: "'publish' or 'gate'"
+    required: true
+outputs:
+  released:
+    description: JSON array of the package names ahead of npmjs.
+    value: ${{ steps.plan.outputs.released }}
+  legs:
+    description: "JSON array of {package, shard, of, runner}: the legs this lane runs."
+    value: ${{ steps.plan.outputs.legs }}
+  waits:
+    description: The legs the gate leaves to this push's publish run, which tests them.
+    value: ${{ steps.plan.outputs.waits }}
+  surface:
+    description: "'true' when what @hanzo/ui packs may have changed (gate only)."
+    value: ${{ steps.plan.outputs.surface }}
+  runner:
+    description: The runner label for this run's ordinary jobs.
+    value: ${{ steps.plan.outputs.runner }}
+runs:
+  using: composite
+  steps:
+    - id: plan
+      shell: bash
+      env:
+        LANE: ${{ inputs.lane }}
+        EVENT: ${{ github.event_name }}
+        BRANCH: ${{ github.ref_type == 'branch' && github.ref_name || '' }}
+        GH_TOKEN: ${{ github.token }}
+        MAIN: ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+        # A pull request from a fork runs code no member of this org wrote: its
+        # legs go to the `ephemeral-` label, the platform's one-job sandboxes.
+        FORK: ${{ startsWith(github.event_name, 'pull_request') && github.event.pull_request.head.repo.full_name != github.repository }}
+      run: |
+        set -euo pipefail
+
+        # The workspace: every package under pkg/ and apps/, with the workspace
+        # packages it names in any dependency field.
+        ws=$(for f in pkg/*/package.json apps/*/package.json; do
+          jq -c --arg dir "${f%/package.json}" '{name, version, dir: $dir, private: (.private // false),
+            test: (.scripts.test // ""), unit: (.scripts["test:unit"] // ""),
+            deps: ([.dependencies, .devDependencies, .peerDependencies, .optionalDependencies] | map(select(.) | keys) | add // [])}' "$f"
+        done | jq -sc .)
+
+        # AHEAD OF NPMJS, FORWARD ONLY. What npm serves, not what the previous
+        # commit said: a merge whose first parent already carries the version has
+        # an empty diff, and asking the registry is independent of merge topology.
+        # A version BEHIND npm (a release cut elsewhere, a revert) is not a release.
+        # A registry that does not answer fails the plan, so an outage reads
+        # neither as thirty first releases nor as nothing to release.
+        ahead() {
+          local name=$1 want=$2 out code old try
+          for try in 1 2 3; do
+            out=$(curl -sS -m 20 -w '\n%{http_code}' -H 'Accept: application/vnd.npm.install-v1+json' \
+                    "https://registry.npmjs.org/${name/\//%2F}" 2>/dev/null) || out=$'\n000'
+            code=${out##*$'\n'}
+            case "$code" in 200|404) break ;; esac
+            sleep $((try * 3))
+          done
+          case "$code" in
+            200) old=$(printf '%s' "${out%$'\n'*}" | jq -r '."dist-tags".latest // "0.0.0"') ;;
+            404) old=0.0.0 ;;
+            *) echo "::error::npmjs answered $code for $name three times" >&2; return 1 ;;
+          esac
+          if [ "$old" != "$want" ] && [ "$(printf '%s\n%s\n' "$old" "$want" | sort -V | tail -1)" = "$want" ]; then
+            echo "$name $old -> $want" >&2
+            echo "$name"
+          fi
+        }
+        export -f ahead
+        released=$(jq -r '.[] | select(.private | not) | select(.name | startswith("@hanzo/")) | "\(.name) \(.version)"' <<<"$ws" \
+          | xargs -r -P 8 -n 2 bash -c 'ahead "$0" "$1"' | jq -R . | jq -sc 'sort')
+
+        # npmjs serves a version minutes after it accepts it (measured 4 to 7).
+        # A version one of this repo's publish jobs had accepted in the last 20
+        # minutes is released, whatever npmjs answers yet, so a push inside that
+        # window does not test it again only to find it published.
+        gh() { curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/$1"; }
+        if [ "$released" != '[]' ]; then
+          since=$(date -u -d '-20 min' +%Y-%m-%dT%H:%M:%SZ)
+          for run in $(gh "actions/workflows/publish.yml/runs?status=success&per_page=10" \
+                       | jq -r --arg t "$since" '.workflow_runs[] | select(.updated_at > $t) | "\(.id):\(.head_sha)"' || true); do
+            for name in $(gh "actions/runs/${run%%:*}/jobs?per_page=100" | jq -r --argjson r "$released" '.jobs[] | select(.conclusion == "success" and (.name | startswith("publish "))) | .name[8:] | select(. as $n | $r | index($n))' || true); do
+              dir=$(jq -r --arg n "$name" '.[] | select(.name == $n) | .dir' <<<"$ws")
+              then=$(gh "contents/$dir/package.json?ref=${run#*:}" | jq -r '.content' | base64 -d 2>/dev/null | jq -r .version) || continue
+              if [ "$then" = "$(jq -r --arg n "$name" '.[] | select(.name == $n) | .version' <<<"$ws")" ]; then
+                echo "$name $then: published by run ${run%%:*}" >&2
+                released=$(jq -c --arg n "$name" 'map(select(. != $n))' <<<"$released")
+              fi
+            done
+          done
+        fi
+
+        # Every workspace package that depends on one in the set, to a fixed point.
+        closure='def up($ws): . as $s | ($s + [$ws[] | select(any(.deps[]; . as $d | $s | index($d))) | .name]) | unique;
+                 until(up($ws) == .; up($ws))'
+
+        surface=false
+        if [ "$LANE" = publish ]; then
+          tested=$released
+        else
+          # What this change touched: a pull request's merge commit against its
+          # first parent; a push against the last commit this gate passed on the
+          # branch, because a gate a newer push cancelled tested nothing, and its
+          # commits are this one's to test. A tag, a dispatch, a branch the gate
+          # never passed or an unreadable base tests everything.
+          range=
+          case "$EVENT" in
+            pull_request*) range="HEAD^1 HEAD" ;;
+            push)
+              base=
+              if [ -n "$BRANCH" ]; then
+                base=$(curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' \
+                  "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/cicd.yml/runs?branch=$BRANCH&event=push&status=success&per_page=1" \
+                  | jq -r '.workflow_runs[0].head_sha // empty') || base=
+              fi
+              if [ -n "$base" ] && git fetch -q --depth=1 origin "$base" 2>/dev/null; then range="$base HEAD"; fi ;;
+          esac
+          if [ -n "$range" ]; then
+            # shellcheck disable=SC2086 # range is two revisions
+            files=$(git diff --name-only $range)
+          else
+            files=ALL
+          fi
+          # A path in a package is that package; a root build input (the lockfile,
+          # the workspace, the shared tsconfigs, scripts/, and this gate's own
+          # actions and legs) is every package; any other path (docs, hanzo.yml,
+          # publish.yml) is none. `shipped` leaves out test
+          # files and Markdown: what a package packs.
+          touch_of() {
+            jq -Rsc --argjson ws "$ws" '
+              split("\n") | map(select(length > 0)) as $f |
+              if $f == ["ALL"] or any($f[]; test("^(pnpm-lock\\.yaml|package\\.json|pnpm-workspace\\.yaml|\\.npmrc|tsconfig\\.json|turbo\\.json|pkg/tsconfig\\.hanzo\\.base\\.json|scripts/.*|\\.github/actions/.*|\\.github/workflows/(cicd|test)\\.yml)$"))
+              then [$ws[].name]
+              else [$ws[] | .dir as $d | select(any($f[]; startswith($d + "/"))) | .name] end'
+          }
+          touched=$(printf '%s\n' "$files" | touch_of)
+          shipped=$(printf '%s\n' "$files" | { grep -Ev '\.(test|spec)\.[cm]?[jt]sx?$|\.md$' || true; } | touch_of)
+          tested=$(jq -c --argjson ws "$ws" "$closure" <<<"$touched")
+          # The consumer suites install the packed @hanzo/ui like a stranger would,
+          # so they run when what it packs, or a package it builds on, changed.
+          jq -e --argjson ws "$ws" "$closure"' | index("@hanzo/ui")' <<<"$shipped" >/dev/null && surface=true
+        fi
+
+        # One leg per 50 test files of a vitest suite, at most eight, on heavy
+        # runners (six cores each), so the longest suite takes about as long as the
+        # shortest. A package that does not test with `vitest run` runs its test
+        # script whole, in one leg. Leg 1 of a package also typechecks it.
+        runner=linux-amd64
+        [ "$FORK" = true ] && runner=ephemeral-linux-amd64
+        legs=$(jq -r --argjson t "$tested" '.[] | select(.name as $n | $t | index($n)) | [.name, .dir, .test, .unit] | @tsv' <<<"$ws" \
+          | while IFS=$'\t' read -r name dir test unit; do
+              n=1
+              if [[ $test =~ (^|"&& ")("vitest run"|"pnpm run test:unit")$ ]] && [ "${unit:-vitest run}" = "vitest run" ]; then
+                files=$(find "$dir" -path '*/node_modules' -prune -o -type f -regex '.*\.\(test\|spec\)\.[cm]?[jt]sx?' -print | wc -l)
+                n=$(( (files + 49) / 50 )); [ "$n" -lt 1 ] && n=1; [ "$n" -gt 8 ] && n=8
+              fi
+              on=$runner
+              [ "$n" -gt 1 ] && [ "$FORK" != true ] && on=heavy-linux-amd64
+              for i in $(seq 1 "$n"); do
+                jq -nc --arg p "$name" --argjson i "$i" --argjson n "$n" --arg r "$on" '{name:$p, packages:[$p], shard:$i, of:$n, runner:$r}'
+              done
+            done | jq -sc .)
+
+        waits='[]'
+        if [ "$LANE" = gate ]; then
+          # On a push to the default branch the publish run tests what it
+          # releases, and nothing cancels it, so the gate does not run those
+          # suites twice: it waits for that run's legs instead.
+          if [ "$EVENT" = push ] && [ "$MAIN" = true ]; then
+            waits=$(jq -c --argjson r "$released" '[.[] | select(.name as $p | $r | index($p))]' <<<"$legs")
+            legs=$(jq -c --argjson r "$released" '[.[] | select(.name as $p | $r | index($p) | not)]' <<<"$legs")
+          fi
+          # The gate's verdict is one, so its one-leg packages share legs, six to
+          # a leg: one install and one build of their common dependencies, not one
+          # pod each. The publish lane keeps one package per leg, so a release
+          # waits on its own suite and no other.
+          legs=$(jq -c --arg r "$runner" '[.[] | select(.of > 1)] + ([.[] | select(.of == 1) | .name] | [range(0; length; 6) as $i | .[$i:$i + 6]]
+            | map({name: (if length > 1 then "\(.[0]) +\(length - 1)" else .[0] end), packages: ., shard: 1, of: 1, runner: $r}))' <<<"$legs")
+        fi
+
+        {
+          echo "released=$released"
+          echo "legs=$legs"
+          echo "waits=$waits"
+          echo "surface=$surface"
+          echo "runner=$runner"
+        } >> "$GITHUB_OUTPUT"
+        {
+          echo "**$LANE** · released: \`$released\` · surface: $surface"
+          echo
+          jq -r '.[] | "- \(.name) \(.shard)/\(.of) on \(.runner): \(.packages | join(", "))"' <<<"$legs"
+          jq -r '.[] | "- \(.name) \(.shard)/\(.of): tested by the publish run"' <<<"$waits"
+        } >> "$GITHUB_STEP_SUMMARY"

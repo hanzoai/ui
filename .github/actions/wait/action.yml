@@ -1,0 +1,59 @@
+name: wait for legs
+description: >-
+  Wait until every named leg of test.yml has passed, in this run or in the run
+  of another workflow for this commit, and fail as soon as one has not.
+inputs:
+  legs:
+    description: "JSON array of the legs, as .github/actions/plan writes them."
+    required: true
+  workflow:
+    description: The workflow file whose run for this commit holds the legs; empty is this run.
+    default: ''
+  token:
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        LEGS: ${{ inputs.legs }}
+        WORKFLOW: ${{ inputs.workflow }}
+        GH_TOKEN: ${{ inputs.token }}
+      run: |
+        set -uo pipefail
+        api() { curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/$1"; }
+        # A leg's job is "test / <name> <shard>/<of>": the caller's job, then the leg's.
+        want=$(jq -c '[.[] | "test / \(.name) \(.shard)/\(.of)"]' <<<"$LEGS")
+        if [ -n "$WORKFLOW" ]; then
+          run=
+          for _ in $(seq 1 24); do
+            run=$(api "actions/workflows/$WORKFLOW/runs?head_sha=$GITHUB_SHA&event=push&per_page=1" | jq -r '.workflow_runs[0].id // empty') && [ -n "$run" ] && break
+            sleep 5
+          done
+          [ -n "$run" ] || { echo "::error::no $WORKFLOW run for $GITHUB_SHA"; exit 1; }
+          jobs="actions/runs/$run/jobs?filter=latest&per_page=100"
+        else
+          jobs="actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs?per_page=100"
+        fi
+        for _ in $(seq 1 240); do
+          got=$(api "$jobs" | jq -c --argjson w "$want" '[.jobs[] | select(.name as $n | $w | index($n)) | {name, status, conclusion}]') || got='[]'
+          bad=$(jq -r '[.[] | select(.status == "completed" and .conclusion != "success") | .name] | join(", ")' <<<"$got")
+          [ -z "$bad" ] || { echo "::error::$bad did not pass"; exit 1; }
+          done=$(jq '[.[] | select(.status == "completed")] | length' <<<"$got")
+          [ "$done" -ge "$(jq length <<<"$want")" ] && { echo "$done of $(jq length <<<"$want") leg(s) passed"; exit 0; }
+          # The other run planned on its own, and one that finished without some of
+          # these legs did not test those packages. That passes only for a package
+          # npmjs already serves at this tree's version; anything else fails.
+          if [ -n "$WORKFLOW" ] && [ "$(api "actions/runs/$run" | jq -r .status)" = completed ]; then
+            missing=$(jq -r --argjson g "$got" --argjson l "$LEGS" '[$l[] | select("test / \(.name) \(.shard)/\(.of)" as $n | $g | map(.name) | index($n) | not) | .name] | unique | .[]' <<<"$want")
+            for name in $missing; do
+              v=$(jq -r --arg n "$name" 'select(.name == $n) | .version' pkg/*/package.json)
+              curl -fsS -o /dev/null "https://registry.npmjs.org/${name/\//%2F}/$v" \
+                || { echo "::error::$WORKFLOW run $run did not test $name, and npmjs does not serve $name@$v"; exit 1; }
+              echo "$name@$v is on npmjs; $WORKFLOW run $run had nothing of it to test"
+            done
+            exit 0
+          fi
+          sleep 5
+        done
+        echo "::error::the legs did not finish within 20 minutes"; exit 1

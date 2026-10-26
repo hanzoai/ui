@@ -28,14 +28,17 @@ outputs:
 runs:
   using: composite
   steps:
-    # The IAM token goes to bin/cache alone, never to GITHUB_ENV: the build runs
-    # every package's scripts.
+    # Fetched for every call and checked against its digest, because a job's
+    # install runs third-party scripts that can write anywhere the job can. The
+    # KMS pair stays in this shell; bin/cache gets the IAM token alone, never
+    # GITHUB_ENV, because the build runs every package's scripts.
     - id: run
       shell: bash
       env:
         KMS_CLIENT_ID: ${{ inputs.kms-client-id }}
         KMS_CLIENT_SECRET: ${{ inputs.kms-client-secret }}
         CI_SHA: c07458b2b77a46a79402f174dc70358e426dcf38
+        CI_SUM: 54673db6606223dbb162d4fb3b3ef9b0cc2159b15cd73c09e20afa646eb4890d
         COMMAND: ${{ inputs.command }}
         NAME: ${{ inputs.name }}
         KEY: ${{ inputs.key }}
@@ -43,14 +46,17 @@ runs:
       run: |
         set +e
         set -uo pipefail
-        bin="$RUNNER_TEMP/bin-cache"
-        if [ ! -x "$bin" ]; then
-          curl -fsSL -m 60 "https://raw.githubusercontent.com/hanzoai/ci/$CI_SHA/bin/cache" -o "$bin" && chmod +x "$bin" \
-            || { echo "::notice::hanzoai/ci@$CI_SHA bin/cache did not download, so nothing is carried"; echo "hit=miss" >> "$GITHUB_OUTPUT"; exit 0; }
+        bin=$(mktemp -p "$RUNNER_TEMP" cache.XXXXXX)
+        if ! curl -fsSL -m 60 "https://raw.githubusercontent.com/hanzoai/ci/$CI_SHA/bin/cache" -o "$bin" \
+           || [ "$(sha256sum < "$bin" | cut -d' ' -f1)" != "$CI_SUM" ]; then
+          echo "::notice::hanzoai/ci@$CI_SHA bin/cache did not download whole, so nothing is carried"; echo "hit=miss" >> "$GITHUB_OUTPUT"; exit 0
         fi
+        chmod +x "$bin"
         T=$(printf '{"clientId":"%s","clientSecret":"%s"}' "$KMS_CLIENT_ID" "$KMS_CLIENT_SECRET" \
           | curl -sS -m 30 https://api.hanzo.ai/v1/kms/auth/login -H 'Content-Type: application/json' -d @- \
           | jq -r '.accessToken // empty' 2>/dev/null)
         if [ -n "$T" ]; then echo "::add-mask::$T"; else echo "::notice::KMS gave no IAM token, so the org store is not used"; fi
         # shellcheck disable=SC2086 # DIRS is a list of label=dir words
-        HANZO_API_TOKEN=$T "$bin" "$COMMAND" "$NAME" "$KEY" $DIRS || echo "::notice::cache $COMMAND $NAME did not complete"
+        env -u KMS_CLIENT_ID -u KMS_CLIENT_SECRET HANZO_API_TOKEN="$T" "$bin" "$COMMAND" "$NAME" "$KEY" $DIRS \
+          || echo "::notice::cache $COMMAND $NAME did not complete"
+        rm -f "$bin"

@@ -1,62 +1,18 @@
-# Canonical CI/CD config for hanzoai/ui — the one file both the hanzoai/ci
-# reusable (.hanzo/workflows/cicd.yml) and platform.hanzo.ai read.
+# Canonical CI/CD config for hanzoai/ui, read by the hanzoai/ci reusable and
+# platform.hanzo.ai.
 #
-# A library, not a container. `pkg/ui` publishes to npm from
-# .hanzo/workflows/publish.yml on a version change — still the only thing here
-# allowed to reach npmjs. The shadcn CLI, the component registry and the docs
-# sites live in hanzoai/shadcn, and ui.hanzo.ai is built there.
+# A library, not a container. Packages publish to npm from
+# .github/workflows/publish.yml when a version is ahead of npmjs — the only
+# thing here allowed to reach npmjs.
 #
-# The gate is pkg/ui — the package this repo publishes — running the same
-# commands publish.yml proves on this runner, moved EARLIER. That ordering is
-# the point: publish.yml is the LAST place a defect costs nothing, because the
-# version it ships is immutable. Here it costs a re-push.
-#
-# The trailing `...` on the build filter is load-bearing: it builds @hanzo/ui's
-# WORKSPACE DEPENDENCIES first, in topological order. Without it the siblings
-# have no dist/, tsc reads them through their own `"types": "dist/index.d.ts"`,
-# and they come back as missing modules — `Cannot find module '@hanzo/tokens'`,
-# `'@hanzo/products'`, `'@hanzo/cd'` — plus a wave of implicit-any in every file
-# that imported them. Those errors name @hanzo/ui and are not its fault.
-#
-# `pnpm install` without --frozen-lockfile is deliberate: pnpm already defaults
-# frozen-lockfile to true under CI, so the flag adds a second way to spell the
-# same thing.
-
-# Two jobs, not one, and the split is not cosmetic. `pnpm run test` is vitest
-# plus the Vite consumer plus the WEBPACK consumer, and the two consumer suites
-# need a browser and a real npm install that unit tests do not. Running them as
-# one step puts a playwright download in front of every unit failure.
-test:
-  - name: ui-unit
-    run: |
-      set -e
-      corepack enable
-      pnpm install
-      pnpm --filter @hanzo/ui... build
-      pnpm --filter @hanzo/ui run test:unit
-  - name: ui-consumer
-    run: |
-      set -e
-      corepack enable
-      pnpm install
-      pnpm --filter @hanzo/ui... build
-      cd pkg/ui
-      # The runner cannot sudo, so --with-deps fails before a browser lands; the
-      # image already carries chromium's libraries. Its baked browsers sit under
-      # /opt as root, so the job's own copy goes where the job may write.
-      export PLAYWRIGHT_BROWSERS_PATH="$PWD/.cache/ms-playwright"
-      pnpm exec playwright install chromium
-      # Corner in a real browser: placement in LTR and RTL, keyboard, theme.
-      # It reads dist/theme.css, which the build above wrote.
-      pnpm run test:corner
-      # Every code surface in Chromium: grey inks on grey grounds at AA, dark and
-      # light, LTR and RTL. Also reads dist/theme.css.
-      pnpm run test:code
-      # Both bundlers. They disagree about css url() asset resolution, and a
-      # Vite-only gate is how 8.0.46 shipped a stylesheet pointing at a font
-      # file the package does not pack.
-      pnpm run test:consumer
-      pnpm run test:consumer:webpack
+# NO `test:` BLOCK. The gate is .github/workflows/cicd.yml: it tests the
+# packages a change touched and every package that depends on them, split
+# across parallel legs (.github/workflows/test.yml, which publish.yml runs for
+# what it releases), and the consumer suites only when what @hanzo/ui packs may
+# have changed. One serial job cannot hold that inside five minutes: @hanzo/ui's
+# 259 test files alone ran 657 s on six cores. cicd.yml calls the reusable with
+# `tests: 'false'` once its own jobs passed, for the repository-wide checks and
+# the site below.
 
 # ui.hanzo.ai. Static documentation and interactive component catalog
 # pre-rendered via One SSG in apps/ui.hanzo.ai. All 48 components and examples

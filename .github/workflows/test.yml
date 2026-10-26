@@ -1,0 +1,95 @@
+# The legs both lanes run: cicd.yml (the gate) and publish.yml call this with
+# the legs .github/actions/plan chose. One leg is one runner: it installs the
+# workspace, builds its packages and what they build on, and runs its share of
+# their tests. A dynamic matrix is safe here because github.com runs this file
+# and expands it; the forge mirror of hanzoai/* runs no Actions.
+name: Test
+
+on:
+  workflow_call:
+    inputs:
+      legs:
+        description: "JSON array of {name, packages, shard, of, runner}."
+        type: string
+        required: true
+      save:
+        description: Lets the first leg write the lockfile verdict back on a miss.
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  leg:
+    name: ${{ matrix.name }} ${{ matrix.shard }}/${{ matrix.of }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(inputs.legs) }}
+    env:
+      PACKAGES: ${{ toJson(matrix.packages) }}
+      SHARD: ${{ matrix.shard }}
+      OF: ${{ matrix.of }}
+    steps:
+      # A leg handed something other than a list of package names and a shard
+      # fails here, loudly: an unmatched `pnpm --filter` exits 0, so a leg that
+      # filtered on nothing would pass having built and tested nothing.
+      - name: One share of named packages
+        run: |
+          jq -e 'type == "array" and length > 0 and all(.[]; test("^(@hanzo/)?[a-z0-9._-]+$"))' <<<"$PACKAGES" >/dev/null \
+            && [[ $SHARD =~ ^[0-9]+$ && $OF =~ ^[0-9]+$ ]] \
+            || { echo "::error::this leg was handed '$PACKAGES' ($SHARD/$OF), not a share of named packages"; exit 1; }
+
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/pnpm
+        with:
+          kms-client-id: ${{ secrets.KMS_CLIENT_ID }}
+          kms-client-secret: ${{ secrets.KMS_CLIENT_SECRET }}
+          save: ${{ inputs.save && strategy.job-index == 0 }}
+
+      # The trailing `...` is load-bearing: it builds each package's WORKSPACE
+      # DEPENDENCIES first, in topological order. Without it the siblings have no
+      # `dist/`, type themselves through `"types": "dist/index.d.ts"`, and come
+      # back as missing modules that name the wrong package. @hanzo/ui's own
+      # build is needed too: its dist, next and styles suites read dist/.
+      - name: Build the packages and what they build on
+        run: |
+          mapfile -t f < <(jq -r '.[] | "--filter", . + "..."' <<<"$PACKAGES")
+          pnpm "${f[@]}" build
+
+      # A build EMITS; it does not check. tsup and tsc -p both stop at the files
+      # they are asked to write, so a program-wide error sits outside what either
+      # reads. Leg 1 of each package checks it, `--if-present` so a package with
+      # no typecheck script passes.
+      - name: Typecheck
+        if: matrix.shard == 1
+        run: |
+          mapfile -t f < <(jq -r '.[] | "--filter", .' <<<"$PACKAGES")
+          pnpm "${f[@]}" run --if-present typecheck
+
+      # bun, only for a package whose own test script asks for it (@hanzo/canvas
+      # and @hanzo/dashboard declare `bun test`); from npmjs, a host this job
+      # already reaches.
+      - name: Provision bun (bun test scripts)
+        run: |
+          mapfile -t f < <(jq -r '.[] | "--filter", .' <<<"$PACKAGES")
+          if pnpm "${f[@]}" exec node -p 'require("./package.json").scripts?.test ?? ""' | grep -qw bun \
+             && ! command -v bun >/dev/null 2>&1; then
+            npm install -g bun && bun --version
+          fi
+
+      # A split suite runs its own share of the files; a whole one runs each
+      # package's test script, `--if-present` so a package with none is skipped
+      # rather than failing.
+      - name: Test
+        run: |
+          mapfile -t f < <(jq -r '.[] | "--filter", .' <<<"$PACKAGES")
+          if [ "$OF" -gt 1 ]; then
+            pnpm "${f[@]}" exec vitest run --shard="$SHARD/$OF"
+          else
+            pnpm "${f[@]}" run --if-present test
+          fi

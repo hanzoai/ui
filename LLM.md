@@ -1116,49 +1116,47 @@ pnpm test                          # unit tests
 
 ## How this ships
 
-One way, and it runs on our own stack:
+    push  ->  github.com/hanzoai/ui              CANONICAL; jobs run in ephemeral
+                                                 pods on the cluster (ns hanzo-ci)
+              .github/workflows/cicd.yml         the gate, then the ui.hanzo.ai site
+              .github/workflows/publish.yml      publishes pkg/* to npmjs
+              .github/workflows/test.yml         the legs both of them run
+              .github/actions/plan               what a run tests, and on what
+      ->  npmjs                                  @hanzo/ui and the @hanzo/* family
 
-    push  ->  git.hanzo.ai/hanzoai/ui           CANONICAL
-              .hanzo/workflows/cicd.yml         the whole pipeline, from hanzo.yml
-              .github/workflows/publish.yml     publishes pkg/*
-              .hanzo/workflows/snapshots.yml    refreshes the visual baselines
-      ->  npmjs                                 @hanzo/ui and the @hanzo/* family
-        github.com/hanzoai/ui                   a mirror, pushed alongside;
-                                                it runs nothing
-
-No image and no deploy lane. This repo emits packages. ui.hanzo.ai is built
-from `hanzoai/shadcn`, which owns the docs site and the registry it serves.
-
-**git.hanzo.ai is canonical; GitHub is a mirror.** There is no `.github/workflows/`
-— every build, check, publish and deploy is a workflow under `.hanzo/workflows/`,
-which the forge reads. `.hanzo/workflows` uses GitHub Actions syntax, so a workflow
-moves between the two by changing directory and nothing else, and github.com has no
-runner registered for the `hanzo-build-*` labels these ask for. Keeping the mirror
-current means pushing both remotes; nothing carries refs for you.
-
-`cicd.yml` names only the triggers: every decision — what to test, what to build,
-where it rolls — is read from the root `hanzo.yml`. No Vercel, no preview deploys.
+Every job fits five minutes; a suite that does not is split into legs.
 
 ## Publishing
 
-One way: bump a package's `version` in its `package.json` and merge to `main`.
-`.hanzo/workflows/publish.yml` detects the changed `@hanzo/*` package and publishes
-it to npm (needs `NPM_TOKEN` as a forge secret). No changesets, no version-PR bot
-— the semver bump is the trigger.
-
-It is the SOLE publisher of every non-private `@hanzo/*` in `pkg/*`,
-and it mirrors the same tarball to `api.hanzo.ai/v1/packages/hanzo/npm` when
-`HANZO_REGISTRY_TOKEN` is present. That mirror is best-effort by construction: no
-token means a notice, not a failure, and npmjs stays authoritative either way.
+One way: bump a package's `version` and merge to `main`. publish.yml's plan asks
+npmjs what it serves; every public `@hanzo/*` whose version is ahead (forward
+only) is released by this run, and nothing else builds. Each released package
+gets its own legs (one per 50 vitest files, at most eight, heavy runners for a
+split suite) and its own publish job in group `publish-<name>`, never cancelled:
+a release waits on its own suite and on no other package. The publish job runs
+the guard (`prepublishOnly`) and publishes with `--ignore-scripts`, so what ships
+is what it built. npmjs's token is read from KMS at run time. It mirrors the same
+tarball to `api.hanzo.ai/v1/packages/hanzo/npm` when `REGISTRY_TOKEN` is set,
+best-effort.
 
 ## The gate
 
-`hanzo.yml`'s `test:` block, which `cicd.yml` runs through `hanzoai/ci`:
-`ui-unit` builds `@hanzo/ui` with its workspace deps and runs `test:unit`, and
-`ui-consumer` installs chromium and runs `test:consumer` under both bundlers —
-Vite and webpack disagree about css `url()` asset resolution, and a Vite-only gate
-is how 8.0.46 shipped a stylesheet pointing at a font the package does not pack.
-No coverage upload runs here.
+cicd.yml, superseded by a newer push to the same ref. Its plan diffs the change
+(a PR's merge commit against its base, a push against `before`): a path in a
+package is that package, a root build input (lockfile, workspace, shared
+tsconfigs, `scripts/`) is every package, anything else is none; then every
+workspace package that depends on those. One-leg packages share legs, six to a
+leg. On a push to main, what the push releases is tested by its publish run
+(which nothing cancels) and the gate's `released` job waits for those legs.
+The consumer suites (`ui browser`: corner + code in Chromium; `ui vite`;
+`ui webpack`) run only when what `@hanzo/ui` packs, or a package it builds on,
+changed outside test files and Markdown. hanzoai/ci runs with `tests: 'false'`:
+its repository checks beside the legs on a PR, and on a push the same checks and
+the site, once every gate job that ran has passed.
+
+Installs carry no node_modules and no store: pnpm 11's lockfile verification
+record (`lockfile-verified.jsonl`, keyed by the lockfile's content) travels
+through the org store, so an install skips re-fetching a packument per entry.
 
 **`test:consumer` is red on published 8.1.0 and later, and it is not a split
 defect.** `@hanzo/ui` → `@hanzogui/lucide-icons-2` → `react-native-svg@15.15.5`

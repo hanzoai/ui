@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     # No `paths:` filter, deliberately. There is ONE question here — "does npmjs
-    # serve something older than this tree?" — and detect-changes answers it
+    # serve something older than this tree?" — and the plan job answers it
     # against the registry itself. A path gate in front of it is a second, worse
     # answer to the same question: it guesses from the shape of a diff, and
     # anything that can veto the job before the registry comparison runs is a way
@@ -19,171 +19,44 @@ on:
 # another's suite. That queue was the lane's floor: one job built, tested and
 # published every changed package in turn.
 
-# The publish leg reads its package's test legs from this run.
+# The publish job reads its package's test legs from this run.
 permissions:
   contents: read
   actions: read
 
 jobs:
-  detect-changes:
-    runs-on: [linux-amd64]
+  plan:
+    runs-on: linux-amd64
     outputs:
-      packages: ${{ steps.changed.outputs.packages }}
-      legs: ${{ steps.changed.outputs.legs }}
+      released: ${{ steps.plan.outputs.released }}
+      legs: ${{ steps.plan.outputs.legs }}
     steps:
       - uses: actions/checkout@v4
+      - id: plan
+        uses: ./.github/actions/plan
         with:
-          fetch-depth: 2
+          lane: publish
 
-      - name: Detect changed packages
-        id: changed
-        run: |
-          CHANGED=()
-          declare -A DIRS
-          for pkg_json in pkg/*/package.json; do
-            [ ! -f "$pkg_json" ] && continue
-            # Skip private packages
-            IS_PRIVATE=$(jq -r '.private // false' "$pkg_json")
-            [ "$IS_PRIVATE" = "true" ] && continue
-
-            # Only publish @hanzo/* packages
-            PKG_NAME=$(jq -r '.name' "$pkg_json")
-            case "$PKG_NAME" in
-              @hanzo/*) ;;
-              *) continue ;;
-            esac
-
-            # What npm SERVES, not what the previous commit said. HEAD~1 is the
-            # FIRST PARENT, so a merge whose first parent is the feature branch
-            # already carries the new version and the diff is empty — the publish
-            # is skipped and npm keeps serving the old release, silently. Asking
-            # the registry is independent of merge topology and of how many
-            # commits the runner fetched.
-            NEW=$(jq -r '.version' "$pkg_json")
-            OLD=$(curl -sf "https://registry.npmjs.org/${PKG_NAME}" \
-                    | jq -r '."dist-tags".latest // "0.0.0"' 2>/dev/null || echo "0.0.0")
-
-            # FORWARD ONLY. `!=` fires in both directions, and several packages
-            # sit BEHIND npm (a release cut elsewhere, a revert) — publishing
-            # those walks the registry backwards. Only a strictly greater local
-            # version is a release.
-            NEWEST=$(printf '%s\n%s\n' "$OLD" "$NEW" | sort -V | tail -1)
-            if [ "$OLD" != "$NEW" ] && [ "$NEWEST" = "$NEW" ]; then
-              echo "Version change: $PKG_NAME ($OLD -> $NEW)"
-              # The package NAME, because every downstream step spends this as a
-              # `pnpm --filter` argument and a directory basename matches nothing.
-              # An unmatched filter exits 0, so the build silently no-ops and the
-              # publish ships an unbuilt tarball — how 8.0.17 and 8.0.19 shipped broken.
-              CHANGED+=("$PKG_NAME")
-              DIRS["$PKG_NAME"]=$(dirname "$pkg_json")
-            fi
-          done
-
-          if [ ${#CHANGED[@]} -eq 0 ]; then
-            echo "packages=[]" >> $GITHUB_OUTPUT
-            echo "legs=[]" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          JSON=$(printf '%s\n' "${CHANGED[@]}" | jq -R . | jq -s -c .)
-          echo "packages=$JSON" >> $GITHUB_OUTPUT
-
-          # One test leg per 50 test files of a vitest suite, at most eight, so the
-          # longest suite takes about as long as the shortest. @hanzo/ui's 260
-          # files ran 657 s in one job (run 39892323401); a package that does not
-          # test with `vitest run` runs its test script whole, in one leg.
-          LEGS=()
-          for PKG in "${CHANGED[@]}"; do
-            DIR=${DIRS[$PKG]}
-            n=1
-            if jq -r '.scripts.test // ""' "$DIR/package.json" | grep -Eq '(^|&& )(vitest run|pnpm run test:unit)$' \
-               && jq -r '.scripts["test:unit"] // "vitest run"' "$DIR/package.json" | grep -qx 'vitest run'; then
-              files=$(find "$DIR" -path '*/node_modules' -prune -o -type f -regex '.*\.\(test\|spec\)\.[cm]?[jt]sx?' -print | wc -l)
-              n=$(( (files + 49) / 50 )); [ "$n" -lt 1 ] && n=1; [ "$n" -gt 8 ] && n=8
-            fi
-            for i in $(seq 1 "$n"); do LEGS+=("$(jq -nc --arg p "$PKG" --argjson i "$i" --argjson n "$n" '{package:$p, shard:$i, of:$n}')"); done
-            echo "$PKG: $n test leg(s)"
-          done
-          echo "legs=$(printf '%s\n' "${LEGS[@]}" | jq -s -c .)" >> $GITHUB_OUTPUT
-
-
-  # ONE JOB PER CHANGED PACKAGE, AND A SUITE SPLIT ACROSS LEGS. One job used to
-  # build, test and publish every changed package in turn, so a release waited on
-  # every other package's suite, and @hanzo/ui's alone ran 657 s.
-  #
-  # A dynamic matrix is safe here because github.com runs this file and expands
-  # it; the forge mirror of hanzoai/* runs no Actions. Hanzo Git did not expand
-  # `fromJson(...)` in a matrix: it ran one job whose `matrix.package` was the
-  # whole array, an unmatched `pnpm --filter` exits 0, and one package shipped
-  # while the rest silently did not (@hanzo/ui@8.0.69 without
-  # @hanzo/appearance). So every leg refuses a value that is not one package
-  # name, and a plane that does not expand the matrix fails loudly instead.
+  # Each released package's legs (test.yml), and nothing cancels them: the gate
+  # leaves these suites to this run.
   test:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.legs != '[]'
-    name: test ${{ matrix.package }} ${{ matrix.shard }}/${{ matrix.of }}
-    # Ordinary runners. A heavy one asks six cores of a node no other heavy job
-    # holds, and the CI pool is eight 8-core nodes (universe infra/aws/pool.tf):
-    # once ordinary jobs hold a few cores of every node, a heavy leg waits for
-    # a node that never empties, measured at 25 minutes and counting.
-    runs-on: [linux-amd64]
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJson(needs.detect-changes.outputs.legs) }}
-    env:
-      PKG: ${{ matrix.package }}
-      SHARD: ${{ matrix.shard }}
-      OF: ${{ matrix.of }}
-    steps:
-      - name: One package per leg
-        run: |
-          [[ $PKG =~ ^@hanzo/[a-z0-9._-]+$ && $SHARD =~ ^[0-9]+$ && $OF =~ ^[0-9]+$ ]] || {
-            echo "::error::this leg was handed '$PKG' ($SHARD/$OF), not one package: the matrix was not expanded"; exit 1; }
-
-      - uses: actions/checkout@v4
-
-      - uses: ./.github/actions/pnpm
-        with:
-          kms-client-id: ${{ secrets.KMS_CLIENT_ID }}
-          kms-client-secret: ${{ secrets.KMS_CLIENT_SECRET }}
-
-      # The trailing `...` is load-bearing: it builds the package's WORKSPACE
-      # DEPENDENCIES first, in topological order. Without it the siblings have no
-      # `dist/`, type themselves through `"types": "dist/index.d.ts"`, and come
-      # back as missing modules that name the wrong package.
-      - name: Build the package and what it builds on
-        run: pnpm --filter "$PKG"... build
-
-      # bun, only for a package whose own test script asks for it (@hanzo/canvas
-      # declares `bun test`); from npmjs, a host this job already reaches.
-      - name: Provision bun (bun test scripts)
-        run: |
-          DIR=$(pnpm --filter "$PKG" exec pwd | tail -1)
-          if jq -r '.scripts.test // ""' "$DIR/package.json" | grep -qw bun && ! command -v bun >/dev/null 2>&1; then
-            npm install -g bun && bun --version
-          fi
-
-      # A published version is IMMUTABLE, so this is the last point at which a
-      # defect costs nothing. A split suite runs its own share of the files; a
-      # whole one runs the package's test script, `--if-present` so a package
-      # with none is skipped rather than failing the release.
-      - name: Test
-        run: |
-          if [ "$OF" -gt 1 ]; then
-            pnpm --filter "$PKG" exec vitest run --shard="$SHARD/$OF"
-          else
-            pnpm --filter "$PKG" run --if-present test
-          fi
+    needs: plan
+    if: needs.plan.outputs.legs != '[]'
+    uses: ./.github/workflows/test.yml
+    with:
+      legs: ${{ needs.plan.outputs.legs }}
+    secrets: inherit
 
   publish:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.packages != '[]'
+    needs: plan
+    if: needs.plan.outputs.released != '[]'
     name: publish ${{ matrix.package }}
-    runs-on: [linux-amd64]
+    runs-on: linux-amd64
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        package: ${{ fromJson(needs.detect-changes.outputs.packages) }}
+        package: ${{ fromJson(needs.plan.outputs.released) }}
     # One publish of a package at a time, and never cancelled: a version is
     # immutable, and the next run republishes whatever npmjs still lacks.
     concurrency:
@@ -191,7 +64,6 @@ jobs:
       cancel-in-progress: false
     env:
       PKG: ${{ matrix.package }}
-      LEGS: ${{ needs.detect-changes.outputs.legs }}
     steps:
       - name: One package per leg
         run: |
@@ -204,8 +76,67 @@ jobs:
         with:
           kms-client-id: ${{ secrets.KMS_CLIENT_ID }}
           kms-client-secret: ${{ secrets.KMS_CLIENT_SECRET }}
-          save: ${{ strategy.job-index == 0 }}
 
+      - name: Build
+        run: |
+          set -euo pipefail
+          # The trailing `...` builds the workspace dependencies first (test.yml
+          # says why). The typecheck ran in the package's first leg.
+          pnpm --filter "$PKG"... build
+          DIR=$(pnpm --filter "$PKG" exec pwd | tail -1)
+          [ -n "$DIR" ] || { echo "::error::$PKG matched no workspace package"; exit 1; }
+          # `types` is a PROMISE to every consumer, and the declaration build is a
+          # separate pass — so a failure there yields a package whose JS is fine
+          # and whose types are absent, which surfaces in dependents as "Could not
+          # find a declaration file".
+          TYPES=$(jq -r '.types // .typings // empty' "$DIR/package.json")
+          if [ -n "$TYPES" ] && [ ! -f "$DIR/$TYPES" ]; then
+            echo "::error::$PKG declares types at $TYPES but the build produced no such file."
+            exit 1
+          fi
+          echo "DIR=$DIR" >> "$GITHUB_ENV"
+
+      - name: This package's legs
+        id: mine
+        env:
+          LEGS: ${{ needs.plan.outputs.legs }}
+        run: echo "legs=$(jq -c --arg p "$PKG" '[.[] | select(.name == $p)]' <<<"$LEGS")" >> "$GITHUB_OUTPUT"
+
+      # The build ran beside the tests; the publish waits for this package's
+      # legs and no other package's, and goes only if every one passed.
+      - name: Wait for this package's tests
+        uses: ./.github/actions/wait
+        with:
+          legs: ${{ steps.mine.outputs.legs }}
+          token: ${{ github.token }}
+
+      # A `workspace:` dependency packs as its local version, so a package this
+      # run also releases has to be on npmjs first or this one ships pointing at
+      # a version nobody can install. Only that wait crosses packages: any other
+      # workspace dependency is not ahead of npmjs, so npmjs already serves it.
+      - name: Its workspace dependencies are released
+        env:
+          RELEASED: ${{ needs.plan.outputs.released }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -uo pipefail
+          deps=$(jq -c --argjson r "$RELEASED" '[.dependencies, .peerDependencies, .optionalDependencies]
+            | map(select(.) | to_entries[] | select(.value | startswith("workspace:")) | .key) | unique
+            | map(select(. as $d | $r | index($d)))' "$DIR/package.json")
+          [ "$deps" = '[]' ] && exit 0
+          url="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}/jobs?per_page=100"
+          for _ in $(seq 1 120); do
+            got=$(curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' "$url" \
+              | jq -c --argjson d "$deps" '[.jobs[] | select(.name | startswith("publish ")) | select(.name[8:] as $n | $d | index($n)) | {name, status, conclusion}]') || got='[]'
+            bad=$(jq -r '[.[] | select(.status == "completed" and .conclusion != "success") | .name] | join(", ")' <<<"$got")
+            [ -z "$bad" ] || { echo "::error::$PKG does not publish: $bad did not"; exit 1; }
+            [ "$(jq '[.[] | select(.conclusion == "success")] | length' <<<"$got")" -ge "$(jq length <<<"$deps")" ] && { echo "released first: $deps"; exit 0; }
+            sleep 5
+          done
+          echo "::error::$PKG: $deps did not publish within 10 minutes"; exit 1
+
+      # Read once this job has built and run its tests, so no package script runs
+      # while the token exists.
       - name: Fetch the npm token from KMS
         id: npmtok
         # publish.yml used secrets.NPM_TOKEN, which exists on NEITHER the hanzoai
@@ -278,49 +209,6 @@ jobs:
           # Masked before it is ever an output, so it cannot surface in a log.
           echo "::add-mask::${npm_token}"
           echo "token=${npm_token}" >> "$GITHUB_OUTPUT"
-
-      - name: Build and typecheck
-        run: |
-          set -euo pipefail
-          # The trailing `...` builds the workspace dependencies first (see test).
-          pnpm --filter "$PKG"... build
-          # A build EMITS; it does not check. tsup and tsc -p both stop at the
-          # files they are asked to write, so a program-wide error sits outside
-          # what either reads -- eleven of them sat on main while this lane was
-          # green. `--if-present`, so a package with no typecheck script passes.
-          pnpm --filter "$PKG" run --if-present typecheck
-          DIR=$(pnpm --filter "$PKG" exec pwd | tail -1)
-          [ -n "$DIR" ] || { echo "::error::$PKG matched no workspace package"; exit 1; }
-          # `types` is a PROMISE to every consumer, and the declaration build is a
-          # separate pass — so a failure there yields a package whose JS is fine
-          # and whose types are absent, which surfaces in dependents as "Could not
-          # find a declaration file".
-          TYPES=$(jq -r '.types // .typings // empty' "$DIR/package.json")
-          if [ -n "$TYPES" ] && [ ! -f "$DIR/$TYPES" ]; then
-            echo "::error::$PKG declares types at $TYPES but the build produced no such file."
-            exit 1
-          fi
-          echo "DIR=$DIR" >> "$GITHUB_ENV"
-
-      # The build ran beside the tests; the publish waits for this package's
-      # legs and no other package's, and goes only if every one passed.
-      - name: Wait for this package's tests
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -uo pipefail
-          want=$(jq -r --arg p "$PKG" '[.[] | select(.package == $p)] | length' <<<"$LEGS")
-          url="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/attempts/${GITHUB_RUN_ATTEMPT}/jobs?per_page=100"
-          for _ in $(seq 1 360); do
-            legs=$(curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' "$url" \
-              | jq -c --arg p "test $PKG " '[.jobs[] | select(.name | startswith($p)) | {name, status, conclusion}]') || legs='[]'
-            done=$(jq '[.[] | select(.status == "completed")] | length' <<<"$legs")
-            bad=$(jq -r '[.[] | select(.status == "completed" and .conclusion != "success") | .name] | join(", ")' <<<"$legs")
-            [ -z "$bad" ] || { echo "::error::$PKG does not publish: $bad did not pass"; exit 1; }
-            [ "$done" -ge "$want" ] && { echo "$PKG: $done of $want test leg(s) passed"; exit 0; }
-            sleep 5
-          done
-          echo "::error::$PKG: its test legs did not finish within 30 minutes"; exit 1
 
       - name: Publish
         env:

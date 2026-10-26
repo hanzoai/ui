@@ -1,12 +1,9 @@
-# The whole caller. Every decision this pipeline makes — what to test, what to
-# build, where to roll it — is read from the root hanzo.yml, so this file only
-# ever names the triggers and the reusable.
-#
-# `.hanzo/workflows`, not `.github/workflows`, and that is not a style choice:
-# CI for this repo runs on git.hanzo.ai, which resolves ONLY `.hanzo/workflows`.
-# github.com has zero self-hosted runners registered for the `hanzo-build-*`
-# labels this pipeline asks for, so the same file under `.github/workflows`
-# would queue there forever and never report anything at all.
+# The gate. It tests the workspace packages a change touched and every package
+# that depends on them, one leg per share (test.yml, the legs publish.yml runs
+# too), and the consumer suites only when what @hanzo/ui packs may have changed.
+# The repository-wide checks and the ui.hanzo.ai site stay with hanzoai/ci,
+# called with `tests: 'false'` because this run's own jobs are the tests: the
+# site is published only once they pass.
 name: CI/CD
 
 on:
@@ -16,13 +13,131 @@ on:
   pull_request:
   workflow_dispatch:
 
+# A newer push to a branch supersedes the gate running for the older one.
+# publish.yml holds no such group, so a release is never cancelled.
 concurrency:
   group: cicd-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
-  cicd:
+  plan:
+    runs-on: ${{ (startsWith(github.event_name, 'pull_request') && github.event.pull_request.head.repo.full_name != github.repository) && 'ephemeral-linux-amd64' || 'linux-amd64' }}
+    outputs:
+      legs: ${{ steps.plan.outputs.legs }}
+      waits: ${{ steps.plan.outputs.waits }}
+      surface: ${{ steps.plan.outputs.surface }}
+      runner: ${{ steps.plan.outputs.runner }}
+    steps:
+      # Two commits: a pull request's merge commit and its base.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - id: plan
+        uses: ./.github/actions/plan
+        with:
+          lane: gate
+
+  test:
+    needs: plan
+    if: needs.plan.outputs.legs != '[]'
+    uses: ./.github/workflows/test.yml
+    with:
+      legs: ${{ needs.plan.outputs.legs }}
+      save: true
+    secrets: inherit
+
+  # The packed @hanzo/ui, as a stranger installs it. One suite a job, because
+  # each packs, installs from the registry and builds on its own. `browser` is
+  # Corner and the code surfaces in Chromium (LTR and RTL, keyboard, theme, AA
+  # contrast), off dist/theme.css. `vite` and `webpack` install the tarball and
+  # bundle it: the two disagree about css url() asset resolution, and a
+  # Vite-only gate is how 8.0.46 shipped a stylesheet pointing at a font file the
+  # package does not pack.
+  consumer:
+    needs: plan
+    if: needs.plan.outputs.surface == 'true'
+    name: ui ${{ matrix.suite }}
+    runs-on: ${{ needs.plan.outputs.runner }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [browser, vite, webpack]
+    env:
+      SUITE: ${{ matrix.suite }}
+      # The runner cannot sudo and its baked browsers sit under /opt as root, so
+      # the job's own Chromium goes where the job may write. The image already
+      # carries Chromium's libraries.
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/pkg/ui/.cache/ms-playwright
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/pnpm
+        with:
+          kms-client-id: ${{ secrets.KMS_CLIENT_ID }}
+          kms-client-secret: ${{ secrets.KMS_CLIENT_SECRET }}
+
+      # `pnpm pack` runs @hanzo/ui's prepack, which builds it, so the bundler
+      # suites build only what it builds on; the browser suites read its dist.
+      - name: Build
+        run: |
+          if [ "$SUITE" = browser ]; then pnpm --filter "@hanzo/ui..." build; else pnpm --filter "@hanzo/ui^..." build; fi
+
+      - name: Chromium
+        if: matrix.suite != 'webpack'
+        working-directory: pkg/ui
+        run: pnpm exec playwright install chromium
+
+      - name: Test
+        working-directory: pkg/ui
+        run: |
+          case "$SUITE" in
+            browser) pnpm run test:corner && pnpm run test:code ;;
+            vite) pnpm run test:consumer ;;
+            webpack) pnpm run test:consumer:webpack ;;
+          esac
+
+  # On main, the suites of what this push releases run in its publish run; this
+  # job holds the gate until they pass there.
+  released:
+    needs: plan
+    if: needs.plan.outputs.waits != '[]'
+    runs-on: linux-amd64
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/wait
+        with:
+          legs: ${{ needs.plan.outputs.waits }}
+          workflow: publish.yml
+          token: ${{ github.token }}
+
+  # A pull request: hanzoai/ci's repository-wide checks, beside the legs.
+  repo:
+    if: github.event_name == 'pull_request'
     uses: hanzoai/ci/.github/workflows/build.yml@v1
+    with:
+      tests: 'false'
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    secrets: inherit
+
+  # A push: the same checks, then the ui.hanzo.ai site (hanzo.yml `site:`), once
+  # every job of this gate that ran has passed.
+  site:
+    needs: [plan, test, consumer, released]
+    if: >-
+      always() && github.event_name != 'pull_request' && needs.plan.result == 'success'
+      && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
+    uses: hanzoai/ci/.github/workflows/build.yml@v1
+    with:
+      tests: 'false'
     permissions:
       contents: write
       packages: write
