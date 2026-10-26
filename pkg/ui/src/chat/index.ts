@@ -1,7 +1,7 @@
 /**
  * @hanzo/ui/chat — the one chat shell, on @hanzo/gui primitives.
  *
- * Thread scrolls, Message presents a turn, Composer takes a draft, Sidebar
+ * Thread scrolls, Message presents a turn, Composer is the one composer, Sidebar
  * navigates between conversations, Header names the current one, and Code,
  * Step, Failure and Sources present the pieces of a turn.
  *
@@ -46,16 +46,28 @@ export {
 } from './Parts'
 export {
   Composer,
-  ComposerTool,
   ASK,
+  GAP,
+  MEASURE,
+  measure,
+  ROUND,
+  useUpload,
+  type Carried,
   type ComposerProps,
-  type ComposerToolProps,
 } from './Composer'
+export { Chips, Tune, type Chip, type Mind, type Modes } from './Tune'
+export { useFamilies } from './Families'
+export { EFFORTS, type Effort, type Way } from './ways'
+export { Plus, type Link, type PlusProps, type Row as ShelfRow, type Shelf, type Switch } from './Plus'
+export { Dictation, type DictationProps } from './Dictation'
+export { LANGUAGES } from './languages'
+export { Palette, type Command } from './Palette'
+export { trigger } from './Mention'
 export { EmptyPrompt, NEXT, type EmptyPromptProps } from './EmptyPrompt'
 export { Home, type HomeProps } from './Home'
 export { Caret, Message, type MessageProps, type Role } from './Message'
 export { Thread, type ThreadProps } from './Thread'
-export { ready, sends, type Mods } from './send'
+export { ready, sends, type Mods, type Rule } from './send'
 export { pinned, SLACK, type Track } from './stick'
 
 export {

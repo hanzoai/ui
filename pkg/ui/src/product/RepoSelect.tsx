@@ -14,10 +14,10 @@
  * composer and in the list two owners can share a name.
  */
 import { SizableText, YStack } from '@hanzo/gui'
-import { Code } from '@hanzogui/lucide-icons-2'
-import { useCallback, type ReactNode } from 'react'
+import { Code, Lock } from '@hanzogui/lucide-icons-2'
+import { useCallback, useState, type ReactNode } from 'react'
 
-import { ChipSelect, type ChipAction, type ChipPlacement } from './ChipSelect'
+import { ChipSelect, type ChipAction, type ChipPlacement, type ChipTab } from './ChipSelect'
 import type { ChipItem, ChipPage } from './chipSelect.logic'
 
 /** A repository, in the fields a chooser needs. Hosts pass their own rows. */
@@ -28,6 +28,8 @@ export interface Repo {
   full_name?: string
   private?: boolean
   default_branch?: string
+  /** Where the host found it — the id of the tab that lists it. */
+  source?: string
 }
 
 /** A repository as the list carries it: keyed by its address, labelled with it. */
@@ -56,6 +58,8 @@ export interface RepoSelectProps {
   connect?: ReactNode
   /** A second thing a row can do — "Add to project". */
   action?: { label: string; onPress: (repo: Repo) => void; when?: (repo: Repo) => boolean }
+  /** Views over the list: the first shows every row, each other the rows whose `source` is its id. */
+  tabs?: readonly ChipTab[]
   /** The chip's text with nothing chosen. */
   placeholder?: string
   placement?: ChipPlacement
@@ -70,7 +74,8 @@ export const address = (repo: Repo): string => repo.full_name || `${repo.owner}/
 const item = (repo: Repo): RepoItem => ({
   id: address(repo),
   label: address(repo),
-  hint: repo.private ? 'private' : undefined,
+  hint: repo.private ? 'Private' : undefined,
+  icon: repo.private ? <Lock size={12} color="$soft" /> : <Code size={12} color="$soft" />,
   repo,
 })
 
@@ -119,21 +124,25 @@ export function RepoSelect({
   onChange,
   load,
   troubleshoot,
-  note = 'Not all repositories are shown. Type to search.',
+  note,
   connect,
   action,
+  tabs,
   placeholder = 'Repository',
   placement,
   disabled,
   open,
   onOpenChange,
 }: RepoSelectProps) {
+  const [tab, setTab] = useState(tabs?.[0]?.id)
+  const every = !tabs?.length || tab === tabs[0]!.id
   const pages = useCallback(
     async (q: string, after?: string | null): Promise<ChipPage<RepoItem>> => {
       const page = await load(q, after)
-      return { items: page.repos.map(item), next: page.next ?? null }
+      const repos = every ? page.repos : page.repos.filter((r) => r.source === tab)
+      return { items: repos.map(item), next: page.next ?? null }
     },
-    [load],
+    [load, every, tab],
   )
 
   const act: ChipAction<RepoItem> | undefined = action
@@ -149,13 +158,17 @@ export function RepoSelect({
       name="Repository"
       icon={<Code size={12} color="$soft" />}
       label={value ? value.name : placeholder}
-      chosen={value ? item(value) : null}
+      // On another tab the chosen row is not pinned: the tab lists what it says, and the check is on the tab the repository belongs to.
+      chosen={value && (every || value.source === tab) ? item(value) : null}
       onChange={(i) => onChange(i.repo)}
       load={pages}
       placeholder="Search repositories…"
       empty="No repositories match."
       cta={connect}
       action={act}
+      tabs={tabs}
+      tab={tab}
+      onTab={setTab}
       placement={placement}
       disabled={disabled}
       open={open}

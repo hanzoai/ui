@@ -53,3 +53,22 @@ Four layers, the narrowest that has an opinion winning axis by axis:
 `install < org < person (everywhere) < person (this org)`. The person's layers
 are kept in IAM (`/v1/iam/preferences`, member `appearance`) and cached on the
 device, so a choice made on one Hanzo origin reaches the others.
+
+## The composer
+
+How a person's composer behaves is one record, read by every composer
+(`@hanzo/ui/chat`'s `Composer`) and written by the panel's last rows:
+
+```ts
+import { useComposing, writeComposing } from '@hanzo/appearance'
+
+useComposing() // { send?: 'enter' | 'mod', chips?: boolean, model?: boolean, mode?: boolean }
+writeComposing({ send: 'mod' }) // ⌘/Ctrl+Enter sends, Enter breaks the line
+```
+
+An axis nobody set is absent, and the surface's own default holds (Chat opens
+without chips or a mode, Dev with both; the model selector is off until turned
+on). It is kept on the device under `hanzo.composer`, announced to the page with a
+`hanzo:composer` event, and kept in IAM beside the appearance under the
+`composer` member of `/v1/iam/preferences`, so it crosses a domain. It paints
+nothing: no document knob, no head script.

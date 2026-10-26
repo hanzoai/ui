@@ -90,7 +90,7 @@ describe('RepoSelect', () => {
     expect(chip().getAttribute('aria-label')).toBe('Repository: cloud')
     act(() => chip().click())
     await settle()
-    expect(labels()).toEqual(['hanzo-inc/cloudprivate', 'acmglobaltech/site', 'activeuser/activeuser.js'])
+    expect(labels()).toEqual(['hanzo-inc/cloudPrivate', 'acmglobaltech/site', 'activeuser/activeuser.js'])
   })
 
   it('hands the host its own repository back', async () => {
@@ -102,7 +102,7 @@ describe('RepoSelect', () => {
     expect(onChange).toHaveBeenCalledWith(REPOS[0])
   })
 
-  it('says the list is partial and links out to troubleshoot, as a real anchor', async () => {
+  it('links out to troubleshoot, as a real anchor, and says nothing it was not handed', async () => {
     mount(
       <RepoSelect
         onChange={() => {}}
@@ -113,10 +113,65 @@ describe('RepoSelect', () => {
     act(() => chip().click())
     await settle()
     const footer = document.querySelector('[data-slot="chip-select-footer"]')!
-    expect(footer.textContent).toContain('Not all repositories are shown. Type to search.')
+    expect(footer.textContent).toBe('Troubleshoot GitHub connection')
     const link = footer.querySelector('a')!
     expect(link.textContent).toBe('Troubleshoot GitHub connection')
     expect(link.getAttribute('href')).toBe('/platform/plugins?tab=github')
+  })
+
+  it('filters by tab: the first lists every row, another the rows from its source', async () => {
+    const rows = [
+      { owner: 'hanzo', name: 'cloud', source: 'forge' },
+      { owner: 'acme', name: 'site', source: 'github' },
+    ]
+    mount(
+      <RepoSelect
+        onChange={() => {}}
+        load={async () => ({ repos: rows })}
+        tabs={[
+          { id: 'all', label: 'All' },
+          { id: 'forge', label: 'Organization' },
+          { id: 'github', label: 'GitHub' },
+        ]}
+      />,
+    )
+    act(() => chip().click())
+    await settle()
+    expect(labels()).toEqual(['hanzo/cloud', 'acme/site'])
+    const github = [...document.querySelectorAll<HTMLElement>('[data-slot="chip-select-tab"]')].find((t) => t.textContent === 'GitHub')!
+    act(() => github.click())
+    await settle()
+    expect(labels()).toEqual(['acme/site'])
+    expect(github.getAttribute('aria-selected')).toBe('true')
+  })
+
+  it('pins the chosen repository only on the tab it belongs to', async () => {
+    const rows = [
+      { owner: 'hanzo', name: 'cloud', source: 'forge' },
+      { owner: 'acme', name: 'site', source: 'github' },
+    ]
+    mount(
+      <RepoSelect
+        value={{ ...rows[0]!, full_name: 'hanzo/cloud' }}
+        onChange={() => {}}
+        load={async () => ({ repos: rows })}
+        tabs={[
+          { id: 'all', label: 'All' },
+          { id: 'forge', label: 'Organization' },
+          { id: 'github', label: 'GitHub' },
+        ]}
+      />,
+    )
+    act(() => chip().click())
+    await settle()
+    const tab = (name: string) => [...document.querySelectorAll<HTMLElement>('[data-slot="chip-select-tab"]')].find((t) => t.textContent === name)!
+    act(() => tab('GitHub').click())
+    await settle()
+    expect(labels()).toEqual(['acme/site'])
+    act(() => tab('Organization').click())
+    await settle()
+    expect(labels()).toEqual(['hanzo/cloud'])
+    expect(document.querySelector('[role="option"]')?.getAttribute('aria-selected')).toBe('true')
   })
 
   it('draws no link for an address that could run script', async () => {

@@ -25,7 +25,7 @@
  * marks the chosen row. Closing returns focus to the chip.
  */
 import { Input as GuiInput, ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
-import { Check, Search } from '@hanzogui/lucide-icons-2'
+import { Check, ChevronDown, Search } from '@hanzogui/lucide-icons-2'
 import {
   useCallback,
   useEffect,
@@ -65,8 +65,14 @@ export interface ChipAction<T extends ChipItem> {
   when?: (item: T) => boolean
 }
 
+/** One view of the list, as a tab over it: a source, a kind. */
+export interface ChipTab {
+  id: string
+  label: string
+}
+
 export interface ChipSelectProps<T extends ChipItem> {
-  /** What the chip says — the current choice, short. */
+  /** What the chip says — the current choice, short. Empty, the chip is its icon alone. */
   label: string
   /** Drawn before the label. */
   icon?: ReactNode
@@ -118,6 +124,12 @@ export interface ChipSelectProps<T extends ChipItem> {
    * than in a row of chips. Same panel, same keyboard.
    */
   quiet?: boolean
+  /** With no label: the box the icon stands in, px. */
+  box?: number
+  /** Views of the list, as tabs between the search and the rows. The host filters by `tab`. */
+  tabs?: readonly ChipTab[]
+  tab?: string
+  onTab?: (id: string) => void
   /** Open state, when the host owns it. */
   open?: boolean
   onOpenChange?: (open: boolean) => void
@@ -128,6 +140,9 @@ const ROW_H = 24
 
 /** The chip: 24px, a hairline, the raised fill. */
 const CHIP_H = 24
+
+/** A chip that is its icon alone: the composer's round controls' box. */
+const BARE = 30
 
 
 const MOVES = new Set<Move>(['ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 'PageUp'])
@@ -150,7 +165,7 @@ interface Pages<T> {
  * for any older generation is dropped — so a slow page for "clo" can never land
  * under the results for "cloud".
  */
-function usePages<T extends ChipItem>(load: ChipLoad<T> | undefined, q: string, delay: number, on: boolean) {
+function usePages<T extends ChipItem>(load: ChipLoad<T> | undefined, q: string, delay: number, on: boolean, view?: string) {
   const [state, setState] = useState<Pages<T>>({ rows: [], next: null, loading: false, error: null })
   const generation = useRef(0)
   const busy = useRef(false)
@@ -201,7 +216,8 @@ function usePages<T extends ChipItem>(load: ChipLoad<T> | undefined, q: string, 
     const wait = q.trim() ? delay : 0
     const timer = setTimeout(() => fetch(null, gen), wait)
     return () => clearTimeout(timer)
-  }, [on, live, q, delay, fetch])
+    // `view` is a tab: the host's loader reads it, so a new one starts over too.
+  }, [on, live, q, delay, fetch, view])
 
   const more = useCallback(() => {
     if (busy.current || !state.next) return
@@ -236,9 +252,14 @@ export function ChipSelect<T extends ChipItem>({
   height = 276,
   disabled = false,
   quiet = false,
+  box = BARE,
+  tabs,
+  tab,
+  onTab,
   open: openProp,
   onOpenChange,
 }: ChipSelectProps<T>) {
+  const bare = !label
   const [own, setOwn] = useState(false)
   const open = openProp ?? own
   const setOpen = useCallback(
@@ -259,7 +280,35 @@ export function ChipSelect<T extends ChipItem>({
   const hintId = `${id}-hint`
   const optionId = (i: number) => `${id}-opt-${i}`
 
-  const pages = usePages(load, q, delay, open)
+  const pages = usePages(load, q, delay, open, tab)
+
+  // The search sits beside the chip it opened from: under the list when the
+  // panel is above the chip, over it when it is below. The popover flips when
+  // its side has no room, so which side it took is read off the page once it is
+  // placed; until then, the side it was asked for.
+  const [side, setSide] = useState<'top' | 'bottom' | null>(null)
+  const up = (side ?? (placement.startsWith('top') ? 'top' : 'bottom')) === 'top'
+  useEffect(() => {
+    if (!open) {
+      setSide(null)
+      return
+    }
+    let frames = 0
+    let frame = 0
+    const read = () => {
+      const panel = typeof document !== 'undefined' ? document.getElementById(listId) : null
+      const anchor = chip.current?.getBoundingClientRect?.()
+      if (panel && anchor) {
+        const at = panel.getBoundingClientRect()
+        if (at.height > 0) return setSide(at.top < anchor.top ? 'top' : 'bottom')
+      }
+      if (frames++ < 8) frame = requestAnimationFrame(read)
+    }
+    frame = requestAnimationFrame(read)
+    return () => cancelAnimationFrame(frame)
+    // listId is stable for the component's life.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
 
   // Sized once per open, from what is known then — see `frame`.
   const [tall, setTall] = useState(height)
@@ -277,6 +326,11 @@ export function ChipSelect<T extends ChipItem>({
     return pin(base, chosen, q)
   }, [load, pages.rows, items, q, chosen])
 
+  // A panel below its chip hangs from it, so a paged list may follow its rows
+  // (never fewer than three, never past the ceiling); one above is placed from
+  // its size at open and keeps it.
+  const listH = !up && load ? Math.min(height, Math.max(rows.length, 3) * ROW_H + 8) : tall
+
   const next = load ? pages.next : hasMore ? 'more' : null
   const loading = load ? pages.loading : loadingProp
   const error = load ? pages.error : errorProp
@@ -285,9 +339,9 @@ export function ChipSelect<T extends ChipItem>({
   // Opening lands the cursor on the chosen row (pinned at 0) or the first one.
   useEffect(() => {
     if (open) setAt(rows.length ? 0 : -1)
-    // Only on open and on a new search — never as rows page in under the cursor.
+    // Only on open, a new search or a new tab — never as rows page in under the cursor.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, q])
+  }, [open, q, tab])
 
   // A loader's first page arrives after the open: the cursor lands on its first
   // row then, or Enter would have nothing under it.
@@ -379,6 +433,87 @@ export function ChipSelect<T extends ChipItem>({
 
   const shown = (item: T) => Boolean(action && (!action.when || action.when(item)))
 
+  const search = (
+    <XStack
+      {...slot('chip-select-search')}
+      {...(up ? { mt: '$1' } : { mb: '$1' })}
+      height={26}
+      px="$2"
+      gap="$1.5"
+      items="center"
+      rounded="$2"
+      borderWidth={1}
+      borderColor="$rim"
+      bg="$background"
+      focusWithinStyle={{ borderColor: '$outlineColor' }}
+    >
+      <Search size={12} color="$soft" aria-hidden />
+      <GuiInput
+        ref={field as never}
+        {...slot('chip-select-input')}
+        unstyled
+        flex={1}
+        minW={0}
+        height={24}
+        p={0}
+        borderWidth={0}
+        bg="transparent"
+        fontSize="$2"
+        color="$ink"
+        placeholderTextColor="$placeholderColor"
+        placeholder={placeholder}
+        value={q}
+        onChangeText={setQ}
+        role="combobox"
+        aria-label={placeholder}
+        aria-expanded={open}
+        aria-controls={listId}
+        aria-autocomplete="list"
+        aria-activedescendant={at >= 0 && rows[at] ? optionId(at) : undefined}
+        autoComplete="off"
+        spellCheck={false}
+        onKeyDown={onField}
+      />
+    </XStack>
+  )
+
+  // Views of the list, beside the search. A tab is a filter the host applies, so
+  // the cursor and the search start over with it.
+  const tabbar = tabs?.length ? (
+    <XStack {...slot('chip-select-tabs')} role="tablist" aria-label={name} gap="$1" px="$1" {...(up ? { mt: '$1' } : { mb: '$1' })}>
+      {tabs.map((v) => {
+        const on = (tab ?? tabs[0]!.id) === v.id
+        return (
+          <XStack
+            key={v.id}
+            {...slot('chip-select-tab')}
+            role="tab"
+            aria-selected={on}
+            tabIndex={on ? 0 : -1}
+            height={22}
+            px="$2"
+            items="center"
+            rounded="$2"
+            cursor="pointer"
+            bg={on ? '$raised' : 'transparent'}
+            hoverStyle={{ bg: '$raised' }}
+            focusVisibleStyle={RING}
+            onPress={() => onTab?.(v.id)}
+            onKeyDown={(e: any) => {
+              if (e?.key !== 'Enter' && e?.key !== ' ') return
+              e.preventDefault?.()
+              onTab?.(v.id)
+            }}
+          >
+            <SizableText size="$1" color={on ? '$ink' : '$soft'}>
+              {v.label}
+            </SizableText>
+          </XStack>
+        )
+      })}
+    </XStack>
+  ) : null
+
   return (
     <Popover
       open={open}
@@ -394,13 +529,14 @@ export function ChipSelect<T extends ChipItem>({
           {...tip(name)}
           role="button"
           tabIndex={disabled ? -1 : 0}
-          aria-label={`${name}: ${label}`}
+          aria-label={bare ? name : `${name}: ${label}`}
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-controls={open ? listId : undefined}
           aria-disabled={disabled || undefined}
           height={CHIP_H}
-          px="$2"
+          // A chip of its icon alone stands with the composer's round controls.
+          {...(bare ? { width: box, height: box, justify: 'center', rounded: 999 } : { px: '$2' })}
           gap="$1.5"
           items="center"
           shrink={0}
@@ -422,9 +558,12 @@ export function ChipSelect<T extends ChipItem>({
               {icon}
             </XStack>
           ) : null}
-          <SizableText size="$2" color={quiet ? '$quiet' : '$ink'} numberOfLines={1} maxW={200}>
-            {label}
-          </SizableText>
+          {bare ? null : (
+            <SizableText size="$2" color={quiet ? '$quiet' : '$ink'} numberOfLines={1} maxW={200}>
+              {label}
+            </SizableText>
+          )}
+          {bare || quiet ? null : <ChevronDown size={12} color="$soft" aria-hidden />}
         </XStack>
       </PopoverTrigger>
 
@@ -462,7 +601,7 @@ export function ChipSelect<T extends ChipItem>({
 
         <ScrollView
           ref={list as never}
-          height={tall}
+          height={listH}
           showsVerticalScrollIndicator
           scrollEventThrottle={64}
           onScroll={onScroll}
@@ -497,6 +636,11 @@ export function ChipSelect<T extends ChipItem>({
                   onHoverIn={() => setAt(i)}
                   onPress={() => choose(item)}
                 >
+                  {item.icon ? (
+                    <XStack width={14} shrink={0} items="center" justify="center" aria-hidden>
+                      {item.icon}
+                    </XStack>
+                  ) : null}
                   <SizableText size="$2" color="$ink" numberOfLines={1} flex={1} minW={0}>
                     {item.label}
                   </SizableText>
@@ -598,47 +742,11 @@ export function ChipSelect<T extends ChipItem>({
           </YStack>
         ) : null}
 
-        <XStack
-          {...slot('chip-select-search')}
-          mt="$1"
-          height={26}
-          px="$2"
-          gap="$1.5"
-          items="center"
-          rounded="$2"
-          borderWidth={1}
-          borderColor="$rim"
-          bg="$background"
-          focusWithinStyle={{ borderColor: '$outlineColor' }}
-        >
-          <Search size={12} color="$soft" aria-hidden />
-          <GuiInput
-            ref={field as never}
-            {...slot('chip-select-input')}
-            unstyled
-            flex={1}
-            minW={0}
-            height={24}
-            p={0}
-            borderWidth={0}
-            bg="transparent"
-            fontSize="$2"
-            color="$ink"
-            placeholderTextColor="$placeholderColor"
-            placeholder={placeholder}
-            value={q}
-            onChangeText={setQ}
-            role="combobox"
-            aria-label={placeholder}
-            aria-expanded={open}
-            aria-controls={listId}
-            aria-autocomplete="list"
-            aria-activedescendant={at >= 0 && rows[at] ? optionId(at) : undefined}
-            autoComplete="off"
-            spellCheck={false}
-            onKeyDown={onField}
-          />
-        </XStack>
+        {/* One place in the tree whichever side the panel took, so the field keeps its focus when it flips; the header goes to the side of the chip. */}
+        <YStack {...slot('chip-select-header')} flexDirection={up ? 'column-reverse' : 'column'} style={{ order: up ? 99 : -1 }}>
+          {search}
+          {tabbar}
+        </YStack>
       </PopoverContent>
     </Popover>
   )

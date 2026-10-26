@@ -28,10 +28,14 @@ const IME = 229
 const claimed = (key: string, mods: Mods): boolean =>
   mods.isComposing === true || key === 'Process' || mods.keyCode === IME
 
+/** Which key sends: the person's choice (Settings → Appearance), Enter unless they chose otherwise. */
+export type Rule = 'enter' | 'mod'
+
 /**
  * Enter sends. Shift+Enter writes a newline, so a multi-line draft is always
  * reachable from the keyboard. Cmd/Ctrl+Enter always sends — it is the force-send
  * every surface already taught its users, and it holds even with Shift down.
+ * Under the `mod` rule Enter is a newline and only Cmd/Ctrl+Enter sends.
  * A keystroke the IME has claimed belongs to the IME, never to the composer.
  *
  * Hand it `e.nativeEvent`, never `e`: React's synthetic event carries neither
@@ -40,10 +44,10 @@ const claimed = (key: string, mods: Mods): boolean =>
  *
  *     onKeyDown={(e) => { if (sends(e.key, e.nativeEvent)) { … } }}
  */
-export const sends = (key: string, mods: Mods = {}): boolean => {
+export const sends = (key: string, mods: Mods = {}, rule: Rule = 'enter'): boolean => {
   if (key !== 'Enter' || claimed(key, mods)) return false
   if (mods.metaKey === true || mods.ctrlKey === true) return true
-  return mods.shiftKey !== true && mods.altKey !== true
+  return rule === 'enter' && mods.shiftKey !== true && mods.altKey !== true
 }
 
 /**

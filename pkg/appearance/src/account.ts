@@ -49,7 +49,15 @@ export interface Account {
  * with a neutral one. Absent means "ask the next layer", and that is what
  * `resolve()` expects.
  */
-export async function load({ base, token, signal }: Account): Promise<Preference | undefined> {
+export async function load(account: Account): Promise<Preference | undefined> {
+  return (await get(MEMBER, account)) as Preference | undefined
+}
+
+/**
+ * One member of the blob, or nothing. `load` is this for `appearance`; the
+ * composer keeps its own member (`composing.ts`) through the same door.
+ */
+export async function get(member: string, { base, token, signal }: Account): Promise<unknown> {
   const isCrossOrigin = typeof window !== 'undefined' &&
     new URL(base, window.location.origin).origin !== window.location.origin
   if (isCrossOrigin && !token) {
@@ -59,7 +67,7 @@ export async function load({ base, token, signal }: Account): Promise<Preference
     // An empty patch merges nothing and returns the stored object, so the write
     // endpoint is also the read. One route, one merge, one shape to keep in step.
     const res = await post(base, token, {}, signal)
-    return res?.[MEMBER] as Preference | undefined
+    return res?.[member]
   } catch {
     return undefined
   }
@@ -73,17 +81,19 @@ export async function load({ base, token, signal }: Account): Promise<Preference
  * carries the choice, so the person sees what they picked on this browser and it
  * reconciles the next time a write succeeds.
  */
-export async function save(
-  appearance: Preference,
-  { base, token, signal }: Account
-): Promise<boolean> {
+export async function save(appearance: Preference, account: Account): Promise<boolean> {
+  return put(MEMBER, appearance, account)
+}
+
+/** Record one member of the blob, and answer whether it stuck. */
+export async function put(member: string, value: unknown, { base, token, signal }: Account): Promise<boolean> {
   const isCrossOrigin = typeof window !== 'undefined' &&
     new URL(base, window.location.origin).origin !== window.location.origin
   if (isCrossOrigin && !token) {
     return false
   }
   try {
-    return !!(await post(base, token, { [MEMBER]: appearance }, signal))
+    return !!(await post(base, token, { [member]: value }, signal))
   } catch {
     return false
   }

@@ -8,6 +8,13 @@ describe('sends', () => {
     expect(sends('Enter')).toBe(true)
   })
 
+  it('under the mod rule, Enter is a newline and Cmd/Ctrl+Enter sends', () => {
+    expect(sends('Enter', {}, 'mod')).toBe(false)
+    expect(sends('Enter', { metaKey: true }, 'mod')).toBe(true)
+    expect(sends('Enter', { ctrlKey: true }, 'mod')).toBe(true)
+    expect(sends('Enter', { metaKey: true, isComposing: true }, 'mod')).toBe(false)
+  })
+
   it('writes a newline on Shift+Enter', () => {
     expect(sends('Enter', { shiftKey: true })).toBe(false)
   })

@@ -8,12 +8,16 @@
  * tested in node.
  */
 
+import type { ReactNode } from 'react'
+
 /** Anything a ChipSelect lists: an id it is keyed by and a label it shows. */
 export interface ChipItem {
   id: string
   label: string
-  /** A quieter second word on the row — `private`, a count. */
+  /** A quieter second word on the row — `Private`, a machine's state. */
   hint?: string
+  /** Drawn before the label: what kind of row this is. */
+  icon?: ReactNode
   disabled?: boolean
 }
 

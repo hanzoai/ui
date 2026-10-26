@@ -1,120 +1,221 @@
 'use client'
 
 /**
- * Composer — the one chat input for every Hanzo surface.
+ * Composer — the one composer every Hanzo surface draws: Chat, Dev, Studio, a
+ * room, a reply, a run being steered. A surface hands it slots and defaults and
+ * nothing else; the field, the keys, the controls and their look are here once.
  *
- * Presentational and controlled: it owns no draft, no transport and no model
- * state. `children` is the toolbar slot, which is where a surface puts its
- * `ModelPicker`, attachment control or mode chips — that keeps the shell the
- * same everywhere while the affordances stay per-surface.
+ *   ┌ pills ───────────────────────────────┐   where a run goes, which repository
+ *   │ the field                            │
+ *   │ +  carried…  children     ✦  🎙  ⬆   │   + menu, what the draft carries,
+ *   └──────────────────────────────────────┘   commands, dictation, send / stop
+ *     chips…                 model effort mode
  *
- * The send control is the same button in both states: it submits, and while a
- * turn is in flight it stops. Two buttons in one place was the thing every
- * surface got subtly different.
+ * Above the frame: the surface's `head`, the `/` or `@` list, and the `note`.
+ * Under it, one row: the surface's chips, then the model, the effort and the mode.
  *
- * Escape and ArrowUp are not bound. Dismissal belongs to whatever the composer
- * floats inside, and history recall needs a turn store this has no view of.
+ * THE PERSON'S SETTING (@hanzo/appearance `useComposing`, Settings →
+ * Appearance) decides which key sends and whether the chips, the model
+ * selector and the mode are drawn, everywhere at once. An axis they left on
+ * Auto takes the surface's `defaults`, and the model selector is off until
+ * they turn it on.
  *
- * Growth is `Textarea`'s and follows the content, so a wrapped paragraph raises
- * the field. `rows` is the floor, `maxHeight` the ceiling.
+ * Its paint is @hanzo/design's: `$` tokens and `--primary`, sized through
+ * `--density` (the round controls are @hanzo/composer's `Control`), so text
+ * size, density and accent change it with the rest of the product.
+ *
+ * Its own words are the reader's language (@hanzo/i18n `t`). A host's words —
+ * its placeholder, a shelf's rows, a chip's label — are drawn as given.
  */
-import { SizableText, XStack, YStack } from '@hanzo/gui'
-import { ArrowUp, ChevronDown, CornerDownLeft, Square } from '@hanzogui/lucide-icons-2'
-import type { ComponentProps, ReactNode } from 'react'
+import { SizableText, useMedia, XStack, YStack } from '@hanzo/gui'
+import { useComposing, type Composing } from '@hanzo/appearance'
+import { Control } from '@hanzo/composer'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
+import { ArrowUp, AudioLines, Square, X } from '@hanzogui/lucide-icons-2'
+import { Voice, type Machine } from '@hanzo/voice'
+import { useEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react'
 
-import { Button, Textarea } from '../backends/gui'
-import { slot, tip } from '../backends/gui/slot'
+import { Textarea } from '../backends/gui'
+import { slot } from '../backends/gui/slot'
+import type { PauseSource } from '../models/catalog'
+import { Dial } from './Dial'
+import { Dictation } from './Dictation'
+import { Mention, trigger } from './Mention'
+import { Palette, type Command } from './Palette'
+import { Plus, type PlusProps, type Shelf } from './Plus'
 import { ready, sends, type Mods } from './send'
+import { RING } from './ring'
+import { Chips, Tune, type Chip, type Mind, type Modes } from './Tune'
 
 /** `onChange` is dropped: here it carries the draft, not a DOM change event. */
 type Stack = Omit<ComponentProps<typeof YStack>, 'children' | 'onChange'>
 type FieldProps = Omit<ComponentProps<typeof Textarea>, 'value' | 'onChangeText'>
 
-const PAD = 8
-const MIN_ROWS = 1
+/**
+ * The resting placeholder. It addresses the person rather than the mechanism,
+ * and as one constant it never re-announces when the model changes.
+ */
+export const ASK = phrase('Ask anything')
 
-/** How tall the field may grow before it scrolls, px. Uncapped, a long paste
- *  pushes the thread off screen; narrower frames pass their own. */
+/** The reading measure: @hanzo/design's prose width, which Width (appearance) retunes. */
+export const MEASURE = 'var(--container-prose, 48rem)'
+
+/** The space between turns, px: one rhythm for every thread. */
+export const GAP = 20
+
+/** The composer's width under a thread: the measure less its 0.75rem gutters, centred, so its edges are the text's. */
+export const measure = { width: 'calc(100% - 1.5rem)', maxW: `calc(${MEASURE} - 1.5rem)`, mx: 'auto' } as const
+
+/** The round controls' box, px, and a phone's, a finger's width: `+`, the effort, the mic, its chevron and send all take it, so they share one centreline. */
+export const ROUND = 36
+const TAP = 44
+
+/** The frame's corner, px: 12 on a laptop, 22 on a phone. */
+const CORNER = 12
+const CORNER_PHONE = 22
+
+/** How tall the field grows before it scrolls, px. */
 const CEILING = 200
 
-/** Floor for the field, px. `Textarea` defaults to 64, which is three lines of
- *  chrome before anything is typed. 44 is the touch-target floor. */
-const FLOOR = 44
+/** The ink on a filled round: the accent's own foreground. */
+const ON = 'var(--primary-foreground)'
 
-/**
- * The one-line frame: 40px outside, so the field inside is 38 — a 20px line
- * with 9px above and below it. The frame is the target, not the glyph, which
- * is why the send control can be a 28px mark inside a row a thumb already hits.
- */
-const LINE = 40
-const LINE_FIELD = LINE - 2
-const LINE_PAD = (LINE_FIELD - 20) / 2
+/** A round control with no ground of its own until it is pointed at. */
+const QUIET = { bg: 'transparent', color: 'var(--foreground)', hoverStyle: { bg: '$hover' } } as const
 
-/** The inline send mark: a glyph in the field's own row, never a filled slab. */
-const MARK = 28
-
-/**
- * The resting placeholder.
- *
- * "Ask anything", not "Send a message" and not "Message <model>". It addresses
- * the person rather than describing the mechanism, and being one constant string
- * it never has to be recomputed or re-announced when the model or endpoint
- * changes — which is what a model-named placeholder forces a surface to do.
- */
-export const ASK = 'Ask anything'
+/** One thing the draft carries, after `+`: a file, a skill that is on. */
+export interface Carried {
+  id: string
+  label: string
+  icon?: ReactNode
+  onRemove: () => void
+}
 
 export interface ComposerProps extends Stack {
   value: string
   onChange: (value: string) => void
-  /** Called when the draft is submitted. Clearing `value` is the host's job. */
+  /** The draft is submitted. Clearing `value` is the host's job. */
   onSend: () => void
-  /** Called instead of `onSend` while `busy`. Omit to disable stopping. */
+  /** Called instead of `onSend` while `busy`. Absent, busy only disables send. */
   onStop?: () => void
-  /** A turn is in flight: the send control becomes stop. */
+  /** A turn is in flight: send becomes stop. */
   busy?: boolean
   disabled?: boolean
+  /** Whether send is lit. Default: the draft has words. */
+  ready?: boolean
   placeholder?: string
+  /** The field's accessible name, independent of the placeholder. */
+  label?: string
   /** Row floor for the field. It grows with the draft from here. */
   rows?: number
-  /** Ceiling for that growth, px. Past it the field scrolls instead. */
+  /** Ceiling for that growth, px. Past it the field scrolls. */
   maxHeight?: number
-  /** Toolbar slot, rendered at the start of the footer row. */
-  children?: ReactNode
-  /** Hint shown at the end of the footer row. */
-  hint?: string
-  /**
-   * The accessible name of the field, independent of `placeholder`.
-   *
-   * A placeholder that rotates renames the control on every tick and gets the
-   * field re-announced mid-sentence. The name is stable; the placeholder is
-   * decoration.
-   */
-  label?: string
-  /** The field's own props — a ref, a testid, focus handlers, a paste handler. */
+  /** The field's own props — a ref, a testid, a paste handler. */
   field?: FieldProps
-  /** Replaces the send control. `children` is the START of the footer row, so a
-   *  second commit mode has nowhere else to go. */
-  send?: ReactNode
-  /**
-   * Drawn ABOVE the frame — the row of context a draft is sent with (where it
-   * runs, which repository, which branch). Outside the frame on purpose: it
-   * says what the draft is about, and the field says what it is.
-   */
+  /** A word at the end of the tool row, before the controls: a status. */
+  hint?: string
+  /** The tool row's start, after `+` and what the draft carries. */
+  children?: ReactNode
+  /** Above the frame, at its width: what the draft is sent with, a banner. */
   head?: ReactNode
-  /**
-   * Drawn UNDER the frame — attach, voice, mode at its start and the model at
-   * its end, as the host arranges them. Unlike `children`, which lives inside
-   * the frame beside the send control.
-   */
-  foot?: ReactNode
-  /**
-   * One line: the field and the send control share a single row inside the
-   * frame, and the send control is a glyph at the field's end — Enter's own
-   * mark while idle, Stop while busy. `children` and `hint` join that row
-   * before it. Unset, the frame is the stacked field-over-toolbar it has
-   * always been.
-   */
-  inline?: boolean
+  /** The frame's first row: the surface's pills — where a run goes, which repository, which branch. */
+  pills?: ReactNode
+  /** What the draft carries, as chips after `+`. */
+  carried?: readonly Carried[]
+  /** The `+` menu. Absent, there is none. */
+  plus?: PlusProps
+  /** `/` lists these (the skills) above the frame. */
+  slash?: Shelf
+  /** `@` lists these (the plugins) above the frame. */
+  at?: Shelf
+  /** The commands ✦ and ⌘K open. */
+  commands?: readonly Command[]
+  /** Under the frame, at the row's start. Hidden where the person hid chips. */
+  chips?: readonly Chip[]
+  /** The model, drawn where the person turned the model selector on. Null where the next send names none (steering a run). */
+  mind?: Mind | null
+  /** The effort, one in force. Null where the next send takes none (steering a run). */
+  effort?: Modes | null
+  limits?: PauseSource | null
+  /** A model the plan does not grant was chosen: the way to the plan that does. */
+  onUpgrade?: (model: string) => void
+  /** The mode, as the pill at the row's end. */
+  mode?: Modes | null
+  /** Dictation into the draft (@hanzo/voice `useVoice` + `useDictation`). */
+  voice?: Machine
+  /** The language dictation listens in, null for Auto, and how to change it. */
+  language?: string | null
+  onLanguage?: (id: string | null) => void
+  /** A spoken conversation (@hanzo/voice `useTalk`): the round button while the draft is empty. */
+  talk?: Machine
+  /** Above the frame, nearest it: the person's suggestions, at every width. */
+  starters?: ReactNode
+  /** Centred just above the frame: what every message is sent under. */
+  note?: ReactNode
+  /** At the reading column's width (`measure`), centred: the composer under a thread, so its edges are the text's. Absent, the width of what holds it. */
+  column?: boolean
+  /** Drawn on a pane: the frame floats as a pane of its own. */
+  framed?: boolean
+  /** A phone: suggestions go above the frame and every target is 44px. Absent, the viewport decides. */
+  narrow?: boolean
+  /** This surface's answer where the person left an axis on Auto. */
+  defaults?: Composing
+}
+
+/** Ctrl+U (⌘U) uploads, while a composer with an upload is on the page. */
+export function useUpload(upload: (() => void) | undefined): void {
+  const now = useRef(upload)
+  now.current = upload
+  useEffect(() => {
+    if (!upload) return
+    const key = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.key.toLowerCase() === 'u') {
+        e.preventDefault()
+        now.current?.()
+      }
+    }
+    window.addEventListener('keydown', key)
+    return () => window.removeEventListener('keydown', key)
+  }, [Boolean(upload)]) // eslint-disable-line react-hooks/exhaustive-deps
+}
+
+/** The modifier state off a keydown, web or native. */
+const modsOf = (e: { nativeEvent?: Mods; key?: string } & Mods): Mods => ({
+  shiftKey: e.shiftKey ?? e.nativeEvent?.shiftKey,
+  altKey: e.altKey ?? e.nativeEvent?.altKey,
+  metaKey: e.metaKey ?? e.nativeEvent?.metaKey,
+  ctrlKey: e.ctrlKey ?? e.nativeEvent?.ctrlKey,
+  isComposing: e.isComposing ?? e.nativeEvent?.isComposing,
+  // Safari's only honest IME signal on this keydown.
+  keyCode: e.keyCode ?? e.nativeEvent?.keyCode,
+})
+
+/**
+ * How far the software keyboard covers the page, px: the layout viewport less the
+ * visual one. A phone keyboard that does not shrink the layout leaves a fixed
+ * composer under it; this is how far to lift it. Zero where the layout follows the
+ * keyboard (the browser resized it) and wherever there is no keyboard.
+ */
+function useLift(): number {
+  const [lift, setLift] = useState(0)
+  useEffect(() => {
+    const vv = typeof window === 'undefined' ? null : window.visualViewport
+    if (!vv) return
+    const read = () => {
+      const covered = Math.round(window.innerHeight - vv.height - vv.offsetTop)
+      // A bar of the browser's own coming and going is not a keyboard.
+      setLift(covered > 100 ? covered : 0)
+    }
+    read()
+    vv.addEventListener('resize', read)
+    vv.addEventListener('scroll', read)
+    return () => {
+      vv.removeEventListener('resize', read)
+      vv.removeEventListener('scroll', read)
+    }
+  }, [])
+  return lift
 }
 
 export function Composer({
@@ -124,61 +225,120 @@ export function Composer({
   onStop,
   busy = false,
   disabled = false,
-  placeholder = ASK,
-  rows = MIN_ROWS,
-  maxHeight = CEILING,
-  children,
-  hint,
+  ready: readyProp,
+  placeholder,
   label,
+  rows = 1,
+  maxHeight = CEILING,
   field,
-  send,
+  hint,
+  children,
   head,
-  foot,
-  inline = false,
+  pills,
+  carried,
+  plus,
+  slash,
+  at,
+  commands,
+  chips,
+  mind,
+  effort,
+  limits,
+  onUpgrade,
+  mode,
+  voice,
+  language = null,
+  onLanguage,
+  talk,
+  starters,
+  note,
+  column = false,
+  framed = false,
+  narrow: narrowProp,
+  defaults,
   ...props
 }: ComposerProps) {
-  const sendable = ready(value, busy, disabled)
+  const { t } = useI18n()
+  const media = useMedia()
+  const narrow = narrowProp ?? !media.sm
+  const hit = narrow ? TAP : ROUND
+  const lift = useLift()
+  const chosen = useComposing()
+  const rule = chosen.send ?? defaults?.send ?? 'enter'
+  const showChips = chosen.chips ?? defaults?.chips ?? true
+  const showModel = chosen.model ?? defaults?.model ?? false
+  const showMode = chosen.mode ?? defaults?.mode ?? true
 
-  const keyed = (e: { nativeEvent?: Mods & { key?: string }; key?: string } & Mods) => {
-    const key = e.key ?? e.nativeEvent?.key ?? ''
-    const mods: Mods = {
-      shiftKey: e.shiftKey ?? e.nativeEvent?.shiftKey,
-      altKey: e.altKey ?? e.nativeEvent?.altKey,
-      metaKey: e.metaKey ?? e.nativeEvent?.metaKey,
-      ctrlKey: e.ctrlKey ?? e.nativeEvent?.ctrlKey,
-      isComposing: e.isComposing ?? e.nativeEvent?.isComposing,
-      // Safari's only honest IME signal on this keydown. Dropping it here would
-      // put the mid-candidate submit straight back, whatever `sends` checks.
-      keyCode: e.keyCode ?? e.nativeEvent?.keyCode,
+  const lit = readyProp ?? ready(value)
+  const live = busy ? Boolean(onStop) : lit && !disabled
+  useUpload(plus?.upload)
+
+  // `/` and `@`: the shelf the caret's word opens, filtered by what follows it.
+  const [index, setIndex] = useState(0)
+  const [closed, setClosed] = useState<string | null>(null)
+  const typed = trigger(value)
+  const shelf = typed ? (typed.char === '/' ? slash : at) : undefined
+  const listed = shelf && typed && closed !== value ? shelf.rows.filter((r) => r.label.toLowerCase().includes(typed.query)).slice(0, 8) : null
+  const row = Math.min(index, Math.max(0, (listed?.length ?? 1) - 1))
+  useEffect(() => setIndex(0), [typed?.char, typed?.query])
+  const pick = (id: string) => {
+    if (!typed || !shelf) return
+    onChange(value.slice(0, typed.at).trimEnd() + (typed.at > 0 ? ' ' : ''))
+    shelf.pick(id)
+  }
+
+  const [palette, setPalette] = useState(false)
+
+  const submit = () => {
+    if (listed?.length) return pick(listed[row]!.id)
+    if (live && !busy) onSend()
+  }
+
+  const keyed = (e: any) => {
+    const key: string = e?.key ?? e?.nativeEvent?.key ?? ''
+    const mods = modsOf(e ?? {})
+    if (listed) {
+      if (key === 'ArrowDown') {
+        e.preventDefault?.()
+        return setIndex((i) => Math.min(i + 1, listed.length - 1))
+      }
+      if (key === 'ArrowUp') {
+        e.preventDefault?.()
+        return setIndex((i) => Math.max(0, i - 1))
+      }
+      if (key === 'Escape') {
+        e.preventDefault?.()
+        return setClosed(value)
+      }
     }
-    if (!sends(key, mods)) return
-    ;(e as { preventDefault?: () => void }).preventDefault?.()
-    if (sendable) onSend()
+    if (commands?.length && (mods.metaKey || mods.ctrlKey) && key.toLowerCase() === 'k') {
+      e.preventDefault?.()
+      return setPalette(true)
+    }
+    if (!sends(key, mods, rule)) return
+    e.preventDefault?.()
+    submit()
   }
 
   const input = (
     <Textarea
       {...slot('composer-field')}
       rows={rows}
-      placeholder={placeholder}
+      placeholder={placeholder ?? t(ASK)}
       disabled={disabled}
       borderWidth={0}
-      {...(inline
-        ? {
-            flex: 1,
-            minW: 0,
-            minH: LINE_FIELD,
-            px: 0,
-            pt: LINE_PAD,
-            pb: LINE_PAD,
-            bg: 'transparent',
-          }
-        : { minH: FLOOR })}
+      fontSize={16}
+      lineHeight={24}
+      px={8}
+      pt={2}
+      pb={0}
+      minH={26}
       maxH={maxHeight}
-      aria-label={label ?? placeholder}
+      bg="transparent"
+      aria-label={label ?? placeholder ?? t(ASK)}
       {...field}
-      // After `field`: spread over, a caller's `onKeyDown` would replace the
-      // Enter rule and the IME guard. Theirs runs first and can claim the key.
+      // After `field`: a caller's `onKeyDown` runs first and can claim the key,
+      // but cannot replace the send rule and the IME guard.
       value={value}
       onChangeText={onChange}
       onKeyDown={(e: any) => {
@@ -188,196 +348,131 @@ export function Composer({
     />
   )
 
-  const said = hint ? (
-    <SizableText size="$1" color="$soft">
-      {hint}
-    </SizableText>
-  ) : null
-
-  const frame = inline ? (
-    <XStack
-      {...slot('composer')}
-      data-variant="inline"
-      width="100%"
-      items="center"
-      rounded="$3"
-      borderWidth={1}
-      borderColor="$rim"
-      bg="$hover"
-      paddingInlineStart="$3"
-      paddingInlineEnd="$1.5"
-      gap="$1.5"
-      {...props}
-    >
-      {input}
-      {children}
-      {said}
-      {send ?? (
-        <XStack
-          {...slot('composer-send')}
-          {...tip(busy ? 'Stop' : 'Send')}
-          role="button"
-          tabIndex={busy ? (onStop ? 0 : -1) : sendable ? 0 : -1}
-          aria-label={busy ? 'Stop' : 'Send'}
-          aria-disabled={busy ? !onStop : !sendable}
-          width={MARK}
-          height={MARK}
-          shrink={0}
-          rounded="$2"
-          items="center"
-          justify="center"
-          cursor={(busy ? onStop : sendable) ? 'pointer' : 'default'}
-          opacity={(busy ? onStop : sendable) ? 1 : 0.6}
-          hoverStyle={{ bg: '$raised' }}
-          onPress={() => (busy ? onStop?.() : sendable ? onSend() : undefined)}
-          onKeyDown={(e: any) => {
-            if (e?.key !== 'Enter' && e?.key !== ' ') return
-            e.preventDefault?.()
-            if (busy) onStop?.()
-            else if (sendable) onSend()
-          }}
-        >
-          {busy ? <Square size={12} color="$soft" /> : <CornerDownLeft size={14} color="$soft" />}
-        </XStack>
-      )}
-    </XStack>
-  ) : (
-    <YStack
-      {...slot('composer')}
-      width="100%"
-      rounded="$5"
-      borderWidth={1}
-      borderColor="$borderColor"
-      bg="$background"
-      p={PAD}
-      gap={PAD}
-      {...props}
-    >
-      {input}
-      <XStack items="center" gap={PAD}>
-        {children}
-        <XStack flex={1} />
-        {said}
-        {send ?? (
-          <Button
-            {...slot('composer-send')}
-            size="sm"
-            disabled={busy ? !onStop : !sendable}
-            onPress={busy ? onStop : onSend}
-            aria-label={busy ? 'Stop' : 'Send'}
-            // A circle, and the room's one primary control. The height is the
-            // size's; `aspectRatio` takes the width from it, so no second number
-            // is written down. `--primary` is the accent a reader picks, and at
-            // rest it is the ink pair Send already paints in both themes.
-            px={0}
-            aspectRatio={1}
-            rounded={'var(--radius-full, 9999px)' as never}
-            bg="var(--primary)"
-            borderWidth={0}
-            hoverStyle={{ bg: 'var(--primary)', opacity: 0.9 }}
-            pressStyle={{ bg: 'var(--primary)', opacity: 0.85 }}
-          >
-            {busy ? (
-              <Square size={14} color={'var(--primary-foreground)' as never} />
-            ) : (
-              <ArrowUp size={16} color={'var(--primary-foreground)' as never} />
-            )}
-          </Button>
-        )}
-      </XStack>
-    </YStack>
-  )
-
-  // With nothing above or below it the composer IS the frame, exactly as it
-  // was before either existed — no wrapper, so every caller's tree is unchanged.
-  if (!head && !foot) return frame
-
-  return (
-    <YStack {...slot('composer-shell')} width="100%" gap="$2.5">
-      {head ? (
-        <XStack {...slot('composer-head')} items="center" gap="$1.5" flexWrap="wrap">
-          {head}
-        </XStack>
-      ) : null}
-      {frame}
-      {foot ? (
-        <XStack {...slot('composer-foot')} items="center" gap="$2" px="$1.5" mt={-4}>
-          {foot}
-        </XStack>
-      ) : null}
-    </YStack>
-  )
-}
-
-type Row = Omit<ComponentProps<typeof XStack>, 'children'>
-
-export interface ComposerToolProps extends Row {
-  /** The control's name — what a screen reader says and the tooltip shows. */
-  label: string
-  icon?: ReactNode
-  /** Words drawn after the icon — a mode, a model. Absent, the tool is icon-only. */
-  text?: string
-  /** A trailing caret: this opens a menu. */
-  caret?: boolean
-  onPress?: () => void
-  disabled?: boolean
-}
-
-/**
- * ComposerTool — one quiet control in a composer's `foot` or `head`: attach,
- * voice, a mode, the model. 24px tall, muted until pointed at, and a real
- * button to the keyboard. Its name is `label` whether or not it shows words,
- * because an icon-only control is the whole navigation for someone who cannot
- * see the icon.
- */
-export function ComposerTool({
-  label,
-  icon,
-  text,
-  caret = false,
-  onPress,
-  disabled = false,
-  ...rest
-}: ComposerToolProps) {
-  return (
-    <XStack
-      {...slot('composer-tool')}
-      {...tip(label)}
-      role="button"
-      tabIndex={disabled ? -1 : 0}
-      aria-label={label}
-      aria-disabled={disabled || undefined}
-      aria-haspopup={caret ? 'menu' : undefined}
-      height={24}
-      px={text ? '$1.5' : '$1'}
-      gap="$1"
-      items="center"
-      rounded="$2"
-      shrink={0}
-      cursor={disabled ? 'default' : 'pointer'}
-      opacity={disabled ? 0.5 : 1}
-      hoverStyle={disabled ? undefined : { bg: '$hover' }}
-      focusVisibleStyle={{ outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' }}
-      hitSlop={{ top: 10, bottom: 10, left: 2, right: 2 }}
-      onPress={disabled ? undefined : onPress}
-      onKeyDown={(e: any) => {
-        if (disabled || (e?.key !== 'Enter' && e?.key !== ' ')) return
-        e.preventDefault?.()
-        onPress?.()
+  const round = (
+    <Control
+      type="button"
+      size={hit}
+      fill
+      rounded={999}
+      {...slot('composer-send')}
+      aria-label={t(busy ? 'Stop' : 'Send')}
+      aria-disabled={!live || undefined}
+      opacity={live ? 1 : 0.4}
+      focusVisibleStyle={RING}
+      onClick={() => {
+        if (!live) return
+        if (busy) onStop?.()
+        else onSend()
       }}
-      {...rest}
     >
-      {icon ? (
-        <XStack aria-hidden items="center">
-          {icon}
+      {busy ? <Square size={13} color={ON} fill={ON} /> : <ArrowUp size={16} strokeWidth={2.5} color={ON} />}
+    </Control>
+  )
+
+  const mention =
+    listed && shelf && typed ? <Mention shelf={shelf} rows={listed} index={row} onPick={pick} skills={typed.char === '/'} /> : null
+
+  const above =
+    starters || head || note || mention ? (
+      <YStack {...slot('composer-head')} gap="$1.5">
+        {starters}
+        {head}
+        {mention}
+        {note ? (
+          <SizableText {...slot('composer-note')} fontSize={12} color="$soft" text="center" self="center">
+            {note}
+          </SizableText>
+        ) : null}
+      </YStack>
+    ) : null
+
+  const shown = showChips && chips?.length ? chips : null
+  const tuned = (showModel && mind) || (showMode && mode)
+  const under =
+    shown || tuned ? (
+      <XStack {...slot('composer-foot')} items="center" gap={6} flexWrap="wrap" rowGap={4} width="100%">
+        {shown ? <Chips chips={shown} /> : null}
+        {tuned ? <Tune mind={showModel ? mind : null} mode={showMode ? mode : null} onUpgrade={onUpgrade} limits={limits} /> : null}
+      </XStack>
+    ) : null
+
+  return (
+    <YStack {...slot('composer-shell')} {...(column ? measure : { width: '100%' })} gap={6} {...(lift ? { mb: lift } : null)} {...props}>
+      {above}
+      <YStack
+        {...slot('composer')}
+        width="100%"
+        rounded={CORNER}
+        borderWidth={1}
+        borderColor="$borderColor"
+        bg="$edge"
+        p={8}
+        pt={pills ? 8 : 12}
+        gap={6}
+        $max-sm={{ rounded: CORNER_PHONE }}
+        {...(framed ? { boxShadow: 'var(--shadow-sheet-1)' } : null)}
+      >
+        {pills ? (
+          <XStack {...slot('composer-pills')} items="center" gap={4} flexWrap="wrap" rowGap={4} px={2}>
+            {pills}
+          </XStack>
+        ) : null}
+        {input}
+        <XStack items="center" gap={4}>
+          <XStack {...slot('composer-start')} items="center" gap={4} flex={1} minW={0} flexWrap="wrap">
+            {plus ? <Plus {...plus} size={hit} disabled={disabled || plus.disabled} /> : null}
+            {(carried ?? []).map((c) => (
+              <XStack key={c.id} {...slot('composer-carried')} items="center" gap={6} paddingInlineStart={8} paddingInlineEnd={4} height={28} rounded={8} bg="$hover" maxW={180}>
+                {c.icon ? <XStack aria-hidden>{c.icon}</XStack> : null}
+                <SizableText fontSize={13} color="$ink" numberOfLines={1} shrink={1}>
+                  {c.label}
+                </SizableText>
+                <XStack
+                  render="button"
+                  aria-label={t('Remove {name}', { name: c.label })}
+                  onPress={c.onRemove}
+                  width={20}
+                  height={20}
+                  rounded={6}
+                  items="center"
+                  justify="center"
+                  hoverStyle={{ bg: '$raised' }}
+                  cursor="pointer"
+                >
+                  <X size={12} color="$hint" />
+                </XStack>
+              </XStack>
+            ))}
+            {children}
+          </XStack>
+          <XStack {...slot('composer-end')} items="center" gap={4} shrink={0}>
+            {hint ? (
+              <SizableText size="$1" color="$soft" numberOfLines={1}>
+                {hint}
+              </SizableText>
+            ) : null}
+            {effort ? <Dial effort={effort} size={hit} disabled={disabled} /> : null}
+            {commands?.length ? <Palette commands={commands} open={palette} onOpenChange={setPalette} size={hit} disabled={disabled} /> : null}
+            {voice ? <Dictation voice={voice} disabled={disabled} size={hit} language={language} {...(onLanguage ? { onLanguage } : {})} /> : null}
+            {!busy && !lit && talk ? (
+              // Voice mode is a plain mark on a laptop, as the mic is, and the filled round on a phone.
+              <Control asChild size={hit} fill={narrow} rounded={999} {...(narrow ? null : QUIET)} focusVisibleStyle={RING}>
+                <Voice
+                  voice={talk}
+                  disabled={disabled}
+                  data-slot="composer-talk"
+                  says={{ idle: t('Voice mode'), listening: t('In conversation — click to hang up'), speaking: t('Hanzo is speaking — talk to interrupt') }}
+                >
+                  {() => <AudioLines size={16} color={narrow ? ON : 'var(--foreground)'} />}
+                </Voice>
+              </Control>
+            ) : (
+              round
+            )}
+          </XStack>
         </XStack>
-      ) : null}
-      {text ? (
-        <SizableText size="$2" color="$quiet" numberOfLines={1}>
-          {text}
-        </SizableText>
-      ) : null}
-      {caret ? <ChevronDown size={12} color="$soft" aria-hidden /> : null}
-    </XStack>
+      </YStack>
+      {under}
+    </YStack>
   )
 }

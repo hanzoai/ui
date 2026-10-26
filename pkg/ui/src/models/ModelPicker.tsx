@@ -60,6 +60,11 @@ export interface ModelPickerProps {
   placeholder?: string
   /** What it chooses, for its accessible name. */
   name?: string
+  /** The accessible name whole, in the reader's language, where `name: model` is not how they say it. */
+  describe?: string
+  /** Whether the payer's plan may send a model: one it may not says Upgrade, and choosing it calls `onUpgrade`. */
+  granted?: (id: string) => boolean
+  onUpgrade?: (id: string) => void
   open?: boolean
   onOpenChange?: (open: boolean) => void
 }
@@ -77,6 +82,9 @@ export function ModelPicker({
   size = 'md',
   placeholder = 'Choose a model',
   name = 'Model',
+  describe,
+  granted,
+  onUpgrade,
   open: openProp,
   onOpenChange,
 }: ModelPickerProps) {
@@ -129,7 +137,7 @@ export function ModelPicker({
       {...slot('model-picker')}
       role="button"
       tabIndex={disabled ? -1 : 0}
-      aria-label={`${name}: ${label}`}
+      aria-label={describe ?? `${name}: ${label}`}
       aria-haspopup="listbox"
       aria-expanded={open}
       aria-disabled={disabled || undefined}
@@ -202,6 +210,8 @@ export function ModelPicker({
       name={name}
       sheet={sheet}
       row={row}
+      granted={granted}
+      onUpgrade={onUpgrade}
     />
   )
 }

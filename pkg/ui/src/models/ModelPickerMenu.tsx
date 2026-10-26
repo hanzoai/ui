@@ -64,9 +64,13 @@ interface ListProps {
   sheet: boolean
   /** Row height, px. */
   row: number
+  /** Whether the payer's plan may send a model. Absent, every one. */
+  granted?: (id: string) => boolean
+  /** A model the plan does not grant was chosen: the way to the plan that does. */
+  onUpgrade?: (id: string) => void
 }
 
-function List({ models, value, onChange, onClose, scope, limits, loading, error, name, sheet, row }: ListProps) {
+function List({ models, value, onChange, onClose, scope, limits, loading, error, name, sheet, row, granted, onUpgrade }: ListProps) {
   const [q, setQ] = useState('')
   const [at, setAt] = useState(-1)
   const [top, setTop] = useState(0)
@@ -133,10 +137,11 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
   const choose = useCallback(
     (r: PickerRow | undefined) => {
       if (r?.kind !== 'model' || !pickable(r.model)) return
-      onChange(r.model.id)
+      if (granted && !granted(r.model.id)) onUpgrade?.(r.model.id)
+      else onChange(r.model.id)
       onClose()
     },
-    [onChange, onClose],
+    [onChange, onClose, granted, onUpgrade],
   )
 
   const onField = (e: { key?: string; preventDefault?: () => void }) => {
@@ -257,6 +262,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
             const m = r.model
             const locked = !pickable(m)
             const paused = !locked && isPaused(m, limits)
+            const upgrade = !locked && granted ? !granted(m.id) : false
             const picked = m.id === value
             const ctx = formatContext(m.context_window)
             const title = modelName(m)
@@ -300,10 +306,12 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
                     ✦
                   </SizableText>
                 ) : null}
-                {locked || paused || saving || ceiling || kind || ctx ? (
+                {locked || upgrade || paused || saving || ceiling || kind || ctx ? (
                   <SizableText size="$1" color="$soft" shrink={0} maxW="60%" numberOfLines={1} fontVariant={['tabular-nums']}>
                     {locked
                       ? 'Research preview'
+                      : upgrade
+                        ? 'Upgrade'
                       : paused
                         ? 'Paused'
                         : saving

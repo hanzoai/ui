@@ -21,6 +21,7 @@ export {
   formatContext,
   formatPrice,
   formatSaving,
+  grants,
   groupKey,
   groupLabel,
   groupModels,

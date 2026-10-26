@@ -21,7 +21,9 @@ import { GuiProvider } from '@hanzo/gui'
 
 import config from '../gui-config'
 import { audit } from '../../test/axe'
-import { Composer, ComposerTool } from './Composer'
+import { writeComposing } from '@hanzo/appearance'
+
+import { Composer } from './Composer'
 
 declare global {
   // eslint-disable-next-line no-var
@@ -66,6 +68,7 @@ beforeEach(() => {
 afterEach(() => {
   act(() => root.unmount())
   host.remove()
+  writeComposing({})
 })
 
 describe('the composer is wired to its own rules', () => {
@@ -150,7 +153,7 @@ describe('the field is bounded at both ends', () => {
     // `Textarea` defaults to 64px, three lines of chrome for a composer.
     mount(<Composer value="" onChange={() => {}} onSend={() => {}} />)
     expect(classes()).toContain('_maxH-200px')
-    expect(classes()).toContain('_minH-44px')
+    expect(classes()).toContain('_minH-26px')
   })
 
   it('takes a ceiling, for a surface with a narrower frame', () => {
@@ -159,118 +162,115 @@ describe('the field is bounded at both ends', () => {
   })
 })
 
-describe('the context row above and the controls below', () => {
-  it('draws no wrapper when there is nothing above or below — the frame is the root', () => {
-    mount(<Composer value="" onChange={() => {}} onSend={() => {}} />)
-    const frame = host.querySelector('[data-slot="composer"]')!
-    expect(host.querySelector('[data-slot="composer-shell"]')).toBeNull()
-    // The provider's own wrapper is the only thing between host and frame.
-    expect(frame.parentElement?.parentElement).toBe(host)
-  })
-
-  it('draws `head` above the frame and `foot` under it, outside the frame', () => {
+describe('the slots', () => {
+  it('draws `head` above the frame, `pills` inside it, and the chips under it', () => {
     mount(
       <Composer
         value=""
         onChange={() => {}}
         onSend={() => {}}
-        head={<span data-testid="chips">chips</span>}
-        foot={<span data-testid="tools">tools</span>}
+        head={<span data-testid="banner">banner</span>}
+        pills={<span data-testid="pill">pill</span>}
+        chips={[{ id: 'issues', label: 'Issues', onPress: () => {} }]}
       />,
     )
     const shell = host.querySelector('[data-slot="composer-shell"]')!
     const parts = [...shell.children].map((c) => c.getAttribute('data-slot'))
     expect(parts).toEqual(['composer-head', 'composer', 'composer-foot'])
     const frame = host.querySelector('[data-slot="composer"]')!
-    expect(frame.querySelector('[data-testid="chips"]')).toBeNull()
-    expect(frame.querySelector('[data-testid="tools"]')).toBeNull()
+    expect(frame.querySelector('[data-testid="banner"]')).toBeNull()
+    expect(frame.querySelector('[data-slot="composer-pills"] [data-testid="pill"]')).not.toBeNull()
+    expect(host.querySelector('[data-slot="composer-foot"] [data-slot="composer-chip"]')?.textContent).toBe('Issues')
+  })
+
+  it('draws what the draft carries after `+`, each with its own remove', () => {
+    const onRemove = vi.fn()
+    mount(<Composer value="" onChange={() => {}} onSend={() => {}} carried={[{ id: 'f', label: 'notes.md', onRemove }]} />)
+    const remove = host.querySelector<HTMLElement>('[data-slot="composer-carried"] [aria-label="Remove notes.md"]')!
+    act(() => remove.click())
+    expect(onRemove).toHaveBeenCalledOnce()
+  })
+
+  it('lists `/` shelves above the frame and picks the lit row on Enter', () => {
+    const pick = vi.fn()
+    const onChange = vi.fn()
+    const onSend = vi.fn()
+    mount(
+      <Composer
+        value="fix it /rev"
+        onChange={onChange}
+        onSend={onSend}
+        slash={{ rows: [{ id: 'review', label: 'review' }, { id: 'plan', label: 'plan' }], pick }}
+      />,
+    )
+    expect(host.querySelector('[data-slot="composer-head"] [data-slot="mention"]')).not.toBeNull()
+    expect(keydown('Enter')).toBe(true)
+    expect(pick).toHaveBeenCalledWith('review')
+    expect(onChange).toHaveBeenCalledWith('fix it ')
+    expect(onSend).not.toHaveBeenCalled()
   })
 })
 
-describe('the one-line frame', () => {
-  it('puts the field and the send mark in one row inside the frame', () => {
-    mount(<Composer inline value="hi" onChange={() => {}} onSend={() => {}} />)
-    const frame = host.querySelector('[data-slot="composer"]')!
-    const send = frame.querySelector('[data-slot="composer-send"]')!
-    expect(send.parentElement).toBe(frame)
-    expect(frame.contains(field())).toBe(true)
-    expect(send.getAttribute('aria-label')).toBe('Send')
-    expect(send.getAttribute('aria-disabled')).toBe('false')
-  })
-
-  it('keeps the Enter rule and the IME guard', () => {
+describe("the person's setting is the one every composer reads", () => {
+  it('sends on Cmd/Ctrl+Enter only, once they chose it', () => {
+    writeComposing({ send: 'mod' })
     const onSend = vi.fn()
-    mount(<Composer inline value="にほん" onChange={() => {}} onSend={onSend} />)
-    expect(keydown('Enter', { isComposing: true })).toBe(false)
+    mount(<Composer value="hi" onChange={() => {}} onSend={onSend} />)
+    expect(keydown('Enter')).toBe(false)
     expect(onSend).not.toHaveBeenCalled()
-    expect(keydown('Enter')).toBe(true)
+    expect(keydown('Enter', { metaKey: true })).toBe(true)
     expect(onSend).toHaveBeenCalledOnce()
   })
 
-  it('sends from the mark by pointer and by keyboard, and not while empty', () => {
-    const onSend = vi.fn()
-    mount(<Composer inline value="" onChange={() => {}} onSend={onSend} />)
-    const send = host.querySelector<HTMLElement>('[data-slot="composer-send"]')!
-    expect(send.getAttribute('aria-disabled')).toBe('true')
-    act(() => send.click())
-    expect(onSend).not.toHaveBeenCalled()
-
-    mount(<Composer inline value="go" onChange={() => {}} onSend={onSend} />)
-    const live = host.querySelector<HTMLElement>('[data-slot="composer-send"]')!
-    act(() => live.click())
-    act(() => {
-      live.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }))
-    })
-    expect(onSend).toHaveBeenCalledTimes(2)
-  })
-
-  it('becomes Stop while busy', () => {
-    const onStop = vi.fn()
-    mount(<Composer inline value="" busy onChange={() => {}} onSend={() => {}} onStop={onStop} />)
-    const send = host.querySelector<HTMLElement>('[data-slot="composer-send"]')!
-    expect(send.getAttribute('aria-label')).toBe('Stop')
-    act(() => send.click())
-    expect(onStop).toHaveBeenCalledOnce()
-  })
-
-  it('stands one line tall', () => {
-    mount(<Composer inline value="" onChange={() => {}} onSend={() => {}} />)
-    expect(field().className).toContain('_minH-38px')
+  it("takes the surface's default for an axis left on Auto, and the person's choice over it", () => {
+    const chips = [{ id: 'auto', label: 'Auto', onPress: () => {} }]
+    mount(<Composer value="" onChange={() => {}} onSend={() => {}} chips={chips} defaults={{ chips: false }} />)
+    expect(host.querySelector('[data-slot="composer-chip"]')).toBeNull()
+    act(() => writeComposing({ chips: true }))
+    expect(host.querySelector('[data-slot="composer-chip"]')).not.toBeNull()
+    act(() => writeComposing({ chips: false }))
+    mount(<Composer value="" onChange={() => {}} onSend={() => {}} chips={chips} />)
+    expect(host.querySelector('[data-slot="composer-chip"]')).toBeNull()
   })
 })
 
-describe('ComposerTool', () => {
-  it('is a named control that answers the keyboard', () => {
-    const onPress = vi.fn()
-    mount(<ComposerTool label="Attach" onPress={onPress} />)
-    const tool = host.querySelector<HTMLElement>('[data-slot="composer-tool"]')!
-    expect(tool.getAttribute('aria-label')).toBe('Attach')
-    act(() => {
-      tool.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }))
-    })
-    act(() => tool.click())
-    expect(onPress).toHaveBeenCalledTimes(2)
-  })
+describe('the model selector', () => {
+  const mind = { model: 'enso-auto', models: [], loading: false, error: null, note: '', free: false, pick: () => {} }
+  const effort = { value: 'auto', set: () => {}, items: [{ id: 'auto', label: 'Auto', note: 'Adaptive' }] }
 
-  it('says it opens a menu when it carries a caret', () => {
-    mount(<ComposerTool label="Mode" text="Auto" caret />)
-    const tool = host.querySelector<HTMLElement>('[data-slot="composer-tool"]')!
-    expect(tool.getAttribute('aria-haspopup')).toBe('menu')
-    expect(tool.textContent).toBe('Auto')
+  it('is not drawn until the person turns it on, and the effort always is', () => {
+    mount(<Composer value="" onChange={() => {}} onSend={() => {}} mind={mind} effort={effort} />)
+    expect(host.querySelector('[data-slot="mind"]')).toBeNull()
+    expect(host.querySelector('[aria-label="Effort: Auto"]')).not.toBeNull()
+    act(() => writeComposing({ model: true }))
+    expect(host.querySelector('[data-slot="mind"]')).not.toBeNull()
+  })
+})
+
+describe('the commands', () => {
+  it('open from the field on Ctrl+K', () => {
+    const run = vi.fn()
+    mount(<Composer value="" onChange={() => {}} onSend={() => {}} commands={[{ id: 'run', label: 'Run', keys: '⌘↵', run }]} />)
+    const chip = host.querySelector<HTMLElement>('[data-slot="chip-select"][aria-label="Commands"]')!
+    expect(chip.getAttribute('aria-expanded')).toBe('false')
+    expect(keydown('k', { ctrlKey: true })).toBe(true)
+    expect(chip.getAttribute('aria-expanded')).toBe('true')
   })
 })
 
 describe('accessibility', () => {
-  it('has no axe violations in either layout, with a head and a foot', async () => {
+  it('has no axe violations, with every slot drawn', async () => {
     mount(
       <Composer
-        inline
         value="draft"
         onChange={() => {}}
         onSend={() => {}}
         label="Describe a task"
-        head={<ComposerTool label="Environment" text="Default" />}
-        foot={<ComposerTool label="Attach" />}
+        head={<span>banner</span>}
+        carried={[{ id: 'f', label: 'notes.md', onRemove: () => {} }]}
+        chips={[{ id: 'issues', label: 'Issues', onPress: () => {} }]}
+        commands={[{ id: 'run', label: 'Run', run: () => {} }]}
+        mode={{ value: 'auto', set: () => {}, items: [{ id: 'auto', label: 'Auto', note: 'Runs on its own' }] }}
       />,
     )
     expect(await audit(host)).toEqual([])

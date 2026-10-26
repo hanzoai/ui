@@ -448,14 +448,51 @@ against gui's index signature, which the docs app's typecheck caught.
 `test/axe.ts` does not descend into frames (`iframes: false`): a framed page is
 another document, and axe's frame messaging throws in jsdom besides.
 
-### The sessions surface — `SessionRail`, `RailBar`, `Home`, `EmptyPrompt`, `Composer` one-line, `ChipSelect`
+### The one composer — `Composer` in `@hanzo/ui/chat`
+
+Chat, Dev, Studio, a room, a reply and a run being steered all draw this one
+component; none carries a copy. It was three (this package's frame, @hanzo/build's
+`prompt`, and Chat's own effort widget beside send) until the three agreed on
+nothing — a key that sent in one wrote a newline in another.
+
+    ┌ pills ────────────────────────────────┐  where a run goes: environment, repository, branch
+    │ the field                             │
+    │ +  carried…  children     ✦  🎙  ⬆    │  + menu, what the draft carries, commands, dictation, send/stop
+    └───────────────────────────────────────┘
+      chips…                  model effort mode   under the frame; `head` and `/` `@` lists above it
+
+- **Slots, not variants.** `pills`, `chips`, `commands`, `plus`, `carried`,
+  `slash`/`at`, `mind` (the model), `effort` and `mode` (each a `Modes`: the one in
+  force, its list, its setter), `below`, `head`, `note`. A surface that has none of
+  a slot draws none of it. Chat hands the effort, a mode and the model families
+  (`useFamilies`); Dev hands three pills (`ChipSelect`, `RepoSelect` with tabs,
+  `BranchSelect`), chips that go to its repositories, branches, issues and
+  templates, and its commands.
+- **One setting.** `@hanzo/appearance` `composing` (`useComposing`, written by
+  Settings → Appearance, kept on the device under `hanzo.composer` and in the IAM
+  account's preferences under `composer`): which key sends (`send`: Enter, or
+  ⌘/Ctrl+Enter), and whether the chips, the model selector and the mode are drawn.
+  An axis left on Auto takes the surface's `defaults` — Chat opens without chips
+  or a mode, Dev with both — and the model selector is off everywhere until the
+  person turns it on. Paint is `@hanzo/design` tokens through `--density`, so text
+  size, density and accent move it with the rest of the product.
+- **Why it is here.** `@hanzo/ui` already hosted the frame, `ModelPicker` and
+  `ChipSelect`; @hanzo/app and @hanzo/build both depend on it and it depends on
+  neither; `@hanzo/appearance` (its dependency, itself only on design) holds the
+  setting and `@hanzo/composer`, `@hanzo/voice` and `@hanzo/i18n` are leaves. A
+  package both consumers already import, with no new edge, is the one place no
+  cycle can form. They are peers of `@hanzo/ui` — install them beside it.
+- `@hanzo/ui/chat/pure` carries what a spec or a settings page needs without the
+  composer: `sends`, `LANGUAGES`, `EFFORTS`.
+
+### The sessions surface — `SessionRail`, `RailBar`, `Home`, `EmptyPrompt`, `Composer`, `ChipSelect`
 
 A coding surface's shell is these pieces, each in the home its kind already
 had. hanzo.build's look is the default: an app that mounts them gets it.
 
 | Piece | Home | What it is |
 |---|---|---|
-| `Composer` `inline` · `head` · `foot` | `@hanzo/ui/chat` | `inline` puts field and send in ONE row inside the frame (↵ idle, Stop busy); `head` is drawn ABOVE the frame (the context chips), `foot` UNDER it (attach, voice, mode … model). With neither, the frame is the root exactly as before — no wrapper — so existing callers' trees are unchanged. `ComposerTool` is one quiet 24px control for those rows. |
+| `Composer` | `@hanzo/ui/chat` | THE one composer — see "The one composer" below. A surface hands it slots (`pills`, `chips`, `commands`, `plus`, `carried`, `mind`/`effort`/`mode`, `below`); the field, keys, mic, send and their look are here once. |
 | `Home` | `@hanzo/ui/chat` | a fresh pane: mark + question ($8, centred, `role=heading`) and the composer as `children`, grouped in the middle of the pane in one column (default 768). |
 | `EmptyPrompt` | `@hanzo/ui/chat` | the smaller question at the TOP of the column, for a pane whose composer stays at the foot. The mark is a slot; no brand is picked here. |
 | `SessionRail` | `@hanzo/ui/chat` | head (`brand` wordmark — press = `onBrand ?? onNew` — over a bordered Search box when `onSearch`) · New · `links` · a More disclosure · Recents (status dots, sort control) · `notice` · account row (`name` over `sub`) with its menu · collapse. Built on `Sidebar`/`SidebarIconButton`. The sidebar canon: collapse is `collapsed` in / `onCollapse` out (the host persists), collapsed is a 56px icon rail whose top row expands (then a search icon), and below `md` the column is `display:none` and the same contents open as a left `Sheet` (`open`/`onOpenChange`); EVERY press in the drawer that leads somewhere closes it — New, a recent, a link, a More link, the brand, search, an account-menu row. |

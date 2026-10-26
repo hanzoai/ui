@@ -191,3 +191,18 @@ describe('a picker over five hundred models', () => {
     expect(document.querySelector('[data-slot="model-picker-research"] a')?.getAttribute('href')).toBe('https://hanzo.ai/research-access')
   })
 })
+
+describe('a model the plan does not grant', () => {
+  it('says Upgrade, and choosing it asks for the plan instead of the model', async () => {
+    const onChange = vi.fn()
+    const onUpgrade = vi.fn()
+    await mount(
+      <ModelPicker models={MODELS} value="enso-auto" onChange={onChange} granted={(id) => id === 'enso-auto'} onUpgrade={onUpgrade} open />,
+    )
+    const claude = options().find((o) => o.getAttribute('data-model') === 'anthropic/claude-sonnet-4.5')!
+    expect(claude.textContent).toContain('Upgrade')
+    act(() => claude.click())
+    expect(onUpgrade).toHaveBeenCalledWith('anthropic/claude-sonnet-4.5')
+    expect(onChange).not.toHaveBeenCalled()
+  })
+})

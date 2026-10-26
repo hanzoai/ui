@@ -29,5 +29,6 @@
  */
 export { Appearance, useAppearance, useScheme, TYPE_STEPS, RATIO_STEPS, ARABICS } from './Appearance'
 export { read, readLayers, write, apply, paint, dark, current, style, bootScript, keyFor, companion, COMPANIONS, DEFAULT, KEY, PAINTED, type Arabic, type Preference, type Scheme, type At } from './state'
-export { load, save, type Account } from './account'
+export { get, load, put, save, type Account } from './account'
+export { COMPOSING, composing, loadComposing, readComposing, saveComposing, useComposing, writeComposing, type Composing } from './composing'
 export { resolve, layerFor, isInherited, LAYERS, type Layer, type Layers, type Resolved, type Scope } from './scope'

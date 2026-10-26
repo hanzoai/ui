@@ -49,7 +49,7 @@ const q = (sel: string) => host.querySelector<HTMLElement>(sel)
 
 const home = (over: Partial<React.ComponentProps<typeof Home>> = {}) => (
   <Home mark={<span>H</span>} {...over}>
-    <Composer inline value="" onChange={() => {}} onSend={() => {}} label="Describe a task" />
+    <Composer value="" onChange={() => {}} onSend={() => {}} label="Describe a task" />
   </Home>
 )
 

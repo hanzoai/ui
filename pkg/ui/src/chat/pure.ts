@@ -11,10 +11,16 @@
 
 // Enter, and whether a draft may go. Read `sends` before writing another one:
 // the IME guard is the point.
-export { ready, sends, type Mods } from './send'
+export { ready, sends, type Mods, type Rule } from './send'
 
 // Stay-at-the-bottom, as a distance test.
 export { pinned, SLACK, type Track } from './stick'
 
 // The text of a turn whose content may be a string or the wire's parts.
 export { words, type Part, type Said } from './words'
+
+// The languages dictation listens in, each named in itself.
+export { LANGUAGES } from './languages'
+
+// The efforts a composer offers, and the shape of a short list of choices.
+export { EFFORTS, type Effort, type Way } from './ways'

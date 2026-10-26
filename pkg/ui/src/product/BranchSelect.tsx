@@ -35,7 +35,7 @@ export interface BranchSelectProps {
   onOpenChange?: (open: boolean) => void
 }
 
-const item = (name: string): ChipItem => ({ id: name, label: name })
+const item = (name: string): ChipItem => ({ id: name, label: name, icon: <GitBranch size={12} color="$soft" /> })
 
 export function BranchSelect({
   value = null,

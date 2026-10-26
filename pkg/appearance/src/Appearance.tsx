@@ -27,6 +27,7 @@
 import { useCallback, useEffect, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react'
 
 import { load, save, type Account } from './account'
+import { loadComposing, saveComposing, useComposing, writeComposing, type Composing } from './composing'
 import { TYPE_MIN, TYPE_MAX } from '@hanzo/design'
 
 import type { Corner, Face, Measure, Scheme } from '@hanzo/design'
@@ -222,6 +223,9 @@ export function useAppearance({
       if (!live || !theirs) return
       write(theirs, { scope: 'everywhere' })
       refresh()
+    })
+    void loadComposing(account).then((theirs) => {
+      if (live && theirs) writeComposing(theirs)
     })
     return () => {
       live = false
@@ -534,6 +538,8 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
         ))}
       </Row>
 
+      <Composer account={account} />
+
       {/* Only offered once something has changed — a reset for a state that is
           already the default is a control that does nothing. */}
       {touched ? (
@@ -544,5 +550,56 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
         </div>
       ) : null}
     </div>
+  )
+}
+
+/** Auto is the surface's own default: Chat and Dev each open the way they are best used. */
+const SHOWS: Array<{ label: string; value?: boolean }> = [
+  { label: 'Auto' },
+  { label: 'Show', value: true },
+  { label: 'Hide', value: false },
+]
+
+/** The composer's three rows. Personal and everywhere: a key that sends is a habit, not a brand. */
+function Composer({ account }: { account?: Account }) {
+  const now = useComposing()
+  const set = (patch: Composing) => {
+    const next: Composing = { ...now, ...patch }
+    for (const k of Object.keys(patch) as (keyof Composing)[]) if (patch[k] === undefined) delete next[k]
+    writeComposing(next)
+    if (account) void saveComposing(next, account)
+  }
+  return (
+    <>
+      <Row label="Send with">
+        <Choice on={(now.send ?? 'enter') === 'enter'} onSelect={() => set({ send: 'enter' })} title="Enter sends; Shift+Enter starts a new line">
+          Enter
+        </Choice>
+        <Choice on={now.send === 'mod'} onSelect={() => set({ send: 'mod' })} title="⌘ or Ctrl+Enter sends; Enter starts a new line">
+          ⌘ Enter
+        </Choice>
+      </Row>
+      <Row label="Composer chips">
+        {SHOWS.map((s) => (
+          <Choice key={s.label} on={now.chips === s.value} onSelect={() => set({ chips: s.value })}>
+            {s.label}
+          </Choice>
+        ))}
+      </Row>
+      <Row label="Model in composer">
+        {SHOWS.map((s) => (
+          <Choice key={s.label} on={now.model === s.value} onSelect={() => set({ model: s.value })}>
+            {s.label}
+          </Choice>
+        ))}
+      </Row>
+      <Row label="Mode in composer">
+        {SHOWS.map((s) => (
+          <Choice key={s.label} on={now.mode === s.value} onSelect={() => set({ mode: s.value })}>
+            {s.label}
+          </Choice>
+        ))}
+      </Row>
+    </>
   )
 }

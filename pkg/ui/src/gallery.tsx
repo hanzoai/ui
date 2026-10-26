@@ -47,7 +47,6 @@ import {
   Code,
   Chat,
   Composer,
-  ComposerTool,
   EmptyPrompt,
   Failure,
   Home,
@@ -1003,37 +1002,34 @@ export const Gallery = () => (
       <EmptyPrompt mark={<Badge>h</Badge>} />
       <div data-home="demo" style={{ display: 'flex', width: '100%', height: 320 }}>
         <Home mark={<Badge>h</Badge>}>
-          <Composer inline value="" onChange={NOOP} onSend={NOOP} placeholder="Describe a task or ask a question" />
+          <Composer value="" onChange={NOOP} onSend={NOOP} placeholder="Describe a task or ask a question" />
         </Home>
       </div>
       <div style={{ width: '100%', maxWidth: 768 }}>
         <Composer
-          inline
           value=""
           onChange={NOOP}
           onSend={NOOP}
           placeholder="Describe a task or ask a question"
-          head={
+          pills={
             <>
-              <ChipSelect name="Environment" label="Default" onChange={NOOP} items={[]} />
+              <ChipSelect name="Environment" label="Cloud" onChange={NOOP} items={[]} />
               <RepoSelect value={{ owner: 'hanzo-inc', name: 'cloud' }} onChange={NOOP} load={NONE} />
               <BranchSelect value="main" onChange={NOOP} load={NONE} />
               <ChipSelect name="Disabled" label="off" onChange={NOOP} items={[]} disabled />
             </>
           }
-          foot={
-            <>
-              <ComposerTool label="Attach" icon={<Badge>+</Badge>} onPress={NOOP} />
-              <ComposerTool label="Mode" text="Auto" caret onPress={NOOP} />
-              <ComposerTool label="Disabled" text="off" disabled />
-              <XStack flex={1} />
-              <ChipSelect name="Model" label="Zen 5" onChange={NOOP} items={[]} quiet />
-            </>
-          }
+          carried={[{ id: 'f', label: 'notes.md', onRemove: NOOP }]}
+          commands={[{ id: 'run', label: 'Run', keys: '⌘↵', run: NOOP }]}
+          chips={[
+            { id: 'a', label: 'Auto', on: true, onPress: NOOP },
+            { id: 'b', label: 'Issues', onPress: NOOP },
+          ]}
+          mode={{ value: 'auto', set: NOOP, items: [{ id: 'auto', label: 'Auto', note: 'Runs on its own' }] }}
         />
       </div>
       <div style={{ width: '100%', maxWidth: 768 }}>
-        <Composer inline value="a draft" onChange={NOOP} onSend={NOOP} onStop={NOOP} busy />
+        <Composer value="a draft" onChange={NOOP} onSend={NOOP} onStop={NOOP} busy />
       </div>
     </Section>
 
