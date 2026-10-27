@@ -42,4 +42,5 @@ export { parseStream } from './utils/stream'
 export * from './types'
 
 // Version
-export const VERSION = '1.0.1'
+import { version } from '../package.json'
+export const VERSION: string = version
