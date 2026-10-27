@@ -12,9 +12,12 @@
  * written.
  *
  * Data only, so a server component can import it: `@hanzo/ui/masthead/nav`.
+ * The words are English, marked with `phrase` and drawn through the reader's
+ * `t`; a name (Zen 6, Hanzo Dev, GitHub) is left as it is.
  */
 
 import type { GlyphName } from '@hanzogui/shell'
+import { phrase } from '@hanzo/i18n'
 
 // ── The hosts the tree links out to ─────────────────────────────────────────
 
@@ -89,26 +92,26 @@ export const leaves = (href: string, here = ''): boolean => away(href) && !(here
 /** The company, opened from the wordmark. */
 export const COMPANY: Menu = {
   id: 'company',
-  label: 'Company',
+  label: phrase('Company'),
   href: '/about',
   glyph: 'user',
   groups: [
     {
-      title: 'Explore Company',
+      title: phrase('Explore Company'),
       lead: true,
       links: [
-        { label: 'About Us', href: '/about' },
-        { label: 'Careers', href: '/careers' },
-        { label: 'News', href: '/press' },
+        { label: phrase('About Us'), href: '/about' },
+        { label: phrase('Careers'), href: '/careers' },
+        { label: phrase('News'), href: '/press' },
       ],
     },
     {
-      title: 'Resources',
+      title: phrase('Resources'),
       links: [
-        { label: 'Brand Guidelines', href: '/brand' },
-        { label: 'Philosophy', href: '/philosophy' },
-        { label: 'Investors', href: '/investors' },
-        { label: 'Contact', href: '/contact' },
+        { label: phrase('Brand Guidelines'), href: '/brand' },
+        { label: phrase('Philosophy'), href: '/philosophy' },
+        { label: phrase('Investors'), href: '/investors' },
+        { label: phrase('Contact'), href: '/contact' },
       ],
     },
   ],
@@ -118,12 +121,12 @@ export const COMPANY: Menu = {
 export const MENUS: Menu[] = [
   {
     id: 'research',
-    label: 'Research',
+    label: phrase('Research'),
     href: '/research',
     glyph: 'pulse',
     groups: [
       {
-        title: 'Releases',
+        title: phrase('Releases'),
         lead: true,
         links: [
           { label: 'Enso 1', href: '/enso' },
@@ -134,7 +137,7 @@ export const MENUS: Menu[] = [
         ],
       },
       {
-        title: 'Creative AI',
+        title: phrase('Creative AI'),
         links: [
           { label: 'Koma', href: '/koma' },
           { label: 'Iro', href: '/iro' },
@@ -145,65 +148,65 @@ export const MENUS: Menu[] = [
         ],
       },
       {
-        title: 'Explore Research',
+        title: phrase('Explore Research'),
         links: [
-          { label: 'Overview', href: '/research' },
-          { label: 'Benchmarks', href: '/benchmarks' },
-          { label: 'Compare', href: '/compare' },
-          { label: 'Open source', href: '/open-source' },
-          { label: 'Specifications', href: HIPS },
+          { label: phrase('Overview'), href: '/research' },
+          { label: phrase('Benchmarks'), href: '/benchmarks' },
+          { label: phrase('Compare'), href: '/compare' },
+          { label: phrase('Open source'), href: '/open-source' },
+          { label: phrase('Specifications'), href: HIPS },
         ],
       },
       {
-        title: 'Safety',
+        title: phrase('Safety'),
         links: [
-          { label: 'Security', href: '/security' },
-          { label: 'Trust & transparency', href: '/trust' },
+          { label: phrase('Security'), href: '/security' },
+          { label: phrase('Trust & transparency'), href: '/trust' },
         ],
       },
     ],
   },
   {
     id: 'products',
-    label: 'Products',
+    label: phrase('Products'),
     href: '/products',
     glyph: 'blocks',
     groups: [
       {
-        title: 'AI Models',
+        title: phrase('AI Models'),
         lead: true,
         links: [
-          { label: 'All models', href: '/models' },
+          { label: phrase('All models'), href: '/models' },
           { label: 'LLMs', href: '/zen' },
-          { label: 'Decisions', href: '/kai' },
-          { label: 'Routing', href: '/enso' },
+          { label: phrase('Decisions'), href: '/kai' },
+          { label: phrase('Routing'), href: '/enso' },
         ],
       },
       {
-        title: 'Creative AI',
+        title: phrase('Creative AI'),
         links: [
-          { label: 'Video', href: '/koma' },
-          { label: 'Images', href: '/iro' },
-          { label: '3D', href: '/mori' },
-          { label: 'Sound effects', href: '/oto' },
-          { label: 'Voice', href: '/koe' },
-          { label: 'Music', href: '/uta' },
+          { label: phrase('Video'), href: '/koma' },
+          { label: phrase('Images'), href: '/iro' },
+          { label: phrase('3D'), href: '/mori' },
+          { label: phrase('Sound effects'), href: '/oto' },
+          { label: phrase('Voice'), href: '/koe' },
+          { label: phrase('Music'), href: '/uta' },
         ],
       },
       {
         title: 'API Platform',
         links: [
-          { label: 'Overview', href: '/platform' },
+          { label: phrase('Overview'), href: '/platform' },
           { label: 'API', href: '/api' },
-          { label: 'Playground', href: '/playground' },
+          { label: phrase('Playground'), href: '/playground' },
           { label: 'Gateway', href: '/gateway' },
-          { label: 'Agents', href: '/agents' },
+          { label: phrase('Agents'), href: '/agents' },
           { label: 'Base', href: '/base' },
-          { label: 'Machines', href: '/machines' },
+          { label: phrase('Machines'), href: '/machines' },
         ],
       },
       {
-        title: 'Apps and tools',
+        title: phrase('Apps and tools'),
         links: [
           { label: 'Hanzo App', href: APP },
           { label: 'Hanzo Bot', href: '/bot' },
@@ -213,184 +216,184 @@ export const MENUS: Menu[] = [
           { label: 'Hanzo Kata', href: '/kata' },
           { label: 'Hanzo Team', href: WORKSPACE },
           { label: 'MCP', href: '/mcp' },
-          { label: 'Skills', href: '/skills' },
+          { label: phrase('Skills'), href: '/skills' },
         ],
       },
       {
-        title: 'Install',
+        title: phrase('Install'),
         links: [
           { label: 'CLI', href: '/cli' },
-          { label: 'Desktop app', href: '/desktop' },
-          { label: 'Browser extension', href: '/extension' },
+          { label: phrase('Desktop app'), href: '/desktop' },
+          { label: phrase('Browser extension'), href: '/extension' },
           { label: 'IDE', href: '/ide' },
-          { label: 'All downloads', href: '/download' },
-          { label: 'Release notes', href: `${GITHUB}/cli/releases` },
+          { label: phrase('All downloads'), href: '/download' },
+          { label: phrase('Release notes'), href: `${GITHUB}/cli/releases` },
         ],
       },
       // Hanzo OS: the product index and its layers (HIP-0903), each at /products/<id>.
       {
         title: 'Hanzo OS',
         links: [
-          { label: 'All products', href: '/products' },
-          { label: 'Company', href: '/products/company' },
-          { label: 'Agents', href: '/products/agents' },
-          { label: 'Models', href: '/products/models' },
-          { label: 'Memory', href: '/products/memory' },
-          { label: 'Identity', href: '/products/identity' },
-          { label: 'Machines', href: '/products/machines' },
-          { label: 'Record', href: '/products/record' },
+          { label: phrase('All products'), href: '/products' },
+          { label: phrase('Company'), href: '/products/company' },
+          { label: phrase('Agents'), href: '/products/agents' },
+          { label: phrase('Models'), href: '/products/models' },
+          { label: phrase('Memory'), href: '/products/memory' },
+          { label: phrase('Identity'), href: '/products/identity' },
+          { label: phrase('Machines'), href: '/products/machines' },
+          { label: phrase('Record'), href: '/products/record' },
         ],
       },
       {
-        title: 'More from Hanzo',
+        title: phrase('More from Hanzo'),
         links: [
-          { label: 'Start from a template', href: '/templates' },
-          { label: 'Agents at work', href: '/agents/crew' },
-          { label: 'Cloud on your laptop', href: '/cloud/local' },
-          { label: 'Start a company', href: '/start' },
+          { label: phrase('Start from a template'), href: '/templates' },
+          { label: phrase('Agents at work'), href: '/agents/crew' },
+          { label: phrase('Cloud on your laptop'), href: '/cloud/local' },
+          { label: phrase('Start a company'), href: '/start' },
         ],
       },
     ],
   },
   {
     id: 'solutions',
-    label: 'Solutions',
+    label: phrase('Solutions'),
     href: SOLUTIONS,
     glyph: 'puzzle',
     groups: [
       {
-        title: 'Explore Solutions',
+        title: phrase('Explore Solutions'),
         lead: true,
         links: [
-          { label: 'All solutions', href: SOLUTIONS },
-          { label: 'Enterprise', href: '/enterprise' },
-          { label: 'Agency', href: AGENCY },
-          { label: 'Customer stories', href: '/customers' },
-          { label: 'Pricing', href: '/pricing' },
-          { label: 'Contact sales', href: '/contact-sales' },
+          { label: phrase('All solutions'), href: SOLUTIONS },
+          { label: phrase('Enterprise'), href: '/enterprise' },
+          { label: phrase('Agency'), href: AGENCY },
+          { label: phrase('Customer stories'), href: '/customers' },
+          { label: phrase('Pricing'), href: '/pricing' },
+          { label: phrase('Contact sales'), href: '/contact-sales' },
         ],
       },
       {
-        title: 'Teams',
+        title: phrase('Teams'),
         links: [
-          { label: 'Finance', href: `${SOLUTIONS}/finance` },
-          { label: 'Data', href: `${SOLUTIONS}/data` },
-          { label: 'Sales', href: `${SOLUTIONS}/sales` },
-          { label: 'Marketing', href: `${SOLUTIONS}/marketing` },
-          { label: 'Operations', href: `${SOLUTIONS}/operations` },
-          { label: 'Engineering', href: `${SOLUTIONS}/engineering` },
-          { label: 'Design', href: `${SOLUTIONS}/design` },
+          { label: phrase('Finance'), href: `${SOLUTIONS}/finance` },
+          { label: phrase('Data'), href: `${SOLUTIONS}/data` },
+          { label: phrase('Sales'), href: `${SOLUTIONS}/sales` },
+          { label: phrase('Marketing'), href: `${SOLUTIONS}/marketing` },
+          { label: phrase('Operations'), href: `${SOLUTIONS}/operations` },
+          { label: phrase('Engineering'), href: `${SOLUTIONS}/engineering` },
+          { label: phrase('Design'), href: `${SOLUTIONS}/design` },
         ],
       },
       {
-        title: 'Industries',
+        title: phrase('Industries'),
         links: [
-          { label: 'Cybersecurity', href: `${SOLUTIONS}/cybersecurity` },
-          { label: 'Financial services', href: `${SOLUTIONS}/financial-services` },
-          { label: 'Healthcare', href: `${SOLUTIONS}/healthcare` },
-          { label: 'Law', href: `${SOLUTIONS}/law` },
-          { label: 'Retail', href: `${SOLUTIONS}/retail` },
-          { label: 'Government', href: `${SOLUTIONS}/government` },
-          { label: 'Education', href: `${SOLUTIONS}/education` },
+          { label: phrase('Cybersecurity'), href: `${SOLUTIONS}/cybersecurity` },
+          { label: phrase('Financial services'), href: `${SOLUTIONS}/financial-services` },
+          { label: phrase('Healthcare'), href: `${SOLUTIONS}/healthcare` },
+          { label: phrase('Law'), href: `${SOLUTIONS}/law` },
+          { label: phrase('Retail'), href: `${SOLUTIONS}/retail` },
+          { label: phrase('Government'), href: `${SOLUTIONS}/government` },
+          { label: phrase('Education'), href: `${SOLUTIONS}/education` },
         ],
       },
       {
-        title: 'Use cases',
+        title: phrase('Use cases'),
         links: [
-          { label: 'Content creation', href: `${SOLUTIONS}/content-creation` },
-          { label: 'Research', href: `${SOLUTIONS}/research` },
-          { label: 'Agents', href: `${SOLUTIONS}/agents` },
+          { label: phrase('Content creation'), href: `${SOLUTIONS}/content-creation` },
+          { label: phrase('Research'), href: `${SOLUTIONS}/research` },
+          { label: phrase('Agents'), href: `${SOLUTIONS}/agents` },
         ],
       },
       {
-        title: 'Programs',
+        title: phrase('Programs'),
         links: [
-          { label: 'Reserved tier', href: `${SOLUTIONS}/reserved` },
-          { label: 'Startups', href: '/startups' },
-          { label: 'Partner network', href: '/affiliate' },
-          { label: 'Cost calculator', href: '/calculator' },
+          { label: phrase('Reserved tier'), href: `${SOLUTIONS}/reserved` },
+          { label: phrase('Startups'), href: '/startups' },
+          { label: phrase('Partner network'), href: '/affiliate' },
+          { label: phrase('Cost calculator'), href: '/calculator' },
         ],
       },
     ],
   },
   {
     id: 'developers',
-    label: 'Developers',
+    label: phrase('Developers'),
     href: DOCS,
     glyph: 'code',
     groups: [
       {
-        title: 'Explore Developers',
+        title: phrase('Explore Developers'),
         lead: true,
         links: [
-          { label: 'Documentation', href: DOCS },
-          { label: 'API reference', href: `${DOCS}/docs/openapi/` },
-          { label: 'Quickstart', href: `${DOCS}/docs/quickstart/` },
+          { label: phrase('Documentation'), href: DOCS },
+          { label: phrase('API reference'), href: `${DOCS}/docs/openapi/` },
+          { label: phrase('Quickstart'), href: `${DOCS}/docs/quickstart/` },
           { label: 'SDKs', href: '/sdks' },
-          { label: 'Open models', href: MODELS },
+          { label: phrase('Open models'), href: MODELS },
         ],
       },
       {
-        title: 'Resources',
+        title: phrase('Resources'),
         links: [
-          { label: 'API keys', href: KEYS },
-          { label: 'Claude Code, Codex, Cursor', href: CODING, hint: 'Use Hanzo with your coding tools' },
-          { label: 'Integrations', href: '/integrations' },
-          { label: 'Examples', href: '/gallery' },
+          { label: phrase('API keys'), href: KEYS },
+          { label: 'Claude Code, Codex, Cursor', href: CODING, hint: phrase('Use Hanzo with your coding tools') },
+          { label: phrase('Integrations'), href: '/integrations' },
+          { label: phrase('Examples'), href: '/gallery' },
         ],
       },
       {
-        title: 'Community',
+        title: phrase('Community'),
         links: [
           { label: 'GitHub', href: GITHUB },
-          { label: 'Status', href: STATUS },
+          { label: phrase('Status'), href: STATUS },
         ],
       },
     ],
   },
   {
     id: 'learn',
-    label: 'Learn',
+    label: phrase('Learn'),
     href: '/learn',
     glyph: 'book',
     groups: [
       {
-        title: 'Blog',
+        title: phrase('Blog'),
         links: [
-          { label: 'Your AI is Planning To Kill You', href: 'https://hanzo.blog/blog/2026-10-16-your-ai-is-planning-to-kill-you/', hint: 'KAI' },
-          { label: 'Kai 1: Decisions, Not Completions', href: 'https://hanzo.blog/blog/2026-10-07-introducing-kai/', hint: 'KAI' },
-          { label: 'What Is a Decision Model?', href: 'https://hanzo.blog/blog/2026-09-30-what-is-a-decision-model/', hint: 'DECISION MODELS' },
-          { label: 'All articles', href: '/blog' },
+          { label: phrase('Your AI is Planning To Kill You'), href: 'https://hanzo.blog/blog/2026-10-16-your-ai-is-planning-to-kill-you/', hint: 'KAI' },
+          { label: phrase('Kai 1: Decisions, Not Completions'), href: 'https://hanzo.blog/blog/2026-10-07-introducing-kai/', hint: 'KAI' },
+          { label: phrase('What Is a Decision Model?'), href: 'https://hanzo.blog/blog/2026-09-30-what-is-a-decision-model/', hint: phrase('DECISION MODELS') },
+          { label: phrase('All articles'), href: '/blog' },
         ],
       },
       {
-        title: 'Research & Guides',
+        title: phrase('Research & Guides'),
         links: [
-          { label: 'Overview', href: '/learn' },
-          { label: 'Technical Blog', href: BLOG },
-          { label: 'Kai & Decision Models', href: '/blog/kai-decision-models' },
-          { label: 'Coding agents', href: `${DOCS}/docs/coding` },
-          { label: 'Guides', href: `${DOCS}/docs/guides/` },
-          { label: 'Cookbook', href: `${DOCS}/docs/guides/cookbook/` },
+          { label: phrase('Overview'), href: '/learn' },
+          { label: phrase('Technical Blog'), href: BLOG },
+          { label: phrase('Kai & Decision Models'), href: '/blog/kai-decision-models' },
+          { label: phrase('Coding agents'), href: `${DOCS}/docs/coding` },
+          { label: phrase('Guides'), href: `${DOCS}/docs/guides/` },
+          { label: phrase('Cookbook'), href: `${DOCS}/docs/guides/cookbook/` },
         ],
       },
       {
-        title: 'Support',
+        title: phrase('Support'),
         links: [
-          { label: 'Documentation', href: DOCS },
-          { label: 'Help center', href: '/support' },
+          { label: phrase('Documentation'), href: DOCS },
+          { label: phrase('Help center'), href: '/support' },
         ],
       },
       {
         title: 'Hanzo University',
         links: [
-          { label: 'Hanzo University', href: UNIVERSITY, hint: 'Courses and certifications' },
-          { label: 'Agentic coding', href: '/university/agentic-coding' },
-          { label: 'Reinforcement learning', href: '/university/reinforcement-learning' },
-          { label: 'Systems engineering', href: '/university/systems-engineering' },
-          { label: 'AI practitioner', href: '/university/ai-practitioner' },
-          { label: 'AI architect', href: '/university/ai-architect' },
-          { label: 'Agentic marketing', href: '/university/agentic-marketing' },
+          { label: 'Hanzo University', href: UNIVERSITY, hint: phrase('Courses and certifications') },
+          { label: phrase('Agentic coding'), href: '/university/agentic-coding' },
+          { label: phrase('Reinforcement learning'), href: '/university/reinforcement-learning' },
+          { label: phrase('Systems engineering'), href: '/university/systems-engineering' },
+          { label: phrase('AI practitioner'), href: '/university/ai-practitioner' },
+          { label: phrase('AI architect'), href: '/university/ai-architect' },
+          { label: phrase('Agentic marketing'), href: '/university/agentic-marketing' },
         ],
       },
     ],
@@ -399,18 +402,18 @@ export const MENUS: Menu[] = [
 
 /** Log in ▾: the two products a person signs in to. The app signs in on hanzo.ai. */
 export const LOGIN: Link[] = [
-  { label: 'Hanzo App', href: SIGNIN, hint: 'Build, chat and ship' },
-  { label: 'API Platform', href: KEYS, hint: 'Keys, usage and billing' },
+  { label: 'Hanzo App', href: SIGNIN, hint: phrase('Build, chat and ship') },
+  { label: 'API Platform', href: KEYS, hint: phrase('Keys, usage and billing') },
 ]
 
 /** The one filled control in the bar: onboarding, which drops into the personal or business plans first. */
-export const TRY: Link = { label: 'Try Hanzo', href: ONBOARDING }
+export const TRY: Link = { label: phrase('Try Hanzo'), href: ONBOARDING }
 
 /** What the same control says to a reader who is signed in: the app, at `/`. */
-export const OPEN: Link = { label: 'Open Hanzo', href: '/' }
+export const OPEN: Link = { label: phrase('Open Hanzo'), href: '/' }
 
 /** The signed-in reader's own page. */
-export const ACCOUNT: Link = { label: 'Settings', href: '/settings' }
+export const ACCOUNT: Link = { label: phrase('Settings'), href: '/settings' }
 
 /**
  * The footer: the header's menus in the header's order and under the same
@@ -420,106 +423,106 @@ export const ACCOUNT: Link = { label: 'Settings', href: '/settings' }
 export const FOOT: Menu[] = [
   {
     id: 'research-foot',
-    label: 'Research',
+    label: phrase('Research'),
     href: '/research',
     glyph: 'pulse',
     groups: [
       {
-        title: 'Research',
+        title: phrase('Research'),
         lead: true,
         links: [
           { label: 'Enso 1', href: '/enso' },
           { label: 'Kai 1', href: '/kai' },
           { label: 'Zen 6', href: '/zen' },
-          { label: 'Creative AI', href: '/models#creative' },
-          { label: 'Benchmarks', href: '/benchmarks' },
-          { label: 'Compare', href: '/compare' },
-          { label: 'Open source', href: '/open-source' },
-          { label: 'Security', href: '/security' },
+          { label: phrase('Creative AI'), href: '/models#creative' },
+          { label: phrase('Benchmarks'), href: '/benchmarks' },
+          { label: phrase('Compare'), href: '/compare' },
+          { label: phrase('Open source'), href: '/open-source' },
+          { label: phrase('Security'), href: '/security' },
         ],
       },
     ],
   },
   {
     id: 'products-foot',
-    label: 'Products',
+    label: phrase('Products'),
     href: '/products',
     glyph: 'blocks',
     groups: [
       {
-        title: 'Products',
+        title: phrase('Products'),
         lead: true,
         links: [
-          { label: 'All models', href: '/models' },
+          { label: phrase('All models'), href: '/models' },
           { label: 'LLMs', href: '/zen' },
-          { label: 'Decisions', href: '/kai' },
-          { label: 'Routing', href: '/enso' },
-          { label: 'Video', href: '/koma' },
-          { label: 'Images', href: '/iro' },
+          { label: phrase('Decisions'), href: '/kai' },
+          { label: phrase('Routing'), href: '/enso' },
+          { label: phrase('Video'), href: '/koma' },
+          { label: phrase('Images'), href: '/iro' },
           { label: 'API Platform', href: '/platform' },
           { label: 'Hanzo App', href: APP },
           { label: 'Hanzo Dev', href: '/dev' },
-          { label: 'Download', href: '/download' },
+          { label: phrase('Download'), href: '/download' },
         ],
       },
     ],
   },
   {
     id: 'solutions-foot',
-    label: 'Solutions',
+    label: phrase('Solutions'),
     href: SOLUTIONS,
     glyph: 'puzzle',
     groups: [
       {
-        title: 'Solutions',
+        title: phrase('Solutions'),
         lead: true,
         links: [
-          { label: 'All solutions', href: SOLUTIONS },
-          { label: 'Enterprise', href: '/enterprise' },
-          { label: 'Agency', href: AGENCY },
-          { label: 'Customer stories', href: '/customers' },
-          { label: 'Pricing', href: '/pricing' },
-          { label: 'Startups', href: '/startups' },
-          { label: 'Contact sales', href: '/contact-sales' },
+          { label: phrase('All solutions'), href: SOLUTIONS },
+          { label: phrase('Enterprise'), href: '/enterprise' },
+          { label: phrase('Agency'), href: AGENCY },
+          { label: phrase('Customer stories'), href: '/customers' },
+          { label: phrase('Pricing'), href: '/pricing' },
+          { label: phrase('Startups'), href: '/startups' },
+          { label: phrase('Contact sales'), href: '/contact-sales' },
         ],
       },
     ],
   },
   {
     id: 'developers-foot',
-    label: 'Developers',
+    label: phrase('Developers'),
     href: DOCS,
     glyph: 'code',
     groups: [
       {
-        title: 'Developers',
+        title: phrase('Developers'),
         lead: true,
         links: [
-          { label: 'Documentation', href: DOCS },
-          { label: 'API reference', href: `${DOCS}/docs/openapi/` },
-          { label: 'Quickstart', href: `${DOCS}/docs/quickstart/` },
+          { label: phrase('Documentation'), href: DOCS },
+          { label: phrase('API reference'), href: `${DOCS}/docs/openapi/` },
+          { label: phrase('Quickstart'), href: `${DOCS}/docs/quickstart/` },
           { label: 'SDKs', href: '/sdks' },
-          { label: 'API keys', href: KEYS },
+          { label: phrase('API keys'), href: KEYS },
           { label: 'GitHub', href: GITHUB },
-          { label: 'Status', href: STATUS },
+          { label: phrase('Status'), href: STATUS },
         ],
       },
     ],
   },
   {
     id: 'learn-foot',
-    label: 'Learn',
+    label: phrase('Learn'),
     href: '/learn',
     glyph: 'book',
     groups: [
       {
-        title: 'Learn',
+        title: phrase('Learn'),
         lead: true,
         links: [
-          { label: 'Blog', href: '/blog' },
-          { label: 'Guides', href: `${DOCS}/docs/guides/` },
-          { label: 'Cookbook', href: `${DOCS}/docs/guides/cookbook/` },
-          { label: 'Help center', href: '/support' },
+          { label: phrase('Blog'), href: '/blog' },
+          { label: phrase('Guides'), href: `${DOCS}/docs/guides/` },
+          { label: phrase('Cookbook'), href: `${DOCS}/docs/guides/cookbook/` },
+          { label: phrase('Help center'), href: '/support' },
           { label: 'Hanzo University', href: UNIVERSITY },
         ],
       },
@@ -527,20 +530,20 @@ export const FOOT: Menu[] = [
   },
   {
     id: 'company-foot',
-    label: 'Company',
+    label: phrase('Company'),
     href: '/about',
     glyph: 'user',
     groups: [
       {
-        title: 'Company',
+        title: phrase('Company'),
         lead: true,
         links: [
-          { label: 'About', href: '/about' },
-          { label: 'Careers', href: '/careers' },
-          { label: 'News', href: '/press' },
-          { label: 'Investors', href: '/investors' },
-          { label: 'Brand', href: '/brand' },
-          { label: 'Contact', href: '/contact' },
+          { label: phrase('About'), href: '/about' },
+          { label: phrase('Careers'), href: '/careers' },
+          { label: phrase('News'), href: '/press' },
+          { label: phrase('Investors'), href: '/investors' },
+          { label: phrase('Brand'), href: '/brand' },
+          { label: phrase('Contact'), href: '/contact' },
         ],
       },
     ],
@@ -549,10 +552,10 @@ export const FOOT: Menu[] = [
 
 /** The line under the columns. hanzo.ai/legal holds the policies not named here. */
 export const FOOT_LINE: Link[] = [
-  { label: 'Terms', href: '/terms' },
-  { label: 'Privacy', href: '/privacy' },
-  { label: 'Usage policy', href: '/aup' },
-  { label: 'Your Privacy Choices', href: '#choices' },
+  { label: phrase('Terms'), href: '/terms' },
+  { label: phrase('Privacy'), href: '/privacy' },
+  { label: phrase('Usage policy'), href: '/aup' },
+  { label: phrase('Your Privacy Choices'), href: '#choices' },
 ]
 
 /** A footer door, as `@hanzo/ui/marketing`'s `Footer` takes it. */

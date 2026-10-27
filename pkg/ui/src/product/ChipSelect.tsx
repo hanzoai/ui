@@ -35,6 +35,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui/popover'
 import { RING } from '../backends/gui/press'
@@ -167,6 +168,7 @@ interface Pages<T> {
  */
 function usePages<T extends ChipItem>(load: ChipLoad<T> | undefined, q: string, delay: number, on: boolean, view?: string) {
   const [state, setState] = useState<Pages<T>>({ rows: [], next: null, loading: false, error: null })
+  const { t } = useI18n()
   const generation = useRef(0)
   const busy = useRef(false)
   // The loader is read at call time, not taken as a dependency: a host that
@@ -199,11 +201,11 @@ function usePages<T extends ChipItem>(load: ChipLoad<T> | undefined, q: string, 
         setState((s) => ({
           ...s,
           loading: false,
-          error: err instanceof Error && err.message ? err.message : 'Could not load the list.',
+          error: err instanceof Error && err.message ? err.message : t('Could not load the list.'),
         }))
       },
     )
-  }, [])
+  }, [t])
 
   const live = Boolean(load)
 
@@ -242,8 +244,8 @@ export function ChipSelect<T extends ChipItem>({
   loading: loadingProp = false,
   error: errorProp = null,
   delay = 200,
-  placeholder = 'Search…',
-  empty = 'No matches.',
+  placeholder: hint,
+  empty: none,
   footer,
   cta,
   action,
@@ -260,6 +262,9 @@ export function ChipSelect<T extends ChipItem>({
   onOpenChange,
 }: ChipSelectProps<T>) {
   const bare = !label
+  const { t } = useI18n()
+  const placeholder = hint ?? t('Search…')
+  const empty = none ?? t('No matches.')
   const [own, setOwn] = useState(false)
   const open = openProp ?? own
   const setOpen = useCallback(
@@ -529,7 +534,7 @@ export function ChipSelect<T extends ChipItem>({
           {...tip(name)}
           role="button"
           tabIndex={disabled ? -1 : 0}
-          aria-label={bare ? name : `${name}: ${label}`}
+          aria-label={bare ? name : t('{label}: {value}', { label: name, value: label })}
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-controls={open ? listId : undefined}
@@ -698,14 +703,14 @@ export function ChipSelect<T extends ChipItem>({
                     pages.retry()
                   }}
                 >
-                  Retry
+                  {t('Retry')}
                 </SizableText>
               ) : null}
             </XStack>
           ) : loading ? (
             <XStack {...slot('chip-select-loading')} px="$2" height={ROW_H} items="center" role="status">
               <SizableText size="$2" color="$soft">
-                {rows.length ? 'Loading more…' : 'Loading…'}
+                {rows.length ? t('Loading more…') : t('Loading…')}
               </SizableText>
             </XStack>
           ) : rows.length === 0 ? (

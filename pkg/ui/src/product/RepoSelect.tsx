@@ -16,6 +16,7 @@
 import { SizableText, YStack } from '@hanzo/gui'
 import { Code, Lock } from '@hanzogui/lucide-icons-2'
 import { useCallback, useState, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { ChipSelect, type ChipAction, type ChipPlacement, type ChipTab } from './ChipSelect'
 import type { ChipItem, ChipPage } from './chipSelect.logic'
@@ -124,16 +125,18 @@ export function RepoSelect({
   onChange,
   load,
   troubleshoot,
-  note,
+  note: given,
   connect,
   action,
   tabs,
-  placeholder = 'Repository',
+  placeholder,
   placement,
   disabled,
   open,
   onOpenChange,
 }: RepoSelectProps) {
+  const { t } = useI18n()
+  const note = given ?? t('Not all repositories are shown. Type to search.')
   const [tab, setTab] = useState(tabs?.[0]?.id)
   const every = !tabs?.length || tab === tabs[0]!.id
   const pages = useCallback(
@@ -155,15 +158,15 @@ export function RepoSelect({
 
   return (
     <ChipSelect<RepoItem>
-      name="Repository"
+      name={t('Repository')}
       icon={<Code size={12} color="$soft" />}
-      label={value ? value.name : placeholder}
+      label={value ? value.name : (placeholder ?? t('Repository'))}
       // On another tab the chosen row is not pinned: the tab lists what it says, and the check is on the tab the repository belongs to.
       chosen={value && (every || value.source === tab) ? item(value) : null}
       onChange={(i) => onChange(i.repo)}
       load={pages}
-      placeholder="Search repositories…"
-      empty="No repositories match."
+      placeholder={t('Search repositories…')}
+      empty={t('No repositories match.')}
       cta={connect}
       action={act}
       tabs={tabs}

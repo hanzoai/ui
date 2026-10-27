@@ -49,6 +49,7 @@
 import * as React from "react"
 import { Input as GuiInput, Menu, Spinner, Text, XStack, YStack, isWeb, type GuiElement } from "@hanzo/gui"
 import { Check, ChevronLeft, ChevronRight, Circle, X } from "@hanzogui/lucide-icons-2"
+import { useI18n } from "@hanzo/i18n/react"
 
 import { touch } from "./gesture"
 import { ltrText, mirror } from "./dir"
@@ -763,10 +764,12 @@ function DropdownMenuSearch({
   value,
   defaultValue,
   onValueChange,
-  placeholder = "Search",
+  placeholder: hint,
   autoFocus = true,
   "aria-label": label,
 }: DropdownMenuSearchProps) {
+  const { t } = useI18n()
+  const placeholder = hint ?? t("Search")
   const field = React.useRef<HTMLInputElement | null>(null)
   React.useEffect(() => {
     if (!autoFocus || !isWeb) return
@@ -828,7 +831,7 @@ function DropdownMenuSearch({
         aria-label={label ?? placeholder}
         placeholder={placeholder}
         {...(value !== undefined ? { value } : { defaultValue })}
-        onChangeText={(t: string) => onValueChange?.(t)}
+        onChangeText={(text: string) => onValueChange?.(text)}
         {...(isWeb ? { onKeyDown: keys as never } : null)}
         style={{ outlineStyle: "none" }}
       />
@@ -973,18 +976,20 @@ function Status({ slot, children }: { slot: string; children: React.ReactNode })
 }
 
 /** No row matched, said once and politely. */
-function DropdownMenuEmpty({ children = "No results" }: { children?: React.ReactNode }) {
+function DropdownMenuEmpty({ children }: { children?: React.ReactNode }) {
+  const { t } = useI18n()
   return (
     <Status slot="dropdown-menu-empty">
       <Text fontSize="$1" color="$aside">
-        {children}
+        {children ?? t("No results")}
       </Text>
     </Status>
   )
 }
 
 /** Rows are on their way. */
-function DropdownMenuLoading({ children = "Loading" }: { children?: React.ReactNode }) {
+function DropdownMenuLoading({ children }: { children?: React.ReactNode }) {
+  const { t } = useI18n()
   return (
     <Status slot="dropdown-menu-loading">
       {/* The words name the status; the spinner is decoration. */}
@@ -992,7 +997,7 @@ function DropdownMenuLoading({ children = "Loading" }: { children?: React.ReactN
         <Spinner size="small" maxW={14} maxH={14} />
       </XStack>
       <Text fontSize="$1" color="$quiet">
-        {children}
+        {children ?? t("Loading")}
       </Text>
     </Status>
   )

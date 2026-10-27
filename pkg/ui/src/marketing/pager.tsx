@@ -11,6 +11,7 @@
  * width of its marks plus their floors — ten pages fit a 360px phone.
  */
 import { View, XStack, type XStackProps } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { slot } from '../backends/gui/slot'
 
@@ -19,11 +20,14 @@ export type PagerProps = Omit<XStackProps, 'children'> & {
   /** The page showing. */
   index: number
   onSelect: (index: number) => void
-  /** What a page is called, for its button's label. */
+  /** What a page is called, for its button's label; absent, "Go to slide N" in the reader's language. */
   label?: (index: number) => string
 }
 
-const Pager = ({ count, index, onSelect, label = (i) => `Go to slide ${i + 1}`, ...p }: PagerProps) => (
+const Pager = ({ count, index, onSelect, label, ...p }: PagerProps) => {
+  const { t } = useI18n()
+  const name = label ?? ((i: number) => t('Go to slide {n}', { n: i + 1 }))
+  return (
   <XStack {...slot('pager')} items="center" {...(p as object)}>
     {Array.from({ length: count }, (_, i) => {
       const on = i === index
@@ -31,7 +35,7 @@ const Pager = ({ count, index, onSelect, label = (i) => `Go to slide ${i + 1}`, 
         <View
           key={i}
           render={<button type="button" />}
-          aria-label={label(i)}
+          aria-label={name(i)}
           aria-current={on ? 'true' : undefined}
           onPress={() => onSelect(i)}
           group
@@ -60,6 +64,7 @@ const Pager = ({ count, index, onSelect, label = (i) => `Go to slide ${i + 1}`, 
       )
     })}
   </XStack>
-)
+  )
+}
 
 export { Pager }

@@ -20,6 +20,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { Boxes, Plus } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { PageHeader } from '../product/PageHeader'
 import { EmptyState } from '../product/EmptyState'
@@ -81,6 +82,7 @@ export function CollectionsBrowser({
   const [creating, setCreating] = useState(false)
   const [actionError, setActionError] = useState<string | null>(null)
   const { phone, onLayout } = useContainerLayout()
+  const { t } = useI18n()
 
   const load = useCallback(
     async (signal: { cancelled: boolean }) => {
@@ -129,7 +131,7 @@ export function CollectionsBrowser({
   if (state.phase === 'loading') {
     return (
       <YStack onLayout={onLayout} width="100%">
-        <Loading label={`Loading ${label}…`} />
+        <Loading label={t('Loading {label}…', { label })} />
       </YStack>
     )
   }
@@ -160,7 +162,7 @@ export function CollectionsBrowser({
                 setActionError(null)
               }}
             >
-              New collection
+              {t('New collection')}
             </Action>
           ) : undefined
         }
@@ -181,20 +183,20 @@ export function CollectionsBrowser({
       {collections.length === 0 && !creating ? (
         <EmptyState
           icon={icon}
-          title={`Set up ${label}`}
+          title={t('Set up {label}', { label })}
           description={
             setupDescription ??
-            `${label} is a set of collections on the Hanzo Framework — typed documents, per organization.`
+            t('{label} is a set of collections on the Hanzo Framework — typed documents, per organization.', { label })
           }
           bullets={
             setupBullets ?? [
-              `Installs the default ${label} collections into your organization`,
-              'Every record is a document on the framework — versioned, permissioned, per-org',
-              'Add your own collections and fields any time',
+              t('Installs the default {label} collections into your organization', { label }),
+              t('Every record is a document on the framework — versioned, permissioned, per-org'),
+              t('Add your own collections and fields any time'),
             ]
           }
-          primary={state.registered ? { label: busy ? 'Setting up…' : `Set up ${label}`, onPress: install } : undefined}
-          secondary={{ label: 'New collection', onPress: () => setCreating(true) }}
+          primary={state.registered ? { label: busy ? t('Setting up…') : t('Set up {label}', { label }), onPress: install } : undefined}
+          secondary={{ label: t('New collection'), onPress: () => setCreating(true) }}
         />
       ) : !creating ? (
         // A fixed 240px card is a 240px column on a 390px phone with dead space
@@ -225,8 +227,8 @@ export function CollectionsBrowser({
                 </Text>
               </XStack>
               <Meta>
-                {dt.fields?.length ?? 0} field{(dt.fields?.length ?? 0) === 1 ? '' : 's'}
-                {dt.isSubmittable ? ' · submittable' : ''}
+                {(dt.fields?.length ?? 0) === 1 ? t('1 field') : t('{n} fields', { n: dt.fields?.length ?? 0 })}
+                {dt.isSubmittable ? ` · ${t('submittable')}` : ''}
               </Meta>
             </YStack>
           ))}

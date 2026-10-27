@@ -17,6 +17,7 @@
 import { Image, SizableText, XStack, YStack, isWeb } from '@hanzo/gui'
 import { ImageUp, Trash2, Upload, X } from '@hanzogui/lucide-icons-2'
 import { useId, useRef, useState } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Button } from './button'
 import { RING } from './press'
 import { slot } from './slot'
@@ -72,16 +73,19 @@ export function ImageInput({
   isUploading = false,
   accept = 'image/*',
   capture,
-  title = 'Picture',
+  title: titled,
   helperText,
   errorMessage,
-  uploadLabel = 'Upload',
-  removeLabel = 'Remove',
-  abortLabel = 'Abort',
+  uploadLabel: upload,
+  removeLabel,
+  abortLabel,
   disabled = false,
   required,
   name,
 }: ImageInputProps) {
+  const { t } = useI18n()
+  const title = titled ?? t('Picture')
+  const uploadLabel = upload ?? t('Upload')
   const file = useRef<HTMLInputElement | null>(null)
   const id = useId()
   const [over, setOver] = useState(false)
@@ -115,7 +119,7 @@ export function ImageInput({
         {...({
           type: 'button',
           disabled: disabled || isUploading,
-          'aria-label': src ? `${title}: change` : `${title}: ${uploadLabel}`,
+          'aria-label': src ? t('{label}: change', { label: title }) : t('{label}: {value}', { label: title, value: uploadLabel }),
           'aria-describedby': errorMessage || helperText ? id : undefined,
           ...drop,
         } as object)}
@@ -147,7 +151,7 @@ export function ImageInput({
         <XStack gap="$2" items="center" flexWrap="wrap">
           {isUploading ? (
             <Button size="sm" variant="outline" startIcon={<X />} onPress={onAbort}>
-              {abortLabel}
+              {abortLabel ?? t('Abort')}
             </Button>
           ) : (
             <Button size="sm" variant="outline" startIcon={<Upload />} disabled={disabled} onPress={pick}>
@@ -161,7 +165,7 @@ export function ImageInput({
             disabled={disabled || isUploading || !src}
             onPress={onRemove}
           >
-            {removeLabel}
+            {removeLabel ?? t('Remove')}
           </Button>
         </XStack>
         {helperText || errorMessage ? (

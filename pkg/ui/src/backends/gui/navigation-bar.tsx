@@ -15,6 +15,7 @@
 import { ChevronRight, ChevronDown, Search, Bell, ShoppingCart, User, Users, Phone, Video, MessageSquare } from '@hanzogui/lucide-icons-2'
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import type { ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Avatar, AvatarFallback, AvatarImage } from './avatar'
 import { Badge } from './badge'
@@ -167,6 +168,7 @@ export function NavigationBar({
   onMessage,
   children,
 }: NavigationBarProps) {
+  const { t } = useI18n()
   const height = variant === 'breadcrumb' ? BREADCRUMB_HEIGHT : HEIGHT
 
   return (
@@ -214,10 +216,10 @@ export function NavigationBar({
         <>
           {ink(title, SizableText, { size: '$5', fontWeight: '600' })}
           <XStack items="center" gap="$3">
-            <IconButton aria-label="Search" onPress={onSearch}>
+            <IconButton aria-label={t('Search')} onPress={onSearch}>
               <Search size={18} />
             </IconButton>
-            <IconButton aria-label="Notifications" onPress={onNotifications}>
+            <IconButton aria-label={t('Notifications')} onPress={onNotifications}>
               <Bell size={18} />
             </IconButton>
             {user ? (
@@ -233,14 +235,14 @@ export function NavigationBar({
           {ink(logo, SizableText, { fontWeight: '700' })}
           <Links items={items} />
           <XStack items="center" gap="$1">
-            <IconButton aria-label="Search" onPress={onSearch}>
+            <IconButton aria-label={t('Search')} onPress={onSearch}>
               <Search size={18} />
             </IconButton>
-            <IconButton aria-label="Account">
+            <IconButton aria-label={t('Account')}>
               <User size={18} />
             </IconButton>
             <XStack position="relative">
-              <IconButton aria-label="Cart">
+              <IconButton aria-label={t('Cart')}>
                 <ShoppingCart size={18} />
               </IconButton>
               {cartCount > 0 ? (
@@ -267,13 +269,13 @@ export function NavigationBar({
         <>
           {ink(contactName, SizableText, { size: '$4', fontWeight: '600' })}
           <XStack items="center" gap="$1">
-            <IconButton aria-label="Call" onPress={onCall}>
+            <IconButton aria-label={t('Call')} onPress={onCall}>
               <Phone size={18} />
             </IconButton>
-            <IconButton aria-label="Video call" onPress={onVideo}>
+            <IconButton aria-label={t('Video call')} onPress={onVideo}>
               <Video size={18} />
             </IconButton>
-            <IconButton aria-label="Message" onPress={onMessage}>
+            <IconButton aria-label={t('Message')} onPress={onMessage}>
               <MessageSquare size={18} />
             </IconButton>
           </XStack>
@@ -284,7 +286,7 @@ export function NavigationBar({
             trigger={
               <Button variant="outline" data-slot="navigation-bar-switcher-trigger">
                 {options.find((o) => o.id === value)?.icon}
-                {options.find((o) => o.id === value)?.label ?? 'Select'}
+                {options.find((o) => o.id === value)?.label ?? t('Select')}
                 <ChevronDown size={14} />
               </Button>
             }

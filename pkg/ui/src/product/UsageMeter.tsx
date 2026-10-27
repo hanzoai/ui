@@ -6,27 +6,30 @@
  * ever drawn. A class with a short window carries it as a second, slimmer bar.
  */
 import { Text, XStack, YStack } from '@hanzo/gui'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 import { Progress } from '../backends/gui/progress'
 import { slot } from '../backends/gui/slot'
-import { CLASSES, CLASS_LABEL, when, type ClassLimit, type LimitClass, type LimitState, type LimitWindow, type Limits } from './limits'
+import { CLASSES, classesLabel, when, type ClassLimit, type LimitClass, type LimitState, type LimitWindow, type Limits } from './limits'
 
 /** The status rung each state paints its bar in. */
 export const STATE_COLOR = { ok: '$good', near: '$yellow10', limited: '$bad' } as const satisfies Record<LimitState, string>
 
 /** What a class row says under its bar about who pays now. */
 function caption(c: ClassLimit): string {
-  if (c.paying === 'credits') return 'Paying from credits'
-  if (c.state === 'limited' && (c.paying === 'none' || c.paying === 'free')) return 'Paused'
-  if (c.state === 'near') return 'Almost used'
+  if (c.paying === 'credits') return phrase('Paying from credits')
+  if (c.state === 'limited' && (c.paying === 'none' || c.paying === 'free')) return phrase('Paused')
+  if (c.state === 'near') return phrase('Almost used')
   return ''
 }
 
 function Session({ label, w, now }: { label: string; w: LimitWindow; now?: number }) {
   const resets = when(w.resets_at, now)
+  const { t } = useI18n()
   return (
     <XStack items="center" gap="$2" minW={0} data-state={w.state} {...slot('usage-meter-window')}>
       <Text fontSize="$1" color="$soft" shrink={0}>
-        Session
+        {t('Session')}
       </Text>
       <Progress
         value={w.percent}
@@ -34,10 +37,10 @@ function Session({ label, w, now }: { label: string; w: LimitWindow; now?: numbe
         flex={1}
         minW={0}
         indicatorColor={STATE_COLOR[w.state]}
-        aria-label={`${label} session: ${w.percent}% used`}
+        aria-label={t('{label} session: {percent}% used', { label, percent: w.percent })}
       />
       <Text fontSize="$1" color="$soft" shrink={0} fontVariant={['tabular-nums']}>
-        {w.percent}%{resets ? ` · Resets ${resets}` : ''}
+        {w.percent}%{resets ? ` · ${t('Resets {until}', { until: resets })}` : ''}
       </Text>
     </XStack>
   )
@@ -58,12 +61,13 @@ export function UsageMeter({ limits, classes = CLASSES, size = 'md', now }: Usag
     const k = limits.classes[c]
     return k ? [{ c, k }] : []
   })
+  const { t } = useI18n()
   if (!rows.length) return null
   const sm = size === 'sm'
   return (
     <YStack gap={sm ? '$2.5' : '$5'} width="100%" minW={0} {...slot('usage-meter')}>
       {rows.map(({ c, k }) => {
-        const label = CLASS_LABEL[c]
+        const label = classesLabel([c], t)
         const resets = when(k.resets_at, now)
         const note = caption(k)
         return (
@@ -73,7 +77,7 @@ export function UsageMeter({ limits, classes = CLASSES, size = 'md', now }: Usag
                 {label}
               </Text>
               <Text fontSize={sm ? '$2' : '$3'} color="$ink" fontVariant={['tabular-nums']} shrink={0}>
-                {k.percent}% used
+                {t('{percent}% used', { percent: k.percent })}
               </Text>
             </XStack>
             <Progress
@@ -81,16 +85,16 @@ export function UsageMeter({ limits, classes = CLASSES, size = 'md', now }: Usag
               height={sm ? 4 : 8}
               minW={0}
               indicatorColor={STATE_COLOR[k.state]}
-              aria-label={`${label}: ${k.percent}% used`}
+              aria-label={t('{label}: {percent}% used', { label, percent: k.percent })}
             />
             {resets || note ? (
               <XStack justify="space-between" gap="$3" flexWrap="wrap" minW={0}>
                 <Text fontSize={sm ? '$1' : '$2'} color="$soft">
-                  {resets ? `Resets ${resets}` : ''}
+                  {resets ? t('Resets {until}', { until: resets }) : ''}
                 </Text>
                 {note ? (
                   <Text fontSize={sm ? '$1' : '$2'} color={k.state === 'limited' ? '$bad' : '$soft'}>
-                    {note}
+                    {t(note)}
                   </Text>
                 ) : null}
               </XStack>

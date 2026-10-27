@@ -22,6 +22,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Button, Card, Input, Text, XStack, YStack } from '@hanzo/gui'
 import { ArrowDown, ArrowUp, GripVertical, Plus, Trash2, TriangleAlert } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { FieldSwitch } from '../product/Field'
 import { SelectMenu } from '../product/SelectMenu'
@@ -43,8 +44,6 @@ import {
 import { Action, Actions, ErrorBar } from './parts'
 import { useContainerLayout, TAP } from './responsive'
 
-const TYPE_OPTIONS = BUILDER_FIELD_TYPES.map((t) => ({ key: t.type, label: t.label }))
-
 export interface CollectionBuilderProps {
   client: FrameworkClient
   module: string
@@ -65,8 +64,10 @@ export function CollectionBuilder({ client, module, existing, onSaved, onCancel 
   const [saveError, setSaveError] = useState<string | null>(null)
   const [showErrors, setShowErrors] = useState(false)
   const { phone, onLayout } = useContainerLayout()
+  const { t } = useI18n()
+  const typeOptions = useMemo(() => BUILDER_FIELD_TYPES.map((k) => ({ key: k.type, label: t(k.label) })), [t])
 
-  const validation = useMemo(() => validateBuilder(name, fields), [name, fields])
+  const validation = useMemo(() => validateBuilder(name, fields, t), [name, fields, t])
 
   const patch = useCallback((key: string, next: Partial<BuilderField>) => {
     setFields((fs) => fs.map((f) => (f.key === key ? { ...f, ...next } : f)))
@@ -110,24 +111,23 @@ export function CollectionBuilder({ client, module, existing, onSaved, onCancel 
     <Card onLayout={onLayout} borderWidth={1} borderColor="$borderColor" p={phone ? '$3' : '$4'} gap="$4" maxW={820} width="100%">
       <YStack gap="$2">
         <Text fontSize="$5" fontWeight="800">
-          {editing ? `Edit ${name}` : 'New collection'}
+          {editing ? t('Edit {name}', { name }) : t('New collection')}
         </Text>
         <Text fontSize="$2" color="$color10">
-          A content type on the Hanzo Framework — name it and define its fields. Every field type is available; a
-          rich-text field gives a full WYSIWYG body.
+          {t('A content type on the Hanzo Framework — name it and define its fields. Every field type is available; a rich-text field gives a full WYSIWYG body.')}
         </Text>
       </YStack>
 
       {/* Name — label above the input, so it never competes for the row. */}
       <YStack gap="$1.5" width="100%">
         <Text fontSize="$1" color="$color11" textTransform="uppercase" letterSpacing={0.4}>
-          Collection
+          {t('Collection')}
         </Text>
         <Input
           width="100%"
           minH={phone ? TAP : undefined}
           size={phone ? '$4' : '$3'}
-          placeholder="e.g. Recipe or LandingPage"
+          placeholder={t('e.g. Recipe or LandingPage')}
           value={name}
           onChangeText={setName}
           disabled={busy || editing}
@@ -135,7 +135,7 @@ export function CollectionBuilder({ client, module, existing, onSaved, onCancel 
         />
         {editing ? (
           <Text fontSize="$1" color="$color9">
-            A collection’s name is its identity and can’t change.
+            {t('A collection’s name is its identity and can’t change.')}
           </Text>
         ) : null}
       </YStack>
@@ -144,10 +144,10 @@ export function CollectionBuilder({ client, module, existing, onSaved, onCancel 
       <YStack gap="$2" width="100%">
         <XStack items="center" justify="space-between">
           <Text fontSize="$3" fontWeight="700" color="$color11">
-            Fields
+            {t('Fields')}
           </Text>
           <Text fontSize="$1" color="$color9">
-            {fields.length} field{fields.length === 1 ? '' : 's'}
+            {fields.length === 1 ? t('1 field') : t('{n} fields', { n: fields.length })}
           </Text>
         </XStack>
 
@@ -174,7 +174,7 @@ export function CollectionBuilder({ client, module, existing, onSaved, onCancel 
                     minW={0}
                     minH={phone ? TAP : undefined}
                     size={phone ? '$4' : '$3'}
-                    placeholder="Field name (e.g. Title)"
+                    placeholder={t('Field name (e.g. Title)')}
                     value={f.label}
                     onChangeText={(v: string) => patch(f.key, { label: v })}
                     disabled={busy}
@@ -184,8 +184,8 @@ export function CollectionBuilder({ client, module, existing, onSaved, onCancel 
                     <YStack minW={150}>
                       <SelectMenu
                         required
-                        ariaLabel="Field type"
-                        options={TYPE_OPTIONS}
+                        ariaLabel={t('Field type')}
+                        options={typeOptions}
                         value={f.type}
                         onChange={(v) => v && patch(f.key, { type: v as Fieldtype })}
                         disabled={busy}
@@ -200,8 +200,8 @@ export function CollectionBuilder({ client, module, existing, onSaved, onCancel 
                   <YStack width="100%">
                     <SelectMenu
                       required
-                      ariaLabel="Field type"
-                      options={TYPE_OPTIONS}
+                      ariaLabel={t('Field type')}
+                      options={typeOptions}
                       value={f.type}
                       onChange={(v) => v && patch(f.key, { type: v as Fieldtype })}
                       disabled={busy}
@@ -217,20 +217,20 @@ export function CollectionBuilder({ client, module, existing, onSaved, onCancel 
                     <XStack gap="$2" items="center" minH={phone ? TAP : undefined}>
                       <FieldSwitch checked={f.required} onChange={(v) => patch(f.key, { required: v })} disabled={busy} />
                       <Text fontSize="$2" color="$color10">
-                        Required
+                        {t('Required')}
                       </Text>
                     </XStack>
                     <XStack gap="$2" items="center" minH={phone ? TAP : undefined}>
                       <FieldSwitch checked={f.inListView} onChange={(v) => patch(f.key, { inListView: v })} disabled={busy} />
                       <Text fontSize="$2" color="$color10">
-                        In list
+                        {t('In list')}
                       </Text>
                     </XStack>
                   </XStack>
                   <XStack gap="$2">
-                    {iconBtn(<ArrowUp size={14} />, 'Move field up', () => move(f.key, -1), busy || i === 0)}
-                    {iconBtn(<ArrowDown size={14} />, 'Move field down', () => move(f.key, 1), busy || i === fields.length - 1)}
-                    {iconBtn(<Trash2 size={14} />, 'Remove field', () => removeField(f.key), busy, true)}
+                    {iconBtn(<ArrowUp size={14} />, t('Move field up'), () => move(f.key, -1), busy || i === 0)}
+                    {iconBtn(<ArrowDown size={14} />, t('Move field down'), () => move(f.key, 1), busy || i === fields.length - 1)}
+                    {iconBtn(<Trash2 size={14} />, t('Remove field'), () => removeField(f.key), busy, true)}
                   </XStack>
                 </XStack>
 
@@ -238,14 +238,14 @@ export function CollectionBuilder({ client, module, existing, onSaved, onCancel 
                 {fieldNeedsOptions(f.type) ? (
                   <YStack gap="$1.5" width="100%">
                     <Text fontSize="$1" color="$color10" textTransform="uppercase" letterSpacing={0.4}>
-                      {f.type === 'Select' ? 'Options' : f.type === 'Link' ? 'Relates to' : 'Child type'}
+                      {f.type === 'Select' ? t('Options') : f.type === 'Link' ? t('Relates to') : t('Child type')}
                     </Text>
                     <Input
                       width="100%"
                       minH={phone ? TAP : undefined}
                       size={phone ? '$4' : '$2'}
                       placeholder={
-                        f.type === 'Select' ? 'One per line — Draft / Published' : 'Collection name (e.g. Author)'
+                        f.type === 'Select' ? t('One per line — Draft / Published') : t('Collection name (e.g. Author)')
                       }
                       value={f.options}
                       onChangeText={(v: string) => patch(f.key, { options: v })}
@@ -260,7 +260,7 @@ export function CollectionBuilder({ client, module, existing, onSaved, onCancel 
                 <XStack items="center" justify="space-between" gap="$2" flexWrap="wrap">
                   {fname ? (
                     <Text fontSize="$1" color="$color8">
-                      field: {fname}
+                      {t('field: {name}', { name: fname })}
                     </Text>
                   ) : (
                     <YStack />
@@ -281,7 +281,7 @@ export function CollectionBuilder({ client, module, existing, onSaved, onCancel 
 
         <XStack width={phone ? '100%' : undefined}>
           <Action phone={phone} icon={<Plus size={14} />} onPress={addField} disabled={busy}>
-            Add field
+            {t('Add field')}
           </Action>
         </XStack>
       </YStack>
@@ -291,10 +291,10 @@ export function CollectionBuilder({ client, module, existing, onSaved, onCancel 
 
       <Actions phone={phone}>
         <Action phone={phone} disabled={busy} onPress={onCancel}>
-          Cancel
+          {t('Cancel')}
         </Action>
         <Action phone={phone} primary disabled={busy} onPress={save}>
-          {busy ? 'Saving…' : editing ? 'Save collection' : 'Create collection'}
+          {busy ? t('Saving…') : editing ? t('Save collection') : t('Create collection')}
         </Action>
       </Actions>
     </Card>

@@ -16,6 +16,7 @@
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import type { ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { slot } from '../backends/gui/slot'
 import { useDensity } from '../backends/gui/density'
@@ -205,7 +206,8 @@ export interface OnceProps {
 }
 
 /** A credential the platform answers once: the value to copy, and what it is for. */
-export function Once({ value, label, says = 'Copy it now. It is not shown again.', children }: OnceProps) {
+export function Once({ value, label, says, children }: OnceProps) {
+  const { t } = useI18n()
   return (
     <YStack
       {...slot('settings-once')}
@@ -229,10 +231,10 @@ export function Once({ value, label, says = 'Copy it now. It is not shown again.
         >
           {value}
         </SizableText>
-        <CopyButton value={value} label={`Copy ${label.toLowerCase()}`} />
+        <CopyButton value={value} label={t('Copy {label}', { label: label.toLowerCase() })} />
       </XStack>
       <SizableText size="$1" color="$soft">
-        {says}
+        {says ?? t('Copy it now. It is not shown again.')}
       </SizableText>
       {children}
     </YStack>

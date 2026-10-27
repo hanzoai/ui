@@ -54,6 +54,7 @@ import {
 } from 'react'
 import { Button as GuiButton, ScrollView, Text, XStack, YStack, useMedia } from '@hanzo/gui'
 import { ChevronLeft, Maximize2, X } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { SlideOver } from './SlideOver'
 import { asColor, type IconLike } from './color'
@@ -130,6 +131,7 @@ export type DetailPaneProps = {
 export const PANE = { w: 400, min: 320, max: 600, bar: 48, icon: 16 } as const
 
 export function DetailPane({ children, zIndex, mode = 'overlay', store = 'hanzo.pane' }: DetailPaneProps) {
+  const { t } = useI18n()
   // One state, so every transition is one pure update: whether it is open, and
   // the pages it holds (kept through a close, so the exit animates with them).
   const [state, setState] = useState<{ open: boolean; stack: DetailDescriptor[] }>({ open: false, stack: [] })
@@ -157,7 +159,7 @@ export function DetailPane({ children, zIndex, mode = 'overlay', store = 'hanzo.
     [open, push, back, close, isOpen, depth],
   )
   const desc = stack[stack.length - 1] ?? null
-  const title = typeof desc?.title === 'string' ? desc.title : 'Details'
+  const title = typeof desc?.title === 'string' ? desc.title : t('Details')
 
   const page = desc ? (
     <PageCtx.Provider value={desc}>
@@ -230,6 +232,7 @@ function Dock({
   children: ReactNode
 }) {
   const span = useSpan(store, PANE.w, PANE.min, PANE.max)
+  const { t } = useI18n()
   const node = useRef<HTMLElement | null>(null)
   const opener = useRef<Element | null>(null)
 
@@ -297,7 +300,7 @@ function Dock({
           ceil={PANE.max}
           reset={PANE.w}
           bar="edge"
-          label="Resize side panel"
+          label={t('Resize side panel')}
           onSpan={span.move}
           onKeep={span.keep}
           onShut={onClose}
@@ -334,12 +337,13 @@ function RecordPage({ desc }: { desc: DetailDescriptor }) {
 function SheetPage({ desc, close }: { desc: DetailDescriptor; close: () => void }) {
   const Icon = desc.icon
   const pane = useContext(Ctx)
+  const { t } = useI18n()
   return (
     <>
       {/* Bare-mode layout: fixed header · scroll body · optional sticky footer. */}
       <XStack items="center" gap="$2.5" px="$4" height={56} borderBottomWidth={1} borderColor="$borderColor">
         {pane && pane.depth > 1 ? (
-          <GuiButton size="$2" chromeless icon={<ChevronLeft {...mirror} size={18} />} onPress={pane.back} aria-label="Back" />
+          <GuiButton size="$2" chromeless icon={<ChevronLeft {...mirror} size={18} />} onPress={pane.back} aria-label={t('Back')} />
         ) : null}
         {Icon ? <Icon size={18} color={desc.iconColor ? asColor(desc.iconColor) : undefined} /> : null}
         <YStack flex={1} minW={0}>
@@ -352,7 +356,7 @@ function SheetPage({ desc, close }: { desc: DetailDescriptor; close: () => void 
             </Text>
           ) : null}
         </YStack>
-        <GuiButton size="$2" chromeless icon={<X size={18} />} onPress={close} aria-label="Close" />
+        <GuiButton size="$2" chromeless icon={<X size={18} />} onPress={close} aria-label={t('Close')} />
       </XStack>
 
       <ScrollView flex={1} minH={0}>
@@ -388,6 +392,7 @@ export function PaneBar({ children, actions }: PaneBarProps) {
   const pane = useContext(Ctx)
   const page = useContext(PageCtx)
   const expand = page?.onExpand
+  const { t } = useI18n()
   return (
     <XStack
       {...slot('pane-bar')}
@@ -403,7 +408,7 @@ export function PaneBar({ children, actions }: PaneBarProps) {
     >
       <XStack flex={1} minW={0} items="center" gap="$1">
         {pane && pane.depth > 1 ? (
-          <Tool tip="Back" onPress={pane.back}>
+          <Tool tip={t('Back')} onPress={pane.back}>
             <ChevronLeft {...mirror} />
           </Tool>
         ) : null}
@@ -412,12 +417,12 @@ export function PaneBar({ children, actions }: PaneBarProps) {
       <XStack shrink={0} items="center" gap="$1">
         {actions}
         {expand ? (
-          <Tool tip={page?.expandLabel ?? 'Open'} onPress={expand}>
+          <Tool tip={page?.expandLabel ?? t('Open')} onPress={expand}>
             <Maximize2 />
           </Tool>
         ) : null}
         {pane ? (
-          <Tool tip="Close side panel" onPress={pane.close}>
+          <Tool tip={t('Close side panel')} onPress={pane.close}>
             <X />
           </Tool>
         ) : null}

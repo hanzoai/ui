@@ -18,6 +18,7 @@
  * on screen.
  */
 import { YStack, isWeb, type YStackProps } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 
 export type AdvancedChartInterval =
@@ -105,6 +106,7 @@ const AdvancedChart = ({
     hideSideToolbar,
     saveImage,
   })
+  const { t } = useI18n()
   const src = EMBED + encodeURIComponent(JSON.stringify(s))
   return (
     <YStack
@@ -124,7 +126,7 @@ const AdvancedChart = ({
         <iframe
           key={src}
           src={src}
-          title={`${s.symbol} chart`}
+          title={t('{symbol} chart', { symbol: s.symbol })}
           loading="lazy"
           scrolling="no"
           allowFullScreen

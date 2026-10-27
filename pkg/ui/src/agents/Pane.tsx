@@ -12,6 +12,8 @@
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { Code2, Eye, FileText, Plus, X } from '@hanzogui/lucide-icons-2'
 import { useState, type ComponentProps, type ReactNode } from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { slot, tip } from '../backends/gui/slot'
 
@@ -37,6 +39,7 @@ export function ChannelHeader({
   children,
   ...rest
 }: ChannelHeaderProps) {
+  const { t } = useI18n()
   return (
     <XStack
       {...slot('channel-header')}
@@ -79,7 +82,7 @@ export function ChannelHeader({
           onPress={onArtifacts}
         >
           <SizableText size="$2" color="$quiet">
-            Artifacts
+            {t('Artifacts')}
           </SizableText>
           <XStack
             minW={18}
@@ -107,9 +110,9 @@ export function ChannelHeader({
 export type ArtifactKind = 'canvas' | 'code' | 'view'
 
 const ART: Record<ArtifactKind, { icon: typeof Code2; says: string }> = {
-  canvas: { icon: FileText, says: 'Canvas' },
-  code: { icon: Code2, says: 'Code' },
-  view: { icon: Eye, says: 'View' },
+  canvas: { icon: FileText, says: phrase('Canvas') },
+  code: { icon: Code2, says: phrase('Code') },
+  view: { icon: Eye, says: phrase('View') },
 }
 
 export interface ArtifactCardProps extends Row {
@@ -121,6 +124,7 @@ export interface ArtifactCardProps extends Row {
 /** A thing the agent made, offered in the thread. Opening it fills the pane. */
 export function ArtifactCard({ title, kind, onOpen, ...rest }: ArtifactCardProps) {
   const { icon: Icon, says } = ART[kind]
+  const { t } = useI18n()
   return (
     <XStack
       {...slot('artifact-card')}
@@ -155,7 +159,7 @@ export function ArtifactCard({ title, kind, onOpen, ...rest }: ArtifactCardProps
           {title}
         </SizableText>
         <SizableText size="$2" color="$soft">
-          {says}
+          {t(says)}
         </SizableText>
       </YStack>
     </XStack>
@@ -208,7 +212,8 @@ export interface PaneProps extends Col {
 export function Pane({ tabs, active, onActive, onClose, ...rest }: PaneProps) {
   const [own, setOwn] = useState(tabs[0]?.id)
   const current = active ?? own
-  const shown = tabs.find((t) => t.id === current) ?? tabs[0]
+  const shown = tabs.find((tab) => tab.id === current) ?? tabs[0]
+  const { t } = useI18n()
 
   return (
     <YStack
@@ -263,8 +268,8 @@ export function Pane({ tabs, active, onActive, onClose, ...rest }: PaneProps) {
             opacity={0.7}
             role="button"
             tabIndex={0}
-            aria-label="Close panel"
-            {...tip('Close panel')}
+            aria-label={t('Close panel')}
+            {...tip(t('Close panel'))}
             hoverStyle={{ bg: '$hover', opacity: 1 }}
             onPress={onClose}
           >
@@ -307,6 +312,7 @@ export interface OrgRailProps extends Col {
  * hidden inside that page.
  */
 export function OrgRail({ orgs, active, onSwitch, onAdd, ...rest }: OrgRailProps) {
+  const { t } = useI18n()
   return (
     <YStack
       {...slot('org-rail')}
@@ -364,8 +370,8 @@ export function OrgRail({ orgs, active, onSwitch, onAdd, ...rest }: OrgRailProps
           cursor="pointer"
           role="button"
           tabIndex={0}
-          aria-label="Add an organization"
-          {...tip('Add an organization')}
+          aria-label={t('Add an organization')}
+          {...tip(t('Add an organization'))}
           borderWidth={1}
           borderColor="$borderColor"
           opacity={0.6}

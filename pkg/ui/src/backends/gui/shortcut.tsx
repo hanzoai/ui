@@ -22,6 +22,7 @@
  */
 import { SizableText, XStack } from '@hanzo/gui'
 import { useSyncExternalStore, type ComponentProps } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Kbd } from './kbd'
 import { slot } from './slot'
 import { ltr, ltrText } from './dir'
@@ -130,10 +131,12 @@ export function Shortcut({
   platform,
   variant = 'keys',
   visibility = 'always',
-  sequenceJoinLabel = 'then',
+  sequenceJoinLabel: join,
   combinationSeparator,
   ...props
 }: ShortcutProps) {
+  const { t } = useI18n()
+  const sequenceJoinLabel = join ?? t('then')
   const detected = useSyncExternalStore(never, detect, () => 'other' as ShortcutPlatform)
   const on = platform ?? detected
   const label = speakShortcut(keys, on, sequenceJoinLabel)

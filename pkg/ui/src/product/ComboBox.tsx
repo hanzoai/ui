@@ -19,6 +19,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { Button, Input, Spinner, Text, XStack } from '@hanzo/gui'
 import { ChevronDown, RefreshCw } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Button as KitButton } from '../backends/gui/button'
 import { useDensity } from '../backends/gui/density'
@@ -40,7 +41,7 @@ export function ComboBox({
   onRetry,
   placeholder,
   disabled,
-  emptyText = 'No matches — press to use what you typed.',
+  emptyText,
   minWidth = 240,
   limit,
 }: {
@@ -63,6 +64,7 @@ export function ComboBox({
   limit?: number
 }) {
   const [open, setOpen] = useState(false)
+  const { t } = useI18n()
   const rowRef = useRef<HTMLElement | null>(null)
   const anchorRect = useCallback(() => rowRef.current?.getBoundingClientRect() ?? null, [])
   const anchorEl = useCallback(() => rowRef.current, [])
@@ -91,7 +93,7 @@ export function ComboBox({
         <XStack ref={rowRef as never} minW={minWidth} data-slot="combo-box">
           <InputGroup
             end={
-              <KitButton size="icon-2xs" variant="ghost" emphasis="subtle" disabled={disabled} aria-label="Show options" onPress={toggle}>
+              <KitButton size="icon-2xs" variant="ghost" emphasis="subtle" disabled={disabled} aria-label={t('Show options')} onPress={toggle}>
                 <ChevronDown />
               </KitButton>
             }
@@ -129,7 +131,7 @@ export function ComboBox({
           disabled={disabled}
           icon={<ChevronDown size={16} opacity={0.7} />}
           onPress={toggle}
-          aria-label="Show options"
+          aria-label={t('Show options')}
         />
       </XStack>
       )}
@@ -147,7 +149,7 @@ export function ComboBox({
           <XStack items="center" gap="$2" px="$2" py="$2">
             <Spinner size="small" color="$quiet" />
             <Text fontSize="$2" color="$soft">
-              Loading options…
+              {t('Loading options…')}
             </Text>
           </XStack>
         ) : error ? (
@@ -156,12 +158,12 @@ export function ComboBox({
               {error}
             </Text>
             {onRetry ? (
-              <Button size="$1" chromeless icon={<RefreshCw size={12} />} onPress={onRetry} aria-label="Retry" />
+              <Button size="$1" chromeless icon={<RefreshCw size={12} />} onPress={onRetry} aria-label={t('Retry')} />
             ) : null}
           </XStack>
         ) : filtered.length === 0 ? (
           <Text fontSize="$2" color="$soft" px="$2" py="$2">
-            {emptyText}
+            {emptyText ?? t('No matches — press to use what you typed.')}
           </Text>
         ) : (
           filtered.map((o) => (

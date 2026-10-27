@@ -16,6 +16,8 @@
 import type { ReactNode } from 'react'
 import { Button, Card, Text, XStack } from '@hanzo/gui'
 import { TriangleAlert, CreditCard } from '@hanzogui/lucide-icons-2'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { useHost } from './host'
 
@@ -66,28 +68,28 @@ export function classifyRead(e: unknown): BackendState | null {
 }
 
 const TITLES: Record<BackendStateKind, string> = {
-  'not-initialized': 'Backend not initialized',
-  unavailable: 'Not available on this deployment yet',
-  'not-implemented': 'Not yet available',
-  access: 'Not enabled for your account',
-  signin: 'Your session expired',
-  billing: 'Add credits to continue',
-  error: 'Could not reach the backend',
+  'not-initialized': phrase('Backend not initialized'),
+  unavailable: phrase('Not available on this deployment yet'),
+  'not-implemented': phrase('Not yet available'),
+  access: phrase('Not enabled for your account'),
+  signin: phrase('Your session expired'),
+  billing: phrase('Add credits to continue'),
+  error: phrase('Could not reach the backend'),
 }
 
 const BODIES: Record<BackendStateKind, string> = {
   'not-initialized':
-    'The /v1 route is mounted but its runtime (or the console API key it proxies to) is not configured on this deployment yet. Real data appears here once it is — no placeholder data is shown.',
+    phrase('The /v1 route is mounted but its runtime (or the console API key it proxies to) is not configured on this deployment yet. Real data appears here once it is — no placeholder data is shown.'),
   unavailable:
-    'This endpoint is not mounted at the gateway on this host yet. The view lights up automatically once the route is live.',
+    phrase('This endpoint is not mounted at the gateway on this host yet. The view lights up automatically once the route is live.'),
   // 501 — a real, planned capability whose body ships in a later phase.
   'not-implemented':
-    'This capability is planned but not wired yet. The backend answers honestly rather than pretending it worked — nothing here is fabricated, and the view lights up automatically once it ships.',
+    phrase('This capability is planned but not wired yet. The backend answers honestly rather than pretending it worked — nothing here is fabricated, and the view lights up automatically once it ships.'),
   // 403 for a SIGNED-IN user — never "sign in".
   access:
-    "You're signed in, but this isn't enabled for your organization on this deployment, or it's an admin-only surface. It appears here automatically once your account has access — nothing is fabricated.",
+    phrase("You're signed in, but this isn't enabled for your organization on this deployment, or it's an admin-only surface. It appears here automatically once your account has access — nothing is fabricated."),
   // 401 — the session itself lapsed; re-auth returns to this exact page.
-  signin: 'Your session has expired or isn’t recognized here. Sign in again to continue where you left off.',
+  signin: phrase('Your session has expired or isn’t recognized here. Sign in again to continue where you left off.'),
   // Empty → the card shows the backend's own message (the honest "Insufficient
   // balance. Please add credits…" from the gateway billing gate).
   billing: '',
@@ -105,16 +107,17 @@ export function BackendStateCard({
   hint?: ReactNode
 }) {
   const { signIn, addCredits } = useHost()
+  const { t } = useI18n()
   return (
     <Card borderWidth={1} borderColor="$borderColor" p="$4" gap="$2" maxWidth={640}>
       <XStack gap="$2" items="center">
         <TriangleAlert size={16} />
         <Text fontSize="$4" fontWeight="700">
-          {TITLES[state.kind]}
+          {t(TITLES[state.kind])}
         </Text>
       </XStack>
       <Text fontSize="$3" color="$quiet">
-        {BODIES[state.kind] || state.message}
+        {BODIES[state.kind] ? t(BODIES[state.kind]) : state.message}
       </Text>
       {hint ? (
         <Text fontSize="$2" color="$soft">
@@ -123,24 +126,24 @@ export function BackendStateCard({
       ) : null}
       {state.kind === 'signin' && signIn ? (
         <Button size="$2" theme="light" self="flex-start" onPress={signIn}>
-          Sign in again
+          {t('Sign in again')}
         </Button>
       ) : state.kind === 'billing' && addCredits ? (
         // 402 — the org has no funded balance. Offer a top-up CTA (and keep Retry so
         // a returning, funded caller can reload in place).
         <XStack gap="$2" items="center" flexWrap="wrap">
           <Button size="$2" theme="light" self="flex-start" icon={<CreditCard size={14} />} onPress={addCredits}>
-            Add credits
+            {t('Add credits')}
           </Button>
           {onRetry ? (
             <Button size="$2" self="flex-start" onPress={onRetry}>
-              Retry
+              {t('Retry')}
             </Button>
           ) : null}
         </XStack>
       ) : onRetry ? (
         <Button size="$2" self="flex-start" onPress={onRetry}>
-          Retry
+          {t('Retry')}
         </Button>
       ) : null}
     </Card>

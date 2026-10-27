@@ -16,6 +16,7 @@
 import { useState, type ComponentProps, type ReactNode } from 'react'
 import { SizableText, XStack, styled } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 import { touch } from './gesture'
 import { Button } from './button'
@@ -56,6 +57,7 @@ export function Announcement({
   ...props
 }: AnnouncementProps) {
   const [visible, setVisible] = useState(true)
+  const { t } = useI18n()
   if (!visible) return null
 
   const dismiss = () => {
@@ -74,7 +76,7 @@ export function Announcement({
           minH={CLOSE}
           minW={CLOSE}
           {...touch(CLOSE)}
-          aria-label="Dismiss"
+          aria-label={t('Dismiss')}
           onPress={dismiss}
         >
           <X size={16} />

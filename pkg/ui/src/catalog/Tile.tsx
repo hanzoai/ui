@@ -20,6 +20,7 @@
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { Check, Plus } from '@hanzogui/lucide-icons-2'
 import { useId, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Button } from '../backends/gui/button'
 import { press, RING } from '../backends/gui/press'
@@ -149,7 +150,9 @@ export interface FeaturedProps {
 }
 
 /** The one card the shelf puts first, drawn larger. Its action wraps under it on a phone. */
-export function Featured({ title, detail, meta, mark, action, onOpen, tag = 'Featured' }: FeaturedProps) {
+export function Featured({ title, detail, meta, mark, action, onOpen, tag: named }: FeaturedProps) {
+  const { t } = useI18n()
+  const tag = named ?? t('Featured')
   const id = useId()
   return (
     <XStack

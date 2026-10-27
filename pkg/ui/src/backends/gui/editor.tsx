@@ -15,6 +15,7 @@
 import { XStack, YStack, type YStackProps } from '@hanzo/gui'
 import { Bold, Italic, List, ListOrdered } from '@hanzogui/lucide-icons-2'
 import * as React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Button } from './button'
 import { slot } from './slot'
@@ -28,7 +29,8 @@ export interface EditorProps extends Omit<YStackProps, 'children' | 'onChange'> 
   placeholder?: string
 }
 
-export function Editor({ value, onChange, placeholder = 'Start typing...', ...props }: EditorProps) {
+export function Editor({ value, onChange, placeholder, ...props }: EditorProps) {
+  const { t } = useI18n()
   const field = React.useRef<HTMLDivElement | null>(null)
   const shown = React.useRef(value)
 
@@ -92,7 +94,7 @@ export function Editor({ value, onChange, placeholder = 'Start typing...', ...pr
         {...slot('editor-content')}
         contentEditable
         onInput={input}
-        data-placeholder={placeholder}
+        data-placeholder={placeholder ?? t('Start typing...')}
         suppressContentEditableWarning
         dangerouslySetInnerHTML={value === undefined ? undefined : { __html: value }}
         style={{

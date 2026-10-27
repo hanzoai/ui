@@ -9,6 +9,7 @@
  */
 import { GitBranch } from '@hanzogui/lucide-icons-2'
 import { useCallback, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { ChipSelect, type ChipPlacement } from './ChipSelect'
 import type { ChipItem, ChipPage } from './chipSelect.logic'
@@ -47,6 +48,7 @@ export function BranchSelect({
   open,
   onOpenChange,
 }: BranchSelectProps) {
+  const { t } = useI18n()
   const pages = useCallback(
     async (q: string, after?: string | null): Promise<ChipPage<ChipItem>> => {
       const page = await load(q, after)
@@ -57,14 +59,14 @@ export function BranchSelect({
 
   return (
     <ChipSelect<ChipItem>
-      name="Branch"
+      name={t('Branch')}
       icon={<GitBranch size={12} color="$soft" />}
-      label={value ?? 'Branch'}
+      label={value ?? t('Branch')}
       chosen={value ? item(value) : null}
       onChange={(i) => onChange(i.id)}
       load={pages}
-      placeholder="Search branches…"
-      empty="No branches match."
+      placeholder={t('Search branches…')}
+      empty={t('No branches match.')}
       footer={footer}
       placement={placement}
       disabled={disabled}

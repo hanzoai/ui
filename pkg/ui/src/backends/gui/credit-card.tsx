@@ -11,6 +11,7 @@
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
 import { CreditCard as CreditCardIcon } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 
 export type CreditCardVariant = 'default' | 'minimal'
@@ -100,12 +101,13 @@ export type CreditCardProps = Omit<ComponentProps<typeof Frame>, 'variant' | 'ch
 
 export function CreditCard({
   number = '•••• •••• •••• ••••',
-  name = 'CARD HOLDER',
-  expiry = 'MM/YY',
+  name,
+  expiry,
   cvv,
   variant = 'default',
   ...props
 }: CreditCardProps) {
+  const { t } = useI18n()
   const resolved = variant ?? 'default'
   return (
     <Frame
@@ -126,7 +128,7 @@ export function CreditCard({
             py="$1"
           >
             <Label {...slot('credit-card-cvv-value')} variant={resolved}>
-              CVV: {cvv}
+              {t('CVV: {cvv}', { cvv })}
             </Label>
           </XStack>
         )}
@@ -138,15 +140,15 @@ export function CreditCard({
         </Number>
         <Row items="flex-end">
           <YStack>
-            <Label variant={resolved}>Card Holder</Label>
+            <Label variant={resolved}>{t('Card Holder')}</Label>
             <Value {...slot('credit-card-name')} variant={resolved}>
-              {name}
+              {name ?? t('CARD HOLDER')}
             </Value>
           </YStack>
           <YStack items="flex-end">
-            <Label variant={resolved}>Expires</Label>
+            <Label variant={resolved}>{t('Expires')}</Label>
             <Value {...slot('credit-card-expiry')} variant={resolved}>
-              {expiry}
+              {expiry ?? t('MM/YY')}
             </Value>
           </YStack>
         </Row>

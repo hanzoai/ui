@@ -17,6 +17,7 @@
  * without the key a changed `market` would leave the old table on screen.
  */
 import { YStack, isWeb, type YStackProps } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 
 /** The market the table screens — TradingView's own `screener_type` values (`america`, `india`, `germany`, …). */
@@ -102,6 +103,7 @@ const StockScreener = ({
     width,
     height,
   })
+  const { t } = useI18n()
   const src = `${EMBED}${s.locale}#${encodeURIComponent(JSON.stringify(s))}`
   return (
     <YStack
@@ -121,7 +123,7 @@ const StockScreener = ({
         <iframe
           key={src}
           src={src}
-          title={`${market ?? 'america'} screener`}
+          title={t('{market} screener', { market: market ?? 'america' })}
           loading="lazy"
           scrolling="no"
           style={{ display: 'block', width: '100%', height: '100%', border: 0 }}

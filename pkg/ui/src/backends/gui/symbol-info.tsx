@@ -23,6 +23,7 @@
  * widget on screen.
  */
 import { YStack, isWeb, type YStackProps } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 
 export type SymbolInfoTheme = 'light' | 'dark'
@@ -54,6 +55,7 @@ const settings = ({
 
 const SymbolInfo = ({ symbol, width, locale = 'en', colorTheme, isTransparent, ...props }: SymbolInfoProps) => {
   const s = settings({ symbol, width, colorTheme, isTransparent })
+  const { t } = useI18n()
   const src = `${EMBED}${locale}#${encodeURIComponent(JSON.stringify(s))}`
   return (
     <YStack
@@ -72,7 +74,7 @@ const SymbolInfo = ({ symbol, width, locale = 'en', colorTheme, isTransparent, .
         <iframe
           key={src}
           src={src}
-          title={`${s.symbol} symbol info`}
+          title={t('{symbol} symbol info', { symbol: s.symbol })}
           loading="lazy"
           scrolling="no"
           style={{ display: 'block', width: '100%', border: 0 }}

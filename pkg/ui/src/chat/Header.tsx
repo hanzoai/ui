@@ -9,6 +9,7 @@
  * project, hanzo.app shows neither.
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { Ellipsis, PanelRight, Share2 } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps, ReactNode } from 'react'
 
@@ -32,6 +33,7 @@ export interface HeaderProps extends Omit<ComponentProps<typeof XStack>, 'childr
 }
 
 export function Header({ title, onOpenMenu, children, leading, ...props }: HeaderProps) {
+  const { t } = useI18n()
   return (
     <XStack
       {...slot('chat-header')}
@@ -56,7 +58,7 @@ export function Header({ title, onOpenMenu, children, leading, ...props }: Heade
           {title}
         </SizableText>
         {onOpenMenu ? (
-          <HeaderButton label="Conversation options" onPress={onOpenMenu}>
+          <HeaderButton label={t('Conversation options')} onPress={onOpenMenu}>
             <Ellipsis size={16} />
           </HeaderButton>
         ) : null}
@@ -99,6 +101,7 @@ export function HeaderButton({ label, onPress, children }: HeaderButtonProps) {
 }
 
 export interface ShareButtonProps {
+  /** Absent, "Share" in the reader's language. */
   label?: string
   onPress?: () => void
 }
@@ -110,7 +113,8 @@ export interface ShareButtonProps {
  * it reads as a label rather than a glyph. Everything reversible in this bar is
  * an icon; this deliberately is not.
  */
-export function ShareButton({ label = 'Share', onPress }: ShareButtonProps) {
+export function ShareButton({ label, onPress }: ShareButtonProps) {
+  const { t } = useI18n()
   return (
     <XStack
       {...slot('chat-share')}
@@ -129,20 +133,22 @@ export function ShareButton({ label = 'Share', onPress }: ShareButtonProps) {
     >
       <Share2 size={14} />
       <SizableText size="$1" fontWeight="500">
-        {label}
+        {label ?? t('Share')}
       </SizableText>
     </XStack>
   )
 }
 
 export interface AsideToggleProps {
+  /** Absent, "Toggle details panel" in the reader's language. */
   label?: string
   onPress?: () => void
 }
 
-export function AsideToggle({ label = 'Toggle details panel', onPress }: AsideToggleProps) {
+export function AsideToggle({ label, onPress }: AsideToggleProps) {
+  const { t } = useI18n()
   return (
-    <HeaderButton label={label} onPress={onPress}>
+    <HeaderButton label={label ?? t('Toggle details panel')} onPress={onPress}>
       <PanelRight {...mirror} size={16} />
     </HeaderButton>
   )

@@ -21,6 +21,7 @@
 import * as React from 'react'
 import { Image, SizableText, XStack, YStack } from '@hanzo/gui'
 import { ChevronLeft, ChevronRight } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { glass } from '../../glass'
 import { sx } from '../../sx'
@@ -109,6 +110,7 @@ export function AppleCardsCarousel({
   React.useEffect(() => setCalm(still()), [])
 
   const count = cards.length
+  const { t } = useI18n()
 
   const step = React.useCallback(
     (by: number) => setIndex((i) => (count ? (i + by + count) % count : 0)),
@@ -175,8 +177,8 @@ export function AppleCardsCarousel({
     <YStack
       data-slot="apple-carousel"
       role="region"
-      aria-roledescription="carousel"
-      aria-label="Cards"
+      aria-roledescription={t('carousel')}
+      aria-label={t('Cards')}
       position="relative"
       width="100%"
       maxW={1152}
@@ -212,8 +214,8 @@ export function AppleCardsCarousel({
               data-slot="apple-carousel-card"
               data-active={active || undefined}
               role="group"
-              aria-roledescription="slide"
-              aria-label={`${i + 1} of ${count}`}
+              aria-roledescription={t('slide')}
+              aria-label={t('{n} of {count}', { n: i + 1, count })}
               aria-hidden={!active || undefined}
               position="absolute"
               inset={0}
@@ -294,8 +296,8 @@ export function AppleCardsCarousel({
       {showArrows
         ? (
             [
-              ['previous', 'Previous card', goPrevious, ChevronLeft, { left: 16 }],
-              ['next', 'Next card', goNext, ChevronRight, { right: 16 }],
+              ['previous', t('Previous card'), goPrevious, ChevronLeft, { left: 16 }],
+              ['next', t('Next card'), goNext, ChevronRight, { right: 16 }],
             ] as const
           ).map(([name, label, go, Chevron, side]) => (
             <XStack
@@ -339,7 +341,7 @@ export function AppleCardsCarousel({
               key={card.id}
               data-slot="apple-carousel-dot"
               render={<button type="button" />}
-              aria-label={`Go to card ${i + 1}`}
+              aria-label={t('Go to card {n}', { n: i + 1 })}
               aria-current={i === index || undefined}
               data-active={i === index || undefined}
               height={8}

@@ -17,6 +17,7 @@ import type { ReactNode } from 'react'
 import { Component, Suspense, lazy, useState } from 'react'
 import { Button } from '@hanzo/gui'
 import { Moon, Sun } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { useEmit } from './instrument'
 
@@ -83,6 +84,7 @@ export function AgnosticThemeToggle({
   const current: ThemeMode = controlled ? (theme as ThemeMode) : internal
   const isDark = current === 'dark'
   const track = useEmit()
+  const { t } = useI18n()
 
   const toggle = () => {
     const next: ThemeMode = isDark ? 'light' : 'dark'
@@ -101,7 +103,7 @@ export function AgnosticThemeToggle({
       chromeless
       icon={isDark ? <Sun size={16} /> : <Moon size={16} />}
       onPress={toggle}
-      aria-label={label ?? (isDark ? 'Switch to light theme' : 'Switch to dark theme')}
+      aria-label={label ?? (isDark ? t('Switch to light theme') : t('Switch to dark theme'))}
     />
   )
 }

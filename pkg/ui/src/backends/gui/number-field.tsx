@@ -24,6 +24,7 @@
 import { XStack } from '@hanzo/gui'
 import { Minus, Plus } from '@hanzogui/lucide-icons-2'
 import { useCallback, useMemo, useRef, useState } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Button, type ButtonSize } from './button'
 import type { FieldSize } from './control'
 import { fieldSize, useDensity } from './density'
@@ -121,13 +122,14 @@ export function NumberField({
   required,
   disabled,
   buttons = false,
-  decrementLabel = 'Decrease',
-  incrementLabel = 'Increase',
+  decrementLabel,
+  incrementLabel,
   size,
   onFocus,
   onBlur,
   ...props
 }: NumberFieldProps) {
+  const { t } = useI18n()
   const density = useDensity()
   const box = fieldSize(size, density)
   const controlled = value !== undefined
@@ -233,7 +235,7 @@ export function NumberField({
         {...slot('number-field-decrement')}
         variant="outline"
         size={beside}
-        aria-label={decrementLabel}
+        aria-label={decrementLabel ?? t('Decrease')}
         // The keyboard belongs to the field; the buttons are for a pointer.
         tabIndex={-1}
         disabled={disabled || (!allowOutOfRange && atMin)}
@@ -246,7 +248,7 @@ export function NumberField({
         {...slot('number-field-increment')}
         variant="outline"
         size={beside}
-        aria-label={incrementLabel}
+        aria-label={incrementLabel ?? t('Increase')}
         tabIndex={-1}
         disabled={disabled || (!allowOutOfRange && atMax)}
         {...(readOnly ? { opacity: 0.5, cursor: 'default', hoverStyle: { bg: '$background' } } : null)}

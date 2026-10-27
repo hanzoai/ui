@@ -35,6 +35,7 @@ import {
   TriangleAlert,
 } from '@hanzogui/lucide-icons-2'
 import { useState, type ComponentProps, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { slot } from '../backends/gui/slot'
 import { mirror } from '../backends/gui/dir'
@@ -121,10 +122,11 @@ export interface ProgressBlockProps extends Col {
 export function ProgressBlock({
   steps,
   done = false,
-  doneLabel = 'Done',
+  doneLabel,
   children,
   ...rest
 }: ProgressBlockProps) {
+  const { t } = useI18n()
   return (
     <YStack {...slot('progress-block')} gap="$1.5" {...rest}>
       {steps.map((step) => (
@@ -135,7 +137,7 @@ export function ProgressBlock({
         <XStack items="center" gap="$1.5">
           <Check size={13} opacity={0.75} />
           <SizableText size="$2" color="$quiet">
-            {doneLabel}
+            {doneLabel ?? t('Done')}
           </SizableText>
         </XStack>
       ) : null}

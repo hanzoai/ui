@@ -18,6 +18,7 @@
  * leave the old table on screen.
  */
 import { YStack, isWeb, type YStackProps } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 
 export type CryptoScreenerColumn = 'overview' | 'performance' | 'oscillators' | 'moving_averages'
@@ -73,6 +74,7 @@ const CryptoScreener = ({
   ...props
 }: CryptoScreenerProps) => {
   const s = settings({ defaultColumn, displayCurrency, colorTheme, isTransparent, locale, width, height })
+  const { t } = useI18n()
   const src = EMBED + encodeURIComponent(JSON.stringify(s))
   return (
     <YStack
@@ -92,7 +94,7 @@ const CryptoScreener = ({
         <iframe
           key={src}
           src={src}
-          title="Crypto screener"
+          title={t('Crypto screener')}
           loading="lazy"
           scrolling="no"
           style={{ display: 'block', width: '100%', height: '100%', border: 0 }}

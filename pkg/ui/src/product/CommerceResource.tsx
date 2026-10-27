@@ -15,6 +15,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Button, XStack } from '@hanzo/gui'
 import { RefreshCw } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { PageHeader } from './PageHeader'
 import { DataTable, type Column } from './DataTable'
@@ -48,6 +49,7 @@ export function CommerceResource<T>({
   actions?: (reload: () => void) => ReactNode
 }) {
   const [state, setState] = useState<Async<T[]>>({ phase: 'loading' })
+  const { t } = useI18n()
   const loadRef = useRef(load)
   loadRef.current = load
 
@@ -72,7 +74,7 @@ export function CommerceResource<T>({
           <XStack gap="$2">
             {actions?.(reload)}
             <Button size="$2" icon={<RefreshCw size={16} />} onPress={reload}>
-              Refresh
+              {t('Refresh')}
             </Button>
           </XStack>
         }
