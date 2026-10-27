@@ -13,7 +13,7 @@ import { GuiProvider } from '@hanzo/gui'
 
 import config from '../gui-config'
 import { audit } from '../../test/axe'
-import { ChipSelect } from './ChipSelect'
+import { ChipSelect, Pills } from './ChipSelect'
 import type { ChipItem, ChipLoad, ChipPage } from './chipSelect.logic'
 
 declare global {
@@ -129,6 +129,24 @@ describe('the chip', () => {
     key(chip(), 'Enter')
     expect(chip().getAttribute('aria-expanded')).toBe('false')
     expect(chip().getAttribute('tabindex')).toBe('-1')
+  })
+
+  // gui compiles each value to an atomic class; the boxes are measured in a browser (scripts/composer.mjs).
+  it('stands as tall as the row it is set in, fully round, a hairline and no fill', () => {
+    mount(
+      <Pills.Provider value={36}>
+        <ChipSelect name="Branch" label="main" onChange={() => {}} items={[]} />
+      </Pills.Provider>,
+    )
+    for (const c of ['_height-36px', '_btlr-999px', '_btw-1px', '_bg-transparent']) expect(chip().className).toContain(c)
+    mount(<ChipSelect name="Branch" label="main" onChange={() => {}} items={[]} />)
+    expect(chip().className).toContain('_height-24px')
+    expect(chip().className).not.toContain('_bg-transparent')
+  })
+
+  it('of its icon alone, is round, as the controls beside it are', () => {
+    mount(<ChipSelect name="Commands" label="" icon={<span />} box={36} quiet onChange={() => {}} items={[]} />)
+    for (const c of ['_height-36px', '_width-36px', '_btlr-999px']) expect(chip().className).toContain(c)
   })
 })
 

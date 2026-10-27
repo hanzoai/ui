@@ -484,6 +484,26 @@ nothing — a key that sent in one wrote a newline in another.
   cycle can form. They are peers of `@hanzo/ui` — install them beside it.
 - `@hanzo/ui/chat/pure` carries what a spec or a settings page needs without the
   composer: `sends`, `LANGUAGES`, `EFFORTS`.
+- **One bar, phone and laptop.** Controls are 32px on a laptop, 36px on a phone,
+  one 4px gap (`SPACE`) between neighbours, every row on one centreline. The pills
+  stand as tall as the controls: Composer provides `Pills` (ChipSelect.tsx) with
+  its control size, and a labelled `ChipSelect` (so `RepoSelect`, `BranchSelect`)
+  inside it is a pill — fully round, a hairline, no fill — while outside it stays
+  the 24px chip. On a phone what the draft carries is a row of those pills above
+  the field (after `+` it wrapped the row), the mic and its chevron sit one gap
+  apart, and the effort's level stands beside the gauge (`Dial narrow`).
+- **The coarse-pointer floor is 24px inside the composer.** @hanzo/design floors
+  every button at `--tap-target` (44px, `!important`) under `pointer: coarse`, so on
+  an iPhone the 36px controls drew at 44 and the pills as 44px slabs while every
+  desktop-pointer test read 36. The frame and the row under it set
+  `--tap-target: 24px` (WCAG 2.5.8); a run without `hasTouch` cannot see this.
+- **`--composer-fill`** is the frame's glass fill, read only by
+  `[data-slot="composer"].glass` inside glass.css's `@supports` block and defaulting
+  to the material's own `color-mix(in oklab, var(--background) 72%, transparent)`.
+  A host darkens the composer (a private chat) by setting it, never `--background`.
+- `pnpm test:composer` (`scripts/composer.mjs`, `test/composer.mount.tsx`) measures
+  all of it in Chromium at 390, 440 and 1280, dark and light, as Chat and as Dev,
+  with touch on the phones, and the fill, with screenshots in `test-results/composer`.
 
 ### The sessions surface — `SessionRail`, `RailBar`, `Home`, `EmptyPrompt`, `Composer`, `ChipSelect`
 
@@ -1193,7 +1213,7 @@ tsconfigs, `scripts/`) is every package, anything else is none; then every
 workspace package that depends on those. One-leg packages share legs, four to a
 leg, grouped by runner. On a push to main, what the push releases is tested by its publish run
 (which nothing cancels) and the gate's `released` job waits for those legs.
-The consumer suites (`ui browser`: corner + code in Chromium; `ui vite`;
+The consumer suites (`ui browser`: corner + code + composer in Chromium; `ui vite`;
 `ui webpack`) run only when what `@hanzo/ui` packs, or a package it builds on,
 changed outside test files and Markdown. hanzoai/ci runs with `tests: 'false'`:
 its repository checks beside the legs on a PR, and on a push the same checks and

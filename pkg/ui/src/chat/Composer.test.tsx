@@ -23,6 +23,7 @@ import config from '../gui-config'
 import { audit } from '../../test/axe'
 import { writeComposing } from '@hanzo/appearance'
 
+import { ChipSelect } from '../product/ChipSelect'
 import { Composer } from './Composer'
 import { ComposerStatusProvider } from './Status'
 
@@ -209,6 +210,38 @@ describe('the slots', () => {
     expect(pick).toHaveBeenCalledWith('review')
     expect(onChange).toHaveBeenCalledWith('fix it ')
     expect(onSend).not.toHaveBeenCalled()
+  })
+})
+
+describe('a phone draws one slim bar', () => {
+  /** gui compiles each value to an atomic class; the boxes are measured in a browser (scripts/composer.mjs). */
+  const cls = (sel: string) => host.querySelector(sel)?.className ?? ''
+  const pills = <ChipSelect name="Branch" label="main" onChange={() => {}} items={[]} />
+  const carried = [{ id: 'f', label: 'notes.md', onRemove: () => {} }]
+
+  it('stands the pills as tall as the controls, round, a hairline and no fill', () => {
+    mount(<Composer narrow value="" onChange={() => {}} onSend={() => {}} pills={pills} />)
+    const pill = cls('[data-slot="composer-pills"] [data-slot="chip-select"]')
+    for (const c of ['_height-36px', '_btlr-999px', '_btw-1px', '_bg-transparent']) expect(pill).toContain(c)
+    mount(<Composer narrow={false} value="" onChange={() => {}} onSend={() => {}} pills={pills} />)
+    expect(cls('[data-slot="composer-pills"] [data-slot="chip-select"]')).toContain('_height-32px')
+  })
+
+  it('carries the draft in a row of its own above the field, so the controls never wrap; a laptop after `+`', () => {
+    mount(<Composer narrow value="" onChange={() => {}} onSend={() => {}} plus={{ upload: () => {} }} carried={carried} />)
+    expect(host.querySelector('[data-slot="composer-start"] [data-slot="composer-carried"]')).toBeNull()
+    const frame = host.querySelector('[data-slot="composer"]')!
+    expect([...frame.children].map((c) => c.getAttribute('data-slot'))[0]).toBe('composer-carry')
+    for (const c of ['_height-36px', '_btlr-999px', '_bg-transparent']) expect(cls('[data-slot="composer-carry"] [data-slot="composer-carried"]')).toContain(c)
+    mount(<Composer narrow={false} value="" onChange={() => {}} onSend={() => {}} plus={{ upload: () => {} }} carried={carried} />)
+    expect(host.querySelector('[data-slot="composer-carry"]')).toBeNull()
+    expect(cls('[data-slot="composer-start"] [data-slot="composer-carried"]')).toContain('_height-28px')
+  })
+
+  it("floors a coarse pointer at 24px inside the frame and the row under it, not design's 44", () => {
+    mount(<Composer narrow value="" onChange={() => {}} onSend={() => {}} chips={[{ id: 'issues', label: 'Issues', onPress: () => {} }]} />)
+    for (const s of ['composer', 'composer-foot'])
+      expect(host.querySelector<HTMLElement>(`[data-slot="${s}"]`)!.style.getPropertyValue('--tap-target')).toBe('24px')
   })
 })
 

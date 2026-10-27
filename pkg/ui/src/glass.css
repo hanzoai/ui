@@ -113,6 +113,17 @@
     background-size: 100% 2px !important;
     background-position: 0 1px !important;
   }
+
+  /* The composer's fill, under a name of its own. A host darkens the composer
+     (a private chat) by setting `--composer-fill` on it or any ancestor, and
+     leaves design's `--background`, which everything else reads, alone. Unset,
+     the fallback is the material's own fill, written out the same, so the
+     composer is the glass every other surface is. The slot and the class
+     outweigh the material's bare `.glass`, so of the two !important fills
+     this one is the composer's. */
+  [data-slot="composer"].glass {
+    background-color: var(--composer-fill, color-mix(in oklab, var(--background) 72%, transparent)) !important;
+  }
 }
 
 /* ── Solid — the one way out of the material ─────────────────────────────────

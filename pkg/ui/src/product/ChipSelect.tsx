@@ -27,7 +27,9 @@
 import { Input as GuiInput, ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { Check, ChevronDown, Search } from '@hanzogui/lucide-icons-2'
 import {
+  createContext,
   useCallback,
+  useContext,
   useEffect,
   useId,
   useMemo,
@@ -143,6 +145,14 @@ const CHIP_H = 24
 
 /** A chip that is its icon alone: the composer's round controls' box. */
 const BARE = 30
+
+/**
+ * The height of the row a chip stands in, px: the composer's pills, which stand
+ * as tall as its round controls. There a labelled chip is a pill — fully round,
+ * a hairline, no fill — so the pills and the controls read as one set. Outside
+ * that row, the 24px chip.
+ */
+export const Pills = createContext<number | null>(null)
 
 
 const MOVES = new Set<Move>(['ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 'PageUp'])
@@ -260,6 +270,8 @@ export function ChipSelect<T extends ChipItem>({
   onOpenChange,
 }: ChipSelectProps<T>) {
   const bare = !label
+  const row = useContext(Pills)
+  const pill = row !== null && !bare && !quiet
   const [own, setOwn] = useState(false)
   const open = openProp ?? own
   const setOpen = useCallback(
@@ -534,19 +546,19 @@ export function ChipSelect<T extends ChipItem>({
           aria-expanded={open}
           aria-controls={open ? listId : undefined}
           aria-disabled={disabled || undefined}
-          height={CHIP_H}
-          // A chip of its icon alone stands with the composer's round controls.
-          {...(bare ? { width: box, height: box, justify: 'center', rounded: 999 } : { px: '$2' })}
+          height={pill ? row : CHIP_H}
+          rounded={pill ? 999 : '$2'}
+          // A chip of its icon alone stands with the composer's round controls, round as they are.
+          {...(bare ? { width: box, height: box, justify: 'center', rounded: 999 } : { px: pill ? 12 : '$2' })}
           gap="$1.5"
           items="center"
           shrink={0}
-          rounded="$2"
           borderWidth={quiet ? 0 : 1}
           borderColor="$borderColor"
-          bg={quiet ? 'transparent' : '$raised'}
+          bg={quiet || pill ? 'transparent' : '$raised'}
           cursor={disabled ? 'default' : 'pointer'}
           opacity={disabled ? 0.5 : 1}
-          hoverStyle={disabled ? undefined : quiet ? { bg: '$hover' } : { borderColor: '$rim' }}
+          hoverStyle={disabled ? undefined : quiet || pill ? { bg: '$hover' } : { borderColor: '$rim' }}
           pressStyle={disabled ? undefined : { bg: '$hover' }}
           focusVisibleStyle={RING}
           // The chip is a small target by design; the hit area is not.

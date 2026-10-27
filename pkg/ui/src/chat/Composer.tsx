@@ -34,12 +34,13 @@ import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 import { ArrowUp, AudioLines, Square, X } from '@hanzogui/lucide-icons-2'
 import { Voice, type Machine } from '@hanzo/voice'
-import { useEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ComponentProps, type CSSProperties, type ReactNode } from 'react'
 
 import { Textarea } from '../backends/gui'
 import { slot } from '../backends/gui/slot'
 import { glass } from '../glass'
 import type { PauseSource } from '../models/catalog'
+import { Pills } from '../product/ChipSelect'
 import { Dial } from './Dial'
 import { Dictation } from './Dictation'
 import { Mention, trigger } from './Mention'
@@ -69,9 +70,12 @@ export const GAP = 20
 /** The composer's width under a thread: the measure less its 0.75rem gutters, centred, so its edges are the text's. */
 export const measure = { width: 'calc(100% - 1.5rem)', maxW: `calc(${MEASURE} - 1.5rem)`, mx: 'auto' } as const
 
-/** The round controls' box, px, and a phone's, a thumb's width kept small so the frame is a slim glass bar: `+`, the effort, the mic, its chevron and send all take it, so they share one centreline. */
+/** The round controls' box, px, and a phone's, a thumb's width kept small so the frame is a slim glass bar: `+`, the effort, the mic, its chevron and send all take it, so they share one centreline. The pills stand as tall. */
 export const ROUND = 32
 const TAP = 36
+
+/** The space between two things in a row of the frame, px: one gap, so a row reads evenly set. */
+const SPACE = 4
 
 /** The frame's corner, px: 12 on a laptop; on a phone the inset plus a control's radius, so the send's circle and the frame's corner are concentric. */
 const CORNER = 12
@@ -85,6 +89,21 @@ const ON = 'var(--primary-foreground)'
 
 /** A round control with no ground of its own until it is pointed at. */
 const QUIET = { bg: 'transparent', color: 'var(--foreground)', hoverStyle: { bg: '$hover' } } as const
+
+/** What the draft carries, as a chip: a filled tab after `+` on a laptop; on a phone a pill in a row of its own above the field, the pills' shape (round, a hairline, no fill) as tall as the controls, so the controls' row never wraps. */
+const CARRIED = { height: 28, rounded: 8, bg: '$hover', paddingInlineStart: 8 } as const
+const pill = (height: number) => ({ height, rounded: 999, borderWidth: 1, borderColor: '$borderColor', bg: 'transparent', paddingInlineStart: 12 }) as const
+
+/**
+ * Under a coarse pointer @hanzo/design floors every button at `--tap-target`,
+ * 44px, with !important. The composer's controls are its secondary chrome — the
+ * field, the column's width, is the target (see @hanzo/composer `Control`) — and
+ * each is sized on purpose, so inside the frame and the row under it the floor
+ * is WCAG 2.5.8's 24px. Without it a phone draws every control, pill and chip
+ * at 44: the slabs the 36px bar was set to replace.
+ */
+// inline-style: a custom property, which no gui prop carries.
+const FLOOR = { '--tap-target': '24px' } as CSSProperties
 
 /** One thing the draft carries, after `+`: a file, a skill that is on. */
 export interface Carried {
@@ -161,7 +180,7 @@ export interface ComposerProps extends Stack {
   column?: boolean
   /** Drawn on a pane: the frame floats as a pane of its own. */
   framed?: boolean
-  /** A phone: suggestions go above the frame and every target is 44px. Absent, the viewport decides. */
+  /** A phone: every control is 36px, the pills as tall, each row evenly set. Absent, the viewport decides. */
   narrow?: boolean
   /** This surface's answer where the person left an axis on Auto. */
   defaults?: Composing
@@ -392,11 +411,34 @@ export function Composer({
       </YStack>
     ) : null
 
+  const things = (carried ?? []).map((c) => (
+    <XStack key={c.id} {...slot('composer-carried')} items="center" gap={6} paddingInlineEnd={4} maxW={180} {...(narrow ? pill(hit) : CARRIED)}>
+      {c.icon ? <XStack aria-hidden>{c.icon}</XStack> : null}
+      <SizableText fontSize={13} color="$ink" numberOfLines={1} shrink={1}>
+        {c.label}
+      </SizableText>
+      <XStack
+        render="button"
+        aria-label={t('Remove {name}', { name: c.label })}
+        onPress={c.onRemove}
+        width={20}
+        height={20}
+        rounded={narrow ? 999 : 6}
+        items="center"
+        justify="center"
+        hoverStyle={{ bg: '$raised' }}
+        cursor="pointer"
+      >
+        <X size={12} color="$hint" />
+      </XStack>
+    </XStack>
+  ))
+
   const shown = showChips && chips?.length ? chips : null
   const tuned = (showModel && mind) || (showMode && mode)
   const under =
     shown || tuned ? (
-      <XStack {...slot('composer-foot')} items="center" gap={6} flexWrap="wrap" rowGap={4} width="100%">
+      <XStack {...slot('composer-foot')} items="center" gap={6} flexWrap="wrap" rowGap={4} width="100%" style={FLOOR}>
         {shown ? <Chips chips={shown} /> : null}
         {tuned ? <Tune mind={showModel ? mind : null} mode={showMode ? mode : null} onUpgrade={onUpgrade} limits={limits} /> : null}
       </XStack>
@@ -412,54 +454,40 @@ export function Composer({
         borderWidth={1}
         {...glass(2)}
         p={6}
-        pt={pills ? 6 : 10}
-        gap={4}
+        pt={pills || (narrow && things.length) ? 6 : 10}
+        gap={SPACE}
         $max-sm={{ rounded: CORNER_PHONE }}
         {...(framed ? { boxShadow: 'var(--shadow-sheet-1)' } : null)}
+        style={FLOOR}
       >
         {pills ? (
-          <XStack {...slot('composer-pills')} items="center" gap={4} flexWrap="wrap" rowGap={4} px={2}>
-            {pills}
+          // The pills stand as tall as the controls (`Pills`), at the controls' edge, so the frame's rows share one rhythm.
+          <XStack {...slot('composer-pills')} items="center" gap={SPACE} flexWrap="wrap" rowGap={SPACE}>
+            <Pills.Provider value={hit}>{pills}</Pills.Provider>
+          </XStack>
+        ) : null}
+        {narrow && things.length ? (
+          <XStack {...slot('composer-carry')} items="center" gap={SPACE} flexWrap="wrap" rowGap={SPACE}>
+            {things}
           </XStack>
         ) : null}
         {input}
-        <XStack items="center" gap={4}>
-          <XStack {...slot('composer-start')} items="center" gap={4} flex={1} minW={0} flexWrap="wrap">
+        <XStack items="center" gap={SPACE}>
+          <XStack {...slot('composer-start')} items="center" gap={SPACE} flex={1} minW={0} flexWrap="wrap">
             {plus ? <Plus {...plus} size={hit} disabled={disabled || plus.disabled} /> : null}
-            {(carried ?? []).map((c) => (
-              <XStack key={c.id} {...slot('composer-carried')} items="center" gap={6} paddingInlineStart={8} paddingInlineEnd={4} height={28} rounded={8} bg="$hover" maxW={180}>
-                {c.icon ? <XStack aria-hidden>{c.icon}</XStack> : null}
-                <SizableText fontSize={13} color="$ink" numberOfLines={1} shrink={1}>
-                  {c.label}
-                </SizableText>
-                <XStack
-                  render="button"
-                  aria-label={t('Remove {name}', { name: c.label })}
-                  onPress={c.onRemove}
-                  width={20}
-                  height={20}
-                  rounded={6}
-                  items="center"
-                  justify="center"
-                  hoverStyle={{ bg: '$raised' }}
-                  cursor="pointer"
-                >
-                  <X size={12} color="$hint" />
-                </XStack>
-              </XStack>
-            ))}
+            {narrow ? null : things}
             {children}
           </XStack>
-          <XStack {...slot('composer-end')} items="center" gap={4} shrink={0}>
+          <XStack {...slot('composer-end')} items="center" gap={SPACE} shrink={0}>
             {hint ? (
               <SizableText size="$1" color="$soft" numberOfLines={1}>
                 {hint}
               </SizableText>
             ) : null}
             {status === undefined ? inheritedStatus : status}
-            {effort ? <Dial effort={effort} size={hit} disabled={disabled} /> : null}
+            {effort ? <Dial effort={effort} size={hit} narrow={narrow} disabled={disabled} /> : null}
             {commands?.length ? <Palette commands={commands} open={palette} onOpenChange={setPalette} size={hit} disabled={disabled} /> : null}
-            {voice ? <Dictation voice={voice} disabled={disabled} size={hit} language={language} {...(onLanguage ? { onLanguage } : {})} /> : null}
+            {voice ? <Dictation voice={voice} disabled={disabled} size={hit} gap={narrow ? SPACE : 0} language={language} {...(onLanguage ? { onLanguage } : {})} /> : null}
             {!busy && !lit && talk ? (
               // Voice mode is a plain mark on a laptop, as the mic is, and the filled round on a phone.
               <Control asChild size={hit} fill={narrow} rounded={999} {...(narrow ? null : QUIET)} focusVisibleStyle={RING}>

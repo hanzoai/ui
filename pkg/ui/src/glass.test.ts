@@ -416,6 +416,27 @@ describe('Glass is for chrome; the flow gets a panel', () => {
   })
 })
 
+describe('The composer’s fill is a hook of our own name', () => {
+  // A host darkens the composer (a private chat) by setting `--composer-fill`,
+  // never by re-pointing design's `--background`, which the whole page reads.
+  // What the property DOES in a browser is scripts/composer.mjs's to measure.
+  const sheet = rules(css)
+  const supports = sheet.slice(sheet.indexOf('@supports (backdrop-filter'), sheet.indexOf('[data-material="solid"]'))
+  const material = supports.match(/\.glass,[^{]*\{\s*background-color:\s*([^;]+?)\s*!important;/)![1]!
+
+  it('defaults to exactly the material’s fill', () => {
+    expect(material).toBe('color-mix(in oklab, var(--background) 72%, transparent)')
+    expect(fallbacks(sheet, 'composer-fill')).toEqual([material])
+  })
+
+  it('is read by the composer’s glass alone, where the material is, and declared by no sheet', () => {
+    const at = supports.indexOf('var(--composer-fill')
+    const open = supports.lastIndexOf('{', at)
+    expect(supports.slice(supports.lastIndexOf('}', open) + 1, open).trim()).toBe('[data-slot="composer"].glass')
+    for (const [name, text] of Object.entries(sheets)) expect([name, /--composer-fill\s*:/.test(rules(text))]).toEqual([name, false])
+  })
+})
+
 describe('The sheets this package ships stamp and select no hz- name', () => {
   // The composer's ring is @hanzo/composer's own gui component now, and the
   // motion vocabulary is keyed on `data-motion`. A namespaced class is a hook a

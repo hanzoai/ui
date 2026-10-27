@@ -31,7 +31,12 @@ const PIP: Record<string, string> = { auto: 'A', low: 'L', medium: 'M', high: 'H
 
 const pip = (id: string, label: string): string => PIP[id] ?? label.slice(0, 1).toUpperCase()
 
-export function Dial({ effort, size = 36, disabled = false }: { effort: Modes; size?: number; disabled?: boolean }) {
+/**
+ * `narrow`, a phone: the level stands BESIDE the gauge on the row's centreline
+ * rather than tucked under its corner, where at a phone's size it crowds the
+ * glyph. The button keeps the row's height and grows as wide as the level needs.
+ */
+export function Dial({ effort, size = 36, disabled = false, narrow = false }: { effort: Modes; size?: number; disabled?: boolean; narrow?: boolean }) {
   const { t, dir } = useI18n()
   const [open, setOpen] = useState(false)
   // The level under the finger while it is held, as a place in the list.
@@ -60,7 +65,7 @@ export function Dial({ effort, size = 36, disabled = false }: { effort: Modes; s
             aria-expanded={open}
             aria-disabled={disabled || undefined}
             tabIndex={disabled ? -1 : 0}
-            width={size}
+            {...(narrow ? { minW: size, px: 8, gap: 3 } : { width: size })}
             height={size}
             rounded={999}
             items="center"
@@ -114,22 +119,28 @@ export function Dial({ effort, size = 36, disabled = false }: { effort: Modes; s
             }}
           >
             <Gauge size={18} color="var(--foreground)" aria-hidden />
-            <SizableText
-              data-slot="dial-pip"
-              aria-hidden
-              position="absolute"
-              b={3}
-              insetInlineEnd={2}
-              fontSize={9}
-              lineHeight={10}
-              fontWeight="700"
-              color="$ink"
-              px={2}
-              rounded={4}
-              bg="$background"
-            >
-              {pip(shown.id, t(shown.label))}
-            </SizableText>
+            {narrow ? (
+              <SizableText data-slot="dial-pip" aria-hidden fontSize={12} lineHeight={16} fontWeight="600" color="$quiet">
+                {pip(shown.id, t(shown.label))}
+              </SizableText>
+            ) : (
+              <SizableText
+                data-slot="dial-pip"
+                aria-hidden
+                position="absolute"
+                b={3}
+                insetInlineEnd={2}
+                fontSize={9}
+                lineHeight={10}
+                fontWeight="700"
+                color="$ink"
+                px={2}
+                rounded={4}
+                bg="$background"
+              >
+                {pip(shown.id, t(shown.label))}
+              </SizableText>
+            )}
           </XStack>
           {held !== null ? (
             <XStack

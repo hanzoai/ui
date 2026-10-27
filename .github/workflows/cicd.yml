@@ -127,7 +127,7 @@ jobs:
         working-directory: pkg/ui
         run: |
           case "$SUITE" in
-            browser) pnpm run test:corner && pnpm run test:code ;;
+            browser) pnpm run test:corner && pnpm run test:code && pnpm run test:composer ;;
             vite) pnpm run test:consumer ;;
             webpack) pnpm run test:consumer:webpack ;;
           esac

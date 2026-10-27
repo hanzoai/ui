@@ -63,6 +63,18 @@ describe('Dial', () => {
     expect(button().textContent).toBe('H')
   })
 
+  it('on a phone stands the level beside the gauge, in the row, not over its corner', () => {
+    mount(<Dial narrow size={36} effort={{ value: 'max', set: () => {}, items }} />)
+    const pip = () => host.querySelector('[data-slot="dial-pip"]')!
+    expect(pip().textContent).toBe('MAX')
+    expect(pip().className).not.toContain('_pos-absolute')
+    expect(button().className).toContain('_height-36px')
+    expect(button().className).toContain('_minW-36px')
+    mount(<Dial size={32} effort={{ value: 'max', set: () => {}, items }} />)
+    expect(pip().className).toContain('_pos-absolute')
+    expect(button().className).toContain('_width-32px')
+  })
+
   it('opens its list on a press and picks from it', () => {
     const set = vi.fn()
     mount(<Dial effort={{ value: 'auto', set, items }} />)

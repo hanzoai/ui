@@ -143,15 +143,17 @@ function Meter({ device, on }: { device: string | null; on: boolean }) {
 export interface DictationProps {
   voice: Machine
   disabled?: boolean
-  /** The box of each half, px: the composer's control size (36 on a laptop, 44 on a phone). */
+  /** The box of each half, px: the composer's control size (32 on a laptop, 36 on a phone). */
   size?: number
+  /** The space between the mic and its chevron, px: the row's own gap where every control in it is evenly set (a phone). */
+  gap?: number
   /** The language dictation listens in, or null for Auto (the browser's own). */
   language?: string | null
   onLanguage?: (id: string | null) => void
 }
 
 /** The mic and its chevron, one control on the composer's row. */
-export function Dictation({ voice, disabled = false, size = 36, language = null, onLanguage }: DictationProps) {
+export function Dictation({ voice, disabled = false, size = 36, gap = 0, language = null, onLanguage }: DictationProps) {
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
   // The Language list, drawn only while open (see Plus.tsx).
@@ -161,7 +163,7 @@ export function Dictation({ voice, disabled = false, size = 36, language = null,
   const spoken = LANGUAGES.find((l) => l.id === language)
   // Two controls on one row, each its own box and its own focus ring: no frame around the pair.
   return (
-    <XStack data-slot="dictation" items="center" shrink={0}>
+    <XStack data-slot="dictation" items="center" gap={gap} shrink={0}>
       <Control asChild size={size} {...PLAIN} focusVisibleStyle={RING}>
         <Voice voice={voice} disabled={disabled} says={{ idle: t('Dictate'), listening: t('Dictating — click to stop') }}>
           {(state) => <MicIcon size={16} color="var(--foreground)" fill={state === 'idle' ? 'none' : 'var(--foreground)'} />}

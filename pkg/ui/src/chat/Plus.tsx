@@ -97,7 +97,7 @@ export interface PlusProps {
   research?: Switch
   memory?: Switch
   disabled?: boolean
-  /** The button's box, px: the composer's control size (36 on a laptop, 44 on a phone). */
+  /** The button's box, px: the composer's control size (32 on a laptop, 36 on a phone). */
   size?: number
 }
 
