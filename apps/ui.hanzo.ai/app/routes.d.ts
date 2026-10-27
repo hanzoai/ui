@@ -1,6 +1,4 @@
-// deno-lint-ignore-file
-/* eslint-disable */
-// biome-ignore: needed import
+// deno-lint-ignore-file: no-empty
 import type { OneRouter } from 'one'
 
 declare module 'one' {
@@ -37,23 +35,4 @@ declare module 'one' {
         | `/ui/[name]`
       IsTyped: true
       RouteTypes: {
-        '/agents/[name]': RouteInfo<{ name: string }>
-        '/blocks/[name]': RouteInfo<{ name: string }>
-        '/catalog/[name]': RouteInfo<{ name: string }>
-        '/chat/[name]': RouteInfo<{ name: string }>
-        '/docs/[...slug]': RouteInfo<{ slug: string[] }>
-        '/product/[name]': RouteInfo<{ name: string }>
-        '/settings/[name]': RouteInfo<{ name: string }>
-        '/ui/[name]': RouteInfo<{ name: string }>
-      }
-    }
-  }
-}
-
-/**
- * Helper type for route information
- */
-type RouteInfo<Params = Record<string, never>> = {
-  Params: Params
-  LoaderProps: { path: string; search?: string; subdomain?: string; params: Params; request?: Request }
-}
+        '/agents/[name]': RouteInfo
