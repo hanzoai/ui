@@ -165,3 +165,5 @@ export {
  */
 export * from '../backdrop'
 export { Persona, clip, type Emotion, type PersonaProps, type Scenes } from './Persona'
+
+export { ComposerStatusProvider } from './Status'

@@ -47,6 +47,7 @@ import { Palette, type Command } from './Palette'
 import { Plus, type PlusProps, type Shelf } from './Plus'
 import { ready, sends, type Mods } from './send'
 import { RING } from './ring'
+import { useComposerStatus } from './Status'
 import { Chips, Tune, type Chip, type Mind, type Modes } from './Tune'
 
 /** `onChange` is dropped: here it carries the draft, not a DOM change event. */
@@ -116,6 +117,8 @@ export interface ComposerProps extends Stack {
   field?: FieldProps
   /** A word at the end of the tool row, before the controls: a status. */
   hint?: string
+  /** Account usage and context control; null hides a host-provided control. */
+  status?: ReactNode
   /** The tool row's start, after `+` and what the draft carries. */
   children?: ReactNode
   /** Above the frame, at its width: what the draft is sent with, a banner. */
@@ -233,6 +236,7 @@ export function Composer({
   maxHeight = CEILING,
   field,
   hint,
+  status,
   children,
   head,
   pills,
@@ -260,6 +264,7 @@ export function Composer({
   ...props
 }: ComposerProps) {
   const { t } = useI18n()
+  const inheritedStatus = useComposerStatus()
   const media = useMedia()
   const narrow = narrowProp ?? !media.sm
   const hit = narrow ? TAP : ROUND
@@ -451,6 +456,7 @@ export function Composer({
                 {hint}
               </SizableText>
             ) : null}
+            {status === undefined ? inheritedStatus : status}
             {effort ? <Dial effort={effort} size={hit} disabled={disabled} /> : null}
             {commands?.length ? <Palette commands={commands} open={palette} onOpenChange={setPalette} size={hit} disabled={disabled} /> : null}
             {voice ? <Dictation voice={voice} disabled={disabled} size={hit} language={language} {...(onLanguage ? { onLanguage } : {})} /> : null}
