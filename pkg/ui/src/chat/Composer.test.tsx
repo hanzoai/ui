@@ -24,6 +24,7 @@ import { audit } from '../../test/axe'
 import { writeComposing } from '@hanzo/appearance'
 
 import { Composer } from './Composer'
+import { ComposerStatusProvider } from './Status'
 
 declare global {
   // eslint-disable-next-line no-var
@@ -276,5 +277,20 @@ describe('accessibility', () => {
     expect(await audit(host)).toEqual([])
     mount(<Composer value="draft" onChange={() => {}} onSend={() => {}} hint="Enter to send" />)
     expect(await audit(host)).toEqual([])
+  })
+})
+
+
+describe('host account usage slot', () => {
+  it('shows the inherited control and lets a surface replace or suppress it', () => {
+    const props = { value: '', onChange: () => {}, onSend: () => {} }
+    const inherited = <button type="button" data-usage="account">Usage</button>
+    mount(<ComposerStatusProvider value={inherited}><Composer {...props} /></ComposerStatusProvider>)
+    expect(host.querySelector('[data-usage="account"]')).not.toBeNull()
+    mount(<ComposerStatusProvider value={inherited}><Composer {...props} status={<button data-usage="conversation">Context</button>} /></ComposerStatusProvider>)
+    expect(host.querySelector('[data-usage="account"]')).toBeNull()
+    expect(host.querySelector('[data-usage="conversation"]')).not.toBeNull()
+    mount(<ComposerStatusProvider value={inherited}><Composer {...props} status={null} /></ComposerStatusProvider>)
+    expect(host.querySelector('[data-usage]')).toBeNull()
   })
 })
