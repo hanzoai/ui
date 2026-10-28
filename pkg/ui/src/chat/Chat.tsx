@@ -199,12 +199,18 @@ export function Chat({
   // and then reports a component that is fine as broken, or one that is broken
   // as fine.
   return (
-    <YStack flex={1} width="100%" {...slot('chat')}>
-      {centred ? <YStack {...slot('chat-space')} flex={1} /> : null}
+    <YStack
+      display="grid"
+      gridTemplateRows={centred ? '1fr auto auto 1fr' : 'minmax(0, 1fr) auto'}
+      height="100%"
+      width="100%"
+      {...slot('chat')}
+    >
+      {centred ? <YStack {...slot('chat-space')} /> : null}
       {opening ? (
         empty
       ) : (
-        <Thread flex={1} {...thread}>
+        <Thread {...thread}>
           {messages.map((turn, i) => (
             <Message
               key={turn.id}
@@ -224,7 +230,7 @@ export function Chat({
         {...(onStop ? { onStop } : {})}
         {...composer}
       />
-      {centred ? <YStack {...slot('chat-space')} flex={1} /> : null}
+      {centred ? <YStack {...slot('chat-space')} /> : null}
       {dropping ? (
         <div
           aria-hidden
