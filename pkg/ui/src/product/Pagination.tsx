@@ -11,9 +11,10 @@
 import { Button, Text, XStack } from '@hanzo/gui'
 import { ChevronLeft, ChevronRight } from '@hanzogui/lucide-icons-2'
 
+import { mirror } from '../backends/gui/dir'
+import { useTranslate } from '../i18n/react'
 import { useEmit } from './instrument'
 import { GAP, pages } from './pages'
-import { mirror } from '../backends/gui/dir'
 
 export { GAP, pages }
 
@@ -28,6 +29,7 @@ export type PaginationProps = {
 }
 
 export function Pagination({ page, count, onChange, around = 1 }: PaginationProps) {
+  const tr = useTranslate()
   const track = useEmit()
   if (count <= 1) return null
 
@@ -39,41 +41,19 @@ export function Pagination({ page, count, onChange, around = 1 }: PaginationProp
 
   return (
     <XStack items="center" justify="center" gap="$1" flexWrap="wrap">
-      <Button
-        size="$2"
-        chromeless
-        icon={<ChevronLeft {...mirror} size={16} />}
-        onPress={() => go(page - 1)}
-        disabled={page <= 1}
-        aria-label="Previous page"
-      />
+      <Button size="$2" chromeless icon={<ChevronLeft {...mirror} size={16} />} onPress={() => go(page - 1)} disabled={page <= 1} aria-label={tr('Previous page')} />
       {pages(page, count, around).map((slot, i) =>
         slot === GAP ? (
           <Text key={`gap-${i}`} px="$1.5" fontSize="$2" color="$soft" aria-hidden>
             {GAP}
           </Text>
         ) : (
-          <Button
-            key={slot}
-            size="$2"
-            chromeless={slot !== page}
-            onPress={() => go(slot)}
-            aria-label={`Page ${slot}`}
-            aria-current={slot === page ? 'page' : undefined}
-            bg={slot === page ? '$edge' : undefined}
-          >
+          <Button key={slot} size="$2" chromeless={slot !== page} onPress={() => go(slot)} aria-label={`Page ${slot}`} aria-current={slot === page ? 'page' : undefined} bg={slot === page ? '$edge' : undefined}>
             {String(slot)}
           </Button>
-        ),
+        )
       )}
-      <Button
-        size="$2"
-        chromeless
-        icon={<ChevronRight {...mirror} size={16} />}
-        onPress={() => go(page + 1)}
-        disabled={page >= count}
-        aria-label="Next page"
-      />
+      <Button size="$2" chromeless icon={<ChevronRight {...mirror} size={16} />} onPress={() => go(page + 1)} disabled={page >= count} aria-label={tr('Next page')} />
     </XStack>
   )
 }

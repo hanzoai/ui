@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 /**
  * ImageCrop — a zoom, rotate and crop preview for a single image.
  *
@@ -11,7 +12,8 @@
  */
 import { Image, XStack, YStack, type YStackProps } from '@hanzo/gui'
 import { Crop, RotateCw, ZoomIn, ZoomOut } from '@hanzogui/lucide-icons-2'
-import { useState } from 'react'
+
+import { useTranslate } from '../../i18n/react'
 import { AspectRatio } from './aspect-ratio'
 import { Button } from './button'
 import { slot } from './slot'
@@ -31,6 +33,7 @@ export interface ImageCropProps extends Omit<YStackProps, 'children'> {
 }
 
 export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps) {
+  const tr = useTranslate()
   const [zoom, setZoom] = useState(1)
   const [rotation, setRotation] = useState(0)
 
@@ -40,13 +43,7 @@ export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps)
 
   return (
     <YStack {...slot('image-crop')} gap="$4" {...props}>
-      <AspectRatio
-        {...slot('image-crop-preview')}
-        ratio={aspect}
-        rounded="$4"
-        borderWidth={1}
-        borderColor="$borderColor"
-      >
+      <AspectRatio {...slot('image-crop-preview')} ratio={aspect} rounded="$4" borderWidth={1} borderColor="$borderColor">
         <Image
           src={src}
           alt="Crop preview"
@@ -62,31 +59,13 @@ export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps)
         />
       </AspectRatio>
       <XStack {...slot('image-crop-controls')} items="center" justify="center" gap="$2">
-        <Button
-          {...slot('image-crop-zoom-out')}
-          variant="outline"
-          size="icon"
-          aria-label="Zoom out"
-          onPress={zoomOut}
-        >
+        <Button {...slot('image-crop-zoom-out')} variant="outline" size="icon" aria-label={tr('Zoom out')} onPress={zoomOut}>
           <ZoomOut size={ICON} />
         </Button>
-        <Button
-          {...slot('image-crop-zoom-in')}
-          variant="outline"
-          size="icon"
-          aria-label="Zoom in"
-          onPress={zoomIn}
-        >
+        <Button {...slot('image-crop-zoom-in')} variant="outline" size="icon" aria-label={tr('Zoom in')} onPress={zoomIn}>
           <ZoomIn size={ICON} />
         </Button>
-        <Button
-          {...slot('image-crop-rotate')}
-          variant="outline"
-          size="icon"
-          aria-label="Rotate"
-          onPress={rotate}
-        >
+        <Button {...slot('image-crop-rotate')} variant="outline" size="icon" aria-label={tr('Rotate')} onPress={rotate}>
           <RotateCw size={ICON} />
         </Button>
         <Button {...slot('image-crop-crop')} onPress={() => onCrop?.(src)}>

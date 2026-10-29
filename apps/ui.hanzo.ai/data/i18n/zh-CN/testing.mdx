@@ -1,0 +1,88 @@
+---
+title: 测试
+description: 挂在根下面，按槽来找，层叠自己去解，其余交给浏览器去算。
+---
+
+每个组件都用自己的名字盖下一个 `data-slot`，于是测试可以找到一个控件，而不必依赖某个版本可能会改掉的标记。像应用那样挂在 `Hanzo` 下面；根带着每个令牌对着解析的那份配置，没有根主题的组件会抛出。
+
+## 单元测试
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+这条别名和打包器所带的是同一条。`inline` 这份列表要紧：引擎的包以再导出 ESM 的 CommonJS 形式交付，若留在外部，它们会解析到拥有主题的那个模块的第二份拷贝，于是提供者写入一份 context，每个带主题的组件去读另一份，并抛出 `Missing theme`。
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## 没有层叠的 DOM 里的颜色
+
+jsdom 不解 `var()`；它把文本原样交给测试。主题的各档故意写成 `var(--border, rgb(255 255 255 / .10))`——设计表挂上了就跟随活的层叠，没挂上就留下审过的字面量——于是在 jsdom 里断言一条边框的对比度，比的是一种颜色和一个函数调用。`substitute` 走的是 jsdom 不走的那一步。
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+没有 `vars` 映射时，这是精确而不是近似：jsdom 不挂设计表，所以没有东西声明 `--border`，回退值就是浏览器在同样条件下会算出的那个。传入一张映射，用来模拟自己声明了令牌的宿主。这个模块什么都不导入，两种格式都交付，所以在任何运行器下都能加载。
+
+## 浏览器算出了什么
+
+一次构建、一次类型检查、一次单元测试，都能在一张从未到达页面的样式表上通过。证明是浏览器：构建应用，把它提供出来，断言计算后的样式，而不是标记自己的说法。
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+包就是这样测试自己的。它的画廊是一份清单，装着每一种变体里的每一个组件；样式表生成器渲染这份清单，单元测试在真正的提供者下面渲染它，并检查每一个槽标记都到了，消费方测试则把 tarball 打包，装进仓库之外的一个应用——绝不用工作区链接，那种链接穿过源码树解析，会藏起 tarball 里缺的文件——再构建它，并在两种主题下、于 390 和 1280 断言计算后的样式和截图。若用了工作区链接，那个测试存在就是为了抓住的每一处缺陷，都会被发出去。

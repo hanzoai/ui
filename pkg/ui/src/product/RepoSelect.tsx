@@ -1,5 +1,6 @@
 'use client'
 
+import { useCallback, useState, type ReactNode } from 'react'
 /**
  * RepoSelect — which repository a run works in, as a composer chip.
  *
@@ -15,8 +16,8 @@
  */
 import { SizableText, YStack } from '@hanzo/gui'
 import { Code, Lock } from '@hanzogui/lucide-icons-2'
-import { useCallback, useState, type ReactNode } from 'react'
 
+import { useTranslate } from '../i18n/react'
 import { ChipSelect, type ChipAction, type ChipPlacement, type ChipTab } from './ChipSelect'
 import type { ChipItem, ChipPage } from './chipSelect.logic'
 
@@ -57,7 +58,11 @@ export interface RepoSelectProps {
   /** Shown above the list — e.g. a "Connect GitHub" button while nothing is connected. */
   connect?: ReactNode
   /** A second thing a row can do — "Add to project". */
-  action?: { label: string; onPress: (repo: Repo) => void; when?: (repo: Repo) => boolean }
+  action?: {
+    label: string
+    onPress: (repo: Repo) => void
+    when?: (repo: Repo) => boolean
+  }
   /** Views over the list: the first shows every row, each other the rows whose `source` is its id. */
   tabs?: readonly ChipTab[]
   /** The chip's text with nothing chosen. */
@@ -84,8 +89,7 @@ const item = (repo: Repo): RepoItem => ({
  * http(s). A `javascript:` or `data:` address handed in as "where to
  * troubleshoot" would run in the page, so it is not drawn as a link at all.
  */
-export const followable = (href: string): boolean =>
-  !/[\s\u0000-\u001f\u007f\\]/.test(href) && (/^\/(?![\/\\])/.test(href) || /^https?:\/\//i.test(href))
+export const followable = (href: string): boolean => !/[\s\u0000-\u001f\u007f\\]/.test(href) && (/^\/(?![\/\\])/.test(href) || /^https?:\/\//i.test(href))
 
 /** A link in the footer: underlined, quiet, and a real control either way. */
 export function FooterLink({ label, href, onPress }: RepoLink) {
@@ -119,21 +123,8 @@ export function FooterLink({ label, href, onPress }: RepoLink) {
   )
 }
 
-export function RepoSelect({
-  value = null,
-  onChange,
-  load,
-  troubleshoot,
-  note,
-  connect,
-  action,
-  tabs,
-  placeholder = 'Repository',
-  placement,
-  disabled,
-  open,
-  onOpenChange,
-}: RepoSelectProps) {
+export function RepoSelect({ value = null, onChange, load, troubleshoot, note, connect, action, tabs, placeholder = 'Repository', placement, disabled, open, onOpenChange }: RepoSelectProps) {
+  const tr = useTranslate()
   const [tab, setTab] = useState(tabs?.[0]?.id)
   const every = !tabs?.length || tab === tabs[0]!.id
   const pages = useCallback(
@@ -142,7 +133,7 @@ export function RepoSelect({
       const repos = every ? page.repos : page.repos.filter((r) => r.source === tab)
       return { items: repos.map(item), next: page.next ?? null }
     },
-    [load, every, tab],
+    [load, every, tab]
   )
 
   const act: ChipAction<RepoItem> | undefined = action
@@ -162,7 +153,7 @@ export function RepoSelect({
       chosen={value && (every || value.source === tab) ? item(value) : null}
       onChange={(i) => onChange(i.repo)}
       load={pages}
-      placeholder="Search repositories…"
+      placeholder={tr('Search repositories…')}
       empty="No repositories match."
       cta={connect}
       action={act}

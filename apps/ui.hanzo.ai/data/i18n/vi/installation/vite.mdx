@@ -1,0 +1,64 @@
+---
+title: Vite
+description: Hai dòng resolve, và gốc.
+---
+
+## Tạo dự án
+
+```bash
+pnpm create vite@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+`react-native-web` là đích mà `react-native` phân giải tới trên web, nên ứng
+dụng khai báo nó cùng cách khai báo `react-dom`.
+
+## Cấu hình Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+Đó là toàn bộ cấu hình. Trong đó không có mục cho gói — không bí danh tới
+gói, không đường ống CSS, không plugin, không danh sách transpile. Ba lần
+phân giải thuộc về react-native-web, và mọi ứng dụng dựng qua nó đều mang
+chúng: bản dựng web của react-native-svg nhập `react-native` trần, điểm vào
+của nó chỉ tới bản dựng đó khi `.web.js` đứng trên `.js`, và đường tài sản
+của nó gọi tên `@react-native/assets-registry/registry`, mà trên web là mô-đun
+AssetRegistry của chính react-native-web.
+
+## Gắn gốc
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+Không có liên kết bảng kiểu trong `index.html` và không có `class="dark"`
+trên đó: gốc mang cả hai.
+
+## Tối và sáng
+
+`Hanzo` nhận `theme`. Để một người được chọn, giữ lựa chọn trong state rồi
+đưa cho gốc và cho một nút chuyển — [Chế độ tối](/docs/dark-mode).

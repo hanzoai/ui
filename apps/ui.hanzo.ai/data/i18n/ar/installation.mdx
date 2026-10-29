@@ -1,0 +1,87 @@
+---
+title: التثبيت
+description: ثبّت الحزمة، وركّب الجذر، وقل للمُجمِّع شيئًا واحدًا.
+---
+
+الإعداد واحد على كل مُضيف. الجزء الذي يختلف هو موضع ضبط المُجمِّع، ولكل مُضيف صفحة لذلك.
+
+## التثبيت
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` و`react-dom` اعتمادان من نوع peer في الإصدار 19 أو أحدث. `@hanzo/gui` اعتماد peer عن قصد: يسلّم سياق React، والنسخة المادية الثانية سياق ثانٍ، يكتب الجذر في أحدهما ويقرأ كل مكوّن الآخر. أبقِها إصدارًا واحدًا يعلنه التطبيق.
+
+## ركّب الجذر
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+`Hanzo` هو الشيء الوحيد الذي يركّبه تطبيق. يحمل إعداد gui قيمةً، ويستورد ورقة الأنماط المولَّدة، ويضع السمة — داكنة افتراضيًا، و`theme="light"` لتبديلها. كل مكوّن يرمي خطأً إن لم تكن هناك سمة جذر، فنسيانُها انهيار عند أول رسم، لا صفحة تُرسم بهدوء بلا تنسيق.
+
+في التطوير يتحقق الجذر من أن الورقة وصلت إلى المستند، ويقول ذلك في وحدة التحكم إن لم تصل. الإصلاح الذي يسمّيه استيراد واحد، `@hanzo/ui/styles.css`، لمُجمِّع أسقط ورقة الحزمة نفسها.
+
+## قل للمُجمِّع
+
+يرسم بيان اعتمادات المحرّك اسم `react-native`، وحزمة داخله، `react-native-svg` تحت مجموعة الأيقونات، تنشر مدخلًا أصليًا إلى جانب شقيقة `.web.js`. اختر الأصلي في بناء ويب فيكون الخطأ فشل تحليل في مصدر Flow داخل اعتماد، ويُقرأ كحزمة مكسورة لا كضبط ناقص. ضبطان يمنعان ذلك:
+
+- `react-native` يُحل إلى `react-native-web`.
+- `.web.js` يتقدّم على `.js`.
+
+في Next الاثنان غلاف واحد، `@hanzo/ui/next`. في Vite سطران من `resolve`. في One يفعل الإطار الاثنين سلفًا. في Expo لا شيء يُضبط، لأن Metro يتكلم react-native أصلًا.
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo وReact Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## صيّر شيئًا
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## الخطوط
+
+تشحن الحزمة Zen وZen Mono وتربطهما بـ `--font-sans` و`--font-mono`، فيأخذ المُضيف الذي لا يربط شيئًا الوجوه بلا عمل. والمُضيف الذي له وجهه يضع `--font-sans-provided` فيفوز — انظر [الخطوط](/docs/typography).

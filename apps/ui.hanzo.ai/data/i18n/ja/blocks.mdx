@@ -1,0 +1,113 @@
+---
+title: ブロック
+description: 内容はデータです。ページはブロックのリストで、それぞれが型を名指しし、型がレンダラーを選び、レンダラーが残りを読みます。
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+ブロックはデータです。`blockType` がレンダラーを選び、ほかのフィールドはそのレンダラーへの入力です。ページは CMS で書いても、リポジトリへ入れても、サーバーが産んでもよく、どちらにしても型が付きます。どの `specifiers` フィールドも、レンダラーが読むレイアウトのヒントを空白で区切った袋です。ユニオンではなく文字列なので、サイトはヒントを打つだけで足せ、知らないヒントはビルドを落とさず無視されます。
+
+## ページ
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## 語彙
+
+| 型 | 描くもの |
+| --- | --- |
+| `heading` | 任意のバイライン付きの見出し。`level` が 0 なら段落、1 から 6 ならそのタグ。 |
+| `enh-heading` | 名前の付いた部分。上の前置見出し、見出し、下のバイライン。それぞれにレベルとマージンがある。 |
+| `image` | `ImageDef` からの画像。`src`、`alt`、`dim`。揃えと電話向けのヒントは `specifiers` の中。 |
+| `video` | `VideoDef`。ソース、ポスター、段ごとの大きさ。 |
+| `space` | 間隔の単位での縦の空き。段ごと、または全部に一つの数値。 |
+| `cta` | リンクとボタンの行。`fill`、`left`、`right`、そして電話向けのヒント。 |
+| `card` | タイトルのあるパネル。メディア、内容、行動への呼びかけ。 |
+| `bullet-cards` | 一行のカードのグリッド。それぞれがアイコンと、その横のテキスト。 |
+| `grid` | `cells` の上に載る `GridDef`。段ごとの列と gap を、昇順で。 |
+| `group` | `elements` の上のラッパー。まとめて効くヒントのため。 |
+| `accordian` | トリガーと、その内容。 |
+| `carte-blanche` | 自由なパネル。上に何でも、見出し、下に何でも、脚に行動への呼びかけ。 |
+| `screenful` | 画面ひとつ分。任意のバナーの下に一列から三列、電話での順序付き。 |
+| `element` | 書き手がすでに組んだノード。設計上、レンダラーを持たない。ブロックのページが何でも持てるのは、そのため。 |
+
+どの形も、同じサブパスから型としてエクスポートされます。`HeadingBlock`、`CTABlock`、`ScreenfulBlock` と残りです。共有する定義、`GridDef`、`ImageDef`、`VideoDef`、`LinkDef`、`ButtonDef` も隣にあります。`http` か `mailto` の href を持つ `LinkDef` は、それだけで外部になり、新しいタブで `rel="noreferrer noopener"` 付きで開きます。`external` を書くのは、スキームだけでは判別できないところだけです。
+
+## デバイスは prop
+
+どのレンダラーも、メディアクエリを読む代わりに `agent`、デバイスの区分を取ります。これらのブロックは、最初から正しいマークアップを出さなければならないサーバーで描画されます。電話のレイアウトがデスクトップのマークアップとして届き、ハイドレーションで直ると、目に見える跳びになります。動画のブロックでは、無駄なダウンロードにもなります。
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## 自分の型
+
+型からレンダラーへの対応が、拡張の点です。ホストは自分の型を足すか、既存の一つを置き換えます。Next のアプリが最適化する画像を差し替えるのも、ライブラリが出荷しないものがページへ届くのも、この方法です。
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+`has(specifiers, token)` は、ヒントが袋の中にあるかを答えます。`fit(dim, within)` は、ある縦横比の箱を別の箱の中へ入れたときの、いちばん大きい箱です。どちらも、自分のレンダラーのためにエクスポートされています。[ブロック](/blocks) のカタログは、各レンダラーの例を型の横に描きます。

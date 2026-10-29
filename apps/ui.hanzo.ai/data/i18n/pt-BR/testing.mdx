@@ -1,0 +1,88 @@
+---
+title: Testes
+description: Monte sob a raiz, encontre pelo slot, resolva a cascata você mesmo, e deixe um navegador calcular o resto.
+---
+
+Todo componente carimba um `data-slot` com o seu nome, então um teste pode achar um controle sem depender de marcação que uma versão pode mudar. Monte sob `Hanzo`, do jeito que o app faz; a raiz carrega a config contra a qual cada token resolve, e um componente sem tema na raiz lança um erro.
+
+## Testes de unidade
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+O alias é o mesmo que o bundler carrega. A lista `inline` importa: os pacotes do motor são publicados como CommonJS que reexporta ESM, e deixados externos resolvem para uma segunda cópia do módulo que possui o tema, então o provider escreve um contexto e cada componente tematizado lê outro e lança `Missing theme`.
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## Cores num DOM sem cascata
+
+O jsdom não resolve `var()`; ele entrega ao teste o texto ao pé da letra. Os degraus do tema são escritos `var(--border, rgb(255 255 255 / .10))` de propósito — siga a cascata ao vivo onde uma folha de design está montada, guarde o literal auditado onde não está — então afirmar o contraste de uma borda no jsdom comparava uma cor com uma chamada de função. `substitute` dá o passo que o jsdom não dá.
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+Sem um mapa `vars` isso é exato e não aproximado: o jsdom não monta folha de design, então nada declara `--border`, então o fallback é o que um navegador calcularia nas mesmas condições. Passe um mapa para modelar um host que declara os próprios tokens. O módulo não importa nada e sai nos dois formatos, então carrega sob qualquer runner.
+
+## O que um navegador calculou
+
+Um build, um typecheck e um teste de unidade passam todos numa folha de estilos que nunca chegou à página. A prova é um navegador: faça o build do app, sirva-o, e afirme estilos computados em vez das alegações da marcação.
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+É assim que o pacote testa a si mesmo. A galeria dele é uma lista de cada componente em cada variante; o gerador da folha de estilos renderiza essa lista, um teste de unidade a renderiza sob o provider real e confere se cada marcador de slot chegou, e um teste de consumidor empacota o tarball, instala-o num app fora do repositório — nunca um link de workspace, que resolve através da árvore de código e esconde um arquivo ausente do tarball — faz o build, e afirma estilos computados e screenshots em 390 e 1280 nos dois temas. Um link de workspace teria publicado cada um dos defeitos que esse teste existe para pegar.

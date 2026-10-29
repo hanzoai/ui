@@ -1,0 +1,98 @@
+---
+title: टाइपोग्राफी
+description: Zen और Zen Mono, एक अक्षर-सीढ़ी जिसे हर कंपोनेंट पढ़ता है, और उस पाठ के लिए एक गद्य कंटेनर जो आपने नहीं लिखा।
+---
+
+## चेहरे
+
+Zen पढ़ने का चेहरा है; Zen Mono कोड, पहचानकर्ताओं और किसी भी संख्या के लिए
+है। दोनों पैकेज के साथ आते हैं और दो कस्टम प्रॉपर्टी से बँधे हैं जो चेहरे
+का नहीं, भूमिका का नाम लेती हैं:
+
+```css
+--font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+--font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
+```
+
+कंपोनेंट दोनों चर पढ़ते हैं, परिवार का नाम कभी नहीं। जो होस्ट अपना चेहरा
+चाहता है वह `--font-sans-provided` बाँधता है; पैकेज का अपना बंधन एक कैस्केड
+लेयर में बैठता है ताकि होस्ट का बिना लेयर वाला जीत जाए। जो कुछ नहीं बाँधता
+उसे Zen मिलता है।
+
+<Preview>
+  <YStack gap="$2">
+    <Text fontSize="$8" fontWeight="600">The quick brown fox jumps over the lazy dog</Text>
+    <Text fontSize="$4" color="$color11">Zen at the section and body rungs, tracked and leaded for the size.</Text>
+    <Text fontFamily="$mono" fontSize="$3">pnpm add @hanzo/ui — Zen Mono for code and numbers 0123456789</Text>
+  </YStack>
+</Preview>
+
+## सीढ़ी
+
+एक ही अक्षर-सीढ़ी है और हर कंपोनेंट उस पर है। `Text` `fontSize="$n"` लेता
+है, उस डंडे की लीडिंग और ट्रैकिंग के साथ; शीर्षक और `Paragraph`
+`size="$n"` लेते हैं और तीनों साथ लगाते हैं।
+
+```tsx
+import { H1, H2, Paragraph, SizableText, Text } from '@hanzo/ui'
+
+<H1>A page title</H1>
+<H2 size="$6">A section</H2>
+<Paragraph size="$4">Body copy at the base rung.</Paragraph>
+<SizableText size="$2" color="$color11">A label.</SizableText>
+<Text fontFamily="$mono" fontSize="$2">an identifier</Text>
+```
+
+अंक कभी नहीं। `fontSize={14}` 14 पर अटका है; `fontSize="$3"` आज 14 है और
+कल वह जो व्यक्ति की टाइप स्केल उससे बनाए, क्योंकि डंडा `var(--text-base)`
+से सुलझता है और घुंडी सीढ़ी को गुणा करती है। [थीम](/docs/theming) पृष्ठ पर
+तालिका है।
+
+## गद्य
+
+रचित सामग्री — एक CMS फ़ील्ड, एक Markdown फ़ाइल, किसी ब्लॉक का मुख्य भाग —
+नंगे टैग बनकर आती है। उसके अंदर कुछ भी प्रॉप नहीं ले जा सकता, इसलिए स्टाइल
+किसी पूर्वज से आनी है और टैग के ज़रिए नीचे पहुँचनी है। `ApplyTypography`
+वही पूर्वज है।
+
+```tsx
+import { ApplyTypography } from '@hanzo/ui'
+
+<ApplyTypography size="base">
+  <h2>Install</h2>
+  <p>
+    Add the package, then wrap the app once at the root. The full guide is
+    at <a href="https://ui.hanzo.ai">ui.hanzo.ai</a>.
+  </p>
+  <pre>
+    <code>{"pnpm add @hanzo/ui\npnpm dev"}</code>
+  </pre>
+  <ol>
+    <li>
+      Render <strong>Hanzo</strong> once, around the whole tree.
+    </li>
+    <li>
+      Import <code>Button</code> or any other component from the same
+      package.
+    </li>
+    <li>Pass it the props its type declares.</li>
+  </ol>
+  <blockquote>
+    Components read their colours from the theme, so a token changed there
+    changes every surface at once.
+  </blockquote>
+</ApplyTypography>
+```
+
+<Preview>
+  <ProseBlocks />
+</Preview>
+
+`size` डिफ़ॉल्ट रूप से `responsive` है — वह एक डंडा जो व्यूपोर्ट के साथ
+चलता है — या `sm`, `base`, `lg`, `xl`, जो टिके रहते हैं, क्योंकि आकार जो
+कॉलर ने चुना वह निर्णय है, सुझाव नहीं। `asTag` तत्व चुनता है, इनमें से कोई
+भी: `div`, `section`, `nav`, `main`, `article`, `aside`। नियम स्टाइलशीट
+में `.hz-prose` के नीचे रहते हैं, नाम-स्थान ऐसा कि जो साइट किसी और
+टाइपोग्राफी प्लगइन से आधी उतरी हो उसके एक सेलेक्टर पर दो शीट न लड़ें।
+[गद्य](/ui/prose) पृष्ठ हर डंडा रेंडर करता है, और एक कंटेनर के अंदर घुसा
+कंटेनर भी।

@@ -1,5 +1,6 @@
 'use client'
 
+import { createContext, useContext, type ComponentProps, type ReactNode } from 'react'
 /**
  * Dialog — modal surface, flattened from @hanzogui/dialog's compound parts.
  *
@@ -18,10 +19,11 @@
  */
 import { Dialog as GuiDialog, XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
-import { createContext, useContext, type ComponentProps, type ReactNode } from 'react'
+
+import { useTranslate } from '../../i18n/react'
 import { PortalTheme, useThemeName } from '../../product/menu/portal-theme'
-import { slot } from './slot'
 import { touch } from './gesture'
+import { slot } from './slot'
 
 const PAD = 24
 
@@ -47,7 +49,12 @@ export const frame = (size: DialogSize) =>
     borderWidth: 0,
     p: 0,
     gap: 0,
-    style: size === 'fullscreen' ? undefined : { boxShadow: 'var(--shadow-floating, 0 24px 60px -16px rgb(0 0 0 / .75))' },
+    style:
+      size === 'fullscreen'
+        ? undefined
+        : {
+            boxShadow: 'var(--shadow-floating, 0 24px 60px -16px rgb(0 0 0 / .75))',
+          },
   }) as const
 
 /** The scrim under a sized dialog: black at 72%, opaque layer. */
@@ -73,14 +80,7 @@ export type DialogOverlayProps = ComponentProps<typeof GuiDialog.Overlay> & {
   zIndex?: number
 } & { [attr: `data-${string}`]: string | undefined }
 
-const DialogOverlay = (props: DialogOverlayProps) => (
-  <GuiDialog.Overlay
-    {...slot('dialog-overlay')}
-    bg="rgba(0,0,0,0.5)"
-    opacity={0.5}
-    {...props}
-  />
-)
+const DialogOverlay = (props: DialogOverlayProps) => <GuiDialog.Overlay {...slot('dialog-overlay')} bg="rgba(0,0,0,0.5)" opacity={0.5} {...props} />
 
 export type DialogContentProps = ComponentProps<typeof GuiDialog.Content> & {
   showCloseButton?: boolean
@@ -98,32 +98,14 @@ export type DialogContentProps = ComponentProps<typeof GuiDialog.Content> & {
   size?: DialogSize
 }
 
-const DialogContent = ({
-  showCloseButton = true,
-  overlay,
-  size,
-  children,
-  ...props
-}: DialogContentProps) => {
+const DialogContent = ({ showCloseButton = true, overlay, size, children, ...props }: DialogContentProps) => {
+  const tr = useTranslate()
   const themeName = useThemeName()
   return (
     <GuiDialog.Portal>
       <PortalTheme name={themeName}>
         <DialogOverlay {...(size ? scrim : null)} {...overlay} />
-        <GuiDialog.Content
-          {...slot('dialog-content')}
-          {...(size ? { 'data-size': size } : null)}
-          bg="$background"
-          borderWidth={1}
-          borderColor="$borderColor"
-          rounded="$5"
-          p={PAD}
-          gap="$4"
-          width="100%"
-          maxW={512}
-          {...(size ? frame(size) : null)}
-          {...props}
-        >
+        <GuiDialog.Content {...slot('dialog-content')} {...(size ? { 'data-size': size } : null)} bg="$background" borderWidth={1} borderColor="$borderColor" rounded="$5" p={PAD} gap="$4" width="100%" maxW={512} {...(size ? frame(size) : null)} {...props}>
           <Sized.Provider value={size ?? null}>{children}</Sized.Provider>
           {showCloseButton ? (
             <GuiDialog.Close asChild>
@@ -140,7 +122,7 @@ const DialogContent = ({
                 cursor="pointer"
                 opacity={0.7}
                 hoverStyle={{ opacity: 1 }}
-                aria-label="Close"
+                aria-label={tr('Close')}
               >
                 <X size={16} />
               </XStack>
@@ -152,7 +134,9 @@ const DialogContent = ({
   )
 }
 
-export type DialogSectionProps = ComponentProps<typeof YStack> & { children?: ReactNode }
+export type DialogSectionProps = ComponentProps<typeof YStack> & {
+  children?: ReactNode
+}
 
 /** The three sections of a sized frame, as the source kit pads them. */
 export const section = {
@@ -160,7 +144,12 @@ export const section = {
   body: { px: PAD, pb: PAD },
   footer: { px: PAD, pb: PAD, mt: 'auto', flexWrap: 'wrap', gap: '$2' },
   title: { size: '$4', fontWeight: '600', textAlign: 'center' },
-  description: { size: '$2', lineHeight: 20, textAlign: 'center', color: '$aside' },
+  description: {
+    size: '$2',
+    lineHeight: 20,
+    textAlign: 'center',
+    color: '$aside',
+  },
 } as const
 
 const DialogHeader = (props: DialogSectionProps) => {
@@ -169,9 +158,7 @@ const DialogHeader = (props: DialogSectionProps) => {
 }
 
 /** A sized dialog's middle: what the dialog is for, inset at the sides and foot. */
-const DialogBody = (props: DialogSectionProps) => (
-  <YStack {...slot('dialog-body')} {...section.body} {...props} />
-)
+const DialogBody = (props: DialogSectionProps) => <YStack {...slot('dialog-body')} {...section.body} {...props} />
 
 const DialogFooter = (props: ComponentProps<typeof XStack>) => {
   const sized = useContext(Sized)
@@ -188,16 +175,4 @@ const DialogDescription = (props: ComponentProps<typeof GuiDialog.Description>) 
   return <GuiDialog.Description {...slot('dialog-description')} size="$2" color="$quiet" {...(sized ? section.description : null)} {...props} />
 }
 
-export {
-  Dialog,
-  DialogBody,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogOverlay,
-  DialogPortal,
-  DialogTitle,
-  DialogTrigger,
-}
+export { Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger }

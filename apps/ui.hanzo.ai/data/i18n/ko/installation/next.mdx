@@ -1,0 +1,61 @@
+---
+title: Next
+description: 두 번들러를 위한 래퍼 하나, 그리고 클라이언트 경계 안의 루트.
+---
+
+## 프로젝트 만들기
+
+```bash
+pnpm create next-app@latest my-app --typescript --app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## 설정 감싸기
+
+```js title="next.config.js"
+const withGui = require('@hanzo/ui/next')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = withGui(nextConfig, __dirname)
+```
+
+`withGui` 는 webpack 과 Turbopack 양쪽을 위해 세 가지를 설정합니다. `.web.*` 이 먼저 풀리고, `react-native` 는 `react-native-web` 이 되고, `node_modules` 안의 모든 `@hanzogui/*` 패키지가 트랜스파일되므로 앞의 둘이 그 안까지 닿습니다. 이미 있는 것과 합성합니다. 기존 `webpack()` 훅, Turbopack 설정, `transpilePackages` 는 남긴 채 넓힙니다. `__dirname` 을 넘기면 패키지는 태스크 러너가 있는 곳이 아니라 앱 자신의 `node_modules` 에서 발견됩니다.
+
+두 번들러에 대해 한 번만 선언합니다. webpack 전용 설정은 Turbopack 아래서 말없이 빠지고, 그러면 `next dev` 와 `next build` 가 앱이 컴파일되는지를 두고 어긋납니다.
+
+## 루트 마운트
+
+루트는 클라이언트 컴포넌트이므로 지시문이 있는 파일에 두고, 레이아웃이 그것을 렌더합니다.
+
+```tsx title="app/providers.tsx"
+'use client'
+
+import { Hanzo } from '@hanzo/ui'
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+```tsx title="app/layout.tsx"
+import { Providers } from './providers'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+`html` 의 `suppressHydrationWarning` 은 React 가 마운트하기 전에 토글이 거기에 쓰는 테마 클래스를 위한 것입니다. [다크 모드](/docs/dark-mode) 를 보세요.
+
+## 서버 컴포넌트
+
+`@hanzo/ui` 아래는 모두 클라이언트 경계입니다. 서버 컴포넌트는 다른 클라이언트 컴포넌트와 같이 임포트해서 렌더합니다. 컴포넌트가 붙지 않은 규칙, `pages`, `masked`, `tone`, `resolveBrand` 는 `@hanzo/ui/product/pure` 에 있고 아무것도 임포트하지 않습니다. 서버 컴포넌트나 라우트 핸들러는 컴포넌트 트리를 불러오지 않고 호출할 수 있습니다.

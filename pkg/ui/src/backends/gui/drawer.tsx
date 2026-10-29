@@ -17,6 +17,7 @@ import * as React from 'react'
 
 import { Box, type BoxProps } from '../../box'
 import { cn } from '../../core/cn'
+import { useTranslate } from '../../i18n/react'
 
 /** A height: `'620px'`, or a fraction of the viewport. */
 export type SnapPoint = number | string
@@ -67,26 +68,12 @@ const useDrawer = (): Ctx => {
 }
 
 /** A snap point in pixels. A number is a fraction of the viewport. */
-const px = (p: SnapPoint, viewport: number): number =>
-  typeof p === 'number' ? p * viewport : parseFloat(p) || 0
+const px = (p: SnapPoint, viewport: number): number => (typeof p === 'number' ? p * viewport : parseFloat(p) || 0)
 
 /** A flick: fast enough that where it was pointing matters more than where it stopped. */
 const FLICK = 0.5 // px per ms
 
-export const Drawer = ({
-  open = false,
-  onOpenChange,
-  modal = true,
-  snapPoints,
-  activeSnapPoint,
-  setActiveSnapPoint,
-  dragHandleOnly = false,
-  fastDragSkipsToEnd = true,
-  handleHandleClicked,
-  handleCloseGesture,
-  extendHandleDragRegion = false,
-  children,
-}: DrawerProps) => {
+export const Drawer = ({ open = false, onOpenChange, modal = true, snapPoints, activeSnapPoint, setActiveSnapPoint, dragHandleOnly = false, fastDragSkipsToEnd = true, handleHandleClicked, handleCloseGesture, extendHandleDragRegion = false, children }: DrawerProps) => {
   // The viewport is only known in a browser, and a fractional snap point needs
   // it. Zero on the server means those resolve to zero and the sheet renders
   // closed, which is the right thing to send.
@@ -102,10 +89,7 @@ export const Drawer = ({
   const heights = points.map((p) => px(p, viewport))
   const tallest = Math.max(...heights, 0)
 
-  const activePx =
-    activeSnapPoint !== undefined && activeSnapPoint !== null
-      ? px(activeSnapPoint, viewport)
-      : tallest
+  const activePx = activeSnapPoint !== undefined && activeSnapPoint !== null ? px(activeSnapPoint, viewport) : tallest
 
   const [offset, setOffset] = React.useState(0)
   const [dragging, setDragging] = React.useState(false)
@@ -184,12 +168,13 @@ export const Drawer = ({
  * misses.
  */
 export const DrawerHandle = ({ className, ...props }: React.ComponentProps<typeof Box>) => {
+  const tr = useTranslate()
   const { drag, handleHandleClicked, extendHandleDragRegion } = useDrawer()
   return (
     <Box
       role="separator"
       aria-orientation="horizontal"
-      aria-label="Resize"
+      aria-label={tr('Resize')}
       className={cn('grid place-items-center cursor-grab', className)}
       style={{
         paddingBlock: extendHandleDragRegion ? 20 : 8,
@@ -211,12 +196,7 @@ export const DrawerHandle = ({ className, ...props }: React.ComponentProps<typeo
  * wrapping it in a button — a button inside a button is invalid markup and a
  * keyboard reaches only the outer one.
  */
-export const DrawerTrigger = ({
-  asChild,
-  children,
-  onClick,
-  ...props
-}: BoxProps<'button'> & { asChild?: boolean }) => {
+export const DrawerTrigger = ({ asChild, children, onClick, ...props }: BoxProps<'button'> & { asChild?: boolean }) => {
   const { onOpenChange } = useDrawer()
   const open = (e: React.MouseEvent) => {
     onOpenChange?.(true)
@@ -243,15 +223,8 @@ export type DrawerContentProps = React.ComponentProps<typeof Box> & {
   onOpenAutoFocus?: (e: Event) => void
 }
 
-export const DrawerContent = ({
-  className,
-  children,
-  defaultHandle = true,
-  onOpenAutoFocus,
-  ...props
-}: DrawerContentProps) => {
-  const { open, modal, heights, active, offset, dragging, onOpenChange, dragHandleOnly, drag } =
-    useDrawer()
+export const DrawerContent = ({ className, children, defaultHandle = true, onOpenAutoFocus, ...props }: DrawerContentProps) => {
+  const { open, modal, heights, active, offset, dragging, onOpenChange, dragHandleOnly, drag } = useDrawer()
 
   // A modal sheet that does not take focus leaves the keyboard behind it, on
   // a page the sheet is covering. Held in a ref so an inline handler does not
@@ -280,7 +253,12 @@ export const DrawerContent = ({
           // does dismiss — which is why the sheet also closes on Escape below.
           aria-hidden="true"
           onClick={() => onOpenChange?.(false)}
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 50 }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,.5)',
+            zIndex: 50,
+          }}
         />
       )}
       <Box

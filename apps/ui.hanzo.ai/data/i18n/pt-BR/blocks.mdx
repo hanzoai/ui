@@ -1,0 +1,113 @@
+---
+title: Blocos
+description: Conteúdo como dados. Uma página é uma lista de blocos; cada um nomeia o seu tipo, o tipo escolhe o renderizador, e o renderizador lê o resto.
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+Um bloco é dado: `blockType` escolhe o renderizador e os outros campos são a entrada desse renderizador. Então uma página pode ser escrita num CMS, commitada num repositório ou produzida por um servidor, e é tipada de qualquer jeito. Cada campo `specifiers` é um saco separado por espaços de dicas de layout que o renderizador lê; é uma string e não uma união, então um site acrescenta uma dica digitando-a, e uma dica desconhecida é ignorada em vez de falhar o build.
+
+## Uma página
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## O vocabulário
+
+| Tipo | O que desenha |
+| --- | --- |
+| `heading` | Um título com uma linha de apoio opcional, `level` 0 para um parágrafo e 1 a 6 para as tags. |
+| `enh-heading` | As partes nomeadas: um pré-título acima, o título, uma linha de apoio abaixo, cada um com o próprio nível e margem. |
+| `image` | Uma imagem a partir de um `ImageDef` — `src`, `alt`, `dim` — com alinhamento e dicas de telefone em `specifiers`. |
+| `video` | Um `VideoDef`: fontes, um poster, dimensionamento por degrau. |
+| `space` | Espaço vertical em unidades de espaçamento, por degrau ou um número para todos. |
+| `cta` | Uma fileira de links e botões: `fill`, `left`, `right`, e as dicas de telefone. |
+| `card` | Um painel titulado com mídia, conteúdo e uma chamada para ação. |
+| `bullet-cards` | Uma grade de cards de uma linha, cada um um ícone ao lado do texto. |
+| `grid` | Um `GridDef` — colunas e gap por degrau, em ordem crescente — sobre `cells`. |
+| `group` | Um wrapper sobre `elements`, para dicas que valem para o conjunto. |
+| `accordian` | Gatilhos e o conteúdo deles. |
+| `carte-blanche` | Um painel livre: qualquer coisa acima, um título, qualquer coisa abaixo, uma chamada para ação no pé. |
+| `screenful` | Uma tela cheia: um banner opcional sobre uma a três colunas, com uma ordem no telefone. |
+| `element` | Um nó que o autor já construiu. Não tem renderizador, de propósito, e é isso que deixa uma página de blocos conter qualquer coisa. |
+
+Cada forma é exportada como um tipo do mesmo subpath — `HeadingBlock`, `CTABlock`, `ScreenfulBlock` e o resto — ao lado das definições que elas compartilham: `GridDef`, `ImageDef`, `VideoDef`, `LinkDef`, `ButtonDef`. Um `LinkDef` com um href `http` ou `mailto` é externo por si e abre numa nova aba com `rel="noreferrer noopener"`; declare `external` só onde o esquema não consegue dizer.
+
+## O dispositivo é uma prop
+
+Todo renderizador recebe `agent`, a classe do dispositivo, em vez de ler uma media query. Esses blocos renderizam num servidor que tem de emitir a marcação certa na primeira vez: um layout de telefone que chega como marcação de desktop e se corrige na hidratação é um salto visível, e para os blocos de vídeo um download desperdiçado.
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## Os seus próprios tipos
+
+O mapa de tipo para renderizador é o ponto de extensão. Um host acrescenta um tipo próprio, ou substitui um — que é como um app Next troca a imagem pela versão que otimiza, e como qualquer coisa que a biblioteca não traz chega à página.
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+`has(specifiers, token)` responde se uma dica está num saco, e `fit(dim, within)` é a maior caixa de uma proporção dentro de outra; os dois são exportados para um renderizador seu. O catálogo [Blocos](/blocks) renderiza os exemplos de cada renderizador ao lado dos tipos.

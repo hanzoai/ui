@@ -1,0 +1,80 @@
+---
+title: Tauri
+description: Une vue web par-dessus un build Vite. La mise en place Vite, et une bascule de thème qui n'a besoin d'aucun framework.
+---
+
+Une app Tauri est une app Vite dans une fenêtre native, donc la mise en place
+web est toute la mise en place : l'alias, l'ordre des extensions et la racine
+sont ceux de la page [Vite](/docs/installation/vite).
+
+## Créer le projet
+
+```bash
+pnpm create tauri-app@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Configurer Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  clearScreen: false,
+  server: { port: 1420, strictPort: true },
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+`server.port` et `clearScreen` sont les conventions propres à Tauri pour la
+fenêtre de développement ; le bloc `resolve` est celui de la bibliothèque.
+
+## Monter la racine
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+## La bascule de thème sans framework
+
+`ThemeToggle`, depuis `@hanzo/ui/product`, marche sans aucune dépendance de
+framework. Contrôlée, elle dessine le bouton et annonce le thème suivant ;
+l'app garde la valeur et la remet à la racine.
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App() {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+    </Hanzo>
+  )
+}
+```
+
+La liaison Next de la même bascule vit sur son propre subpath,
+`@hanzo/ui/product/theme-toggle-next`, précisément pour qu'un hôte Tauri,
+Vite ou Express n'entraîne jamais Next dans son graphe en important la couche
+produit.

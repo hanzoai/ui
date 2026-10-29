@@ -1,0 +1,159 @@
+---
+title: Journal des modifications
+description: Ce que chaque version a changé, à partir des commits qui l'ont publiée.
+---
+
+Les versions se coupent en montant la version du paquet sur `main` ; chaque
+entrée ci-dessous est le sujet du commit qui l'a fait.
+
+## 8.27
+
+| Version | Changement |
+| --- | --- |
+| 8.27.10 | Porte quarante et un composants sur le backend gui. |
+| 8.27.9 | Un écart de grille nommé comme token valait toujours 12px. `gap="$4"` sur une grille lit maintenant `var(--space-4)`, donc l'échelle du document répond et un changement de densité déplace chaque grille. |
+| 8.27.8 | Rend la documentation de chaque module depuis le paquet lui-même. Le catalogue de ce site lit les barrels, cite les types de chaque module et rend ses exemples à côté de leur source. |
+| 8.27.7 | Box garde les parties de tableau sur leurs valeurs de display de tableau. |
+| 8.27.6 | Box porte transition et text-overflow comme style sur le chemin de la balise. |
+| 8.27.4 | Parts, Backdrop et Persona ; un backdrop peint derrière la conversation. |
+| 8.27.3 | L'anneau entoure tout le compositeur, pas le champ à l'intérieur. |
+| 8.27.2 | Énonce une version une seule fois ; prend les signes de marque dans un jeu de marques ; donne à chaque dépendance une seule version ; fournit le peer SVG web et dérive les deux entrées node ; fait de l'entité légale une valeur que le site énonce. |
+| 8.27.1 | Le sélecteur de modèle prend sa propre largeur. |
+
+## 8.25
+
+| Version | Changement |
+| --- | --- |
+| 8.25.1 | Une seule génération de gui dans l'arbre. |
+| 8.25.0 | Porte la frontière client de chaque module dans sa sortie ; une version par paquet sur la release en cours ; aligne un panneau de liste déroulante sur son déclencheur. |
+
+## 8.24
+
+| Version | Changement |
+| --- | --- |
+| 8.24.1 | Slot, et les dix premiers composants écrits dans le vocabulaire propre de gui. |
+
+## 8.23
+
+| Version | Changement |
+| --- | --- |
+| 8.23.6 | Déclare hz-nav-menu-trigger, et exige une règle derrière chaque nom de classe. |
+| 8.23.4 | Listes de prose, panneaux de code, `size-*`, et des icônes qui gardent leur largeur. |
+| 8.23.2 | Trois choses qu'une classe n'atteignait pas, et une qu'elle ne devrait pas avoir à atteindre. |
+
+## 8.22
+
+| Version | Changement |
+| --- | --- |
+| 8.22.1 | Une tuile snap dispose ce qu'elle contient, et les titres prennent un rythme. |
+
+## 8.21
+
+| Version | Changement |
+| --- | --- |
+| 8.21.0 | Un écran plein fait la hauteur d'un écran quand il a de quoi en remplir un. |
+
+## 8.19
+
+| Version | Changement |
+| --- | --- |
+| 8.19.2 | Une mesure, et les trois choses qui, en silence, ne faisaient rien. |
+
+## 8.17
+
+| Version | Changement |
+| --- | --- |
+| 8.17.1 | `tw` lit `space-y` et `space-x` comme l'écart de l'axe. |
+| 8.17.0 | La feuille énonce le fond de l'élément ; un lien en variante bouton est un bouton. |
+
+## 8.15
+
+| Version | Changement |
+| --- | --- |
+| 8.15.0 | La notation de classes marche sur chaque composant, pas sur la moitié. |
+
+## 8.14
+
+| Version | Changement |
+| --- | --- |
+| 8.14.6 | Box : l'élément l'emporte sur chaque nom partagé, une fois calculé. |
+| 8.14.4 | `css` : notation de classes pour un composant qui n'est ni le nôtre ni un élément. |
+| 8.14.1 | Box installe la config gui. |
+| 8.14.0 | `DrawerTrigger` ; la vue de travail des agents, ce sont cinq composants que n'importe qui peut composer. |
+
+## 8.13
+
+| Version | Changement |
+| --- | --- |
+| 8.13.3 | L'API de carrousel qu'un consommateur conduit vraiment, et le nom d'un bouton. |
+| 8.13.0 | `Sheet` — un dialogue qui arrive depuis un bord. |
+
+## 8.12
+
+| Version | Changement |
+| --- | --- |
+| 8.12.3 | `cn`, `tw`, `sx` et les types sont appelables depuis un composant serveur. |
+| 8.12.0 | `@hanzo/ui/next` — les alias web, pour les deux bundlers. |
+
+## 8.11
+
+| Version | Changement |
+| --- | --- |
+| 8.11.2 | Garde les nouveaux composants dans l'espace de noms des classes. |
+| 8.11.1 | Fermeture du drawer au geste, un point de snap non décidé, le focus à l'ouverture. |
+| 8.11.0 | Alignement et autoplay du carrousel. |
+
+## 8.10
+
+| Version | Changement |
+| --- | --- |
+| 8.10.1 | Les six composants que le chrome d'un site demandait encore à la 5.x. |
+
+## 8.9
+
+| Version | Changement |
+| --- | --- |
+| 8.9.3 | Commerce quitte la ligne 5.x. |
+| 8.9.2 | Pose les flèches du carrousel par-dessus le carrousel. |
+| 8.9.1 | Régénère les points d'entrée des primitifs, un par membre. |
+| 8.9.0 | Carrousel, skeleton et pile de médias, et le CSS dont ils ont besoin. |
+
+## 8.8
+
+| Version | Changement |
+| --- | --- |
+| 8.8.0 | `Form` et `capitalize` — les deux dernières choses que la 5.x avait et que la 8.x n'avait pas. |
+
+## 8.7
+
+| Version | Changement |
+| --- | --- |
+| 8.7.5 | Exporte `ClassValue` à côté de `cn`. |
+| 8.7.4 | `cn` possède l'aplatisseur, et clsx part avec lui. |
+| 8.7.3 | `tw` : un interligne écrit en nombre est une longueur, et doit le dire. |
+| 8.7.2 | `tw` : la hauteur de ligne qu'une taille nommée demande doit se résoudre. |
+| 8.7.1 | `tw` : `bg-` est une couleur ou une sous-propriété de fond. |
+| 8.7.0 | `sx` est public — le pendant de `Box`, pour les composants. |
+
+## 8.6
+
+| Version | Changement |
+| --- | --- |
+| 8.6.2 | `tw` : une taille de texte arbitraire règle aussi sa hauteur de ligne. |
+| 8.6.1 | La prose est une grille, et son axe en ligne est justify. |
+| 8.6.0 | `tw` : grid est une notation dans laquelle on peut finir une disposition. |
+
+## 8.5
+
+| Version | Changement |
+| --- | --- |
+| 8.5.2 | `tw` : une valeur de tracking arbitraire, et le décalage du soulignement. |
+| 8.5.1 | `tw` : une valeur de texte arbitraire est une taille quand c'est une longueur. |
+| 8.5.0 | Blocs : le contenu comme données, sur la bibliothèque canonique. |
+
+## 8.4
+
+| Version | Changement |
+| --- | --- |
+| 8.4.13 | Les paquets gui avancent en un seul train, en 8.2.1. |
+| 8.4.12 | Une entrée node, parce qu'une feuille de styles n'est pas un module que node peut charger. |

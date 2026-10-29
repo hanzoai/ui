@@ -1,0 +1,87 @@
+---
+title: Kurulum
+description: Paketi kurun, kökü monte edin ve bundler’a tek bir şey söyleyin.
+---
+
+Kurulum her host’ta aynıdır. Değişen tek parça, bundler ayarının nereye girdiğidir ve her host’un bunun için bir sayfası vardır.
+
+## Kurun
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` ve `react-dom`, 19 veya sonrası bir peer’dır. `@hanzo/gui` bilerek bir peer’dır: bir React bağlamı dağıtır ve ikinci bir fiziksel kopya ikinci bir bağlam olur; kök birine yazarken her bileşen diğerini okur. Uygulamanın bildirdiği tek bir sürümde tutun.
+
+## Kökü monte edin
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+Bir uygulamanın monte ettiği tek şey `Hanzo`’dur. Gui yapılandırmasını bir değer olarak taşır, üretilmiş stil sayfasını içe aktarır ve temayı kurar — varsayılan koyu, değiştirmek için `theme="light"`. Kök teması olmayan her bileşen hata fırlatır, bu yüzden onu unutmak ilk boyamada bir çökmedir, sessizce stillenmeden çizilen bir sayfa değil.
+
+Geliştirmede kök, stil sayfasının belgeye ulaşıp ulaşmadığına bakar ve ulaşmadıysa konsola söyler. Adını verdiği düzeltme tek bir import’tur, `@hanzo/ui/styles.css`, paketin kendi sayfasını düşüren bir bundler için.
+
+## Bundler’a söyleyin
+
+Motorun bağımlılık grafı `react-native` adını taşır ve içindeki bir paket, ikon kümesinin altındaki `react-native-svg`, bir `.web.js` kardeşinin yanında yerel bir giriş yayımlar. Web derlemesinde yereli seçerseniz hata, bir bağımlılığın içindeki Flow kaynağında bir ayrıştırma hatasıdır ve eksik bir ayar değil, bozuk bir paket gibi okunur. İki ayar bunu önler:
+
+- `react-native`, `react-native-web` olarak çözülür.
+- `.web.js`, `.js` karşısında önde gelir.
+
+Next’te ikisi tek bir sarmalayıcıdır, `@hanzo/ui/next`. Vite’ta `resolve` içinde iki satırdır. One’da framework ikisini de zaten yapar. Expo’da kurulacak bir şey yoktur, çünkü Metro react-native’i yerli dilinde konuşur.
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo ve React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## Bir şey render edin
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## Yazı tipleri
+
+Paket Zen ve Zen Mono’yu getirir ve onları `--font-sans` ile `--font-mono`’ya bağlar, bu yüzden hiçbir şey bağlamayan bir host yüzleri iş yapmadan alır. Kendi yüzü olan bir host `--font-sans-provided` koyar ve kazanır — bkz. [Tipografi](/docs/typography).

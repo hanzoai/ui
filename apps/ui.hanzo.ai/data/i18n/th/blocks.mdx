@@ -1,0 +1,113 @@
+---
+title: บล็อก
+description: เนื้อหาเป็นข้อมูล หน้าคือรายการของบล็อก แต่ละอันบอกชนิด ชนิดเลือกตัวเรนเดอร์ และตัวเรนเดอร์อ่านที่เหลือ
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+บล็อกคือข้อมูล `blockType` เลือกตัวเรนเดอร์ และฟิลด์อื่นเป็นอินพุตของตัวเรนเดอร์นั้น ดังนั้นหน้าเขียนใน CMS ได้ เช็คอินเข้าที่เก็บได้ หรือให้เซิร์ฟเวอร์ผลิตได้ และมีชนิดไม่ว่าทางใด ทุกฟิลด์ `specifiers` เป็นถุงของคำใบ้การจัดวางคั่นด้วยช่องว่างที่ตัวเรนเดอร์อ่าน มันเป็นสตริงไม่ใช่ยูเนียน ดังนั้นไซต์เพิ่มคำใบ้ด้วยการพิมพ์ และคำใบ้ที่ไม่รู้จักถูกเพิกเฉย ไม่ใช่ทำให้บิลด์พัง
+
+## หน้าหนึ่ง
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## คำศัพท์
+
+| ชนิด | สิ่งที่วาด |
+| --- | --- |
+| `heading` | หัวเรื่องพร้อมบรรทัดรองที่เลือกได้ `level` 0 สำหรับย่อหน้า และ 1 ถึง 6 สำหรับแท็ก |
+| `enh-heading` | ส่วนที่ถูกตั้งชื่อ หัวนำด้านบน หัวเรื่อง บรรทัดรองด้านล่าง แต่ละส่วนมีระดับและมาร์จินของตัวเอง |
+| `image` | ภาพจาก `ImageDef` — `src`, `alt`, `dim` — พร้อมการจัดแนวและคำใบ้โทรศัพท์ใน `specifiers` |
+| `video` | `VideoDef` แหล่ง โปสเตอร์ ขนาดต่อขั้น |
+| `space` | ที่ว่างแนวตั้งในหน่วยระยะ ต่อขั้น หรือตัวเลขเดียวสำหรับทั้งหมด |
+| `cta` | แถวของลิงก์และปุ่ม `fill`, `left`, `right` และคำใบ้โทรศัพท์ |
+| `card` | แผงมีชื่อพร้อมสื่อ เนื้อหา และคำเรียกให้ทำ |
+| `bullet-cards` | กริดของการ์ดบรรทัดเดียว แต่ละใบเป็นไอคอนข้างข้อความ |
+| `grid` | `GridDef` — คอลัมน์และช่องว่างต่อขั้น ตามลำดับจากน้อยไปมาก — บน `cells` |
+| `group` | ตัวหุ้มบน `elements` สำหรับคำใบ้ที่ใช้กับทั้งชุด |
+| `accordian` | ตัวกระตุ้นและเนื้อหาของพวกมัน |
+| `carte-blanche` | แผงอิสระ อะไรก็ได้ด้านบน หัวเรื่อง อะไรก็ได้ด้านล่าง คำเรียกให้ทำที่เท้า |
+| `screenful` | เต็มหนึ่งจอ แบนเนอร์ที่เลือกได้บนหนึ่งถึงสามคอลัมน์ พร้อมลำดับบนโทรศัพท์ |
+| `element` | โหนดที่ผู้เขียนสร้างไว้แล้ว มันไม่มีตัวเรนเดอร์ โดยตั้งใจ และนั่นคือสิ่งที่ให้หน้าของบล็อกถืออะไรก็ได้ |
+
+ทุกรูปถูกส่งออกเป็นชนิดจากซับพาธเดียวกัน — `HeadingBlock`, `CTABlock`, `ScreenfulBlock` และที่เหลือ — ข้างนิยามที่พวกมันใช้ร่วม `GridDef`, `ImageDef`, `VideoDef`, `LinkDef`, `ButtonDef` `LinkDef` ที่มี href เป็น `http` หรือ `mailto` เป็นภายนอกเองและเปิดแท็บใหม่ด้วย `rel="noreferrer noopener"` ระบุ `external` เฉพาะที่ที่สกีมบอกเองไม่ได้
+
+## อุปกรณ์เป็นพร็อพ
+
+ทุกตัวเรนเดอร์รับ `agent` คือชั้นของอุปกรณ์ แทนการอ่านมีเดียเควอรี บล็อกเหล่านี้เรนเดอร์บนเซิร์ฟเวอร์ที่ต้องปล่อยมาร์กอัปที่ถูกตั้งแต่ครั้งแรก เลย์เอาต์โทรศัพท์ที่มาเป็นมาร์กอัปเดสก์ท็อปแล้วแก้ตัวเองตอนไฮเดรตคือการกระโดดที่เห็นได้ และสำหรับบล็อกวิดีโอคือการดาวน์โหลดที่เสียเปล่า
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## ชนิดของคุณเอง
+
+แผนที่จากชนิดไปตัวเรนเดอร์คือจุดขยาย โฮสต์เพิ่มชนิดของตัวเอง หรือแทนที่หนึ่ง — ซึ่งเป็นวิธีที่แอป Next สลับภาพที่ปรับให้เหมาะ และวิธีที่สิ่งที่ไลบรารีไม่ได้ส่งไปถึงหน้า
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+`has(specifiers, token)` ตอบว่าคำใบ้อยู่ในถุงหรือไม่ และ `fit(dim, within)` คือกล่องใหญ่สุดของอัตราส่วนหนึ่งที่อยู่ในอีกอัน ทั้งคู่ถูกส่งออกสำหรับตัวเรนเดอร์ของคุณ แคตตาล็อก [บล็อก](/blocks) เรนเดอร์ตัวอย่างของแต่ละตัวเรนเดอร์ข้างชนิดของมัน

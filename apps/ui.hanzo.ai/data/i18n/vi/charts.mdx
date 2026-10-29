@@ -1,0 +1,171 @@
+---
+title: Biểu đồ
+description: Một xu hướng, một chuỗi, một phần và một phân bố. SVG nội tuyến, không phụ thuộc, và không bao giờ một điểm bịa.
+---
+
+```tsx
+import { BarChart, BarRows, Donut, LineChart, Sparkline } from '@hanzo/ui/product'
+```
+
+Biểu đồ vẽ bằng SVG nội tuyến và lấy màu từ chủ đề đang sống, nên chúng đảo
+theo chủ đề. Chúng trung thực nhờ cách làm: một sparkline với ít hơn hai điểm
+không dựng gì, một donut không có giá trị dương dựng một dấu gạch ngang dài,
+và không biểu đồ nào bịa một xu hướng. Người gọi truyền chuỗi thật.
+
+Hai hình mang dữ liệu. `ChartPoint` là một giá trị có nhãn trên trục tuần tự;
+`Slice` là một độ lớn có nhãn trên trục phân loại, với màu tùy chọn và một gợi ý.
+
+```ts
+type ChartPoint = { label: string; value: number }
+type Slice = { label: string; value: number; color?: string; hint?: string }
+```
+
+## Sparkline
+
+Một xu hướng cỡ cố định cho thẻ số đo. `values` là một mảng thường; `width`,
+`height` và `color` là tùy chọn.
+
+```tsx
+<Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+```
+
+<Preview>
+  <Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+</Preview>
+
+## Biểu đồ đường
+
+Một giá trị theo thời gian. Nó đo khung chứa, nên rộng bằng hộp nó đang ở, và
+khi trỏ đọc điểm gần nhất ra cạnh một đường dẫn. `formatValue` định dạng bản đọc.
+
+```tsx
+<LineChart
+  data={[
+    { label: 'Mon', value: 120 },
+    { label: 'Tue', value: 180 },
+    { label: 'Wed', value: 150 },
+    { label: 'Thu', value: 260 },
+    { label: 'Fri', value: 230 },
+    { label: 'Sat', value: 310 },
+    { label: 'Sun', value: 290 },
+  ]}
+  height={200}
+  formatValue={(v) => `${v} req`}
+/>
+```
+
+<Preview>
+  <LineChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+    formatValue={(v) => `${v} req`}
+  />
+</Preview>
+
+## Biểu đồ cột
+
+Cùng dữ liệu, dưới dạng cột. Cùng các prop.
+
+```tsx
+<BarChart data={points} height={200} />
+```
+
+<Preview>
+  <BarChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+  />
+</Preview>
+
+## Donut
+
+Một phần. Màu là dữ liệu, không phải chế độ: lát có `color` được vẽ bằng màu
+ấy, và lát không có thì lấy một thang đơn sắc từ màu chữ, nên một thành phần
+phục vụ cả biểu đồ phân loại và biểu đồ đúng thương hiệu. `center` dựng bên
+trong vòng; `legend` vẽ danh sách nhãn và phần trăm có sẵn, tắt theo mặc định
+để người dùng ghép một danh sách giàu hơn.
+
+```tsx
+<Donut
+  slices={[
+    { label: 'zen-4', value: 62 },
+    { label: 'zen-3', value: 28 },
+    { label: 'other', value: 10 },
+  ]}
+  center="62%"
+  legend
+/>
+```
+
+<Preview>
+  <XStack gap="$8" flexWrap="wrap" items="center">
+    <Donut
+      slices={[
+        { label: 'zen-4', value: 62 },
+        { label: 'zen-3', value: 28 },
+        { label: 'other', value: 10 },
+      ]}
+      center="62%"
+      legend
+    />
+    <Donut
+      slices={[
+        { label: 'compute', value: 540, color: '#7c5cff' },
+        { label: 'storage', value: 220, color: '#23c562' },
+        { label: 'egress', value: 90, color: '#ff9f45' },
+      ]}
+      size={120}
+      thickness={16}
+    />
+  </XStack>
+</Preview>
+
+`CHART_PALETTE` là tám sắc khác nhau cho một chuỗi phân loại, chỉnh cho nền
+tối; `CHART_OTHER` là tông dịu cho phần còn lại.
+
+## Hàng cột
+
+Một phân bố dưới dạng thanh ngang có nhãn, vẽ bằng các thành phần bố cục nên
+nó nhận chủ đề như vỏ. Nhận cùng hình `Slice`.
+
+```tsx
+<BarRows
+  bars={[
+    { label: 'us-east', value: 1240 },
+    { label: 'eu-west', value: 860 },
+    { label: 'ap-south', value: 410 },
+  ]}
+/>
+```
+
+<Preview>
+  <BarRows
+    bars={[
+      { label: 'us-east', value: 1240 },
+      { label: 'eu-west', value: 860 },
+      { label: 'ap-south', value: 410 },
+    ]}
+  />
+</Preview>
+
+## Đo hộp
+
+`useContainerWidth` cũng được xuất: một `ref` và chiều rộng nó đo lần cuối,
+giữ bởi một `ResizeObserver`. Đó là thứ biểu đồ đường và cột dùng, và thứ biểu
+đồ của bạn có thể dùng để vẽ vào hộp được đưa, chứ không phải một số nó đoán.

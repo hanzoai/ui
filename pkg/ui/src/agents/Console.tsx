@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef, useState, type ComponentProps, type KeyboardEvent, type ReactNode } from 'react'
 /**
  * Console — the dock under the work: what the run and the page just said.
  *
@@ -21,20 +22,13 @@
  */
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { ChevronDown, ChevronUp, Trash2 } from '@hanzogui/lucide-icons-2'
-import {
-  type ComponentProps,
-  type KeyboardEvent,
-  type ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
 
 import { Button } from '../backends/gui/button'
 import { drag, type DragEvent } from '../backends/gui/gesture'
 import { Input } from '../backends/gui/input'
 import { slot } from '../backends/gui/slot'
-import { ceiling, count, HEAD, type Level, type Line, OPEN, opened, resolve, STEP } from './log'
+import { useTranslate } from '../i18n/react'
+import { ceiling, count, HEAD, OPEN, opened, resolve, STEP, type Level, type Line } from './log'
 
 type Col = Omit<ComponentProps<typeof YStack>, 'children' | 'height'>
 
@@ -78,20 +72,8 @@ const TONE: Record<Level, string> = {
 
 const viewport = () => (typeof window === 'undefined' ? 1000 : window.innerHeight)
 
-export function Console({
-  lines,
-  height,
-  onHeight,
-  tabs = [],
-  tab = 'log',
-  onTab,
-  onClear,
-  onRun,
-  busy = false,
-  status,
-  label = 'Console',
-  ...rest
-}: ConsoleProps) {
+export function Console({ lines, height, onHeight, tabs = [], tab = 'log', onTab, onClear, onRun, busy = false, status, label = 'Console', ...rest }: ConsoleProps) {
+  const tr = useTranslate()
   const open = opened(height)
   const last = useRef(OPEN)
   if (open) last.current = height
@@ -109,7 +91,11 @@ export function Console({
 
   const grip = drag({
     begin: (e: DragEvent) => {
-      start.current = { y: e.clientY ?? 0, base: open ? height : HEAD, moved: false }
+      start.current = {
+        y: e.clientY ?? 0,
+        base: open ? height : HEAD,
+        moved: false,
+      }
     },
     move: (e: DragEvent) => {
       const s = start.current
@@ -129,19 +115,7 @@ export function Console({
   const all: { id: string; label: string }[] = [{ id: 'log', label }, ...tabs]
 
   return (
-    <YStack
-      {...slot('console')}
-      render="section"
-      aria-label={label}
-      shrink={0}
-      minW={0}
-      overflow="hidden"
-      borderTopWidth={1}
-      borderColor="$borderColor"
-      bg="$background"
-      style={{ height: Math.max(height, HEAD) }}
-      {...rest}
-    >
+    <YStack {...slot('console')} render="section" aria-label={label} shrink={0} minW={0} overflow="hidden" borderTopWidth={1} borderColor="$borderColor" bg="$background" style={{ height: Math.max(height, HEAD) }} {...rest}>
       <YStack
         {...slot('console-grip')}
         role="separator"
@@ -156,13 +130,15 @@ export function Console({
         cursor="row-resize"
         hoverStyle={{ bg: '$edge' }}
         focusVisibleStyle={{ bg: '$rim' }}
-        onKeyDown={((e: KeyboardEvent) => {
-          if (e.key === 'ArrowUp') nudge(e.shiftKey ? STEP * 4 : STEP)
-          else if (e.key === 'ArrowDown') nudge(-(e.shiftKey ? STEP * 4 : STEP))
-          else if (e.key === 'Enter' || e.key === ' ') toggle()
-          else return
-          e.preventDefault()
-        }) as never}
+        onKeyDown={
+          ((e: KeyboardEvent) => {
+            if (e.key === 'ArrowUp') nudge(e.shiftKey ? STEP * 4 : STEP)
+            else if (e.key === 'ArrowDown') nudge(-(e.shiftKey ? STEP * 4 : STEP))
+            else if (e.key === 'Enter' || e.key === ' ') toggle()
+            else return
+            e.preventDefault()
+          }) as never
+        }
         {...(grip as object)}
       />
       <XStack items="center" gap="$2" px="$2" minH={HEAD - 6} shrink={0}>
@@ -202,31 +178,11 @@ export function Console({
           {status}
         </XStack>
         {onClear && tab === 'log' ? (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            minHeight={24}
-            minWidth={24}
-            aria-label={`Clear ${label.toLowerCase()}`}
-            title={`Clear ${label.toLowerCase()}`}
-            disabled={lines.length === 0}
-            onClick={onClear}
-          >
+          <Button type="button" variant="ghost" size="icon-sm" minHeight={24} minWidth={24} aria-label={`Clear ${label.toLowerCase()}`} title={`Clear ${label.toLowerCase()}`} disabled={lines.length === 0} onClick={onClear}>
             <Trash2 size={13} />
           </Button>
         ) : null}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          minHeight={24}
-          minWidth={24}
-          aria-label={open ? `Collapse ${label.toLowerCase()}` : `Expand ${label.toLowerCase()}`}
-          aria-expanded={open}
-          title={open ? 'Collapse' : 'Expand'}
-          onClick={toggle}
-        >
+        <Button type="button" variant="ghost" size="icon-sm" minHeight={24} minWidth={24} aria-label={open ? `Collapse ${label.toLowerCase()}` : `Expand ${label.toLowerCase()}`} aria-expanded={open} title={open ? 'Collapse' : 'Expand'} onClick={toggle}>
           {open ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </Button>
       </XStack>
@@ -251,15 +207,7 @@ export function Console({
                             {l.source}
                           </SizableText>
                         ) : null}
-                        <SizableText
-                          size="$1"
-                          color={TONE[l.level]}
-                          fontFamily="$mono"
-                          flex={1}
-                          minW={0}
-                          whiteSpace="pre-wrap"
-                          style={{ wordBreak: 'break-word' }}
-                        >
+                        <SizableText size="$1" color={TONE[l.level]} fontFamily="$mono" flex={1} minW={0} whiteSpace="pre-wrap" style={{ wordBreak: 'break-word' }}>
                           {l.text}
                         </SizableText>
                       </XStack>
@@ -277,17 +225,23 @@ export function Console({
                     {...slot('console-prompt')}
                     value={command}
                     disabled={busy}
-                    aria-label="Run a command"
+                    aria-label={tr('Run a command')}
                     placeholder={busy ? 'Running…' : 'Run a command'}
                     onChangeText={setCommand}
-                    onKeyDown={((e: KeyboardEvent & { nativeEvent?: { isComposing?: boolean } }) => {
-                      if (e.key !== 'Enter' || e.nativeEvent?.isComposing) return
-                      const typed = command.trim()
-                      if (!typed || busy) return
-                      e.preventDefault()
-                      onRun(typed)
-                      setCommand('')
-                    }) as never}
+                    onKeyDown={
+                      ((
+                        e: KeyboardEvent & {
+                          nativeEvent?: { isComposing?: boolean }
+                        }
+                      ) => {
+                        if (e.key !== 'Enter' || e.nativeEvent?.isComposing) return
+                        const typed = command.trim()
+                        if (!typed || busy) return
+                        e.preventDefault()
+                        onRun(typed)
+                        setCommand('')
+                      }) as never
+                    }
                     flex={1}
                     height={28}
                     borderWidth={0}

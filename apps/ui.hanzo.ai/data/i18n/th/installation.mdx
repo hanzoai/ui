@@ -1,0 +1,99 @@
+---
+title: การติดตั้ง
+description: ติดตั้งแพ็กเกจ ติดตั้งรูท และบอกตัวรวมโมดูลหนึ่งอย่าง
+---
+
+การตั้งค่าเหมือนกันทุกโฮสต์ ส่วนเดียวที่ต่างคือที่ที่ค่าของตัวรวมโมดูลไปอยู่
+และแต่ละโฮสต์มีหน้าของมัน
+
+## ติดตั้ง
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` และ `react-dom` เป็น peer ที่รุ่น 19 ขึ้นไป `@hanzo/gui` เป็น peer
+โดยตั้งใจ มันส่งบริบทของ React ออกมา และสำเนาทางกายภาพที่สองจะเป็นบริบทที่สอง
+รูทเขียนลงอันหนึ่งขณะที่ทุกคอมโพเนนต์อ่านอีกอัน คงไว้รุ่นเดียว ที่แอปประกาศ
+
+## ติดตั้งรูท
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+`Hanzo` คือสิ่งเดียวที่แอปติดตั้ง มันถือค่าคอนฟิกของ gui เป็นค่าหนึ่ง
+นำเข้าสไตล์ชีตที่สร้างแล้ว และตั้งธีม — มืดเป็นค่าเริ่มต้น
+`theme="light"` เพื่อเปลี่ยน ทุกคอมโพเนนต์โยนข้อผิดพลาดเมื่อไม่มีธีมของรูท
+ดังนั้นการลืมคือการพังตอนเพนต์ครั้งแรก ไม่ใช่หน้าที่เรนเดอร์เงียบๆ โดยไม่มีสไตล์
+
+ตอนพัฒนา รูทตรวจว่าสไตล์ชีตไปถึงเอกสาร และบอกในคอนโซลเมื่อไม่ถึง
+การแก้ที่มันเอ่ยคือการนำเข้าครั้งเดียว `@hanzo/ui/styles.css`
+สำหรับตัวรวมโมดูลที่ทิ้งชีตของแพ็กเกจเอง
+
+## บอกตัวรวมโมดูล
+
+กราฟดีเพนเดนซีของเอนจินเอ่ยชื่อ `react-native` และแพ็กเกจหนึ่งในนั้น
+`react-native-svg` ใต้ชุดไอคอน ส่งเอนทรีเนทีฟคู่กับพี่น้อง `.web.js`
+เลือกตัวเนทีฟในบิลด์เว็บ แล้วข้อผิดพลาดคือการแยกวิเคราะห์ล้มในซอร์ส Flow
+ภายในดีเพนเดนซี ซึ่งอ่านเหมือนแพ็กเกจพัง ไม่ใช่ค่าที่ขาด สองค่าป้องกันไว้
+
+- `react-native` คลี่ไปที่ `react-native-web`
+- `.web.js` อยู่เหนือ `.js`
+
+ใต้ Next ทั้งสองคือตัวหุ้มเดียว `@hanzo/ui/next` ใต้ Vite เป็นสองบรรทัดของ `resolve` ใต้ One เฟรมเวิร์กทำทั้งสองอยู่แล้ว ใต้ Expo ไม่มีอะไรต้องตั้ง เพราะ Metro พูด react-native แบบเนทีฟ
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo และ React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## เรนเดอร์บางอย่าง
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## แบบอักษร
+
+แพ็กเกจส่ง Zen และ Zen Mono มาด้วย และผูกกับ `--font-sans` และ `--font-mono`
+ดังนั้นโฮสต์ที่ไม่ผูกอะไรได้หน้าตัวอักษรโดยไม่ต้องทำอะไร โฮสต์ที่มีหน้าของตัวเองตั้ง `--font-sans-provided` แล้วชนะ — ดู [การจัดตัวอักษร](/docs/typography)

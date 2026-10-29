@@ -1,0 +1,98 @@
+---
+title: Modalità scura
+description: Scuro prima, chiaro con una prop, e un interruttore per l'host su cui ti trovi.
+---
+
+L'identità è scura. `:root` tiene la palette scura e `.light` se ne esce, al
+contrario della maggior parte dei fogli, ed è voluto: una pagina che monta la
+radice e non dice altro esce sul fondo del marchio, non sul bianco.
+
+## Decide la radice
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` è tutta l'API. La radice mette `.t_light` o `.t_dark` sul body, ogni
+token si risolve contro quel tema, e le proprietà personalizzate del foglio
+rispondono alla stessa classe. Un host che vuole che la scelta sia di una
+persona la tiene nello stato e la consegna alla radice.
+
+## Un interruttore
+
+`ThemeToggle`, da `@hanzo/ui/product`, disegna il pulsante e annuncia il tema
+successivo. Controllato, è una riga accanto alla radice:
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+Non controllato — `<ThemeToggle onThemeChange={fn} />` — alterna le classi
+`.dark` e `.light` sull'elemento del documento stesso e ricorda la scelta
+sotto la chiave `theme` in localStorage, per un host che non ha uno stato in
+cui tenerla. In entrambi i casi mostra la meta: un sole nello scuro, una luna
+nel chiaro.
+
+## Next
+
+Gli host Next fanno già girare `@hanzogui/next-theme`, e il legame
+dell'interruttore con esso sta su un subpath proprio, così nessun altro host
+si tira dentro Next nel grafo importando lo strato di prodotto.
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+`<ThemeToggle />` senza alcuna prop raggiunge lo stesso legame per import
+dinamico e, dove manca, ricade sull'interruttore del documento.
+
+## One e Vite
+
+Questo sito tiene la scelta con `@vxrn/color-scheme`, che sistema lo schema
+salvato prima del primo paint e lo riferisce alla radice:
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` espone anche `setting` — `system`, `dark` o `light` — e
+`set`, che è ciò che muove l'interruttore nell'intestazione di questo sito.
+
+## Niente lampo
+
+Qualunque sia l'host, la classe del tema deve stare sul documento prima che il
+foglio dipinga, altrimenti la pagina dipinge scura e si ridipinge chiara. Il
+legame di Next e `@vxrn/color-scheme` la scrivono entrambi da uno script in
+linea; un interruttore scritto a mano dovrebbe fare lo stesso. Metti
+`suppressHydrationWarning` sull'elemento `html`, perché la classe che ha
+scritto lo script non è quella che ha renderizzato React.

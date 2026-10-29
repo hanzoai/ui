@@ -1,0 +1,75 @@
+---
+title: Next
+description: Satu pembungkus untuk kedua bundler, dan akar di batas klien.
+---
+
+## Buat proyek
+
+```bash
+pnpm create next-app@latest my-app --typescript --app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Bungkus konfigurasi
+
+```js title="next.config.js"
+const withGui = require('@hanzo/ui/next')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = withGui(nextConfig, __dirname)
+```
+
+`withGui` menetapkan tiga hal, untuk webpack dan Turbopack sekaligus:
+`.web.*` diselesaikan lebih dulu, `react-native` adalah `react-native-web`,
+dan setiap paket `@hanzogui/*` di `node_modules` ditranspilasi agar dua hal
+pertama sampai ke dalamnya. Ia menyatu dengan yang sudah ada — hook
+`webpack()` yang ada, pengaturan Turbopack, dan `transpilePackages` dipertahankan
+lalu diperluas. Berikan `__dirname` agar paket ditemukan dari `node_modules`
+milik aplikasi sendiri, bukan dari mana pun task runner kebetulan berada.
+
+Dinyatakan sekali untuk kedua bundler, karena pengaturan yang hanya untuk
+webpack diam-diam tidak ada di bawah Turbopack, lalu `next dev` dan
+`next build` berbeda pendapat soal apakah aplikasi berhasil dikompilasi.
+
+## Pasang akar
+
+Akar adalah komponen klien, jadi ia tinggal di berkas yang memuat direktif,
+dan layout merendernya.
+
+```tsx title="app/providers.tsx"
+'use client'
+
+import { Hanzo } from '@hanzo/ui'
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+```tsx title="app/layout.tsx"
+import { Providers } from './providers'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+`suppressHydrationWarning` pada `html` untuk kelas tema yang ditulis sebuah
+pengalih di sana sebelum React terpasang — lihat [Mode gelap](/docs/dark-mode).
+
+## Komponen server
+
+Segala sesuatu di bawah `@hanzo/ui` adalah batas klien; komponen server
+merendernya dengan mengimpornya, seperti komponen klien lain mana pun. Aturan
+yang tidak menempel pada komponen — `pages`, `masked`, `tone`, `resolveBrand`
+— ada di `@hanzo/ui/product/pure` dan tidak mengimpor apa pun, jadi komponen
+server atau route handler dapat memanggilnya tanpa memuat pohon komponen.

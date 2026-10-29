@@ -1,0 +1,87 @@
+---
+title: 安装
+description: 装上包，挂上根，再告诉打包器一件事。
+---
+
+每种宿主的搭建都一样。唯一不同的是打包器设置写在哪里，每种宿主都有自己的一页。
+
+## 安装
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` 和 `react-dom` 是 19 或更高版本的对等依赖。`@hanzo/gui` 故意做成对等依赖：它交出一份 React context，物理上的第二份拷贝就会是第二份 context，根往一份里写，每个组件却去读另一份。保持一个版本，由应用自己声明。
+
+## 挂上根
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+应用要挂的只有 `Hanzo`。它把 gui 配置当作一个值带着，导入生成好的样式表，并设定主题——默认深色，`theme="light"` 则改调。没有根主题时，每个组件都会抛出。忘了它，第一次绘制就崩溃，不会静静地画出一页没有样式的页面。
+
+开发时，根会检查样式表有没有到达文档，没有到达就在控制台里说出来。它点名的修法是一次导入，`@hanzo/ui/styles.css`，给那些把包自己的样式表丢掉的打包器用。
+
+## 告诉打包器
+
+引擎的依赖图写着 `react-native` 这个名字，其中的一个包、图标集下面的 `react-native-svg`，在原生入口旁边还带了一份 `.web.js` 兄弟文件。Web 构建若选中原生那份，错误会是依赖内部 Flow 源码的解析失败，读起来像包坏了，而不像少了一项设置。两项设置可以拦住它：
+
+- `react-native` 解析到 `react-native-web`。
+- `.web.js` 排在 `.js` 前面。
+
+在 Next 里，这两项是一个包装，`@hanzo/ui/next`。在 Vite 里，是 `resolve` 的两行。在 One 里，框架已经两件都做了。在 Expo 里没有要设的，因为 Metro 本来就会说 react-native。
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo 与 React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## 画一点东西
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## 字体
+
+包里带了 Zen 和 Zen Mono，并绑到 `--font-sans` 和 `--font-mono` 上，所以什么都不绑的宿主不用动手就得到这两款字体。自带字体的宿主设置 `--font-sans-provided`，就会胜出。见 [排版](/docs/typography)。

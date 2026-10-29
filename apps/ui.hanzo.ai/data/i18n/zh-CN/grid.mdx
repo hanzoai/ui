@@ -1,0 +1,117 @@
+---
+title: 网格
+description: 真正的 CSS 网格，轨道来自容器，不来自子节点。列用一个 prop，没有断点。
+---
+
+手写的网格——每个子节点都是 `width: calc(25% - 7.5px)`——只有在每个子节点都同意时才齐整，一个长词就会把这一行扯毛。调数字修不好这件事。这里由父级声明一次轨道，子节点没有发言权：等宽的列是结构，没有哪个子节点能把自己的轨道撑宽。
+
+```tsx
+import { Cell, Grid } from '@hanzo/ui/grid'
+```
+
+`Grid` 待在自己的子路径上，因为它渲染的是一个 `display: grid` 的 `div`，这两样在 React Native 上都不存在。API 用 CSS 网格的术语来命名——`columns` 和 `rows` 是轨道列表，`Cell` 负责放置和跨越——所以一套原生网格引擎改的是文件，不是调用处。
+
+## 列
+
+`columns` 接受轨道列表的任何一种写法：一个数量、一个列表，或一条写出来的轨道列表。
+
+```tsx
+<Grid columns={3} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={3} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+  </Grid>
+</Preview>
+
+数量会变成 `repeat(3, minmax(0, 1fr))`，而不是 `1fr`，因为单独的 `1fr` 意味着 `minmax(auto, 1fr)`，`auto` 把轨道的下限放在内容上——一条不断开的字符串就会把自己那一列撑得更宽。组件存在，就是为了拦住这种毛边的行，所以更长的那种写法才是要点。
+
+```tsx
+<Grid columns={['2fr', '1fr']} gap="$3">
+  <Tile>main</Tile>
+  <Tile>aside</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={['2fr', '1fr']} gap="$3">
+    <Tile>main</Tile>
+    <Tile>aside</Tile>
+  </Grid>
+</Preview>
+
+列表里的数字是像素；其余的已经是轨道尺寸。
+
+## 能放进多少
+
+响应式的形式是 `columns` 的一个值，不是第二个 prop，里面也没有断点。`min` 是一列在网格减掉一列之前可以窄到的程度，`max` 封住数量。
+
+```tsx
+<Grid columns={{ min: 160, max: 4 }} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Tile>5</Tile>
+  <Tile>6</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={{ min: 160, max: 4 }} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Tile>5</Tile>
+    <Tile>6</Tile>
+  </Grid>
+</Preview>
+
+改变窗口大小：数量跟着网格所在的那一列走，于是同一块放进一个它从未见过的侧栏里也是对的。`min` 写成 `min(160px, 100%)`，而不是裸的 `160px`，于是比下限更窄的手机得到的是一条满宽轨道，而不是横向滚动。`max` 折进同一个下限——一行的 M 分之一，再减去间隙——所以这个上限在小屏幕上不花任何代价。
+
+## 单元格
+
+普通的子节点不需要包装。`Cell` 的存在是为了跨越或放置：数字跨越那么多条轨道，字符串则是照写的 `grid-column`。
+
+```tsx
+<Grid columns={4} gap="$3">
+  <Cell col={2}><Tile>col=2</Tile></Cell>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={4} gap="$3">
+    <Cell col={2}><Tile>col=2</Tile></Cell>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+  </Grid>
+</Preview>
+
+`row` 沿页面向下是同一回事。网格上的 `rows` 决定行轨道的尺寸；没有它，行就按内容定大小。
+
+## 间隙
+
+`gap` 是一个间距令牌，或一个原始的像素数。令牌读的是文档里的坡道——`gap="$4"` 就是 `var(--space-4)`——所以一个人在外观面板里移动密度，每一张网格都跟着动。在渲染时解析出来的数字，就固定在渲染那一刻。
+
+## 轨道列表本身
+
+`tracks(columns, gap)` 被导出，因为它就是这个组件的全部决定：`columns` 的任何一种写法，变成它所指的那一条轨道列表，上面两条不变量都在里面。
+
+```ts
+import { tracks } from '@hanzo/ui/grid'
+
+tracks(3)                       // 'repeat(3, minmax(0, 1fr))'
+tracks({ min: 240 })            // 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))'
+```

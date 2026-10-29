@@ -8,7 +8,9 @@
  * it renders on web, native (expo) and Tauri. An empty task list renders a
  * placeholder rather than nothing.
  */
-import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
+import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
+
+import { useLocale, useTranslate } from '../../i18n/react'
 import { ink } from './ink'
 import { slot } from './slot'
 
@@ -54,11 +56,14 @@ export type GanttProps = Omit<import('react').ComponentProps<typeof GanttFrame>,
 }
 
 export function Gantt({ tasks = [], ...props }: GanttProps) {
+  const tr = useTranslate()
+  const { active, locale } = useLocale()
+  const when = (d: Date) => d.toLocaleDateString(active ? locale : undefined)
   return (
     <GanttFrame {...slot('gantt')} {...props}>
       {tasks.length === 0 ? (
         <XStack {...slot('gantt-empty')} items="center" justify="center" p="$8">
-          {ink('No tasks available. Add tasks to display Gantt chart.', SizableText, {
+          {ink(tr('No tasks available. Add tasks to display Gantt chart.'), SizableText, {
             size: '$2',
             color: '$quiet',
           })}
@@ -70,15 +75,27 @@ export function Gantt({ tasks = [], ...props }: GanttProps) {
             return (
               <RowFrame key={task.id} {...slot('gantt-task')} data-progress={progress}>
                 <XStack justify="space-between" items="center">
-                  {ink(task.name, SizableText, { size: '$3', fontWeight: '600' })}
-                  {ink(`${progress}%`, SizableText, { size: '$3', color: '$quiet' })}
+                  {ink(task.name, SizableText, {
+                    size: '$3',
+                    fontWeight: '600',
+                  })}
+                  {ink(`${progress}%`, SizableText, {
+                    size: '$3',
+                    color: '$quiet',
+                  })}
                 </XStack>
                 <TrackFrame {...slot('gantt-track')}>
                   <BarFrame {...slot('gantt-bar')} width={`${progress}%`} />
                 </TrackFrame>
                 <XStack justify="space-between">
-                  {ink(task.start.toLocaleDateString(), SizableText, { size: '$1', color: '$quiet' })}
-                  {ink(task.end.toLocaleDateString(), SizableText, { size: '$1', color: '$quiet' })}
+                  {ink(when(task.start), SizableText, {
+                    size: '$1',
+                    color: '$quiet',
+                  })}
+                  {ink(when(task.end), SizableText, {
+                    size: '$1',
+                    color: '$quiet',
+                  })}
                 </XStack>
               </RowFrame>
             )

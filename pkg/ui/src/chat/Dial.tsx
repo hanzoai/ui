@@ -14,12 +14,12 @@
  * The list is the surface's (`Modes`): a chat offers six levels, a coding run four.
  * The pointer events are the page's own — nothing is captured past the press.
  */
-import { SizableText, XStack } from '@hanzo/gui'
-import { useI18n } from '@hanzo/i18n/react'
-import { Gauge } from '@hanzogui/lucide-icons-2'
 import { useRef, useState } from 'react'
+import { SizableText, XStack } from '@hanzo/gui'
+import { Gauge } from '@hanzogui/lucide-icons-2'
 
 import { Popover, PopoverAnchor, PopoverContent } from '../backends/gui'
+import { useDirection, useTranslate } from '../i18n/react'
 import { RING } from './ring'
 import { Choices, type Modes } from './Tune'
 
@@ -27,7 +27,14 @@ import { Choices, type Modes } from './Tune'
 const STEP = 22
 
 /** The pip: the level in a letter or two, so the icon says where it stands without a word. */
-const PIP: Record<string, string> = { auto: 'A', low: 'L', medium: 'M', high: 'H', xhigh: 'XH', max: 'MAX' }
+const PIP: Record<string, string> = {
+  auto: 'A',
+  low: 'L',
+  medium: 'M',
+  high: 'H',
+  xhigh: 'XH',
+  max: 'MAX',
+}
 
 const pip = (id: string, label: string): string => PIP[id] ?? label.slice(0, 1).toUpperCase()
 
@@ -37,12 +44,16 @@ const pip = (id: string, label: string): string => PIP[id] ?? label.slice(0, 1).
  * glyph. The button keeps the row's height and grows as wide as the level needs.
  */
 export function Dial({ effort, size = 36, disabled = false, narrow = false }: { effort: Modes; size?: number; disabled?: boolean; narrow?: boolean }) {
-  const { t, dir } = useI18n()
+  const t = useTranslate()
+  const dir = useDirection()
   const [open, setOpen] = useState(false)
   // The level under the finger while it is held, as a place in the list.
   const [held, setHeld] = useState<number | null>(null)
   const press = useRef<{ x: number; at: number; moved: boolean } | null>(null)
-  const index = Math.max(0, effort.items.findIndex((e) => e.id === effort.value))
+  const index = Math.max(
+    0,
+    effort.items.findIndex((e) => e.id === effort.value)
+  )
   const now = effort.items[index] ?? effort.items[0]!
   const shown = held === null ? now : (effort.items[held] ?? now)
   const flip = dir === 'rtl' ? -1 : 1
@@ -124,38 +135,13 @@ export function Dial({ effort, size = 36, disabled = false, narrow = false }: { 
                 {pip(shown.id, t(shown.label))}
               </SizableText>
             ) : (
-              <SizableText
-                data-slot="dial-pip"
-                aria-hidden
-                position="absolute"
-                b={3}
-                insetInlineEnd={2}
-                fontSize={9}
-                lineHeight={10}
-                fontWeight="700"
-                color="$ink"
-                px={2}
-                rounded={4}
-                bg="$background"
-              >
+              <SizableText data-slot="dial-pip" aria-hidden position="absolute" b={3} insetInlineEnd={2} fontSize={9} lineHeight={10} fontWeight="700" color="$ink" px={2} rounded={4} bg="$background">
                 {pip(shown.id, t(shown.label))}
               </SizableText>
             )}
           </XStack>
           {held !== null ? (
-            <XStack
-              data-slot="dial-tip"
-              role="status"
-              position="absolute"
-              b={size + 6}
-              self="center"
-              px={8}
-              py={3}
-              rounded={6}
-              bg="$ink"
-              pointerEvents="none"
-              style={{ whiteSpace: 'nowrap' }}
-            >
+            <XStack data-slot="dial-tip" role="status" position="absolute" b={size + 6} self="center" px={8} py={3} rounded={6} bg="$ink" pointerEvents="none" style={{ whiteSpace: 'nowrap' }}>
               <SizableText fontSize={12} color="$background">
                 {t(shown.label)}
               </SizableText>

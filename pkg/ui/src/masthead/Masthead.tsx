@@ -4,7 +4,8 @@ import { Fragment, useCallback, useEffect, useRef, useState, type CSSProperties,
 import { Anchor, Text, View, XStack, YStack, type AnchorProps, type GuiElement } from '@hanzo/gui'
 import { HanzoCommandPalette, HanzoIdentity, HanzoWordmark, MARKS, type GlyphName, type HanzoCommandEntry } from '@hanzogui/shell'
 
-import { ACCOUNT, COMPANY, DOCS, LOGIN, MENUS, OPEN, TRY, at, leaves, type Link, type Menu } from './nav'
+import { useTranslate } from '../i18n/react'
+import { ACCOUNT, at, COMPANY, DOCS, leaves, LOGIN, MENUS, OPEN, TRY, type Link, type Menu } from './nav'
 
 /**
  * hanzo.ai's header, for every site that wears it: one nav tree (`./nav`) for
@@ -111,8 +112,7 @@ const TOP = 2147483647
  * sets with the theme. The dimmest is PUSHED rather than mirrored — .45 black on
  * white is 3.35:1, .56 is 4.5:1 on the bar and on the panel.
  */
-const ink = (dark: number, light: number) =>
-  `light-dark(color-mix(in srgb, var(--pure-black) ${light}%, transparent), color-mix(in srgb, var(--pure-white) ${dark}%, transparent))`
+const ink = (dark: number, light: number) => `light-dark(color-mix(in srgb, var(--pure-black) ${light}%, transparent), color-mix(in srgb, var(--pure-white) ${dark}%, transparent))`
 const INK = {
   '--white-92': ink(92, 92),
   '--white-60': ink(60, 60),
@@ -136,10 +136,26 @@ const BAR = {
 } as const
 
 /** The name of the place, lit under the pointer and while the company menu is open. */
-const BRAND = { items: 'center', shrink: 0, height: 34, marginInlineStart: -4, rounded: 999, hoverStyle: { bg: WASH, boxShadow: RING } } as const
+const BRAND = {
+  items: 'center',
+  shrink: 0,
+  height: 34,
+  marginInlineStart: -4,
+  rounded: 999,
+  hoverStyle: { bg: WASH, boxShadow: RING },
+} as const
 
 /** The wordmark: home, and never dim. */
-const NAME = { display: 'flex', items: 'center', height: '100%', pl: 12, pr: 12, color: 'var(--foreground)', whiteSpace: 'nowrap', textDecorationLine: 'none' } as const
+const NAME = {
+  display: 'flex',
+  items: 'center',
+  height: '100%',
+  pl: 12,
+  pr: 12,
+  color: 'var(--foreground)',
+  whiteSpace: 'nowrap',
+  textDecorationLine: 'none',
+} as const
 
 /** A pill in the bar: dim at rest, lit under the pointer. A button's own padding is the browser's, so it is stated. */
 const PILL = {
@@ -157,7 +173,15 @@ const PILL = {
 } as const
 
 /** A pill that opens a menu: its label, then a chevron. */
-const TRIGGER = { ...PILL, gap: 6, px: 12, fontSize: '$2', lineHeight: 20, fontWeight: '500', whiteSpace: 'nowrap' } as const
+const TRIGGER = {
+  ...PILL,
+  gap: 6,
+  px: 12,
+  fontSize: '$2',
+  lineHeight: 20,
+  fontWeight: '500',
+  whiteSpace: 'nowrap',
+} as const
 
 /** The one filled control, in the bar and in the sheet. */
 const ACT = {
@@ -178,7 +202,10 @@ const ACT = {
 } as const
 
 /** What hangs from the bar arrives: up 4px, faded in. */
-const ARRIVE = { enterStyle: { opacity: 0, y: -4 }, transition: 'quickest' } as const
+const ARRIVE = {
+  enterStyle: { opacity: 0, y: -4 },
+  transition: 'quickest',
+} as const
 
 /**
  * A row in a plane. As wide as its words, so a keyboard ring hugs the words it
@@ -197,8 +224,23 @@ const ROW = {
   focusVisibleStyle: { color: 'var(--foreground)' },
 } as const
 /** The destinations someone arrives wanting, in display type. */
-const LEAD = { ...ROW, py: 2, fontSize: '$8', lineHeight: 33.28, fontWeight: '400', letterSpacing: -0.26, color: 'var(--foreground)' } as const
-const PLAIN = { ...ROW, py: 5, fontSize: '$2', lineHeight: 20, fontWeight: '500', color: 'var(--muted-foreground)' } as const
+const LEAD = {
+  ...ROW,
+  py: 2,
+  fontSize: '$8',
+  lineHeight: 33.28,
+  fontWeight: '400',
+  letterSpacing: -0.26,
+  color: 'var(--foreground)',
+} as const
+const PLAIN = {
+  ...ROW,
+  py: 5,
+  fontSize: '$2',
+  lineHeight: 20,
+  fontWeight: '500',
+  color: 'var(--muted-foreground)',
+} as const
 
 /** A row in the sheet: a thumb's height, the column's width. */
 const LINE = {
@@ -213,7 +255,16 @@ const LINE = {
   focusVisibleStyle: { color: 'var(--foreground)' },
 } as const
 /** The sheet's doors: Log in's rows, or the reader's own page. */
-const DOOR = { display: 'flex', items: 'center', justify: 'flex-start', minH: 44, fontSize: '$4', lineHeight: 20, fontWeight: '400', color: 'var(--foreground)' } as const
+const DOOR = {
+  display: 'flex',
+  items: 'center',
+  justify: 'flex-start',
+  minH: 44,
+  fontSize: '$4',
+  lineHeight: 20,
+  fontWeight: '400',
+  color: 'var(--foreground)',
+} as const
 
 /** Where a row goes, and whether it says ↗ — one reading for the bar, the sheet and ⌘K. */
 interface Place {
@@ -257,14 +308,7 @@ function Out() {
 function Row({ link, place, onClick, ...style }: { link: Link; place: Place; onClick?: () => void } & Omit<AnchorProps, 'href' | 'target' | 'rel' | 'onClick'>) {
   const out = leaves(link.href, place.here)
   return (
-    <Anchor
-      href={at(link.href, place.origin, place.here)}
-      target={out ? '_blank' : undefined}
-      rel={out ? 'noreferrer' : undefined}
-      onClick={onClick}
-      textDecorationLine="none"
-      {...style}
-    >
+    <Anchor href={at(link.href, place.origin, place.here)} target={out ? '_blank' : undefined} rel={out ? 'noreferrer' : undefined} onClick={onClick} textDecorationLine="none" {...style}>
       {link.label}
       {out ? <Out /> : null}
     </Anchor>
@@ -290,15 +334,7 @@ function Columns({ menu, place, onPick }: { menu: Menu; place: Place; onPick: ()
   return (
     <View display="grid" gridAutoFlow="column" gridAutoColumns="max-content" justify="flex-start" gap="max(24px, min(3vw, 64px))" pt={36} pb={48} px="calc(var(--page-gutter) + 8px)">
       {menu.groups.map((group, i) => (
-        <YStack
-          key={group.title}
-          gap={2}
-          minW={0}
-          opacity={hot === null || hot === i ? 1 : 0.45}
-          transition="quickest"
-          onPointerEnter={() => setHot(i)}
-          onPointerLeave={() => setHot(null)}
-        >
+        <YStack key={group.title} gap={2} minW={0} opacity={hot === null || hot === i ? 1 : 0.45} transition="quickest" onPointerEnter={() => setHot(i)} onPointerLeave={() => setHot(null)}>
           <Title>{group.title}</Title>
           {group.links.map((link) => (
             <Row key={link.label} link={link} place={place} onClick={onPick} {...(group.lead ? LEAD : PLAIN)} />
@@ -343,19 +379,8 @@ function entries(company: Menu, menus: readonly Menu[], login: readonly Link[], 
     }))
 }
 
-export function Masthead({
-  label = 'Hanzo AI',
-  home = '/',
-  origin = '',
-  here = '',
-  tree = {},
-  person,
-  onSignOut,
-  commands = [],
-  onAsk,
-  askHref,
-  bare = false,
-}: MastheadProps) {
+export function Masthead({ label = 'Hanzo AI', home = '/', origin = '', here = '', tree = {}, person, onSignOut, commands = [], onAsk, askHref, bare = false }: MastheadProps) {
+  const tr = useTranslate()
   const company = tree.company ?? COMPANY
   const menus = tree.menus ?? MENUS
   const login = tree.login ?? LOGIN
@@ -482,21 +507,7 @@ export function Masthead({
       {trigger}
       {open === item.id ? (
         /* A menu's panel spans the window under the bar. */
-        <YStack
-          id={`menu-${item.id}`}
-          role="group"
-          aria-label={item.label}
-          position="fixed"
-          t={UNDER}
-          l={0}
-          r={0}
-          z="var(--z-raised)"
-          maxH={`calc(100dvh - ${HEADER}px)`}
-          overflowY="auto"
-          bg={PANEL}
-          boxShadow={DROP}
-          {...ARRIVE}
-        >
+        <YStack id={`menu-${item.id}`} role="group" aria-label={item.label} position="fixed" t={UNDER} l={0} r={0} z="var(--z-raised)" maxH={`calc(100dvh - ${HEADER}px)`} overflowY="auto" bg={PANEL} boxShadow={DROP} {...ARRIVE}>
           <Columns menu={item} place={place} onPick={close} />
         </YStack>
       ) : null}
@@ -504,15 +515,7 @@ export function Masthead({
   )
 
   const trigger = (item: Menu) => (
-    <Text
-      render="button"
-      {...TRIGGER}
-      {...lit(item.id)}
-      aria-expanded={open === item.id}
-      aria-controls={`menu-${item.id}`}
-      onClick={press(item.id)}
-      onKeyDown={step(item.id)}
-    >
+    <Text render="button" {...TRIGGER} {...lit(item.id)} aria-expanded={open === item.id} aria-controls={`menu-${item.id}`} onClick={press(item.id)} onKeyDown={step(item.id)}>
       <Mark name={item.glyph} bar />
       {item.label}
       <Chevron turned={open === item.id} />
@@ -557,122 +560,46 @@ export function Masthead({
               <HanzoWordmark label={label} size={22} />
             </Anchor>
             {/* The name goes home; the chevron beside it is its own stop and opens the company. */}
-            <Text
-              render="button"
-              aria-label={company.label}
-              aria-expanded={open === company.id}
-              aria-controls={`menu-${company.id}`}
-              onClick={press(company.id)}
-              onKeyDown={step(company.id)}
-              display="none"
-              $lg={{ display: 'grid' }}
-              placeItems="center"
-              width={30}
-              height="100%"
-              p={0}
-              paddingInlineEnd={6}
-              borderWidth={0}
-              borderStartEndRadius={999}
-              borderEndEndRadius={999}
-              bg="transparent"
-              color="var(--foreground)"
-              cursor="pointer"
-            >
+            <Text render="button" aria-label={company.label} aria-expanded={open === company.id} aria-controls={`menu-${company.id}`} onClick={press(company.id)} onKeyDown={step(company.id)} display="none" $lg={{ display: 'grid' }} placeItems="center" width={30} height="100%" p={0} paddingInlineEnd={6} borderWidth={0} borderStartEndRadius={999} borderEndEndRadius={999} bg="transparent" color="var(--foreground)" cursor="pointer">
               <Chevron turned={open === company.id} />
             </Text>
-          </XStack>,
+          </XStack>
         )}
-        <XStack render="nav" aria-label="Main" display="none" $lg={{ display: 'flex' }} items="center" gap={2}>
+        <XStack render="nav" aria-label={tr('Main')} display="none" $lg={{ display: 'flex' }} items="center" gap={2}>
           {menus.map((item) => (
             <Fragment key={item.id}>{menu(item, trigger(item))}</Fragment>
           ))}
         </XStack>
         {/* The page recedes under an open plane, and a press on it closes the plane. */}
-        {open && open !== 'login' ? (
-          <View
-            aria-hidden
-            onPress={close}
-            position="fixed"
-            t={UNDER}
-            l={0}
-            r={0}
-            b={0}
-            z="var(--z-base)"
-            bg="$black/40"
-            backdropFilter="var(--chrome-blur)"
-          />
-        ) : null}
-        <Text
-          render="button"
-          aria-label="Search Hanzo or ask AI"
-          onClick={find}
-          {...PILL}
-          justify="center"
-          width={44}
-          height={44}
-          marginInlineStart="auto"
-          $lg={{ width: 34, height: 34, marginInlineStart: 0 }}
-        >
+        {open && open !== 'login' ? <View aria-hidden onPress={close} position="fixed" t={UNDER} l={0} r={0} b={0} z="var(--z-base)" bg="$black/40" backdropFilter="var(--chrome-blur)" /> : null}
+        <Text render="button" aria-label={tr('Search Hanzo or ask AI')} onClick={find} {...PILL} justify="center" width={44} height={44} marginInlineStart="auto" $lg={{ width: 34, height: 34, marginInlineStart: 0 }}>
           <MARKS.search size={16} />
         </Text>
         <XStack items="center" gap={8} $lg={{ marginInlineStart: 'auto' }}>
           {person ? (
             <HanzoIdentity
-              auth={{ user: person, onSignOut, items: [{ id: 'account', label: account.label, href: at(account.href, origin, here) }] }}
+              auth={{
+                user: person,
+                onSignOut,
+                items: [
+                  {
+                    id: 'account',
+                    label: account.label,
+                    href: at(account.href, origin, here),
+                  },
+                ],
+              }}
             />
           ) : (
             <XStack position="relative" display="none" $lg={{ display: 'flex' }} onPointerEnter={rest('login')} onPointerLeave={leave} onBlur={blur}>
-              <Text
-                render="button"
-                {...TRIGGER}
-                {...lit('login')}
-                aria-expanded={open === 'login'}
-                aria-controls="menu-login"
-                onClick={press('login')}
-                onKeyDown={step('login')}
-              >
+              <Text render="button" {...TRIGGER} {...lit('login')} aria-expanded={open === 'login'} aria-controls="menu-login" onClick={press('login')} onKeyDown={step('login')}>
                 Log in
                 <Chevron turned={open === 'login'} />
               </Text>
               {open === 'login' ? (
-                <YStack
-                  id="menu-login"
-                  role="group"
-                  aria-label="Log in"
-                  position="absolute"
-                  t="calc(100% + 8px)"
-                  insetInlineEnd={0}
-                  display="grid"
-                  gap={2}
-                  minW={240}
-                  p={6}
-                  borderWidth={1}
-                  borderColor="var(--border)"
-                  rounded={12}
-                  bg={PANEL}
-                  boxShadow={DROP}
-                  {...ARRIVE}
-                >
+                <YStack id="menu-login" role="group" aria-label={tr('Log in')} position="absolute" t="calc(100% + 8px)" insetInlineEnd={0} display="grid" gap={2} minW={240} p={6} borderWidth={1} borderColor="var(--border)" rounded={12} bg={PANEL} boxShadow={DROP} {...ARRIVE}>
                   {login.map((link) => (
-                    <Anchor
-                      key={link.label}
-                      href={at(link.href, origin, here)}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={close}
-                      display="grid"
-                      gap={2}
-                      py={8}
-                      px={10}
-                      rounded={8}
-                      color="var(--foreground)"
-                      fontSize="$2"
-                      lineHeight={20}
-                      fontWeight="600"
-                      textDecorationLine="none"
-                      hoverStyle={{ bg: WASH }}
-                      focusVisibleStyle={{ bg: WASH }}
-                    >
+                    <Anchor key={link.label} href={at(link.href, origin, here)} target="_blank" rel="noreferrer" onClick={close} display="grid" gap={2} py={8} px={10} rounded={8} color="var(--foreground)" fontSize="$2" lineHeight={20} fontWeight="600" textDecorationLine="none" hoverStyle={{ bg: WASH }} focusVisibleStyle={{ bg: WASH }}>
                       {link.label}
                       <Text render="small" fontSize="$1" lineHeight={20} fontWeight="400" color="var(--muted-foreground)">
                         {link.hint}
@@ -712,27 +639,11 @@ export function Masthead({
           </Text>
         </XStack>
       </XStack>
-      {sheet ? (
-        <Sheet
-          company={company}
-          menus={menus}
-          login={login}
-          door={person ? account : null}
-          act={act}
-          place={place}
-          onClose={() => setSheet(false)}
-        />
-      ) : null}
+      {sheet ? <Sheet company={company} menus={menus} login={login} door={person ? account : null} act={act} place={place} onClose={() => setSheet(false)} /> : null}
       {/* A fixed box of no size is a stacking context at TOP, and the palette's
           scrim and panel, fixed to the window themselves, stack inside it. */}
       <View position="fixed" z={TOP}>
-        <HanzoCommandPalette
-          commands={[...commands, ...entries(company, menus, login, place).filter((e) => !commands.some((c) => c.href === e.href))]}
-          open={search}
-          onOpenChange={setSearch}
-          onAsk={onAsk}
-          askHref={askHref}
-        />
+        <HanzoCommandPalette commands={[...commands, ...entries(company, menus, login, place).filter((e) => !commands.some((c) => c.href === e.href))]} open={search} onOpenChange={setSearch} onAsk={onAsk} askHref={askHref} />
       </View>
     </>
   )
@@ -762,6 +673,7 @@ function Sheet({
   place: Place
   onClose: () => void
 }) {
+  const tr = useTranslate()
   const first = useRef<GuiElement>(null)
   const [section, setSection] = useState<string | null>(null)
   useEffect(() => node(first.current)?.focus(), [])
@@ -770,7 +682,7 @@ function Sheet({
       id="sheet"
       role="dialog"
       aria-modal
-      aria-label="Menu"
+      aria-label={tr('Menu')}
       display="block"
       position="fixed"
       t={UNDER}
@@ -779,14 +691,17 @@ function Sheet({
       b={0}
       z="var(--z-overlay)"
       overflowY="auto"
-      $platform-web={{ overscrollBehaviorX: 'contain', overscrollBehaviorY: 'contain' }}
+      $platform-web={{
+        overscrollBehaviorX: 'contain',
+        overscrollBehaviorY: 'contain',
+      }}
       pt={4}
       px="var(--page-gutter)"
       pb="calc(24px + env(safe-area-inset-bottom))"
       bg={PANEL}
       {...ARRIVE}
     >
-      <View render="nav" aria-label="Main" display="block">
+      <View render="nav" aria-label={tr('Main')} display="block">
         {[company, ...menus].map((item, i) => (
           <View
             key={item.id}
@@ -803,19 +718,7 @@ function Sheet({
             borderBottomWidth={1}
             borderColor="var(--border)"
           >
-            <Text
-              ref={i === 0 ? first : undefined}
-              render="summary"
-              display="flex"
-              items="center"
-              gap={10}
-              minH={56}
-              fontSize="$6"
-              lineHeight={20}
-              fontWeight="500"
-              color="var(--foreground)"
-              cursor="pointer"
-            >
+            <Text ref={i === 0 ? first : undefined} render="summary" display="flex" items="center" gap={10} minH={56} fontSize="$6" lineHeight={20} fontWeight="500" color="var(--foreground)" cursor="pointer">
               <Mark name={item.glyph} />
               {item.label}
               <Chevron turned={section === item.id} end />

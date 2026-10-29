@@ -1,10 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+
+import { Button } from '../backends/gui/button'
 import { Checkbox } from '../backends/gui/checkbox'
 import { FieldError } from '../backends/gui/field'
-import { Button } from '../backends/gui/button'
 import { Anchor, Paragraph, SizableText, XStack } from '../backends/gui/layout'
+import { useTranslate } from '../i18n/react'
 import { Page, Panel } from './frame'
 import { Primary } from './screens'
 
@@ -29,6 +31,7 @@ export interface CreateAccountProps {
 }
 
 export function CreateAccount({ site = 'Hanzo', email, busy, wrong, termsPath = '/terms', aupPath = '/aup', onCreate, onOther }: CreateAccountProps) {
+  const tr = useTranslate()
   const [agree, setAgree] = useState(false)
   return (
     <Page
@@ -48,7 +51,7 @@ export function CreateAccount({ site = 'Hanzo', email, busy, wrong, termsPath = 
     >
       <Panel label="Terms">
         <XStack gap="$3" items="flex-start">
-          <Checkbox id="hanzo-terms" checked={agree} onCheckedChange={(v: boolean | 'indeterminate') => setAgree(v === true)} mt="$1" aria-label="I agree to the Terms of Service and Acceptable Use Policy and confirm that I am at least 18 years of age" />
+          <Checkbox id="hanzo-terms" checked={agree} onCheckedChange={(v: boolean | 'indeterminate') => setAgree(v === true)} mt="$1" aria-label={tr('I agree to the Terms of Service and Acceptable Use Policy and confirm that I am at least 18 years of age')} />
           <Paragraph render="label" htmlFor="hanzo-terms" size="$2" color="$ink" flex={1} m={0}>
             {`I agree to ${site}’s `}
             <Anchor href={termsPath} color="$ink" textDecorationLine="underline">

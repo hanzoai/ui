@@ -1,0 +1,78 @@
+---
+title: はじめに
+description: Web、ネイティブ、デスクトップを一つの基盤でまかなうコンポーネントライブラリ。インポートは一つ、ルートは一つ、設定は何もいりません。
+---
+
+{brand.name} は {brand.org} のコンポーネントライブラリです。どのコンポーネントも [@hanzo/gui](https://gui.hanzo.ai) を通して描きます。React と React Native のためのスタイルエンジンで、スタイルを props として受け取り、Web ではアトミック CSS へコンパイルします。エンジンがクロスプラットフォームなので、ライブラリも同じです。同じ `Switch` が、ブラウザでは `div` に、電話ではネイティブのビューになります。
+
+ユーティリティクラスを組み立てるビルドはありません。Tailwind も、PostCSS プラグインも、コンポーネントの下に敷く Radix のプリミティブも、レジストリも、`components.json` も、ソースをリポジトリへコピーする CLI もありません。パッケージを入れて、そこからインポートします。
+
+## インストールして描く
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+```tsx title="main.tsx"
+import { Hanzo, Button } from '@hanzo/ui'
+
+export default function App() {
+  return (
+    <Hanzo>
+      <Button>Ship</Button>
+    </Hanzo>
+  )
+}
+```
+
+セットアップは、これで全部です。`Hanzo` がルートで、これまで各アプリが自分で持っていた三つを担います。トークンが照らす gui の設定、スタイルシート、テーマです。読み込む CSS はなく、走らせるジェネレーターもありません。シートはパッケージを公開するときに作られます。すべてのコンポーネントを描画し、その描画が出す CSS を拾うので、最初の描画も、サーバー側の描画も、最初からルールを持っています。
+
+ホストがまだやることは一つです。バンドラーに、`react-native` は `react-native-web` だと伝えることです。エイリアスは一つで、置き場所は [インストール](/docs/installation) の各ホストのページにあります。
+
+## スタイルは props
+
+スタイルはコンポーネントの prop で、レスポンシブなスタイルは、同じ prop をブレークポイントのキーの下に置いたものです。
+
+```tsx
+import { Button, Text, XStack, YStack } from '@hanzo/ui'
+
+<YStack gap="$4" p="$5" $md={{ p: '$8' }}>
+  <Text fontSize="$5" color="$color11">
+    Balance
+  </Text>
+  <XStack gap="$2">
+    <Button>Send</Button>
+    <Button variant="outline">Receive</Button>
+  </XStack>
+</YStack>
+```
+
+ブレークポイントはモバイルファーストの最小幅です。`$sm` は 640、`$md` は 768、`$lg` は 1024、`$xl` は 1280。`$` で始まる値はトークンです。色、サイズ、間隔ランプの一段で、テーマに対して解決されます。だから `$background` は、呼び出し側が知らなくても、ライトとダークで別の色になります。フォントサイズは必ずトークンで、数値にはしません。`fontSize="$3"` であり、`fontSize={14}` ではありません。人が自分のタイプスケールを決めれば、ランプの `$n` はそれに合わせて動きます。直書きの 14 は動きません。階段は [テーマ](/docs/theming) にあります。
+
+## レイアウト
+
+スタックは flex です。`XStack` は行、`YStack` は列に並べ、どちらも `gap`、`items`、`justify` を取ります。グリッドは本物の CSS グリッドで、`@hanzo/ui/grid` にあります。トラックは子ではなくコンテナが決めます。[グリッド](/docs/grid) を見てください。
+
+## どこに何があるか
+
+| インポート | 中身 |
+| --- | --- |
+| `@hanzo/ui` | コンポーネント API。プリミティブのすべて、スタック、タイプスケール、そして `Hanzo`。 |
+| `@hanzo/ui/product` | アプリの層。チャート、ページの外装、状態のタグ、詳細ペイン、テーマの切り替え。 |
+| `@hanzo/ui/blocks` | データとしての内容と、それを描くレンダラー。 |
+| `@hanzo/ui/grid` | `Grid` と `Cell`。Web だけ。 |
+| `@hanzo/ui/product/pure` | プロダクト層が従うルール。コンポーネントは付いていません。 |
+| `@hanzo/ui/css` | `substitute`。カスケードのない DOM では答えられないテストのため。 |
+| `@hanzo/ui/next` | 両方のバンドラーへ Web のエイリアスを置く、Next のラッパー。 |
+
+このサイトのカタログ、[コンポーネント](/ui)、[ブロック](/blocks)、[プロダクト](/product) は、パッケージそのものから読みます。各ページはモジュールの例をソースの横に描き、型を引きます。
+
+## 質問
+
+**Tailwind は要りますか？** 要りません。コンポーネントはスタイルの props を受け取り、見た目の実体は素の CSS カスタムプロパティです。クラスの文字列を抱えたアプリが来ても、`Box` と `sx` と `css` が `tw` を通して読み、同じ props に変えます。パッケージが定義していないクラスとして DOM に届くものはありません。
+
+**コピーして貼る方式ですか？** 違います。パッケージを入れて、そこからインポートします。コンポーネントはパッケージと一緒にバージョンが付き、サブパスが解決するのはエクスポートマップです。深いインポートは、パッチをまたいでもそのまま動きます。
+
+**どのフレームワークですか？** バンドラーが `react-native` のエイリアスを知っていれば、React 19 のレンダラーならどれでもです。[Vite](/docs/installation/vite)、[Next](/docs/installation/next)、[One](/docs/installation/one)、[Expo](/docs/installation/expo)、[Tauri](/docs/installation/tauri) のページがあります。
+
+**商用で使えますか？** 使えます。Apache-2.0 か MIT か、好きな方を選んでください。

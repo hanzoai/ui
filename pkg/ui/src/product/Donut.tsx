@@ -1,3 +1,4 @@
+import { useTranslate } from '../i18n/react'
 
 /**
  * Donut — a tiny dependency-free SVG ring for a categorical breakdown
@@ -30,6 +31,7 @@ export function Donut({
   valueColor?: string
   labelColor?: string
 }) {
+  const tr = useTranslate()
   const total = segments.reduce((n, s) => n + Math.max(0, s.value), 0)
   if (total <= 0) return null
 
@@ -44,25 +46,13 @@ export function Donut({
     .map((s) => {
       const frac = s.value / total
       const dash = frac * circ
-      const node = (
-        <circle
-          key={s.label}
-          cx={cx}
-          cy={cy}
-          r={r}
-          fill="none"
-          stroke={s.color}
-          strokeWidth={thickness}
-          strokeDasharray={`${dash} ${circ - dash}`}
-          strokeDashoffset={-offset}
-        />
-      )
+      const node = <circle key={s.label} cx={cx} cy={cy} r={r} fill="none" stroke={s.color} strokeWidth={thickness} strokeDasharray={`${dash} ${circ - dash}`} strokeDashoffset={-offset} />
       offset += dash
       return node
     })
 
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Donut chart">
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={tr('Donut chart')}>
       {/* track */}
       <circle cx={cx} cy={cy} r={r} fill="none" stroke={trackColor} strokeWidth={thickness} />
       {/* segments, drawn from 12 o'clock */}

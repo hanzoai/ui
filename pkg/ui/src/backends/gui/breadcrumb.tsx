@@ -1,5 +1,6 @@
 'use client'
 
+import type { ComponentProps } from 'react'
 /**
  * Breadcrumb — where you are, in a trail.
  *
@@ -18,17 +19,18 @@
  * which this package's own house rule forbids.
  */
 import { Text, XStack } from '@hanzo/gui'
-import type { ComponentProps } from 'react'
 
+import { useTranslate } from '../../i18n/react'
 import { ink } from './ink'
 import { slot } from './slot'
 
 type Row = ComponentProps<typeof XStack>
 type Words = ComponentProps<typeof Text>
 
-export const Breadcrumb = (props: Row) => (
-  <XStack {...slot('breadcrumb')} render="nav" aria-label="Breadcrumb" minH={32} items="center" overflow="hidden" minW={0} {...props} />
-)
+export const Breadcrumb = (props: Row) => {
+  const tr = useTranslate()
+  return <XStack {...slot('breadcrumb')} render="nav" aria-label={tr('Breadcrumb')} minH={32} items="center" overflow="hidden" minW={0} {...props} />
+}
 
 export const BreadcrumbList = ({ children, ...props }: Row) => (
   <XStack {...slot('breadcrumb-list')} render="ol" items="center" gap="$1" m={0} p={0} minW={0} style={{ listStyle: 'none' }} {...props}>
@@ -51,16 +53,7 @@ export const BreadcrumbItem = ({ children, ...props }: Row) => (
  */
 export const BreadcrumbLink = ({ href, children, ...props }: Words & { href?: string }) =>
   href ? (
-    <Text
-      {...slot('breadcrumb-link')}
-      render="a"
-      {...({ href } as object)}
-      fontSize="$2"
-      color="$hint"
-      textDecorationLine="none"
-      hoverStyle={{ color: '$ink' }}
-      {...props}
-    >
+    <Text {...slot('breadcrumb-link')} render="a" {...({ href } as object)} fontSize="$2" color="$hint" textDecorationLine="none" hoverStyle={{ color: '$ink' }} {...props}>
       {children}
     </Text>
   ) : (
@@ -71,18 +64,7 @@ export const BreadcrumbLink = ({ href, children, ...props }: Words & { href?: st
 
 /** The step you are ON — not a link, and it says so. The one step that shrinks. */
 export const BreadcrumbPage = ({ children, ...props }: Words) => (
-  <Text
-    {...slot('breadcrumb-page')}
-    role="link"
-    aria-disabled
-    aria-current="page"
-    fontSize="$2"
-    color="$ink"
-    numberOfLines={1}
-    shrink={1}
-    minW={0}
-    {...props}
-  >
+  <Text {...slot('breadcrumb-page')} role="link" aria-disabled aria-current="page" fontSize="$2" color="$ink" numberOfLines={1} shrink={1} minW={0} {...props}>
     {children}
   </Text>
 )

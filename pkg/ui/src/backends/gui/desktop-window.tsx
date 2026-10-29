@@ -1,5 +1,6 @@
 'use client'
 
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 /**
  * DesktopWindow — a macOS-style floating panel: a title bar with traffic-light
  * controls (close/minimize/maximize), a draggable title bar, a resizable
@@ -13,8 +14,9 @@
  * a themed surface — everything else on the frame (background, border, radius,
  * shadow) is a token read through `variant`.
  */
-import { SizableText, XStack, YStack, createStyledContext, styled, type GuiElement } from '@hanzo/gui'
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { createStyledContext, SizableText, styled, XStack, YStack, type GuiElement } from '@hanzo/gui'
+
+import { useTranslate } from '../../i18n/react'
 import { drag, dragPos, touch, type DragEvent } from './gesture'
 import { slot } from './slot'
 
@@ -24,10 +26,11 @@ const TITLE_BAR_H = 40
 const CONTROL = 12
 const RESIZE_HANDLE = 16
 
-const box = (el: GuiElement | null) =>
-  typeof HTMLElement !== 'undefined' && el instanceof HTMLElement ? el : null
+const box = (el: GuiElement | null) => (typeof HTMLElement !== 'undefined' && el instanceof HTMLElement ? el : null)
 
-const WindowContext = /* @__PURE__ */ createStyledContext<{ windowType: DesktopWindowType }>({
+const WindowContext = /* @__PURE__ */ createStyledContext<{
+  windowType: DesktopWindowType
+}>({
   windowType: 'default',
 })
 
@@ -95,38 +98,13 @@ export type DesktopWindowControlsProps = {
 }
 
 /** The three traffic-light dots on their own, for a title bar built by hand. */
-export function DesktopWindowControls({
-  onClose,
-  onMinimize,
-  onMaximize,
-  isMaximized = false,
-}: DesktopWindowControlsProps) {
+export function DesktopWindowControls({ onClose, onMinimize, onMaximize, isMaximized = false }: DesktopWindowControlsProps) {
+  const tr = useTranslate()
   return (
     <XStack {...slot('desktop-window-controls')} items="center" gap="$2">
-      <Light
-        {...slot('desktop-window-close')}
-        tone="close"
-        onPress={onClose}
-        {...touch(CONTROL, 44, 'both')}
-        aria-label="Close window"
-        role="button"
-      />
-      <Light
-        {...slot('desktop-window-minimize')}
-        tone="minimize"
-        onPress={onMinimize}
-        {...touch(CONTROL, 44, 'both')}
-        aria-label="Minimize window"
-        role="button"
-      />
-      <Light
-        {...slot('desktop-window-maximize')}
-        tone="maximize"
-        onPress={onMaximize}
-        {...touch(CONTROL, 44, 'both')}
-        aria-label={isMaximized ? 'Restore window' : 'Maximize window'}
-        role="button"
-      />
+      <Light {...slot('desktop-window-close')} tone="close" onPress={onClose} {...touch(CONTROL, 44, 'both')} aria-label={tr('Close window')} role="button" />
+      <Light {...slot('desktop-window-minimize')} tone="minimize" onPress={onMinimize} {...touch(CONTROL, 44, 'both')} aria-label={tr('Minimize window')} role="button" />
+      <Light {...slot('desktop-window-maximize')} tone="maximize" onPress={onMaximize} {...touch(CONTROL, 44, 'both')} aria-label={isMaximized ? tr('Restore window') : tr('Maximize window')} role="button" />
     </XStack>
   )
 }
@@ -165,31 +143,15 @@ export type DesktopWindowProps = {
  * a caller that needs several windows keeps one of these per window and an
  * `onFocus` that raises its `zIndex`.
  */
-export function DesktopWindow({
-  title,
-  icon,
-  children,
-  onClose,
-  onMinimize,
-  onMaximize,
-  onFocus,
-  initialPosition,
-  initialSize,
-  minWidth = 200,
-  minHeight = 150,
-  maxWidth,
-  maxHeight,
-  windowType = 'default',
-  resizable = true,
-  draggable = true,
-  hideControls = false,
-  zIndex = 1000,
-}: DesktopWindowProps) {
+export function DesktopWindow({ title, icon, children, onClose, onMinimize, onMaximize, onFocus, initialPosition, initialSize, minWidth = 200, minHeight = 150, maxWidth, maxHeight, windowType = 'default', resizable = true, draggable = true, hideControls = false, zIndex = 1000 }: DesktopWindowProps) {
   const frameRef = useRef<GuiElement | null>(null)
   const [position, setPosition] = useState(() => initialPosition ?? { x: 100, y: 100 })
   const [size, setSize] = useState(() => initialSize ?? { width: 800, height: 600 })
   const [isMaximized, setIsMaximized] = useState(false)
-  const restoreRef = useRef<{ position: typeof position; size: typeof size } | null>(null)
+  const restoreRef = useRef<{
+    position: typeof position
+    size: typeof size
+  } | null>(null)
   const lastPointer = useRef({ x: 0, y: 0 })
   const startSize = useRef(size)
 
@@ -235,10 +197,13 @@ export function DesktopWindow({
     enabled: draggable && !isMaximized,
   })
 
-  const beginResize = useCallback((e: DragEvent) => {
-    lastPointer.current = { x: dragPos(e, true), y: dragPos(e, false) }
-    startSize.current = size
-  }, [size])
+  const beginResize = useCallback(
+    (e: DragEvent) => {
+      lastPointer.current = { x: dragPos(e, true), y: dragPos(e, false) }
+      startSize.current = size
+    },
+    [size]
+  )
 
   const moveResize = useCallback(
     (e: DragEvent) => {
@@ -250,7 +215,7 @@ export function DesktopWindow({
       const height = Math.max(minHeight, Math.min(startSize.current.height + dy, maxHeight ?? Infinity))
       setSize({ width, height })
     },
-    [minWidth, minHeight, maxWidth, maxHeight],
+    [minWidth, minHeight, maxWidth, maxHeight]
   )
 
   const resizeGesture = drag({
@@ -294,28 +259,8 @@ export function DesktopWindow({
         zIndex,
       }}
     >
-      <XStack
-        {...slot('desktop-window-title-bar')}
-        height={TITLE_BAR_H}
-        px="$3"
-        items="center"
-        justify="space-between"
-        borderBottomWidth={1}
-        borderColor="$borderColor"
-        cursor={draggable && !isMaximized ? 'grab' : 'default'}
-        onDoubleClick={handleMaximize}
-        {...dragGesture}
-      >
-        {hideControls ? (
-          <XStack width={CONTROL * 3 + 16} />
-        ) : (
-          <DesktopWindowControls
-            onClose={onClose}
-            onMinimize={onMinimize}
-            onMaximize={handleMaximize}
-            isMaximized={isMaximized}
-          />
-        )}
+      <XStack {...slot('desktop-window-title-bar')} height={TITLE_BAR_H} px="$3" items="center" justify="space-between" borderBottomWidth={1} borderColor="$borderColor" cursor={draggable && !isMaximized ? 'grab' : 'default'} onDoubleClick={handleMaximize} {...dragGesture}>
+        {hideControls ? <XStack width={CONTROL * 3 + 16} /> : <DesktopWindowControls onClose={onClose} onMinimize={onMinimize} onMaximize={handleMaximize} isMaximized={isMaximized} />}
         <XStack items="center" gap="$2" flex={1} justify="center">
           {icon}
           <TitleText id={titleId} windowType={windowType} numberOfLines={1}>
@@ -329,18 +274,7 @@ export function DesktopWindow({
         {children}
       </YStack>
 
-      {resizable && !isMaximized ? (
-        <XStack
-          {...slot('desktop-window-resize-handle')}
-          position="absolute"
-          b={0}
-          r={0}
-          width={RESIZE_HANDLE}
-          height={RESIZE_HANDLE}
-          cursor="se-resize"
-          {...resizeGesture}
-        />
-      ) : null}
+      {resizable && !isMaximized ? <XStack {...slot('desktop-window-resize-handle')} position="absolute" b={0} r={0} width={RESIZE_HANDLE} height={RESIZE_HANDLE} cursor="se-resize" {...resizeGesture} /> : null}
     </Frame>
   )
 }

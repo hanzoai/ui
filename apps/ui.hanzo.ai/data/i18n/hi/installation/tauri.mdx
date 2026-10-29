@@ -1,0 +1,79 @@
+---
+title: Tauri
+description: Vite बिल्ड के ऊपर एक वेब व्यू। Vite की तैयारी, और एक थीम टॉगल जिसे किसी फ़्रेमवर्क की ज़रूरत नहीं।
+---
+
+Tauri ऐप एक नेटिव खिड़की में Vite ऐप है, इसलिए वेब की तैयारी ही पूरी तैयारी
+है: एलियास, एक्सटेंशन का क्रम और रूट वही हैं जो
+[Vite](/docs/installation/vite) पृष्ठ पर हैं।
+
+## प्रोजेक्ट बनाएँ
+
+```bash
+pnpm create tauri-app@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Vite कॉन्फ़िगर करें
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  clearScreen: false,
+  server: { port: 1420, strictPort: true },
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+`server.port` और `clearScreen` डेव खिड़की के लिए Tauri की अपनी परंपराएँ
+हैं; `resolve` ब्लॉक लाइब्रेरी का है।
+
+## रूट लगाएँ
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+## बिना फ़्रेमवर्क के थीम टॉगल
+
+`@hanzo/ui/product` का `ThemeToggle` बिना किसी फ़्रेमवर्क डिपेंडेंसी के
+काम करता है। नियंत्रित होने पर वह बटन खींचता है और अगली थीम बताता है; ऐप
+मान रखता है और उसे रूट को देता है।
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App() {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+    </Hanzo>
+  )
+}
+```
+
+उसी टॉगल का Next बंधन अपने सबपाथ पर रहता है,
+`@hanzo/ui/product/theme-toggle-next`, ठीक इसलिए कि Tauri, Vite या Express
+होस्ट उत्पाद परत आयात करके अपने ग्राफ़ में Next न खींचे।

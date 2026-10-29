@@ -1,0 +1,100 @@
+---
+title: Tipografia
+description: Zen e Zen Mono, una scala tipografica che ogni componente legge, e un contenitore di prosa per il testo che non hai scritto tu.
+---
+
+## I caratteri
+
+Zen è il carattere con cui si legge; Zen Mono è per il codice, gli
+identificatori e tutto ciò che è numerico. Entrambi viaggiano con il pacchetto
+e sono legati a due proprietà personalizzate che nominano il ruolo, non il
+carattere:
+
+```css
+--font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+--font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
+```
+
+I componenti leggono le due variabili e mai un nome di famiglia. Un host che
+preferisce il proprio lega `--font-sans-provided`; il legame del pacchetto
+vive in un livello di cascata, quindi quello dell'host, senza livello, vince.
+Un host che non lega niente ottiene Zen.
+
+<Preview>
+  <YStack gap="$2">
+    <Text fontSize="$8" fontWeight="600">The quick brown fox jumps over the lazy dog</Text>
+    <Text fontSize="$4" color="$color11">Zen at the section and body rungs, tracked and leaded for the size.</Text>
+    <Text fontFamily="$mono" fontSize="$3">pnpm add @hanzo/ui — Zen Mono for code and numbers 0123456789</Text>
+  </YStack>
+</Preview>
+
+## La scala
+
+C'è una sola scala tipografica e ogni componente ci sta sopra. `Text` riceve
+`fontSize="$n"` con l'interlinea e il tracking di quel gradino; i titoli e
+`Paragraph` ricevono `size="$n"` e impostano i tre insieme.
+
+```tsx
+import { H1, H2, Paragraph, SizableText, Text } from '@hanzo/ui'
+
+<H1>A page title</H1>
+<H2 size="$6">A section</H2>
+<Paragraph size="$4">Body copy at the base rung.</Paragraph>
+<SizableText size="$2" color="$color11">A label.</SizableText>
+<Text fontFamily="$mono" fontSize="$2">an identifier</Text>
+```
+
+Mai un numero. `fontSize={14}` resta fisso a 14; `fontSize="$3"` è 14 oggi e
+quello che ne fa la scala tipografica di una persona, perché il gradino si
+risolve attraverso `var(--text-base)` e la manopola moltiplica la rampa. La
+pagina [Temi](/docs/theming) ha la tabella.
+
+## Prosa
+
+Il contenuto d'autore — un campo di un CMS, un file Markdown, il corpo di un
+blocco — arriva come tag nudi. Niente al suo interno può portare una prop,
+quindi lo stile deve venire da un antenato e scendere per tag.
+`ApplyTypography` è quell'antenato.
+
+```tsx
+import { ApplyTypography } from '@hanzo/ui'
+
+<ApplyTypography size="base">
+  <h2>Install</h2>
+  <p>
+    Add the package, then wrap the app once at the root. The full guide is
+    at <a href="https://ui.hanzo.ai">ui.hanzo.ai</a>.
+  </p>
+  <pre>
+    <code>{"pnpm add @hanzo/ui\npnpm dev"}</code>
+  </pre>
+  <ol>
+    <li>
+      Render <strong>Hanzo</strong> once, around the whole tree.
+    </li>
+    <li>
+      Import <code>Button</code> or any other component from the same
+      package.
+    </li>
+    <li>Pass it the props its type declares.</li>
+  </ol>
+  <blockquote>
+    Components read their colours from the theme, so a token changed there
+    changes every surface at once.
+  </blockquote>
+</ApplyTypography>
+```
+
+<Preview>
+  <ProseBlocks />
+</Preview>
+
+`size` vale `responsive` per default — l'unico gradino che si muove con il
+viewport — oppure `sm`, `base`, `lg`, `xl`, che restano fermi, perché una
+dimensione scelta da chi chiama è una decisione e non un suggerimento.
+`asTag` sceglie l'elemento, uno qualunque tra `div`, `section`, `nav`, `main`,
+`article`, `aside`. Le regole vivono nel foglio sotto `.hz-prose`, con uno
+spazio di nomi, così un sito a metà strada da un altro plugin di tipografia
+non ha due fogli che si contendono un selettore. La pagina
+[prosa](/ui/prose) renderizza ogni gradino, e un contenitore annidato in un
+contenitore.

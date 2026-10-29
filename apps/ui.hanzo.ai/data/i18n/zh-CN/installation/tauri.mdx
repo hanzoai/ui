@@ -1,0 +1,72 @@
+---
+title: Tauri
+description: 盖在 Vite 构建之上的 Web 视图。Vite 的搭建，以及一个不需要框架的主题开关。
+---
+
+Tauri 应用就是原生窗口里的一个 Vite 应用，所以 Web 的搭建就是全部搭建：别名、扩展名顺序和根，都是 [Vite](/docs/installation/vite) 那一页上的。
+
+## 创建项目
+
+```bash
+pnpm create tauri-app@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## 配置 Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  clearScreen: false,
+  server: { port: 1420, strictPort: true },
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+`server.port` 和 `clearScreen` 是 Tauri 自己给开发窗口定的惯例；`resolve` 那一块是库的。
+
+## 挂上根
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+## 不靠框架的主题开关
+
+来自 `@hanzo/ui/product` 的 `ThemeToggle` 不依赖任何框架。受控时，它画出按钮并报告下一个主题；应用自己保存这个值，再交给根。
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App() {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+    </Hanzo>
+  )
+}
+```
+
+同一个开关的 Next 绑定住在它自己的子路径 `@hanzo/ui/product/theme-toggle-next`，正是为了让 Tauri、Vite 或 Express 宿主在导入产品层时，不会把 Next 拖进依赖图。

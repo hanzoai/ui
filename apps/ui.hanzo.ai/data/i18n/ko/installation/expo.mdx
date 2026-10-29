@@ -1,0 +1,37 @@
+---
+title: Expo 와 React Native
+description: 같은 임포트이고, 별칭할 것은 없습니다. Metro 는 이미 react-native 를 말합니다.
+---
+
+라이브러리는 @hanzo/gui 를 거쳐 렌더합니다. 이쪽이 React Native 가 먼저입니다. 스택은 `View`, 글자는 `Text`, 스타일 prop 은 스타일 자체입니다. 웹에서 `div` 를 그리는 같은 컴포넌트가 여기서는 네이티브 뷰를 그립니다. 테마 토큰, 간격 램프, 타입 사다리는 양쪽에서 같은 뜻입니다.
+
+## 설치
+
+```bash
+pnpm create expo-app@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+번들러 설정은 없습니다. 웹 호스트가 두는 `react-native` 별칭은 웹 번들러가 네이티브 패키지를 읽게 하는 것입니다. Metro 는 네이티브 번들러이고, 적힌 그대로 읽습니다. 루트가 가져오는 스타일시트 임포트는 네이티브 Metro 에서는 아무 일도 하지 않고, Expo 웹에서는 적용됩니다.
+
+## 루트 마운트
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Stack } from 'expo-router'
+
+export default function Layout() {
+  return (
+    <Hanzo>
+      <Stack />
+    </Hanzo>
+  )
+}
+```
+
+## 웹에 남는 것
+
+`@hanzo/ui/grid` 는 `display: grid` 인 `div` 를 렌더합니다. 둘 다 React Native 에는 없습니다. Yoga 에 그리드 알고리즘이 없기 때문입니다. 그래서 루트 배럴이 아니라 자기 서브패스로 나갑니다. 거기서는 `XStack` 과 `YStack` 으로 놓으세요. 네이티브 그리드 엔진은 그 파일 하나만 바꾸고 호출부는 바꾸지 않습니다. `@hanzo/ui/product` 의 차트는 인라인 SVG 를 그리고 컨테이너를 `ResizeObserver` 로 재므로, 지금도 웹 컴포넌트입니다.
+
+터치 대상은 `hitSlop` 으로 44 포인트 하한을 맞춥니다. padding 으로는 맞추지 않습니다. 컨트롤의 상자는 두 플랫폼에서 같은 크기이고, 닿는 영역은 다릅니다.

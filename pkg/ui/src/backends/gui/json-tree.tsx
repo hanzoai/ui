@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from 'react'
 /**
  * JsonTree — a JSON value drawn as a tree a reader can open and close: one row
  * per key or element, objects and arrays behind a disclosure that says how
@@ -37,23 +38,10 @@
  * A keyPath is the keys joined with dots, entries by their id.
  */
 import { SizableText, XStack, YStack, type YStackProps } from '@hanzo/gui'
-import {
-  Box,
-  Brackets,
-  Check,
-  ChevronDown,
-  ChevronRight,
-  ChevronsDownUp,
-  ChevronsUpDown,
-  CircleOff,
-  Copy,
-  Hash,
-  SquareCheck,
-  Type,
-} from '@hanzogui/lucide-icons-2'
-import * as React from 'react'
+import { Box, Brackets, Check, ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, CircleOff, Copy, Hash, SquareCheck, Type } from '@hanzogui/lucide-icons-2'
 
 import { face, type CodeToken } from '../../code-theme'
+import { useTranslate } from '../../i18n/react'
 import { Button } from './button'
 import { ltr } from './dir'
 import { Grip } from './grip'
@@ -103,13 +91,13 @@ const branch = (v: unknown): Branch | null =>
   Array.isArray(v)
     ? { kind: 'array', entries: v.map((x, i) => [String(i), x]) }
     : v !== null && typeof v === 'object'
-      ? { kind: 'object', entries: Object.entries(v as Record<string, unknown>) }
+      ? {
+          kind: 'object',
+          entries: Object.entries(v as Record<string, unknown>),
+        }
       : null
 
-const count = (b: Branch) =>
-  b.kind === 'array'
-    ? `[${b.entries.length} ${b.entries.length === 1 ? 'item' : 'items'}]`
-    : `{${b.entries.length} ${b.entries.length === 1 ? 'key' : 'keys'}}`
+const count = (b: Branch) => (b.kind === 'array' ? `[${b.entries.length} ${b.entries.length === 1 ? 'item' : 'items'}]` : `{${b.entries.length} ${b.entries.length === 1 ? 'key' : 'keys'}}`)
 
 /** A child's path: each key escaped, so a key `a.b` and a nested `a` → `b` stay two paths. */
 const child = (path: string, key: string) => `${path}/${encodeURIComponent(key)}`
@@ -124,8 +112,7 @@ function paths(v: unknown, depth: number, at = '$', level = 0, out = new Set<str
 }
 
 /** A leaf as it is drawn, and as the filter reads it. */
-const text = (value: unknown) =>
-  typeof value === 'string' ? JSON.stringify(value) : value === undefined ? 'undefined' : String(value)
+const text = (value: unknown) => (typeof value === 'string' ? JSON.stringify(value) : value === undefined ? 'undefined' : String(value))
 
 /**
  * What a filter keeps. `rows` maps each kept path to `true` when everything
@@ -140,9 +127,7 @@ export function sift(data: unknown, query: string): Sifted {
   const open = new Set<string>()
   const walk = (v: unknown, at: string, dotted: string, name: string | null): boolean => {
     const b = branch(v)
-    const hit =
-      (name !== null && (name.toLowerCase().includes(q) || `.${dotted}`.toLowerCase().includes(`.${q}`))) ||
-      (!b && text(v).toLowerCase().includes(q))
+    const hit = (name !== null && (name.toLowerCase().includes(q) || `.${dotted}`.toLowerCase().includes(`.${q}`))) || (!b && text(v).toLowerCase().includes(q))
     if (hit) {
       rows.set(at, true)
       if (b) open.add(at)
@@ -192,28 +177,9 @@ export interface JsonTreeProps extends Omit<YStackProps, 'children' | 'minHeight
   onResize?: (height: number | null) => void
 }
 
-export function JsonTree({
-  data: given,
-  entries,
-  variant = 'code',
-  getNodeHighlighting,
-  onNodeValueClick,
-  labels,
-  depth = 2,
-  title,
-  showCopyButton = true,
-  search = true,
-  maxHeight,
-  minHeight = 96,
-  resizable = false,
-  defaultHeight = null,
-  onResize,
-  ...props
-}: JsonTreeProps) {
-  const data = React.useMemo(
-    () => (entries ? Object.fromEntries(entries.map((e) => [e.id, e.value])) : given),
-    [entries, given],
-  )
+export function JsonTree({ data: given, entries, variant = 'code', getNodeHighlighting, onNodeValueClick, labels, depth = 2, title, showCopyButton = true, search = true, maxHeight, minHeight = 96, resizable = false, defaultHeight = null, onResize, ...props }: JsonTreeProps) {
+  const tr = useTranslate()
+  const data = React.useMemo(() => (entries ? Object.fromEntries(entries.map((e) => [e.id, e.value])) : given), [entries, given])
   const ctx = React.useMemo<Ctx>(
     () => ({
       variant,
@@ -222,7 +188,7 @@ export function JsonTree({
       labels: { ...LABELS, ...labels },
       names: new Map((entries ?? []).map((e) => [e.id, e.label])),
     }),
-    [variant, getNodeHighlighting, onNodeValueClick, labels, entries],
+    [variant, getNodeHighlighting, onNodeValueClick, labels, entries]
   )
   const [open, setOpen] = React.useState(() => paths(data, depth))
   const [query, setQuery] = React.useState('')
@@ -263,7 +229,7 @@ export function JsonTree({
         if (!next.delete(path)) next.add(path)
         return next
       }),
-    [],
+    []
   )
 
   const copy = async () => {
@@ -287,42 +253,16 @@ export function JsonTree({
   const fixed = height !== null
 
   return (
-    <YStack
-      {...slot('json-tree')}
-      borderWidth={1}
-      borderColor="$borderColor"
-      rounded="$3"
-      overflow="hidden"
-      bg="$background"
-      {...props}
-    >
+    <YStack {...slot('json-tree')} borderWidth={1} borderColor="$borderColor" rounded="$3" overflow="hidden" bg="$background" {...props}>
       {header && (
         // One row: the title, then the filter and the three actions as icons that name
         // themselves. The filter and the actions move as one group, so on a pane too narrow
         // for all of it they wrap under the title together instead of overlapping it.
-        <XStack
-          {...slot('json-tree-header')}
-          items="center"
-          flexWrap="wrap"
-          gap="$1"
-          borderBottomWidth={1}
-          borderColor="$borderColor"
-          bg="$panel"
-          px="$2"
-          py="$1"
-        >
+        <XStack {...slot('json-tree-header')} items="center" flexWrap="wrap" gap="$1" borderBottomWidth={1} borderColor="$borderColor" bg="$panel" px="$2" py="$1">
           <SizableText size="$1" fontFamily="$mono" color="$soft" px="$2" grow={1}>
             {title ?? 'JSON'}
           </SizableText>
-          <XStack
-            grow={1}
-            shrink={1}
-            flexBasis={searchable ? 240 : 'auto'}
-            minW={0}
-            justify="flex-end"
-            items="center"
-            gap="$1"
-          >
+          <XStack grow={1} shrink={1} flexBasis={searchable ? 240 : 'auto'} minW={0} justify="flex-end" items="center" gap="$1">
             {searchable && (
               <XStack flex={1} minW={0} maxW={260}>
                 <Input
@@ -330,7 +270,7 @@ export function JsonTree({
                   type="search"
                   value={query}
                   onChangeText={type}
-                  placeholder="Filter"
+                  placeholder={tr('Filter')}
                   aria-label={`Filter ${title ?? 'JSON'} by key, path or value`}
                   // No adornment: its wrapper holds the field at its intrinsic width, and
                   // on a narrow pane that pushed the actions out of the header.
@@ -341,37 +281,16 @@ export function JsonTree({
             )}
             {root && (
               <>
-                <Button
-                  {...slot('json-tree-expand')}
-                  variant="ghost"
-                  size="icon-sm"
-                  aria-label="Expand all"
-                  title="Expand all"
-                  onClick={() => setOpen(paths(data, Number.POSITIVE_INFINITY))}
-                >
+                <Button {...slot('json-tree-expand')} variant="ghost" size="icon-sm" aria-label={tr('Expand all')} title="Expand all" onClick={() => setOpen(paths(data, Number.POSITIVE_INFINITY))}>
                   <ChevronsUpDown size={14} />
                 </Button>
-                <Button
-                  {...slot('json-tree-collapse')}
-                  variant="ghost"
-                  size="icon-sm"
-                  aria-label="Collapse all"
-                  title="Collapse all"
-                  onClick={() => setOpen(new Set())}
-                >
+                <Button {...slot('json-tree-collapse')} variant="ghost" size="icon-sm" aria-label={tr('Collapse all')} title="Collapse all" onClick={() => setOpen(new Set())}>
                   <ChevronsDownUp size={14} />
                 </Button>
               </>
             )}
             {showCopyButton && (
-              <Button
-                {...slot('json-tree-copy')}
-                variant="ghost"
-                size="icon-sm"
-                aria-label={copied ? 'Copied' : `Copy ${title ?? 'JSON'}`}
-                title="Copy"
-                onClick={copy}
-              >
+              <Button {...slot('json-tree-copy')} variant="ghost" size="icon-sm" aria-label={copied ? tr('Copied') : tr('Copy {what}', { what: title ?? 'JSON' })} title={tr('Copy')} onClick={copy}>
                 {copied ? <Check size={14} /> : <Copy size={14} />}
               </Button>
             )}
@@ -380,14 +299,7 @@ export function JsonTree({
       )}
       {/* The grip measures its parent, so the body and its grip share one box. */}
       <YStack position="relative">
-        <YStack
-          {...slot('json-tree-body')}
-          {...ltr}
-          py="$2"
-          px="$2"
-          {...(fixed ? { height } : maxHeight !== undefined ? { maxH: maxHeight } : null)}
-          overflowY={fixed || maxHeight !== undefined ? 'auto' : undefined}
-        >
+        <YStack {...slot('json-tree-body')} {...ltr} py="$2" px="$2" {...(fixed ? { height } : maxHeight !== undefined ? { maxH: maxHeight } : null)} overflowY={fixed || maxHeight !== undefined ? 'auto' : undefined}>
           {none ? (
             <SizableText {...slot('json-tree-empty')} size="$2" color="$soft" px="$2" py="$1">
               Nothing matches “{query.trim()}”.
@@ -396,19 +308,7 @@ export function JsonTree({
             <Node name={null} value={data} path="$" dotted="" level={0} open={open} toggle={toggle} kept={kept} ctx={ctx} />
           )}
         </YStack>
-        {resizable && (
-          <Grip
-            side="top"
-            span={height ?? minHeight}
-            floor={minHeight}
-            ceil={CEILING}
-            onSpan={setHeight}
-            onKeep={size}
-            onReset={() => size(null)}
-            label={`Resize ${title ?? 'JSON'}`}
-            b={0}
-          />
-        )}
+        {resizable && <Grip side="top" span={height ?? minHeight} floor={minHeight} ceil={CEILING} onSpan={setHeight} onKeep={size} onReset={() => size(null)} label={`Resize ${title ?? 'JSON'}`} b={0} />}
       </YStack>
     </YStack>
   )
@@ -442,8 +342,18 @@ const kindOf = (v: unknown): keyof typeof KIND => {
 
 /** The accent, the error state, or nothing, as the three parts of a node paint it. */
 const MARK = {
-  blue: { edge: 'var(--primary)', fill: '$hover', ink: 'var(--primary)', value: 'var(--primary)' },
-  red: { edge: '$red7', fill: 'var(--state-error-bg)', ink: '$bad', value: '$bad' },
+  blue: {
+    edge: 'var(--primary)',
+    fill: '$hover',
+    ink: 'var(--primary)',
+    value: 'var(--primary)',
+  },
+  red: {
+    edge: '$red7',
+    fill: 'var(--state-error-bg)',
+    ink: '$bad',
+    value: '$bad',
+  },
 } as const
 
 function Leaf({ value, dotted, mark, ctx }: { value: unknown; dotted: string; mark: JsonHighlight | null; ctx: Ctx }) {
@@ -483,7 +393,11 @@ function Leaf({ value, dotted, mark, ctx }: { value: unknown; dotted: string; ma
       rounded="$xs"
       cursor="pointer"
       hoverStyle={{ bg: '$hover' }}
-      focusVisibleStyle={{ outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' }}
+      focusVisibleStyle={{
+        outlineColor: '$outlineColor',
+        outlineWidth: 2,
+        outlineStyle: 'solid',
+      }}
       aria-label={`${dotted || 'value'}: ${shown}`}
       onPress={() => ctx.onValue?.(value, dotted)}
     >
@@ -503,22 +417,14 @@ function Arrow({ expanded, empty, mark, ctx }: { expanded: boolean; empty: boole
   }
   if (empty) return <XStack width={24} shrink={0} />
   return (
-    <XStack
-      {...slot('json-tree-arrow')}
-      width={24}
-      height={24}
-      shrink={0}
-      items="center"
-      justify="center"
-      rounded="$xs"
-      borderWidth={1}
-      borderColor={(mark === 'red' ? '$red7' : mark ? 'var(--primary)' : '$borderColor') as never}
-      bg="$panel"
-    >
+    <XStack {...slot('json-tree-arrow')} width={24} height={24} shrink={0} items="center" justify="center" rounded="$xs" borderWidth={1} borderColor={(mark === 'red' ? '$red7' : mark ? 'var(--primary)' : '$borderColor') as never} bg="$panel">
       <ChevronDown
         size={16}
         color={(mark ? ink : '$aside') as never}
-        style={{ transform: `rotate(${expanded ? 0 : -90}deg)`, transition: 'transform 300ms ease' }}
+        style={{
+          transform: `rotate(${expanded ? 0 : -90}deg)`,
+          transition: 'transform 300ms ease',
+        }}
       />
     </XStack>
   )
@@ -539,18 +445,7 @@ function Key({ name, kind, mark, ctx }: { name: string; kind: keyof typeof KIND;
   const Icon = KIND[kind]
   const m = mark === 'blue' || mark === 'red' ? MARK[mark] : null
   return (
-    <XStack
-      {...slot('json-tree-key')}
-      items="center"
-      gap="$1"
-      height={24}
-      px="$2"
-      shrink={0}
-      rounded="$xs"
-      borderWidth={1}
-      borderColor={(m?.edge ?? '$borderColor') as never}
-      bg={(m?.fill ?? '$panel') as never}
-    >
+    <XStack {...slot('json-tree-key')} items="center" gap="$1" height={24} px="$2" shrink={0} rounded="$xs" borderWidth={1} borderColor={(m?.edge ?? '$borderColor') as never} bg={(m?.fill ?? '$panel') as never}>
       <Icon size={16} color={(m?.ink ?? '$hint') as never} aria-hidden />
       <SizableText size="$2" color={(m?.ink ?? '$ink') as never} numberOfLines={1}>
         {shown}
@@ -635,15 +530,7 @@ function Node({
         <Arrow expanded={expanded} empty={empty} mark={mark} ctx={ctx} />
         {key}
         <SizableText {...slot('json-tree-count')} size="$2" fontFamily={boxed ? undefined : '$mono'} color={boxed ? '$hint' : '$codeComment'}>
-          {empty
-            ? boxed
-              ? b.kind === 'array'
-                ? ctx.labels.emptyArray
-                : ctx.labels.emptyObject
-              : b.kind === 'array'
-                ? '[]'
-                : '{}'
-            : count(b)}
+          {empty ? (boxed ? (b.kind === 'array' ? ctx.labels.emptyArray : ctx.labels.emptyObject) : b.kind === 'array' ? '[]' : '{}') : count(b)}
         </SizableText>
       </XStack>
       {expanded && (
@@ -651,20 +538,7 @@ function Node({
           {b.entries.map(([k, v]) => {
             const at = child(path, k)
             if (kept && !kept.has(at)) return null
-            return (
-              <Node
-                key={k}
-                name={k}
-                value={v}
-                path={at}
-                dotted={dotted ? `${dotted}.${k}` : k}
-                level={level + 1}
-                open={open}
-                toggle={toggle}
-                kept={kept && !kept.get(at) ? kept : null}
-                ctx={ctx}
-              />
-            )
+            return <Node key={k} name={k} value={v} path={at} dotted={dotted ? `${dotted}.${k}` : k} level={level + 1} open={open} toggle={toggle} kept={kept && !kept.get(at) ? kept : null} ctx={ctx} />
           })}
         </YStack>
       )}

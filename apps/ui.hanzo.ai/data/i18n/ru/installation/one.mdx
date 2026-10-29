@@ -1,0 +1,64 @@
+---
+title: One
+description: Фреймворк, на котором собран этот сайт. Псевдоним, список dedupe и корень в документе.
+---
+
+[One](https://onestack.dev) — фреймворк Vite для React и React Native с файловыми маршрутами. Этот сайт — приложение One, отрендеренное в статический HTML, и конфигурация ниже — его собственная.
+
+## Создайте проект
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Настройте Vite
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+Псевдоним тот же, что ставит каждый хост. Список dedupe держит движок одним экземпляром в клиентском и серверном бандлах: тема — это контекст React, и две копии модуля, которому он принадлежит, — два контекста.
+
+## Смонтируйте корень
+
+One рендерит весь документ из `_layout.tsx`, поэтому корень ставится туда.
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## Статический рендер
+
+При `defaultRenderMode: 'ssg'` каждый маршрут один раз рендерится во время сборки в настоящий HTML-файл, и таблица стилей пакета уже в этом файле. Таблица рождается при публикации пакета, а не когда браузер впервые рендерит компонент, — поэтому статическая страница верна ещё до какого-либо скрипта.

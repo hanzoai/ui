@@ -1658,6 +1658,32 @@ reader who notices it does not spend a release cycle repairing a break with no
 consumer. If an outside consumer ever appears, the lever is `npm deprecate` on
 those two exact versions, not a new minor.
 
+## Localization
+
+Built-in component copy is English in the source and a catalog beside it.
+`<Hanzo locale="ja">` or `<LocaleProvider locale="ar">` switches it. With no
+provider, and for any key a catalog lacks, the English sentence is what
+renders — the same tree as before the catalogs existed. `locale` accepts the
+site tags (`es`, `pt-BR`, `zh-CN`, `zh-TW`, …) and any tag `@hanzo/i18n`
+negotiates (`fa`, `he`, `nl`); direction follows that package, so Arabic and
+the other Arabic- and Hebrew-script locales set `dir="rtl"` on the subtree.
+
+Catalogs: `pkg/ui/src/i18n/source.ts` is the key list, `pkg/ui/src/i18n/catalogs/`
+holds one JSON file per target locale. `node scripts/i18n-check.mjs` fails when
+a key or a `{placeholder}` is missing. `node scripts/i18n-translate.mjs` fills
+gaps from `HANZO_API_BASE` (default `https://api.hanzo.ai/v1`) with
+`HANZO_API_KEY`, and does not overwrite a string that is already there.
+`node scripts/i18n-translate-mdx.mjs` does the same for docs pages that are
+not already translated. English lives in `apps/ui.hanzo.ai/data/docs`. Every
+page there now has a translation at
+`apps/ui.hanzo.ai/data/i18n/<locale>/<slug>.mdx` for es, fr, de, it, pt-BR,
+ru, tr, ar, hi, id, vi, th, ja, ko, zh-CN and zh-TW. A page with no file still
+renders in English. The docs site prefixes every locale but English
+(`/ja/docs`) and emits `hreflang` plus `public/sitemap.xml`.
+
+Chat copy still goes through `t` / `phrase` from `@hanzo/i18n`. Inside
+`<Hanzo locale>`, `useTranslate` reads this package's catalog first.
+
 ## Gotchas
 
 - Build with `...` or not at all — `pnpm --filter @hanzo/ui build` alone reports

@@ -1,5 +1,6 @@
 'use client'
 
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactElement } from 'react'
 /**
  * The open half of ModelPicker: the popover (a bottom sheet on a phone) and in
  * it the search, the virtualised list and the research note. It loads when a
@@ -18,28 +19,13 @@
  */
 import { Anchor, Input as GuiInput, ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { Check, Search } from '@hanzogui/lucide-icons-2'
-import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactElement } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui/popover'
 import { Sheet, SheetContent, SheetTitle } from '../backends/gui/sheet'
 import { slot } from '../backends/gui/slot'
+import { useTranslate } from '../i18n/react'
 import { move, type Move } from '../product/chipSelect.logic'
-import {
-  CAPABILITY_NAMES,
-  can,
-  capabilitiesOf,
-  formatCeiling,
-  formatContext,
-  formatSaving,
-  groupLabel,
-  isPaused,
-  modelName,
-  RESEARCH,
-  savingOf,
-  type Capability,
-  type ModelCatalogEntry,
-  type PauseSource,
-} from './catalog'
+import { can, capabilitiesOf, CAPABILITY_NAMES, formatCeiling, formatContext, formatSaving, groupLabel, isPaused, modelName, RESEARCH, savingOf, type Capability, type ModelCatalogEntry, type PauseSource } from './catalog'
 import { modelCount, pickable, pickerRows, restable, revealTop, visibleRange, type PickerRow } from './picker.logic'
 
 /** The list's ceiling in a popover, px. */
@@ -71,11 +57,14 @@ interface ListProps {
 }
 
 function List({ models, value, onChange, onClose, scope, limits, loading, error, name, sheet, row, granted, onUpgrade }: ListProps) {
+  const tr = useTranslate()
   const [q, setQ] = useState('')
   const [at, setAt] = useState(-1)
   const [top, setTop] = useState(0)
   const [viewH, setViewH] = useState(LIST_H)
-  const list = useRef<{ scrollTo?: (o: { y: number; animated?: boolean }) => void } | null>(null)
+  const list = useRef<{
+    scrollTo?: (o: { y: number; animated?: boolean }) => void
+  } | null>(null)
   const field = useRef<HTMLInputElement | null>(null)
   const id = useId()
   const listId = `${id}-list`
@@ -131,7 +120,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
       const y = revealTop(i, top, viewH, row)
       if (y !== null) scrollTo(y)
     },
-    [top, viewH, row, scrollTo],
+    [top, viewH, row, scrollTo]
   )
 
   const choose = useCallback(
@@ -141,7 +130,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
       else onChange(r.model.id)
       onClose()
     },
-    [onChange, onClose, granted, onUpgrade],
+    [onChange, onClose, granted, onUpgrade]
   )
 
   const onField = (e: { key?: string; preventDefault?: () => void }) => {
@@ -170,45 +159,9 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
 
   return (
     <YStack {...slot('model-picker-body')} flex={sheet ? 1 : undefined} minH={0} gap="$1">
-      <XStack
-        {...slot('model-picker-search')}
-        height={sheet ? 40 : 32}
-        px="$2"
-        gap="$2"
-        items="center"
-        rounded="$2"
-        borderWidth={1}
-        borderColor="$rim"
-        bg="$background"
-        focusWithinStyle={{ borderColor: '$outlineColor' }}
-      >
+      <XStack {...slot('model-picker-search')} height={sheet ? 40 : 32} px="$2" gap="$2" items="center" rounded="$2" borderWidth={1} borderColor="$rim" bg="$background" focusWithinStyle={{ borderColor: '$outlineColor' }}>
         <Search size={14} color="$soft" aria-hidden />
-        <GuiInput
-          ref={field as never}
-          {...slot('model-picker-input')}
-          unstyled
-          flex={1}
-          minW={0}
-          height={sheet ? 38 : 30}
-          p={0}
-          borderWidth={0}
-          bg="transparent"
-          fontSize={sheet ? '$3' : '$2'}
-          color="$ink"
-          placeholderTextColor="$placeholderColor"
-          placeholder="Search models"
-          value={q}
-          onChangeText={setQ}
-          role="combobox"
-          aria-label="Search models"
-          aria-expanded
-          aria-controls={listId}
-          aria-autocomplete="list"
-          aria-activedescendant={at >= 0 && rows[at] ? optionId(at) : undefined}
-          autoComplete="off"
-          spellCheck={false}
-          onKeyDown={onField}
-        />
+        <GuiInput ref={field as never} {...slot('model-picker-input')} unstyled flex={1} minW={0} height={sheet ? 38 : 30} p={0} borderWidth={0} bg="transparent" fontSize={sheet ? '$3' : '$2'} color="$ink" placeholderTextColor="$placeholderColor" placeholder={tr('Search models')} value={q} onChangeText={setQ} role="combobox" aria-label={tr('Search models')} aria-expanded aria-controls={listId} aria-autocomplete="list" aria-activedescendant={at >= 0 && rows[at] ? optionId(at) : undefined} autoComplete="off" spellCheck={false} onKeyDown={onField} />
         <SizableText {...slot('model-picker-count')} size="$1" color="$soft" shrink={0} aria-live="polite">
           {loading && !models.length ? 'Loading' : `${total} ${total === 1 ? 'model' : 'models'}`}
         </SizableText>
@@ -240,16 +193,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
             const i = range.start + k
             if (r.kind === 'group') {
               return (
-                <XStack
-                  key={r.key}
-                  {...slot('model-picker-group')}
-                  role="presentation"
-                  height={row}
-                  px="$2"
-                  gap="$2"
-                  items="flex-end"
-                  pb="$1.5"
-                >
+                <XStack key={r.key} {...slot('model-picker-group')} role="presentation" height={row} px="$2" gap="$2" items="flex-end" pb="$1.5">
                   <SizableText size="$1" color="$soft" fontWeight="600" numberOfLines={1} flex={1}>
                     {r.label}
                   </SizableText>
@@ -274,29 +218,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
             const saving = savingOf(m, models)
             const ceiling = formatCeiling(m)
             return (
-              <XStack
-                key={m.id}
-                {...slot('model-picker-option')}
-                id={optionId(i)}
-                role="option"
-                aria-selected={picked}
-                aria-disabled={locked || undefined}
-                aria-setsize={total}
-                aria-posinset={position[i]}
-                aria-label={`${title}, ${groupLabel(m)}${paused ? ', paused' : ''}${locked ? ', research preview' : ''}`}
-                data-model={m.id}
-                data-class={m.class}
-                data-paused={paused || undefined}
-                height={row}
-                px="$2"
-                gap="$2"
-                items="center"
-                rounded="$2"
-                cursor={locked ? 'default' : 'pointer'}
-                bg={i === at ? '$raised' : 'transparent'}
-                onHoverIn={() => setAt(i)}
-                onPress={() => choose(r)}
-              >
+              <XStack key={m.id} {...slot('model-picker-option')} id={optionId(i)} role="option" aria-selected={picked} aria-disabled={locked || undefined} aria-setsize={total} aria-posinset={position[i]} aria-label={`${title}, ${groupLabel(m)}${paused ? ', paused' : ''}${locked ? ', research preview' : ''}`} data-model={m.id} data-class={m.class} data-paused={paused || undefined} height={row} px="$2" gap="$2" items="center" rounded="$2" cursor={locked ? 'default' : 'pointer'} bg={i === at ? '$raised' : 'transparent'} onHoverIn={() => setAt(i)} onPress={() => choose(r)}>
                 <Check size={14} color="$ink" shrink={0} opacity={picked ? 1 : 0} aria-hidden />
                 <SizableText size={sheet ? '$3' : '$2'} color="$ink" opacity={locked ? 0.5 : 1} numberOfLines={1} flex={1} minW={0}>
                   {title}
@@ -308,19 +230,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
                 ) : null}
                 {locked || upgrade || paused || saving || ceiling || kind || ctx ? (
                   <SizableText size="$1" color="$soft" shrink={0} maxW="60%" numberOfLines={1} fontVariant={['tabular-nums']}>
-                    {locked
-                      ? 'Research preview'
-                      : upgrade
-                        ? 'Upgrade'
-                      : paused
-                        ? 'Paused'
-                        : saving
-                          ? formatSaving(saving)
-                          : ceiling
-                            ? ceiling
-                            : kind
-                              ? CAPABILITY_NAMES[kind]
-                              : ctx}
+                    {locked ? 'Research preview' : upgrade ? 'Upgrade' : paused ? 'Paused' : saving ? formatSaving(saving) : ceiling ? ceiling : kind ? CAPABILITY_NAMES[kind] : ctx}
                   </SizableText>
                 ) : null}
               </XStack>
@@ -393,15 +303,7 @@ export function ModelPickerMenu({ trigger, open, onOpen, disabled, width, focusT
       </Popover>
       {list.sheet ? (
         <Sheet open={open} onOpenChange={(v: boolean) => (v ? onOpen() : list.onClose())}>
-          <SheetContent
-            {...slot('model-picker-sheet')}
-            side="bottom"
-            height="85%"
-            maxH="85%"
-            p="$3"
-            gap="$2"
-            onOpenAutoFocus={(e: Event) => e.preventDefault()}
-          >
+          <SheetContent {...slot('model-picker-sheet')} side="bottom" height="85%" maxH="85%" p="$3" gap="$2" onOpenAutoFocus={(e: Event) => e.preventDefault()}>
             <SheetTitle size="$4">{list.name}</SheetTitle>
             {body}
           </SheetContent>

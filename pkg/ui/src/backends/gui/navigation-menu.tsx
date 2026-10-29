@@ -12,11 +12,11 @@
  * backdrop from the same events — so they are chained, never replaced.
  */
 import * as React from 'react'
-
-import { Text, XStack, styled } from '@hanzo/gui'
+import { styled, Text, XStack } from '@hanzo/gui'
 
 import { Box, type BoxProps } from '../../box'
 import { cn } from '../../core/cn'
+import { useTranslate } from '../../i18n/react'
 
 type ItemContext = {
   open: boolean
@@ -36,22 +36,12 @@ const both =
     theirs?.(e)
   }
 
-export const NavigationMenu = ({ className, ...props }: React.ComponentProps<typeof Box>) => (
-  <Box
-    tag="nav"
-    aria-label="Main"
-    className={cn('relative grid justify-center', className)}
-    {...props}
-  />
-)
+export const NavigationMenu = ({ className, ...props }: React.ComponentProps<typeof Box>) => {
+  const tr = useTranslate()
+  return <Box tag="nav" aria-label={tr('Main')} className={cn('relative grid justify-center', className)} {...props} />
+}
 
-export const NavigationMenuList = ({ className, ...props }: React.ComponentProps<typeof Box>) => (
-  <Box
-    tag="ul"
-    className={cn('grid grid-flow-col auto-cols-max items-center gap-1', className)}
-    {...props}
-  />
-)
+export const NavigationMenuList = ({ className, ...props }: React.ComponentProps<typeof Box>) => <Box tag="ul" className={cn('grid grid-flow-col auto-cols-max items-center gap-1', className)} {...props} />
 
 export const NavigationMenuItem = ({ className, children, ...props }: React.ComponentProps<typeof Box>) => {
   const [open, setOpen] = React.useState(false)
@@ -95,22 +85,23 @@ const Trigger = styled(
     rounded: 'var(--radius, 0.5rem)',
     cursor: 'pointer',
     ...({ color: 'var(--muted-foreground)' } as object),
-    hoverStyle: { bg: 'var(--muted)', ...({ color: 'var(--foreground)' } as object) },
+    hoverStyle: {
+      bg: 'var(--muted)',
+      ...({ color: 'var(--foreground)' } as object),
+    },
     variants: {
-      open: { true: { bg: 'var(--muted)', ...({ color: 'var(--foreground)' } as object) } },
+      open: {
+        true: {
+          bg: 'var(--muted)',
+          ...({ color: 'var(--foreground)' } as object),
+        },
+      },
     } as const,
   },
-  { validStyles: Text.staticConfig.validStyles },
+  { validStyles: Text.staticConfig.validStyles }
 )
 
-export const NavigationMenuTrigger = ({
-  className,
-  children,
-  onFocus,
-  onBlur,
-  onClick,
-  ...props
-}: BoxProps<'button'>) => {
+export const NavigationMenuTrigger = ({ className, children, onFocus, onBlur, onClick, ...props }: BoxProps<'button'>) => {
   const item = useItem()
   return (
     <Trigger
@@ -144,6 +135,4 @@ export const NavigationMenuContent = ({ className, children, ...props }: React.C
   )
 }
 
-export const NavigationMenuLink = ({ className, ...props }: BoxProps<'a'>) => (
-  <Box tag="a" className={className} {...props} />
-)
+export const NavigationMenuLink = ({ className, ...props }: BoxProps<'a'>) => <Box tag="a" className={className} {...props} />

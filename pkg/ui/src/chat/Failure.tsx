@@ -11,13 +11,14 @@
  * that is never coming, which is the one event in a conversation that has to
  * interrupt.
  */
+import type { ComponentProps, ReactNode } from 'react'
 import { XStack, YStack } from '@hanzo/gui'
 import { RefreshCw } from '@hanzogui/lucide-icons-2'
-import type { ComponentProps, ReactNode } from 'react'
 
 import { Button } from '../backends/gui'
 import { ink } from '../backends/gui/ink'
 import { slot } from '../backends/gui/slot'
+import { useTranslate } from '../i18n/react'
 
 export interface FailureProps extends Omit<ComponentProps<typeof YStack>, 'children'> {
   /** What went wrong, in the surface's own words. */
@@ -28,6 +29,7 @@ export interface FailureProps extends Omit<ComponentProps<typeof YStack>, 'child
 }
 
 export function Failure({ children, onRetry, retryLabel = 'Try again', ...props }: FailureProps) {
+  const tr = useTranslate()
   return (
     <YStack
       {...slot('failure')}
@@ -51,7 +53,7 @@ export function Failure({ children, onRetry, retryLabel = 'Try again', ...props 
         <XStack self="flex-start">
           <Button {...slot('failure-retry')} variant="outline" size="sm" onPress={onRetry}>
             <RefreshCw size={13} />
-            {retryLabel}
+            {tr(retryLabel)}
           </Button>
         </XStack>
       ) : null}

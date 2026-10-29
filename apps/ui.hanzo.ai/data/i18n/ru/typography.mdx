@@ -1,0 +1,78 @@
+---
+title: Типографика
+description: Zen и Zen Mono, лестница кегля, которую читает каждый компонент, и контейнер прозы для текста, который написали не вы.
+---
+
+## Гарнитуры
+
+Zen — гарнитура для чтения; Zen Mono — для кода, идентификаторов и всего числового. Обе приходят с пакетом и привязаны к двум пользовательским свойствам, которые называют роль, а не гарнитуру:
+
+```css
+--font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+--font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
+```
+
+Компоненты читают две переменные и никогда имя семейства. Хост, которому нужна своя гарнитура, привязывает `--font-sans-provided`; собственная привязка пакета сидит в слое каскада, поэтому непривязанная к слою привязка хоста побеждает. Хост, который не привязывает ничего, получает Zen.
+
+<Preview>
+  <YStack gap="$2">
+    <Text fontSize="$8" fontWeight="600">The quick brown fox jumps over the lazy dog</Text>
+    <Text fontSize="$4" color="$color11">Zen at the section and body rungs, tracked and leaded for the size.</Text>
+    <Text fontFamily="$mono" fontSize="$3">pnpm add @hanzo/ui — Zen Mono for code and numbers 0123456789</Text>
+  </YStack>
+</Preview>
+
+## Лестница
+
+Лестница кегля одна, и на ней каждый компонент. `Text` принимает `fontSize="$n"` с интерлиньяжем и трекингом этой ступени; заголовки и `Paragraph` принимают `size="$n"` и задают все три вместе.
+
+```tsx
+import { H1, H2, Paragraph, SizableText, Text } from '@hanzo/ui'
+
+<H1>A page title</H1>
+<H2 size="$6">A section</H2>
+<Paragraph size="$4">Body copy at the base rung.</Paragraph>
+<SizableText size="$2" color="$color11">A label.</SizableText>
+<Text fontFamily="$mono" fontSize="$2">an identifier</Text>
+```
+
+Никогда число. `fontSize={14}` зафиксирован на 14; `fontSize="$3"` — это 14 сегодня и то, что из него сделает шкала человека, потому что ступень разрешается через `var(--text-base)`, а регулятор умножает шкалу. Таблица — на странице [Темы](/docs/theming).
+
+## Проза
+
+Авторский текст — поле CMS, файл Markdown, тело блока — приходит голыми тегами. Внутри него ничто не может нести проп, поэтому стиль должен прийти от предка и спуститься по тегу. `ApplyTypography` — этот предок.
+
+```tsx
+import { ApplyTypography } from '@hanzo/ui'
+
+<ApplyTypography size="base">
+  <h2>Install</h2>
+  <p>
+    Add the package, then wrap the app once at the root. The full guide is
+    at <a href="https://ui.hanzo.ai">ui.hanzo.ai</a>.
+  </p>
+  <pre>
+    <code>{"pnpm add @hanzo/ui\npnpm dev"}</code>
+  </pre>
+  <ol>
+    <li>
+      Render <strong>Hanzo</strong> once, around the whole tree.
+    </li>
+    <li>
+      Import <code>Button</code> or any other component from the same
+      package.
+    </li>
+    <li>Pass it the props its type declares.</li>
+  </ol>
+  <blockquote>
+    Components read their colours from the theme, so a token changed there
+    changes every surface at once.
+  </blockquote>
+</ApplyTypography>
+```
+
+<Preview>
+  <ProseBlocks />
+</Preview>
+
+`size` по умолчанию `responsive` — единственная ступень, которая едет вместе с вьюпортом, — либо `sm`, `base`, `lg`, `xl`, которые остаются на месте: размер, выбранный вызывающим, это решение, а не подсказка. `asTag` выбирает элемент: любой из `div`, `section`, `nav`, `main`, `article`, `aside`. Правила живут в таблице стилей под `.hz-prose`, в своём пространстве имён, чтобы часть сайта, которая ещё не ушла с другого плагина типографики, не получила две таблицы, спорящие за один селектор. Страница [прозы](/ui/prose) рендерит каждую ступень и контейнер, вложенный в контейнер.

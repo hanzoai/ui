@@ -1,0 +1,140 @@
+---
+title: Themes
+description: Tokens lösen sich gegen das Theme auf, benutzerdefinierte Eigenschaften tragen die Identität, und drei Regler lassen eine Person das Ganze umstimmen.
+---
+
+Nichts in der Bibliothek nennt eine Farbe. Eine Komponente verlangt
+`$background` oder `$color12`, das Theme antwortet, und die Antwort
+unterscheidet sich zwischen dunkel und hell, ohne dass die Komponente es
+weiß. Eine Marke ändert die Antwort, indem sie eine benutzerdefinierte
+Eigenschaft setzt; eine Person ändert sie, indem sie einen Regler bewegt, mit
+dem sich die Rampen multiplizieren.
+
+## Tokens
+
+Ein Prop-Wert, der mit `$` beginnt, ist ein Token. Die Farbrampe läuft von
+der Fläche zum Text: `$color1` ist der ruhigste Grund, `$color12` der
+lauteste Text.
+
+| Token | Was es ist |
+| --- | --- |
+| `$background` | Der Grund der Seite. Liest `--background`, also antwortet das Stylesheet der Marke. |
+| `$color` | Die Standard-Textfarbe. |
+| `$color1` – `$color12` | Die neutrale Rampe: `$color2`/`$color3` sind angehobene Flächen, `$color10`/`$color11` gedämpfter Text, `$color12` der lauteste. |
+| `$borderColor` | Der Haarstrich. Durchscheinend, also liest er sich auf jeder Fläche als hellere Linie und nicht als ein Grauton, der nicht dazugehört. |
+| `$accentBackground` / `$accentColor` | Das eine laute Steuerelement, das eine Seite haben darf. Lesen `--primary`, also erreicht sie der Akzent-Regler. |
+
+<Preview>
+  <XStack gap="$2" flexWrap="wrap">
+    <Button>Default</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="destructive">Destructive</Button>
+  </XStack>
+  <XStack gap="$2" flexWrap="wrap">
+    <Badge>default</Badge>
+    <Badge variant="secondary">secondary</Badge>
+    <Badge variant="destructive">destructive</Badge>
+    <Badge variant="outline">outline</Badge>
+  </XStack>
+</Preview>
+
+## Die Leitern
+
+Größe, Raum und Radius sind auf jedem Host dieselben Zahlen, und jede Sprosse
+trägt einen Regler.
+
+**Schrift.** `fontSize="$n"`, nie eine Zahl. Zwölf Sprossen lesen die
+Design-Rampe, von `--text-xs` bis `--text-9xl`, und die vier Sprossen
+dazwischen interpolieren ihre Nachbarn, sodass die Skala einer Person alle
+sechzehn verschiebt und die Leiter eine Leiter bleibt.
+
+| Sprosse | `$1` | `$2` | `$3` | `$4` | `$5` | `$6` | `$7` | `$8` | `$9` | `$10` | `$11` | `$14` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| px | 11 | 13 | 14 | 15 | 15 | 17 | 21 | 26 | 26 | 32 | 40 | 64 |
+
+`$1` ist eine Beschriftung, `$2` Navigation und dichter Fließtext, `$3` die
+Basis, `$6` eine Abschnittsüberschrift, `$7` ein Seitentitel, `$8` und darüber
+Display. Display-Sprossen ziehen ihren Durchschuss und ihr Tracking auf
+−0.025em zusammen, und das ist der Unterschied zwischen gesetzter Schrift und
+Schrift, die bloß groß ist.
+
+**Raum.** Die 4px-Rampe, und nur die: `$1` 4, `$2` 8, `$3` 12, `$4` 16, `$5`
+24, `$6` 32, `$8` 48, `$10` 64. Jede Stufe wird mit `--density` multipliziert.
+
+**Radius.** Vier Werte. `$1` und `$2` sind 6, ein Steuerelement; `$3` und `$4`
+sind 8, ein Feld oder eine Zeile; `$5` bis `$9` sind 12, eine Fläche; `$10`
+und darüber sind die Pille. Alles außer der Pille wird mit `--radius-scale`
+multipliziert.
+
+## Benutzerdefinierte Eigenschaften
+
+Die Identität ist ein Satz benutzerdefinierter Eigenschaften auf `:root`,
+dunkel zuerst, und `.light` stimmt sie um. `Hanzo` setzt `.t_dark` oder
+`.t_light` auf den Body, und das CSS antwortet auf beide Schreibweisen, sodass
+die Komponenten-Tokens und das Stylesheet ein Theme benennen.
+
+```css
+:root {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --primary: #fafafa;
+  --border: rgb(255 255 255 / .10);
+  --ring: rgb(255 255 255 / .40);
+  --font-sans: 'Zen', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Zen Mono', ui-monospace, monospace;
+}
+```
+
+Der volle Satz ist `--background`, `--foreground`, `--card`, `--popover`,
+`--primary`, `--secondary`, `--muted`, `--accent`, `--destructive`, jede mit
+ihrem `-foreground`, dann `--border`, `--input`, `--ring`, `--radius`,
+`--chart-1` bis `--chart-5`, und die Familie `--sidebar-*`. Sie kommen aus
+`@hanzo/design` und werden in das Stylesheet komponiert, das die Wurzel
+importiert; ein Host, der auch das eigene Stylesheet von design einhängt,
+folgt ihm live.
+
+Eine Marke stimmt um, indem sie dieselben Namen später in der Kaskade
+deklariert. Ein Host, der eine eigene Schrift mitbringt, bindet
+`--font-sans-provided` und nicht `--font-sans`, weil die Bindung des Pakets in
+einer Kaskadenebene sitzt und eine Deklaration ohne Ebene gewinnt, ganz gleich
+wie spezifisch sie ist.
+
+## Die Regler der Erscheinung
+
+`@hanzo/design` veröffentlicht drei Regler, mit denen sich jede Rampe
+multipliziert, und `@hanzo/appearance` ist das Panel, das sie für eine Person
+setzt:
+
+| Regler | Was er bewegt |
+| --- | --- |
+| `--type-scale` | Jede Sprosse `--text-*`, und mit ihr jedes `fontSize="$n"`. |
+| `--type-ratio` | Wie weit die Sprossen auseinanderliegen. |
+| `--density` | Jede Stufe `--space-*`, und jeder Gap und jedes Padding von gui. |
+| `--primary` / `--accent` | Die eine laute Farbe. |
+| `--font-sans` | Die Leseschrift: die der Marke, die des Systems, eine Serif, oder Mono. |
+| `--container-max` / `--container-prose` / `--container-wide` | Die drei Maße, auf die sich eine Seite setzt. |
+
+Sie landen als Inline-Eigenschaften auf `html`, und das ist `:root`, also
+gewinnen sie gegen jedes Stylesheet, ohne dass ein Selektor sie an
+Spezifität überbieten müsste, und sie erreichen die Komponenten, weil gui eine
+Größe in JavaScript als `var(--text-base)` auflöst und die Variable die
+Kaskade am Element weiter liest. Eine Achse, die niemand gesetzt hat, fehlt,
+statt neutral zu stehen: eine `1` zu schreiben sähe gleich aus und würde eine
+Marke, die ihre eigene Skala veröffentlicht hat, still überstimmen.
+
+```tsx
+import { Appearance } from '@hanzo/appearance'
+import { bootScript } from '@hanzo/appearance/state'
+
+// In <head>, so the first paint is already correct.
+<script dangerouslySetInnerHTML={{ __html: bootScript() }} />
+
+// Wherever the product keeps settings.
+<Appearance />
+```
+
+`Hanzo` wendet die gespeicherte Vorliebe bei jedem Einhängen erneut an, also
+hält eine Wahl, die auf einer Seite getroffen wurde, auf der nächsten. Das
+Steuerelement in der Kopfzeile dieser Site ist dieses Panel.

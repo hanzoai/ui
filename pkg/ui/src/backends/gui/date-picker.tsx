@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 /**
  * DatePicker — a button that opens a calendar in a popover, for picking one
  * date (`mode="single"`, the default) or a range (`mode="range"`), with an
@@ -14,8 +15,8 @@
  */
 import { SizableText, YStack } from '@hanzo/gui'
 import { Calendar as CalendarIcon } from '@hanzogui/lucide-icons-2'
-import { useState } from 'react'
 
+import { useTranslate } from '../../i18n/react'
 import { Button } from './button'
 import { Calendar } from './calendar'
 import type { CalendarRange } from './calendar'
@@ -23,15 +24,11 @@ import { Popover, PopoverContent, PopoverTrigger } from './popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select'
 import { slot } from './slot'
 
-const MONTHS = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-]
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 const format = (d: Date) => `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`
 
-const sameDay = (a: Date, b: Date) =>
-  a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
+const sameDay = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
 
 /** A quick pick offered above the calendar: `label` shown, `days` from today. */
 export interface DatePickerPreset {
@@ -64,16 +61,13 @@ export interface DatePickerRangeProps extends DatePickerSharedProps {
 export type DatePickerProps = DatePickerSingleProps | DatePickerRangeProps
 
 export function DatePicker(props: DatePickerProps) {
+  const tr = useTranslate()
   const { placeholder = 'Pick a date', disabled, className, width = 280 } = props
   const isRange = props.mode === 'range'
 
   const [open, setOpen] = useState(false)
-  const [ownDate, setOwnDate] = useState<Date | undefined>(
-    isRange ? undefined : (props as DatePickerSingleProps).selected,
-  )
-  const [ownRange, setOwnRange] = useState<CalendarRange | undefined>(
-    isRange ? (props as DatePickerRangeProps).selected : undefined,
-  )
+  const [ownDate, setOwnDate] = useState<Date | undefined>(isRange ? undefined : (props as DatePickerSingleProps).selected)
+  const [ownRange, setOwnRange] = useState<CalendarRange | undefined>(isRange ? (props as DatePickerRangeProps).selected : undefined)
 
   const date = !isRange ? ((props as DatePickerSingleProps).selected ?? ownDate) : undefined
   const range = isRange ? ((props as DatePickerRangeProps).selected ?? ownRange) : undefined
@@ -88,15 +82,7 @@ export function DatePicker(props: DatePickerProps) {
     ;(props as DatePickerRangeProps).onSelect?.(r)
   }
 
-  const label = isRange
-    ? range?.from
-      ? range.to && !sameDay(range.to, range.from)
-        ? `${format(range.from)} - ${format(range.to)}`
-        : format(range.from)
-      : placeholder
-    : date
-      ? format(date)
-      : placeholder
+  const label = isRange ? (range?.from ? (range.to && !sameDay(range.to, range.from) ? `${format(range.from)} - ${format(range.to)}` : format(range.from)) : placeholder) : date ? format(date) : placeholder
 
   const empty = isRange ? !range?.from : !date
   const presets = !isRange ? (props as DatePickerSingleProps).presets : undefined
@@ -104,16 +90,9 @@ export function DatePicker(props: DatePickerProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          {...slot('date-picker-trigger')}
-          data-empty={empty || undefined}
-          variant="outline"
-          width={width}
-          justify="flex-start"
-          className={className}
-        >
+        <Button {...slot('date-picker-trigger')} data-empty={empty || undefined} variant="outline" width={width} justify="flex-start" className={className}>
           <CalendarIcon size={16} />
-          {empty ? <SizableText color="$quiet">{label}</SizableText> : label}
+          {empty ? <SizableText color="$quiet">{tr(label)}</SizableText> : label}
         </Button>
       </PopoverTrigger>
       <PopoverContent {...slot('date-picker-content')} width="auto" p={0} align="start">
@@ -128,7 +107,7 @@ export function DatePicker(props: DatePickerProps) {
               }}
             >
               <SelectTrigger {...slot('date-picker-preset-trigger')}>
-                <SelectValue placeholder="Select" />
+                <SelectValue placeholder={tr('Select')} />
               </SelectTrigger>
               <SelectContent>
                 {presets.map((preset) => (
@@ -140,19 +119,7 @@ export function DatePicker(props: DatePickerProps) {
             </Select>
           </YStack>
         )}
-        {isRange ? (
-          <Calendar
-            mode="range"
-            selected={range}
-            onSelect={selectRange}
-            defaultMonth={range?.from}
-            numberOfMonths={(props as DatePickerRangeProps).numberOfMonths ?? 2}
-            disabled={disabled}
-            initialFocus
-          />
-        ) : (
-          <Calendar mode="single" selected={date} onSelect={selectDate} disabled={disabled} initialFocus />
-        )}
+        {isRange ? <Calendar mode="range" selected={range} onSelect={selectRange} defaultMonth={range?.from} numberOfMonths={(props as DatePickerRangeProps).numberOfMonths ?? 2} disabled={disabled} initialFocus /> : <Calendar mode="single" selected={date} onSelect={selectDate} disabled={disabled} initialFocus />}
       </PopoverContent>
     </Popover>
   )

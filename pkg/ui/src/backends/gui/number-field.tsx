@@ -21,19 +21,18 @@
  * smallStep 0.1, largeStep 10, no wheel scrub, out-of-range refused; its buttons
  * are the outline control at the field's height, 4px apart.
  */
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { XStack } from '@hanzo/gui'
 import { Minus, Plus } from '@hanzogui/lucide-icons-2'
-import { useCallback, useMemo, useRef, useState } from 'react'
+
+import { useLocale, useTranslate } from '../../i18n/react'
 import { Button, type ButtonSize } from './button'
 import type { FieldSize } from './control'
 import { fieldSize, useDensity } from './density'
 import { Input, type InputProps } from './input'
 import { slot } from './slot'
 
-export type NumberFieldProps = Omit<
-  InputProps,
-  'value' | 'defaultValue' | 'onChangeText' | 'type' | 'secureTextEntry' | 'reveal'
-> & {
+export type NumberFieldProps = Omit<InputProps, 'value' | 'defaultValue' | 'onChangeText' | 'type' | 'secureTextEntry' | 'reveal'> & {
   value?: number | null
   defaultValue?: number | null
   /** Every number the text reads as while typing, the clamped one on blur, and each step. */
@@ -99,35 +98,20 @@ const decimals = (n: number) => {
   return s.includes('.') ? s.split('.')[1].length : 0
 }
 
-const clamp = (n: number, min?: number, max?: number) =>
-  Math.min(max ?? Infinity, Math.max(min ?? -Infinity, n))
+const clamp = (n: number, min?: number, max?: number) => Math.min(max ?? Infinity, Math.max(min ?? -Infinity, n))
 
 /** The icon button that stands beside a field of each box. */
-const BESIDE: Record<FieldSize, ButtonSize> = { lg: 'icon-lg', default: 'icon', sm: 'icon-sm', xs: 'icon-xs' }
+const BESIDE: Record<FieldSize, ButtonSize> = {
+  lg: 'icon-lg',
+  default: 'icon',
+  sm: 'icon-sm',
+  xs: 'icon-xs',
+}
 
-export function NumberField({
-  value,
-  defaultValue = null,
-  onValueChange,
-  min,
-  max,
-  step = 1,
-  smallStep = 0.1,
-  largeStep = 10,
-  format,
-  locale,
-  allowOutOfRange = false,
-  readOnly = false,
-  required,
-  disabled,
-  buttons = false,
-  decrementLabel = 'Decrease',
-  incrementLabel = 'Increase',
-  size,
-  onFocus,
-  onBlur,
-  ...props
-}: NumberFieldProps) {
+export function NumberField({ value, defaultValue = null, onValueChange, min, max, step = 1, smallStep = 0.1, largeStep = 10, format, locale, allowOutOfRange = false, readOnly = false, required, disabled, buttons = false, decrementLabel = 'Decrease', incrementLabel = 'Increase', size, onFocus, onBlur, ...props }: NumberFieldProps) {
+  const tr = useTranslate()
+  const { active, locale: treeLocale } = useLocale()
+  const resolved = locale ?? (active ? treeLocale : undefined)
   const density = useDensity()
   const box = fieldSize(size, density)
   const controlled = value !== undefined
@@ -137,7 +121,7 @@ export function NumberField({
   const last = useRef<number | null>(current)
   last.current = current
 
-  const formatter = useMemo(() => new Intl.NumberFormat(locale, { maximumFractionDigits: 20, ...format }), [locale, format])
+  const formatter = useMemo(() => new Intl.NumberFormat(resolved, { maximumFractionDigits: 20, ...format }), [resolved, format])
   const shown = draft ?? (current == null || Number.isNaN(current) ? '' : formatter.format(current))
 
   const commit = useCallback(
@@ -146,7 +130,7 @@ export function NumberField({
       if (next !== last.current) onValueChange?.(next)
       last.current = next
     },
-    [controlled, onValueChange],
+    [controlled, onValueChange]
   )
 
   const nudge = (by: number) => {
@@ -198,7 +182,7 @@ export function NumberField({
       onChangeText={(text: string) => {
         setDraft(text)
         if (!text.trim()) return commit(null)
-        const n = parseNumber(text, locale, format)
+        const n = parseNumber(text, resolved, format)
         if (!Number.isNaN(n)) commit(n)
       }}
       onFocus={(e: unknown) => {
@@ -211,7 +195,7 @@ export function NumberField({
         const text = draft
         setDraft(null)
         if (text != null && text.trim()) {
-          const n = parseNumber(text, locale, format)
+          const n = parseNumber(text, resolved, format)
           if (!Number.isNaN(n)) commit(allowOutOfRange ? n : clamp(n, min, max))
         }
         ;(onBlur as ((e: unknown) => void) | undefined)?.(e)
@@ -233,11 +217,17 @@ export function NumberField({
         {...slot('number-field-decrement')}
         variant="outline"
         size={beside}
-        aria-label={decrementLabel}
+        aria-label={tr(decrementLabel)}
         // The keyboard belongs to the field; the buttons are for a pointer.
         tabIndex={-1}
         disabled={disabled || (!allowOutOfRange && atMin)}
-        {...(readOnly ? { opacity: 0.5, cursor: 'default', hoverStyle: { bg: '$background' } } : null)}
+        {...(readOnly
+          ? {
+              opacity: 0.5,
+              cursor: 'default',
+              hoverStyle: { bg: '$background' },
+            }
+          : null)}
         onPress={press(-step)}
       >
         <Minus size={16} />
@@ -246,10 +236,16 @@ export function NumberField({
         {...slot('number-field-increment')}
         variant="outline"
         size={beside}
-        aria-label={incrementLabel}
+        aria-label={tr(incrementLabel)}
         tabIndex={-1}
         disabled={disabled || (!allowOutOfRange && atMax)}
-        {...(readOnly ? { opacity: 0.5, cursor: 'default', hoverStyle: { bg: '$background' } } : null)}
+        {...(readOnly
+          ? {
+              opacity: 0.5,
+              cursor: 'default',
+              hoverStyle: { bg: '$background' },
+            }
+          : null)}
         onPress={press(step)}
       >
         <Plus size={16} />

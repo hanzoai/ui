@@ -17,12 +17,13 @@
  * filtering model.
  */
 import { useMemo, useState, type ReactNode } from 'react'
+import { FieldDisplay, searchRecords, type FieldDefinition } from '@hanzo/data'
 import { Card, Input, Text, XStack, YStack } from '@hanzo/gui'
 import { ChevronRight, Search } from '@hanzogui/lucide-icons-2'
-import { FieldDisplay, searchRecords, type FieldDefinition } from '@hanzo/data'
 
-import { Action, Loading, Meta, WRAP_ANYWHERE } from './parts'
 import { mirror } from '../backends/gui/dir'
+import { useTranslate } from '../i18n/react'
+import { Action, Loading, Meta, WRAP_ANYWHERE } from './parts'
 
 export interface RecordCardsProps {
   /** The field shown as the card's headline (the DocType's titleField). */
@@ -50,18 +51,8 @@ function headline(record: Record<string, unknown>, titleField?: string): string 
   return typeof name === 'string' && name ? name : 'Untitled'
 }
 
-export function RecordCards({
-  titleField,
-  fields,
-  cardFields,
-  records,
-  loading,
-  empty,
-  onOpen,
-  onCreate,
-  createLabel = 'New record',
-  toolbarExtra,
-}: RecordCardsProps) {
+export function RecordCards({ titleField, fields, cardFields, records, loading, empty, onOpen, onCreate, createLabel = 'New record', toolbarExtra }: RecordCardsProps) {
+  const tr = useTranslate()
   const [query, setQuery] = useState('')
   const visible = useMemo(() => searchRecords(records, query, fields), [records, query, fields])
 
@@ -70,29 +61,9 @@ export function RecordCards({
       {/* Toolbar: search takes the full row on a phone; the create action sits
           below it at full width, so both are thumb-reachable and neither clips. */}
       <YStack gap="$2" width="100%">
-        <XStack
-          items="center"
-          gap="$2"
-          px="$3"
-          minH={44}
-          rounded="$3"
-          borderWidth={1}
-          borderColor="$borderColor"
-          width="100%"
-        >
+        <XStack items="center" gap="$2" px="$3" minH={44} rounded="$3" borderWidth={1} borderColor="$borderColor" width="100%">
           <Search size={15} opacity={0.6} />
-          <Input
-            unstyled
-            flex={1}
-            minW={0}
-            height={42}
-            fontSize="$3"
-            color="$color12"
-            placeholder="Search"
-            value={query}
-            onChangeText={setQuery}
-            autoCapitalize="none"
-          />
+          <Input unstyled flex={1} minW={0} height={42} fontSize="$3" color="$color12" placeholder={tr('Search')} value={query} onChangeText={setQuery} autoCapitalize="none" />
         </XStack>
         <XStack gap="$2" items="center" flexWrap="wrap" width="100%">
           {onCreate ? (
@@ -109,7 +80,7 @@ export function RecordCards({
       {!loading && visible.length === 0 ? (
         <Card borderWidth={1} borderColor="$borderColor" p="$4" width="100%">
           <Text fontSize="$3" color="$color10">
-            {query ? `No records match “${query}”.` : empty ?? 'No records yet.'}
+            {query ? `No records match “${query}”.` : (empty ?? 'No records yet.')}
           </Text>
         </Card>
       ) : null}
@@ -118,19 +89,7 @@ export function RecordCards({
         {visible.map((rec, i) => {
           const key = String(rec.name ?? rec.id ?? i)
           return (
-            <Card
-              key={key}
-              borderWidth={1}
-              borderColor="$borderColor"
-              rounded="$3"
-              p="$3"
-              width="100%"
-              cursor={onOpen ? 'pointer' : undefined}
-              pressStyle={onOpen ? { bg: '$color3' } : undefined}
-              hoverStyle={onOpen ? { borderColor: '$color8' } : undefined}
-              onPress={onOpen ? () => onOpen(rec) : undefined}
-              style={WRAP_ANYWHERE}
-            >
+            <Card key={key} borderWidth={1} borderColor="$borderColor" rounded="$3" p="$3" width="100%" cursor={onOpen ? 'pointer' : undefined} pressStyle={onOpen ? { bg: '$color3' } : undefined} hoverStyle={onOpen ? { borderColor: '$color8' } : undefined} onPress={onOpen ? () => onOpen(rec) : undefined} style={WRAP_ANYWHERE}>
               <YStack gap="$2" width="100%">
                 <XStack items="center" gap="$2" width="100%">
                   <Text fontSize="$4" fontWeight="700" flex={1} minW={0} numberOfLines={2}>
@@ -159,7 +118,8 @@ export function RecordCards({
 
       {visible.length ? (
         <Meta>
-          {visible.length} of {records.length} record{records.length === 1 ? '' : 's'}
+          {visible.length} of {records.length} record
+          {records.length === 1 ? '' : 's'}
         </Meta>
       ) : null}
     </YStack>

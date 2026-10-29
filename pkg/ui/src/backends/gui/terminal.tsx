@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from 'react'
 /**
  * Terminal — an emulated shell: a title bar, a scrolling command history, and
  * one input line. Enter runs a line through `onCommand` (after the built-ins
@@ -15,10 +16,11 @@
  * and flags in every line and sets keywords and literals bold. Every line is set
  * in the mono face, left to right under any `dir`.
  */
-import { Input as GuiInput, SizableText, Text, XStack, YStack, styled, type YStackProps } from '@hanzo/gui'
+import { Input as GuiInput, SizableText, styled, Text, XStack, YStack, type YStackProps } from '@hanzo/gui'
 import { Check, Copy } from '@hanzogui/lucide-icons-2'
-import * as React from 'react'
+
 import { face, type CodeToken } from '../../code-theme'
+import { useTranslate } from '../../i18n/react'
 import { mono } from './code-surface'
 import { ltr } from './dir'
 import { slot } from './slot'
@@ -124,7 +126,10 @@ const SYNTAX: { regex: RegExp; token?: CodeToken }[] = [
   { regex: /"[^"]*"|'[^']*'/, token: 'string' },
   { regex: /\b(?:true|false|null|undefined)\b/, token: 'boolean' },
   { regex: /\b\d+\b/, token: 'number' },
-  { regex: /\b(?:function|const|let|var|if|else|for|while|return)\b/, token: 'keyword' },
+  {
+    regex: /\b(?:function|const|let|var|if|else|for|while|return)\b/,
+    token: 'keyword',
+  },
   { regex: /--?\w+/ },
 ]
 
@@ -148,7 +153,7 @@ const highlight = (text: string, palette: Palette): React.ReactNode => {
     parts.push(
       <Text key={key++} color={tint(token, palette) as never} {...(token ? face[token] : null)}>
         {match[0]}
-      </Text>,
+      </Text>
     )
     last = start + match[0].length
   }
@@ -156,20 +161,10 @@ const highlight = (text: string, palette: Palette): React.ReactNode => {
   return parts.length ? <>{parts}</> : text
 }
 
-const outputColor = (type: TerminalLineType | undefined, palette: Palette) =>
-  type === 'error' ? palette.error : type === 'success' ? palette.success : type === 'info' ? palette.info : palette.output
+const outputColor = (type: TerminalLineType | undefined, palette: Palette) => (type === 'error' ? palette.error : type === 'success' ? palette.success : type === 'info' ? palette.info : palette.output)
 
-export function Terminal({
-  prompt = '$',
-  initialCommands = [],
-  onCommand,
-  theme,
-  enableHistory = true,
-  enableAutoComplete = true,
-  autoCompleteCommands = DEFAULT_COMMANDS,
-  maxHistorySize = 50,
-  ...props
-}: TerminalProps) {
+export function Terminal({ prompt = '$', initialCommands = [], onCommand, theme, enableHistory = true, enableAutoComplete = true, autoCompleteCommands = DEFAULT_COMMANDS, maxHistorySize = 50, ...props }: TerminalProps) {
+  const tr = useTranslate()
   const [lines, setLines] = React.useState<TerminalCommand[]>(initialCommands)
   const [value, setValue] = React.useState('')
   const [historyIndex, setHistoryIndex] = React.useState(-1)
@@ -260,7 +255,7 @@ export function Terminal({
       setHistoryIndex(-1)
       setSuggestions([])
     },
-    [onCommand, enableHistory, maxHistorySize, autoCompleteCommands, palette.output],
+    [onCommand, enableHistory, maxHistorySize, autoCompleteCommands, palette.output]
   )
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -318,21 +313,7 @@ export function Terminal({
   }
 
   return (
-    <YStack
-      ref={scroller as never}
-      {...slot('terminal')}
-      {...ltr}
-      data-theme={theme}
-      rounded="$3"
-      borderWidth={1}
-      p="$4"
-      overflow="scroll"
-      bg={palette.bg as never}
-      borderColor={palette.border as never}
-      onClick={() => field.current?.focus()}
-      onPaste={onPaste}
-      {...props}
-    >
+    <YStack ref={scroller as never} {...slot('terminal')} {...ltr} data-theme={theme} rounded="$3" borderWidth={1} p="$4" overflow="scroll" bg={palette.bg as never} borderColor={palette.border as never} onClick={() => field.current?.focus()} onPaste={onPaste} {...props}>
       <XStack {...slot('terminal-header')} items="center" gap="$2" mb="$4">
         {[0, 1, 2].map((i) => (
           <YStack key={i} width={12} height={12} rounded={999} bg={palette.line as never} />
@@ -350,28 +331,14 @@ export function Terminal({
               <Mono flex={1} color={palette.input as never}>
                 {highlight(line.input, palette)}
               </Mono>
-              <XStack
-                {...slot('terminal-copy')}
-                cursor="pointer"
-                opacity={0.7}
-                hoverStyle={{ opacity: 1 }}
-                aria-label="Copy command"
-                onPress={() => copy(line.input)}
-              >
-                {copied === line.input ? (
-                  <Check size={12} color={palette.input as never} />
-                ) : (
-                  <Copy size={12} color={palette.prompt as never} />
-                )}
+              <XStack {...slot('terminal-copy')} cursor="pointer" opacity={0.7} hoverStyle={{ opacity: 1 }} aria-label={tr('Copy command')} onPress={() => copy(line.input)}>
+                {copied === line.input ? <Check size={12} color={palette.input as never} /> : <Copy size={12} color={palette.prompt as never} />}
               </XStack>
             </XStack>
             {line.output !== '' && line.output != null && (
               <YStack paddingInlineStart="$4" mt="$1">
                 {typeof line.output === 'string' ? (
-                  <Mono
-                    color={outputColor(line.type, palette) as never}
-                    {...(line.type === 'error' ? { fontWeight: '700' as const } : null)}
-                  >
+                  <Mono color={outputColor(line.type, palette) as never} {...(line.type === 'error' ? { fontWeight: '700' as const } : null)}>
                     {highlight(line.output, palette)}
                   </Mono>
                 ) : (
@@ -396,27 +363,19 @@ export function Terminal({
             onKeyDown={onKeyDown}
             spellCheck={false}
             autoComplete="off"
-            aria-label="Terminal input"
+            aria-label={tr('Terminal input')}
             fontFamily="$mono"
             color={palette.input as never}
-            style={{ background: 'transparent', border: 'none', outline: 'none' }}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              outline: 'none',
+            }}
           />
         </XStack>
 
         {suggestions.length > 0 && (
-          <YStack
-            {...slot('terminal-suggestions')}
-            position="absolute"
-            insetInlineStart={0}
-            t="100%"
-            mt="$1"
-            rounded="$2"
-            borderWidth={1}
-            p="$1"
-            z={10}
-            bg={palette.bg as never}
-            borderColor={palette.border as never}
-          >
+          <YStack {...slot('terminal-suggestions')} position="absolute" insetInlineStart={0} t="100%" mt="$1" rounded="$2" borderWidth={1} p="$1" z={10} bg={palette.bg as never} borderColor={palette.border as never}>
             {suggestions.map((suggestion, index) => (
               <YStack
                 key={suggestion}

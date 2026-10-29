@@ -14,26 +14,15 @@
  * once. Speed and quality are the existing `DropdownMenu` for the same reason.
  */
 import * as React from 'react'
-import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
-import {
-  Captions,
-  Maximize,
-  Minimize,
-  Pause,
-  PictureInPicture,
-  Play,
-  RotateCcw,
-  Settings,
-  SkipForward,
-  Volume2,
-  VolumeX,
-} from '@hanzogui/lucide-icons-2'
+import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
+import { Captions, Maximize, Minimize, Pause, PictureInPicture, Play, RotateCcw, Settings, SkipForward, Volume2, VolumeX } from '@hanzogui/lucide-icons-2'
 
+import { useTranslate } from '../../i18n/react'
 import { Button } from './button'
-import { Slider } from './slider'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu'
-import { Spinner } from './spinner'
+import { Slider } from './slider'
 import { slot } from './slot'
+import { Spinner } from './spinner'
 
 export type MediaSource = {
   src: string
@@ -99,10 +88,7 @@ const overlayButton = {
   hoverStyle: { bg: 'rgba(255,255,255,0.2)' },
 } as const
 
-export type MediaPlayerProps = Omit<
-  React.ComponentPropsWithoutRef<typeof Frame>,
-  'onPlay' | 'onPause' | 'onEnded' | 'children'
-> & {
+export type MediaPlayerProps = Omit<React.ComponentPropsWithoutRef<typeof Frame>, 'onPlay' | 'onPause' | 'onEnded' | 'children'> & {
   sources: MediaSource[]
   poster?: string
   subtitles?: MediaSubtitleTrack[]
@@ -123,27 +109,8 @@ export type MediaPlayerProps = Omit<
   onSpeedChange?: (speed: number) => void
 }
 
-export function MediaPlayer({
-  sources,
-  poster,
-  subtitles = [],
-  size = 'md',
-  autoPlay = false,
-  loop = false,
-  muted = false,
-  preload = 'metadata',
-  controls = true,
-  disableKeyboard = false,
-  disablePictureInPicture = false,
-  onPlay,
-  onPause,
-  onEnded,
-  onTimeUpdate,
-  onVolumeChange,
-  onQualityChange,
-  onSpeedChange,
-  ...props
-}: MediaPlayerProps) {
+export function MediaPlayer({ sources, poster, subtitles = [], size = 'md', autoPlay = false, loop = false, muted = false, preload = 'metadata', controls = true, disableKeyboard = false, disablePictureInPicture = false, onPlay, onPause, onEnded, onTimeUpdate, onVolumeChange, onQualityChange, onSpeedChange, ...props }: MediaPlayerProps) {
+  const tr = useTranslate()
   const videoRef = React.useRef<HTMLVideoElement>(null)
   const containerRef = React.useRef<HTMLDivElement>(null)
   const hideTimer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
@@ -158,9 +125,7 @@ export function MediaPlayer({
   const [isFullscreen, setIsFullscreen] = React.useState(false)
   const [showControls, setShowControls] = React.useState(true)
   const [playbackSpeed, setPlaybackSpeed] = React.useState(1)
-  const [currentQuality, setCurrentQuality] = React.useState(
-    sources.find((s) => s.quality)?.quality ?? 'auto',
-  )
+  const [currentQuality, setCurrentQuality] = React.useState(sources.find((s) => s.quality)?.quality ?? 'auto')
   const [showSubtitles, setShowSubtitles] = React.useState(false)
   const [isBuffering, setIsBuffering] = React.useState(false)
   const [isPictureInPicture, setIsPictureInPicture] = React.useState(false)
@@ -186,7 +151,7 @@ export function MediaPlayer({
     (seconds: number) => {
       seekTo(Math.max(0, Math.min(duration, currentTime + seconds)))
     },
-    [currentTime, duration, seekTo],
+    [currentTime, duration, seekTo]
   )
 
   const toggleMute = React.useCallback(() => {
@@ -211,7 +176,7 @@ export function MediaPlayer({
       setIsMuted(clamped === 0)
       onVolumeChange?.(clamped)
     },
-    [onVolumeChange],
+    [onVolumeChange]
   )
 
   const toggleFullscreen = React.useCallback(async () => {
@@ -248,7 +213,7 @@ export function MediaPlayer({
       setPlaybackSpeed(speed)
       onSpeedChange?.(speed)
     },
-    [onSpeedChange],
+    [onSpeedChange]
   )
 
   const changeQuality = React.useCallback(
@@ -265,12 +230,12 @@ export function MediaPlayer({
           video.currentTime = at
           if (wasPlaying) void video.play()
         },
-        { once: true },
+        { once: true }
       )
       setCurrentQuality(quality)
       onQualityChange?.(quality)
     },
-    [sources, onQualityChange],
+    [sources, onQualityChange]
   )
 
   const hideControlsAfterTimeout = React.useCallback(() => {
@@ -335,17 +300,7 @@ export function MediaPlayer({
     }
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [
-    disableKeyboard,
-    togglePlayPause,
-    toggleFullscreen,
-    toggleMute,
-    skip,
-    changeVolume,
-    volume,
-    togglePictureInPicture,
-    showControlsTemporarily,
-  ])
+  }, [disableKeyboard, togglePlayPause, toggleFullscreen, toggleMute, skip, changeVolume, volume, togglePictureInPicture, showControlsTemporarily])
 
   // Media element events.
   React.useEffect(() => {
@@ -436,106 +391,48 @@ export function MediaPlayer({
 
   return (
     <Frame ref={containerRef as never} size={size} tabIndex={0} {...slot('media-player')} {...props}>
-      <video
-        ref={videoRef}
-        data-slot="media-player-video"
-        poster={poster}
-        autoPlay={autoPlay}
-        loop={loop}
-        muted={muted}
-        preload={preload}
-        playsInline
-        onClick={togglePlayPause}
-        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-      >
+      <video ref={videoRef} data-slot="media-player-video" poster={poster} autoPlay={autoPlay} loop={loop} muted={muted} preload={preload} playsInline onClick={togglePlayPause} style={{ width: '100%', height: '100%', objectFit: 'contain' }}>
         {sources.map((source) => (
           <source key={source.src} src={source.src} type={source.type} />
         ))}
         {subtitles.map((track, index) => (
-          <track
-            key={track.src}
-            kind="subtitles"
-            src={track.src}
-            srcLang={track.srcLang}
-            label={track.label}
-            default={track.default ?? index === 0}
-          />
+          <track key={track.src} kind="subtitles" src={track.src} srcLang={track.srcLang} label={track.label} default={track.default ?? index === 0} />
         ))}
         Your browser does not support the video tag.
       </video>
 
       {isBuffering && (
-        <YStack
-          {...slot('media-player-buffering')}
-          position="absolute"
-          l={0}
-          r={0}
-          t={0}
-          b={0}
-          items="center"
-          justify="center"
-          bg="rgba(0,0,0,0.5)"
-          pointerEvents="none"
-        >
+        <YStack {...slot('media-player-buffering')} position="absolute" l={0} r={0} t={0} b={0} items="center" justify="center" bg="rgba(0,0,0,0.5)" pointerEvents="none">
           <Spinner size={32} color="white" />
         </YStack>
       )}
 
       {controls && (
-        <YStack
-          {...slot('media-player-controls')}
-          position="absolute"
-          l={0}
-          r={0}
-          b={0}
-          t={0}
-          justify="flex-end"
-          bg="rgba(0,0,0,0.55)"
-          opacity={showControls ? 1 : 0}
-          pointerEvents={showControls ? 'auto' : 'none'}
-          style={{ transition: 'opacity 200ms ease' }}
-        >
+        <YStack {...slot('media-player-controls')} position="absolute" l={0} r={0} b={0} t={0} justify="flex-end" bg="rgba(0,0,0,0.55)" opacity={showControls ? 1 : 0} pointerEvents={showControls ? 'auto' : 'none'} style={{ transition: 'opacity 200ms ease' }}>
           <XStack px="$4" pb="$2">
-            <Slider
-              aria-label="Seek"
-              value={[duration > 0 ? currentTime : 0]}
-              max={duration || 1}
-              step={0.1}
-              onValueChange={([value]) => seekTo(value)}
-            />
+            <Slider aria-label={tr('Seek')} value={[duration > 0 ? currentTime : 0]} max={duration || 1} step={0.1} onValueChange={([value]) => seekTo(value)} />
           </XStack>
 
           <XStack px="$4" pb="$3" items="center" justify="space-between" gap="$2">
             <XStack items="center" gap="$2">
-              <Button {...overlayButton} aria-label="Rewind 10 seconds" onClick={() => skip(-SKIP_SECONDS)}>
+              <Button {...overlayButton} aria-label={tr('Rewind 10 seconds')} onClick={() => skip(-SKIP_SECONDS)}>
                 <RotateCcw size={16} />
               </Button>
 
-              <Button
-                {...overlayButton}
-                size="icon"
-                aria-label={isPlaying ? 'Pause' : 'Play'}
-                onClick={togglePlayPause}
-              >
+              <Button {...overlayButton} size="icon" aria-label={isPlaying ? tr('Pause') : tr('Play')} onClick={togglePlayPause}>
                 {isPlaying ? <Pause size={18} /> : <Play size={18} />}
               </Button>
 
-              <Button {...overlayButton} aria-label="Forward 10 seconds" onClick={() => skip(SKIP_SECONDS)}>
+              <Button {...overlayButton} aria-label={tr('Forward 10 seconds')} onClick={() => skip(SKIP_SECONDS)}>
                 <SkipForward size={16} />
               </Button>
 
-              <Button {...overlayButton} aria-label={isMuted ? 'Unmute' : 'Mute'} onClick={toggleMute}>
+              <Button {...overlayButton} aria-label={isMuted ? tr('Unmute') : tr('Mute')} onClick={toggleMute}>
                 {isMuted || volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
               </Button>
 
               <XStack width={80}>
-                <Slider
-                  aria-label="Volume"
-                  value={[isMuted ? 0 : volume]}
-                  max={1}
-                  step={0.1}
-                  onValueChange={([value]) => changeVolume(value)}
-                />
+                <Slider aria-label={tr('Volume')} value={[isMuted ? 0 : volume]} max={1} step={0.1} onValueChange={([value]) => changeVolume(value)} />
               </XStack>
 
               <SizableText color="white" fontSize="$1" ml="$2">
@@ -545,19 +442,14 @@ export function MediaPlayer({
 
             <XStack items="center" gap="$1">
               {subtitles.length > 0 && (
-                <Button
-                  {...overlayButton}
-                  aria-label="Toggle captions"
-                  bg={showSubtitles ? 'rgba(255,255,255,0.2)' : undefined}
-                  onClick={() => setShowSubtitles((v) => !v)}
-                >
+                <Button {...overlayButton} aria-label={tr('Toggle captions')} bg={showSubtitles ? 'rgba(255,255,255,0.2)' : undefined} onClick={() => setShowSubtitles((v) => !v)}>
                   <Captions size={16} />
                 </Button>
               )}
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button {...overlayButton} size="sm" aria-label="Playback speed">
+                  <Button {...overlayButton} size="sm" aria-label={tr('Playback speed')}>
                     {playbackSpeed}x
                   </Button>
                 </DropdownMenuTrigger>
@@ -573,7 +465,7 @@ export function MediaPlayer({
               {qualityOptions.length > 1 && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button {...overlayButton} aria-label="Quality">
+                    <Button {...overlayButton} aria-label={tr('Quality')}>
                       <Settings size={16} />
                     </Button>
                   </DropdownMenuTrigger>
@@ -588,21 +480,12 @@ export function MediaPlayer({
               )}
 
               {!disablePictureInPicture && (
-                <Button
-                  {...overlayButton}
-                  aria-label="Picture in picture"
-                  bg={isPictureInPicture ? 'rgba(255,255,255,0.2)' : undefined}
-                  onClick={() => void togglePictureInPicture()}
-                >
+                <Button {...overlayButton} aria-label={tr('Picture in picture')} bg={isPictureInPicture ? 'rgba(255,255,255,0.2)' : undefined} onClick={() => void togglePictureInPicture()}>
                   <PictureInPicture size={16} />
                 </Button>
               )}
 
-              <Button
-                {...overlayButton}
-                aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-                onClick={() => void toggleFullscreen()}
-              >
+              <Button {...overlayButton} aria-label={isFullscreen ? tr('Exit fullscreen') : tr('Enter fullscreen')} onClick={() => void toggleFullscreen()}>
                 {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
               </Button>
             </XStack>

@@ -1,0 +1,37 @@
+---
+title: Expo と React Native
+description: 同じインポートで、エイリアスは何もいりません。Metro はすでに react-native を話します。
+---
+
+ライブラリは @hanzo/gui を通して描画します。こちらが先に React Native です。スタックは `View`、テキストは `Text`、スタイルの prop はスタイルそのものです。Web で `div` を描くのと同じコンポーネントが、ここではネイティブのビューを描きます。テーマのトークン、間隔のランプ、タイプの階段は、両方で同じ意味です。
+
+## インストール
+
+```bash
+pnpm create expo-app@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+バンドラーの設定はありません。Web のホストが置く `react-native` のエイリアスは、Web のバンドラーにネイティブのパッケージを読ませるためのものです。Metro はネイティブのバンドラーで、書いてあるとおりに読みます。ルートが持ち込むスタイルシートのインポートは、ネイティブの Metro では何もせず、Expo の Web では適用されます。
+
+## ルートをマウントする
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Stack } from 'expo-router'
+
+export default function Layout() {
+  return (
+    <Hanzo>
+      <Stack />
+    </Hanzo>
+  )
+}
+```
+
+## Web に残るもの
+
+`@hanzo/ui/grid` は `display: grid` の `div` を描画します。どちらも React Native にはありません。Yoga にグリッドのアルゴリズムがないからです。だからルートのバレルではなく、自分のサブパスで出荷します。そこでは `XStack` と `YStack` で組んでください。ネイティブのグリッドエンジンは、そのファイル一つを変え、呼び出し側は変えません。`@hanzo/ui/product` のチャートはインライン SVG を描き、コンテナを `ResizeObserver` で測るので、いまのところこれも Web のコンポーネントです。
+
+タッチの対象は、`hitSlop` を通して 44 ポイントの下限を満たします。padding では満たしません。コントロールの箱は両方のプラットフォームで同じ大きさで、触れる範囲は別です。

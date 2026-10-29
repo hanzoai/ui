@@ -1,0 +1,98 @@
+---
+title: 主题
+description: 令牌对着主题解析，自定义属性承载身份，三枚旋钮让人把整套重新调过。
+---
+
+库里没有任何一处写下颜色的名字。组件要的是 `$background` 或 `$color12`，主题来回答，深色和浅色的答案不同，组件并不知情。品牌改答案，靠的是设一条自定义属性；人改答案，靠的是拧一枚坡道都要乘上的旋钮。
+
+## 令牌
+
+以 `$` 开头的 prop 值就是令牌。色阶从底面走到文字：`$color1` 是最安静的底，`$color12` 是最响的字。
+
+| 令牌 | 是什么 |
+| --- | --- |
+| `$background` | 页面的底。它读 `--background`，所以品牌的样式表来回答它。 |
+| `$color` | 默认的文字颜色。 |
+| `$color1` – `$color12` | 中性坡道：`$color2`/`$color3` 是抬起的表面，`$color10`/`$color11` 是压低的文字，`$color12` 最响。 |
+| `$borderColor` | 发丝线。半透明，所以在任何表面上读起来都是一条更轻的线，而不是一块不相干的灰。 |
+| `$accentBackground` / `$accentColor` | 一页上被允许的那一个响亮控件。它们读 `--primary`，强调色旋钮因此够得着。 |
+
+<Preview>
+  <XStack gap="$2" flexWrap="wrap">
+    <Button>Default</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="destructive">Destructive</Button>
+  </XStack>
+  <XStack gap="$2" flexWrap="wrap">
+    <Badge>default</Badge>
+    <Badge variant="secondary">secondary</Badge>
+    <Badge variant="destructive">destructive</Badge>
+    <Badge variant="outline">outline</Badge>
+  </XStack>
+</Preview>
+
+## 阶梯
+
+尺寸、间距和圆角在每一种宿主上都是同一组数字，每一档都带着一枚旋钮。
+
+**字号。** `fontSize="$n"`，永远不是数字。十二档读的是设计坡道，从 `--text-xs` 到 `--text-9xl`，档与档之间的四档插值相邻两档，于是一个人的比例会带动全部十六档，梯子仍然是梯子。
+
+| 档 | `$1` | `$2` | `$3` | `$4` | `$5` | `$6` | `$7` | `$8` | `$9` | `$10` | `$11` | `$14` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| px | 11 | 13 | 14 | 15 | 15 | 17 | 21 | 26 | 26 | 32 | 40 | 64 |
+
+`$1` 是标签，`$2` 是导航和密排正文，`$3` 是基准，`$6` 是节标题，`$7` 是页标题，`$8` 及以上是展示字号。展示档把行距和字距收到 −0.025em，这就是排过的字和仅仅很大的字之间的差别。
+
+**间距。** 只有这条 4px 坡道：`$1` 4，`$2` 8，`$3` 12，`$4` 16，`$5` 24，`$6` 32，`$8` 48，`$10` 64。每一档都乘以 `--density`。
+
+**圆角。** 四个值。`$1` 和 `$2` 是 6，一个控件；`$3` 和 `$4` 是 8，一个输入框或一行；`$5` 到 `$9` 是 12，一块面板；`$10` 及以上是胶囊。除了胶囊，其余都乘以 `--radius-scale`。
+
+## 自定义属性
+
+身份是 `:root` 上的一组自定义属性，深色在先，`.light` 再把它们调过去。`Hanzo` 在 body 上盖下 `.t_dark` 或 `.t_light`，CSS 对两种写法都作答，于是组件令牌和样式表叫的是同一个主题。
+
+```css
+:root {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --primary: #fafafa;
+  --border: rgb(255 255 255 / .10);
+  --ring: rgb(255 255 255 / .40);
+  --font-sans: 'Zen', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Zen Mono', ui-monospace, monospace;
+}
+```
+
+全套是 `--background`、`--foreground`、`--card`、`--popover`、`--primary`、`--secondary`、`--muted`、`--accent`、`--destructive`，各自带上 `-foreground`，然后是 `--border`、`--input`、`--ring`、`--radius`、`--chart-1` 到 `--chart-5`，以及 `--sidebar-*` 这一族。它们来自 `@hanzo/design`，并被编进根所导入的样式表；同时挂上 design 自己那张表的宿主，会实时跟着它走。
+
+品牌要改调，就在层叠的后面声明同样的名字。自带字体的宿主绑定的是 `--font-sans-provided`，而不是 `--font-sans`，因为包自己的绑定坐在一个层里，没有层的声明不论特异度都会胜出。
+
+## 外观旋钮
+
+`@hanzo/design` 公布了三枚每条坡道都要乘上的旋钮，`@hanzo/appearance` 是替一个人把它们设下去的面板：
+
+| 旋钮 | 带动什么 |
+| --- | --- |
+| `--type-scale` | 每一档 `--text-*`，以及随之而来的每一个 `fontSize="$n"`。 |
+| `--type-ratio` | 各档之间隔多远。 |
+| `--density` | 每一档 `--space-*`，以及 gui 的每一个 gap 和 padding。 |
+| `--primary` / `--accent` | 那一个响亮的颜色。 |
+| `--font-sans` | 阅读用的字体：品牌的、系统的、衬线，或等宽。 |
+| `--container-max` / `--container-prose` / `--container-wide` | 一页排版所对准的三种行长。 |
+
+它们作为内联属性落在 `html` 上，而那里就是 `:root`，所以不必靠一条更特异的选择器，就能压过每一张样式表。它们能到达组件，是因为 gui 在 JavaScript 里把尺寸解析成 `var(--text-base)`，这个 var 到了元素上仍然去读层叠。没人设过的轴是缺席，不是中性：写成 `1` 看起来一样，却会悄悄压过一个公布了自己比例的品牌。
+
+```tsx
+import { Appearance } from '@hanzo/appearance'
+import { bootScript } from '@hanzo/appearance/state'
+
+// In <head>, so the first paint is already correct.
+<script dangerouslySetInnerHTML={{ __html: bootScript() }} />
+
+// Wherever the product keeps settings.
+<Appearance />
+```
+
+`Hanzo` 每次挂载都会重新应用存下来的偏好，于是在一页上做出的选择，到下一页仍然成立。本站页眉里的那个控件，就是这块面板。

@@ -36,45 +36,21 @@
  * move into it, so an editor has one bar. A `title` or `actions` alone implies
  * `with-header`. `autoHeight` lets the editor follow its text with no ceiling.
  */
-import { SizableText, XStack, YStack, type YStackProps } from '@hanzo/gui'
-import { AlignLeft, Check, CircleAlert, CircleCheck, Copy, Type } from '@hanzogui/lucide-icons-2'
+import * as React from 'react'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import { jsonLanguage } from '@codemirror/lang-json'
-import {
-  HighlightStyle,
-  LanguageSupport,
-  bracketMatching,
-  codeFolding,
-  foldGutter,
-  foldKeymap,
-  foldNodeProp,
-  indentOnInput,
-  syntaxHighlighting,
-  syntaxTree,
-} from '@codemirror/language'
+import { bracketMatching, codeFolding, foldGutter, foldKeymap, foldNodeProp, HighlightStyle, indentOnInput, LanguageSupport, syntaxHighlighting, syntaxTree } from '@codemirror/language'
 import { Annotation, Compartment, EditorState, RangeSet, RangeSetBuilder, StateField } from '@codemirror/state'
-import {
-  Decoration,
-  EditorView,
-  GutterMarker,
-  drawSelection,
-  gutterLineClass,
-  highlightActiveLine,
-  highlightActiveLineGutter,
-  keymap,
-  lineNumbers as numbering,
-  placeholder as hint,
-  ViewPlugin,
-  type DecorationSet,
-  type ViewUpdate,
-} from '@codemirror/view'
+import { Decoration, drawSelection, EditorView, gutterLineClass, GutterMarker, highlightActiveLine, highlightActiveLineGutter, placeholder as hint, keymap, lineNumbers as numbering, ViewPlugin, type DecorationSet, type ViewUpdate } from '@codemirror/view'
+import { SizableText, XStack, YStack, type YStackProps } from '@hanzo/gui'
+import { AlignLeft, Check, CircleAlert, CircleCheck, Copy, Type } from '@hanzogui/lucide-icons-2'
 import { tags } from '@lezer/highlight'
-import * as React from 'react'
 
 import { face, type CodeToken } from '../../code-theme'
+import { useTranslate } from '../../i18n/react'
 import { Button } from './button'
-import { Grip } from './grip'
 import { ltr } from './dir'
+import { Grip } from './grip'
 import { checkJson, formatJson, type JsonCheck } from './json'
 import { Select, SelectContent, SelectItem, SelectTrigger } from './select'
 import { slot } from './slot'
@@ -83,32 +59,7 @@ import { toast } from './toaster'
 export type CodeEditorWordWrap = 'on' | 'off' | 'wordWrapColumn' | 'bounded'
 
 /** The languages the menu offers when a caller does not narrow the list. */
-const LANGUAGES = [
-  'javascript',
-  'typescript',
-  'python',
-  'java',
-  'csharp',
-  'cpp',
-  'c',
-  'go',
-  'rust',
-  'ruby',
-  'php',
-  'swift',
-  'kotlin',
-  'dart',
-  'html',
-  'css',
-  'scss',
-  'json',
-  'xml',
-  'yaml',
-  'sql',
-  'markdown',
-  'shell',
-  'plaintext',
-] as const
+const LANGUAGES = ['javascript', 'typescript', 'python', 'java', 'csharp', 'cpp', 'c', 'go', 'rust', 'ruby', 'php', 'swift', 'kotlin', 'dart', 'html', 'css', 'scss', 'json', 'xml', 'yaml', 'sql', 'markdown', 'shell', 'plaintext'] as const
 
 const LABEL: Record<string, string> = {
   javascript: 'JavaScript',
@@ -179,9 +130,15 @@ const FRAME = /* @__PURE__ */ EditorView.theme({
     border: 'none',
     borderInlineEnd: '1px solid var(--edge)',
   },
-  '.cm-lineNumbers .cm-gutterElement': { padding: '0 10px 0 12px', minWidth: '28px' },
+  '.cm-lineNumbers .cm-gutterElement': {
+    padding: '0 10px 0 12px',
+    minWidth: '28px',
+  },
   '.cm-activeLine': { backgroundColor: 'var(--panel)' },
-  '.cm-activeLineGutter': { backgroundColor: 'transparent', color: 'var(--quiet)' },
+  '.cm-activeLineGutter': {
+    backgroundColor: 'transparent',
+    color: 'var(--quiet)',
+  },
   '.cm-cursor, .cm-dropCursor': { borderInlineStartColor: 'var(--ink)' },
   '.cm-selectionBackground, &.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, ::selection': {
     backgroundColor: 'var(--raised)',
@@ -191,9 +148,15 @@ const FRAME = /* @__PURE__ */ EditorView.theme({
     color: 'inherit',
     outline: 'none',
   },
-  '.cm-nonmatchingBracket, &.cm-focused .cm-nonmatchingBracket': { backgroundColor: 'transparent' },
+  '.cm-nonmatchingBracket, &.cm-focused .cm-nonmatchingBracket': {
+    backgroundColor: 'transparent',
+  },
   '.cm-placeholder': { color: 'var(--codeDim)' },
-  '.cm-foldGutter .cm-gutterElement': { padding: '0 4px', color: 'var(--codeDim)', cursor: 'pointer' },
+  '.cm-foldGutter .cm-gutterElement': {
+    padding: '0 4px',
+    color: 'var(--codeDim)',
+    cursor: 'pointer',
+  },
   '.cm-foldGutter .cm-gutterElement:hover': { color: 'var(--ink)' },
   '.cm-foldPlaceholder': {
     backgroundColor: 'var(--raised)',
@@ -205,7 +168,9 @@ const FRAME = /* @__PURE__ */ EditorView.theme({
     cursor: 'pointer',
   },
   '.cm-foldCount': { color: 'var(--codeComment)' },
-  '.cm-fault': { backgroundColor: 'var(--state-error-bg, rgb(239 68 68 / .1))' },
+  '.cm-fault': {
+    backgroundColor: 'var(--state-error-bg, rgb(239 68 68 / .1))',
+  },
   '.cm-gutterElement.cm-fault': { color: 'var(--bad)' },
   '.cm-fault-at': {
     textDecoration: 'underline wavy var(--bad)',
@@ -215,7 +180,10 @@ const FRAME = /* @__PURE__ */ EditorView.theme({
 })
 
 /** One kind of token in the code theme: its theme key, and its slant or weight (`face`). */
-const paint = (token: CodeToken) => ({ color: `var(--code${token[0].toUpperCase()}${token.slice(1)})`, ...face[token] })
+const paint = (token: CodeToken) => ({
+  color: `var(--code${token[0].toUpperCase()}${token.slice(1)})`,
+  ...face[token],
+})
 
 /** The syntax in the code theme: one theme key per kind of token, from `code-theme.ts`. */
 const SYNTAX = /* @__PURE__ */ HighlightStyle.define([
@@ -224,7 +192,10 @@ const SYNTAX = /* @__PURE__ */ HighlightStyle.define([
   { tag: tags.number, ...paint('number') },
   { tag: tags.bool, ...paint('boolean') },
   { tag: tags.null, ...paint('null') },
-  { tag: [tags.punctuation, tags.separator, tags.brace, tags.squareBracket], ...paint('punctuation') },
+  {
+    tag: [tags.punctuation, tags.separator, tags.brace, tags.squareBracket],
+    ...paint('punctuation'),
+  },
   { tag: tags.comment, ...paint('comment') },
   { tag: tags.keyword, ...paint('keyword') },
 ])
@@ -236,8 +207,12 @@ const SYNTAX = /* @__PURE__ */ HighlightStyle.define([
  */
 const JSON_GRAMMAR = /* @__PURE__ */ new LanguageSupport(
   jsonLanguage.configure({
-    props: [foldNodeProp.add({ 'Object Array': (node) => ({ from: node.from, to: node.to }) })],
-  }),
+    props: [
+      foldNodeProp.add({
+        'Object Array': (node) => ({ from: node.from, to: node.to }),
+      }),
+    ],
+  })
 )
 
 const words = (n: number, one: string) => `${n} ${one}${n === 1 ? '' : 's'}`
@@ -246,7 +221,12 @@ const words = (n: number, one: string) => `${n} ${one}${n === 1 ? '' : 's'}`
 function measureFold(state: EditorState, range: { from: number; to: number }) {
   let node = syntaxTree(state).resolveInner(range.from, 1)
   while (node.parent && node.name !== 'Object' && node.name !== 'Array') node = node.parent
-  if (node.name === 'Object') return { open: '{', close: '}', count: words(node.getChildren('Property').length, 'key') }
+  if (node.name === 'Object')
+    return {
+      open: '{',
+      close: '}',
+      count: words(node.getChildren('Property').length, 'key'),
+    }
   let n = 0
   for (let c = node.firstChild; c; c = c.nextSibling) if (!/^[[\],]$/.test(c.name) && !c.type.isError) n += 1
   return { open: '[', close: ']', count: words(n, 'item') }
@@ -287,7 +267,11 @@ const hangs = new Map<number, Decoration>()
 const hangFor = (n: number) => {
   let d = hangs.get(n)
   if (!d) {
-    d = Decoration.line({ attributes: { style: `padding-inline-start: calc(${n}ch + 12px); text-indent: -${n}ch` } })
+    d = Decoration.line({
+      attributes: {
+        style: `padding-inline-start: calc(${n}ch + 12px); text-indent: -${n}ch`,
+      },
+    })
     hangs.set(n, d)
   }
   return d
@@ -311,7 +295,7 @@ const hang = /* @__PURE__ */ ViewPlugin.fromClass(
     build(view: EditorView) {
       const out = new RangeSetBuilder<Decoration>()
       for (const { from, to } of view.visibleRanges) {
-        for (let pos = from; pos <= to; ) {
+        for (let pos = from; pos <= to;) {
           const line = view.state.doc.lineAt(pos)
           out.add(line.from, line.from, hangFor(indentOf(line.text, view.state.tabSize) + HANG))
           pos = line.to + 1
@@ -320,7 +304,7 @@ const hang = /* @__PURE__ */ ViewPlugin.fromClass(
       return out.finish()
     }
   },
-  { decorations: (v) => v.decorations },
+  { decorations: (v) => v.decorations }
 )
 
 /** Marks a programmatic edit, so a caller's own `value` is never echoed back to `onChange`. */
@@ -333,7 +317,11 @@ const FAULT_GUTTER = /* @__PURE__ */ new Fault()
 const FAULT_LINE = /* @__PURE__ */ Decoration.line({ class: 'cm-fault' })
 const FAULT_AT = /* @__PURE__ */ Decoration.mark({ class: 'cm-fault-at' })
 
-type Verdict = { check: JsonCheck; marks: DecorationSet; gutter: RangeSet<GutterMarker> }
+type Verdict = {
+  check: JsonCheck
+  marks: DecorationSet
+  gutter: RangeSet<GutterMarker>
+}
 
 function judge(state: EditorState, text: boolean): Verdict {
   const check = checkJson(state.doc.toString(), { text })
@@ -342,7 +330,11 @@ function judge(state: EditorState, text: boolean): Verdict {
   const line = state.doc.lineAt(at)
   const end = Math.min(at + 1, line.to)
   const ranges = [FAULT_LINE.range(line.from), ...(end > at ? [FAULT_AT.range(at, end)] : [])]
-  return { check, marks: Decoration.set(ranges, true), gutter: RangeSet.of([FAULT_GUTTER.range(line.from)]) }
+  return {
+    check,
+    marks: Decoration.set(ranges, true),
+    gutter: RangeSet.of([FAULT_GUTTER.range(line.from)]),
+  }
 }
 
 /** The JSON verdict as editor state: recomputed on every edit, drawn as decorations. */
@@ -350,16 +342,12 @@ const verdict = (text: boolean) =>
   StateField.define<Verdict>({
     create: (state) => judge(state, text),
     update: (value, tr) => (tr.docChanged ? judge(tr.state, text) : value),
-    provide: (field) => [
-      EditorView.decorations.from(field, (v) => v.marks),
-      gutterLineClass.from(field, (v) => v.gutter),
-    ],
+    provide: (field) => [EditorView.decorations.from(field, (v) => v.marks), gutterLineClass.from(field, (v) => v.gutter)],
   })
 
 const px = (v: string | number) => (typeof v === 'number' ? `${v}px` : v)
 
-export interface CodeEditorProps
-  extends Omit<YStackProps, 'children' | 'height' | 'minHeight' | 'maxHeight' | 'onChange'> {
+export interface CodeEditorProps extends Omit<YStackProps, 'children' | 'height' | 'minHeight' | 'maxHeight' | 'onChange'> {
   /** A controlled value; omit it and set `defaultValue` to let the editor own its text. */
   value?: string
   defaultValue?: string
@@ -406,34 +394,8 @@ export interface CodeEditorProps
   autoHeight?: boolean
 }
 
-export function CodeEditor({
-  value,
-  defaultValue = '',
-  language = 'javascript',
-  height,
-  minHeight = 96,
-  maxHeight = 480,
-  resizable = height === undefined,
-  allowText = false,
-  onChange,
-  onCheck,
-  onMount,
-  readOnly = false,
-  lineNumbers = true,
-  wordWrap = 'on',
-  fontSize = 14,
-  placeholder,
-  showCopyButton = true,
-  showFormatButton,
-  showLanguageSelector = true,
-  availableLanguages = LANGUAGES,
-  label = 'Code',
-  variant,
-  title,
-  actions,
-  autoHeight = false,
-  ...props
-}: CodeEditorProps) {
+export function CodeEditor({ value, defaultValue = '', language = 'javascript', height, minHeight = 96, maxHeight = 480, resizable = height === undefined, allowText = false, onChange, onCheck, onMount, readOnly = false, lineNumbers = true, wordWrap = 'on', fontSize = 14, placeholder, showCopyButton = true, showFormatButton, showLanguageSelector = true, availableLanguages = LANGUAGES, label = 'Code', variant, title, actions, autoHeight = false, ...props }: CodeEditorProps) {
+  const tr = useTranslate()
   const frame = variant ?? (title !== undefined || actions !== undefined ? 'with-header' : 'default')
   const headed = frame === 'with-header'
   const [selected, setSelected] = React.useState(language)
@@ -452,12 +414,19 @@ export function CodeEditor({
   listeners.current = { onChange, onCheck }
 
   const compartments = React.useMemo(
-    () => ({ language: new Compartment(), gutter: new Compartment(), wrap: new Compartment(), edit: new Compartment() }),
-    [],
+    () => ({
+      language: new Compartment(),
+      gutter: new Compartment(),
+      wrap: new Compartment(),
+      edit: new Compartment(),
+    }),
+    []
   )
   const isJson = selected === 'json'
   const field = React.useMemo(() => verdict(allowText), [allowText])
-  const judged = React.useRef<{ field: typeof field; seen?: Verdict }>({ field })
+  const judged = React.useRef<{ field: typeof field; seen?: Verdict }>({
+    field,
+  })
   judged.current.field = field
 
   const grammar = () => (isJson ? [JSON_GRAMMAR, field, FOLDING, foldGutter()] : [])
@@ -526,7 +495,10 @@ export function CodeEditor({
           compartments.wrap.of(wrap()),
           compartments.edit.of(edit()),
           placeholder ? hint(placeholder) : [],
-          EditorView.contentAttributes.of({ 'aria-label': label, 'data-slot': 'code-editor-content' }),
+          EditorView.contentAttributes.of({
+            'aria-label': label,
+            'data-slot': 'code-editor-content',
+          }),
           FRAME,
           listen,
         ],
@@ -546,12 +518,7 @@ export function CodeEditor({
   // so the caret, the selection and the undo history survive.
   React.useEffect(() => {
     view.current?.dispatch({
-      effects: [
-        compartments.language.reconfigure(grammar()),
-        compartments.gutter.reconfigure(gutter()),
-        compartments.wrap.reconfigure(wrap()),
-        compartments.edit.reconfigure(edit()),
-      ],
+      effects: [compartments.language.reconfigure(grammar()), compartments.gutter.reconfigure(gutter()), compartments.wrap.reconfigure(wrap()), compartments.edit.reconfigure(edit())],
     })
   }, [isJson, field, lineNumbers, wordWrap, readOnly])
 
@@ -570,7 +537,10 @@ export function CodeEditor({
     sent.current = []
     const current = v.state.doc.toString()
     if (value === current) return
-    v.dispatch({ changes: { from: 0, to: current.length, insert: value }, annotations: External.of(true) })
+    v.dispatch({
+      changes: { from: 0, to: current.length, insert: value },
+      annotations: External.of(true),
+    })
     setText(value)
   }, [value])
 
@@ -605,31 +575,9 @@ export function CodeEditor({
   const footer = isJson && check !== null
 
   return (
-    <YStack
-      {...slot('code-editor')}
-      data-variant={frame}
-      borderWidth={frame === 'borderless' ? 0 : 1}
-      borderColor="$borderColor"
-      rounded={frame === 'borderless' ? 0 : '$3'}
-      overflow="hidden"
-      bg="$background"
-      focusWithinStyle={frame === 'borderless' ? undefined : { borderColor: '$outlineColor' }}
-      {...props}
-    >
+    <YStack {...slot('code-editor')} data-variant={frame} borderWidth={frame === 'borderless' ? 0 : 1} borderColor="$borderColor" rounded={frame === 'borderless' ? 0 : '$3'} overflow="hidden" bg="$background" focusWithinStyle={frame === 'borderless' ? undefined : { borderColor: '$outlineColor' }} {...props}>
       {toolbar && (
-        <XStack
-          {...slot(headed ? 'code-editor-header' : 'code-editor-toolbar')}
-          items="center"
-          justify="space-between"
-          flexWrap="wrap"
-          gap="$2"
-          borderBottomWidth={1}
-          borderColor="$borderColor"
-          bg="$panel"
-          px="$2"
-          py={headed ? 0 : '$1'}
-          {...(headed ? { minH: 40 } : null)}
-        >
+        <XStack {...slot(headed ? 'code-editor-header' : 'code-editor-toolbar')} items="center" justify="space-between" flexWrap="wrap" gap="$2" borderBottomWidth={1} borderColor="$borderColor" bg="$panel" px="$2" py={headed ? 0 : '$1'} {...(headed ? { minH: 40 } : null)}>
           {headed ? (
             <SizableText {...slot('code-editor-title')} size="$2" fontWeight="500" color="$hint" px="$1" numberOfLines={1} flex={1} minW={0}>
               {title ?? label}
@@ -637,15 +585,7 @@ export function CodeEditor({
           ) : null}
           {showLanguageSelector ? (
             <Select value={selected} onValueChange={setSelected}>
-              <SelectTrigger
-                {...slot('code-editor-language-trigger')}
-                width="auto"
-                minHeight={32}
-                borderWidth={0}
-                bg="transparent"
-                gap="$1.5"
-                px="$2"
-              >
+              <SelectTrigger {...slot('code-editor-language-trigger')} width="auto" minHeight={32} borderWidth={0} bg="transparent" gap="$1.5" px="$2">
                 <SizableText size="$1" fontFamily="$mono">
                   {LABEL[selected] ?? selected}
                 </SizableText>
@@ -665,27 +605,15 @@ export function CodeEditor({
           )}
           <XStack items="center" justify="flex-end" flexWrap="wrap" gap={headed ? '$2' : '$1'} shrink={1} minW={0}>
             {formattable && (
-              <Button
-                {...slot('code-editor-format-button')}
-                variant="ghost"
-                size="sm"
-                disabled={check?.kind !== 'json'}
-                onClick={format}
-              >
+              <Button {...slot('code-editor-format-button')} variant="ghost" size="sm" disabled={check?.kind !== 'json'} onClick={format}>
                 <AlignLeft size={14} />
                 Format
               </Button>
             )}
             {showCopyButton && (
-              <Button
-                {...slot('code-editor-copy-button')}
-                variant="ghost"
-                size="sm"
-                disabled={!text}
-                onClick={copy}
-              >
+              <Button {...slot('code-editor-copy-button')} variant="ghost" size="sm" disabled={!text} onClick={copy}>
                 {copied ? <Check size={14} /> : <Copy size={14} />}
-                {copied ? 'Copied!' : 'Copy'}
+                {copied ? tr('Copied!') : tr('Copy')}
               </Button>
             )}
             {actions}
@@ -711,18 +639,7 @@ export function CodeEditor({
         )}
       </YStack>
       {footer && (
-        <XStack
-          {...slot('code-editor-footer')}
-          items="center"
-          justify="space-between"
-          gap="$2"
-          minH={28}
-          px="$3"
-          py="$1"
-          borderTopWidth={1}
-          borderColor="$borderColor"
-          bg="$panel"
-        >
+        <XStack {...slot('code-editor-footer')} items="center" justify="space-between" gap="$2" minH={28} px="$3" py="$1" borderTopWidth={1} borderColor="$borderColor" bg="$panel">
           <Status check={check} />
         </XStack>
       )}
@@ -733,33 +650,11 @@ export function CodeEditor({
 /** The footer's JSON verdict, announced politely when it changes. */
 function Status({ check }: { check: JsonCheck | null }) {
   const bad = check?.kind === 'error'
-  const words =
-    check === null
-      ? ''
-      : check.kind === 'error'
-        ? `Line ${check.line}, column ${check.column}: ${check.message}`
-        : check.kind === 'text'
-          ? 'Plain text'
-          : check.kind === 'empty'
-            ? 'Empty'
-            : 'Valid JSON'
+  const words = check === null ? '' : check.kind === 'error' ? `Line ${check.line}, column ${check.column}: ${check.message}` : check.kind === 'text' ? 'Plain text' : check.kind === 'empty' ? 'Empty' : 'Valid JSON'
   return (
     <XStack {...slot('code-editor-status')} aria-live="polite" items="center" gap="$1.5" flex={1} minW={0}>
-      {bad ? (
-        <CircleAlert size={14} color="$bad" />
-      ) : check?.kind === 'text' ? (
-        <Type size={14} color="$soft" />
-      ) : check?.kind === 'json' ? (
-        <CircleCheck size={14} color="$soft" />
-      ) : null}
-      <SizableText
-        {...slot('code-editor-status-text')}
-        data-kind={check?.kind}
-        size="$1"
-        fontFamily="$mono"
-        color={bad ? '$bad' : '$soft'}
-        numberOfLines={2}
-      >
+      {bad ? <CircleAlert size={14} color="$bad" /> : check?.kind === 'text' ? <Type size={14} color="$soft" /> : check?.kind === 'json' ? <CircleCheck size={14} color="$soft" /> : null}
+      <SizableText {...slot('code-editor-status-text')} data-kind={check?.kind} size="$1" fontFamily="$mono" color={bad ? '$bad' : '$soft'} numberOfLines={2}>
         {words}
       </SizableText>
     </XStack>

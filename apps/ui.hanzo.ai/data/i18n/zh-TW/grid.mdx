@@ -1,0 +1,117 @@
+---
+title: 格線
+description: 真正的 CSS 格線。軌道由容器決定，不由子節點決定。欄只要一個 prop，沒有中斷點。
+---
+
+自己算的格線——每個子節點都寫成 `width: calc(25% - 7.5px)`——只有大家尺寸都同意時才齊。一個長詞就會把那一列扯得參差。把數字調一調並不能修好。這裡由父層把軌道宣告一次，子節點沒有發言權：等寬是結構，沒有任何子節點能把自己那條軌道撐開。
+
+```tsx
+import { Cell, Grid } from '@hanzo/ui/grid'
+```
+
+`Grid` 單獨放在自己的子路徑，因為它畫的是帶 `display: grid` 的 `div`，這兩樣 React Native 都沒有。API 用的是 CSS 格線的說法：`columns` 和 `rows` 是軌道清單，`Cell` 負責擺放與跨越。換上原生格線引擎時，要改的是那個檔案，呼叫處不動。
+
+## 欄
+
+`columns` 吃得下軌道清單的各種寫法：一個數量、一份清單，或一條直接寫出來的軌道清單。
+
+```tsx
+<Grid columns={3} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={3} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+  </Grid>
+</Preview>
+
+數量會變成 `repeat(3, minmax(0, 1fr))`，而不是 `1fr`，因為單獨的 `1fr` 意味著 `minmax(auto, 1fr)`，`auto` 把軌道的下限放在內容上——一條不斷開的字串就會把自己那一欄撐得更寬。元件存在，就是為了攔住這種毛邊的列，所以更長的那種寫法才是要點。
+
+```tsx
+<Grid columns={['2fr', '1fr']} gap="$3">
+  <Tile>main</Tile>
+  <Tile>aside</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={['2fr', '1fr']} gap="$3">
+    <Tile>main</Tile>
+    <Tile>aside</Tile>
+  </Grid>
+</Preview>
+
+清單裡的數字是像素；其餘的已經是軌道尺寸。
+
+## 能放進多少
+
+回應式的形式是 `columns` 的一個值，不是第二個 prop，裡面也沒有中斷點。`min` 是一欄在格線減掉一欄之前可以窄到的程度，`max` 封住數量。
+
+```tsx
+<Grid columns={{ min: 160, max: 4 }} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Tile>5</Tile>
+  <Tile>6</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={{ min: 160, max: 4 }} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Tile>5</Tile>
+    <Tile>6</Tile>
+  </Grid>
+</Preview>
+
+改變視窗大小：數量跟著格線所在的那一欄走，於是同一塊放進一個它從未見過的側邊欄裡也是對的。`min` 寫成 `min(160px, 100%)`，而不是裸的 `160px`，於是比下限更窄的手機得到的是一條滿寬軌道，而不是橫向捲動。`max` 折進同一個下限——一列的 M 分之一，再減去間隙——所以這個上限在小螢幕上不花任何代價。
+
+## 儲存格
+
+普通的子節點不需要包裝。`Cell` 的存在是為了跨越或放置：數字跨越那麼多條軌道，字串則是照寫的 `grid-column`。
+
+```tsx
+<Grid columns={4} gap="$3">
+  <Cell col={2}><Tile>col=2</Tile></Cell>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={4} gap="$3">
+    <Cell col={2}><Tile>col=2</Tile></Cell>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+  </Grid>
+</Preview>
+
+`row` 沿頁面向下是同一回事。格線上的 `rows` 決定列軌道的尺寸；沒有它，列就按內容定大小。
+
+## 間隙
+
+`gap` 是一個間距權杖，或一個原始的像素數。權杖讀的是文件裡的坡道——`gap="$4"` 就是 `var(--space-4)`——所以一個人在外觀面板裡移動密度，每一張格線都跟著動。在繪製時解析出來的數字，就固定在繪製那一刻。
+
+## 軌道清單本身
+
+`tracks(columns, gap)` 被匯出，因為它就是這個元件的全部決定：`columns` 的任何一種寫法，變成它所指的那一條軌道清單，上面兩條不變量都在裡面。
+
+```ts
+import { tracks } from '@hanzo/ui/grid'
+
+tracks(3)                       // 'repeat(3, minmax(0, 1fr))'
+tracks({ min: 240 })            // 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))'
+```

@@ -1,0 +1,64 @@
+---
+title: One
+description: O framework com o qual este site é construído. O alias, a lista de dedupe e a raiz no documento.
+---
+
+[One](https://onestack.dev) é um framework Vite para React e React Native com rotas por arquivo. Este site é um app One renderizado para HTML estático, e a configuração abaixo é a dele.
+
+## Crie o projeto
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Configure o Vite
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+O alias é o mesmo que todo host define. A lista de dedupe é o que mantém o motor numa única instância entre os bundles de cliente e de servidor: o tema é um contexto de React, e duas cópias do módulo que o possui são dois contextos.
+
+## Monte a raiz
+
+O One renderiza o documento inteiro a partir de `_layout.tsx`, então a raiz vai ali.
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## Renderização estática
+
+Com `defaultRenderMode: 'ssg'` cada rota é renderizada uma vez, na hora do build, para um arquivo HTML de verdade, e a folha de estilos do pacote está nesse arquivo — a folha é gerada quando o pacote é publicado, não quando um navegador renderiza um componente pela primeira vez, e é isso que torna uma página estática correta antes de qualquer script rodar.

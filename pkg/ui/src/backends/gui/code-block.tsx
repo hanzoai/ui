@@ -16,23 +16,17 @@
  * does. `size` picks the type scale. A line is never wrapped, so the body
  * scrolls on both axes once it outgrows `maxHeight` or the panel's width.
  */
-import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
-import { Check, Copy, FileText } from '@hanzogui/lucide-icons-2'
 import { useCallback, useState, type ComponentProps } from 'react'
+import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
+import { Check, Copy, FileText } from '@hanzogui/lucide-icons-2'
+
+import { useTranslate } from '../../i18n/react'
 import { Button } from './button'
 import { Language, mono, named, type Palette, type Surface } from './code-surface'
 import { align, ltr } from './dir'
 import { slot } from './slot'
 
-export type CodeBlockTheme =
-  | 'dark'
-  | 'light'
-  | 'github'
-  | 'github-dark'
-  | 'vs-dark'
-  | 'monokai'
-  | 'dracula'
-  | 'nord'
+export type CodeBlockTheme = 'dark' | 'light' | 'github' | 'github-dark' | 'vs-dark' | 'monokai' | 'dracula' | 'nord'
 
 export type CodeBlockSize = 'sm' | 'default' | 'lg'
 
@@ -58,16 +52,35 @@ export interface CodeBlockProps extends Omit<ComponentProps<'div'>, 'children'> 
 /** The named editor palettes, opt-in by name and fixed whatever the page's theme. */
 const PALETTE = {
   github: { bg: '#ffffff', border: '#e2e8f0', fg: '#24292e', muted: '#6e7781' },
-  'github-dark': { bg: '#0d1117', border: '#30363d', fg: '#c9d1d9', muted: '#8b949e' },
-  'vs-dark': { bg: '#1e1e1e', border: '#333333', fg: '#d4d4d4', muted: '#808080' },
-  monokai: { bg: '#272822', border: '#49483e', fg: '#f8f8f2', muted: '#75715e' },
-  dracula: { bg: '#282a36', border: '#44475a', fg: '#f8f8f2', muted: '#6272a4' },
+  'github-dark': {
+    bg: '#0d1117',
+    border: '#30363d',
+    fg: '#c9d1d9',
+    muted: '#8b949e',
+  },
+  'vs-dark': {
+    bg: '#1e1e1e',
+    border: '#333333',
+    fg: '#d4d4d4',
+    muted: '#808080',
+  },
+  monokai: {
+    bg: '#272822',
+    border: '#49483e',
+    fg: '#f8f8f2',
+    muted: '#75715e',
+  },
+  dracula: {
+    bg: '#282a36',
+    border: '#44475a',
+    fg: '#f8f8f2',
+    muted: '#6272a4',
+  },
   nord: { bg: '#2e3440', border: '#4c566a', fg: '#d8dee9', muted: '#81a1c1' },
 } as const satisfies Record<Exclude<CodeBlockTheme, 'dark' | 'light'>, Palette>
 
 /** The surface a `theme` names: the code theme for none, `dark` or `light`, else that palette. */
-const surface = (theme: CodeBlockTheme | null | undefined): Surface =>
-  !theme || theme === 'dark' || theme === 'light' ? mono(theme) : named(PALETTE[theme])
+const surface = (theme: CodeBlockTheme | null | undefined): Surface => (!theme || theme === 'dark' || theme === 'light' ? mono(theme) : named(PALETTE[theme]))
 
 const FONT_SIZE: Record<CodeBlockSize, number> = { sm: 12, default: 14, lg: 16 }
 
@@ -121,34 +134,17 @@ const Mono = styled(SizableText, {
 const rows = (code: string, highlightLines: number[], diff?: CodeBlockDiff) =>
   code.split('\n').map((text, i) => {
     const n = i + 1
-    const marker: Marker | undefined = diff?.added?.includes(n)
-      ? 'added'
-      : diff?.removed?.includes(n)
-        ? 'removed'
-        : highlightLines.includes(n)
-          ? 'highlight'
-          : undefined
+    const marker: Marker | undefined = diff?.added?.includes(n) ? 'added' : diff?.removed?.includes(n) ? 'removed' : highlightLines.includes(n) ? 'highlight' : undefined
     return { n, text, marker }
   })
 
-export function CodeBlock({
-  code,
-  language = 'text',
-  filename,
-  theme,
-  size,
-  showLineNumbers = true,
-  highlightLines = [],
-  showCopyButton = true,
-  maxHeight = 400,
-  diff,
-  ...props
-}: CodeBlockProps) {
+export function CodeBlock({ code, language = 'text', filename, theme, size, showLineNumbers = true, highlightLines = [], showCopyButton = true, maxHeight = 400, diff, ...props }: CodeBlockProps) {
+  const tr = useTranslate()
   const [copied, setCopied] = useState(false)
   const paint = surface(theme)
   const fontSize = FONT_SIZE[size ?? 'default']
   const lineHeight = fontSize * 1.5
-  const label = copied ? 'Copied' : 'Copy code'
+  const label = copied ? tr('Copied') : tr('Copy code')
 
   const copy = useCallback(async () => {
     try {
@@ -161,12 +157,7 @@ export function CodeBlock({
   }, [code])
 
   return (
-    <Frame
-      {...slot('code-block')}
-      bg={paint.bg as never}
-      borderColor={paint.border as never}
-      {...(props as ComponentProps<typeof Frame>)}
-    >
+    <Frame {...slot('code-block')} bg={paint.bg as never} borderColor={paint.border as never} {...(props as ComponentProps<typeof Frame>)}>
       {(filename || language || showCopyButton) && (
         <Header {...slot('code-block-header')} borderBottomColor={paint.border as never}>
           <XStack items="center" gap="$2">
@@ -186,11 +177,7 @@ export function CodeBlock({
           </XStack>
           {showCopyButton && (
             <Button variant="ghost" size="icon-sm" onClick={copy} aria-label={label} title={label}>
-              {copied ? (
-                <Check size={14} color={paint.strong as never} />
-              ) : (
-                <Copy size={14} color={paint.muted as never} />
-              )}
+              {copied ? <Check size={14} color={paint.strong as never} /> : <Copy size={14} color={paint.muted as never} />}
             </Button>
           )}
         </Header>
@@ -204,30 +191,23 @@ export function CodeBlock({
             return (
               <Line
                 key={n}
-                {...(mark ? { bg: paint.line as never, borderInlineStartColor: paint[mark.edge] as never } : null)}
+                {...(mark
+                  ? {
+                      bg: paint.line as never,
+                      borderInlineStartColor: paint[mark.edge] as never,
+                    }
+                  : null)}
                 data-slot="code-block-line"
                 data-line={n}
                 data-mark={marker}
               >
                 {showLineNumbers && (
-                  <Mono
-                    width={32}
-                    {...align('end')}
-                    select="none"
-                    fontSize={FONT_SIZE.sm}
-                    lineHeight={lineHeight}
-                    color={paint.muted as never}
-                  >
+                  <Mono width={32} {...align('end')} select="none" fontSize={FONT_SIZE.sm} lineHeight={lineHeight} color={paint.muted as never}>
                     {n}
                   </Mono>
                 )}
                 {mark?.sign && (
-                  <Mono
-                    select="none"
-                    fontSize={FONT_SIZE.sm}
-                    lineHeight={lineHeight}
-                    color={paint[mark.edge] as never}
-                  >
+                  <Mono select="none" fontSize={FONT_SIZE.sm} lineHeight={lineHeight} color={paint[mark.edge] as never}>
                     {mark.sign}
                   </Mono>
                 )}

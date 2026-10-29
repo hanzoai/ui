@@ -1,0 +1,55 @@
+---
+title: Vite
+description: resolve 的兩行，再加上根。
+---
+
+## 建立專案
+
+```bash
+pnpm create vite@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+`react-native-web` 是 `react-native` 在網頁上解析到的地方，所以應用宣告它的方式和宣告 `react-dom` 一樣。
+
+## 設定 Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+設定到這裡就完整了。裡面沒有這個套件的條目——沒有指向它的別名，沒有 CSS 管線，沒有外掛，沒有轉譯清單。這三項解析屬於 react-native-web，每一個透過它來繪製的應用都帶著它們：react-native-svg 的網頁建置匯入的是裸的 `react-native`，只有 `.web.js` 排在 `.js` 前面時，它的入口才會走到那份建置；它的資源路徑名叫 `@react-native/assets-registry/registry`，在網頁上這就是 react-native-web 自己的 AssetRegistry 模組。
+
+## 掛上根
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+`index.html` 裡不用鏈樣式表，也不用寫 `class="dark"`：兩樣都由根帶來。
+
+## 深色與淺色
+
+`Hanzo` 接受 `theme`。要讓人自己選，就把選擇放在 state 裡，交給根，也交給一個開關。見 [深色模式](/docs/dark-mode)。

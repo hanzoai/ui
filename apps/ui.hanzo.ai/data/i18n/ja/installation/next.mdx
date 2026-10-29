@@ -1,0 +1,61 @@
+---
+title: Next
+description: 両方のバンドラーのためのラッパー一つと、クライアント境界の中のルート。
+---
+
+## プロジェクトを作る
+
+```bash
+pnpm create next-app@latest my-app --typescript --app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## 設定を包む
+
+```js title="next.config.js"
+const withGui = require('@hanzo/ui/next')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = withGui(nextConfig, __dirname)
+```
+
+`withGui` は三つを、webpack と Turbopack の両方に対して設定します。`.web.*` が先に解決され、`react-native` は `react-native-web` になり、`node_modules` の中のすべての `@hanzogui/*` パッケージがトランスパイルされるので、先の二つがその中まで届きます。すでに書いてあるものと合成します。既存の `webpack()` フック、Turbopack の設定、`transpilePackages` は残したまま拡張します。`__dirname` を渡すと、パッケージはタスクランナーの居場所ではなく、アプリ自身の `node_modules` から見つかります。
+
+両方のバンドラーに対して一度だけ宣言します。webpack だけの設定は Turbopack の下では黙って欠けるので、`next dev` と `next build` が、アプリがコンパイルできるかどうかで食い違うようになります。
+
+## ルートをマウントする
+
+ルートはクライアントコンポーネントなので、ディレクティブのあるファイルに置き、レイアウトがそれを描画します。
+
+```tsx title="app/providers.tsx"
+'use client'
+
+import { Hanzo } from '@hanzo/ui'
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+```tsx title="app/layout.tsx"
+import { Providers } from './providers'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+`html` の `suppressHydrationWarning` は、React がマウントする前にトグルがそこへ書くテーマのクラスのためのものです。[ダークモード](/docs/dark-mode) を見てください。
+
+## サーバーコンポーネント
+
+`@hanzo/ui` の下はすべてクライアント境界です。サーバーコンポーネントは、ほかのクライアントコンポーネントと同じように、インポートして描画します。コンポーネントの付いていないルール、`pages`、`masked`、`tone`、`resolveBrand` は `@hanzo/ui/product/pure` にあり、何もインポートしません。サーバーコンポーネントやルートハンドラーは、コンポーネントの木を読み込まずに呼べます。

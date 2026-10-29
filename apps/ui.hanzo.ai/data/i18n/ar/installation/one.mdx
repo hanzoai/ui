@@ -1,0 +1,64 @@
+---
+title: One
+description: الإطار الذي بُني به هذا الموقع. الاسم المستعار، وقائمة dedupe، والجذر في المستند.
+---
+
+[One](https://onestack.dev) إطار Vite لـ React وReact Native بمسارات ملفات. هذا الموقع تطبيق One مُصيَّر إلى HTML ثابت، والضبط أدناه ضبطه.
+
+## أنشئ المشروع
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## اضبط Vite
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+الاسم المستعار هو الذي يضعه كل مُضيف. قائمة dedupe هي ما يُبقي المحرّك نسخة واحدة عبر حزمتَي العميل والخادم: السمة سياق React، ونسختان من الوحدة التي تملكه سياقان.
+
+## ركّب الجذر
+
+يصيّر One المستند كله من `_layout.tsx`، فيذهب الجذر إلى هناك.
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## التصيير الثابت
+
+مع `defaultRenderMode: 'ssg'` يُصيَّر كل مسار مرة واحدة وقت البناء إلى ملف HTML حقيقي، وورقة أنماط الحزمة في ذلك الملف — تُولَّد الورقة حين تُنشر الحزمة، لا حين يصيّر المتصفح مكوّنًا أول مرة، وهذا ما يجعل الصفحة الثابتة صحيحة قبل أن يعمل أي نص برمجي.

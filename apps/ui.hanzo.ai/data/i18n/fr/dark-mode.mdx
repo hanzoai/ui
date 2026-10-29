@@ -1,0 +1,99 @@
+---
+title: Mode sombre
+description: Sombre d'abord, clair par une prop, et une bascule pour l'hôte sur lequel vous êtes.
+---
+
+L'identité est sombre. `:root` tient la palette sombre et `.light` s'en
+retire, à l'inverse de la plupart des feuilles, et c'est voulu : une page qui
+monte la racine et ne dit rien d'autre sort sur le fond de la marque, pas sur
+du blanc.
+
+## La racine décide
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` est toute l'API. La racine pose `.t_light` ou `.t_dark` sur le body,
+chaque token se résout sur ce thème, et les propriétés personnalisées de la
+feuille répondent à la même classe. Un hôte qui veut que le choix soit celui
+d'une personne le garde dans l'état et le remet à la racine.
+
+## Une bascule
+
+`ThemeToggle`, depuis `@hanzo/ui/product`, dessine le bouton et annonce le
+thème suivant. Contrôlée, c'est une ligne à côté de la racine :
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+Non contrôlée — `<ThemeToggle onThemeChange={fn} />` — elle bascule les
+classes `.dark` et `.light` sur l'élément du document lui-même et retient le
+choix sous la clé `theme` dans localStorage, pour un hôte qui n'a pas d'état
+où le garder. Dans les deux cas elle montre la cible : un soleil en sombre,
+une lune en clair.
+
+## Next
+
+Les hôtes Next font déjà tourner `@hanzogui/next-theme`, et la liaison de la
+bascule avec lui est sur son propre subpath, pour qu'aucun autre hôte
+n'entraîne Next dans son graphe en important la couche produit.
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+`<ThemeToggle />` sans aucune prop atteint la même liaison par import
+dynamique et retombe sur la bascule du document là où elle est absente.
+
+## One et Vite
+
+Ce site garde le choix avec `@vxrn/color-scheme`, qui fixe le schéma
+enregistré avant le premier affichage et le rapporte à la racine :
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` expose aussi `setting` — `system`, `dark` ou `light` — et
+`set`, qui est ce que commande la bascule dans l'en-tête de ce site.
+
+## Pas de flash
+
+Quel que soit l'hôte, la classe de thème doit être sur le document avant que
+la feuille ne peigne, sinon la page peint en sombre et repeint en clair. La
+liaison Next et `@vxrn/color-scheme` l'écrivent toutes les deux depuis un
+script en ligne ; une bascule écrite à la main doit faire de même. Mettez
+`suppressHydrationWarning` sur l'élément `html`, puisque la classe écrite par
+le script n'est pas celle que React a rendue.

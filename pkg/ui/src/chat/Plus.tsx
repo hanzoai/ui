@@ -14,41 +14,13 @@
  * shelf holds — its rows, its links, its search and empty words — is the
  * surface's, drawn as given.
  */
+import { useMemo, useState, type ReactNode } from 'react'
 import { SizableText, useMedia, XStack } from '@hanzo/gui'
 import { phrase } from '@hanzo/i18n'
-import { useI18n } from '@hanzo/i18n/react'
-import {
-  Blocks,
-  Bot,
-  Briefcase,
-  Brain,
-  Monitor,
-  Palette,
-  Paperclip,
-  Plug,
-  Plus as PlusIcon,
-  ScrollText,
-  Telescope,
-  Check,
-} from '@hanzogui/lucide-icons-2'
-import {
-  DropdownMenu,
-  DropdownMenuBack,
-  DropdownMenuContent,
-  DropdownMenuEmpty,
-  DropdownMenuItem,
-  DropdownMenuLoading,
-  DropdownMenuPage,
-  DropdownMenuSearch,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from '../backends/gui'
-import { useMemo, useState, type ReactNode } from 'react'
+import { Blocks, Bot, Brain, Briefcase, Check, Monitor, Palette, Paperclip, Plug, Plus as PlusIcon, ScrollText, Telescope } from '@hanzogui/lucide-icons-2'
 
+import { DropdownMenu, DropdownMenuBack, DropdownMenuContent, DropdownMenuEmpty, DropdownMenuItem, DropdownMenuLoading, DropdownMenuPage, DropdownMenuSearch, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '../backends/gui'
+import { useTranslate } from '../i18n/react'
 import { RING } from './ring'
 
 /** One thing a shelf holds. `on` marks what the conversation already has. */
@@ -109,12 +81,54 @@ const ICON = 16
  * when it holds nothing. Whole sentences, so a language puts the noun where it goes.
  */
 const SHELVES = [
-  { key: 'agents', label: phrase('Agents'), search: phrase('Search agents'), reading: phrase('Reading agents'), none: phrase('No agents yet'), icon: <Bot size={ICON} /> },
-  { key: 'skills', label: phrase('Skills'), search: phrase('Search skills'), reading: phrase('Reading skills'), none: phrase('No skills yet'), icon: <ScrollText size={ICON} /> },
-  { key: 'connectors', label: phrase('Connectors'), search: phrase('Search connectors'), reading: phrase('Reading connectors'), none: phrase('No connectors yet'), icon: <Blocks size={ICON} /> },
-  { key: 'design', label: phrase('Design system'), search: phrase('Search design system'), reading: phrase('Reading design system'), none: phrase('No design system yet'), icon: <Palette size={ICON} /> },
-  { key: 'plugins', label: phrase('Plugins'), search: phrase('Search plugins'), reading: phrase('Reading plugins'), none: phrase('No plugins yet'), icon: <Plug size={ICON} /> },
-  { key: 'devices', label: phrase('Devices'), search: phrase('Search devices'), reading: phrase('Reading devices'), none: phrase('No devices yet'), icon: <Monitor size={ICON} /> },
+  {
+    key: 'agents',
+    label: phrase('Agents'),
+    search: phrase('Search agents'),
+    reading: phrase('Reading agents'),
+    none: phrase('No agents yet'),
+    icon: <Bot size={ICON} />,
+  },
+  {
+    key: 'skills',
+    label: phrase('Skills'),
+    search: phrase('Search skills'),
+    reading: phrase('Reading skills'),
+    none: phrase('No skills yet'),
+    icon: <ScrollText size={ICON} />,
+  },
+  {
+    key: 'connectors',
+    label: phrase('Connectors'),
+    search: phrase('Search connectors'),
+    reading: phrase('Reading connectors'),
+    none: phrase('No connectors yet'),
+    icon: <Blocks size={ICON} />,
+  },
+  {
+    key: 'design',
+    label: phrase('Design system'),
+    search: phrase('Search design system'),
+    reading: phrase('Reading design system'),
+    none: phrase('No design system yet'),
+    icon: <Palette size={ICON} />,
+  },
+  {
+    key: 'plugins',
+    label: phrase('Plugins'),
+    search: phrase('Search plugins'),
+    reading: phrase('Reading plugins'),
+    none: phrase('No plugins yet'),
+    icon: <Plug size={ICON} />,
+  },
+  {
+    key: 'devices',
+    label: phrase('Devices'),
+    search: phrase('Search devices'),
+    reading: phrase('Reading devices'),
+    none: phrase('No devices yet'),
+    icon: <Monitor size={ICON} />,
+  },
 ] as const
 
 type Words = (typeof SHELVES)[number]
@@ -148,7 +162,7 @@ function Line({ icon, label, note, on, tail }: { icon?: ReactNode; label: string
 
 /** A shelf's rows, its status, then its ways to more. */
 function Contents({ shelf, words, close }: { shelf: Shelf; words: Words; close: () => void }) {
-  const { t } = useI18n()
+  const t = useTranslate()
   const [q, setQ] = useState('')
   const needle = q.trim().toLowerCase()
   const rows = needle ? shelf.rows.filter((r) => `${r.label} ${r.note ?? ''}`.toLowerCase().includes(needle)) : shelf.rows
@@ -182,7 +196,7 @@ function Contents({ shelf, words, close }: { shelf: Shelf; words: Words; close: 
 
 /** The `+` and its menu. */
 export function Plus(p: PlusProps) {
-  const { t } = useI18n()
+  const t = useTranslate()
   const media = useMedia()
   const wide = media.sm
   const [open, setOpen] = useState(false)
@@ -191,8 +205,22 @@ export function Plus(p: PlusProps) {
   const close = () => setOpen(false)
   const shelves = useMemo(() => SHELVES.filter((s) => p[s.key as Key]), [p])
   const switches = [
-    p.research ? { key: 'research', label: t('Research'), icon: <Telescope size={ICON} />, s: p.research } : null,
-    p.memory ? { key: 'memory', label: t('Memory'), icon: <Brain size={ICON} />, s: p.memory } : null,
+    p.research
+      ? {
+          key: 'research',
+          label: t('Research'),
+          icon: <Telescope size={ICON} />,
+          s: p.research,
+        }
+      : null,
+    p.memory
+      ? {
+          key: 'memory',
+          label: t('Memory'),
+          icon: <Brain size={ICON} />,
+          s: p.memory,
+        }
+      : null,
   ].filter((x): x is NonNullable<typeof x> => x !== null)
 
   const main = (
@@ -217,16 +245,16 @@ export function Plus(p: PlusProps) {
             </DropdownMenuSubTrigger>
             {/* Drawn only while open: a closed shelf stays laid out under the menu, and its rows would take its clicks. */}
             {sub === s.key ? (
-            <DropdownMenuSubContent minW={200} maxW={340} maxH={420} pointerEvents="auto" style={{ overflowY: "auto" }}>
-              <Contents shelf={p[s.key as Key]!} words={s} close={close} />
-            </DropdownMenuSubContent>
+              <DropdownMenuSubContent minW={200} maxW={340} maxH={420} pointerEvents="auto" style={{ overflowY: 'auto' }}>
+                <Contents shelf={p[s.key as Key]!} words={s} close={close} />
+              </DropdownMenuSubContent>
             ) : null}
           </DropdownMenuSub>
         ) : (
           <DropdownMenuItem key={s.key} page={s.key} data-slot={`plus-${s.key}`}>
             <Line icon={s.icon} label={t(s.label)} />
           </DropdownMenuItem>
-        ),
+        )
       )}
       {switches.length && (p.upload || shelves.length) ? <DropdownMenuSeparator /> : null}
       {switches.map((w) => (
@@ -240,22 +268,7 @@ export function Plus(p: PlusProps) {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen} {...(wide ? null : { defaultPage: 'main' })}>
       <DropdownMenuTrigger asChild disabled={p.disabled}>
-        <XStack
-          render="button"
-          data-slot="plus"
-          aria-label={t('Add files, agents, skills and more')}
-          width={p.size ?? 36}
-          height={p.size ?? 36}
-          rounded={999}
-          items="center"
-          justify="center"
-          shrink={0}
-          cursor={p.disabled ? 'default' : 'pointer'}
-          opacity={p.disabled ? 0.4 : 1}
-          bg={open ? '$hover' : 'transparent'}
-          hoverStyle={{ bg: '$hover' }}
-          focusVisibleStyle={RING}
-        >
+        <XStack render="button" data-slot="plus" aria-label={t('Add files, agents, skills and more')} width={p.size ?? 36} height={p.size ?? 36} rounded={999} items="center" justify="center" shrink={0} cursor={p.disabled ? 'default' : 'pointer'} opacity={p.disabled ? 0.4 : 1} bg={open ? '$hover' : 'transparent'} hoverStyle={{ bg: '$hover' }} focusVisibleStyle={RING}>
           <PlusIcon size={18} color="$ink" />
         </XStack>
       </DropdownMenuTrigger>

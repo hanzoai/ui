@@ -1,0 +1,110 @@
+---
+title: Giới thiệu
+description: Một thư viện thành phần cho web, native và desktop, trên một nền. Một lần nhập, một gốc, và không có gì phải cấu hình.
+---
+
+{brand.name} là thư viện thành phần của {brand.org}. Mọi thành phần được dựng
+qua [@hanzo/gui](https://gui.hanzo.ai), máy kiểu cho React và React Native,
+nhận kiểu dưới dạng prop rồi biên dịch thành CSS atomic trên web. Vì máy chạy
+đa nền tảng, thư viện cũng vậy: cùng một `Switch` là `div` trong trình duyệt
+và là view native trên điện thoại.
+
+Ở đây không có bản dựng lớp tiện ích. Không Tailwind, không plugin PostCSS,
+không thành phần cơ bản Radix nằm dưới một thành phần, không registry, không
+`components.json`, và không CLI nào chép mã nguồn vào kho của bạn. Cài một gói
+rồi nhập từ gói đó.
+
+## Cài và dựng
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+```tsx title="main.tsx"
+import { Hanzo, Button } from '@hanzo/ui'
+
+export default function App() {
+  return (
+    <Hanzo>
+      <Button>Ship</Button>
+    </Hanzo>
+  )
+}
+```
+
+Đó là toàn bộ việc chuẩn bị. `Hanzo` là gốc, và nó mang ba thứ trước kia là
+việc của từng ứng dụng: cấu hình gui mà token phân giải theo, bảng kiểu, và
+chủ đề. Không có CSS để nhập và không có bộ sinh để chạy — bảng được tạo lúc
+gói phát hành, bằng cách dựng từng thành phần rồi thu CSS mà lần dựng ấy tạo
+ra, nên lần vẽ đầu và mọi lần dựng trên máy chủ đã có sẵn quy tắc.
+
+Việc duy nhất host còn làm là bảo trình đóng gói rằng `react-native` nghĩa là
+`react-native-web`. Đó là một bí danh, và mỗi trang host trong
+[Cài đặt](/docs/installation) chỉ chỗ nó nằm.
+
+## Kiểu là prop
+
+Một kiểu là prop trên thành phần, và kiểu đáp ứng là cùng prop ấy dưới một
+khóa điểm ngắt.
+
+```tsx
+import { Button, Text, XStack, YStack } from '@hanzo/ui'
+
+<YStack gap="$4" p="$5" $md={{ p: '$8' }}>
+  <Text fontSize="$5" color="$color11">
+    Balance
+  </Text>
+  <XStack gap="$2">
+    <Button>Send</Button>
+    <Button variant="outline">Receive</Button>
+  </XStack>
+</YStack>
+```
+
+Điểm ngắt là chiều rộng tối thiểu, ưu tiên di động: `$sm` 640, `$md` 768,
+`$lg` 1024, `$xl` 1280. Giá trị bắt đầu bằng `$` là một token — một màu, một
+cỡ, một bậc của thang khoảng cách — và phân giải theo chủ đề, nên
+`$background` là màu khác ở sáng và tối mà chỗ gọi không cần biết. Cỡ chữ luôn
+là token, không bao giờ là số: `fontSize="$3"`, không phải `fontSize={14}`.
+Một người có thể đặt thang chữ của mình và dốc `$n` đi cùng; số 14 viết cứng
+thì không. [Chủ đề](/docs/theming) có các thang.
+
+## Bố cục
+
+Stack là flex. `XStack` xếp theo hàng, `YStack` theo cột, và cả hai nhận
+`gap`, `items` và `justify`. Lưới là lưới CSS thật, tại `@hanzo/ui/grid`,
+với các rãnh đến từ khung chứa chứ không từ con — xem [Lưới](/docs/grid).
+
+## Cái gì ở đâu
+
+| Lối nhập | Nó là gì |
+| --- | --- |
+| `@hanzo/ui` | API thành phần — mọi thành phần cơ bản, các stack, thang chữ, và `Hanzo`. |
+| `@hanzo/ui/product` | Lớp ứng dụng: biểu đồ, khung trang, nhãn trạng thái, ngăn chi tiết, nút đổi chủ đề. |
+| `@hanzo/ui/blocks` | Nội dung là dữ liệu, và bộ dựng vẽ nó. |
+| `@hanzo/ui/grid` | `Grid` và `Cell`, chỉ web. |
+| `@hanzo/ui/product/pure` | Các quy tắc lớp sản phẩm chạy trên đó, không gắn thành phần. |
+| `@hanzo/ui/css` | `substitute`, cho những phép thử mà DOM thiếu tầng lớp không trả lời được. |
+| `@hanzo/ui/next` | Lớp bọc Next đặt bí danh web cho cả hai trình đóng gói. |
+
+Các trang danh mục của trang này — [Thành phần](/ui), [Khối](/blocks),
+[Sản phẩm](/product) — được đọc từ chính gói: mỗi trang dựng ví dụ của một
+mô-đun cạnh mã nguồn và trích kiểu của nó.
+
+## Câu hỏi
+
+**Tôi có cần Tailwind không?** Không. Thành phần nhận prop kiểu, và bản sắc là
+thuộc tính tùy biến CSS thường. Nếu một ứng dụng mang chuỗi lớp, `Box`, `sx`
+và `css` đọc chúng qua `tw` rồi đổi thành cùng các prop ấy; không gì tới DOM
+dưới dạng một lớp mà gói không định nghĩa.
+
+**Đây có phải chép và dán không?** Không. Cài gói và nhập từ gói. Thành phần
+được đánh phiên bản cùng gói, và bản đồ xuất là đường một đường con phân giải
+qua, nên một lần nhập sâu vẫn chạy qua các bản vá.
+
+**Framework nào?** Bất kỳ bộ dựng React 19 nào, khi trình đóng gói biết bí danh
+`react-native`. Có trang cho [Vite](/docs/installation/vite),
+[Next](/docs/installation/next), [One](/docs/installation/one),
+[Expo](/docs/installation/expo) và [Tauri](/docs/installation/tauri).
+
+**Dùng cho mục đích thương mại được không?** Được. Apache-2.0 hoặc MIT, tùy bạn chọn.

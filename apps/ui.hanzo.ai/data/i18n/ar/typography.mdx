@@ -1,0 +1,78 @@
+---
+title: الخطوط
+description: Zen وZen Mono، وسُلّم خط يقرؤه كل مكوّن، وحاوية نثر لنص لم تكتبه أنت.
+---
+
+## الوجوه
+
+Zen وجه القراءة؛ وZen Mono للكود والمعرّفات وكل ما هو عددي. يأتيان مع الحزمة ومربوطان بخاصيتين مخصصتين تسمّيان الدور لا الوجه:
+
+```css
+--font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+--font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
+```
+
+تقرأ المكوّنات المتغيّرين ولا تقرأ اسم عائلة أبدًا. المُضيف الذي يفضّل وجهه يربط `--font-sans-provided`؛ وربط الحزمة نفسها يقعد في طبقة تتالٍ، فيفوز ربط المُضيف خارج الطبقة. والمُضيف الذي لا يربط شيئًا يأخذ Zen.
+
+<Preview>
+  <YStack gap="$2">
+    <Text fontSize="$8" fontWeight="600">The quick brown fox jumps over the lazy dog</Text>
+    <Text fontSize="$4" color="$color11">Zen at the section and body rungs, tracked and leaded for the size.</Text>
+    <Text fontFamily="$mono" fontSize="$3">pnpm add @hanzo/ui — Zen Mono for code and numbers 0123456789</Text>
+  </YStack>
+</Preview>
+
+## السُلّم
+
+سُلّم خط واحد، وكل مكوّن عليه. يأخذ `Text` القيمة `fontSize="$n"` مع مسافة أسطر تلك الدرجة وتتبّعها؛ وتأخذ العناوين و`Paragraph` القيمة `size="$n"` وتضع الثلاثة معًا.
+
+```tsx
+import { H1, H2, Paragraph, SizableText, Text } from '@hanzo/ui'
+
+<H1>A page title</H1>
+<H2 size="$6">A section</H2>
+<Paragraph size="$4">Body copy at the base rung.</Paragraph>
+<SizableText size="$2" color="$color11">A label.</SizableText>
+<Text fontFamily="$mono" fontSize="$2">an identifier</Text>
+```
+
+ليس رقمًا أبدًا. `fontSize={14}` ثابت عند 14؛ و`fontSize="$3"` هو 14 اليوم وما يصنعه منه مقياس خط الشخص، لأن الدرجة تُحل عبر `var(--text-base)` والمقبض يضرب التدرّج. الجدول في صفحة [السمات](/docs/theming).
+
+## النثر
+
+المحتوى المؤلَّف — حقل في نظام إدارة، أو ملف Markdown، أو متن كتلة — يصل وسومًا عارية. لا شيء داخله يستطيع حمل prop، فلا بد أن يأتي التنسيق من سلف وينزل بحسب الوسم. `ApplyTypography` هو ذلك السلف.
+
+```tsx
+import { ApplyTypography } from '@hanzo/ui'
+
+<ApplyTypography size="base">
+  <h2>Install</h2>
+  <p>
+    Add the package, then wrap the app once at the root. The full guide is
+    at <a href="https://ui.hanzo.ai">ui.hanzo.ai</a>.
+  </p>
+  <pre>
+    <code>{"pnpm add @hanzo/ui\npnpm dev"}</code>
+  </pre>
+  <ol>
+    <li>
+      Render <strong>Hanzo</strong> once, around the whole tree.
+    </li>
+    <li>
+      Import <code>Button</code> or any other component from the same
+      package.
+    </li>
+    <li>Pass it the props its type declares.</li>
+  </ol>
+  <blockquote>
+    Components read their colours from the theme, so a token changed there
+    changes every surface at once.
+  </blockquote>
+</ApplyTypography>
+```
+
+<Preview>
+  <ProseBlocks />
+</Preview>
+
+`size` هي `responsive` افتراضيًا — الدرجة الوحيدة التي تتحرّك مع إطار العرض — أو `sm` أو `base` أو `lg` أو `xl`، وهذه تبقى مكانها، لأن المقاس الذي اختاره المستدعي قرار لا اقتراح. يختار `asTag` العنصر، أيًا من `div` و`section` و`nav` و`main` و`article` و`aside`. تعيش القواعد في ورقة الأنماط تحت `.hz-prose`، في فضاء أسماء، حتى لا يتشاجر جزء من الموقع خارج لتوّه من إضافة خطوط أخرى بورقتين على محدّد واحد. صفحة [النثر](/ui/prose) تصيّر كل درجة، وحاوية متداخلة في حاوية.

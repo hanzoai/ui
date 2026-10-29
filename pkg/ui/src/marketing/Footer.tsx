@@ -1,5 +1,6 @@
 'use client'
 
+import type { ReactNode } from 'react'
 /**
  * Footer — the foot of a marketing page: a place to ask, the doors, the legal line.
  *
@@ -16,14 +17,20 @@
  * ↗ by the host's own data (`out`).
  */
 import { Anchor, XStack, YStack } from '@hanzo/gui'
-import type { ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
-import { Line } from './type'
 import { PrivacyChoicesIcon } from '../consent/icon'
+import { useTranslate } from '../i18n/react'
+import { Line } from './type'
 
 export type FooterLink = { label: string; href: string; out?: boolean }
-export type FooterColumn = { id: string; title: string; href?: string; out?: boolean; links: readonly FooterLink[] }
+export type FooterColumn = {
+  id: string
+  title: string
+  href?: string
+  out?: boolean
+  links: readonly FooterLink[]
+}
 
 export type FooterProps = {
   columns: readonly FooterColumn[]
@@ -38,96 +45,65 @@ export type FooterProps = {
 const open = (out?: boolean) => (out ? { target: '_blank', rel: 'noreferrer' } : {})
 
 /** The link to the consent sheet (`#choices`) carries California's privacy options icon before its words. */
-const CHOICES = { display: 'inline-flex', alignItems: 'center', gap: 6 } as const
+const CHOICES = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 6,
+} as const
 
 const Door = ({ link }: { link: FooterLink }) => (
-  <Anchor
-    href={link.href}
-    {...open(link.out)}
-    color="$soft"
-    fontSize="$2"
-    lineHeight="$2"
-    py={3}
-    textDecorationLine="none"
-    hoverStyle={{ color: '$ink' }}
-  >
+  <Anchor href={link.href} {...open(link.out)} color="$soft" fontSize="$2" lineHeight="$2" py={3} textDecorationLine="none" hoverStyle={{ color: '$ink' }}>
     {link.label}
     {link.out ? ' ↗' : ''}
   </Anchor>
 )
 
-const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)' }: FooterProps) => (
-  <YStack
-    {...slot('footer')}
-    render="footer"
-    width="100%"
-    borderTopWidth={1}
-    borderColor="$edge"
-    pt={48}
-    pb={32}
-    gap={40}
-    style={{ paddingInline: gutter }}
-  >
-    {ask ? (
-      <YStack width="100%" items="center">
-        {ask}
-      </YStack>
-    ) : null}
-    <XStack flexWrap="wrap" gap={28} $sm={{ gap: 40 }}>
-      {columns.map((c) => (
-        <YStack key={c.id} render="nav" aria-label={c.title} flexBasis="40%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
-          {c.href ? (
-            <Anchor
-              href={c.href}
-              {...open(c.out)}
-              color="$ink"
-              fontSize="$2"
-              lineHeight="$2"
-              fontWeight="600"
-              pb={10}
-              textDecorationLine="none"
-            >
-              {c.title}
-              {c.out ? ' ↗' : ''}
-            </Anchor>
-          ) : (
-            <Line size="sm" weight="600" pb={10}>
-              {c.title}
-            </Line>
-          )}
-          {c.links.map((l) => (
-            <Door key={l.label} link={l} />
-          ))}
+const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)' }: FooterProps) => {
+  const tr = useTranslate()
+  return (
+    <YStack {...slot('footer')} render="footer" width="100%" borderTopWidth={1} borderColor="$edge" pt={48} pb={32} gap={40} style={{ paddingInline: gutter }}>
+      {ask ? (
+        <YStack width="100%" items="center">
+          {ask}
         </YStack>
-      ))}
-    </XStack>
-    <XStack flexWrap="wrap" items="center" gap={20} rowGap={8}>
-      {wordmark}
-      {copyright ? (
-        <Line size="sm" tone="dim">
-          {copyright}
-        </Line>
       ) : null}
-      <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8} marginInlineStart={0} width="100%" $sm={{ marginInlineStart: 'auto', width: 'auto' }}>
-        {legal.map((l) => (
-          <Anchor
-            key={l.label}
-            href={l.href}
-            {...open(l.out)}
-            color="$faint"
-            fontSize="$2"
-            lineHeight="$2"
-            textDecorationLine="none"
-            hoverStyle={{ color: '$ink' }}
-            {...(l.href.endsWith('#choices') ? CHOICES : null)}
-          >
-            {l.href.endsWith('#choices') ? <PrivacyChoicesIcon /> : null}
-            {l.label}
-          </Anchor>
+      <XStack flexWrap="wrap" gap={28} $sm={{ gap: 40 }}>
+        {columns.map((c) => (
+          <YStack key={c.id} render="nav" aria-label={c.title} flexBasis="40%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
+            {c.href ? (
+              <Anchor href={c.href} {...open(c.out)} color="$ink" fontSize="$2" lineHeight="$2" fontWeight="600" pb={10} textDecorationLine="none">
+                {c.title}
+                {c.out ? ' ↗' : ''}
+              </Anchor>
+            ) : (
+              <Line size="sm" weight="600" pb={10}>
+                {c.title}
+              </Line>
+            )}
+            {c.links.map((l) => (
+              <Door key={l.label} link={l} />
+            ))}
+          </YStack>
         ))}
       </XStack>
-    </XStack>
-  </YStack>
-)
+      <XStack flexWrap="wrap" items="center" gap={20} rowGap={8}>
+        {wordmark}
+        {copyright ? (
+          <Line size="sm" tone="dim">
+            {copyright}
+          </Line>
+        ) : null}
+        <XStack render="nav" aria-label={tr('Terms & Policies')} flexWrap="wrap" gap={16} rowGap={8} marginInlineStart={0} width="100%" $sm={{ marginInlineStart: 'auto', width: 'auto' }}>
+          {legal.map((l) => (
+            <Anchor key={l.label} href={l.href} {...open(l.out)} color="$faint" fontSize="$2" lineHeight="$2" textDecorationLine="none" hoverStyle={{ color: '$ink' }} {...(l.href.endsWith('#choices') ? CHOICES : null)}>
+              {l.href.endsWith('#choices') ? <PrivacyChoicesIcon /> : null}
+              {l.label}
+            </Anchor>
+          ))}
+        </XStack>
+      </XStack>
+    </YStack>
+  )
+}
 
 export { Footer }

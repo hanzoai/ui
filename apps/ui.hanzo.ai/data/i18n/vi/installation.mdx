@@ -1,0 +1,106 @@
+---
+title: Cài đặt
+description: Cài gói, gắn gốc, và nói với trình đóng gói một điều.
+---
+
+Cách chuẩn bị giống nhau trên mọi host. Phần duy nhất khác là chỗ đặt thiết
+lập của trình đóng gói, và mỗi host có một trang cho việc đó.
+
+## Cài
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` và `react-dom` là peer ở bản 19 trở lên. `@hanzo/gui` là peer có
+chủ đích: nó đưa ra một ngữ cảnh React, và một bản sao vật lý thứ hai sẽ là
+ngữ cảnh thứ hai, gốc ghi vào một bên trong khi mọi thành phần đọc bên kia.
+Giữ một phiên bản, do ứng dụng khai báo.
+
+## Gắn gốc
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+`Hanzo` là thứ duy nhất một ứng dụng gắn. Nó mang cấu hình gui như một giá
+trị, nhập bảng kiểu đã sinh, và đặt chủ đề — tối theo mặc định,
+`theme="light"` để đổi. Mọi thành phần ném lỗi khi không có chủ đề gốc, nên
+quên nó là vỡ ngay lần vẽ đầu, không bao giờ là một trang lặng lẽ dựng mà
+không có kiểu.
+
+Lúc phát triển, gốc kiểm tra bảng kiểu đã tới tài liệu chưa và nói trên bảng
+điều khiển khi chưa. Cách sửa nó nêu là một lần nhập, `@hanzo/ui/styles.css`,
+cho trình đóng gói đã bỏ bảng của chính gói.
+
+## Nói với trình đóng gói
+
+Đồ thị phụ thuộc của máy gọi tên `react-native`, và một gói trong đó,
+`react-native-svg` dưới bộ biểu tượng, phát hành một điểm vào native cạnh
+một tệp anh em `.web.js`. Chọn bản native trên bản dựng web thì lỗi là thất
+bại phân tích cú pháp mã Flow bên trong một phụ thuộc, đọc như gói hỏng chứ
+không như một thiết lập còn thiếu. Hai thiết lập ngăn điều đó:
+
+- `react-native` phân giải tới `react-native-web`.
+- `.web.js` đứng trên `.js`.
+
+Dưới Next cả hai là một lớp bọc, `@hanzo/ui/next`. Dưới Vite chúng là hai dòng
+`resolve`. Dưới One framework đã làm cả hai. Dưới Expo không có gì để đặt, vì
+Metro nói react-native theo cách native.
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo và React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## Dựng một thứ gì đó
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## Phông
+
+Gói mang theo Zen và Zen Mono rồi buộc chúng vào `--font-sans` và
+`--font-mono`, nên host không buộc gì vẫn có các mặt chữ mà không phải làm
+gì. Host có mặt chữ riêng đặt `--font-sans-provided` và thắng — xem
+[Kiểu chữ](/docs/typography).

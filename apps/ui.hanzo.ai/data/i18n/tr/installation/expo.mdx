@@ -1,0 +1,37 @@
+---
+title: Expo ve React Native
+description: Aynı import, alias kurulacak bir şey yok. Metro zaten react-native konuşur.
+---
+
+Kütüphane @hanzo/gui üzerinden render eder ve o önce React Native’dir: bir stack bir `View`, metin `Text` ve bir stil prop’u bir stildir. Webde bir `div` çizen aynı bileşenler burada yerel bir görünüm çizer ve tema token’ları, aralık ölçeği ile yazı merdiveni ikisinde de aynı anlama gelir.
+
+## Kurun
+
+```bash
+pnpm create expo-app@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+Bundler ayarı yoktur. Web host’larının kurduğu `react-native` alias’ı, bir web bundler’ının yerel bir paketi okumasını sağlar; Metro yerel bundler’dır ve paketi yazıldığı gibi okur. Kökün taşıdığı stil sayfası import’u, Metro altında yerelde bir no-op’tur ve Expo web’de uygulanır.
+
+## Kökü monte edin
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Stack } from 'expo-router'
+
+export default function Layout() {
+  return (
+    <Hanzo>
+      <Stack />
+    </Hanzo>
+  )
+}
+```
+
+## Webde kalanlar
+
+`@hanzo/ui/grid` bir `div`’i `display: grid` ile render eder ve ikisi de React Native’de yoktur — Yoga’nın ızgara algoritması yoktur — bu yüzden kök barrel’ında değil, kendi subpath’inde çıkar. Orada `XStack` ve `YStack` ile dizin; yerel bir ızgara motoru o tek dosyayı değiştirir, hiçbir çağrı yerini değil. `@hanzo/ui/product` içindeki grafikler satır içi SVG çizer ve kaplarını `ResizeObserver` ile ölçer, bu yüzden onlar da bugün web bileşenleridir.
+
+Dokunma hedefleri 44 puntoluk tabanı padding ile değil `hitSlop` ile karşılar, bu yüzden bir kontrolün kutusu iki platformda da aynı boydadır, dokunulabilir alanı değildir.

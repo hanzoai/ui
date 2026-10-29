@@ -1,0 +1,99 @@
+---
+title: Typographie
+description: Zen et Zen Mono, une échelle de caractères que chaque composant lit, et un conteneur de prose pour le texte que vous n'avez pas écrit.
+---
+
+## Les polices
+
+Zen est la police de lecture ; Zen Mono sert au code, aux identifiants et à
+tout ce qui est numérique. Les deux voyagent avec le paquet et sont liées à
+deux propriétés personnalisées qui nomment le rôle, pas la police :
+
+```css
+--font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+--font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
+```
+
+Les composants lisent les deux variables et jamais un nom de famille. Un hôte
+qui préfère la sienne lie `--font-sans-provided` ; la liaison du paquet vit
+dans une couche de cascade, donc celle de l'hôte, hors couche, l'emporte. Un
+hôte qui ne lie rien obtient Zen.
+
+<Preview>
+  <YStack gap="$2">
+    <Text fontSize="$8" fontWeight="600">The quick brown fox jumps over the lazy dog</Text>
+    <Text fontSize="$4" color="$color11">Zen at the section and body rungs, tracked and leaded for the size.</Text>
+    <Text fontFamily="$mono" fontSize="$3">pnpm add @hanzo/ui — Zen Mono for code and numbers 0123456789</Text>
+  </YStack>
+</Preview>
+
+## L'échelle
+
+Il y a une seule échelle de caractères et chaque composant est dessus.
+`Text` prend `fontSize="$n"` avec l'interligne et le tracking de ce barreau ;
+les titres et `Paragraph` prennent `size="$n"` et règlent les trois ensemble.
+
+```tsx
+import { H1, H2, Paragraph, SizableText, Text } from '@hanzo/ui'
+
+<H1>A page title</H1>
+<H2 size="$6">A section</H2>
+<Paragraph size="$4">Body copy at the base rung.</Paragraph>
+<SizableText size="$2" color="$color11">A label.</SizableText>
+<Text fontFamily="$mono" fontSize="$2">an identifier</Text>
+```
+
+Jamais un nombre. `fontSize={14}` est figé à 14 ; `fontSize="$3"` vaut 14
+aujourd'hui et ce que l'échelle d'une personne en fait, parce que le barreau
+se résout à travers `var(--text-base)` et que la molette multiplie la rampe.
+La page [Thème](/docs/theming) a le tableau.
+
+## Prose
+
+Le contenu rédigé — un champ de CMS, un fichier Markdown, le corps d'un bloc
+— arrive en balises nues. Rien à l'intérieur ne peut porter une prop, donc le
+style doit venir d'un ancêtre et descendre par la balise. `ApplyTypography`
+est cet ancêtre.
+
+```tsx
+import { ApplyTypography } from '@hanzo/ui'
+
+<ApplyTypography size="base">
+  <h2>Install</h2>
+  <p>
+    Add the package, then wrap the app once at the root. The full guide is
+    at <a href="https://ui.hanzo.ai">ui.hanzo.ai</a>.
+  </p>
+  <pre>
+    <code>{"pnpm add @hanzo/ui\npnpm dev"}</code>
+  </pre>
+  <ol>
+    <li>
+      Render <strong>Hanzo</strong> once, around the whole tree.
+    </li>
+    <li>
+      Import <code>Button</code> or any other component from the same
+      package.
+    </li>
+    <li>Pass it the props its type declares.</li>
+  </ol>
+  <blockquote>
+    Components read their colours from the theme, so a token changed there
+    changes every surface at once.
+  </blockquote>
+</ApplyTypography>
+```
+
+<Preview>
+  <ProseBlocks />
+</Preview>
+
+`size` vaut `responsive` par défaut — le seul barreau qui bouge avec le
+viewport — ou `sm`, `base`, `lg`, `xl`, qui restent en place, parce qu'une
+taille choisie par l'appelant est une décision et non une suggestion. `asTag`
+choisit l'élément, n'importe lequel parmi `div`, `section`, `nav`, `main`,
+`article`, `aside`. Les règles vivent dans la feuille sous `.hz-prose`, avec
+un espace de noms, pour qu'un site à moitié sorti d'un autre plugin de
+typographie n'ait pas deux feuilles qui se disputent un sélecteur. La page
+[prose](/ui/prose) rend chaque barreau, et un conteneur imbriqué dans un
+conteneur.

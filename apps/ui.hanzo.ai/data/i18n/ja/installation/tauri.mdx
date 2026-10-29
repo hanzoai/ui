@@ -1,0 +1,72 @@
+---
+title: Tauri
+description: Vite のビルドの上に載る Web ビュー。Vite のセットアップと、フレームワークを要らないテーマのトグル。
+---
+
+Tauri のアプリは、ネイティブのウィンドウの中の Vite アプリです。Web のセットアップがセットアップの全部です。エイリアス、拡張子の順序、ルートは [Vite](/docs/installation/vite) のページにあるものです。
+
+## プロジェクトを作る
+
+```bash
+pnpm create tauri-app@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Vite を設定する
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  clearScreen: false,
+  server: { port: 1420, strictPort: true },
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+`server.port` と `clearScreen` は、開発ウィンドウのための Tauri 自身の慣例です。`resolve` のブロックはライブラリのものです。
+
+## ルートをマウントする
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+## フレームワークなしのテーマのトグル
+
+`@hanzo/ui/product` の `ThemeToggle` は、フレームワークの依存なしで動きます。制御された状態ではボタンを描き、次のテーマを伝えます。アプリが値を持ち、ルートへ渡します。
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App() {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+    </Hanzo>
+  )
+}
+```
+
+同じトグルの Next 向けの結線は、自分のサブパス `@hanzo/ui/product/theme-toggle-next` にあります。Tauri や Vite や Express のホストが、プロダクト層をインポートしただけで Next をグラフへ引き込まないようにするためです。

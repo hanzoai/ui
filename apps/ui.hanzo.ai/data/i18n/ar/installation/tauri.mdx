@@ -1,0 +1,72 @@
+---
+title: Tauri
+description: عرض ويب فوق بناء Vite. إعداد Vite، ومبدّل سمة لا يحتاج إلى إطار.
+---
+
+تطبيق Tauri هو تطبيق Vite في نافذة أصلية، فإعداد الويب هو الإعداد كله: الاسم المستعار، وترتيب الامتدادات، والجذر هي التي في صفحة [Vite](/docs/installation/vite).
+
+## أنشئ المشروع
+
+```bash
+pnpm create tauri-app@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## اضبط Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  clearScreen: false,
+  server: { port: 1420, strictPort: true },
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+`server.port` و`clearScreen` أعراف Tauri نفسه لنافذة التطوير؛ كتلة `resolve` للمكتبة.
+
+## ركّب الجذر
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+## مبدّل السمة بلا إطار
+
+يعمل `ThemeToggle` من `@hanzo/ui/product` بلا اعتماد على إطار. وهو مضبوط، يرسم الزر ويبلّغ السمة التالية؛ يُبقي التطبيق القيمة ويسلّمها إلى الجذر.
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App() {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+    </Hanzo>
+  )
+}
+```
+
+ربط Next للمبدّل نفسه يعيش في subpath خاص به، `@hanzo/ui/product/theme-toggle-next`، حتى لا يسحب مُضيف Tauri أو Vite أو Express إطار Next إلى بيانه باستيراد طبقة المنتج.
