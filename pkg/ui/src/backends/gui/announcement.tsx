@@ -14,11 +14,13 @@
  * over the host's.
  */
 import { useState, type ComponentProps, type ReactNode } from 'react'
-import { SizableText, XStack, styled } from '@hanzo/gui'
+import { SizableText, styled, XStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
-import { slot } from './slot'
-import { touch } from './gesture'
+
+import { useTranslate } from '../../i18n/react'
 import { Button } from './button'
+import { touch } from './gesture'
+import { slot } from './slot'
 
 const CLOSE = 24
 
@@ -49,12 +51,8 @@ export type AnnouncementProps = Omit<ComponentProps<typeof AnnouncementFrame>, '
   onDismiss?: () => void
 }
 
-export function Announcement({
-  children,
-  dismissible = true,
-  onDismiss,
-  ...props
-}: AnnouncementProps) {
+export function Announcement({ children, dismissible = true, onDismiss, ...props }: AnnouncementProps) {
+  const tr = useTranslate()
   const [visible, setVisible] = useState(true)
   if (!visible) return null
 
@@ -67,16 +65,7 @@ export function Announcement({
     <AnnouncementFrame {...slot('announcement')} {...props}>
       <AnnouncementText {...slot('announcement-message')}>{children}</AnnouncementText>
       {dismissible ? (
-        <Button
-          {...slot('announcement-dismiss')}
-          variant="ghost"
-          size="icon"
-          minH={CLOSE}
-          minW={CLOSE}
-          {...touch(CLOSE)}
-          aria-label="Dismiss"
-          onPress={dismiss}
-        >
+        <Button {...slot('announcement-dismiss')} variant="ghost" size="icon" minH={CLOSE} minW={CLOSE} {...touch(CLOSE)} aria-label={tr('Dismiss')} onPress={dismiss}>
           <X size={16} />
         </Button>
       ) : null}

@@ -1,5 +1,6 @@
 'use client'
 
+import type { ComponentProps } from 'react'
 /**
  * Attachments — what the next turn is about, shown before it is sent.
  *
@@ -14,9 +15,9 @@
  */
 import { SizableText, XStack } from '@hanzo/gui'
 import { FileText, MousePointerClick, Paperclip, X } from '@hanzogui/lucide-icons-2'
-import type { ComponentProps } from 'react'
 
 import { slot } from '../backends/gui/slot'
+import { useTranslate } from '../i18n/react'
 
 type Row = Omit<ComponentProps<typeof XStack>, 'children'>
 
@@ -29,7 +30,11 @@ export interface Attachment {
   label: string
 }
 
-const ICON = { file: FileText, element: MousePointerClick, upload: Paperclip } as const
+const ICON = {
+  file: FileText,
+  element: MousePointerClick,
+  upload: Paperclip,
+} as const
 
 export interface AttachmentsProps extends Row {
   items: readonly Attachment[]
@@ -38,36 +43,14 @@ export interface AttachmentsProps extends Row {
 }
 
 export function Attachments({ items, onRemove, ...rest }: AttachmentsProps) {
+  const tr = useTranslate()
   if (items.length === 0) return null
   return (
-    <XStack
-      {...slot('attachments')}
-      render="ul"
-      aria-label="Attached to the next message"
-      flexWrap="wrap"
-      gap="$1.5"
-      m={0}
-      p={0}
-      style={{ listStyle: 'none' }}
-      {...rest}
-    >
+    <XStack {...slot('attachments')} render="ul" aria-label={tr('Attached to the next message')} flexWrap="wrap" gap="$1.5" m={0} p={0} style={{ listStyle: 'none' }} {...rest}>
       {items.map((item) => {
         const Icon = ICON[item.kind]
         return (
-          <XStack
-            key={item.id}
-            render="li"
-            items="center"
-            gap="$1.5"
-            minH={24}
-            paddingInlineStart="$2"
-            paddingInlineEnd={onRemove ? '$1' : '$2'}
-            rounded="$3"
-            borderWidth={1}
-            borderColor="$borderColor"
-            bg="$panel"
-            maxW="100%"
-          >
+          <XStack key={item.id} render="li" items="center" gap="$1.5" minH={24} paddingInlineStart="$2" paddingInlineEnd={onRemove ? '$1' : '$2'} rounded="$3" borderWidth={1} borderColor="$borderColor" bg="$panel" maxW="100%">
             <Icon size={12} opacity={0.7} />
             <SizableText size="$1" color="$quiet" numberOfLines={1} maxW={220}>
               {item.label}
@@ -75,7 +58,10 @@ export function Attachments({ items, onRemove, ...rest }: AttachmentsProps) {
             {onRemove ? (
               <XStack
                 render="button"
-                {...({ type: 'button', title: `Remove ${item.label}` } as object)}
+                {...({
+                  type: 'button',
+                  title: `Remove ${item.label}`,
+                } as object)}
                 aria-label={`Remove ${item.label}`}
                 onPress={() => onRemove(item.id)}
                 width={20}
@@ -87,7 +73,11 @@ export function Attachments({ items, onRemove, ...rest }: AttachmentsProps) {
                 borderWidth={0}
                 cursor="pointer"
                 hoverStyle={{ bg: '$raised' }}
-                focusVisibleStyle={{ outlineWidth: 2, outlineStyle: 'solid', outlineColor: '$rim' }}
+                focusVisibleStyle={{
+                  outlineWidth: 2,
+                  outlineStyle: 'solid',
+                  outlineColor: '$rim',
+                }}
               >
                 <X size={11} />
               </XStack>

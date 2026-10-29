@@ -21,7 +21,9 @@
     "format:write": "turbo run format:write",
     "format:check": "turbo run format:check",
     "test": "turbo run test",
-    "check": "bash scripts/check-no-brand-pkg.sh && turbo lint typecheck format:check"
+    "check": "bash scripts/check-no-brand-pkg.sh && turbo lint typecheck format:check",
+    "i18n:check": "node scripts/i18n-check.mjs",
+    "i18n:translate": "node scripts/i18n-translate.mjs"
   },
   "packageManager": "pnpm@11.24.0",
   "devDependencies": {

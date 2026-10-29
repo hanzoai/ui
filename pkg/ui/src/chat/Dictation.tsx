@@ -14,24 +14,14 @@
  * Its words are the reader's language (@hanzo/i18n `t`); a microphone's name
  * is the device's and a language's is its own, drawn as given.
  */
-import { SizableText, XStack, YStack } from '@hanzo/gui'
-import { Check, ChevronDown, Mic as MicIcon } from '@hanzogui/lucide-icons-2'
-import { Control } from '@hanzo/composer'
-import { useI18n } from '@hanzo/i18n/react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from '../backends/gui'
-import { choose, Voice, type Machine } from '@hanzo/voice'
 import { useEffect, useRef, useState } from 'react'
+import { Control } from '@hanzo/composer'
+import { SizableText, XStack, YStack } from '@hanzo/gui'
+import { choose, Voice, type Machine } from '@hanzo/voice'
+import { Check, ChevronDown, Mic as MicIcon } from '@hanzogui/lucide-icons-2'
 
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '../backends/gui'
+import { useDirection, useTranslate } from '../i18n/react'
 import { LANGUAGES } from './languages'
 import { RING } from './ring'
 
@@ -59,10 +49,18 @@ function keep(id: string | null): void {
 if (typeof window !== 'undefined') choose(kept())
 
 /** The mic is a plain mark until it is pointed at. */
-const PLAIN = { bg: 'transparent', color: 'var(--foreground)', hoverStyle: { bg: '$hover' } } as const
+const PLAIN = {
+  bg: 'transparent',
+  color: 'var(--foreground)',
+  hoverStyle: { bg: '$hover' },
+} as const
 
 /** The microphones this browser lists; labels only once the page may use one. */
-function useInputs(open: boolean): { inputs: MediaDeviceInfo[]; allowed: boolean; using: string } {
+function useInputs(open: boolean): {
+  inputs: MediaDeviceInfo[]
+  allowed: boolean
+  using: string
+} {
   const [inputs, setInputs] = useState<MediaDeviceInfo[]>([])
   const [allowed, setAllowed] = useState(false)
   const [using, setUsing] = useState('')
@@ -87,7 +85,7 @@ function useInputs(open: boolean): { inputs: MediaDeviceInfo[]; allowed: boolean
 /** The chosen microphone's level while the menu is open, drawn without re-rendering. */
 function Meter({ device, on }: { device: string | null; on: boolean }) {
   // The level grows from the line's start: the right edge in a right-to-left language.
-  const { dir } = useI18n()
+  const dir = useDirection()
   const bar = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     if (!on) return
@@ -154,7 +152,7 @@ export interface DictationProps {
 
 /** The mic and its chevron, one control on the composer's row. */
 export function Dictation({ voice, disabled = false, size = 36, gap = 0, language = null, onLanguage }: DictationProps) {
-  const { t } = useI18n()
+  const t = useTranslate()
   const [open, setOpen] = useState(false)
   // The Language list, drawn only while open (see Plus.tsx).
   const [lang, setLang] = useState(false)
@@ -165,26 +163,20 @@ export function Dictation({ voice, disabled = false, size = 36, gap = 0, languag
   return (
     <XStack data-slot="dictation" items="center" gap={gap} shrink={0}>
       <Control asChild size={size} {...PLAIN} focusVisibleStyle={RING}>
-        <Voice voice={voice} disabled={disabled} says={{ idle: t('Dictate'), listening: t('Dictating — click to stop') }}>
+        <Voice
+          voice={voice}
+          disabled={disabled}
+          says={{
+            idle: t('Dictate'),
+            listening: t('Dictating — click to stop'),
+          }}
+        >
           {(state) => <MicIcon size={16} color="var(--foreground)" fill={state === 'idle' ? 'none' : 'var(--foreground)'} />}
         </Voice>
       </Control>
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild disabled={disabled}>
-          <XStack
-            render="button"
-            aria-label={t('Dictation settings')}
-            data-slot="dictation-menu"
-            width={size}
-            height={size}
-            items="center"
-            justify="center"
-            rounded={999}
-            cursor="pointer"
-            bg={open ? '$hover' : 'transparent'}
-            hoverStyle={{ bg: '$hover' }}
-            focusVisibleStyle={RING}
-          >
+          <XStack render="button" aria-label={t('Dictation settings')} data-slot="dictation-menu" width={size} height={size} items="center" justify="center" rounded={999} cursor="pointer" bg={open ? '$hover' : 'transparent'} hoverStyle={{ bg: '$hover' }} focusVisibleStyle={RING}>
             <ChevronDown size={14} color="$soft" />
           </XStack>
         </DropdownMenuTrigger>
@@ -238,18 +230,18 @@ export function Dictation({ voice, disabled = false, size = 36, gap = 0, languag
                   </XStack>
                 </DropdownMenuSubTrigger>
                 {lang ? (
-                <DropdownMenuSubContent minW={160} pointerEvents="auto">
-                  {[{ id: '', label: t('Auto') }, ...LANGUAGES].map((l) => (
-                    <DropdownMenuItem key={l.id || 'auto'} onSelect={() => onLanguage(l.id || null)}>
-                      <XStack flex={1} items="center" gap={8}>
-                        <SizableText fontSize={14} color="$ink" flex={1}>
-                          {l.label}
-                        </SizableText>
-                        {(language ?? '') === l.id ? <Check size={14} color="var(--primary)" aria-hidden /> : null}
-                      </XStack>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuSubContent>
+                  <DropdownMenuSubContent minW={160} pointerEvents="auto">
+                    {[{ id: '', label: t('Auto') }, ...LANGUAGES].map((l) => (
+                      <DropdownMenuItem key={l.id || 'auto'} onSelect={() => onLanguage(l.id || null)}>
+                        <XStack flex={1} items="center" gap={8}>
+                          <SizableText fontSize={14} color="$ink" flex={1}>
+                            {l.label}
+                          </SizableText>
+                          {(language ?? '') === l.id ? <Check size={14} color="var(--primary)" aria-hidden /> : null}
+                        </XStack>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuSubContent>
                 ) : null}
               </DropdownMenuSub>
             </>

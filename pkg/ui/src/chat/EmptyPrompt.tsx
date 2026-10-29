@@ -12,10 +12,11 @@
  * own (`BrandMark`, an org mark, nothing), and the heading is the same either
  * way.
  */
-import { SizableText, XStack, YStack } from '@hanzo/gui'
 import type { ComponentProps, ReactNode } from 'react'
+import { SizableText, XStack, YStack } from '@hanzo/gui'
 
 import { slot } from '../backends/gui/slot'
+import { useTranslate } from '../i18n/react'
 
 type Col = Omit<ComponentProps<typeof YStack>, 'children'>
 
@@ -36,13 +37,9 @@ export interface EmptyPromptProps extends Col {
   level?: 1 | 2 | 3
 }
 
-export function EmptyPrompt({
-  title = NEXT,
-  mark,
-  column = COLUMN,
-  level = 1,
-  ...rest
-}: EmptyPromptProps) {
+export function EmptyPrompt({ title = NEXT, mark, column = COLUMN, level = 1, ...rest }: EmptyPromptProps) {
+  const tr = useTranslate()
+  const heading = typeof title === 'string' ? tr(title) : title
   return (
     <YStack {...slot('empty-prompt')} width="100%" items="center" px="$4" pt="$2.5" {...rest}>
       <XStack width="100%" maxW={column} items="center" gap="$2">
@@ -51,14 +48,8 @@ export function EmptyPrompt({
             {mark}
           </XStack>
         ) : null}
-        <SizableText
-          {...slot('empty-prompt-title')}
-          role="heading"
-          aria-level={level}
-          size="$7"
-          color="$ink"
-        >
-          {title}
+        <SizableText {...slot('empty-prompt-title')} role="heading" aria-level={level} size="$7" color="$ink">
+          {heading}
         </SizableText>
       </XStack>
     </YStack>

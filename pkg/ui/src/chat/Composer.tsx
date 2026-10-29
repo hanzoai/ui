@@ -27,18 +27,18 @@
  * Its own words are the reader's language (@hanzo/i18n `t`). A host's words —
  * its placeholder, a shelf's rows, a chip's label — are drawn as given.
  */
-import { SizableText, useMedia, XStack, YStack } from '@hanzo/gui'
+import { useEffect, useRef, useState, type ComponentProps, type CSSProperties, type ReactNode } from 'react'
 import { useComposing, type Composing } from '@hanzo/appearance'
 import { Control } from '@hanzo/composer'
+import { SizableText, useMedia, XStack, YStack } from '@hanzo/gui'
 import { phrase } from '@hanzo/i18n'
-import { useI18n } from '@hanzo/i18n/react'
-import { ArrowUp, AudioLines, Square, X } from '@hanzogui/lucide-icons-2'
 import { Voice, type Machine } from '@hanzo/voice'
-import { useEffect, useRef, useState, type ComponentProps, type CSSProperties, type ReactNode } from 'react'
+import { ArrowUp, AudioLines, Square, X } from '@hanzogui/lucide-icons-2'
 
 import { Textarea } from '../backends/gui'
 import { slot } from '../backends/gui/slot'
 import { glass } from '../glass'
+import { useTranslate } from '../i18n/react'
 import type { PauseSource } from '../models/catalog'
 import { Pills } from '../product/ChipSelect'
 import { Dial } from './Dial'
@@ -46,8 +46,8 @@ import { Dictation } from './Dictation'
 import { Mention, trigger } from './Mention'
 import { Palette, type Command } from './Palette'
 import { Plus, type PlusProps, type Shelf } from './Plus'
-import { ready, sends, type Mods } from './send'
 import { RING } from './ring'
+import { ready, sends, type Mods } from './send'
 import { useComposerStatus } from './Status'
 import { Chips, Tune, type Chip, type Mind, type Modes } from './Tune'
 
@@ -68,7 +68,11 @@ export const MEASURE = 'var(--container-prose, 48rem)'
 export const GAP = 20
 
 /** The composer's width under a thread: the measure less its 0.75rem gutters, centred, so its edges are the text's. */
-export const measure = { width: 'calc(100% - 1.5rem)', maxW: `calc(${MEASURE} - 1.5rem)`, mx: 'auto' } as const
+export const measure = {
+  width: 'calc(100% - 1.5rem)',
+  maxW: `calc(${MEASURE} - 1.5rem)`,
+  mx: 'auto',
+} as const
 
 /** The round controls' box, px, and a phone's, a thumb's width kept small so the frame is a slim glass bar: `+`, the effort, the mic, its chevron and send all take it, so they share one centreline. The pills stand as tall. */
 export const ROUND = 32
@@ -88,11 +92,28 @@ const CEILING = 200
 const ON = 'var(--primary-foreground)'
 
 /** A round control with no ground of its own until it is pointed at. */
-const QUIET = { bg: 'transparent', color: 'var(--foreground)', hoverStyle: { bg: '$hover' } } as const
+const QUIET = {
+  bg: 'transparent',
+  color: 'var(--foreground)',
+  hoverStyle: { bg: '$hover' },
+} as const
 
 /** What the draft carries, as a chip: a filled tab after `+` on a laptop; on a phone a pill in a row of its own above the field, the pills' shape (round, a hairline, no fill) as tall as the controls, so the controls' row never wraps. */
-const CARRIED = { height: 28, rounded: 8, bg: '$hover', paddingInlineStart: 8 } as const
-const pill = (height: number) => ({ height, rounded: 999, borderWidth: 1, borderColor: '$borderColor', bg: 'transparent', paddingInlineStart: 12 }) as const
+const CARRIED = {
+  height: 28,
+  rounded: 8,
+  bg: '$hover',
+  paddingInlineStart: 8,
+} as const
+const pill = (height: number) =>
+  ({
+    height,
+    rounded: 999,
+    borderWidth: 1,
+    borderColor: '$borderColor',
+    bg: 'transparent',
+    paddingInlineStart: 12,
+  }) as const
 
 /**
  * Under a coarse pointer @hanzo/design floors every button at `--tap-target`,
@@ -241,48 +262,8 @@ function useLift(): number {
   return lift
 }
 
-export function Composer({
-  value,
-  onChange,
-  onSend,
-  onStop,
-  busy = false,
-  disabled = false,
-  ready: readyProp,
-  placeholder,
-  label,
-  rows = 1,
-  maxHeight = CEILING,
-  field,
-  hint,
-  status,
-  children,
-  head,
-  pills,
-  carried,
-  plus,
-  slash,
-  at,
-  commands,
-  chips,
-  mind,
-  effort,
-  limits,
-  onUpgrade,
-  mode,
-  voice,
-  language = null,
-  onLanguage,
-  talk,
-  starters,
-  note,
-  column = false,
-  framed = false,
-  narrow: narrowProp,
-  defaults,
-  ...props
-}: ComposerProps) {
-  const { t } = useI18n()
+export function Composer({ value, onChange, onSend, onStop, busy = false, disabled = false, ready: readyProp, placeholder, label, rows = 1, maxHeight = CEILING, field, hint, status, children, head, pills, carried, plus, slash, at, commands, chips, mind, effort, limits, onUpgrade, mode, voice, language = null, onLanguage, talk, starters, note, column = false, framed = false, narrow: narrowProp, defaults, ...props }: ComposerProps) {
+  const t = useTranslate()
   const inheritedStatus = useComposerStatus()
   const media = useMedia()
   const narrow = narrowProp ?? !media.sm
@@ -394,8 +375,7 @@ export function Composer({
     </Control>
   )
 
-  const mention =
-    listed && shelf && typed ? <Mention shelf={shelf} rows={listed} index={row} onPick={pick} skills={typed.char === '/'} /> : null
+  const mention = listed && shelf && typed ? <Mention shelf={shelf} rows={listed} index={row} onPick={pick} skills={typed.char === '/'} /> : null
 
   const above =
     starters || head || note || mention ? (
@@ -417,18 +397,7 @@ export function Composer({
       <SizableText fontSize={13} color="$ink" numberOfLines={1} shrink={1}>
         {c.label}
       </SizableText>
-      <XStack
-        render="button"
-        aria-label={t('Remove {name}', { name: c.label })}
-        onPress={c.onRemove}
-        width={20}
-        height={20}
-        rounded={narrow ? 999 : 6}
-        items="center"
-        justify="center"
-        hoverStyle={{ bg: '$raised' }}
-        cursor="pointer"
-      >
+      <XStack render="button" aria-label={t('Remove {name}', { name: c.label })} onPress={c.onRemove} width={20} height={20} rounded={narrow ? 999 : 6} items="center" justify="center" hoverStyle={{ bg: '$raised' }} cursor="pointer">
         <X size={12} color="$hint" />
       </XStack>
     </XStack>
@@ -447,19 +416,7 @@ export function Composer({
   return (
     <YStack {...slot('composer-shell')} {...(column ? measure : { width: '100%' })} gap={6} {...(lift ? { mb: lift } : null)} {...props}>
       {above}
-      <YStack
-        {...slot('composer')}
-        width="100%"
-        rounded={CORNER}
-        borderWidth={1}
-        {...glass(2)}
-        p={6}
-        pt={pills || (narrow && things.length) ? 6 : 10}
-        gap={SPACE}
-        $max-sm={{ rounded: CORNER_PHONE }}
-        {...(framed ? { boxShadow: 'var(--shadow-sheet-1)' } : null)}
-        style={FLOOR}
-      >
+      <YStack {...slot('composer')} width="100%" rounded={CORNER} borderWidth={1} {...glass(2)} p={6} pt={pills || (narrow && things.length) ? 6 : 10} gap={SPACE} $max-sm={{ rounded: CORNER_PHONE }} {...(framed ? { boxShadow: 'var(--shadow-sheet-1)' } : null)} style={FLOOR}>
         {pills ? (
           // The pills stand as tall as the controls (`Pills`), at the controls' edge, so the frame's rows share one rhythm.
           <XStack {...slot('composer-pills')} items="center" gap={SPACE} flexWrap="wrap" rowGap={SPACE}>
@@ -495,7 +452,11 @@ export function Composer({
                   voice={talk}
                   disabled={disabled}
                   data-slot="composer-talk"
-                  says={{ idle: t('Voice mode'), listening: t('In conversation — click to hang up'), speaking: t('Hanzo is speaking — talk to interrupt') }}
+                  says={{
+                    idle: t('Voice mode'),
+                    listening: t('In conversation — click to hang up'),
+                    speaking: t('Hanzo is speaking — talk to interrupt'),
+                  }}
                 >
                   {() => <AudioLines size={16} color={narrow ? ON : 'var(--foreground)'} />}
                 </Voice>

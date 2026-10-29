@@ -7,17 +7,19 @@
  * adornment (or the password toggle) is actually asked for, so the common path
  * stays one element.
  */
+import { forwardRef, useContext, useEffect, useState, type ComponentProps, type ReactNode } from 'react'
 import { Input as GuiInput, XStack } from '@hanzo/gui'
 import { Eye, EyeOff } from '@hanzogui/lucide-icons-2'
-import { forwardRef, useContext, useEffect, useState, type ComponentProps, type ReactNode } from 'react'
-import { slot } from './slot'
-import { touch } from './gesture'
-import { masked } from './mask'
+
+import { useTranslate } from '../../i18n/react'
 import { BOX, FIELD, FILL, type FieldSize } from './control'
 import { fieldSize, useDensity } from './density'
-import { GroupContext } from './input-group'
-import { invalidOf, useField } from './field'
 import { ltr } from './dir'
+import { invalidOf, useField } from './field'
+import { touch } from './gesture'
+import { GroupContext } from './input-group'
+import { masked } from './mask'
+import { slot } from './slot'
 
 /** What an adornment takes past the gutter: its 16px mark and 8 beside it. */
 const MARK = 24
@@ -50,20 +52,17 @@ export type InputProps = Omit<ComponentProps<typeof GuiInput>, 'children' | 'siz
   fill?: boolean
 }
 
-const well = (side: 'start' | 'end', gutter: number) =>
-  ({
-    position: 'absolute' as const,
-    [side === 'start' ? 'insetInlineStart' : 'insetInlineEnd']: gutter,
-    t: 0,
-    b: 0,
-    items: 'center' as const,
-    justify: 'center' as const,
-  })
+const well = (side: 'start' | 'end', gutter: number) => ({
+  position: 'absolute' as const,
+  [side === 'start' ? 'insetInlineStart' : 'insetInlineEnd']: gutter,
+  t: 0,
+  b: 0,
+  items: 'center' as const,
+  justify: 'center' as const,
+})
 
-const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function Input(
-  { startAdornment, endAdornment, reveal = true, type, secureTextEntry, size, fill = false, ...props },
-  ref,
-) {
+const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function Input({ startAdornment, endAdornment, reveal = true, type, secureTextEntry, size, fill = false, ...props }, ref) {
+  const tr = useTranslate()
   const [revealed, setRevealed] = useState(false)
   const density = useDensity()
   const group = useContext(GroupContext)
@@ -83,7 +82,10 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
   // Inside a group the GROUP is the box — its edge, its fill, its focus — and the
   // field is the text that fills the space its adornments leave.
   if (group) {
-    const { onFocus, onBlur } = props as { onFocus?: (e: unknown) => void; onBlur?: (e: unknown) => void }
+    const { onFocus, onBlur } = props as {
+      onFocus?: (e: unknown) => void
+      onBlur?: (e: unknown) => void
+    }
     return (
       <GuiInput
         ref={ref as never}
@@ -104,7 +106,10 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
         // The group draws the one focus ring, round the whole box. Inline,
         // because design's `:focus-visible` outline is a stylesheet rule and
         // only an inline declaration is certain to outrank it here.
-        style={{ ...((props as { style?: object }).style ?? null), outlineStyle: 'none' }}
+        style={{
+          ...((props as { style?: object }).style ?? null),
+          outlineStyle: 'none',
+        }}
         onFocus={(e: unknown) => {
           group.focus(true)
           onFocus?.(e)
@@ -184,7 +189,7 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
           {...well('end', box.gutter)}
           cursor="pointer"
           onPress={() => setRevealed((v) => !v)}
-          aria-label={revealed ? 'Hide password' : 'Show password'}
+          aria-label={revealed ? tr('Hide password') : tr('Show password')}
         >
           {revealed ? <EyeOff size={16} /> : <Eye size={16} />}
         </XStack>

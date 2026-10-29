@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from 'react'
 /**
  * Pill — a small rounded label for a status, a tag or a filter, with an
  * optional remove control. `variant`, `onRemove`, `pillVariants`, and the
@@ -13,13 +14,14 @@
  * element, so it already carries the real `<button type="button">` host and
  * the 44px touch floor.
  */
-import { SizableText, XStack, createStyledContext, styled } from '@hanzo/gui'
+import { createStyledContext, SizableText, styled, XStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
-import * as React from 'react'
+
+import { useTranslate } from '../../i18n/react'
 import { sx } from '../../sx'
 import { Button } from './button'
-import { ink } from './ink'
 import { touch } from './gesture'
+import { ink } from './ink'
 import { slot } from './slot'
 
 export type PillVariant = 'default' | 'secondary' | 'outline' | 'success' | 'warning' | 'error'
@@ -29,7 +31,9 @@ const MIN_TOUCH = 44
 const HEIGHT = 28
 const REMOVE = 16
 
-const PillContext = /* @__PURE__ */ createStyledContext<{ variant: PillVariant }>({ variant: 'default' })
+const PillContext = /* @__PURE__ */ createStyledContext<{
+  variant: PillVariant
+}>({ variant: 'default' })
 
 const PillFrame = styled(XStack, {
   name: 'Pill',
@@ -81,8 +85,7 @@ const PillText = styled(SizableText, {
 })
 
 /** A pill's classes, for hosts that hook it from CSS. Styling lives in the tokens. */
-export const pillVariants = ({ variant }: { variant?: PillVariant | null } = {}) =>
-  `pill pill-${variant ?? 'default'}`
+export const pillVariants = ({ variant }: { variant?: PillVariant | null } = {}) => `pill pill-${variant ?? 'default'}`
 
 export type PillProps = React.ComponentProps<'span'> & {
   variant?: PillVariant | null
@@ -90,28 +93,13 @@ export type PillProps = React.ComponentProps<'span'> & {
 }
 
 export function Pill({ className, variant = 'default', onRemove, children, ...props }: PillProps) {
+  const tr = useTranslate()
   const resolved = variant ?? 'default'
   return (
-    <PillFrame
-      {...slot('pill')}
-      data-variant={resolved}
-      variant={resolved}
-      {...sx([pillVariants({ variant: resolved }), className].filter(Boolean).join(' '))}
-      {...(props as React.ComponentProps<typeof PillFrame>)}
-    >
+    <PillFrame {...slot('pill')} data-variant={resolved} variant={resolved} {...sx([pillVariants({ variant: resolved }), className].filter(Boolean).join(' '))} {...(props as React.ComponentProps<typeof PillFrame>)}>
       {ink(children, PillText)}
       {onRemove ? (
-        <Button
-          {...slot('pill-remove')}
-          variant="ghost"
-          size="icon"
-          minH={REMOVE}
-          minW={REMOVE}
-          rounded={999}
-          {...touch(REMOVE, MIN_TOUCH)}
-          aria-label="Remove"
-          onPress={onRemove}
-        >
+        <Button {...slot('pill-remove')} variant="ghost" size="icon" minH={REMOVE} minW={REMOVE} rounded={999} {...touch(REMOVE, MIN_TOUCH)} aria-label={tr('Remove')} onPress={onRemove}>
           <X size={12} />
         </Button>
       ) : null}

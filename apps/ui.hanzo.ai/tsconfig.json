@@ -1,26 +1,19 @@
 {
   "compilerOptions": {
     "paths": {
-      "~/*": [
-        "./*"
-      ]
+      "~/*": ["./*"]
     },
     "strict": true,
     "noEmit": true,
     "jsx": "react-jsx",
     "module": "Preserve",
     "target": "ES2022",
-    "lib": [
-      "dom",
-      "esnext"
-    ],
-    "types": [
-      "node",
-      "react",
-      "vite/client"
-    ],
+    "lib": ["dom", "esnext"],
+    "types": ["node", "react", "vite/client"],
     "isolatedModules": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "app",
@@ -32,10 +25,8 @@
     "mdx.ts",
     "brand.ts",
     "features",
-    "font.d.ts"
+    "font.d.ts",
+    "i18n"
   ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "exclude": ["node_modules", "dist"]
 }

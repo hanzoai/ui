@@ -34,14 +34,16 @@
  * still reach the document: that path is `insertStyleRules`, and it is not what
  * this flag controls.
  */
+import { useMemo, type ReactNode } from 'react'
+import { useAppearance, useScheme, type Account, type Preference } from '@hanzo/appearance'
 import { GuiProvider } from '@hanzo/gui'
 import { TelemetryProvider, type TelemetryConfig } from '@hanzogui/telemetry'
-import { useMemo, type ReactNode } from 'react'
-
-import { useAppearance, useScheme, type Account, type Preference } from '@hanzo/appearance'
 
 import { config as full, type Conf } from './gui-config'
+import { LocaleProvider } from './i18n/provider'
+import type { Messages } from './i18n/source'
 import { Look } from './look'
+
 import './styles.css'
 
 export type HanzoProps = {
@@ -64,7 +66,12 @@ export type HanzoProps = {
    * here without the settings panel ever being opened. `org` / `orgPref` are the
    * org's layer, `install` the surface's own defaults.
    */
-  appearance?: { org?: string; orgPref?: Preference; install?: Preference; account?: Account }
+  appearance?: {
+    org?: string
+    orgPref?: Preference
+    install?: Preference
+    account?: Account
+  }
   /**
    * Interaction analytics for everything inside — OFF unless you ask.
    *
@@ -89,6 +96,21 @@ export type HanzoProps = {
    * engine holds, so the events do not double either way.
    */
   analytics?: boolean | TelemetryConfig
+  /**
+   * The reader's language. Omitted, every built-in string stays the English it
+   * was written in — the same tree as before this prop existed.
+   *
+   * A BCP-47 tag. Catalogs ship for `es`, `fr`, `de`, `it`, `pt-BR`, `ru`,
+   * `tr`, `ar`, `hi`, `id`, `vi`, `th`, `ja`, `ko`, `zh-CN` and `zh-TW`.
+   * Arabic (and any other locale `@hanzo/i18n` marks right to left) sets `dir`
+   * on the subtree. A key a catalog lacks is rendered in English.
+   */
+  locale?: string
+  /**
+   * Extra copy, keyed by the English source, merged over the catalog. A host
+   * correcting one sentence does not replace the rest.
+   */
+  messages?: Messages
 }
 
 /** A stylesheet that did not reach the document is invisible until someone opens
@@ -107,12 +129,10 @@ const assertStylesheet = () => {
   if (checked || typeof document === 'undefined') return
   checked = true
   if (getComputedStyle(document.documentElement).getPropertyValue('--hanzo-ui-styles').trim()) return
-  console.error(
-    "@hanzo/ui: styles.css did not reach the document. Import it directly: import '@hanzo/ui/styles.css'.",
-  )
+  console.error("@hanzo/ui: styles.css did not reach the document. Import it directly: import '@hanzo/ui/styles.css'.")
 }
 
-export const Hanzo = ({ children, theme, analytics, config = full, appearance }: HanzoProps) => {
+export const Hanzo = ({ children, theme, analytics, config = full, appearance, locale, messages }: HanzoProps) => {
   if (process.env.NODE_ENV !== 'production') assertStylesheet()
   // A person's appearance, put on the document and kept there.
   //
@@ -135,10 +155,18 @@ export const Hanzo = ({ children, theme, analytics, config = full, appearance }:
   const { pref, set } = useAppearance(appearance)
   const look = useMemo(() => ({ pref, set }), [pref, set])
   const scheme = useScheme()
+  const body =
+    locale || messages ? (
+      <LocaleProvider locale={locale} messages={messages}>
+        {children}
+      </LocaleProvider>
+    ) : (
+      children
+    )
   const tree = (
     <Look.Provider value={look}>
       <GuiProvider config={config} defaultTheme={theme ?? scheme} disableInjectCSS>
-        {children}
+        {body}
       </GuiProvider>
     </Look.Provider>
   )

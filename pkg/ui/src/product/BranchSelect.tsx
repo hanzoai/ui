@@ -1,5 +1,6 @@
 'use client'
 
+import { useCallback, type ReactNode } from 'react'
 /**
  * BranchSelect — which branch a run starts from, as a composer chip.
  *
@@ -8,8 +9,8 @@
  * Like `RepoSelect` it knows no git host — the loader is the host's.
  */
 import { GitBranch } from '@hanzogui/lucide-icons-2'
-import { useCallback, type ReactNode } from 'react'
 
+import { useTranslate } from '../i18n/react'
 import { ChipSelect, type ChipPlacement } from './ChipSelect'
 import type { ChipItem, ChipPage } from './chipSelect.logic'
 
@@ -35,41 +36,24 @@ export interface BranchSelectProps {
   onOpenChange?: (open: boolean) => void
 }
 
-const item = (name: string): ChipItem => ({ id: name, label: name, icon: <GitBranch size={12} color="$soft" /> })
+const item = (name: string): ChipItem => ({
+  id: name,
+  label: name,
+  icon: <GitBranch size={12} color="$soft" />,
+})
 
-export function BranchSelect({
-  value = null,
-  onChange,
-  load,
-  footer,
-  placement,
-  disabled,
-  open,
-  onOpenChange,
-}: BranchSelectProps) {
+export function BranchSelect({ value = null, onChange, load, footer, placement, disabled, open, onOpenChange }: BranchSelectProps) {
+  const tr = useTranslate()
   const pages = useCallback(
     async (q: string, after?: string | null): Promise<ChipPage<ChipItem>> => {
       const page = await load(q, after)
-      return { items: page.branches.map((b) => item(branchName(b))), next: page.next ?? null }
+      return {
+        items: page.branches.map((b) => item(branchName(b))),
+        next: page.next ?? null,
+      }
     },
-    [load],
+    [load]
   )
 
-  return (
-    <ChipSelect<ChipItem>
-      name="Branch"
-      icon={<GitBranch size={12} color="$soft" />}
-      label={value ?? 'Branch'}
-      chosen={value ? item(value) : null}
-      onChange={(i) => onChange(i.id)}
-      load={pages}
-      placeholder="Search branches…"
-      empty="No branches match."
-      footer={footer}
-      placement={placement}
-      disabled={disabled}
-      open={open}
-      onOpenChange={onOpenChange}
-    />
-  )
+  return <ChipSelect<ChipItem> name="Branch" icon={<GitBranch size={12} color="$soft" />} label={value ?? 'Branch'} chosen={value ? item(value) : null} onChange={(i) => onChange(i.id)} load={pages} placeholder={tr('Search branches…')} empty="No branches match." footer={footer} placement={placement} disabled={disabled} open={open} onOpenChange={onOpenChange} />
 }

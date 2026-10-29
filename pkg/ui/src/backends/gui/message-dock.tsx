@@ -1,5 +1,6 @@
 'use client'
 
+import type { ComponentProps } from 'react'
 /**
  * MessageDock — a fixed stack of dismissable status cards, anchored to a
  * corner or edge of the viewport (`top`, `bottom`, `top-end`, `bottom-end`, and
@@ -14,13 +15,14 @@
  * surface tokens. `onClose` only reports which id was dismissed, the same
  * contract `Banner.onClose` uses — the dock itself holds no visibility state.
  */
-import { XStack, YStack, SizableText, createStyledContext, styled } from '@hanzo/gui'
+import { createStyledContext, SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
-import type { ComponentProps } from 'react'
+
+import { useTranslate } from '../../i18n/react'
+import { Button } from './button'
+import { touch } from './gesture'
 import { ink } from './ink'
 import { slot } from './slot'
-import { touch } from './gesture'
-import { Button } from './button'
 
 export type MessageDockMessageType = 'info' | 'success' | 'warning' | 'error'
 
@@ -36,7 +38,9 @@ export type MessageDockPosition = 'top' | 'bottom' | 'top-end' | 'bottom-end' | 
 const CLOSE = 24
 const CARD_MIN_WIDTH = 300
 
-const CardContext = /* @__PURE__ */ createStyledContext<{ type: MessageDockMessageType | 'default' }>({
+const CardContext = /* @__PURE__ */ createStyledContext<{
+  type: MessageDockMessageType | 'default'
+}>({
   type: 'default',
 })
 
@@ -143,16 +147,10 @@ function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: M
   return (
     <DockFrame {...slot('message-dock')} data-position={resolved} anchor={resolved} {...props}>
       {messages.map((message) => {
+        const tr = useTranslate()
         const type = message.type ?? 'default'
         return (
-          <CardFrame
-            key={message.id}
-            {...slot('message-dock-card')}
-            data-message-id={message.id}
-            data-type={type}
-            type={type}
-            role="status"
-          >
+          <CardFrame key={message.id} {...slot('message-dock-card')} data-message-id={message.id} data-type={type} type={type} role="status">
             <XStack items="flex-start" justify="space-between" gap="$4">
               <YStack flex={1} paddingInlineEnd={onClose ? CLOSE : 0}>
                 <CardTitle type={type} {...slot('message-dock-card-title')}>
@@ -165,19 +163,7 @@ function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: M
                 ) : null}
               </YStack>
               {onClose ? (
-                <Button
-                  {...slot('message-dock-card-close')}
-                  variant="ghost"
-                  size="icon"
-                  minH={CLOSE}
-                  minW={CLOSE}
-                  {...touch(CLOSE)}
-                  position="absolute"
-                  t="$3"
-                  insetInlineEnd="$3"
-                  aria-label="Close"
-                  onPress={() => onClose(message.id)}
-                >
+                <Button {...slot('message-dock-card-close')} variant="ghost" size="icon" minH={CLOSE} minW={CLOSE} {...touch(CLOSE)} position="absolute" t="$3" insetInlineEnd="$3" aria-label={tr('Close')} onPress={() => onClose(message.id)}>
                   <X size={16} />
                 </Button>
               ) : null}

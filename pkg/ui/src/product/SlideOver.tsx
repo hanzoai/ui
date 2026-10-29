@@ -26,7 +26,9 @@ import { useEffect, useRef, type ReactNode } from 'react'
 import { Button, ScrollView, Text, XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
 
+import { useTranslate } from '../i18n/react'
 import { asColor, type IconLike } from './color'
+import { useEmit } from './instrument'
 
 /** The lg breakpoint (px) — matches the shell's one responsive threshold. */
 const LG = 1024
@@ -73,21 +75,8 @@ export type SlideOverProps = {
   children: ReactNode
 }
 
-import { useEmit } from './instrument'
-
-export function SlideOver({
-  open,
-  onClose,
-  side = 'end',
-  size = 420,
-  title,
-  icon: Icon,
-  iconColor,
-  headerRight,
-  ariaLabel,
-  zIndex = 1000,
-  children,
-}: SlideOverProps) {
+export function SlideOver({ open, onClose, side = 'end', size = 420, title, icon: Icon, iconColor, headerRight, ariaLabel, zIndex = 1000, children }: SlideOverProps) {
+  const tr = useTranslate()
   const track = useEmit()
   const panelRef = useRef<HTMLElement | null>(null)
   const openerRef = useRef<Element | null>(null)
@@ -95,7 +84,11 @@ export function SlideOver({
   // One open/close pair per drawer, keyed by its title — the shared way every
   // product reports "a detail pane was looked at".
   useEffect(() => {
-    track({ component: 'SlideOver', action: open ? 'open' : 'close', id: typeof title === 'string' ? title : ariaLabel })
+    track({
+      component: 'SlideOver',
+      action: open ? 'open' : 'close',
+      id: typeof title === 'string' ? title : ariaLabel,
+    })
     // Only the open/close transition matters; `track` is stable per surface.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
@@ -131,14 +124,7 @@ export function SlideOver({
     return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose])
 
-  const edge =
-    side === 'end'
-      ? { insetInlineEnd: 0, borderInlineStartWidth: 1 }
-      : side === 'start'
-        ? { insetInlineStart: 0, borderInlineEndWidth: 1 }
-        : side === 'right'
-          ? { r: 0, borderLeftWidth: 1 }
-          : { l: 0, borderRightWidth: 1 }
+  const edge = side === 'end' ? { insetInlineEnd: 0, borderInlineStartWidth: 1 } : side === 'start' ? { insetInlineStart: 0, borderInlineEndWidth: 1 } : side === 'right' ? { r: 0, borderLeftWidth: 1 } : { l: 0, borderRightWidth: 1 }
 
   return (
     <YStack
@@ -150,17 +136,7 @@ export function SlideOver({
       style={{ position: 'fixed', inset: 0, zIndex }}
     >
       {/* Backdrop — cross-fades; click to dismiss. */}
-      <YStack
-        position="absolute"
-        t={0}
-        l={0}
-        r={0}
-        b={0}
-        bg="rgba(0,0,0,0.55)"
-        data-motion="fade"
-        style={{ opacity: open ? 1 : 0 }}
-        onPress={onClose}
-      />
+      <YStack position="absolute" t={0} l={0} r={0} b={0} bg="rgba(0,0,0,0.55)" data-motion="fade" style={{ opacity: open ? 1 : 0 }} onPress={onClose} />
 
       {/* Panel — slides in from the edge. Full-screen below lg, fixed width at lg+. */}
       <YStack
@@ -202,20 +178,13 @@ export function SlideOver({
       >
         {title !== undefined ? (
           <>
-            <XStack
-              items="center"
-              gap="$2.5"
-              px="$4"
-              height={56}
-              borderBottomWidth={1}
-              borderColor="$borderColor"
-            >
+            <XStack items="center" gap="$2.5" px="$4" height={56} borderBottomWidth={1} borderColor="$borderColor">
               {Icon ? <Icon size={18} color={iconColor ? asColor(iconColor) : undefined} /> : null}
               <Text flex={1} fontSize="$5" fontWeight="700" color="$ink" numberOfLines={1}>
                 {title}
               </Text>
               {headerRight}
-              <Button chromeless width={44} height={44} icon={<X size={18} />} onPress={onClose} aria-label="Close" />
+              <Button chromeless width={44} height={44} icon={<X size={18} />} onPress={onClose} aria-label={tr('Close')} />
             </XStack>
             <ScrollView flex={1}>
               <YStack flex={1} p="$4" gap="$3">

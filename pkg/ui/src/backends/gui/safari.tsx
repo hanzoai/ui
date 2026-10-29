@@ -1,5 +1,7 @@
 'use client'
 
+import type { ReactNode } from 'react'
+import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
 /**
  * Safari — a browser-window frame for showing a screenshot, a demo or a live
  * preview inside: a traffic-light title bar, back/forward controls, a URL
@@ -11,22 +13,11 @@
  * controls only matter once something is listening — so every button takes
  * an optional handler and renders whether or not one is given.
  */
-import {
-  Bookmark,
-  ChevronLeft,
-  ChevronRight,
-  Clock,
-  Lock,
-  Menu,
-  Plus,
-  RotateCw,
-  Share2,
-  Star,
-} from '@hanzogui/lucide-icons-2'
-import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
-import type { ReactNode } from 'react'
-import { slot } from './slot'
+import { Bookmark, ChevronLeft, ChevronRight, Clock, Lock, Menu, Plus, RotateCw, Share2, Star } from '@hanzogui/lucide-icons-2'
+
+import { useTranslate } from '../../i18n/react'
 import { touch } from './gesture'
+import { slot } from './slot'
 
 const CONTROL = 12
 const ICON = 16
@@ -68,7 +59,11 @@ const ToolbarButton = styled(XStack, {
 
 export type SafariToolbarItem = 'favorites' | 'reading-list' | 'history'
 
-const TOOLBAR_ITEMS: { item: SafariToolbarItem; label: string; icon: typeof Star }[] = [
+const TOOLBAR_ITEMS: {
+  item: SafariToolbarItem
+  label: string
+  icon: typeof Star
+}[] = [
   { item: 'favorites', label: 'Favorites', icon: Star },
   { item: 'reading-list', label: 'Reading List', icon: Bookmark },
   { item: 'history', label: 'History', icon: Clock },
@@ -94,41 +89,11 @@ export type SafariProps = {
  * A macOS Safari window as a frame around `children` — drop a screenshot, an
  * iframe or a live component in and it reads as a captured browser tab.
  */
-export function Safari({
-  children,
-  url = 'https://ui.hanzo.ai',
-  showToolbar = true,
-  onBack,
-  onForward,
-  onReload,
-  onShare,
-  onNewTab,
-  onMenu,
-  onToolbarItemPress,
-}: SafariProps) {
+export function Safari({ children, url = 'https://ui.hanzo.ai', showToolbar = true, onBack, onForward, onReload, onShare, onNewTab, onMenu, onToolbarItemPress }: SafariProps) {
+  const tr = useTranslate()
   return (
-    <YStack
-      {...slot('safari')}
-      width="100%"
-      maxW={960}
-      self="center"
-      rounded="$5"
-      borderWidth={1}
-      borderColor="$borderColor"
-      overflow="hidden"
-      shadowColor="$shadowColor"
-      shadowRadius={24}
-    >
-      <XStack
-        {...slot('safari-chrome')}
-        items="center"
-        gap="$2"
-        px="$3"
-        py="$2"
-        bg="$panel"
-        borderBottomWidth={1}
-        borderColor="$borderColor"
-      >
+    <YStack {...slot('safari')} width="100%" maxW={960} self="center" rounded="$5" borderWidth={1} borderColor="$borderColor" overflow="hidden" shadowColor="$shadowColor" shadowRadius={24}>
+      <XStack {...slot('safari-chrome')} items="center" gap="$2" px="$3" py="$2" bg="$panel" borderBottomWidth={1} borderColor="$borderColor">
         <XStack {...slot('safari-traffic-lights')} gap="$2">
           <Light tone="close" />
           <Light tone="minimize" />
@@ -136,105 +101,41 @@ export function Safari({
         </XStack>
 
         <XStack {...slot('safari-nav')} ml="$2" items="center" gap="$1">
-          <IconButton
-            {...slot('safari-back')}
-            onPress={onBack}
-            {...touch(24, 44, 'both')}
-            aria-label="Go back"
-            role="button"
-          >
+          <IconButton {...slot('safari-back')} onPress={onBack} {...touch(24, 44, 'both')} aria-label={tr('Go back')} role="button">
             <ChevronLeft size={ICON} color="$quiet" />
           </IconButton>
-          <IconButton
-            {...slot('safari-forward')}
-            onPress={onForward}
-            {...touch(24, 44, 'both')}
-            aria-label="Go forward"
-            role="button"
-          >
+          <IconButton {...slot('safari-forward')} onPress={onForward} {...touch(24, 44, 'both')} aria-label={tr('Go forward')} role="button">
             <ChevronRight size={ICON} color="$quiet" />
           </IconButton>
         </XStack>
 
-        <XStack
-          {...slot('safari-url-bar')}
-          mx="$3"
-          flex={1}
-          items="center"
-          gap="$2"
-          rounded="$4"
-          bg="$background"
-          px="$3"
-          py="$1.5"
-        >
+        <XStack {...slot('safari-url-bar')} mx="$3" flex={1} items="center" gap="$2" rounded="$4" bg="$background" px="$3" py="$1.5">
           <Lock size={14} color="$quiet" />
           <SizableText {...slot('safari-url-text')} flex={1} size="$2" color="$quiet" numberOfLines={1}>
             {url}
           </SizableText>
-          <IconButton
-            {...slot('safari-reload')}
-            width={22}
-            height={22}
-            onPress={onReload}
-            {...touch(22, 44, 'both')}
-            aria-label="Reload page"
-            role="button"
-          >
+          <IconButton {...slot('safari-reload')} width={22} height={22} onPress={onReload} {...touch(22, 44, 'both')} aria-label={tr('Reload page')} role="button">
             <RotateCw size={14} color="$quiet" />
           </IconButton>
         </XStack>
 
         <XStack {...slot('safari-actions')} items="center" gap="$1">
-          <IconButton
-            {...slot('safari-share')}
-            onPress={onShare}
-            {...touch(24, 44, 'both')}
-            aria-label="Share"
-            role="button"
-          >
+          <IconButton {...slot('safari-share')} onPress={onShare} {...touch(24, 44, 'both')} aria-label={tr('Share')} role="button">
             <Share2 size={ICON} color="$quiet" />
           </IconButton>
-          <IconButton
-            {...slot('safari-new-tab')}
-            onPress={onNewTab}
-            {...touch(24, 44, 'both')}
-            aria-label="New tab"
-            role="button"
-          >
+          <IconButton {...slot('safari-new-tab')} onPress={onNewTab} {...touch(24, 44, 'both')} aria-label={tr('New tab')} role="button">
             <Plus size={ICON} color="$quiet" />
           </IconButton>
-          <IconButton
-            {...slot('safari-menu')}
-            onPress={onMenu}
-            {...touch(24, 44, 'both')}
-            aria-label="Menu"
-            role="button"
-          >
+          <IconButton {...slot('safari-menu')} onPress={onMenu} {...touch(24, 44, 'both')} aria-label={tr('Menu')} role="button">
             <Menu size={ICON} color="$quiet" />
           </IconButton>
         </XStack>
       </XStack>
 
       {showToolbar ? (
-        <XStack
-          {...slot('safari-secondary-toolbar')}
-          items="center"
-          gap="$4"
-          px="$4"
-          py="$2"
-          bg="$panel"
-          borderBottomWidth={1}
-          borderColor="$borderColor"
-        >
+        <XStack {...slot('safari-secondary-toolbar')} items="center" gap="$4" px="$4" py="$2" bg="$panel" borderBottomWidth={1} borderColor="$borderColor">
           {TOOLBAR_ITEMS.map(({ item, label, icon: Icon }) => (
-            <ToolbarButton
-              key={item}
-              {...slot(`safari-toolbar-${item}`)}
-              onPress={() => onToolbarItemPress?.(item)}
-              {...touch(20, 44, 'y')}
-              aria-label={label}
-              role="button"
-            >
+            <ToolbarButton key={item} {...slot(`safari-toolbar-${item}`)} onPress={() => onToolbarItemPress?.(item)} {...touch(20, 44, 'y')} aria-label={label} role="button">
               <Icon size={14} color="$quiet" />
               <SizableText size="$2" color="$quiet">
                 {label}

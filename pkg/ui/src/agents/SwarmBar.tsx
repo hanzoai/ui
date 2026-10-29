@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useTranslate } from '../i18n/react'
+
 export interface AgentDescriptor {
   id: string
   name: string
@@ -18,14 +20,8 @@ export interface SwarmBarProps {
   style?: React.CSSProperties
 }
 
-export const SwarmBar: React.FC<SwarmBarProps> = ({
-  agents,
-  selectedAgentId,
-  onSelectAgent,
-  onAddAgent,
-  className = '',
-  style,
-}) => {
+export const SwarmBar: React.FC<SwarmBarProps> = ({ agents, selectedAgentId, onSelectAgent, onAddAgent, className = '', style }) => {
+  const tr = useTranslate()
   return (
     <div
       style={{
@@ -38,9 +34,16 @@ export const SwarmBar: React.FC<SwarmBarProps> = ({
         borderRadius: 16,
         ...style,
       }}
-      aria-label="Multi-Agent Swarm Bar"
+      aria-label={tr('Multi-Agent Swarm Bar')}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, overflowX: 'auto' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          overflowX: 'auto',
+        }}
+      >
         {agents.map((agent) => {
           const isSelected = agent.id === selectedAgentId
           return (

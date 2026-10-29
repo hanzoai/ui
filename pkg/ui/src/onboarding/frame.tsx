@@ -1,14 +1,16 @@
 'use client'
 
 import { createContext, useContext, type ReactNode } from 'react'
-import { HanzoMark } from '@hanzogui/shell'
 import { ArrowLeft } from '@hanzogui/lucide-icons-2'
+import { HanzoMark } from '@hanzogui/shell'
+
 import { Button } from '../backends/gui/button'
-import { mirror } from '../backends/gui/dir'
 import { Card, CardContent } from '../backends/gui/card'
+import { mirror } from '../backends/gui/dir'
 import { Heading, Paragraph, SizableText, XStack, YStack } from '../backends/gui/layout'
 import { Spinner } from '../backends/gui/spinner'
 import { ToggleGroup, ToggleGroupItem } from '../backends/gui/toggle-group'
+import { useTranslate } from '../i18n/react'
 import type { Interval } from './plans'
 
 const Brand = createContext(true)
@@ -51,11 +53,12 @@ export function Page({
   /** A quiet line under the screen: who the email is, a way out. */
   foot?: ReactNode
 }) {
+  const tr = useTranslate()
   const brand = useContext(Brand)
   return (
     <YStack render={brand ? 'main' : 'div'} aria-busy={busy || undefined} bg="$background" minH="100vh" items="center" justify={center ? 'center' : 'flex-start'} gap="$4" pt={center ? 96 : 28} pb={96} px="$4">
       {back ? (
-        <Button type="button" variant="ghost" size="icon-lg" aria-label="Back" position="absolute" t={20} insetInlineStart={20} rounded="$10" onClick={back}>
+        <Button type="button" variant="ghost" size="icon-lg" aria-label={tr('Back')} position="absolute" t={20} insetInlineStart={20} rounded="$10" onClick={back}>
           <ArrowLeft {...mirror} size={18} />
         </Button>
       ) : null}

@@ -2,17 +2,19 @@
 
 import { useEffect, useRef, useState, type ComponentType, type FormEvent, type ReactNode } from 'react'
 import { Binoculars, Calendar, ChartLine, Clock, Code, Dna, EyeOff, FileText, Gavel, GraduationCap, HeartHandshake, LayoutGrid, Library, Lightbulb, MessageSquare, Palette, Pencil, Presentation, User } from '@hanzogui/lucide-icons-2'
+
 import { Button } from '../backends/gui/button'
 import { Field } from '../backends/gui/field'
 import { Input } from '../backends/gui/input'
 import { Anchor, Paragraph, XStack, YStack } from '../backends/gui/layout'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../backends/gui/select'
 import { Switch } from '../backends/gui/switch'
+import { useTranslate } from '../i18n/react'
 import { API } from './api'
 import { Page, Panel } from './frame'
-import { Primary } from './screens'
 import { useSession, type Track } from './hooks'
 import { OWN_TOPIC, ROLES, ROLES_PLACEHOLDER, ROLES_SUBTITLE, ROLES_TITLE, type Glyph } from './roles'
+import { Primary } from './screens'
 import { chatStep } from './state'
 
 /**
@@ -57,6 +59,7 @@ const ICONS: Record<Glyph, ComponentType<{ size?: number }>> = {
 }
 
 export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, privacyPath = '/settings/privacy', safeguards = false }: ChatOnboardingProps) {
+  const tr = useTranslate()
   const session = useSession(api)
   const [role, setRole] = useState('')
   const [name, setName] = useState('')
@@ -88,7 +91,7 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
               <b>Built to help, not harm:</b> Automated safeguards protect your chats from violent, abusive, or deceptive content.
             </Row>
           ) : null}
-          <Row icon={<Switch checked={train} onCheckedChange={setTrain} aria-label="Help improve our AI models" />}>
+          <Row icon={<Switch checked={train} onCheckedChange={setTrain} aria-label={tr('Help improve our AI models')} />}>
             <b>Help improve our AI models:</b> Allow the use of your chats and coding sessions to train and improve Zen models. Change anytime in privacy settings.{' '}
             <Anchor href={privacyPath} color="$ink" textDecorationLine="underline">
               Learn more
@@ -127,7 +130,7 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
       <Page site={site} title="What’s your name?" lede={`So ${site} knows what to call you.`} center>
         <YStack render={<form onSubmit={submit} noValidate />} gap="$4" items="stretch">
           <Field gap="$2">
-            <Input name="name" autoComplete="name" aria-label="Your name" value={name} onChangeText={setName} placeholder="Your name" height={48} autoFocus />
+            <Input name="name" autoComplete="name" aria-label={tr('Your name')} value={name} onChangeText={setName} placeholder={tr('Your name')} height={48} autoFocus />
           </Field>
           <Primary type="submit" disabled={!name.trim() || busy}>
             Continue
@@ -141,7 +144,10 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
   const pick = async (prompt?: string) => {
     if (busy || !chosen) return
     setBusy(true)
-    track?.('usage_selected', { use: session.progress.use ?? 'personal', role: chosen.role })
+    track?.('usage_selected', {
+      use: session.progress.use ?? 'personal',
+      role: chosen.role,
+    })
     await session.save({ role: chosen.role })
     onDone({ prompt, role: chosen.role })
   }
@@ -154,7 +160,7 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
           track?.('role_selected', { role: v })
         }}
       >
-        <SelectTrigger aria-label="Your role" height={48}>
+        <SelectTrigger aria-label={tr('Your role')} height={48}>
           <SelectValue placeholder={ROLES_PLACEHOLDER} />
         </SelectTrigger>
         <SelectContent>
@@ -181,7 +187,10 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
                 justify="flex-start"
                 gap="$4"
                 onClick={() => {
-                  track?.('starter_prompt_used', { role: chosen.role, prompt: p.label })
+                  track?.('starter_prompt_used', {
+                    role: chosen.role,
+                    prompt: p.label,
+                  })
                   void pick(p.prompt)
                 }}
               >
