@@ -1,0 +1,130 @@
+---
+title: Khối
+description: Nội dung là dữ liệu. Một trang là danh sách khối; mỗi khối nêu kiểu của nó, kiểu chọn bộ dựng, và bộ dựng đọc phần còn lại.
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+Một khối là dữ liệu: `blockType` chọn bộ dựng và các trường còn lại là đầu vào
+của bộ dựng ấy. Nên một trang có thể được soạn trong CMS, đưa vào kho, hoặc do
+máy chủ tạo, và dù cách nào cũng có kiểu. Mọi trường `specifiers` là một túi
+gợi ý bố cục cách nhau bằng dấu cách mà bộ dựng đọc; nó là chuỗi chứ không phải
+union, nên trang thêm một gợi ý bằng cách gõ ra và gợi ý lạ bị bỏ qua chứ không
+làm hỏng bản dựng.
+
+## Một trang
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## Từ vựng
+
+| Kiểu | Nó vẽ gì |
+| --- | --- |
+| `heading` | Một tiêu đề với dòng phụ tùy chọn, `level` 0 cho đoạn và 1 tới 6 cho các thẻ. |
+| `enh-heading` | Các phần được gọi tên: một tiền đề ở trên, tiêu đề, một dòng phụ ở dưới, mỗi phần có mức và lề riêng. |
+| `image` | Một ảnh từ `ImageDef` — `src`, `alt`, `dim` — với căn chỉnh và gợi ý điện thoại trong `specifiers`. |
+| `video` | Một `VideoDef`: các nguồn, một poster, cỡ theo từng bậc. |
+| `space` | Khoảng đứng theo đơn vị khoảng cách, theo từng bậc hoặc một số cho tất cả. |
+| `cta` | Một hàng liên kết và nút: `fill`, `left`, `right`, và các gợi ý điện thoại. |
+| `card` | Một bảng có tiêu đề, với phương tiện, nội dung và một lời kêu gọi. |
+| `bullet-cards` | Một lưới thẻ một dòng, mỗi thẻ một biểu tượng cạnh chữ của nó. |
+| `grid` | Một `GridDef` — cột và khoảng theo từng bậc, theo thứ tự tăng — trên `cells`. |
+| `group` | Một lớp bọc trên `elements`, cho các gợi ý áp lên cả nhóm. |
+| `accordian` | Các nút kích và nội dung của chúng. |
+| `carte-blanche` | Một bảng tự do: bất cứ gì ở trên, một tiêu đề, bất cứ gì ở dưới, một lời kêu gọi ở chân. |
+| `screenful` | Một màn hình đầy: một băng tùy chọn trên một tới ba cột, với thứ tự trên điện thoại. |
+| `element` | Một nút tác giả đã dựng sẵn. Nó không có bộ dựng, cố ý như vậy, và đó là điều để một trang khối giữ được bất cứ gì. |
+
+Mọi hình được xuất như một kiểu từ cùng đường con — `HeadingBlock`,
+`CTABlock`, `ScreenfulBlock` và phần còn lại — cạnh các định nghĩa chúng dùng
+chung: `GridDef`, `ImageDef`, `VideoDef`, `LinkDef`, `ButtonDef`. Một
+`LinkDef` có href `http` hoặc `mailto` tự là ngoài và mở tab mới với
+`rel="noreferrer noopener"`; nêu `external` chỉ ở nơi lược đồ không tự nói được.
+
+## Thiết bị là một prop
+
+Mọi bộ dựng nhận `agent`, lớp thiết bị, thay vì đọc truy vấn media. Các khối
+này dựng trên máy chủ phải phát đúng đánh dấu ngay lần đầu: bố cục điện thoại
+đến như đánh dấu desktop rồi tự sửa lúc hydrate là một cú nhảy thấy được, và
+với khối video là một lần tải phí.
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## Kiểu của bạn
+
+Bản đồ từ kiểu tới bộ dựng là điểm mở rộng. Host thêm một kiểu của mình, hoặc
+thay một kiểu — đó là cách ứng dụng Next thay ảnh tối ưu của nó, và cách bất
+cứ thứ gì thư viện không phát hành cũng tới được trang.
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+`has(specifiers, token)` trả lời một gợi ý có trong túi hay không, và
+`fit(dim, within)` là hộp lớn nhất của một tỉ lệ khung hình nằm trong hộp kia;
+cả hai được xuất cho bộ dựng của bạn. Danh mục [Khối](/blocks) dựng ví dụ của
+từng bộ dựng cạnh các kiểu của nó.

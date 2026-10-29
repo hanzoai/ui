@@ -1,0 +1,179 @@
+---
+title: Diagramme
+description: Ein Trend, eine Serie, ein Anteil und eine Verteilung. Inline-SVG, keine Abhängigkeit, und nie ein erfundener Punkt.
+---
+
+```tsx
+import { BarChart, BarRows, Donut, LineChart, Sparkline } from '@hanzo/ui/product'
+```
+
+Die Diagramme zeichnen mit Inline-SVG und nehmen ihre Farben aus dem lebenden
+Theme, also kehren sie sich mit ihm um. Sie sind von Konstruktion her ehrlich:
+eine Sparkline mit weniger als zwei Punkten rendert nichts, ein Donut ohne
+positiven Wert rendert einen Geviertstrich, und kein Diagramm erfindet einen
+Trend. Aufrufer geben echte Serien hinein.
+
+Zwei Formen tragen die Daten. Ein `ChartPoint` ist ein beschrifteter Wert auf
+einer sequenziellen Achse; ein `Slice` ist eine beschriftete Größe auf einer
+kategorialen, mit optionaler Farbe und einem Hinweis.
+
+```ts
+type ChartPoint = { label: string; value: number }
+type Slice = { label: string; value: number; color?: string; hint?: string }
+```
+
+## Sparkline
+
+Ein Trend in fester Größe für eine Metrik-Karte. `values` ist ein schlichtes
+Array; `width`, `height` und `color` sind optional.
+
+```tsx
+<Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+```
+
+<Preview>
+  <Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+</Preview>
+
+## Liniendiagramm
+
+Ein Wert über die Zeit. Es misst seinen Container, ist also so breit wie die
+Box, in der es steht, und beim Hovern liest es den nächsten Punkt neben einer
+Führungslinie ab. `formatValue` formatiert die Ablesung.
+
+```tsx
+<LineChart
+  data={[
+    { label: 'Mon', value: 120 },
+    { label: 'Tue', value: 180 },
+    { label: 'Wed', value: 150 },
+    { label: 'Thu', value: 260 },
+    { label: 'Fri', value: 230 },
+    { label: 'Sat', value: 310 },
+    { label: 'Sun', value: 290 },
+  ]}
+  height={200}
+  formatValue={(v) => `${v} req`}
+/>
+```
+
+<Preview>
+  <LineChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+    formatValue={(v) => `${v} req`}
+  />
+</Preview>
+
+## Balkendiagramm
+
+Dieselben Daten, als Balken. Dieselben Props.
+
+```tsx
+<BarChart data={points} height={200} />
+```
+
+<Preview>
+  <BarChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+  />
+</Preview>
+
+## Donut
+
+Ein Anteil. Farbe ist ein Datum, kein Modus: ein Segment mit `color` wird
+darin gezeichnet, und ein Segment ohne nimmt eine monochrome Rampe vom
+Vordergrund, sodass eine Komponente ein kategoriales Diagramm bedient und
+eines, das zur Marke passt. `center` rendert innerhalb des Rings; `legend`
+zeichnet eine eingebaute Liste aus Beschriftung und Prozent, standardmäßig
+aus, damit ein Nutzer eine reichere zusammensetzen kann.
+
+```tsx
+<Donut
+  slices={[
+    { label: 'zen-4', value: 62 },
+    { label: 'zen-3', value: 28 },
+    { label: 'other', value: 10 },
+  ]}
+  center="62%"
+  legend
+/>
+```
+
+<Preview>
+  <XStack gap="$8" flexWrap="wrap" items="center">
+    <Donut
+      slices={[
+        { label: 'zen-4', value: 62 },
+        { label: 'zen-3', value: 28 },
+        { label: 'other', value: 10 },
+      ]}
+      center="62%"
+      legend
+    />
+    <Donut
+      slices={[
+        { label: 'compute', value: 540, color: '#7c5cff' },
+        { label: 'storage', value: 220, color: '#23c562' },
+        { label: 'egress', value: 90, color: '#ff9f45' },
+      ]}
+      size={120}
+      thickness={16}
+    />
+  </XStack>
+</Preview>
+
+`CHART_PALETTE` sind die acht unterscheidbaren Farbtöne für eine kategoriale
+Serie, auf den dunklen Grund abgestimmt; `CHART_OTHER` ist der gedämpfte Ton
+für einen Rest.
+
+## Balkenreihen
+
+Eine Verteilung als beschriftete waagerechte Balken, gezeichnet mit den
+Layout-Primitiven, damit sie das Theme so annehmen wie die Hülle. Nimmt
+dieselbe Form `Slice`.
+
+```tsx
+<BarRows
+  bars={[
+    { label: 'us-east', value: 1240 },
+    { label: 'eu-west', value: 860 },
+    { label: 'ap-south', value: 410 },
+  ]}
+/>
+```
+
+<Preview>
+  <BarRows
+    bars={[
+      { label: 'us-east', value: 1240 },
+      { label: 'eu-west', value: 860 },
+      { label: 'ap-south', value: 410 },
+    ]}
+  />
+</Preview>
+
+## Die Box messen
+
+`useContainerWidth` wird ebenfalls exportiert: ein `ref` und die Breite, die
+es zuletzt gemessen hat, gehalten von einem `ResizeObserver`. Das nutzen die
+Linien- und Balkendiagramme, und das kann ein eigenes Diagramm nutzen, um in
+die Box zu zeichnen, die es bekommt, und nicht in eine Zahl, die es geraten
+hat.

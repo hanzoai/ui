@@ -1,0 +1,75 @@
+---
+title: Next
+description: Một lớp bọc cho cả hai trình đóng gói, và gốc nằm trong ranh giới client.
+---
+
+## Tạo dự án
+
+```bash
+pnpm create next-app@latest my-app --typescript --app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Bọc cấu hình
+
+```js title="next.config.js"
+const withGui = require('@hanzo/ui/next')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = withGui(nextConfig, __dirname)
+```
+
+`withGui` đặt ba thứ, cho webpack và Turbopack cùng lúc: `.web.*` phân giải
+trước, `react-native` là `react-native-web`, và mọi gói `@hanzogui/*` trong
+`node_modules` được transpile để hai điều đầu tới được bên trong chúng. Nó
+ghép với những gì đã có — hook `webpack()` sẵn có, thiết lập Turbopack và
+`transpilePackages` được giữ rồi mở rộng. Truyền `__dirname` để gói được tìm
+từ `node_modules` của chính ứng dụng, chứ không phải chỗ trình chạy tác vụ
+tình cờ đứng.
+
+Khai báo một lần cho cả hai trình đóng gói, vì một thiết lập chỉ cho webpack
+vắng mặt trong im lặng dưới Turbopack, rồi `next dev` và `next build` bất đồng
+về việc ứng dụng có biên dịch được hay không.
+
+## Gắn gốc
+
+Gốc là một thành phần client, nên nó sống trong tệp có chỉ thị, và layout dựng
+nó.
+
+```tsx title="app/providers.tsx"
+'use client'
+
+import { Hanzo } from '@hanzo/ui'
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+```tsx title="app/layout.tsx"
+import { Providers } from './providers'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+`suppressHydrationWarning` trên `html` là cho lớp chủ đề mà một nút chuyển ghi
+ở đó trước khi React gắn — xem [Chế độ tối](/docs/dark-mode).
+
+## Thành phần máy chủ
+
+Mọi thứ dưới `@hanzo/ui` là một ranh giới client; thành phần máy chủ dựng nó
+bằng cách nhập, như với bất kỳ thành phần client nào. Các quy tắc không gắn
+thành phần — `pages`, `masked`, `tone`, `resolveBrand` — nằm ở
+`@hanzo/ui/product/pure` và không nhập gì, nên một thành phần máy chủ hoặc bộ
+xử lý route gọi chúng được mà không tải cây thành phần.

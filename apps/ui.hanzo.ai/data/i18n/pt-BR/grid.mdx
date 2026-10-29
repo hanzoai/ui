@@ -1,0 +1,117 @@
+---
+title: Grade
+description: Uma grade CSS de verdade, cujas trilhas vêm do contêiner, não dos filhos. Uma prop para as colunas, e nenhum breakpoint.
+---
+
+Uma grade feita à mão — cada filho em `width: calc(25% - 7.5px)` — só fica uniforme enquanto todo filho concorda, e uma palavra longa deixa a linha irregular. Nada conserta isso afinando o número. Aqui o pai declara as trilhas uma vez e os filhos não têm voto: colunas iguais são estruturais, e nenhum filho consegue alargar a própria trilha.
+
+```tsx
+import { Cell, Grid } from '@hanzo/ui/grid'
+```
+
+`Grid` fica no próprio subpath porque renderiza um `div` com `display: grid`, e nenhum dos dois existe no React Native. A API é nomeada em termos de CSS grid — `columns` e `rows` são listas de trilhas, `Cell` posiciona e faz span — então um motor de grade nativo muda o arquivo e não os pontos de chamada.
+
+## Colunas
+
+`columns` aceita qualquer grafia de uma lista de trilhas: uma contagem, uma lista, ou uma lista de trilhas escrita.
+
+```tsx
+<Grid columns={3} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={3} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+  </Grid>
+</Preview>
+
+Uma contagem vira `repeat(3, minmax(0, 1fr))` e não `1fr`, porque `1fr` sozinho significa `minmax(auto, 1fr)` e `auto` põe o piso da trilha no conteúdo — uma string sem quebra então empurra a própria coluna para mais larga. Essa é a linha irregular que o componente existe para impedir, então a grafia mais longa é o ponto.
+
+```tsx
+<Grid columns={['2fr', '1fr']} gap="$3">
+  <Tile>main</Tile>
+  <Tile>aside</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={['2fr', '1fr']} gap="$3">
+    <Tile>main</Tile>
+    <Tile>aside</Tile>
+  </Grid>
+</Preview>
+
+Um número numa lista é pixels; qualquer outra coisa já é um tamanho de trilha.
+
+## Quantas couberem
+
+A forma responsiva é um valor de `columns`, não uma segunda prop, e não há breakpoint nela. `min` é o mais estreito que uma coluna pode ficar antes de a grade largar uma, e `max` limita a contagem.
+
+```tsx
+<Grid columns={{ min: 160, max: 4 }} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Tile>5</Tile>
+  <Tile>6</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={{ min: 160, max: 4 }} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Tile>5</Tile>
+    <Tile>6</Tile>
+  </Grid>
+</Preview>
+
+Redimensione a janela: a contagem segue a coluna em que a grade está, então o mesmo bloco fica certo dentro de uma sidebar que ele nunca viu. `min` é escrito como `min(160px, 100%)` em vez de um `160px` nu, então um telefone mais estreito que o piso ganha uma trilha de largura inteira em vez de um scroll lateral. `max` se dobra no mesmo piso — um enésimo da linha, gaps subtraídos — então o teto não custa nada numa tela pequena.
+
+## Células
+
+Um filho simples não precisa de wrapper. Um `Cell` existe para fazer span ou para posicionar: um número faz span de tantas trilhas, uma string é um `grid-column` como escrita.
+
+```tsx
+<Grid columns={4} gap="$3">
+  <Cell col={2}><Tile>col=2</Tile></Cell>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={4} gap="$3">
+    <Cell col={2}><Tile>col=2</Tile></Cell>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+  </Grid>
+</Preview>
+
+`row` é o mesmo descendo a página. `rows` na grade dimensiona as trilhas de linha; sem ele as linhas se dimensionam ao conteúdo.
+
+## Espaço
+
+`gap` é um token de espaço ou um número cru de pixels. Um token lê a rampa no documento — `gap="$4"` é `var(--space-4)` — então uma pessoa que move a densidade no painel de aparência move toda grade junto. Um número resolvido no render fica fixo no render.
+
+## A própria lista de trilhas
+
+`tracks(columns, gap)` é exportado, porque é a decisão inteira do componente: qualquer grafia de `columns` para a única lista de trilhas que ela significa, com as duas invariantes acima dentro dela.
+
+```ts
+import { tracks } from '@hanzo/ui/grid'
+
+tracks(3)                       // 'repeat(3, minmax(0, 1fr))'
+tracks({ min: 240 })            // 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))'
+```

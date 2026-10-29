@@ -1,0 +1,175 @@
+---
+title: चार्ट
+description: एक प्रवृत्ति, एक शृंखला, एक हिस्सा और एक वितरण। इनलाइन SVG, कोई डिपेंडेंसी नहीं, और कभी गढ़ा हुआ बिंदु नहीं।
+---
+
+```tsx
+import { BarChart, BarRows, Donut, LineChart, Sparkline } from '@hanzo/ui/product'
+```
+
+चार्ट इनलाइन SVG से खींचते हैं और रंग जीवित थीम से लेते हैं, इसलिए वे उसके
+साथ उलटते हैं। वे बनावट से ईमानदार हैं: दो से कम बिंदुओं वाली स्पार्कलाइन
+कुछ नहीं रेंडर करती, बिना धनात्मक मान वाला डोनट एक लंबी डैश रेंडर करता है,
+और कोई चार्ट प्रवृत्ति गढ़ता नहीं। कॉलर असली शृंखला देते हैं।
+
+डेटा दो आकृतियाँ लेकर चलती हैं। `ChartPoint` क्रमिक अक्ष पर एक लेबल वाला
+मान है; `Slice` श्रेणी वाले अक्ष पर एक लेबल वाला परिमाण है, वैकल्पिक रंग
+और एक संकेत के साथ।
+
+```ts
+type ChartPoint = { label: string; value: number }
+type Slice = { label: string; value: number; color?: string; hint?: string }
+```
+
+## Sparkline
+
+मेट्रिक कार्ड के लिए स्थिर आकार की प्रवृत्ति। `values` एक सादी सरणी है;
+`width`, `height` और `color` वैकल्पिक हैं।
+
+```tsx
+<Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+```
+
+<Preview>
+  <Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+</Preview>
+
+## रेखा चार्ट
+
+समय के साथ एक मान। यह अपने कंटेनर को नापता है, इसलिए वह उतना चौड़ा है
+जितने बॉक्स में है, और होवर निकटतम बिंदु को एक गाइड रेखा के बगल पढ़कर
+दिखाता है। `formatValue` उस पठन को स्वरूपित करता है।
+
+```tsx
+<LineChart
+  data={[
+    { label: 'Mon', value: 120 },
+    { label: 'Tue', value: 180 },
+    { label: 'Wed', value: 150 },
+    { label: 'Thu', value: 260 },
+    { label: 'Fri', value: 230 },
+    { label: 'Sat', value: 310 },
+    { label: 'Sun', value: 290 },
+  ]}
+  height={200}
+  formatValue={(v) => `${v} req`}
+/>
+```
+
+<Preview>
+  <LineChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+    formatValue={(v) => `${v} req`}
+  />
+</Preview>
+
+## दंड चार्ट
+
+वही डेटा, दंडों की तरह। वही प्रॉप।
+
+```tsx
+<BarChart data={points} height={200} />
+```
+
+<Preview>
+  <BarChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+  />
+</Preview>
+
+## Donut
+
+एक हिस्सा। रंग डेटा है, मोड नहीं: जिस स्लाइस के पास `color` हो वह उसी में
+खींची जाती है, और जिसके पास न हो वह अग्रभूमि से एकरंगी सीढ़ी लेती है, इसलिए
+एक कंपोनेंट श्रेणी चार्ट की भी सेवा करता है और ब्रांड पर बैठे चार्ट की भी।
+`center` छल्ले के अंदर रेंडर होता है; `legend` बनी हुई लेबल और प्रतिशत
+सूची खींचता है, डिफ़ॉल्ट रूप से बंद, ताकि उपभोक्ता अधिक समृद्ध सूची जोड़
+सके।
+
+```tsx
+<Donut
+  slices={[
+    { label: 'zen-4', value: 62 },
+    { label: 'zen-3', value: 28 },
+    { label: 'other', value: 10 },
+  ]}
+  center="62%"
+  legend
+/>
+```
+
+<Preview>
+  <XStack gap="$8" flexWrap="wrap" items="center">
+    <Donut
+      slices={[
+        { label: 'zen-4', value: 62 },
+        { label: 'zen-3', value: 28 },
+        { label: 'other', value: 10 },
+      ]}
+      center="62%"
+      legend
+    />
+    <Donut
+      slices={[
+        { label: 'compute', value: 540, color: '#7c5cff' },
+        { label: 'storage', value: 220, color: '#23c562' },
+        { label: 'egress', value: 90, color: '#ff9f45' },
+      ]}
+      size={120}
+      thickness={16}
+    />
+  </XStack>
+</Preview>
+
+`CHART_PALETTE` श्रेणी शृंखला के लिए आठ अलग रंग हैं, गहरी ज़मीन के लिए
+सधे हुए; `CHART_OTHER` शेष के लिए मद्धम टोन है।
+
+## दंड पंक्तियाँ
+
+लेबल वाली क्षैतिज पट्टियों के रूप में एक वितरण, लेआउट प्रिमिटिव से खींचा
+हुआ ताकि वह खोल की तरह थीम ले। वही `Slice` आकृति लेता है।
+
+```tsx
+<BarRows
+  bars={[
+    { label: 'us-east', value: 1240 },
+    { label: 'eu-west', value: 860 },
+    { label: 'ap-south', value: 410 },
+  ]}
+/>
+```
+
+<Preview>
+  <BarRows
+    bars={[
+      { label: 'us-east', value: 1240 },
+      { label: 'eu-west', value: 860 },
+      { label: 'ap-south', value: 410 },
+    ]}
+  />
+</Preview>
+
+## बॉक्स नापना
+
+`useContainerWidth` भी एक्सपोर्ट है: एक `ref` और वह चौड़ाई जो उसने आख़िरी
+बार नापी, `ResizeObserver` द्वारा रखी हुई। रेखा और दंड चार्ट यही इस्तेमाल
+करते हैं, और आपका अपना चार्ट भी इसका इस्तेमाल कर उस बॉक्स पर खींच सकता है
+जो उसे दिया गया, न कि किसी अंक पर जिसका उसने अनुमान लगाया हो।

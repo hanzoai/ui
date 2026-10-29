@@ -1,0 +1,53 @@
+---
+title: Expo und React Native
+description: Derselbe Import, und nichts zu aliasen. Metro spricht react-native schon.
+---
+
+Die Bibliothek rendert über @hanzo/gui, und das ist zuerst React Native: ein
+Stack ist eine `View`, Text ist `Text`, und eine Style-Prop ist ein Style.
+Dieselben Komponenten, die auf dem Web ein `div` zeichnen, zeichnen hier also
+eine native View, und die Theme-Tokens, die Abstandsrampe und die Schriftleiter
+bedeuten auf beiden dasselbe.
+
+## Installieren
+
+```bash
+pnpm create expo-app@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+Es gibt keine Bundler-Einstellung. Der Alias `react-native`, den die Web-Hosts
+setzen, ist das, was einen Web-Bundler ein natives Paket lesen lässt; Metro
+ist der native Bundler und liest es, wie es geschrieben steht. Der
+Stylesheet-Import, den die Wurzel trägt, ist unter Metro auf Native ein No-op
+und gilt auf Expo Web.
+
+## Die Wurzel einhängen
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Stack } from 'expo-router'
+
+export default function Layout() {
+  return (
+    <Hanzo>
+      <Stack />
+    </Hanzo>
+  )
+}
+```
+
+## Was auf dem Web bleibt
+
+`@hanzo/ui/grid` rendert ein `div` mit `display: grid`, und beides gibt es in
+React Native nicht — Yoga hat keinen Grid-Algorithmus —, deshalb wird es auf
+einem eigenen Subpath ausgeliefert und nicht auf dem Barrel der Wurzel. Leg
+dort mit `XStack` und `YStack` aus; eine native Grid-Engine ändert diese eine
+Datei und keine Aufrufstelle. Die Diagramme in `@hanzo/ui/product` zeichnen
+Inline-SVG und messen ihren Container mit `ResizeObserver`, also sind auch sie
+heute Web-Komponenten.
+
+Berührungsziele erreichen den Boden von 44 Punkt über `hitSlop`, nie über
+Padding, sodass die Box eines Steuerelements auf beiden Plattformen gleich groß
+ist und seine berührbare Fläche nicht.

@@ -1,0 +1,64 @@
+---
+title: One
+description: このサイトを組んでいるフレームワーク。エイリアス、重複排除の一覧、文書の中のルート。
+---
+
+[One](https://onestack.dev) は、ファイルのルートを持つ、React と React Native のための Vite フレームワークです。このサイトは静的な HTML へ描画する One のアプリで、下の設定はサイト自身のものです。
+
+## プロジェクトを作る
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Vite を設定する
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+エイリアスは、どのホストも置くものと同じです。重複排除の一覧は、クライアントとサーバーのバンドルをまたいでエンジンを一つのインスタンスに保つためのものです。テーマは React のコンテキストで、それを持つモジュールのコピーが二つあると、コンテキストも二つになります。
+
+## ルートをマウントする
+
+One は文書全体を `_layout.tsx` から描画するので、ルートはそこへ置きます。
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## 静的な描画
+
+`defaultRenderMode: 'ssg'` では、すべてのルートがビルド時に一度だけ、本物の HTML ファイルへ描画されます。パッケージのスタイルシートはそのファイルの中にあります。シートが作られるのはパッケージを公開するときで、ブラウザがコンポーネントを初めて描画するときではありません。だから静的なページは、スクリプトが走る前から正しい状態です。

@@ -1,0 +1,134 @@
+---
+title: Temi
+description: I token si risolvono contro il tema, le proprietà personalizzate portano l'identità, e tre manopole lasciano che una persona ritocchi tutto.
+---
+
+Niente nella libreria nomina un colore. Un componente chiede `$background` o
+`$color12`, il tema risponde, e la risposta cambia tra scuro e chiaro senza
+che il componente lo sappia. Un marchio cambia la risposta impostando una
+proprietà personalizzata; una persona la cambia muovendo una manopola per cui
+si moltiplicano le rampe.
+
+## Token
+
+Un valore di prop che inizia con `$` è un token. La rampa dei colori va dalla
+superficie al testo: `$color1` è il fondo più quieto, `$color12` il testo più
+forte.
+
+| Token | Che cos'è |
+| --- | --- |
+| `$background` | Il fondo della pagina. Legge `--background`, quindi risponde il foglio del marchio. |
+| `$color` | Il colore del testo per default. |
+| `$color1` – `$color12` | La rampa neutra: `$color2`/`$color3` sono superfici sollevate, `$color10`/`$color11` testo attenuato, `$color12` il più forte. |
+| `$borderColor` | Il filetto. Traslucido, quindi si legge come una linea più chiara su qualunque superficie, e non come un grigio che non c'entra. |
+| `$accentBackground` / `$accentColor` | L'unico controllo forte che una pagina può permettersi. Leggono `--primary`, quindi li raggiunge la manopola dell'accento. |
+
+<Preview>
+  <XStack gap="$2" flexWrap="wrap">
+    <Button>Default</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="destructive">Destructive</Button>
+  </XStack>
+  <XStack gap="$2" flexWrap="wrap">
+    <Badge>default</Badge>
+    <Badge variant="secondary">secondary</Badge>
+    <Badge variant="destructive">destructive</Badge>
+    <Badge variant="outline">outline</Badge>
+  </XStack>
+</Preview>
+
+## Le scale
+
+Dimensione, spazio e raggio sono gli stessi numeri su ogni host, e ogni
+gradino porta una manopola.
+
+**Carattere.** `fontSize="$n"`, mai un numero. Dodici gradini leggono la rampa
+di design, da `--text-xs` a `--text-9xl`, e i quattro gradini di mezzo
+interpolano i vicini, così la scala di una persona sposta tutti e sedici e la
+scala resta una scala.
+
+| Gradino | `$1` | `$2` | `$3` | `$4` | `$5` | `$6` | `$7` | `$8` | `$9` | `$10` | `$11` | `$14` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| px | 11 | 13 | 14 | 15 | 15 | 17 | 21 | 26 | 26 | 32 | 40 | 64 |
+
+`$1` è un'etichetta, `$2` la navigazione e il corpo denso, `$3` la base, `$6`
+un titolo di sezione, `$7` un titolo di pagina, `$8` e oltre il display. I
+gradini di display stringono l'interlinea e il tracking a −0.025em, che è la
+differenza tra un carattere composto e un carattere che è soltanto grande.
+
+**Spazio.** La rampa da 4px, e solo quella: `$1` 4, `$2` 8, `$3` 12, `$4` 16,
+`$5` 24, `$6` 32, `$8` 48, `$10` 64. Ogni passo si moltiplica per `--density`.
+
+**Raggio.** Quattro valori. `$1` e `$2` sono 6, un controllo; `$3` e `$4` sono
+8, un campo o una riga; da `$5` a `$9` sono 12, un pannello; `$10` e oltre
+sono la pillola. Tutto, tranne la pillola, si moltiplica per `--radius-scale`.
+
+## Proprietà personalizzate
+
+L'identità è un insieme di proprietà personalizzate su `:root`, prima lo
+scuro, e `.light` le ritocca. `Hanzo` mette `.t_dark` o `.t_light` sul body e
+il CSS risponde a entrambe le grafie, così i token dei componenti e il foglio
+di stile nominano un solo tema.
+
+```css
+:root {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --primary: #fafafa;
+  --border: rgb(255 255 255 / .10);
+  --ring: rgb(255 255 255 / .40);
+  --font-sans: 'Zen', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Zen Mono', ui-monospace, monospace;
+}
+```
+
+L'insieme completo è `--background`, `--foreground`, `--card`, `--popover`,
+`--primary`, `--secondary`, `--muted`, `--accent`, `--destructive`, ognuno
+con il suo `-foreground`, poi `--border`, `--input`, `--ring`, `--radius`, da
+`--chart-1` a `--chart-5`, e la famiglia `--sidebar-*`. Vengono da
+`@hanzo/design` e si compongono nel foglio che importa la radice; un host che
+monta anche il foglio proprio di design lo segue dal vivo.
+
+Un marchio ritocca dichiarando gli stessi nomi più avanti nella cascata. Un
+host che porta un carattere proprio lega `--font-sans-provided` e non
+`--font-sans`, perché il legame del pacchetto vive in un livello e una
+dichiarazione senza livello vince, qualunque sia la sua specificità.
+
+## Le manopole dell'aspetto
+
+`@hanzo/design` pubblica tre manopole per cui si moltiplica ogni rampa, e
+`@hanzo/appearance` è il pannello che le imposta per una persona:
+
+| Manopola | Che cosa muove |
+| --- | --- |
+| `--type-scale` | Ogni gradino `--text-*`, e con esso ogni `fontSize="$n"`. |
+| `--type-ratio` | Quanto distano i gradini. |
+| `--density` | Ogni passo `--space-*`, e ogni gap e padding di gui. |
+| `--primary` / `--accent` | L'unico colore forte. |
+| `--font-sans` | Il carattere di lettura: quello del marchio, quello del sistema, un serif, o mono. |
+| `--container-max` / `--container-prose` / `--container-wide` | Le tre misure su cui si compone una pagina. |
+
+Atterrano come proprietà in linea su `html`, che è `:root`, quindi vincono su
+qualunque foglio senza che un selettore debba superarle in specificità, e
+raggiungono i componenti perché gui risolve una dimensione in JavaScript come
+`var(--text-base)` e la variabile continua a leggere la cascata sull'elemento.
+Un asse che nessuno ha impostato è assente, non neutro: scrivere `1` avrebbe
+lo stesso aspetto e, in silenzio, supererebbe un marchio che ha pubblicato la
+propria scala.
+
+```tsx
+import { Appearance } from '@hanzo/appearance'
+import { bootScript } from '@hanzo/appearance/state'
+
+// In <head>, so the first paint is already correct.
+<script dangerouslySetInnerHTML={{ __html: bootScript() }} />
+
+// Wherever the product keeps settings.
+<Appearance />
+```
+
+`Hanzo` riapplica la preferenza salvata a ogni montaggio, quindi una scelta
+fatta su una pagina regge sulla successiva. Il controllo nell'intestazione di
+questo sito è quel pannello.

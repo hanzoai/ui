@@ -1,0 +1,78 @@
+---
+title: Koyu mod
+description: Önce koyu, tek bir prop ile açık ve hangi host’ta olduğunuza göre bir anahtar.
+---
+
+Kimlik koyudur. `:root` koyu paleti tutar ve `.light` ondan çıkar; çoğu stil sayfasının tersidir ve kasıtlıdır: kökü monte edip başka bir şey söylemeyen bir sayfa beyazda değil, markanın zemininde çıkar.
+
+## Kök karar verir
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` API’nin tamamıdır. Kök body üzerine `.t_light` veya `.t_dark` basar, her token o temaya göre çözülür ve stil sayfasının özel özellikleri aynı sınıfa yanıt verir. Seçimin bir kişiye ait olmasını isteyen bir host onu durumda tutar ve köke verir.
+
+## Bir anahtar
+
+`@hanzo/ui/product` içindeki `ThemeToggle` düğmeyi çizer ve sonraki temayı bildirir. Kontrollü olduğunda kökün yanında tek bir satırdır:
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+Kontrolsüz — `<ThemeToggle onThemeChange={fn} />` — `.dark` ve `.light` sınıflarını belgenin kendi öğesinde değiştirir ve seçimi, tutacak durumu olmayan bir host için localStorage’da `theme` anahtarı altında hatırlar. İki durumda da hedefi gösterir: koyu modda bir güneş, açıkta bir ay.
+
+## Next
+
+Next host’ları zaten `@hanzogui/next-theme` çalıştırır ve anahtarın ona bağlaması kendi subpath’indedir, böylece başka hiçbir host ürün katmanını içe aktararak Next’i grafına çekmez.
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+Hiç prop’u olmayan `<ThemeToggle />` aynı bağlamaya dinamik import ile ulaşır ve olmadığı yerde belge anahtarına düşer.
+
+## One ve Vite
+
+Bu site seçimi `@vxrn/color-scheme` ile tutar; o, saklanan şemayı ilk boyamadan önce yerleştirir ve köke bildirir:
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` ayrıca `setting` açığa çıkarır — `system`, `dark` veya `light` — ve `set`, bu sitenin başlığındaki anahtarın sürdüğü şey odur.
+
+## Parlama yok
+
+Hangi host olursa olsun tema sınıfı, stil sayfası boyamadan önce belgede olmalıdır, yoksa sayfa koyu boyanır ve açığa yeniden boyanır. Next bağlaması ve `@vxrn/color-scheme` ikisi de onu satır içi bir betikten yazar; elle yazılmış bir anahtar da aynısını yapmalıdır. `suppressHydrationWarning` öğesini `html` üzerine koyun, çünkü betiğin yazdığı sınıf React’in render ettiği sınıf değildir.

@@ -1,0 +1,67 @@
+---
+title: Vite
+description: Dua baris resolve, dan akarnya.
+---
+
+## Buat proyek
+
+```bash
+pnpm create vite@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+`react-native-web` adalah tujuan penyelesaian `react-native` di web, jadi
+aplikasi menyatakannya dengan cara yang sama seperti menyatakannya
+`react-dom`.
+
+## Konfigurasi Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+Itu seluruh konfigurasinya. Tidak ada entri untuk paket di dalamnya — tidak
+ada alias ke paket, tidak ada jalur CSS, tidak ada plugin, tidak ada daftar
+transpile. Ketiga resolusi itu milik react-native-web, dan setiap aplikasi
+yang merender lewatnya membawanya: build web react-native-svg mengimpor
+`react-native` telanjang, entrinya hanya sampai ke build itu bila `.web.js`
+mengungguli `.js`, dan jalur asetnya menyebut
+`@react-native/assets-registry/registry`, yang di web adalah modul
+AssetRegistry milik react-native-web sendiri.
+
+## Pasang akar
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+Tidak ada tautan lembar gaya di `index.html` dan tidak ada `class="dark"`
+padanya: akar membawa keduanya.
+
+## Gelap dan terang
+
+`Hanzo` menerima `theme`. Untuk membiarkan seseorang memilih, simpan pilihan
+itu di state lalu serahkan ke akar dan ke sebuah pengalih —
+[Mode gelap](/docs/dark-mode).

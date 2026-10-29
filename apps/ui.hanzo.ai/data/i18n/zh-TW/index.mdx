@@ -1,0 +1,78 @@
+---
+title: 簡介
+description: 一套元件庫，網頁、原生與桌面共用同一層基底。匯入一次，根只放一個，沒有什麼要事先設定。
+---
+
+{brand.name} 是 {brand.org} 的元件庫。每個元件都透過 [@hanzo/gui](https://gui.hanzo.ai) 畫出來。它是給 React 與 React Native 用的樣式引擎，把樣式當成 props 收下，在網頁上編譯成原子 CSS。引擎跨平台，元件庫也就跨平台：同一個 `Switch`，在瀏覽器裡是一個 `div`，在手機上則是一個原生視圖。
+
+這裡不組一套工具類別的建置。沒有 Tailwind，沒有 PostCSS 外掛，元件底下沒有 Radix 原語，沒有登錄表，沒有 `components.json`，也沒有把原始碼抄進儲存庫的 CLI。裝好一個套件，再從裡面匯入。
+
+## 裝上，然後畫出來
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+```tsx title="main.tsx"
+import { Hanzo, Button } from '@hanzo/ui'
+
+export default function App() {
+  return (
+    <Hanzo>
+      <Button>Ship</Button>
+    </Hanzo>
+  )
+}
+```
+
+到這裡，準備工作就做完了。`Hanzo` 是根，它把以前每個應用自己處理的三件事一起帶走：權杖對照著解析的 gui 設定、樣式表，以及主題。沒有要匯入的 CSS，也沒有要執行的產生器。樣式表在套件釋出時就做好了：把每個元件都繪製一遍，收下那一次繪製產生的 CSS，所以第一次繪製和每一次伺服器端繪製，一開始就帶著規則。
+
+宿主還得做的只有一件：告訴打包工具，`react-native` 指的是 `react-native-web`。這是一條別名，每種宿主該把它放在哪裡，寫在 [安裝](/docs/installation) 底下各自的頁面。
+
+## 樣式就是 props
+
+樣式是元件上的一個 prop；回應式樣式則是同一個 prop，放在中斷點的鍵下面。
+
+```tsx
+import { Button, Text, XStack, YStack } from '@hanzo/ui'
+
+<YStack gap="$4" p="$5" $md={{ p: '$8' }}>
+  <Text fontSize="$5" color="$color11">
+    Balance
+  </Text>
+  <XStack gap="$2">
+    <Button>Send</Button>
+    <Button variant="outline">Receive</Button>
+  </XStack>
+</YStack>
+```
+
+中斷點是行動優先的最小寬度：`$sm` 640、`$md` 768、`$lg` 1024、`$xl` 1280。以 `$` 開頭的值是權杖，一種色彩、一個尺寸、間距坡道上的一階，對著主題解析。因此 `$background` 在淺色與深色裡是不同的顏色，呼叫處不必知道。字級永遠是權杖，不是數字：寫 `fontSize="$3"`，不寫 `fontSize={14}`。人可以自訂字級比例，坡道上的 `$n` 會跟著移動；寫死的 14 不會。階梯在 [主題](/docs/theming)。
+
+## 版面
+
+堆疊是 flex。`XStack` 橫向排列，`YStack` 直向排列，兩者都接受 `gap`、`items` 與 `justify`。格線是真正的 CSS 格線，位在 `@hanzo/ui/grid`，軌道來自容器，不來自子節點。請看 [格線](/docs/grid)。
+
+## 什麼放在哪裡
+
+| 匯入 | 它是什麼 |
+| --- | --- |
+| `@hanzo/ui` | 元件 API：每一種原語、堆疊、字級階梯，以及 `Hanzo`。 |
+| `@hanzo/ui/product` | 應用層：圖表、頁面外框、狀態標籤、詳細窗格、主題切換。 |
+| `@hanzo/ui/blocks` | 當成資料的內容，以及把它畫出來的繪製器。 |
+| `@hanzo/ui/grid` | `Grid` 與 `Cell`，只有網頁。 |
+| `@hanzo/ui/product/pure` | 產品層所依循的規則，沒有掛上元件。 |
+| `@hanzo/ui/css` | `substitute`，給沒有層疊、答不出來的 DOM 測試用。 |
+| `@hanzo/ui/next` | 替兩套打包工具都設好網頁別名的 Next 包裝。 |
+
+這個網站上的目錄頁——[元件](/ui)、[區塊](/blocks)、[產品](/product)——直接從套件本身讀出來：每一頁把模組的範例畫在原始碼旁邊，並引述它的型別。
+
+## 問題
+
+**需要 Tailwind 嗎？** 不需要。元件接收樣式 props，身份就是普通的 CSS 自訂屬性。若一個應用帶著類別字串進來，`Box`、`sx` 與 `css` 會經由 `tw` 讀取，轉成同樣的 props；沒有任何東西會以套件沒定義過的類別到達 DOM。
+
+**這是複製貼上嗎？** 不是。裝好套件，從裡面匯入。元件跟著套件一起標版本，子路徑透過匯出對照表解析，所以深層匯入跨過修補版也繼續能用。
+
+**哪些框架？** 任何 React 19 繪製器，只要打包工具認得 `react-native` 這條別名。已有頁面：[Vite](/docs/installation/vite)、[Next](/docs/installation/next)、[One](/docs/installation/one)、[Expo](/docs/installation/expo)、[Tauri](/docs/installation/tauri)。
+
+**可以商用嗎？** 可以。Apache-2.0 或 MIT，自行擇一。

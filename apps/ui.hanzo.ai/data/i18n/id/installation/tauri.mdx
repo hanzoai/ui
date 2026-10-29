@@ -1,0 +1,80 @@
+---
+title: Tauri
+description: Sebuah tampilan web di atas build Vite. Penyiapan Vite, dan sebuah pengalih tema yang tidak membutuhkan framework.
+---
+
+Aplikasi Tauri adalah aplikasi Vite di dalam jendela native, jadi penyiapan
+web adalah seluruh penyiapan: alias, urutan ekstensi, dan akar adalah yang
+ada di halaman [Vite](/docs/installation/vite).
+
+## Buat proyek
+
+```bash
+pnpm create tauri-app@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Konfigurasi Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  clearScreen: false,
+  server: { port: 1420, strictPort: true },
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+`server.port` dan `clearScreen` adalah konvensi Tauri sendiri untuk jendela
+pengembangan; blok `resolve` milik pustaka.
+
+## Pasang akar
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+## Pengalih tema tanpa framework
+
+`ThemeToggle` dari `@hanzo/ui/product` bekerja tanpa dependensi framework.
+Saat dikendalikan, ia menggambar tombol dan melaporkan tema berikutnya;
+aplikasi menyimpan nilai itu lalu menyerahkannya ke akar.
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App() {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+    </Hanzo>
+  )
+}
+```
+
+Pengikatan Next dari pengalih yang sama tinggal di subpath sendiri,
+`@hanzo/ui/product/theme-toggle-next`, justru agar host Tauri, Vite, atau
+Express tidak pernah menarik Next ke dalam grafnya dengan mengimpor lapisan
+produk.

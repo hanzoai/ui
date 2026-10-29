@@ -1,0 +1,176 @@
+---
+title: Grafik
+description: Sebuah tren, sebuah seri, sebuah bagian, dan sebuah sebaran. SVG inline, tanpa dependensi, dan tidak pernah sebuah titik yang direka.
+---
+
+```tsx
+import { BarChart, BarRows, Donut, LineChart, Sparkline } from '@hanzo/ui/product'
+```
+
+Grafik menggambar dengan SVG inline dan mengambil warnanya dari tema yang
+hidup, jadi mereka terbalik bersamanya. Mereka jujur karena konstruksi:
+sparkline dengan kurang dari dua titik tidak merender apa pun, Donut tanpa
+nilai positif merender tanda pisah panjang, dan tidak ada grafik yang
+mengarang tren. Pemanggil menyerahkan seri yang nyata.
+
+Dua bentuk membawa data. `ChartPoint` adalah nilai berlabel pada sumbu
+berurutan; `Slice` adalah besaran berlabel pada sumbu kategoris, dengan warna
+opsional dan sebuah petunjuk.
+
+```ts
+type ChartPoint = { label: string; value: number }
+type Slice = { label: string; value: number; color?: string; hint?: string }
+```
+
+## Sparkline
+
+Tren berukuran tetap untuk kartu metrik. `values` adalah larik biasa; `width`,
+`height`, dan `color` bersifat opsional.
+
+```tsx
+<Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+```
+
+<Preview>
+  <Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+</Preview>
+
+## Grafik garis
+
+Sebuah nilai sepanjang waktu. Ia mengukur wadahnya, jadi ia selebar kotak
+tempat ia berada, dan mengarahkan kursor membaca titik terdekat di samping
+sebuah garis pemandu. `formatValue` memformat bacaan itu.
+
+```tsx
+<LineChart
+  data={[
+    { label: 'Mon', value: 120 },
+    { label: 'Tue', value: 180 },
+    { label: 'Wed', value: 150 },
+    { label: 'Thu', value: 260 },
+    { label: 'Fri', value: 230 },
+    { label: 'Sat', value: 310 },
+    { label: 'Sun', value: 290 },
+  ]}
+  height={200}
+  formatValue={(v) => `${v} req`}
+/>
+```
+
+<Preview>
+  <LineChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+    formatValue={(v) => `${v} req`}
+  />
+</Preview>
+
+## Grafik batang
+
+Data yang sama, sebagai batang. Prop yang sama.
+
+```tsx
+<BarChart data={points} height={200} />
+```
+
+<Preview>
+  <BarChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+  />
+</Preview>
+
+## Donut
+
+Sebuah bagian. Warna adalah data, bukan mode: irisan yang punya `color`
+digambar dengan warna itu, dan irisan yang tidak punya mengambil tangga
+monokrom dari foreground, jadi satu komponen melayani grafik kategoris dan
+grafik yang sesuai merek. `center` merender di dalam cincin; `legend`
+menggambar daftar label dan persentase bawaan, mati secara bawaan agar
+pemakai dapat menyusun yang lebih kaya.
+
+```tsx
+<Donut
+  slices={[
+    { label: 'zen-4', value: 62 },
+    { label: 'zen-3', value: 28 },
+    { label: 'other', value: 10 },
+  ]}
+  center="62%"
+  legend
+/>
+```
+
+<Preview>
+  <XStack gap="$8" flexWrap="wrap" items="center">
+    <Donut
+      slices={[
+        { label: 'zen-4', value: 62 },
+        { label: 'zen-3', value: 28 },
+        { label: 'other', value: 10 },
+      ]}
+      center="62%"
+      legend
+    />
+    <Donut
+      slices={[
+        { label: 'compute', value: 540, color: '#7c5cff' },
+        { label: 'storage', value: 220, color: '#23c562' },
+        { label: 'egress', value: 90, color: '#ff9f45' },
+      ]}
+      size={120}
+      thickness={16}
+    />
+  </XStack>
+</Preview>
+
+`CHART_PALETTE` adalah delapan rona yang berbeda untuk seri kategoris,
+disetel untuk dasar gelap; `CHART_OTHER` adalah nada redup untuk sisa.
+
+## Baris batang
+
+Sebuah sebaran sebagai batang mendatar berlabel, digambar dengan primitif tata
+letak agar bertema seperti cangkang. Menerima bentuk `Slice` yang sama.
+
+```tsx
+<BarRows
+  bars={[
+    { label: 'us-east', value: 1240 },
+    { label: 'eu-west', value: 860 },
+    { label: 'ap-south', value: 410 },
+  ]}
+/>
+```
+
+<Preview>
+  <BarRows
+    bars={[
+      { label: 'us-east', value: 1240 },
+      { label: 'eu-west', value: 860 },
+      { label: 'ap-south', value: 410 },
+    ]}
+  />
+</Preview>
+
+## Mengukur kotak
+
+`useContainerWidth` juga diekspor: sebuah `ref` dan lebar yang terakhir ia
+ukur, dijaga oleh sebuah `ResizeObserver`. Itulah yang dipakai grafik garis
+dan batang, dan yang dapat dipakai grafik milik Anda untuk menggambar ke kotak
+yang diberikan, bukan ke angka yang ia tebak.

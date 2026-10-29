@@ -1,0 +1,78 @@
+---
+title: การจัดตัวอักษร
+description: Zen และ Zen Mono บันไดตัวอักษรที่ทุกคอมโพเนนต์อ่าน และกล่องร้อยแก้วสำหรับข้อความที่คุณไม่ได้เขียน
+---
+
+## หน้าตัวอักษร
+
+Zen คือหน้าสำหรับอ่าน Zen Mono สำหรับโค้ด ตัวระบุ และอะไรก็ตามที่เป็นตัวเลข ทั้งคู่มาพร้อมแพ็กเกจ และถูกผูกกับคุณสมบัติกำหนดเองสองตัวที่เรียกบทบาท ไม่ใช่เรียกหน้า
+
+```css
+--font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+--font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
+```
+
+คอมโพเนนต์อ่านสองตัวแปรนั้น และไม่เคยอ่านชื่อตระกูล โฮสต์ที่อยากใช้หน้าของตัวเองผูก `--font-sans-provided` การผูกของแพ็กเกจนั่งในเลเยอร์ของคาสเคด เพื่อให้ของโฮสต์ที่ไม่มีเลเยอร์ชนะ โฮสต์ที่ไม่ผูกอะไรได้ Zen
+
+<Preview>
+  <YStack gap="$2">
+    <Text fontSize="$8" fontWeight="600">The quick brown fox jumps over the lazy dog</Text>
+    <Text fontSize="$4" color="$color11">Zen at the section and body rungs, tracked and leaded for the size.</Text>
+    <Text fontFamily="$mono" fontSize="$3">pnpm add @hanzo/ui — Zen Mono for code and numbers 0123456789</Text>
+  </YStack>
+</Preview>
+
+## บันได
+
+มีบันไดตัวอักษรเดียว และทุกคอมโพเนนต์อยู่บนนั้น `Text` รับ `fontSize="$n"` พร้อม leading และ tracking ของขั้นนั้น หัวเรื่องและ `Paragraph` รับ `size="$n"` แล้วตั้งทั้งสามพร้อมกัน
+
+```tsx
+import { H1, H2, Paragraph, SizableText, Text } from '@hanzo/ui'
+
+<H1>A page title</H1>
+<H2 size="$6">A section</H2>
+<Paragraph size="$4">Body copy at the base rung.</Paragraph>
+<SizableText size="$2" color="$color11">A label.</SizableText>
+<Text fontFamily="$mono" fontSize="$2">an identifier</Text>
+```
+
+ไม่เคยเป็นตัวเลข `fontSize={14}` ตรึงที่ 14 `fontSize="$3"` วันนี้เป็น 14 และเป็นอะไรก็ตามที่สเกลตัวอักษรของคนทำให้จากมัน เพราะขั้นคลี่ผ่าน `var(--text-base)` และปุ่มปรับคูณบันได หน้า [ธีม](/docs/theming) มีตาราง
+
+## ร้อยแก้ว
+
+เนื้อหาที่เขียน — ช่อง CMS ไฟล์ Markdown เนื้อของบล็อก — มาเป็นแท็กเปล่า ไม่มีอะไรข้างในถือพร็อพได้ ดังนั้นสไตล์ต้องมาจากบรรพบุรุษแล้วลงไปตามแท็ก `ApplyTypography` คือบรรพบุรุษนั้น
+
+```tsx
+import { ApplyTypography } from '@hanzo/ui'
+
+<ApplyTypography size="base">
+  <h2>Install</h2>
+  <p>
+    Add the package, then wrap the app once at the root. The full guide is
+    at <a href="https://ui.hanzo.ai">ui.hanzo.ai</a>.
+  </p>
+  <pre>
+    <code>{"pnpm add @hanzo/ui\npnpm dev"}</code>
+  </pre>
+  <ol>
+    <li>
+      Render <strong>Hanzo</strong> once, around the whole tree.
+    </li>
+    <li>
+      Import <code>Button</code> or any other component from the same
+      package.
+    </li>
+    <li>Pass it the props its type declares.</li>
+  </ol>
+  <blockquote>
+    Components read their colours from the theme, so a token changed there
+    changes every surface at once.
+  </blockquote>
+</ApplyTypography>
+```
+
+<Preview>
+  <ProseBlocks />
+</Preview>
+
+`size` เป็น `responsive` โดยปริยาย — ขั้นเดียวที่ขยับตามวิวพอร์ต — หรือ `sm`, `base`, `lg`, `xl` ที่อยู่กับที่ เพราะขนาดที่ผู้เรียกเลือกคือการตัดสินใจ ไม่ใช่คำแนะนำ `asTag` เลือกอิลิเมนต์ หนึ่งใน `div`, `section`, `nav`, `main`, `article`, `aside` กฎอยู่ในสไตล์ชีตใต้ `.hz-prose` ตั้งเนมสเปซเพื่อให้ไซต์ที่กำลังเลิกปลั๊กอินตัวอักษรอื่นไปครึ่งทาง ไม่มีสองชีตแย่งตัวเลือกเดียว หน้า [ร้อยแก้ว](/ui/prose) เรนเดอร์ทุกขั้น และกล่องที่ซ้อนในกล่อง

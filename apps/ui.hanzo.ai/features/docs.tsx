@@ -192,6 +192,7 @@ function NavItem({ item, active }: { item: Item; active: boolean }) {
 /** The page's own headings, the one the reader is at marked, kept by an observer
  *  whose reading line sits 70% down the screen. */
 function QuickNav({ headings }: { headings: Heading[] }) {
+  const t = useTranslate()
   const [active, setActive] = useState(0)
   const path = usePathname()
   useEffect(() => setActive(0), [path])

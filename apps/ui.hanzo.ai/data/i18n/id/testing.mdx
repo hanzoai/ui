@@ -1,0 +1,115 @@
+---
+title: Pengujian
+description: Pasang di bawah akar, cari lewat slot, selesaikan kaskade sendiri, dan biarkan peramban menghitung sisanya.
+---
+
+Setiap komponen menstempel sebuah `data-slot` dengan namanya, jadi pengujian
+dapat menemukan kontrol tanpa bergantung pada markup yang mungkin diubah sebuah
+versi. Pasang di bawah `Hanzo`, seperti yang dilakukan aplikasi; akar membawa
+konfigurasi yang menjadi patokan penyelesaian setiap token, dan komponen tanpa
+tema akar melempar.
+
+## Pengujian unit
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+Alias itu sama dengan yang dibawa bundler. Daftar `inline` penting: paket
+mesin dikirim sebagai CommonJS yang mengekspor ulang ESM, dan bila dibiarkan
+eksternal mereka diselesaikan ke salinan kedua dari modul yang memiliki tema,
+jadi penyedia menulis satu konteks dan setiap komponen bertema membaca yang
+lain lalu melempar `Missing theme`.
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## Warna di DOM tanpa kaskade
+
+jsdom tidak menyelesaikan `var()`; ia menyerahkan teks itu apa adanya kepada
+pengujian. Anak tangga tema ditulis `var(--border, rgb(255 255 255 / .10))`
+dengan sengaja — ikuti kaskade yang hidup bila lembar desain terpasang,
+pertahankan literal yang telah diaudit bila tidak — jadi menegaskan kontras
+sebuah border di jsdom membandingkan sebuah warna dengan pemanggilan fungsi.
+`substitute` mengambil langkah yang tidak diambil jsdom.
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+Tanpa peta `vars` itu tepat, bukan kira-kira: jsdom tidak memasang lembar
+desain, jadi tidak ada yang menyatakan `--border`, jadi fallback adalah yang
+akan dihitung peramban dalam kondisi yang sama. Berikan sebuah peta untuk
+memodelkan host yang menyatakan tokennya sendiri. Modul tidak mengimpor apa
+pun dan mengirim kedua format, jadi ia termuat di bawah runner mana pun.
+
+## Yang dihitung peramban
+
+Sebuah build, sebuah pemeriksaan tipe, dan sebuah pengujian unit semuanya lulus
+pada lembar gaya yang tidak pernah sampai ke halaman. Buktinya adalah peramban:
+bangun aplikasi, sajikan, dan tegaskan gaya yang terhitung, bukan klaim markup.
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+Beginilah paket menguji dirinya. Galerinya adalah satu daftar setiap komponen
+dalam setiap varian; generator lembar gaya merender daftar itu, sebuah pengujian
+unit merendernya di bawah penyedia yang nyata dan memeriksa setiap penanda slot
+tiba, dan sebuah pengujian konsumen mengemas tarball, memasangnya ke sebuah
+aplikasi di luar repositori — tidak pernah tautan workspace, yang diselesaikan
+lewat pohon sumber dan menyembunyikan berkas yang hilang dari tarball —
+membangunnya, lalu menegaskan gaya terhitung dan tangkapan layar pada 390 dan
+1280 di kedua tema. Tautan workspace akan mengirim setiap cacat yang pengujian
+ini ada untuk menangkap.

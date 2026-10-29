@@ -1,0 +1,98 @@
+---
+title: Modo oscuro
+description: Oscuro primero, claro con una sola prop, y un interruptor para el host en el que estés.
+---
+
+La identidad es oscura. `:root` guarda la paleta oscura y `.light` se aparta,
+al revés que casi todas las hojas, y es deliberado: una página que monta la
+raíz y no dice nada más sale sobre el fondo de la marca, no sobre blanco.
+
+## Decide la raíz
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` es toda la API. La raíz pone `.t_light` o `.t_dark` en el body, cada
+token se resuelve contra ese tema, y las propiedades personalizadas de la hoja
+responden a la misma clase. Un host que quiere que la elección sea de una
+persona la guarda en el estado y se la entrega a la raíz.
+
+## Un interruptor
+
+`ThemeToggle`, de `@hanzo/ui/product`, dibuja el botón y avisa del tema que
+viene. Controlado, es una línea al lado de la raíz:
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+Sin controlar — `<ThemeToggle onThemeChange={fn} />` — alterna las clases
+`.dark` y `.light` en el propio elemento del documento y recuerda la elección
+bajo la clave `theme` de localStorage, para un host que no tiene estado donde
+guardarla. En los dos casos muestra el destino: un sol en oscuro, una luna en
+claro.
+
+## Next
+
+Los hosts de Next ya corren `@hanzogui/next-theme`, y el enlace del interruptor
+con él vive en su propio subpath para que ningún otro host arrastre Next a su
+grafo por importar la capa de producto.
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+`<ThemeToggle />` sin ninguna prop llega al mismo enlace por import dinámico,
+y donde no está cae al interruptor del documento.
+
+## One y Vite
+
+Este sitio guarda la elección con `@vxrn/color-scheme`, que deja asentado el
+esquema guardado antes del primer pintado y se lo pasa a la raíz:
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` expone también `setting` — `system`, `dark` o `light` — y
+`set`, que es lo que acciona el interruptor de la cabecera de este sitio.
+
+## Sin parpadeo
+
+Sea el host que sea, la clase de tema tiene que estar en el documento antes de
+que pinte la hoja, o la página pinta en oscuro y se vuelve a pintar en claro.
+El enlace de Next y `@vxrn/color-scheme` la escriben los dos desde un script en
+línea; un interruptor escrito a mano debería hacer lo mismo. Pon
+`suppressHydrationWarning` en el elemento `html`, porque la clase que escribió
+el script no es la que renderizó React.

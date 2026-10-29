@@ -1,0 +1,117 @@
+---
+title: Izgara
+description: Şeritleri çocuklardan değil kaptan gelen gerçek bir CSS ızgarası. Kolonlar için tek prop ve hiç kırılım yok.
+---
+
+Elle kurulmuş bir ızgara — her çocuk `width: calc(25% - 7.5px)` — ancak her çocuk anlaştığı sürece düzgündür ve uzun bir sözcük satırı pürüzlü bırakır. Sayıyı ayarlamak bunu düzeltmez. Burada ebeveyn şeritleri bir kez bildirir ve çocukların söz hakkı yoktur: eşit kolonlar yapısalıdır ve hiçbir çocuk kendi şeridini genişletemez.
+
+```tsx
+import { Cell, Grid } from '@hanzo/ui/grid'
+```
+
+`Grid` kendi subpath’indedir, çünkü `display: grid` ile bir `div` render eder ve ikisi de React Native’de yoktur. API, CSS ızgarası terimleriyle adlandırılır — `columns` ve `rows` şerit listeleridir, `Cell` yerleştirir ve yayılır — bu yüzden yerel bir ızgara motoru dosyayı değiştirir, çağrı yerlerini değil.
+
+## Kolonlar
+
+`columns` bir şerit listesinin her yazılışını alır: bir sayı, bir liste veya yazılmış bir şerit listesi.
+
+```tsx
+<Grid columns={3} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={3} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+  </Grid>
+</Preview>
+
+Bir sayı `repeat(3, minmax(0, 1fr))` olur, `1fr` değil, çünkü yalnız `1fr` `minmax(auto, 1fr)` demektir ve `auto` şeridin tabanını içeriğe koyar — kırılmayan bir dize o zaman kendi kolonunu daha geniş iter. Bileşenin var olduğu pürüzlü satır budur, bu yüzden daha uzun yazılış meseledir.
+
+```tsx
+<Grid columns={['2fr', '1fr']} gap="$3">
+  <Tile>main</Tile>
+  <Tile>aside</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={['2fr', '1fr']} gap="$3">
+    <Tile>main</Tile>
+    <Tile>aside</Tile>
+  </Grid>
+</Preview>
+
+Listedeki bir sayı pikseldir; başka her şey zaten bir şerit boyutudur.
+
+## Sığdığı kadar
+
+Duyarlı biçim ikinci bir prop değil, `columns` değeridir ve içinde kırılım yoktur. `min`, ızgara bir kolon düşürmeden önce bir kolonun inebileceği en dar ölçüdür ve `max` sayıyı sınırlar.
+
+```tsx
+<Grid columns={{ min: 160, max: 4 }} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Tile>5</Tile>
+  <Tile>6</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={{ min: 160, max: 4 }} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Tile>5</Tile>
+    <Tile>6</Tile>
+  </Grid>
+</Preview>
+
+Pencereyi yeniden boyutlandırın: sayı, ızgaranın durduğu kolonu izler, bu yüzden aynı blok hiç görmediği bir kenar çubuğunun içinde de doğrudur. `min`, çıplak bir `160px` yerine `min(160px, 100%)` olarak yazılır, böylece tabandan dar bir telefon yana kaydırma yerine tam genişlikte tek bir şerit alır. `max` aynı tabana katlanır — satırın M’de biri, gap’ler çıkarılmış — bu yüzden tavan küçük bir ekranda hiçbir şeye mal olmaz.
+
+## Hücreler
+
+Düz bir çocuğun sarmalayıcıya ihtiyacı yoktur. Bir `Cell`, yayılmak veya yerleşmek için vardır: bir sayı o kadar şerit yayar, bir dize yazıldığı gibi bir `grid-column` olur.
+
+```tsx
+<Grid columns={4} gap="$3">
+  <Cell col={2}><Tile>col=2</Tile></Cell>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={4} gap="$3">
+    <Cell col={2}><Tile>col=2</Tile></Cell>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+  </Grid>
+</Preview>
+
+`row` sayfa boyunca aynıdır. Izgaradaki `rows` satır şeritlerini boyutlar; o olmadan satırlar içeriğe göre boyutlanır.
+
+## Aralık
+
+`gap` bir aralık token’ı veya ham bir piksel sayısıdır. Bir token belgedeki ölçeği okur — `gap="$4"`, `var(--space-4)` olur — bu yüzden görünüm panelinde yoğunluğu oynatan bir kişi her ızgarayı da oynatır. Render sırasında çözülen bir sayı render sırasında sabitlenir.
+
+## Şerit listesinin kendisi
+
+`tracks(columns, gap)` dışa aktarılır, çünkü bileşenin kararının tamamıdır: `columns` yazılışının her biri, anlamına gelen tek şerit listesine iner ve yukarıdaki iki değişmez onun içindedir.
+
+```ts
+import { tracks } from '@hanzo/ui/grid'
+
+tracks(3)                       // 'repeat(3, minmax(0, 1fr))'
+tracks({ min: 240 })            // 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))'
+```

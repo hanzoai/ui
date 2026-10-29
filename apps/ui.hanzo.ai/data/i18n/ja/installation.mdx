@@ -1,0 +1,87 @@
+---
+title: インストール
+description: パッケージを入れ、ルートをマウントし、バンドラーに一つだけ伝える。
+---
+
+セットアップは、どのホストでも同じです。違うのはバンドラーの設定をどこへ書くかだけで、ホストごとにページがあります。
+
+## インストール
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` と `react-dom` は、19 以降の peer です。`@hanzo/gui` を peer にしているのは意図です。これは React のコンテキストを渡すもので、物理的なコピーが二つあるとコンテキストも二つになり、ルートは一方へ書き、コンポーネントはもう一方を読みます。バージョンは一つに保ち、アプリが宣言します。
+
+## ルートをマウントする
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+アプリがマウントするのは `Hanzo` だけです。gui の設定を値として持ち、生成されたスタイルシートを読み、テーマを決めます。初期値はダークで、`theme="light"` で切り替えます。ルートのテーマがないと、どのコンポーネントも例外を投げます。付け忘れると最初の描画で落ち、スタイルのないまま静かに描画されるページにはなりません。
+
+開発中、ルートはスタイルシートが文書に届いたかを確かめ、届いていなければコンソールにそう書きます。そこで名指しされる直し方は、インポート一つ、`@hanzo/ui/styles.css` です。パッケージ自身のシートを落としたバンドラーのためのものです。
+
+## バンドラーに伝える
+
+エンジンの依存グラフは `react-native` という名前を使い、その中の一つ、アイコンセット配下の `react-native-svg` は、ネイティブのエントリと `.web.js` の兄弟を一緒に出荷します。Web のビルドでネイティブ側を拾うと、依存の中の Flow のソースを解析できずに落ちます。壊れたパッケージのように見えて、足りない設定には見えません。それを防ぐ設定は二つです。
+
+- `react-native` は `react-native-web` に解決する。
+- `.web.js` が `.js` より優先される。
+
+Next では、この二つはラッパー一つ、`@hanzo/ui/next` です。Vite では `resolve` の二行です。One では、フレームワークがすでに両方をやります。Expo では設定するものがありません。Metro は react-native をネイティブに話すからです。
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo と React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## 何か描いてみる
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## フォント
+
+パッケージは Zen と Zen Mono を同梱し、`--font-sans` と `--font-mono` に結んでいます。何も結ばないホストは、手間なしでその書体を得ます。自分の書体を持つホストは `--font-sans-provided` を置けば、それが勝ります。[タイポグラフィ](/docs/typography) を見てください。

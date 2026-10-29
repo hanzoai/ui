@@ -1,0 +1,88 @@
+---
+title: การทดสอบ
+description: ติดตั้งใต้รูท หาด้วยสล็อต คลี่คาสเคดเอง และให้เบราว์เซอร์คำนวณที่เหลือ
+---
+
+ทุกคอมโพเนนต์ประทับ `data-slot` ด้วยชื่อของมัน ดังนั้นเทสหาตัวควบคุมได้โดยไม่พึ่งมาร์กอัปที่รุ่นหนึ่งอาจเปลี่ยน ติดตั้งใต้ `Hanzo` แบบที่แอปทำ รูทถือค่าคอนฟิกที่ทุกโทเคนคลี่กับมัน และคอมโพเนนต์ที่ไม่มีธีมของรูทจะโยนข้อผิดพลาด
+
+## เทสหน่วย
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+นามแฝงเป็นอันเดียวกับที่ตัวรวมโมดูลถือไป รายการ `inline` สำคัญ แพ็กเกจของเอนจินถูกส่งเป็น CommonJS ที่ส่งออก ESM ซ้ำ และถ้าปล่อยไว้ภายนอกพวกมันคลี่ไปสำเนาที่สองของโมดูลที่เป็นเจ้าของธีม ดังนั้นโปรไวเดอร์เขียนบริบทหนึ่ง และทุกคอมโพเนนต์ที่มีธีมอ่านอีกอันแล้วโยน `Missing theme`
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## สีใน DOM ที่ไม่มีคาสเคด
+
+jsdom ไม่คลี่ `var()` มันส่งข้อความให้เทสตามตัว ขั้นของธีมถูกเขียน `var(--border, rgb(255 255 255 / .10))` โดยตั้งใจ ตามคาสเคดที่กำลังใช้เมื่อชีตของงานออกแบบถูกติดตั้ง และคงตัวอักษรที่ตรวจแล้วเมื่อไม่มี ดังนั้นการยืนยันคอนทราสต์ของเส้นขอบใน jsdom คือการเทียบสีกับคำเรียกฟังก์ชัน `substitute` ทำขั้นที่ jsdom ไม่ทำ
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+เมื่อไม่มีแผนที่ `vars` นั่นคือตรง ไม่ใช่ประมาณ jsdom ไม่ติดตั้งชีตของงานออกแบบ ดังนั้นไม่มีอะไรประกาศ `--border` ดังนั้นค่าสำรองคือสิ่งที่เบราว์เซอร์จะคำนวณในเงื่อนไขเดียวกัน ส่งแผนที่เพื่อจำลองโฮสต์ที่ประกาศโทเคนของตัวเอง โมดูลไม่นำเข้าอะไรและส่งทั้งสองรูปแบบ ดังนั้นมันโหลดได้ใต้ตัวรันใดๆ
+
+## สิ่งที่เบราว์เซอร์คำนวณ
+
+บิลด์ การตรวจชนิด และเทสหน่วยผ่านทั้งหมดบนสไตล์ชีตที่ไม่เคยไปถึงหน้า หลักฐานคือเบราว์เซอร์ สร้างแอป ให้บริการ แล้วยืนยันสไตล์ที่คำนวณแล้ว ไม่ใช่คำกล่าวอ้างของมาร์กอัป
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+แพ็กเกจทดสอบตัวเองแบบนี้ แกลเลอรีของมันคือรายการเดียวของทุกคอมโพเนนต์ในทุกแวเรียนต์ ตัวสร้างสไตล์ชีตเรนเดอร์รายการนั้น เทสหน่วยเรนเดอร์มันใต้โปรไวเดอร์จริงและตรวจว่าเครื่องหมายสล็อตทุกอันมาถึง และเทสของผู้ใช้แพ็ก tarball ติดตั้งเข้าแอปนอกที่เก็บ ไม่เคยเป็นลิงก์เวิร์กสเปซ ซึ่งคลี่ผ่านต้นไม้ซอร์สและซ่อนไฟล์ที่ขาดจาก tarball สร้างมัน แล้วยืนยันสไตล์ที่คำนวณและภาพหน้าจอที่ 390 และ 1280 ในทั้งสองธีม ลิงก์เวิร์กสเปซจะส่งทุกข้อบกพร่องที่เทสนี้มีไว้จับ

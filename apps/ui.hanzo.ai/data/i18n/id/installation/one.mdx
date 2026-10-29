@@ -1,0 +1,73 @@
+---
+title: One
+description: Framework yang dipakai membangun situs ini. Alias, daftar dedupe, dan akar di dalam dokumen.
+---
+
+[One](https://onestack.dev) adalah framework Vite untuk React dan React Native
+dengan rute berkas. Situs ini adalah aplikasi One yang dirender menjadi HTML
+statis, dan konfigurasi di bawah adalah milik situs ini sendiri.
+
+## Buat proyek
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Konfigurasi Vite
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+Alias itu sama dengan yang ditetapkan setiap host. Daftar dedupe adalah yang
+menjaga mesin tetap satu instans di antara bundel klien dan server: tema
+adalah sebuah konteks React, dan dua salinan modul yang memilikinya adalah
+dua konteks.
+
+## Pasang akar
+
+One merender seluruh dokumen dari `_layout.tsx`, jadi akar diletakkan di sana.
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## Render statis
+
+Dengan `defaultRenderMode: 'ssg'` setiap rute dirender sekali saat build
+menjadi berkas HTML sungguhan, dan lembar gaya paket ada di berkas itu —
+lembar dihasilkan saat paket diterbitkan, bukan saat peramban pertama kali
+merender sebuah komponen, dan itulah yang membuat halaman statis benar sebelum
+skrip apa pun berjalan.

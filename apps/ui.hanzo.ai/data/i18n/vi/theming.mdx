@@ -1,0 +1,126 @@
+---
+title: Chủ đề
+description: Token phân giải theo chủ đề, thuộc tính tùy biến mang bản sắc, và ba núm cho một người chỉnh lại toàn bộ.
+---
+
+Không gì trong thư viện gọi tên một màu. Thành phần xin `$background` hoặc
+`$color12`, chủ đề trả lời, và câu trả lời khác nhau giữa tối và sáng mà thành
+phần không biết. Một thương hiệu đổi câu trả lời bằng cách đặt một thuộc tính
+tùy biến; một người đổi nó bằng cách kéo một núm mà các thang nhân với núm đó.
+
+## Token
+
+Giá trị prop bắt đầu bằng `$` là một token. Thang màu chạy từ mặt đến chữ:
+`$color1` là nền yên nhất, `$color12` là chữ lớn tiếng nhất.
+
+| Token | Nó là gì |
+| --- | --- |
+| `$background` | Nền của trang. Đọc `--background`, nên bảng kiểu của thương hiệu trả lời nó. |
+| `$color` | Màu chữ mặc định. |
+| `$color1` – `$color12` | Thang trung tính: `$color2`/`$color3` là mặt được nâng, `$color10`/`$color11` chữ dịu, `$color12` lớn tiếng nhất. |
+| `$borderColor` | Đường tóc. Trong mờ, nên nó đọc như một đường nhạt hơn trên mọi mặt, chứ không phải một xám không liên quan. |
+| `$accentBackground` / `$accentColor` | Một điều khiển lớn tiếng mà trang được phép có. Đọc `--primary`, nên núm nhấn tới được chúng. |
+
+<Preview>
+  <XStack gap="$2" flexWrap="wrap">
+    <Button>Default</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="destructive">Destructive</Button>
+  </XStack>
+  <XStack gap="$2" flexWrap="wrap">
+    <Badge>default</Badge>
+    <Badge variant="secondary">secondary</Badge>
+    <Badge variant="destructive">destructive</Badge>
+    <Badge variant="outline">outline</Badge>
+  </XStack>
+</Preview>
+
+## Các thang
+
+Cỡ, khoảng cách và bán kính là cùng các số trên mọi host, và mỗi bậc mang một núm.
+
+**Chữ.** `fontSize="$n"`, không bao giờ là số. Mười hai bậc đọc thang thiết kế,
+từ `--text-xs` tới `--text-9xl`, và bốn bậc nằm giữa nội suy các bậc kề, nên
+thang của một người dịch cả mười sáu và chiếc thang vẫn là một chiếc thang.
+
+| Bậc | `$1` | `$2` | `$3` | `$4` | `$5` | `$6` | `$7` | `$8` | `$9` | `$10` | `$11` | `$14` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| px | 11 | 13 | 14 | 15 | 15 | 17 | 21 | 26 | 26 | 32 | 40 | 64 |
+
+`$1` là nhãn, `$2` điều hướng và thân chữ đặc, `$3` nền, `$6` tiêu đề mục, `$7`
+tiêu đề trang, `$8` trở lên là trưng bày. Các bậc trưng bày siết leading và
+tracking ở −0.025em, đó là khác biệt giữa chữ được sắp và chữ chỉ lớn.
+
+**Khoảng cách.** Thang 4px, và chỉ thang 4px: `$1` 4, `$2` 8, `$3` 12, `$4`
+16, `$5` 24, `$6` 32, `$8` 48, `$10` 64. Mọi bước được nhân với `--density`.
+
+**Bán kính.** Bốn giá trị. `$1` và `$2` là 6, một điều khiển; `$3` và `$4` là
+8, một ô nhập hoặc một hàng; `$5` tới `$9` là 12, một bảng; `$10` trở lên là
+viên thuốc. Mọi thứ trừ viên thuốc được nhân với `--radius-scale`.
+
+## Thuộc tính tùy biến
+
+Bản sắc là một tập thuộc tính tùy biến trên `:root`, tối trước, với `.light`
+chỉnh lại chúng. `Hanzo` đóng dấu `.t_dark` hoặc `.t_light` lên body và CSS
+trả lời cả hai cách viết, nên token thành phần và bảng kiểu gọi cùng một chủ đề.
+
+```css
+:root {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --primary: #fafafa;
+  --border: rgb(255 255 255 / .10);
+  --ring: rgb(255 255 255 / .40);
+  --font-sans: 'Zen', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Zen Mono', ui-monospace, monospace;
+}
+```
+
+Tập đầy đủ là `--background`, `--foreground`, `--card`, `--popover`,
+`--primary`, `--secondary`, `--muted`, `--accent`, `--destructive`, mỗi cái
+kèm `-foreground` của nó, rồi `--border`, `--input`, `--ring`, `--radius`,
+`--chart-1` tới `--chart-5`, và họ `--sidebar-*`. Chúng đến từ `@hanzo/design`
+và được ghép vào bảng kiểu mà gốc nhập; host nào cũng gắn bảng riêng của design
+thì đi theo nó trực tiếp.
+
+Một thương hiệu chỉnh lại bằng cách khai báo cùng các tên ấy muộn hơn trong
+tầng lớp. Host mang mặt chữ riêng buộc `--font-sans-provided` chứ không phải
+`--font-sans`, vì sự buộc của gói ngồi trong một layer và một khai báo không
+layer thắng dù độ đặc hiệu thế nào.
+
+## Các núm diện mạo
+
+`@hanzo/design` công bố ba núm mà mọi thang nhân với chúng, và
+`@hanzo/appearance` là bảng đặt chúng cho một người:
+
+| Núm | Cái được dịch |
+| --- | --- |
+| `--type-scale` | Mọi bậc `--text-*`, và cùng nó mọi `fontSize="$n"`. |
+| `--type-ratio` | Các bậc ngồi cách nhau bao xa. |
+| `--density` | Mọi bước `--space-*`, và mọi khoảng cùng phần đệm của gui. |
+| `--primary` / `--accent` | Một màu lớn tiếng. |
+| `--font-sans` | Mặt chữ để đọc: của thương hiệu, của hệ thống, serif, hoặc mono. |
+| `--container-max` / `--container-prose` / `--container-wide` | Ba khổ mà một trang trải tới. |
+
+Chúng đáp xuống thành thuộc tính nội tuyến trên `html`, tức `:root`, nên thắng
+mọi bảng kiểu mà không cần một bộ chọn để áp đảo, và chúng tới được thành phần
+vì gui phân giải một cỡ trong JavaScript thành `var(--text-base)` và var vẫn
+đọc tầng lớp tại phần tử. Một trục không ai đặt thì vắng, chứ không trung tính:
+viết `1` trông sẽ giống vậy và lặng lẽ đứng trên một thương hiệu đã công bố
+thang của mình.
+
+```tsx
+import { Appearance } from '@hanzo/appearance'
+import { bootScript } from '@hanzo/appearance/state'
+
+// In <head>, so the first paint is already correct.
+<script dangerouslySetInnerHTML={{ __html: bootScript() }} />
+
+// Wherever the product keeps settings.
+<Appearance />
+```
+
+`Hanzo` áp lại lựa chọn đã lưu ở mỗi lần gắn, nên một lựa chọn trên trang này
+giữ ở trang sau. Điều khiển ở đầu trang này chính là bảng ấy.

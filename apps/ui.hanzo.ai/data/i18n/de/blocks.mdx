@@ -1,0 +1,135 @@
+---
+title: Blöcke
+description: Inhalt als Daten. Eine Seite ist eine Liste von Blöcken; jeder nennt seinen Typ, der Typ wählt den Renderer, und der Renderer liest den Rest.
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+Ein Block ist Daten: `blockType` wählt den Renderer, und die übrigen Felder
+sind die Eingabe dieses Renderers. Eine Seite kann also in einem CMS verfasst,
+in ein Repository eingecheckt oder von einem Server erzeugt werden, und sie
+ist in jedem Fall typisiert. Jedes Feld `specifiers` ist ein durch Leerzeichen
+getrennter Beutel von Layout-Hinweisen, die der Renderer liest; es ist eine
+Zeichenkette und keine Union, also fügt eine Site einen Hinweis hinzu, indem
+sie ihn hinschreibt, und ein unbekannter Hinweis wird ignoriert, statt einen
+Build scheitern zu lassen.
+
+## Eine Seite
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## Das Vokabular
+
+| Typ | Was es zeichnet |
+| --- | --- |
+| `heading` | Eine Überschrift mit optionaler Unterzeile, `level` 0 für einen Absatz und 1 bis 6 für die Tags. |
+| `enh-heading` | Die benannten Teile: ein Vortitel darüber, die Überschrift, eine Unterzeile darunter, jedes mit eigener Stufe und eigenem Abstand. |
+| `image` | Ein Bild aus einem `ImageDef` — `src`, `alt`, `dim` — mit Ausrichtung und Telefon-Hinweisen in `specifiers`. |
+| `video` | Ein `VideoDef`: Quellen, ein Poster, die Größe je Sprosse. |
+| `space` | Vertikaler Raum in Abstandseinheiten, je Sprosse oder eine Zahl für alle. |
+| `cta` | Eine Reihe aus Links und Buttons: `fill`, `left`, `right`, und die Telefon-Hinweise. |
+| `card` | Eine betitelte Fläche mit Medium, Inhalt und einem Aufruf zum Handeln. |
+| `bullet-cards` | Ein Grid aus einzeiligen Karten, jede ein Icon neben ihrem Text. |
+| `grid` | Ein `GridDef` — Spalten und Abstand je Sprosse, aufsteigend — über `cells`. |
+| `group` | Eine Hülle über `elements`, für Hinweise, die für das Ganze gelten. |
+| `accordian` | Auslöser und ihr Inhalt. |
+| `carte-blanche` | Eine freie Fläche: irgendetwas darüber, eine Überschrift, irgendetwas darunter, ein Aufruf zum Handeln am Fuß. |
+| `screenful` | Eine Bildschirmhöhe: ein optionales Banner über einer bis drei Spalten, mit einer Reihenfolge fürs Telefon. |
+| `element` | Ein Knoten, den der Autor schon gebaut hat. Er hat keinen Renderer, und das mit Absicht: genau das lässt eine Seite aus Blöcken alles enthalten. |
+
+Jede Form wird als Typ vom selben Subpath exportiert — `HeadingBlock`,
+`CTABlock`, `ScreenfulBlock` und der Rest — neben den Definitionen, die sie
+teilen: `GridDef`, `ImageDef`, `VideoDef`, `LinkDef`, `ButtonDef`. Ein
+`LinkDef` mit einem `http`- oder `mailto`-Href ist von selbst extern und
+öffnet sich in einem neuen Tab mit `rel="noreferrer noopener"`; setz
+`external` nur dort, wo das Schema es nicht erkennen kann.
+
+## Das Gerät ist eine Prop
+
+Jeder Renderer nimmt `agent`, die Geräteklasse, statt eine Media Query zu
+lesen. Diese Blöcke rendern auf einem Server, der beim ersten Mal das richtige
+Markup ausgeben muss: ein Telefon-Layout, das als Desktop-Markup ankommt und
+sich bei der Hydration korrigiert, ist ein sichtbarer Sprung, und bei den
+Video-Blöcken ein vergeudeter Download.
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## Eigene Typen
+
+Die Zuordnung von Typ zu Renderer ist der Erweiterungspunkt. Ein Host fügt
+einen eigenen Typ hinzu oder ersetzt einen — so setzt eine Next-App ihr
+optimierendes Bild ein, und so erreicht alles die Seite, was die Bibliothek
+nicht mitliefert.
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+`has(specifiers, token)` sagt, ob ein Hinweis in einem Beutel liegt, und
+`fit(dim, within)` ist die größte Box eines Seitenverhältnisses in einem
+anderen; beide werden für einen eigenen Renderer exportiert. Der Katalog
+[Blöcke](/blocks) rendert die Beispiele jedes Renderers neben seinen Typen.

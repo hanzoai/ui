@@ -1,0 +1,88 @@
+---
+title: テスト
+description: ルートの下にマウントし、スロットで見つけ、カスケードは自分で解決し、残りはブラウザに計算させる。
+---
+
+どのコンポーネントも、自分の名前で `data-slot` を押します。テストは、バージョンが変えうるマークアップに依存せず、コントロールを見つけられます。アプリと同じように `Hanzo` の下へマウントしてください。ルートは、どのトークンも照らす設定を持ち、ルートのテーマがないコンポーネントは例外を投げます。
+
+## 単体テスト
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+エイリアスは、バンドラーが持つものと同じです。`inline` の一覧が効きます。エンジンのパッケージは ESM を再エクスポートする CommonJS として出荷されていて、external のままにすると、テーマを持つモジュールの二つ目のコピーへ解決します。プロバイダーは一つのコンテキストへ書き、テーマ付きのコンポーネントは別のものを読んで、`Missing theme` を投げます。
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## カスケードのない DOM の中の色
+
+jsdom は `var()` を解決せず、テストにその文字列をそのまま渡します。テーマの段は、意図して `var(--border, rgb(255 255 255 / .10))` と書かれています。デザインのシートがマウントされていれば生きているカスケードに従い、なければ監査済みのリテラルを残すためです。jsdom で枠線のコントラストを主張すると、色と関数呼び出しを比べることになります。`substitute` は、jsdom が踏まないその一歩を踏みます。
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+`vars` のマップがなければ、これは近似ではなく正確です。jsdom はデザインのシートをマウントしないので、`--border` を宣言するものがなく、フォールバックは同じ条件でブラウザが計算するものです。自分のトークンを宣言するホストを模すなら、マップを渡します。このモジュールは何もインポートせず、両方の形式を出荷するので、どのランナーでも読み込めます。
+
+## ブラウザが計算したもの
+
+ビルドも、型検査も、単体テストも、ページに一度も届いていないスタイルシートの上で通ります。証明はブラウザです。アプリをビルドして配信し、マークアップの主張ではなく計算されたスタイルを主張します。
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+パッケージが自分を試す方法がこれです。ギャラリーは、すべてのバリアントのすべてのコンポーネントの一つのリストです。スタイルシートのジェネレーターがそのリストを描画し、単体テストは本物のプロバイダーの下でそれを描画して、すべてのスロットの印が届いたかを確かめます。利用側のテストは tarball を詰め、リポジトリの外のアプリへインストールします。ワークスペースのリンクは使いません。それはソースツリーを通して解決し、tarball から欠けたファイルを隠すからです。ビルドして、両方のテーマで 390 と 1280 の計算されたスタイルとスクリーンショットを主張します。ワークスペースのリンクなら、そのテストが捕まえるために存在する欠陥を、どれも出荷していたでしょう。

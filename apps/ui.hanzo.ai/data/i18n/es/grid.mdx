@@ -1,0 +1,147 @@
+---
+title: Cuadrícula
+description: Una cuadrícula CSS de verdad, cuyas pistas salen del contenedor y no de los hijos. Una prop para las columnas, y ningún breakpoint.
+---
+
+Una cuadrícula hecha a mano — cada hijo a `width: calc(25% - 7.5px)` — solo
+queda pareja mientras cada hijo esté de acuerdo, y una palabra larga deja la
+fila despareja. Eso no se arregla afinando el número. Aquí el padre declara
+las pistas una vez y los hijos no tienen voto: las columnas iguales son cosa
+de la estructura, y ningún hijo puede ensanchar su propia pista.
+
+```tsx
+import { Cell, Grid } from '@hanzo/ui/grid'
+```
+
+`Grid` está en su propio subpath porque renderiza un `div` con `display: grid`,
+y ni lo uno ni lo otro existe en React Native. La API se nombra en términos de
+CSS grid — `columns` y `rows` son listas de pistas, `Cell` coloca y abarca —
+así que un motor de cuadrícula nativo cambia el archivo y no los puntos de
+llamada.
+
+## Columnas
+
+`columns` acepta cualquier forma de escribir una lista de pistas: un número,
+una lista, o una lista de pistas ya escrita.
+
+```tsx
+<Grid columns={3} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={3} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+  </Grid>
+</Preview>
+
+Un número se vuelve `repeat(3, minmax(0, 1fr))` y no `1fr`, porque `1fr` a
+solas significa `minmax(auto, 1fr)` y `auto` apoya el suelo de la pista en el
+contenido: una cadena que no se parte empuja entonces su columna y la hace más
+ancha. Esa es la fila despareja que el componente existe para impedir, así que
+la grafía larga es el propósito.
+
+```tsx
+<Grid columns={['2fr', '1fr']} gap="$3">
+  <Tile>main</Tile>
+  <Tile>aside</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={['2fr', '1fr']} gap="$3">
+    <Tile>main</Tile>
+    <Tile>aside</Tile>
+  </Grid>
+</Preview>
+
+Un número dentro de una lista son píxeles; cualquier otra cosa ya es un tamaño
+de pista.
+
+## Las que quepan
+
+La forma responsive es un valor de `columns`, no una segunda prop, y no lleva
+ningún breakpoint dentro. `min` es lo más estrecha que puede quedar una columna
+antes de que la cuadrícula suelte una, y `max` pone techo al número.
+
+```tsx
+<Grid columns={{ min: 160, max: 4 }} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Tile>5</Tile>
+  <Tile>6</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={{ min: 160, max: 4 }} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Tile>5</Tile>
+    <Tile>6</Tile>
+  </Grid>
+</Preview>
+
+Cambia el tamaño de la ventana: el número sigue a la columna en la que está la
+cuadrícula, así que el mismo bloque queda bien dentro de una barra lateral que
+no había visto nunca. `min` se escribe `min(160px, 100%)` y no un `160px`
+pelado, así que un teléfono más estrecho que el suelo obtiene una pista a todo
+el ancho en vez de un scroll de lado. `max` se pliega en el mismo suelo — una
+M-ésima de la fila, restados los gaps — así que el techo no cuesta nada en una
+pantalla pequeña.
+
+## Celdas
+
+Un hijo a secas no necesita envoltorio. Una `Cell` existe para abarcar o para
+colocar: un número abarca tantas pistas, una cadena es un `grid-column` tal
+como está escrito.
+
+```tsx
+<Grid columns={4} gap="$3">
+  <Cell col={2}><Tile>col=2</Tile></Cell>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={4} gap="$3">
+    <Cell col={2}><Tile>col=2</Tile></Cell>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+  </Grid>
+</Preview>
+
+`row` es lo mismo página abajo. `rows` en la cuadrícula da tamaño a las pistas
+de fila; sin ello, las filas se miden por el contenido.
+
+## Hueco
+
+`gap` es un token de espacio o un número de píxeles en crudo. Un token lee la
+rampa en el documento — `gap="$4"` es `var(--space-4)` — así que una persona
+que mueve la densidad en el panel de apariencia mueve con ella cada cuadrícula.
+Un número resuelto al renderizar queda fijo en ese momento.
+
+## La lista de pistas, ella misma
+
+`tracks(columns, gap)` se exporta porque es toda la decisión del componente:
+cualquier forma de escribir `columns`, a la única lista de pistas que
+significa, con los dos invariantes de arriba dentro.
+
+```ts
+import { tracks } from '@hanzo/ui/grid'
+
+tracks(3)                       // 'repeat(3, minmax(0, 1fr))'
+tracks({ min: 240 })            // 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))'
+```

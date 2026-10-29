@@ -1,0 +1,74 @@
+---
+title: One
+description: Das Framework, mit dem diese Site gebaut ist. Der Alias, die Dedupe-Liste, und die Wurzel im Dokument.
+---
+
+[One](https://onestack.dev) ist ein Vite-Framework für React und React Native
+mit Datei-Routen. Diese Site ist eine One-App, zu statischem HTML gerendert,
+und die Konfiguration unten ist ihre eigene.
+
+## Das Projekt anlegen
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Vite einrichten
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+Der Alias ist derselbe, den jeder Host setzt. Die Dedupe-Liste ist das, was
+die Engine über die Client- und Server-Bundles hinweg zu einer Instanz macht:
+das Theme ist ein React-Kontext, und zwei Kopien des Moduls, dem er gehört,
+sind zwei Kontexte.
+
+## Die Wurzel einhängen
+
+One rendert das ganze Dokument aus `_layout.tsx`, also gehört die Wurzel
+dorthin.
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## Statisches Rendern
+
+Mit `defaultRenderMode: 'ssg'` wird jede Route zur Build-Zeit einmal in eine
+echte HTML-Datei gerendert, und das Stylesheet des Pakets steht in dieser
+Datei — das Stylesheet wird erzeugt, wenn das Paket veröffentlicht wird, nicht
+wenn ein Browser eine Komponente zum ersten Mal rendert, und genau das macht
+eine statische Seite korrekt, bevor irgendein Script läuft.

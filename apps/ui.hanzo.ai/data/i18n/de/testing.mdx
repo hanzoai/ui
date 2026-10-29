@@ -1,0 +1,117 @@
+---
+title: Testen
+description: Häng unter der Wurzel ein, such über den Slot, löse die Kaskade selbst auf, und lass einen Browser den Rest berechnen.
+---
+
+Jede Komponente setzt ein `data-slot` mit ihrem Namen, also kann ein Test ein
+Steuerelement finden, ohne von Markup abzuhängen, das eine Version ändern
+kann. Häng unter `Hanzo` ein, so wie die App es tut; die Wurzel trägt die
+Konfiguration, gegen die sich jedes Token auflöst, und eine Komponente ohne
+Theme an der Wurzel wirft.
+
+## Unit-Tests
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+Der Alias ist derselbe, den der Bundler trägt. Die Liste `inline` zählt: die
+Pakete der Engine werden als CommonJS ausgeliefert, das ESM re-exportiert, und
+außen gelassen lösen sie zu einer zweiten Kopie des Moduls auf, dem das Theme
+gehört, sodass der Provider einen Kontext schreibt und jede thematisierte
+Komponente einen anderen liest und `Missing theme` wirft.
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## Farben in einem DOM ohne Kaskade
+
+jsdom löst `var()` nicht auf; es reicht einem Test den Text wortwörtlich. Die
+Theme-Sprossen werden mit Absicht als `var(--border, rgb(255 255 255 / .10))`
+geschrieben — der lebenden Kaskade folgen, wo ein Design-Stylesheet eingehängt
+ist, das geprüfte Literal behalten, wo es das nicht ist —, sodass eine Aussage
+über den Kontrast eines Rahmens in jsdom eine Farbe mit einem Funktionsaufruf
+verglich. `substitute` tut den Schritt, den jsdom nicht tut.
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+Ohne eine `vars`-Map ist das exakt und nicht ungefähr: jsdom hängt kein
+Design-Stylesheet ein, also deklariert nichts `--border`, also ist der
+Fallback das, was ein Browser unter denselben Bedingungen berechnen würde.
+Übergib eine Map, um einen Host zu modellieren, der eigene Tokens deklariert.
+Das Modul importiert nichts und wird in beiden Formaten ausgeliefert, also
+lädt es unter jedem Runner.
+
+## Was ein Browser berechnet hat
+
+Ein Build, eine Typprüfung und ein Unit-Test bestehen alle auf einem
+Stylesheet, das die Seite nie erreicht hat. Der Beweis ist ein Browser: bau
+die App, liefere sie aus, und behaupte berechnete Styles statt dessen, was das
+Markup behauptet.
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+So testet das Paket sich selbst. Seine Galerie ist eine Liste jeder Komponente
+in jeder Variante; der Stylesheet-Generator rendert diese Liste, ein Unit-Test
+rendert sie unter dem echten Provider und prüft, dass jede Slot-Marke angekommen
+ist, und ein Verbrauchertest packt das Tarball, installiert es in eine App
+außerhalb des Repositorys — nie ein Workspace-Link, der durch den Quellbaum
+auflöst und eine Datei versteckt, die im Tarball fehlt —, baut sie, und
+behauptet berechnete Styles und Screenshots bei 390 und 1280 in beiden Themes.
+Ein Workspace-Link hätte genau die Fehler ausgeliefert, die dieser Test fangen
+soll.

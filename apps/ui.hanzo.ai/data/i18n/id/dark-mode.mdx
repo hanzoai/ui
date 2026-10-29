@@ -1,0 +1,99 @@
+---
+title: Mode gelap
+description: Gelap lebih dulu, terang lewat satu prop, dan sebuah pengalih untuk host mana pun yang Anda pakai.
+---
+
+Identitasnya gelap. `:root` memegang palet gelap dan `.light` memilih keluar,
+kebalikan dari kebanyakan lembar gaya, dan itu disengaja: halaman yang memasang
+akar dan tidak mengatakan apa pun lagi tampil di dasar merek, bukan di putih.
+
+## Akar yang memutuskan
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` adalah seluruh API. Akar menstempel `.t_light` atau `.t_dark` pada
+body, setiap token diselesaikan terhadap tema itu, dan properti kustom lembar
+gaya menjawab kelas yang sama. Host yang ingin pilihan itu milik seseorang
+menyimpannya di state lalu menyerahkannya ke akar.
+
+## Sebuah pengalih
+
+`ThemeToggle` dari `@hanzo/ui/product` menggambar tombol dan melaporkan tema
+berikutnya. Saat dikendalikan, ia satu baris di samping akar:
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+Tanpa kendali — `<ThemeToggle onThemeChange={fn} />` — ia mengalihkan kelas
+`.dark` dan `.light` pada elemen dokumen sendiri dan mengingat pilihan di
+bawah kunci `theme` dalam localStorage, untuk host yang tidak punya state
+untuk menyimpannya. Bagaimanapun ia menunjukkan sasaran: matahari di mode
+gelap, bulan di mode terang.
+
+## Next
+
+Host Next sudah menjalankan `@hanzogui/next-theme`, dan pengikatan pengalih ke
+situ tinggal di subpath sendiri agar host lain tidak menarik Next ke dalam
+grafnya dengan mengimpor lapisan produk.
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+`<ThemeToggle />` tanpa prop sama sekali mencapai pengikatan yang sama lewat
+impor dinamis dan jatuh kembali ke pengalih dokumen bila pengikatan itu tidak
+ada.
+
+## One dan Vite
+
+Situs ini menyimpan pilihan bersama `@vxrn/color-scheme`, yang menetapkan
+skema tersimpan sebelum cat pertama dan melaporkannya ke akar:
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` juga membuka `setting` — `system`, `dark`, atau `light` — dan
+`set`, yang digerakkan pengalih di header situs ini.
+
+## Tanpa kilatan
+
+Host mana pun, kelas tema harus sudah ada pada dokumen sebelum lembar gaya
+mengecat, atau halaman mengecat gelap lalu mengecat ulang terang. Pengikatan
+Next dan `@vxrn/color-scheme` keduanya menuliskannya dari skrip inline; pengalih
+yang ditulis tangan sebaiknya melakukan hal yang sama. Letakkan
+`suppressHydrationWarning` pada elemen `html`, karena kelas yang ditulis skrip
+bukan kelas yang dirender React.

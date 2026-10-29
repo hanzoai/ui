@@ -1,0 +1,55 @@
+---
+title: Vite
+description: resolve 두 줄과 루트.
+---
+
+## 프로젝트 만들기
+
+```bash
+pnpm create vite@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+`react-native-web` 은 웹에서 `react-native` 가 풀리는 곳입니다. 앱은 `react-dom` 을 선언하는 것과 같은 방식으로 이것을 선언합니다.
+
+## Vite 설정
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+설정은 이게 전부입니다. 패키지를 위한 항목은 없습니다. 별칭도, CSS 파이프라인도, 플러그인도, 트랜스파일 목록도 없습니다. 세 가지 해석은 react-native-web 의 것이고, 그것을 거쳐 그리는 앱은 모두 이것을 집니다. react-native-svg 의 웹 빌드는 맨 `react-native` 를 임포트하고, 그 엔트리가 웹 빌드에 닿는 것은 `.web.js` 가 `.js` 보다 앞설 때뿐입니다. 에셋 경로는 `@react-native/assets-registry/registry` 라는 이름이고, 웹에서 이것은 react-native-web 자신의 AssetRegistry 모듈입니다.
+
+## 루트 마운트
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+`index.html` 에 스타일시트 링크도 없고 `class="dark"` 도 두지 않습니다. 둘 다 루트가 가져옵니다.
+
+## 다크와 라이트
+
+`Hanzo` 는 `theme` 를 받습니다. 사람이 고르게 하려면 선택을 state 에 두고 루트와 토글에 넘깁니다. [다크 모드](/docs/dark-mode) 를 보세요.

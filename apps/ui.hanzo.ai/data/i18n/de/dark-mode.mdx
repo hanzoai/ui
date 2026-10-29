@@ -1,0 +1,100 @@
+---
+title: Dunkelmodus
+description: Dunkel zuerst, hell über eine Prop, und ein Schalter für den Host, auf dem du bist.
+---
+
+Die Identität ist dunkel. `:root` hält die dunkle Palette, und `.light` steigt
+aus, umgekehrt zu den meisten Stylesheets, und das ist Absicht: eine Seite,
+die die Wurzel einhängt und sonst nichts sagt, kommt auf dem Grund der Marke
+heraus, nicht auf Weiß.
+
+## Die Wurzel entscheidet
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` ist die ganze API. Die Wurzel setzt `.t_light` oder `.t_dark` auf den
+Body, jedes Token löst sich gegen dieses Theme auf, und die benutzerdefinierten
+Eigenschaften des Stylesheets antworten auf dieselbe Klasse. Ein Host, der die
+Wahl einer Person überlassen will, hält sie im State und reicht sie an die
+Wurzel.
+
+## Ein Schalter
+
+`ThemeToggle` aus `@hanzo/ui/product` zeichnet den Button und meldet das
+nächste Theme. Gesteuert ist es eine Zeile neben der Wurzel:
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+Ungesteuert — `<ThemeToggle onThemeChange={fn} />` — schaltet es die Klassen
+`.dark` und `.light` auf dem Dokumentelement selbst um und merkt sich die Wahl
+unter dem Schlüssel `theme` in localStorage, für einen Host, der keinen State
+hat, um sie zu halten. So oder so zeigt es das Ziel: eine Sonne im Dunklen,
+einen Mond im Hellen.
+
+## Next
+
+Next-Hosts lassen `@hanzogui/next-theme` bereits laufen, und die Bindung des
+Schalters daran liegt auf einem eigenen Subpath, damit kein anderer Host Next
+in seinen Graphen zieht, nur weil er die Produktschicht importiert.
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+`<ThemeToggle />` ganz ohne Props erreicht dieselbe Bindung per dynamischem
+Import und fällt dort, wo sie fehlt, auf den Dokument-Schalter zurück.
+
+## One und Vite
+
+Diese Site hält die Wahl mit `@vxrn/color-scheme`, das das gespeicherte Schema
+vor dem ersten Paint festlegt und es der Wurzel meldet:
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` gibt auch `setting` heraus — `system`, `dark` oder `light` —
+und `set`, und genau das treibt der Schalter in der Kopfzeile dieser Site.
+
+## Kein Aufblitzen
+
+Egal welcher Host: die Theme-Klasse muss auf dem Dokument stehen, bevor das
+Stylesheet zeichnet, sonst zeichnet die Seite dunkel und zeichnet hell neu.
+Die Next-Bindung und `@vxrn/color-scheme` schreiben sie beide aus einem
+Inline-Script; ein von Hand geschriebener Schalter sollte dasselbe tun. Setz
+`suppressHydrationWarning` auf das Element `html`, denn die Klasse, die das
+Script geschrieben hat, ist nicht die, die React gerendert hat.

@@ -1,0 +1,147 @@
+---
+title: Raster
+description: Ein echtes CSS-Grid, dessen Spuren vom Container kommen, nicht von den Kindern. Eine Prop für die Spalten, und keine Breakpoints.
+---
+
+Ein von Hand gebautes Grid — jedes Kind auf `width: calc(25% - 7.5px)` — ist
+nur so lange gerade, wie jedes Kind mitspielt, und ein langes Wort macht die
+Zeile ausgefranst. Das lässt sich nicht reparieren, indem man an der Zahl
+dreht. Hier deklariert das Elternelement die Spuren einmal, und die Kinder haben
+nichts zu sagen: gleiche Spalten sind eine Sache der Struktur, und kein Kind
+kann seine eigene Spur verbreitern.
+
+```tsx
+import { Cell, Grid } from '@hanzo/ui/grid'
+```
+
+`Grid` liegt auf einem eigenen Subpath, weil es ein `div` mit `display: grid`
+rendert, und beides gibt es in React Native nicht. Die API ist in den
+Begriffen von CSS-Grid benannt — `columns` und `rows` sind Spurenlisten,
+`Cell` platziert und spannt —, sodass eine native Grid-Engine die Datei
+ändert und nicht die Aufrufstellen.
+
+## Spalten
+
+`columns` nimmt jede Schreibweise einer Spurenliste: eine Anzahl, eine Liste
+oder eine ausgeschriebene Spurenliste.
+
+```tsx
+<Grid columns={3} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={3} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+  </Grid>
+</Preview>
+
+Eine Anzahl wird zu `repeat(3, minmax(0, 1fr))` und nicht zu `1fr`, weil `1fr`
+allein `minmax(auto, 1fr)` bedeutet und `auto` den Boden der Spur auf den
+Inhalt legt: eine Zeichenkette, die nicht umbricht, schiebt dann ihre eigene
+Spalte breiter. Das ist die ausgefranste Zeile, die die Komponente verhindern
+soll, also ist die längere Schreibweise der Punkt.
+
+```tsx
+<Grid columns={['2fr', '1fr']} gap="$3">
+  <Tile>main</Tile>
+  <Tile>aside</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={['2fr', '1fr']} gap="$3">
+    <Tile>main</Tile>
+    <Tile>aside</Tile>
+  </Grid>
+</Preview>
+
+Eine Zahl in einer Liste sind Pixel; alles andere ist schon eine Spurgröße.
+
+## So viele, wie passen
+
+Die responsive Form ist ein Wert von `columns`, keine zweite Prop, und ein
+Breakpoint steckt nicht darin. `min` ist das Schmalste, was eine Spalte werden
+darf, bevor das Grid eine fallen lässt, und `max` deckelt die Anzahl.
+
+```tsx
+<Grid columns={{ min: 160, max: 4 }} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Tile>5</Tile>
+  <Tile>6</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={{ min: 160, max: 4 }} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Tile>5</Tile>
+    <Tile>6</Tile>
+  </Grid>
+</Preview>
+
+Änder die Fenstergröße: die Anzahl folgt der Spalte, in der das Grid steht,
+also sitzt derselbe Block richtig in einer Seitenleiste, die er nie gesehen
+hat. `min` wird als `min(160px, 100%)` geschrieben und nicht als nacktes
+`160px`, sodass ein Telefon schmaler als der Boden eine Spur in voller Breite
+bekommt statt eines seitlichen Scrollens. `max` faltet sich in denselben Boden
+— ein M-tel der Zeile, die Gaps abgezogen —, sodass die Deckelung auf einem
+kleinen Bildschirm nichts kostet.
+
+## Zellen
+
+Ein schlichtes Kind braucht keine Hülle. Eine `Cell` gibt es, um zu spannen
+oder zu platzieren: eine Zahl spannt so viele Spuren, eine Zeichenkette ist
+ein `grid-column`, wie es geschrieben steht.
+
+```tsx
+<Grid columns={4} gap="$3">
+  <Cell col={2}><Tile>col=2</Tile></Cell>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={4} gap="$3">
+    <Cell col={2}><Tile>col=2</Tile></Cell>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+  </Grid>
+</Preview>
+
+`row` ist dasselbe die Seite hinunter. `rows` auf dem Grid bemisst die
+Zeilenspuren; ohne es bemessen sich die Zeilen nach dem Inhalt.
+
+## Abstand
+
+`gap` ist ein Raum-Token oder eine rohe Pixelzahl. Ein Token liest die Rampe
+im Dokument — `gap="$4"` ist `var(--space-4)` —, sodass eine Person, die im
+Erscheinungs-Panel die Dichte bewegt, jedes Grid mitbewegt. Eine Zahl, die
+beim Rendern aufgelöst wird, steht beim Rendern fest.
+
+## Die Spurenliste selbst
+
+`tracks(columns, gap)` wird exportiert, weil es die ganze Entscheidung der
+Komponente ist: jede Schreibweise von `columns` zu der einen Spurenliste, die
+sie meint, mit den beiden Invarianten von oben darin.
+
+```ts
+import { tracks } from '@hanzo/ui/grid'
+
+tracks(3)                       // 'repeat(3, minmax(0, 1fr))'
+tracks({ min: 240 })            // 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))'
+```

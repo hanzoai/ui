@@ -1,0 +1,72 @@
+---
+title: One
+description: वह फ़्रेमवर्क जिससे यह साइट बनी है। एलियास, डीड्यूप सूची, और दस्तावेज़ में रूट।
+---
+
+[One](https://onestack.dev) React और React Native के लिए एक Vite फ़्रेमवर्क
+है, फ़ाइल रूट के साथ। यह साइट एक One ऐप है जो स्थैतिक HTML में रेंडर होती
+है, और नीचे की कॉन्फ़िगरेशन इसकी अपनी है।
+
+## प्रोजेक्ट बनाएँ
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Vite कॉन्फ़िगर करें
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+एलियास वही है जो हर होस्ट लगाता है। डीड्यूप सूची वही है जो इंजन को क्लाइंट
+और सर्वर बंडल के पार एक ही इंस्टेंस रखती है: थीम एक React कॉन्टेक्स्ट है,
+और उस मॉड्यूल की दो प्रतियाँ जिसके पास वह है, दो कॉन्टेक्स्ट हैं।
+
+## रूट लगाएँ
+
+One पूरा दस्तावेज़ `_layout.tsx` से रेंडर करता है, इसलिए रूट वहीं जाता है।
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## स्थैतिक रेंडर
+
+`defaultRenderMode: 'ssg'` के साथ हर रूट बिल्ड के समय एक बार असली HTML
+फ़ाइल में रेंडर होता है, और पैकेज की स्टाइलशीट उस फ़ाइल में होती है — शीट
+तब बनती है जब पैकेज प्रकाशित होता है, न कि जब ब्राउज़र पहली बार कोई
+कंपोनेंट रेंडर करे, और यही स्थैतिक पृष्ठ को किसी स्क्रिप्ट के चलने से पहले
+सही बनाता है।

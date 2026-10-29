@@ -1,0 +1,75 @@
+---
+title: Next
+description: दोनों बंडलर के लिए एक आवरण, और क्लाइंट सीमा में रूट।
+---
+
+## प्रोजेक्ट बनाएँ
+
+```bash
+pnpm create next-app@latest my-app --typescript --app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## कॉन्फ़िग लपेटें
+
+```js title="next.config.js"
+const withGui = require('@hanzo/ui/next')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = withGui(nextConfig, __dirname)
+```
+
+`withGui` तीन चीज़ें लगाता है, webpack और Turbopack दोनों के लिए: `.web.*`
+पहले सुलझता है, `react-native` यानी `react-native-web`, और `node_modules`
+में हर `@hanzogui/*` पैकेज ट्रांसपाइल होता है ताकि पहली दो बातें उनके अंदर
+तक पहुँचें। यह जो पहले से है उसके साथ जुड़ता है — मौजूदा `webpack()` हुक,
+Turbopack की सेटिंग और `transpilePackages` रखे जाते हैं और बढ़ाए जाते हैं।
+`__dirname` दें ताकि पैकेज ऐप के अपने `node_modules` से मिले, न कि जहाँ
+टास्क रनर संयोग से हो।
+
+दोनों बंडलर के लिए एक बार घोषित, क्योंकि केवल webpack वाली सेटिंग
+Turbopack के नीचे चुपचाप गायब रहती है, और फिर `next dev` तथा `next build`
+इस बात पर अलग हो जाते हैं कि ऐप कंपाइल होता है या नहीं।
+
+## रूट लगाएँ
+
+रूट एक क्लाइंट कंपोनेंट है, इसलिए वह उस फ़ाइल में रहता है जिसमें डायरेक्टिव
+हो, और लेआउट उसे रेंडर करता है।
+
+```tsx title="app/providers.tsx"
+'use client'
+
+import { Hanzo } from '@hanzo/ui'
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+```tsx title="app/layout.tsx"
+import { Providers } from './providers'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+`html` पर `suppressHydrationWarning` उस थीम क्लास के लिए है जिसे टॉगल React
+के माउंट होने से पहले वहाँ लिखता है — देखें [डार्क मोड](/docs/dark-mode)।
+
+## सर्वर कंपोनेंट
+
+`@hanzo/ui` के नीचे सब कुछ एक क्लाइंट सीमा है; सर्वर कंपोनेंट उसे आयात करके
+रेंडर करता है, जैसे किसी भी क्लाइंट कंपोनेंट को। जिन नियमों पर कोई कंपोनेंट
+नहीं लगा — `pages`, `masked`, `tone`, `resolveBrand` — वे
+`@hanzo/ui/product/pure` पर हैं और कुछ आयात नहीं करते, इसलिए सर्वर कंपोनेंट
+या रूट हैंडलर उन्हें कंपोनेंट ट्री लादे बिना कॉल कर सकता है।

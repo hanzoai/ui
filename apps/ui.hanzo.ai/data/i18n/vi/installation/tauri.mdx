@@ -1,0 +1,79 @@
+---
+title: Tauri
+description: Một web view trên bản dựng Vite. Cách chuẩn bị của Vite, và một nút đổi chủ đề không cần framework.
+---
+
+Một ứng dụng Tauri là một ứng dụng Vite trong cửa sổ native, nên phần chuẩn
+bị web là toàn bộ: bí danh, thứ tự phần mở rộng và gốc là những thứ trên trang
+[Vite](/docs/installation/vite).
+
+## Tạo dự án
+
+```bash
+pnpm create tauri-app@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Cấu hình Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  clearScreen: false,
+  server: { port: 1420, strictPort: true },
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+`server.port` và `clearScreen` là quy ước riêng của Tauri cho cửa sổ phát
+triển; khối `resolve` là của thư viện.
+
+## Gắn gốc
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+## Nút đổi chủ đề không cần framework
+
+`ThemeToggle` từ `@hanzo/ui/product` chạy không cần phụ thuộc framework. Khi
+được điều khiển, nó vẽ nút và báo chủ đề kế tiếp; ứng dụng giữ giá trị rồi đưa
+cho gốc.
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App() {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+    </Hanzo>
+  )
+}
+```
+
+Phần buộc Next của cùng nút ấy sống ở đường con riêng,
+`@hanzo/ui/product/theme-toggle-next`, chính để host Tauri, Vite hoặc Express
+không bao giờ kéo Next vào đồ thị của mình chỉ vì nhập lớp sản phẩm.

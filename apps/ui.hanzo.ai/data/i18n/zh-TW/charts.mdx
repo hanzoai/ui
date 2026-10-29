@@ -1,0 +1,157 @@
+---
+title: 圖表
+description: 趨勢、序列、份額、分布。用內嵌 SVG 畫，不帶相依，也絕不編一個點出來。
+---
+
+```tsx
+import { BarChart, BarRows, Donut, LineChart, Sparkline } from '@hanzo/ui/product'
+```
+
+圖表以內嵌 SVG 繪製，顏色跟著當下的主題走，主題一翻，圖也跟著翻。誠實寫在結構裡：點不到兩個的迷你趨勢什麼都不畫，沒有正值的圓環畫出一條全形破折號，沒有任何一張圖會自己發明趨勢。真實的序列由呼叫端傳進來。
+
+資料有兩種形狀。`ChartPoint` 是順序軸上、帶標籤的一個值；`Slice` 是分類軸上、帶標籤的一個量，顏色和提示都可以不給。
+
+```ts
+type ChartPoint = { label: string; value: number }
+type Slice = { label: string; value: number; color?: string; hint?: string }
+```
+
+## 迷你趨勢
+
+放在指標卡上的固定尺寸趨勢。`values` 就是一個普通陣列；`width`、`height`、`color` 都可以省略。
+
+```tsx
+<Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+```
+
+<Preview>
+  <Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+</Preview>
+
+## 折線
+
+一個沿著時間走的值。它會量自己的容器，所以寬度和所在的盒子一樣。滑鼠停上去時，最近的點會被讀出來，標在引導線旁邊。讀出來的文字由 `formatValue` 格式化。
+
+```tsx
+<LineChart
+  data={[
+    { label: 'Mon', value: 120 },
+    { label: 'Tue', value: 180 },
+    { label: 'Wed', value: 150 },
+    { label: 'Thu', value: 260 },
+    { label: 'Fri', value: 230 },
+    { label: 'Sat', value: 310 },
+    { label: 'Sun', value: 290 },
+  ]}
+  height={200}
+  formatValue={(v) => `${v} req`}
+/>
+```
+
+<Preview>
+  <LineChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+    formatValue={(v) => `${v} req`}
+  />
+</Preview>
+
+## 長條
+
+還是同一份資料，改畫成長條。props 沒有換。
+
+```tsx
+<BarChart data={points} height={200} />
+```
+
+<Preview>
+  <BarChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+  />
+</Preview>
+
+## 圓環
+
+這是一份份額。顏色屬於資料，不屬於模式：切片若帶了 `color`，就用那個顏色畫；沒帶的，就從前景取一條單色坡道。因此同一個元件既能做分類圖，也能做貼著品牌的圖。`center` 畫在環的裡面；`legend` 畫出內建的標籤與百分比清單，預設是關的，呼叫端可以自己組一個更完整的。
+
+```tsx
+<Donut
+  slices={[
+    { label: 'zen-4', value: 62 },
+    { label: 'zen-3', value: 28 },
+    { label: 'other', value: 10 },
+  ]}
+  center="62%"
+  legend
+/>
+```
+
+<Preview>
+  <XStack gap="$8" flexWrap="wrap" items="center">
+    <Donut
+      slices={[
+        { label: 'zen-4', value: 62 },
+        { label: 'zen-3', value: 28 },
+        { label: 'other', value: 10 },
+      ]}
+      center="62%"
+      legend
+    />
+    <Donut
+      slices={[
+        { label: 'compute', value: 540, color: '#7c5cff' },
+        { label: 'storage', value: 220, color: '#23c562' },
+        { label: 'egress', value: 90, color: '#ff9f45' },
+      ]}
+      size={120}
+      thickness={16}
+    />
+  </XStack>
+</Preview>
+
+`CHART_PALETTE` 是分類序列用的八個彼此分開的色相，對準深色的底調過；`CHART_OTHER` 是留給剩餘部分的那種壓低的顏色。
+
+## 橫向長條
+
+把分布畫成一列列帶標籤的水平長條，用的是版面原語，所以主題會像外框一樣套上去。收的是同一種 `Slice` 形狀。
+
+```tsx
+<BarRows
+  bars={[
+    { label: 'us-east', value: 1240 },
+    { label: 'eu-west', value: 860 },
+    { label: 'ap-south', value: 410 },
+  ]}
+/>
+```
+
+<Preview>
+  <BarRows
+    bars={[
+      { label: 'us-east', value: 1240 },
+      { label: 'eu-west', value: 860 },
+      { label: 'ap-south', value: 410 },
+    ]}
+  />
+</Preview>
+
+## 把盒子量出來
+
+`useContainerWidth` 也有匯出：一個 `ref`，加上它最後一次量到的寬度，由 `ResizeObserver` 保管。折線和長條用的就是這個。自己寫的圖也可以用它，畫進真正給到的盒子，而不是一個猜出來的數字。

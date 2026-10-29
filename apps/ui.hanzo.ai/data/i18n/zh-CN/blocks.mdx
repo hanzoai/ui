@@ -1,0 +1,113 @@
+---
+title: 块
+description: 内容即数据。一页是一列块；每一块说出自己的类型，类型挑选渲染器，渲染器再读剩下的字段。
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+一块就是数据：`blockType` 挑选渲染器，其余字段是那个渲染器的输入。于是一页可以在 CMS 里写，可以提交进仓库，也可以由服务器产出，无论哪条路它都是有类型的。每个 `specifiers` 字段都是一袋用空格分开的布局提示，由渲染器来读；它是字符串而不是联合类型，所以站点要加一条提示，打出来就行，不认识的提示会被忽略，而不是让构建失败。
+
+## 一页
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## 词汇
+
+| 类型 | 它画什么 |
+| --- | --- |
+| `heading` | 一个标题，可带一行副题。`level` 为 0 是段落，1 到 6 是对应的标签。 |
+| `enh-heading` | 点了名的几部分：上面一行前导，中间标题，下面一行副题，各自有自己的级别和外边距。 |
+| `image` | 来自 `ImageDef` 的一张图——`src`、`alt`、`dim`——对齐和手机提示放在 `specifiers` 里。 |
+| `video` | 一个 `VideoDef`：源、海报、按档的尺寸。 |
+| `space` | 以间距单位计的垂直空白，按档，或一个数字管全部。 |
+| `cta` | 一行链接和按钮：`fill`、`left`、`right`，以及手机提示。 |
+| `card` | 一块带标题的面板，有媒体、内容和行动号召。 |
+| `bullet-cards` | 一格一格的单行卡片，每张是图标旁边一行字。 |
+| `grid` | 一个 `GridDef`——按档的列和间隙，升序——盖在 `cells` 上。 |
+| `group` | 盖在 `elements` 上的一层包装，给那些要作用到整组的提示。 |
+| `accordian` | 触发器，以及它们的内容。 |
+| `carte-blanche` | 一块自由面板：上面任意，一个标题，下面任意，脚上一个行动号召。 |
+| `screenful` | 满满一屏：可选的横幅下面一到三列，并带手机上的顺序。 |
+| `element` | 作者已经做好的一个节点。它故意没有渲染器，一页块因此什么都能装下。 |
+
+每一种形状都从同一条子路径导出为类型——`HeadingBlock`、`CTABlock`、`ScreenfulBlock` 以及其余——旁边是它们共用的定义：`GridDef`、`ImageDef`、`VideoDef`、`LinkDef`、`ButtonDef`。带 `http` 或 `mailto` href 的 `LinkDef` 自己就是外部的，会在新标签页打开，并带上 `rel="noreferrer noopener"`；只有方案本身说不清的时候，才去声明 `external`。
+
+## 设备是一个 prop
+
+每个渲染器接收 `agent`，也就是设备类别，而不是去读一条媒体查询。这些块在服务器上渲染，服务器第一次就必须吐出正确的标记：手机布局若以桌面标记到来、再在水合时改自己，会是一次看得见的跳动，对视频块来说还是一次浪费的下载。
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## 你自己的类型
+
+从类型到渲染器的这张表就是扩展点。宿主可以加一种自己的类型，或替换一种——Next 应用就是这样换上它自己的优化图片，库没有交付的东西也是这样到达页面。
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+`has(specifiers, token)` 回答一条提示在不在袋子里，`fit(dim, within)` 是一种宽高比的盒子放进另一种里面时最大的那一个；两者都导出，给自己写的渲染器用。[块](/blocks) 目录把每个渲染器的示例画在它的类型旁边。

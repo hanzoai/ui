@@ -1,0 +1,157 @@
+---
+title: แผนภูมิ
+description: แนวโน้มหนึ่ง อนุกรมหนึ่ง ส่วนแบ่งหนึ่ง และการกระจายหนึ่ง SVG ในบรรทัด ไม่มีดีเพนเดนซี และไม่เคยมีจุดที่กุขึ้น
+---
+
+```tsx
+import { BarChart, BarRows, Donut, LineChart, Sparkline } from '@hanzo/ui/product'
+```
+
+แผนภูมิวาดด้วย SVG ในบรรทัดและเอาสีจากธีมที่กำลังใช้ ดังนั้นพวกมันกลับสีตามธีม พวกมันซื่อตรงโดยโครงสร้าง สปาร์กลายน์ที่มีจุดน้อยกว่าสองไม่วาดอะไร โดนัทที่ไม่มีค่าบวกวาดขีดยาว และไม่มีแผนภูมิกุแนวโน้ม ผู้เรียกส่งอนุกรมจริง
+
+ข้อมูลถูกถือด้วยสองรูป `ChartPoint` คือค่าที่มีป้ายบนแกนลำดับ `Slice` คือขนาดที่มีป้ายบนแกนหมวด พร้อมสีที่เลือกได้และคำใบ้
+
+```ts
+type ChartPoint = { label: string; value: number }
+type Slice = { label: string; value: number; color?: string; hint?: string }
+```
+
+## Sparkline
+
+แนวโน้มขนาดคงที่สำหรับการ์ดเมตริก `values` เป็นอาร์เรย์ธรรมดา `width`, `height` และ `color` เป็นทางเลือก
+
+```tsx
+<Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+```
+
+<Preview>
+  <Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+</Preview>
+
+## แผนภูมิเส้น
+
+ค่าตามเวลา มันวัดกล่องของตัวเอง ดังนั้นกว้างเท่ากล่องที่มันอยู่ และการชี้เมาส์อ่านจุดที่ใกล้สุดออกมาข้างเส้นนำ `formatValue` จัดรูปแบบค่าที่อ่าน
+
+```tsx
+<LineChart
+  data={[
+    { label: 'Mon', value: 120 },
+    { label: 'Tue', value: 180 },
+    { label: 'Wed', value: 150 },
+    { label: 'Thu', value: 260 },
+    { label: 'Fri', value: 230 },
+    { label: 'Sat', value: 310 },
+    { label: 'Sun', value: 290 },
+  ]}
+  height={200}
+  formatValue={(v) => `${v} req`}
+/>
+```
+
+<Preview>
+  <LineChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+    formatValue={(v) => `${v} req`}
+  />
+</Preview>
+
+## แผนภูมิแท่ง
+
+ข้อมูลเดียวกัน เป็นแท่ง พร็อพเดียวกัน
+
+```tsx
+<BarChart data={points} height={200} />
+```
+
+<Preview>
+  <BarChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+  />
+</Preview>
+
+## Donut
+
+ส่วนแบ่ง สีเป็นข้อมูล ไม่ใช่โหมด ชิ้นที่มี `color` ถูกวาดด้วยสีนั้น และชิ้นที่ไม่มีเอาบันไดเอกรงค์จากสีข้อความ ดังนั้นคอมโพเนนต์เดียวรับใช้ทั้งแผนภูมิหมวดและแผนภูมิที่เข้ากับแบรนด์ `center` เรนเดอร์ในวง `legend` วาดรายการป้ายและเปอร์เซ็นต์ที่มีมาให้ ปิดโดยปริยาย เพื่อให้ผู้ใช้ประกอบรายการที่ละเอียดกว่าได้
+
+```tsx
+<Donut
+  slices={[
+    { label: 'zen-4', value: 62 },
+    { label: 'zen-3', value: 28 },
+    { label: 'other', value: 10 },
+  ]}
+  center="62%"
+  legend
+/>
+```
+
+<Preview>
+  <XStack gap="$8" flexWrap="wrap" items="center">
+    <Donut
+      slices={[
+        { label: 'zen-4', value: 62 },
+        { label: 'zen-3', value: 28 },
+        { label: 'other', value: 10 },
+      ]}
+      center="62%"
+      legend
+    />
+    <Donut
+      slices={[
+        { label: 'compute', value: 540, color: '#7c5cff' },
+        { label: 'storage', value: 220, color: '#23c562' },
+        { label: 'egress', value: 90, color: '#ff9f45' },
+      ]}
+      size={120}
+      thickness={16}
+    />
+  </XStack>
+</Preview>
+
+`CHART_PALETTE` คือแปดเฉดที่ต่างกันสำหรับอนุกรมหมวด จูนสำหรับพื้นมืด `CHART_OTHER` คือโทนเบาสำหรับส่วนที่เหลือ
+
+## แถวแท่ง
+
+การกระจายเป็นแท่งแนวนอนมีป้าย วาดด้วยพื้นฐานการจัดวาง จึงรับธีมเหมือนเปลือก รับรูป `Slice` เดียวกัน
+
+```tsx
+<BarRows
+  bars={[
+    { label: 'us-east', value: 1240 },
+    { label: 'eu-west', value: 860 },
+    { label: 'ap-south', value: 410 },
+  ]}
+/>
+```
+
+<Preview>
+  <BarRows
+    bars={[
+      { label: 'us-east', value: 1240 },
+      { label: 'eu-west', value: 860 },
+      { label: 'ap-south', value: 410 },
+    ]}
+  />
+</Preview>
+
+## วัดกล่อง
+
+`useContainerWidth` ถูกส่งออกด้วย `ref` และความกว้างที่มันวัดครั้งล่าสุด เก็บโดย `ResizeObserver` นั่นคือสิ่งที่แผนภูมิเส้นและแท่งใช้ และสิ่งที่แผนภูมิของคุณใช้วาดลงกล่องที่ได้รับ ไม่ใช่ตัวเลขที่มันเดา

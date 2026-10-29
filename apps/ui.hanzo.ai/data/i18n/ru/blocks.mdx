@@ -1,0 +1,113 @@
+---
+title: Блоки
+description: Содержимое как данные. Страница — список блоков; каждый называет свой тип, тип выбирает отрисовщик, отрисовщик читает остальное.
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+Блок — это данные: `blockType` выбирает отрисовщик, а остальные поля — вход этого отрисовщика. Страницу можно написать в CMS, закоммитить в репозиторий или получить с сервера, и в любом случае она типизирована. Каждое поле `specifiers` — мешок подсказок раскладки через пробел, который читает отрисовщик; это строка, а не объединение, поэтому сайт добавляет подсказку, просто набрав её, а неизвестная подсказка игнорируется, а не роняет сборку.
+
+## Страница
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## Словарь
+
+| Тип | Что рисует |
+| --- | --- |
+| `heading` | Заголовок с необязательной подписью, `level` 0 для абзаца и 1–6 для тегов. |
+| `enh-heading` | Названные части: надзаголовок сверху, заголовок, подпись снизу, у каждой свой уровень и свой отступ. |
+| `image` | Изображение из `ImageDef` — `src`, `alt`, `dim` — с выравниванием и подсказками для телефона в `specifiers`. |
+| `video` | `VideoDef`: источники, постер, размер на каждой ступени. |
+| `space` | Вертикальный интервал в единицах отступа, по ступени или одно число на все. |
+| `cta` | Ряд ссылок и кнопок: `fill`, `left`, `right` и подсказки для телефона. |
+| `card` | Панель с заголовком, медиа, содержимым и призывом к действию. |
+| `bullet-cards` | Сетка однострочных карточек, у каждой иконка рядом с текстом. |
+| `grid` | `GridDef` — колонки и зазор на каждой ступени, по возрастанию — поверх `cells`. |
+| `group` | Обёртка над `elements` для подсказок, которые относятся ко всей группе. |
+| `accordian` | Триггеры и их содержимое. |
+| `carte-blanche` | Свободная панель: что угодно сверху, заголовок, что угодно снизу, призыв к действию в подвале. |
+| `screenful` | Один экран: необязательный баннер над одной–тремя колонками, с порядком на телефоне. |
+| `element` | Узел, который автор уже собрал. Отрисовщика у него нет, нарочно: поэтому страница блоков может держать что угодно. |
+
+Каждая форма экспортируется типом с того же subpath — `HeadingBlock`, `CTABlock`, `ScreenfulBlock` и остальные — рядом с общими определениями: `GridDef`, `ImageDef`, `VideoDef`, `LinkDef`, `ButtonDef`. `LinkDef` с href на `http` или `mailto` сам по себе внешний и открывается в новой вкладке с `rel="noreferrer noopener"`; указывайте `external` только там, где схема этого не скажет.
+
+## Устройство — это проп
+
+Каждый отрисовщик принимает `agent`, класс устройства, а не читает media query. Эти блоки рендерятся на сервере, который должен отдать верную разметку с первого раза: телефонная раскладка, пришедшая как разметка рабочего стола и поправившая себя на гидратации, — заметный скачок, а для видеоблоков ещё и зря скачанный файл.
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## Свои типы
+
+Карта от типа к отрисовщику — точка расширения. Хост добавляет собственный тип или заменяет один из них. Так приложение Next подставляет своё оптимизирующее изображение, и так на страницу попадает всё, чего библиотека не привозит.
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+`has(specifiers, token)` отвечает, есть ли подсказка в мешке, а `fit(dim, within)` — наибольшая коробка одного соотношения сторон внутри другого; оба экспортированы для вашего отрисовщика. Каталог [Блоки](/blocks) рендерит примеры каждого отрисовщика рядом с типами.

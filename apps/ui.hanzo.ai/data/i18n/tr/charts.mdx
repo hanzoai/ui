@@ -1,0 +1,157 @@
+---
+title: Grafikler
+description: Bir eğilim, bir dizi, bir pay ve bir dağılım. Satır içi SVG, bağımlılık yok ve uydurulmuş bir nokta asla yok.
+---
+
+```tsx
+import { BarChart, BarRows, Donut, LineChart, Sparkline } from '@hanzo/ui/product'
+```
+
+Grafikler satır içi SVG ile çizer ve renklerini canlı temadan alır, bu yüzden onunla birlikte ters döner. Yapıları gereği dürüsttürler: ikiden az noktası olan bir sparkline hiçbir şey render etmez, pozitif değeri olmayan bir halka bir uzun tire render eder ve hiçbir grafik bir eğilim uydurmaz. Çağıranlar gerçek diziler geçirir.
+
+Veriyi iki biçim taşır. Bir `ChartPoint` ardışık bir eksende etiketli bir değerdir; bir `Slice` kategorik bir eksende etiketli bir büyüklüktür, isteğe bağlı bir renk ve bir ipucu ile.
+
+```ts
+type ChartPoint = { label: string; value: number }
+type Slice = { label: string; value: number; color?: string; hint?: string }
+```
+
+## Sparkline
+
+Bir metrik kartı için sabit boyutlu bir eğilim. `values` düz bir dizidir; `width`, `height` ve `color` isteğe bağlıdır.
+
+```tsx
+<Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+```
+
+<Preview>
+  <Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+</Preview>
+
+## Çizgi grafik
+
+Zaman içinde bir değer. Kabını ölçer, bu yüzden içinde durduğu kutu kadar geniştir ve üzerine gelmek en yakın noktayı bir kılavuz çizginin yanında okur. `formatValue` okumayı biçimler.
+
+```tsx
+<LineChart
+  data={[
+    { label: 'Mon', value: 120 },
+    { label: 'Tue', value: 180 },
+    { label: 'Wed', value: 150 },
+    { label: 'Thu', value: 260 },
+    { label: 'Fri', value: 230 },
+    { label: 'Sat', value: 310 },
+    { label: 'Sun', value: 290 },
+  ]}
+  height={200}
+  formatValue={(v) => `${v} req`}
+/>
+```
+
+<Preview>
+  <LineChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+    formatValue={(v) => `${v} req`}
+  />
+</Preview>
+
+## Çubuk grafik
+
+Aynı veri, çubuk olarak. Aynı prop’lar.
+
+```tsx
+<BarChart data={points} height={200} />
+```
+
+<Preview>
+  <BarChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+  />
+</Preview>
+
+## Halka
+
+Bir pay. Renk bir kip değil, veridir: `color` taşıyan bir dilim onunla çizilir, taşımayan bir dilim ön plandan tek renkli bir ölçek alır, bu yüzden tek bir bileşen hem kategorik bir grafiğe hem markaya uygun bir grafiğe hizmet eder. `center` halkanın içinde render eder; `legend` yerleşik bir etiket ve yüzde listesi çizer, tüketicinin daha zengin birini kurabilmesi için varsayılan olarak kapalıdır.
+
+```tsx
+<Donut
+  slices={[
+    { label: 'zen-4', value: 62 },
+    { label: 'zen-3', value: 28 },
+    { label: 'other', value: 10 },
+  ]}
+  center="62%"
+  legend
+/>
+```
+
+<Preview>
+  <XStack gap="$8" flexWrap="wrap" items="center">
+    <Donut
+      slices={[
+        { label: 'zen-4', value: 62 },
+        { label: 'zen-3', value: 28 },
+        { label: 'other', value: 10 },
+      ]}
+      center="62%"
+      legend
+    />
+    <Donut
+      slices={[
+        { label: 'compute', value: 540, color: '#7c5cff' },
+        { label: 'storage', value: 220, color: '#23c562' },
+        { label: 'egress', value: 90, color: '#ff9f45' },
+      ]}
+      size={120}
+      thickness={16}
+    />
+  </XStack>
+</Preview>
+
+`CHART_PALETTE`, kategorik bir dizi için koyu zemine ayarlanmış sekiz ayrı tondur; `CHART_OTHER` bir kalan için kısık tondur.
+
+## Çubuk sıraları
+
+Yerleşim primitifleriyle çizilmiş, kabuk gibi tema alan, etiketli yatay çubuklar olarak bir dağılım. Aynı `Slice` biçimini alır.
+
+```tsx
+<BarRows
+  bars={[
+    { label: 'us-east', value: 1240 },
+    { label: 'eu-west', value: 860 },
+    { label: 'ap-south', value: 410 },
+  ]}
+/>
+```
+
+<Preview>
+  <BarRows
+    bars={[
+      { label: 'us-east', value: 1240 },
+      { label: 'eu-west', value: 860 },
+      { label: 'ap-south', value: 410 },
+    ]}
+  />
+</Preview>
+
+## Kutuyu ölçmek
+
+`useContainerWidth` de dışa aktarılır: bir `ref` ve son ölçtüğü genişlik, bir `ResizeObserver` tarafından tutulur. Çizgi ve çubuk grafiklerin kullandığı budur ve kendi grafiğiniz, tahmin ettiği bir sayı yerine verilen kutuya çizmek için bunu kullanabilir.

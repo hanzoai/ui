@@ -1673,11 +1673,13 @@ holds one JSON file per target locale. `node scripts/i18n-check.mjs` fails when
 a key or a `{placeholder}` is missing. `node scripts/i18n-translate.mjs` fills
 gaps from `HANZO_API_BASE` (default `https://api.hanzo.ai/v1`) with
 `HANZO_API_KEY`, and does not overwrite a string that is already there.
-`node scripts/i18n-translate-mdx.mjs` does the same for docs pages:
-English in `apps/ui.hanzo.ai/data/docs`, a translation at
-`apps/ui.hanzo.ai/data/i18n/<locale>/<slug>.mdx`, English when that file is
-absent. The docs site prefixes every locale but English (`/ja/docs`) and
-emits `hreflang` plus `public/sitemap.xml`.
+`node scripts/i18n-translate-mdx.mjs` does the same for docs pages that are
+not already translated. English lives in `apps/ui.hanzo.ai/data/docs`. Every
+page there now has a translation at
+`apps/ui.hanzo.ai/data/i18n/<locale>/<slug>.mdx` for es, fr, de, it, pt-BR,
+ru, tr, ar, hi, id, vi, th, ja, ko, zh-CN and zh-TW. A page with no file still
+renders in English. The docs site prefixes every locale but English
+(`/ja/docs`) and emits `hreflang` plus `public/sitemap.xml`.
 
 Chat copy still goes through `t` / `phrase` from `@hanzo/i18n`. Inside
 `<Hanzo locale>`, `useTranslate` reads this package's catalog first.

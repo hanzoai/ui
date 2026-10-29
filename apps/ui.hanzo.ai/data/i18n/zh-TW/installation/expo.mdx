@@ -1,0 +1,37 @@
+---
+title: Expo 與 React Native
+description: 同一次匯入，沒有要起的別名。Metro 本來就會說 react-native。
+---
+
+函式庫透過 @hanzo/gui 繪製，而它以 React Native 為先：堆疊是一個 `View`，文字是 `Text`，樣式 prop 就是樣式。於是在網頁上畫出 `div` 的同一批元件，在這裡畫出原生視圖，主題權杖、間距坡道和字級階梯在兩邊意思相同。
+
+## 安裝
+
+```bash
+pnpm create expo-app@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+沒有打包工具的設定。網頁宿主所設的 `react-native` 別名，是為了讓網頁打包工具去讀一個原生套件；Metro 是原生打包工具，按寫下來的樣子讀。根所攜帶的樣式表匯入，在原生的 Metro 下是空操作，在 Expo 的網頁上則會生效。
+
+## 掛上根
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Stack } from 'expo-router'
+
+export default function Layout() {
+  return (
+    <Hanzo>
+      <Stack />
+    </Hanzo>
+  )
+}
+```
+
+## 留在網頁上的
+
+`@hanzo/ui/grid` 繪製一個帶 `display: grid` 的 `div`，這兩樣在 React Native 上都不存在——Yoga 沒有格線演算法——所以它待在自己的子路徑上，而不是根的桶檔裡。在那邊用 `XStack` 和 `YStack` 來排；一套原生格線引擎改的是那一個檔案，呼叫處不動。`@hanzo/ui/product` 裡的圖表畫的是內嵌 SVG，並用 `ResizeObserver` 測量容器，所以它們今天也是網頁元件。
+
+觸控目標透過 `hitSlop` 達到 44 點的下限，從不靠 padding，於是控制項的盒子在兩個平台上一樣大，可點的區域則不是。

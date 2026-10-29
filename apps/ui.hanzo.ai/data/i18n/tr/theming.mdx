@@ -1,0 +1,98 @@
+---
+title: Temalar
+description: Token’lar temaya göre çözülür, kimliği özel özellikler taşır ve üç ayar bir kişinin tamamını yeniden akort etmesini sağlar.
+---
+
+Kütüphanede hiçbir şey bir rengin adını koymaz. Bir bileşen `$background` veya `$color12` ister, tema yanıtlar ve yanıt koyu ile açık arasında bileşenin haberi olmadan değişir. Bir marka yanıtı bir özel özellik koyarak değiştirir; bir kişi, ölçeklerin çarpıldığı bir ayarı oynatarak değiştirir.
+
+## Token’lar
+
+`$` ile başlayan bir prop değeri bir token’dır. Renk ölçeği yüzeyden metne gider: `$color1` en sessiz zemindir, `$color12` en gürültülü metin.
+
+| Token | Ne olduğu |
+| --- | --- |
+| `$background` | Sayfa zemini. `--background` okur, bu yüzden bir markanın stil sayfası ona yanıt verir. |
+| `$color` | Varsayılan metin rengi. |
+| `$color1` – `$color12` | Nötr ölçek: `$color2`/`$color3` yükseltilmiş yüzeylerdir, `$color10`/`$color11` kısık metin, `$color12` en gürültülü. |
+| `$borderColor` | Saç teli. Yarı saydamdır, bu yüzden ilgisiz bir gri değil, herhangi bir yüzeyde daha açık bir çizgi olarak okunur. |
+| `$accentBackground` / `$accentColor` | Bir sayfaya izin verilen tek gürültülü kontrol. `--primary` okurlar, bu yüzden vurgu ayarı onlara ulaşır. |
+
+<Preview>
+  <XStack gap="$2" flexWrap="wrap">
+    <Button>Default</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="destructive">Destructive</Button>
+  </XStack>
+  <XStack gap="$2" flexWrap="wrap">
+    <Badge>default</Badge>
+    <Badge variant="secondary">secondary</Badge>
+    <Badge variant="destructive">destructive</Badge>
+    <Badge variant="outline">outline</Badge>
+  </XStack>
+</Preview>
+
+## Merdivenler
+
+Boyut, aralık ve yarıçap her host’ta aynı sayılardır ve her basamak bir ayar taşır.
+
+**Yazı.** `fontSize="$n"`, asla bir sayı. On iki basamak tasarım ölçeğini okur, `--text-xs` ile `--text-9xl` arasında, ve basamakların arasındaki dördü komşularını ara değerler, bu yüzden bir kişinin ölçeği on altısını da oynatır ve merdiven merdiven kalır.
+
+| Basamak | `$1` | `$2` | `$3` | `$4` | `$5` | `$6` | `$7` | `$8` | `$9` | `$10` | `$11` | `$14` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| px | 11 | 13 | 14 | 15 | 15 | 17 | 21 | 26 | 26 | 32 | 40 | 64 |
+
+`$1` bir etikettir, `$2` gezinme ve sık gövde, `$3` taban, `$6` bir bölüm başlığı, `$7` bir sayfa başlığı, `$8` ve üzeri display. Display basamakları satır aralığını ve tracking’i −0.025em’e sıkar; dizilmiş yazı ile yalnızca büyük yazı arasındaki fark budur.
+
+**Aralık.** 4px ölçeği ve yalnızca 4px ölçeği: `$1` 4, `$2` 8, `$3` 12, `$4` 16, `$5` 24, `$6` 32, `$8` 48, `$10` 64. Her adım `--density` ile çarpılır.
+
+**Yarıçap.** Dört değer. `$1` ve `$2` 6’dır, bir kontrol; `$3` ve `$4` 8’dir, bir input veya bir satır; `$5` ile `$9` 12’dir, bir panel; `$10` ve üzeri hap. Hap dışında her şey `--radius-scale` ile çarpılır.
+
+## Özel özellikler
+
+Kimlik, `:root` üzerindeki bir özel özellik kümesidir, önce koyu, `.light` onları yeniden akort eder. `Hanzo` body üzerine `.t_dark` veya `.t_light` basar ve CSS iki yazılışa da yanıt verir, bu yüzden bileşen token’ları ile stil sayfası tek bir tema adlandırır.
+
+```css
+:root {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --primary: #fafafa;
+  --border: rgb(255 255 255 / .10);
+  --ring: rgb(255 255 255 / .40);
+  --font-sans: 'Zen', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Zen Mono', ui-monospace, monospace;
+}
+```
+
+Tam küme `--background`, `--foreground`, `--card`, `--popover`, `--primary`, `--secondary`, `--muted`, `--accent`, `--destructive`, her birinin kendi `-foreground` değeri, sonra `--border`, `--input`, `--ring`, `--radius`, `--chart-1` ile `--chart-5` ve `--sidebar-*` ailesidir. `@hanzo/design` içinden gelirler ve kökün içe aktardığı stil sayfasına katılırlar; design’ın kendi sayfasını da monte eden bir host onu canlı izler.
+
+Bir marka, aynı adları kaskatta daha sonra bildirerek yeniden akort eder. Kendi yüzünü getiren bir host `--font-sans` yerine `--font-sans-provided` bağlar, çünkü paketin bağlaması bir katmanda durur ve katmansız bir bildirim özgüllüğü ne olursa olsun kazanır.
+
+## Görünüm ayarları
+
+`@hanzo/design`, her ölçeğin çarpıldığı üç ayar yayımlar ve `@hanzo/appearance` bunları bir kişi için kuran paneldir:
+
+| Ayar | Neyi oynatır |
+| --- | --- |
+| `--type-scale` | Her `--text-*` basamağını ve onunla birlikte her `fontSize="$n"` değerini. |
+| `--type-ratio` | Basamakların birbirinden ne kadar uzak durduğunu. |
+| `--density` | Her `--space-*` adımını ve gui’deki her gap ile padding’i. |
+| `--primary` / `--accent` | Tek gürültülü rengi. |
+| `--font-sans` | Okuma yüzü: markanınki, sisteminki, bir serif veya mono. |
+| `--container-max` / `--container-prose` / `--container-wide` | Bir sayfanın yerleştiği üç ölçü. |
+
+`html` üzerine, yani `:root` üzerine, satır içi özellik olarak inerler, bu yüzden özgüllükte geçilecek bir seçici olmadan her stil sayfasını yenerler ve bileşenlere ulaşırlar, çünkü gui bir boyutu JavaScript’te `var(--text-base)` olarak çözer ve değişken öğedeki kaskadı hâlâ okur. Kimsenin kurmadığı bir eksen nötr değil, yoktur: `1` yazmak aynı görünür ve kendi ölçeğini yayımlamış bir markayı sessizce ezer.
+
+```tsx
+import { Appearance } from '@hanzo/appearance'
+import { bootScript } from '@hanzo/appearance/state'
+
+// In <head>, so the first paint is already correct.
+<script dangerouslySetInnerHTML={{ __html: bootScript() }} />
+
+// Wherever the product keeps settings.
+<Appearance />
+```
+
+`Hanzo` saklanan tercihi her monte edilişte yeniden uygular, bu yüzden bir sayfada yapılan seçim sonrakinde durur. Bu sitenin başlığındaki kontrol o paneldir.

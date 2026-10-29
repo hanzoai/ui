@@ -1,0 +1,78 @@
+---
+title: Tipografi
+description: Zen ve Zen Mono, her bileşenin okuduğu bir yazı merdiveni ve sizin yazmadığınız metin için bir düzyazı kabı.
+---
+
+## Yüzler
+
+Zen okuma yüzüdür; Zen Mono kod, tanımlayıcılar ve sayısal her şey içindir. İkisi de paketle gelir ve rolü adlandıran, yüzü değil, iki özel özelliğe bağlanır:
+
+```css
+--font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+--font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
+```
+
+Bileşenler iki değişkeni okur, asla bir aile adını değil. Kendi yüzünü yeğleyen bir host `--font-sans-provided` bağlar; paketin kendi bağlaması bir kaskad katmanında durur, bu yüzden host’un katmansız olanı kazanır. Hiçbir şey bağlamayan bir host Zen alır.
+
+<Preview>
+  <YStack gap="$2">
+    <Text fontSize="$8" fontWeight="600">The quick brown fox jumps over the lazy dog</Text>
+    <Text fontSize="$4" color="$color11">Zen at the section and body rungs, tracked and leaded for the size.</Text>
+    <Text fontFamily="$mono" fontSize="$3">pnpm add @hanzo/ui — Zen Mono for code and numbers 0123456789</Text>
+  </YStack>
+</Preview>
+
+## Merdiven
+
+Tek bir yazı merdiveni vardır ve her bileşen ondadır. `Text`, o basamağın satır aralığı ve tracking’i ile `fontSize="$n"` alır; başlıklar ve `Paragraph` `size="$n"` alır ve üçünü birlikte kurar.
+
+```tsx
+import { H1, H2, Paragraph, SizableText, Text } from '@hanzo/ui'
+
+<H1>A page title</H1>
+<H2 size="$6">A section</H2>
+<Paragraph size="$4">Body copy at the base rung.</Paragraph>
+<SizableText size="$2" color="$color11">A label.</SizableText>
+<Text fontFamily="$mono" fontSize="$2">an identifier</Text>
+```
+
+Asla bir sayı. `fontSize={14}` 14’te sabitlenir; `fontSize="$3"` bugün 14’tür ve bir kişinin yazı ölçeğinin ondan çıkardığı şeydir, çünkü basamak `var(--text-base)` üzerinden çözülür ve ayar ölçeği çarpar. Tablo [Temalar](/docs/theming) sayfasındadır.
+
+## Düzyazı
+
+Yazarın yazdığı içerik — bir CMS alanı, bir Markdown dosyası, bir bloğun gövdesi — çıplak etiketler olarak gelir. İçinde hiçbir şey bir prop taşıyamaz, bu yüzden stilin bir atadan gelip etikete göre aşağı inmesi gerekir. `ApplyTypography` o atadır.
+
+```tsx
+import { ApplyTypography } from '@hanzo/ui'
+
+<ApplyTypography size="base">
+  <h2>Install</h2>
+  <p>
+    Add the package, then wrap the app once at the root. The full guide is
+    at <a href="https://ui.hanzo.ai">ui.hanzo.ai</a>.
+  </p>
+  <pre>
+    <code>{"pnpm add @hanzo/ui\npnpm dev"}</code>
+  </pre>
+  <ol>
+    <li>
+      Render <strong>Hanzo</strong> once, around the whole tree.
+    </li>
+    <li>
+      Import <code>Button</code> or any other component from the same
+      package.
+    </li>
+    <li>Pass it the props its type declares.</li>
+  </ol>
+  <blockquote>
+    Components read their colours from the theme, so a token changed there
+    changes every surface at once.
+  </blockquote>
+</ApplyTypography>
+```
+
+<Preview>
+  <ProseBlocks />
+</Preview>
+
+`size` varsayılan olarak `responsive`’tır — görüntü alanıyla birlikte kımıldayan tek basamak — ya da `sm`, `base`, `lg`, `xl`, yerinde kalır, çünkü çağıranın seçtiği bir boyut bir öneri değil bir karardır. `asTag` öğeyi seçer: `div`, `section`, `nav`, `main`, `article`, `aside` içinden herhangi biri. Kurallar stil sayfasında `.hz-prose` altında yaşar, ad alanlıdır, böylece başka bir tipografi eklentisinden yarı yolda çıkan bir site parçası tek bir seçici için kavga eden iki sayfa taşımaz. [Düzyazı](/ui/prose) sayfası her basamağı ve bir kabın içine yuvalanmış bir kabı render eder.

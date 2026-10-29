@@ -1,0 +1,55 @@
+---
+title: Vite
+description: İki satır resolve ve kök.
+---
+
+## Projeyi oluşturun
+
+```bash
+pnpm create vite@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+`react-native-web`, `react-native` ifadesinin webde çözüldüğü şeydir, bu yüzden uygulama onu `react-dom`’u bildirdiği şekilde bildirir.
+
+## Vite’ı yapılandırın
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+Yapılandırmanın tamamı budur. İçinde paket için bir giriş yoktur — ona bir alias yok, CSS borusu yok, eklenti yok, transpile listesi yok. Üç çözümleme react-native-web’e aittir ve onun üzerinden render eden her uygulama onları taşır: react-native-svg’nin web derlemesi çıplak `react-native` içe aktarır, girişi o derlemeye ancak `.web.js` `.js` karşısında öndeyken ulaşır ve asset yolu `@react-native/assets-registry/registry` adını taşır; webde bu, react-native-web’in kendi AssetRegistry modülüdür.
+
+## Kökü monte edin
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+`index.html` içinde ne bir stil sayfası bağlantısı ne de `class="dark"` vardır: ikisini de kök getirir.
+
+## Koyu ve açık
+
+`Hanzo`, `theme` alır. Seçimi bir kişiye bırakmak için seçimi durumda tutun ve köke de bir anahtara da verin — [Koyu mod](/docs/dark-mode).

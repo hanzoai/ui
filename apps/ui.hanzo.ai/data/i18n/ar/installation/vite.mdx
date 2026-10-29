@@ -1,0 +1,55 @@
+---
+title: Vite
+description: سطران من resolve، والجذر.
+---
+
+## أنشئ المشروع
+
+```bash
+pnpm create vite@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+`react-native-web` هو ما يُحل إليه `react-native` على الويب، فيعلنه التطبيق بالطريقة التي يعلن بها `react-dom`.
+
+## اضبط Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+هذا كل الضبط. لا مدخل للحزمة فيه — لا اسم مستعار إليها، ولا أنبوب CSS، ولا إضافة، ولا قائمة ترجمة. القرارات الثلاثة تخص react-native-web، وكل تطبيق يصيّر عبره يحملها: بناء react-native-svg للويب يستورد `react-native` عاريًا، ومدخله لا يبلغ ذلك البناء إلا حين يتقدّم `.web.js` على `.js`، ومسار الأصل يسمّي `@react-native/assets-registry/registry`، وهو على الويب وحدة AssetRegistry الخاصة بـ react-native-web.
+
+## ركّب الجذر
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+لا رابط لورقة أنماط في `index.html` ولا `class="dark"` عليه: الجذر يأتي بالاثنين.
+
+## الداكن والفاتح
+
+يأخذ `Hanzo` الخاصية `theme`. لترك الاختيار لشخص، أبقِ الاختيار في الحالة وسلّمه إلى الجذر وإلى مبدّل — [الوضع الداكن](/docs/dark-mode).

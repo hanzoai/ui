@@ -1,0 +1,88 @@
+---
+title: Тесты
+description: Монтируйте под корнем, ищите по слоту, разрешайте каскад сами и остальное пусть посчитает браузер.
+---
+
+Каждый компонент ставит `data-slot` со своим именем, поэтому тест находит контрол, не завися от разметки, которую версия может сменить. Монтируйте под `Hanzo`, как это делает приложение: корень несёт конфиг, относительно которого разрешается каждый токен, а компонент без корневой темы бросает ошибку.
+
+## Модульные тесты
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+Псевдоним тот же, что несёт сборщик. Список `inline` важен: пакеты движка публикуются как CommonJS, который реэкспортирует ESM, и оставленные внешними они разрешаются во вторую копию модуля, которому принадлежит тема. Провайдер пишет один контекст, каждый тематический компонент читает другой и бросает `Missing theme`.
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## Цвета в DOM без каскада
+
+jsdom не разрешает `var()` и отдаёт тесту текст дословно. Ступени темы записаны как `var(--border, rgb(255 255 255 / .10))` нарочно: идти по живому каскаду там, где смонтирована таблица design, и держать проверенный литерал там, где её нет. Утверждать контраст границы в jsdom значило сравнивать цвет с вызовом функции. `substitute` делает шаг, которого jsdom не делает.
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+Без карты `vars` это точно, а не приблизительно: jsdom не монтирует таблицу design, поэтому ничто не объявляет `--border`, и запасное значение — то, что браузер посчитал бы в тех же условиях. Передайте карту, чтобы смоделировать хост, который объявляет свои токены. Модуль ничего не импортирует и выходит в обоих форматах, поэтому грузится под любым раннером.
+
+## Что посчитал браузер
+
+Сборка, проверка типов и модульный тест проходят и на таблице стилей, которая до страницы не дошла. Доказательство — браузер: соберите приложение, отдайте его и утверждайте вычисленные стили, а не заявления разметки.
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+Так пакет проверяет сам себя. Его галерея — один список каждого компонента в каждом варианте; генератор таблицы рендерит этот список, модульный тест рендерит его под настоящим провайдером и проверяет, что доехал каждый маркер слота, а потребительский тест пакует tarball, ставит его в приложение вне репозитория — никогда ссылкой workspace, которая разрешается через дерево исходников и прячет файл, отсутствующий в tarball, — собирает и утверждает вычисленные стили и скриншоты на 390 и 1280 в обеих темах. Ссылка workspace выпустила бы каждый дефект, ради которого этот тест и существует.

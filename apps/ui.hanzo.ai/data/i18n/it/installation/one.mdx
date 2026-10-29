@@ -1,0 +1,72 @@
+---
+title: One
+description: Il framework con cui è costruito questo sito. L'alias, la lista di dedupe, e la radice nel documento.
+---
+
+[One](https://onestack.dev) è un framework Vite per React e React Native, con
+rotte per file. Questo sito è un'app One renderizzata in HTML statico, e la
+configurazione qui sotto è la sua.
+
+## Creare il progetto
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Configurare Vite
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+L'alias è lo stesso che imposta ogni host. La lista di dedupe è ciò che tiene
+il motore in una sola istanza tra il bundle client e quello server: il tema è
+un contesto React, e due copie del modulo che lo possiede sono due contesti.
+
+## Montare la radice
+
+One renderizza l'intero documento da `_layout.tsx`, quindi la radice va lì.
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## Render statico
+
+Con `defaultRenderMode: 'ssg'` ogni rotta si renderizza una volta, al momento
+della build, in un file HTML vero, e il foglio del pacchetto sta in quel file
+— il foglio si genera quando si pubblica il pacchetto, non quando un browser
+renderizza un componente per la prima volta, ed è ciò che rende corretta una
+pagina statica prima che giri qualunque script.

@@ -1,0 +1,73 @@
+---
+title: One
+description: Le framework avec lequel ce site est construit. L'alias, la liste de dedupe, et la racine dans le document.
+---
+
+[One](https://onestack.dev) est un framework Vite pour React et React Native,
+avec des routes par fichier. Ce site est une app One rendue en HTML statique,
+et la configuration ci-dessous est la sienne.
+
+## Créer le projet
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Configurer Vite
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+L'alias est le même que chaque hôte pose. La liste de dedupe est ce qui garde
+le moteur en une seule instance à travers les bundles client et serveur : le
+thème est un contexte React, et deux copies du module qui le possède sont
+deux contextes.
+
+## Monter la racine
+
+One rend le document entier depuis `_layout.tsx`, donc la racine va là.
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## Rendu statique
+
+Avec `defaultRenderMode: 'ssg'`, chaque route est rendue une fois au moment
+du build, dans un vrai fichier HTML, et la feuille du paquet est dans ce
+fichier — la feuille est générée à la publication du paquet, pas quand un
+navigateur rend un composant pour la première fois, et c'est ce qui rend une
+page statique correcte avant qu'aucun script ne tourne.

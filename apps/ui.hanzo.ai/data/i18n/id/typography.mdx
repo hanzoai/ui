@@ -1,0 +1,99 @@
+---
+title: Tipografi
+description: Zen dan Zen Mono, satu tangga huruf yang dibaca setiap komponen, dan sebuah wadah prosa untuk teks yang tidak Anda tulis.
+---
+
+## Wajah
+
+Zen adalah wajah baca; Zen Mono untuk kode, pengenal, dan apa pun yang
+berupa angka. Keduanya dikirim bersama paket dan diikat ke dua properti kustom
+yang menamai peran, bukan wajahnya:
+
+```css
+--font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+--font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
+```
+
+Komponen membaca kedua variabel itu dan tidak pernah sebuah nama keluarga.
+Host yang lebih suka wajahnya sendiri mengikat `--font-sans-provided`; ikatan
+milik paket duduk di sebuah layer kaskade agar yang tanpa layer dari host
+menang. Host yang tidak mengikat apa pun mendapat Zen.
+
+<Preview>
+  <YStack gap="$2">
+    <Text fontSize="$8" fontWeight="600">The quick brown fox jumps over the lazy dog</Text>
+    <Text fontSize="$4" color="$color11">Zen at the section and body rungs, tracked and leaded for the size.</Text>
+    <Text fontFamily="$mono" fontSize="$3">pnpm add @hanzo/ui — Zen Mono for code and numbers 0123456789</Text>
+  </YStack>
+</Preview>
+
+## Tangga
+
+Ada satu tangga huruf dan setiap komponen berada di atasnya. `Text` menerima
+`fontSize="$n"` beserta leading dan tracking anak tangga itu; judul dan
+`Paragraph` menerima `size="$n"` lalu menetapkan ketiganya bersama-sama.
+
+```tsx
+import { H1, H2, Paragraph, SizableText, Text } from '@hanzo/ui'
+
+<H1>A page title</H1>
+<H2 size="$6">A section</H2>
+<Paragraph size="$4">Body copy at the base rung.</Paragraph>
+<SizableText size="$2" color="$color11">A label.</SizableText>
+<Text fontFamily="$mono" fontSize="$2">an identifier</Text>
+```
+
+Tidak pernah angka. `fontSize={14}` terkunci di 14; `fontSize="$3"` adalah 14
+hari ini dan apa pun yang dibuat skala huruf seseorang darinya, karena anak
+tangga diselesaikan lewat `var(--text-base)` dan kenop mengalikan tangga.
+Halaman [Tema](/docs/theming) memuat tabelnya.
+
+## Prosa
+
+Konten yang dikarang — bidang CMS, berkas Markdown, isi sebuah blok — datang
+sebagai tag telanjang. Tidak ada di dalamnya yang bisa membawa prop, jadi gaya
+harus datang dari leluhur dan menjangkau ke bawah lewat tag. `ApplyTypography`
+adalah leluhur itu.
+
+```tsx
+import { ApplyTypography } from '@hanzo/ui'
+
+<ApplyTypography size="base">
+  <h2>Install</h2>
+  <p>
+    Add the package, then wrap the app once at the root. The full guide is
+    at <a href="https://ui.hanzo.ai">ui.hanzo.ai</a>.
+  </p>
+  <pre>
+    <code>{"pnpm add @hanzo/ui\npnpm dev"}</code>
+  </pre>
+  <ol>
+    <li>
+      Render <strong>Hanzo</strong> once, around the whole tree.
+    </li>
+    <li>
+      Import <code>Button</code> or any other component from the same
+      package.
+    </li>
+    <li>Pass it the props its type declares.</li>
+  </ol>
+  <blockquote>
+    Components read their colours from the theme, so a token changed there
+    changes every surface at once.
+  </blockquote>
+</ApplyTypography>
+```
+
+<Preview>
+  <ProseBlocks />
+</Preview>
+
+`size` secara bawaan adalah `responsive` — satu-satunya anak tangga yang
+bergerak bersama viewport — atau `sm`, `base`, `lg`, `xl`, yang tetap di
+tempat, karena ukuran yang dipilih pemanggil adalah keputusan, bukan saran.
+`asTag` memilih elemen, salah satu dari `div`, `section`, `nav`, `main`,
+`article`, `aside`. Aturannya tinggal di lembar gaya di bawah `.hz-prose`,
+diberi namespace agar situs yang baru setengah lepas dari plugin tipografi
+lain tidak punya dua lembar berebut satu selektor. Halaman
+[prosa](/ui/prose) merender setiap anak tangga, dan sebuah wadah yang bersarang
+di dalam wadah.

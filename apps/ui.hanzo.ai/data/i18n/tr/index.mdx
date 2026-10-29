@@ -1,0 +1,78 @@
+---
+title: Giriş
+description: Web, yerel ve masaüstü için tek bir bileşen kütüphanesi, tek bir taban üzerinde. Tek import, tek kök ve yapılandırılacak bir şey yok.
+---
+
+{brand.name}, {brand.org} bileşen kütüphanesidir. Her bileşen [@hanzo/gui](https://gui.hanzo.ai) üzerinden çizilir. Bu, React ve React Native için bir stil motorudur: stilleri prop olarak alır ve webde atomik CSS’e derler. Motor platformlar arası olduğu için kütüphane de öyledir: aynı `Switch` tarayıcıda bir `div`, telefonda ise yerel bir görünüm olur.
+
+Burada yardımcı sınıf derlemesi yoktur. Ne Tailwind, ne bir PostCSS eklentisi, ne bir bileşenin altında Radix primiti, ne bir kayıt, ne `components.json`, ne de kaynağı deponuza kopyalayan bir CLI. Bir paket kurar, ondan içe aktarırsınız.
+
+## Kurun ve render edin
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+```tsx title="main.tsx"
+import { Hanzo, Button } from '@hanzo/ui'
+
+export default function App() {
+  return (
+    <Hanzo>
+      <Button>Ship</Button>
+    </Hanzo>
+  )
+}
+```
+
+Kurulumun tamamı budur. `Hanzo` köktür ve eskiden her uygulamanın işi olan üç şeyi taşır: token’ların çözüldüğü gui yapılandırması, stil sayfası ve tema. İçe aktarılacak bir CSS ve çalıştırılacak bir üreteç yoktur — sayfa, paket yayımlanırken üretilir: her bileşen render edilir ve o render’ın ürettiği CSS toplanır, böylece ilk boyama ve her sunucu render’ı kurallarıyla birlikte gelir.
+
+Host’un hâlâ yaptığı tek şey, bundler’a `react-native` ifadesinin `react-native-web` anlamına geldiğini söylemektir. Bu bir alias’tır ve [Kurulum](/docs/installation) altındaki her host sayfası onun nereye girdiğini gösterir.
+
+## Stil, prop’tur
+
+Stil, bileşenin bir prop’udur; duyarlı bir stil de aynı prop’un bir kırılım anahtarı altındaki hâlidir.
+
+```tsx
+import { Button, Text, XStack, YStack } from '@hanzo/ui'
+
+<YStack gap="$4" p="$5" $md={{ p: '$8' }}>
+  <Text fontSize="$5" color="$color11">
+    Balance
+  </Text>
+  <XStack gap="$2">
+    <Button>Send</Button>
+    <Button variant="outline">Receive</Button>
+  </XStack>
+</YStack>
+```
+
+Kırılımlar, mobile-first en küçük genişliklerdir: `$sm` 640, `$md` 768, `$lg` 1024, `$xl` 1280. `$` ile başlayan bir değer bir token’dır — bir renk, bir boyut, aralık ölçeğinin bir basamağı — ve temaya göre çözülür, bu yüzden `$background` çağrı yerinin haberi olmadan açıkta ve koyuda başka bir renktir. Yazı boyu her zaman bir token’dır, asla bir sayı değil: `fontSize="$3"`, `fontSize={14}` değil. Bir kişi kendi yazı ölçeğini koyabilir ve `$n` merdiveni onunla birlikte kayar; koda gömülü bir 14 kaymaz. Merdivenler [Temalar](/docs/theming) sayfasındadır.
+
+## Yerleşim
+
+Stack’ler flex’tir. `XStack` satırda, `YStack` kolonda dizer ve ikisi de `gap`, `items` ve `justify` alır. Izgara gerçek bir CSS ızgarasıdır, `@hanzo/ui/grid` altındadır ve şeritleri çocuklardan değil kaptan gelir — bkz. [Izgara](/docs/grid).
+
+## Ne nerede
+
+| Import | Ne olduğu |
+| --- | --- |
+| `@hanzo/ui` | Bileşen API’si — her primitif, stack’ler, yazı ölçeği ve `Hanzo`. |
+| `@hanzo/ui/product` | Uygulama katmanı: grafikler, sayfa kromu, durum etiketleri, ayrıntı panelleri, tema anahtarı. |
+| `@hanzo/ui/blocks` | Veri olarak içerik ve onu çizen render’lar. |
+| `@hanzo/ui/grid` | `Grid` ve `Cell`, yalnızca web. |
+| `@hanzo/ui/product/pure` | Ürün katmanının üzerinde çalıştığı kurallar, iliştirilmiş bir bileşen olmadan. |
+| `@hanzo/ui/css` | `substitute`, kaskadı olmayan bir DOM’un yanıtlayamadığı testler için. |
+| `@hanzo/ui/next` | İki bundler için de web alias’larını kuran Next sarmalayıcısı. |
+
+Bu sitedeki katalog sayfaları — [Bileşenler](/ui), [Bloklar](/blocks), [Ürün](/product) — paketin kendisinden okunur: her biri bir modülün örneklerini kaynaklarının yanında render eder ve tiplerini alıntılar.
+
+## Sorular
+
+**Tailwind gerekir mi?** Hayır. Bileşenler stil prop’u alır ve kimlik düz CSS özel özellikleridir. Bir uygulama sınıf dizeleriyle gelirse `Box`, `sx` ve `css` bunları `tw` üzerinden okur ve aynı prop’lara çevirir; paketin tanımlamadığı bir sınıf olarak DOM’a hiçbir şey ulaşmaz.
+
+**Bu kopyala-yapıştır mı?** Hayır. Paketi kurun ve ondan içe aktarın. Bileşenler paketle birlikte sürümlenir ve export haritası bir subpath’in çözüldüğü yerdir, bu yüzden derin bir import yamalar boyunca çalışmaya devam eder.
+
+**Hangi framework’ler?** Bundler `react-native` alias’ını bildikten sonra herhangi bir React 19 renderer’ı. [Vite](/docs/installation/vite), [Next](/docs/installation/next), [One](/docs/installation/one), [Expo](/docs/installation/expo) ve [Tauri](/docs/installation/tauri) için sayfalar vardır.
+
+**Ticari olarak kullanabilir miyim?** Evet. Apache-2.0 veya MIT, sizin seçiminiz.

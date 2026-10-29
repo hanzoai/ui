@@ -1,0 +1,61 @@
+---
+title: Next
+description: İki bundler için tek sarmalayıcı ve istemci sınırında kök.
+---
+
+## Projeyi oluşturun
+
+```bash
+pnpm create next-app@latest my-app --typescript --app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Yapılandırmayı sarın
+
+```js title="next.config.js"
+const withGui = require('@hanzo/ui/next')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = withGui(nextConfig, __dirname)
+```
+
+`withGui` webpack ve Turbopack için birlikte üç şey kurar: `.web.*` önce çözülür, `react-native` `react-native-web` olur ve `node_modules` içindeki her `@hanzogui/*` paketi transpile edilir, böylece ilk ikisi onların içine ulaşır. Zaten orada olanla birleşir — var olan bir `webpack()` kancası, Turbopack ayarları ve `transpilePackages` korunur ve genişletilir. `__dirname` geçirin ki paket, görev çalıştırıcının rastladığı yerden değil, uygulamanın kendi `node_modules` klasöründen bulunsun.
+
+İki bundler için bir kez bildirilir, çünkü yalnızca webpack’e ait bir ayar Turbopack altında sessizce yoktur ve o zaman `next dev` ile `next build` uygulamanın derlenip derlenmediğinde ayrılır.
+
+## Kökü monte edin
+
+Kök bir istemci bileşenidir, bu yüzden direktifli bir dosyada yaşar ve layout onu render eder.
+
+```tsx title="app/providers.tsx"
+'use client'
+
+import { Hanzo } from '@hanzo/ui'
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+```tsx title="app/layout.tsx"
+import { Providers } from './providers'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+`html` üzerindeki `suppressHydrationWarning`, bir anahtarın React monte olmadan önce oraya yazdığı tema sınıfı içindir — bkz. [Koyu mod](/docs/dark-mode).
+
+## Sunucu bileşenleri
+
+`@hanzo/ui` altındaki her şey bir istemci sınırıdır; bir sunucu bileşeni onu, herhangi bir istemci bileşenini içe aktaracağı gibi içe aktararak render eder. Bileşen iliştirilmemiş kurallar — `pages`, `masked`, `tone`, `resolveBrand` — `@hanzo/ui/product/pure` altındadır ve hiçbir şey içe aktarmaz, bu yüzden bir sunucu bileşeni veya bir route handler bir bileşen ağacı yüklemeden onları çağırabilir.

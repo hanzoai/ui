@@ -1,0 +1,157 @@
+---
+title: الرسوم
+description: اتجاه، وسلسلة، وحصة، وتوزيع. SVG مضمّن، بلا اعتماد، وبلا نقطة مختلقة أبدًا.
+---
+
+```tsx
+import { BarChart, BarRows, Donut, LineChart, Sparkline } from '@hanzo/ui/product'
+```
+
+ترسم الرسوم بـ SVG مضمّن وتأخذ ألوانها من السمة الحية، فتنقلب معها. هي صادقة بالبناء: sparkline بأقل من نقطتين لا تصيّر شيئًا، والحلقة بلا قيمة موجبة تصيّر شرطة طويلة، ولا رسم يخترع اتجاهًا. يمرّر المستدعي سلاسل حقيقية.
+
+شكلان يحملان البيانات. `ChartPoint` قيمة موسومة على محور تسلسلي؛ و`Slice` مقدار موسوم على محور تصنيفي، مع لون اختياري وتلميح.
+
+```ts
+type ChartPoint = { label: string; value: number }
+type Slice = { label: string; value: number; color?: string; hint?: string }
+```
+
+## Sparkline
+
+اتجاه بمقاس ثابت لبطاقة مقياس. `values` مصفوفة بسيطة؛ و`width` و`height` و`color` اختيارية.
+
+```tsx
+<Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+```
+
+<Preview>
+  <Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+</Preview>
+
+## رسم خطّي
+
+قيمة عبر الزمن. يقيس حاويته، فيكون بعرض الصندوق الذي هو فيه، والمرور يقرأ أقرب نقطة إلى جانب خط دليل. ينسّق `formatValue` القراءة.
+
+```tsx
+<LineChart
+  data={[
+    { label: 'Mon', value: 120 },
+    { label: 'Tue', value: 180 },
+    { label: 'Wed', value: 150 },
+    { label: 'Thu', value: 260 },
+    { label: 'Fri', value: 230 },
+    { label: 'Sat', value: 310 },
+    { label: 'Sun', value: 290 },
+  ]}
+  height={200}
+  formatValue={(v) => `${v} req`}
+/>
+```
+
+<Preview>
+  <LineChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+    formatValue={(v) => `${v} req`}
+  />
+</Preview>
+
+## رسم أعمدة
+
+البيانات نفسها، أعمدة. والـ props نفسها.
+
+```tsx
+<BarChart data={points} height={200} />
+```
+
+<Preview>
+  <BarChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+  />
+</Preview>
+
+## حلقة
+
+حصة. اللون بيانات لا وضع: الشريحة التي لها `color` تُرسم به، والتي بلا لون تأخذ تدرّجًا أحادي اللون من المقدّمة، فيخدم مكوّن واحد رسمًا تصنيفيًا ورسمًا على العلامة. يصيّر `center` داخل الحلقة؛ ويرسم `legend` قائمة مدمجة من الوسم والنسبة، وهي مطفأة افتراضيًا حتى يستطيع المستهلك أن يركّب أغنى منها.
+
+```tsx
+<Donut
+  slices={[
+    { label: 'zen-4', value: 62 },
+    { label: 'zen-3', value: 28 },
+    { label: 'other', value: 10 },
+  ]}
+  center="62%"
+  legend
+/>
+```
+
+<Preview>
+  <XStack gap="$8" flexWrap="wrap" items="center">
+    <Donut
+      slices={[
+        { label: 'zen-4', value: 62 },
+        { label: 'zen-3', value: 28 },
+        { label: 'other', value: 10 },
+      ]}
+      center="62%"
+      legend
+    />
+    <Donut
+      slices={[
+        { label: 'compute', value: 540, color: '#7c5cff' },
+        { label: 'storage', value: 220, color: '#23c562' },
+        { label: 'egress', value: 90, color: '#ff9f45' },
+      ]}
+      size={120}
+      thickness={16}
+    />
+  </XStack>
+</Preview>
+
+`CHART_PALETTE` ثمانية أصباغ متمايزة لسلسلة تصنيفية، مضبوطة للأرض الداكنة؛ و`CHART_OTHER` النغمة الخافتة للباقي.
+
+## صفوف الأعمدة
+
+توزيع على هيئة أعمدة أفقية موسومة، مرسومة ببدائيات التخطيط حتى تتبع السمة القشرة. يأخذ شكل `Slice` نفسه.
+
+```tsx
+<BarRows
+  bars={[
+    { label: 'us-east', value: 1240 },
+    { label: 'eu-west', value: 860 },
+    { label: 'ap-south', value: 410 },
+  ]}
+/>
+```
+
+<Preview>
+  <BarRows
+    bars={[
+      { label: 'us-east', value: 1240 },
+      { label: 'eu-west', value: 860 },
+      { label: 'ap-south', value: 410 },
+    ]}
+  />
+</Preview>
+
+## قياس الصندوق
+
+يُصدَّر `useContainerWidth` أيضًا: `ref` والعرض الذي قاسه آخر مرة، يمسكه `ResizeObserver`. هذا ما يستخدمه الرسمان الخطّي والعمودي، وما يستطيع رسمك أن يستخدمه ليرسم في الصندوق الذي أُعطي، لا في رقم خمّنه.

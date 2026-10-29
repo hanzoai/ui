@@ -1,0 +1,117 @@
+---
+title: グリッド
+description: トラックが子ではなくコンテナから来る、本物の CSS グリッド。列は prop 一つで、ブレークポイントはありません。
+---
+
+手で組んだグリッド、子がすべて `width: calc(25% - 7.5px)` のものは、子がみんな同意しているあいだだけ揃います。長い単語が一つあると、行がガタつきます。数をいじっても、それは直りません。ここでは親がトラックを一度宣言し、子には発言権がありません。等しい列は構造で、自分のトラックを広げられる子はいません。
+
+```tsx
+import { Cell, Grid } from '@hanzo/ui/grid'
+```
+
+`Grid` が自分のサブパスにあるのは、`display: grid` の `div` を描画するからです。どちらも React Native にはありません。API の名前は CSS グリッドの用語です。`columns` と `rows` はトラックのリストで、`Cell` は配置とスパンです。ネイティブのグリッドエンジンはファイルを変え、呼び出し側は変えません。
+
+## 列
+
+`columns` はトラックリストのどの書き方も取ります。個数、リスト、書き下したトラックリストです。
+
+```tsx
+<Grid columns={3} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={3} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+  </Grid>
+</Preview>
+
+個数は `repeat(3, minmax(0, 1fr))` になり、`1fr` にはなりません。`1fr` 単独は `minmax(auto, 1fr)` を意味し、`auto` はトラックの下限を中身に置くからです。切れない文字列が一つあると、自分の列を押し広げます。コンポーネントが防ぐために存在するのは、そのガタついた行です。長い綴りに意味があります。
+
+```tsx
+<Grid columns={['2fr', '1fr']} gap="$3">
+  <Tile>main</Tile>
+  <Tile>aside</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={['2fr', '1fr']} gap="$3">
+    <Tile>main</Tile>
+    <Tile>aside</Tile>
+  </Grid>
+</Preview>
+
+リストの中の数値はピクセルです。それ以外は、すでにトラックのサイズです。
+
+## 入るだけ
+
+レスポンシブな形は `columns` の値であって、二つ目の prop ではなく、その中にブレークポイントはありません。`min` は、グリッドが一つ減らす前に列が取りうるいちばん狭い幅です。`max` は個数の上限です。
+
+```tsx
+<Grid columns={{ min: 160, max: 4 }} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Tile>5</Tile>
+  <Tile>6</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={{ min: 160, max: 4 }} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Tile>5</Tile>
+    <Tile>6</Tile>
+  </Grid>
+</Preview>
+
+ウィンドウの大きさを変えてみてください。個数は、グリッドが入っている列に従います。同じブロックが、見たこともないサイドバーの中でも正しく収まります。`min` は裸の `160px` ではなく `min(160px, 100%)` と書かれるので、下限より狭い電話は横スクロールではなく、幅いっぱいのトラックを一つ得ます。`max` は同じ下限へ折り畳まれます。行の M 分の 1 から gap を引いたものです。上限は小さい画面では何もコストになりません。
+
+## セル
+
+素の子にラッパーは要りません。`Cell` があるのは、スパンするか配置するためです。数値はその数のトラックをまたぎ、文字列は書いたままの `grid-column` です。
+
+```tsx
+<Grid columns={4} gap="$3">
+  <Cell col={2}><Tile>col=2</Tile></Cell>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={4} gap="$3">
+    <Cell col={2}><Tile>col=2</Tile></Cell>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+  </Grid>
+</Preview>
+
+`row` は、ページの下方向で同じです。グリッドの `rows` は行トラックの大きさを決めます。なければ、行は中身の大きさになります。
+
+## 間隔
+
+`gap` は間隔のトークンか、生のピクセル数です。トークンは文書の中のランプを読みます。`gap="$4"` は `var(--space-4)` です。見た目のパネルで密度を動かすと、すべてのグリッドが一緒に動きます。描画時に解決された数値は、描画時に固定されます。
+
+## トラックリストそのもの
+
+`tracks(columns, gap)` がエクスポートされているのは、それがコンポーネントの決定の全部だからです。`columns` のどの書き方も、それが意味する一つのトラックリストへ変え、上の二つの不変条件を中に含みます。
+
+```ts
+import { tracks } from '@hanzo/ui/grid'
+
+tracks(3)                       // 'repeat(3, minmax(0, 1fr))'
+tracks({ min: 240 })            // 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))'
+```

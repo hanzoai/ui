@@ -1,0 +1,66 @@
+---
+title: Vite
+description: Deux lignes de resolve, et la racine.
+---
+
+## Créer le projet
+
+```bash
+pnpm create vite@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+`react-native-web` est ce vers quoi `react-native` se résout sur le web, donc
+l'app le déclare de la même façon qu'elle déclare `react-dom`.
+
+## Configurer Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+C'est toute la config. Il n'y a pas d'entrée pour le paquet dedans — pas
+d'alias vers lui, pas de pipeline CSS, pas de plugin, pas de liste à
+transpiler. Les trois résolutions appartiennent à react-native-web, et chaque
+app qui rend à travers lui les porte : le build web de react-native-svg
+importe `react-native` nu, son entrée n'atteint ce build que lorsque
+`.web.js` passe devant `.js`, et son chemin d'assets nomme
+`@react-native/assets-registry/registry`, qui sur le web est le module
+AssetRegistry propre à react-native-web.
+
+## Monter la racine
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+Pas de lien vers la feuille dans `index.html` et pas de `class="dark"`
+dessus : la racine apporte les deux.
+
+## Sombre et clair
+
+`Hanzo` prend `theme`. Pour laisser une personne choisir, gardez le choix
+dans l'état et remettez-le à la racine et à une bascule —
+[Mode sombre](/docs/dark-mode).
