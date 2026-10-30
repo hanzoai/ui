@@ -14,13 +14,13 @@ import { ViewBar } from './ViewBar'
 import { Button, Input, Text, XStack, YStack } from '@hanzo/gui'
 import { ArrowDownUp, ArrowDown, ArrowUp, Columns3, LayoutGrid, ListFilter, Plus, Search, Table2, X } from '@hanzogui/lucide-icons-2'
 import type { FieldDefinition, SelectOption } from '../field/types'
-import { FieldInput } from '../field/FieldInput'
 import { Menu, MenuItem } from '../primitives'
 import { tokens } from '../theme'
-import { OP_LABELS, operatorsForType, type FilterOp, type SortRule } from '../table/logic'
+import { OP_LABELS, isActiveRule, operatorsForType, type FilterOp, type SortRule } from '../table/logic'
 import { groupFieldCandidates } from '../board/logic'
 import type { ViewConfig } from './types'
-import { addFilter, defaultRuleFor, removeFilter, setGroupField, setKind, setSearch, setSorts, updateFilter } from './logic'
+import { addFilter, defaultRuleFor, otherMatch, removeFilter, setGroupField, setKind, setMatch, setSearch, setSorts, updateFilter } from './logic'
+import { Operand, takesOperand } from './Operand'
 
 const byName = (fields: FieldDefinition[], name: string) => fields.find((f) => f.name === name)
 
@@ -139,7 +139,7 @@ function PillText({ text }: { text: string }) {
 
 function FilterBuilder({ fields, view, onView, fieldOptions }: RecordsToolbarProps) {
   const [open, setOpen] = useState(false)
-  const active = view.filters.filter((r) => r.op === 'isEmpty' || r.op === 'isNotEmpty' || r.value != null).length
+  const active = view.filters.filter(isActiveRule).length
   return (
     <Menu
       open={open}
@@ -154,24 +154,30 @@ function FilterBuilder({ fields, view, onView, fieldOptions }: RecordsToolbarPro
         {view.filters.map((rule, i) => {
           const field = byName(fields, rule.field) ?? fields[0]
           const ops = operatorsForType(field.type)
-          const needsValue = rule.op !== 'isEmpty' && rule.op !== 'isNotEmpty'
-          const valueField: FieldDefinition = rule.op === 'isAnyOf' ? { ...field, type: 'multiSelect' } : field
-          const withOpts: FieldDefinition = fieldOptions?.(field)
-            ? { ...valueField, metadata: { ...(valueField.metadata as object), options: fieldOptions(field) } as FieldDefinition['metadata'] }
-            : valueField
           return (
             <XStack key={i} items="center" gap={6}>
-              <Text fontSize={12} width={28} style={{ color: tokens.textFaint }}>{i === 0 ? 'Where' : 'and'}</Text>
+              {i === 0 ? (
+                <Text fontSize={12} width={36} style={{ color: tokens.textFaint }}>Where</Text>
+              ) : (
+                <XStack
+                  width={36}
+                  cursor="pointer"
+                  onPress={() => onView(setMatch(view, otherMatch(view.match)))}
+                  {...({ role: 'button', 'aria-label': `Rules combine by ${view.match === 'or' ? 'or' : 'and'}; press for ${otherMatch(view.match)}` } as object)}
+                >
+                  <Text fontSize={12} fontWeight="600" style={{ color: tokens.accent }}>{view.match === 'or' ? 'or' : 'and'}</Text>
+                </XStack>
+              )}
               <FieldPicker
                 fields={fields}
                 value={rule.field}
                 onPick={(name) => { const nf = byName(fields, name)!; onView(updateFilter(view, i, { field: name, op: operatorsForType(nf.type)[0], value: undefined })) }}
                 trigger={<PillText text={field.label} />}
               />
-              <OpPicker ops={ops} value={rule.op} onPick={(op) => onView(updateFilter(view, i, { op }))} />
-              {needsValue ? (
+              <OpPicker ops={ops} value={rule.op} onPick={(op) => onView(updateFilter(view, i, op === 'between' || rule.op === 'between' ? { op, value: undefined } : { op }))} />
+              {takesOperand(rule) ? (
                 <XStack flex={1} minW={120}>
-                  <FieldInput field={withOpts} value={rule.value} onChange={(v) => onView(updateFilter(view, i, { value: v }))} />
+                  <Operand field={field} rule={rule} fieldOptions={fieldOptions} onChange={(v) => onView(updateFilter(view, i, { value: v }))} />
                 </XStack>
               ) : <XStack flex={1} />}
               <YStack cursor="pointer" p={4} rounded={6} hoverStyle={{ bg: tokens.hover }} onPress={() => onView(removeFilter(view, i))}>

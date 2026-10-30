@@ -37,6 +37,20 @@ import { RecordsView, type FieldDefinition } from '@hanzo/data'
 - **BoardView** — kanban grouped by a select/status/boolean/relation field; drag a card to another lane and the record patch is emitted (optimistic, reverts on failure).
 - **RecordDetail** — a titled panel of fields, optionally inline-editable, with a `related` slot. **RecordForm** — the create/edit form.
 
+A view's rules combine by `match`: `and` (every rule, the default) or `or` (any one); the word between two rules switches it. Numbers, money and dates also filter `between` two values, either end left open, and a range that ends on a day takes that day whole.
+
+**A server's page.** For a collection too large to hold, the host runs the view as its query and passes the one page it got back with `remote`: the records are shown as given, never re-filtered, and the pager reads the total.
+
+```tsx
+<RecordsView
+  fields={fields}
+  records={page.items}                                       // already searched, filtered, sorted
+  view={view}
+  onViewChange={setView}                                     // the host re-queries on every change
+  remote={{ page: page.page, total: page.total, onPage: setPageNumber }}
+/>
+```
+
 ## Field types
 
 `text · longText · number · percent · currency · boolean · select · multiSelect · date · dateTime · email · url · links · phone · rating · relation · json · uuid · fullName · address · files · richText · position · actor`

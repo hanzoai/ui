@@ -3,7 +3,7 @@
 // grouped by, and the table's column layout. A host persists these (per user, per
 // collection); the components render from them and emit the next config. One
 // value describes a view, so switching, saving, and restoring are all data.
-import type { SortRule, FilterRule } from '../table/logic'
+import type { SortRule, FilterRule, FilterMatch } from '../table/logic'
 
 export type ViewKind = 'table' | 'board'
 
@@ -13,8 +13,10 @@ export interface ViewConfig {
   /** Human name shown in the view switcher. */
   name: string
   kind: ViewKind
-  /** AND-combined filter rules. */
+  /** Filter rules, combined by `match`. */
   filters: FilterRule[]
+  /** Every rule must hold (`and`, the default), or any one of them (`or`). */
+  match?: FilterMatch
   /** Ordered sort rules (first is primary). */
   sorts: SortRule[]
   /** Quick full-text search across fields. */

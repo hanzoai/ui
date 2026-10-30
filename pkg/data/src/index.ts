@@ -54,7 +54,7 @@ export { regions, currencies, type Region, type Currency } from './field/regions
 export { CALLING } from './field/calling'
 
 // ── Views ────────────────────────────────────────────────────────────────────
-export { DataTable, type DataTableProps } from './table/DataTable'
+export { DataTable, type DataTableProps, type RemotePage } from './table/DataTable'
 export { RecordCard, type RecordCardProps } from './table/RecordCard'
 export { BoardView, type BoardViewProps } from './board/BoardView'
 export {
@@ -69,6 +69,7 @@ export {
   type SavedViews,
 } from './view/RecordsView'
 export { RecordsToolbar, type RecordsToolbarProps } from './view/Toolbar'
+export { Operand, operandField, operandText, takesOperand, type OperandProps } from './view/Operand'
 export type { ViewConfig, ViewKind } from './view/types'
 
 // ── Composable primitives (dropdown, checkbox, toggle, calendar) ──────────────
@@ -85,6 +86,8 @@ export {
   operatorsForType,
   matchesRule,
   filterRecords,
+  isActiveRule,
+  rangeOf,
   searchRecords,
   paginate,
   moveItem,
@@ -95,6 +98,7 @@ export {
   type SortDir,
   type FilterRule,
   type FilterOp,
+  type FilterMatch,
   type Page,
 } from './table/logic'
 export {
@@ -113,6 +117,8 @@ export {
   addFilter,
   updateFilter,
   removeFilter,
+  setMatch,
+  otherMatch,
   setSorts,
   cycleColumnSort,
   setSearch,

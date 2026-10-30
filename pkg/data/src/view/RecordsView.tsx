@@ -13,7 +13,7 @@ import { Text, XStack, YStack } from '@hanzo/gui'
 import { Plus, X } from '@hanzogui/lucide-icons-2'
 import { useDensity } from '@hanzo/ui'
 import type { FieldDefinition, SelectOption } from '../field/types'
-import { DataTable } from '../table/DataTable'
+import { DataTable, type RemotePage } from '../table/DataTable'
 import { BoardView } from '../board/BoardView'
 import { defaultGroupField, movePatch } from '../board/logic'
 import { tokens } from '../theme'
@@ -64,6 +64,12 @@ export interface RecordsViewProps {
   /** Toolbar extra (e.g. Refresh). */
   toolbarExtra?: ReactNode
   boardDisabled?: boolean
+  /**
+   * The records are one page a server already searched, filtered and sorted by
+   * the view: they are shown as given, never re-applied, and the table pages
+   * through `total` with `onPage`. The host turns the view into its query.
+   */
+  remote?: RemotePage
   titleField?: string
   /** Fields shown on board cards (defaults to all but the group field). */
   cardFields?: FieldDefinition[]
@@ -75,7 +81,7 @@ export function RecordsView(props: RecordsViewProps) {
     view: controlledView, onViewChange, defaultKind = 'table',
     savedViews, title, onOpen, onCreate, createLabel,
     onEditCommit, onRecordChange, fieldOptions,
-    selectable = true, editable = true, bulkActions, toolbarExtra, boardDisabled, titleField, cardFields,
+    selectable = true, editable = true, bulkActions, toolbarExtra, boardDisabled, titleField, cardFields, remote,
   } = props
 
   const [internalView, setInternalView] = useState<ViewConfig>(() => {
@@ -89,7 +95,7 @@ export function RecordsView(props: RecordsViewProps) {
     onViewChange ? onViewChange(next) : setInternalView(next)
   }
 
-  const visible = useMemo(() => applyView(records, view, fields), [records, view, fields])
+  const visible = useMemo(() => (remote ? records : applyView(records, view, fields)), [remote, records, view, fields])
 
   // On a compact surface the view bar carries the saved views itself: its picker
   // lists them, and it offers Reset and Update view while the view has moved
@@ -131,7 +137,7 @@ export function RecordsView(props: RecordsViewProps) {
         fieldOptions={fieldOptions}
         extra={toolbarExtra}
         boardDisabled={boardDisabled}
-        {...(record ? { count: visible.length } : null)}
+        {...(record ? { count: remote ? remote.total : visible.length } : null)}
         {...bar}
       />
 
@@ -164,6 +170,7 @@ export function RecordsView(props: RecordsViewProps) {
           columnOrder={view.columnOrder}
           onColumnOrderChange={(columnOrder) => setView({ ...view, columnOrder })}
           pageSize={view.pageSize ?? 25}
+          remote={remote}
         />
       )}
     </YStack>

@@ -7,6 +7,8 @@ import {
   addFilter,
   updateFilter,
   removeFilter,
+  setMatch,
+  otherMatch,
   cycleColumnSort,
   setSearch,
   setGroupField,
@@ -35,6 +37,16 @@ describe('applyView', () => {
     v = { ...v, sorts: [{ field: 'count', dir: 'desc' }] }
     const out = applyView(rows, v, fields)
     expect(out.map((r) => r.id)).toEqual(['3', '1']) // Ace(9), Acme(5)
+  })
+  it('combines its rules by its match', () => {
+    let v = emptyView('table')
+    v = addFilter(v, { field: 'stage', op: 'is', value: 'WON' })
+    v = addFilter(v, { field: 'count', op: 'gte', value: 9 })
+    expect(applyView(rows, v, fields)).toHaveLength(0)
+    v = setMatch(v, 'or')
+    expect(applyView(rows, v, fields).map((r) => r.id)).toEqual(['2', '3'])
+    expect(otherMatch(v.match)).toBe('and')
+    expect(otherMatch(undefined)).toBe('or')
   })
   it('empty view returns all in order', () => {
     expect(applyView(rows, emptyView('table'), fields).map((r) => r.id)).toEqual(['1', '2', '3'])

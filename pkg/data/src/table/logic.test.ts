@@ -8,6 +8,8 @@ import {
   operatorsForType,
   matchesRule,
   filterRecords,
+  isActiveRule,
+  rangeOf,
   searchRecords,
   paginate,
   moveItem,
@@ -87,6 +89,9 @@ describe('operatorsForType', () => {
   it('offers numeric operators for numbers/dates', () => {
     expect(operatorsForType('number')).toContain('gte')
     expect(operatorsForType('date')).toContain('lt')
+    expect(operatorsForType('currency')).toContain('between')
+    expect(operatorsForType('dateTime')).toContain('between')
+    expect(operatorsForType('text')).not.toContain('between')
   })
   it('offers set operators for selects', () => {
     expect(operatorsForType('select')).toContain('isAnyOf')
@@ -131,6 +136,42 @@ describe('matchesRule / filterRecords', () => {
   })
   it('ignores a rule whose value is not yet set', () => {
     expect(filterRecords(rows, [{ field: 'name', op: 'contains' }], fields)).toHaveLength(3)
+    expect(filterRecords(rows, [{ field: 'name', op: 'contains', value: '' }], fields)).toHaveLength(3)
+    expect(filterRecords(rows, [{ field: 'stage', op: 'isAnyOf', value: [] }], fields)).toHaveLength(3)
+    expect(filterRecords(rows, [{ field: 'employees', op: 'between', value: ['', ''] }], fields)).toHaveLength(3)
+  })
+  it('OR keeps a record any rule admits', () => {
+    const rules = [
+      { field: 'stage', op: 'is' as const, value: 'WON' },
+      { field: 'name', op: 'contains' as const, value: 'gam' },
+    ]
+    expect(filterRecords(rows, rules, fields, 'or').map((r) => r.id)).toEqual(['2', '3'])
+    expect(filterRecords(rows, rules, fields, 'and')).toHaveLength(0)
+  })
+  it('number between is inclusive, and either end may be open', () => {
+    expect(filterRecords(rows, [{ field: 'employees', op: 'between', value: ['3', '10'] }], fields).map((r) => r.id)).toEqual(['1', '2'])
+    expect(filterRecords(rows, [{ field: 'employees', op: 'between', value: ['4', ''] }], fields).map((r) => r.id)).toEqual(['1'])
+    expect(filterRecords(rows, [{ field: 'employees', op: 'between', value: [null, 3] }], fields).map((r) => r.id)).toEqual(['2'])
+  })
+  it('money compares by its amount, entered plain or whole', () => {
+    expect(filterRecords(rows, [{ field: 'arr', op: 'gte', value: 1000 }], fields).map((r) => r.id)).toEqual(['2'])
+    expect(filterRecords(rows, [{ field: 'arr', op: 'gte', value: { amount: 1000, currencyCode: 'USD' } }], fields).map((r) => r.id)).toEqual(['2'])
+    expect(filterRecords(rows, [{ field: 'arr', op: 'between', value: [100, 600] }], fields).map((r) => r.id)).toEqual(['1'])
+  })
+  it('a date range ending on a day takes the whole day', () => {
+    const stamped = [
+      { id: 'a', signed: '2024-01-31T18:30:00.000Z' },
+      { id: 'b', signed: '2024-02-01T00:00:00.000Z' },
+    ]
+    expect(filterRecords(stamped, [{ field: 'signed', op: 'between', value: ['2024-01-01', '2024-01-31'] }], fields).map((r) => r.id)).toEqual(['a'])
+    expect(filterRecords(stamped, [{ field: 'signed', op: 'between', value: ['2024-02-01', undefined] }], fields).map((r) => r.id)).toEqual(['b'])
+  })
+  it('a rule is active once it constrains anything', () => {
+    expect(isActiveRule({ field: 'x', op: 'isEmpty' })).toBe(true)
+    expect(isActiveRule({ field: 'x', op: 'between', value: [undefined, '5'] })).toBe(true)
+    expect(isActiveRule({ field: 'x', op: 'between', value: ['', null] })).toBe(false)
+    expect(isActiveRule({ field: 'x', op: 'is', value: 0 })).toBe(true)
+    expect(rangeOf(['1'])).toEqual(['1', undefined])
   })
 })
 

@@ -159,6 +159,18 @@ describe('behaviour', () => {
     expect(host.textContent).toContain('3–3 of 3')
   })
 
+  it('a server page is shown as given, and the pager asks the server for the next', () => {
+    const onPage = vi.fn()
+    mount({ pageSize: 3, remote: { page: 2, total: 1250, onPage } })
+    expect(host.querySelectorAll('[role="row"]').length).toBe(1 + RECORDS.length)
+    expect(host.textContent).toContain('4–6 of 1,250')
+    expect(host.textContent).toContain('2 / 417')
+    act(() => host.querySelector<HTMLElement>('[aria-label="Next page"]')!.click())
+    expect(onPage).toHaveBeenCalledWith(3)
+    act(() => host.querySelector<HTMLElement>('[aria-label="Previous page"]')!.click())
+    expect(onPage).toHaveBeenLastCalledWith(1)
+  })
+
   it('passes axe', async () => {
     mount({ selectable: true, editable: true, onOpen: () => {} })
     await settle()

@@ -16,10 +16,15 @@ export type Record_ = Record<string, unknown>
 const asStr = (v: unknown): string => (v == null ? '' : String(v))
 const asNum = (v: unknown): number | null => {
   if (v == null || v === '') return null
+  // A money operand may arrive whole ({ amount, currencyCode }); it compares by its amount.
+  if (typeof v === 'object' && !Array.isArray(v) && 'amount' in v) return asNum((v as { amount: unknown }).amount)
   const n = typeof v === 'number' ? v : Number(v)
   return Number.isFinite(n) ? n : null
 }
 const asArray = (v: unknown): unknown[] => (Array.isArray(v) ? v : v == null ? [] : [v])
+const DAY = 86_400_000
+/** A calendar day with no time of day: `2026-10-30`. */
+const isDay = (v: unknown): boolean => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v.trim())
 const asTime = (v: unknown): number | null => {
   if (v == null || v === '') return null
   const d = v instanceof Date ? v : new Date(v as string | number)
@@ -168,12 +173,38 @@ export type FilterOp =
   | 'isEmpty'
   | 'isNotEmpty'
   | 'isAnyOf'
+  | 'between'
 
 export interface FilterRule {
   field: string
   op: FilterOp
-  /** Operand — a string for text/number ops, a string[] for `isAnyOf`. */
+  /**
+   * Operand — a string for text/number ops, a string[] for `isAnyOf`, and a
+   * `[from, to]` pair for `between`, either end left empty for an open range.
+   */
   value?: unknown
+}
+
+/** How a view's rules combine: every rule must hold, or any one. */
+export type FilterMatch = 'and' | 'or'
+
+/** The two ends of a `between` operand, each `undefined` when left open. */
+export function rangeOf(value: unknown): [unknown, unknown] {
+  const pair = Array.isArray(value) ? value : []
+  const end = (v: unknown) => (v == null || v === '' ? undefined : v)
+  return [end(pair[0]), end(pair[1])]
+}
+
+/**
+ * Whether a rule constrains anything: an empty-check always does, a range once
+ * either end is set, a set once it names a member, any other rule once it has a
+ * value. A rule still being written is left out rather than matching nothing.
+ */
+export function isActiveRule(rule: FilterRule): boolean {
+  if (rule.op === 'isEmpty' || rule.op === 'isNotEmpty') return true
+  if (rule.op === 'between') return rangeOf(rule.value).some((v) => v !== undefined)
+  if (rule.op === 'isAnyOf') return Array.isArray(rule.value) && rule.value.length > 0
+  return rule.value != null && rule.value !== ''
 }
 
 /** Human labels for the operators — for the filter UI menu. */
@@ -189,10 +220,11 @@ export const OP_LABELS: Record<FilterOp, string> = {
   isEmpty: 'is empty',
   isNotEmpty: 'is not empty',
   isAnyOf: 'is any of',
+  between: 'is between',
 }
 
 const TEXT_OPS: FilterOp[] = ['contains', 'notContains', 'is', 'isNot', 'isEmpty', 'isNotEmpty']
-const NUM_OPS: FilterOp[] = ['is', 'isNot', 'gt', 'gte', 'lt', 'lte', 'isEmpty', 'isNotEmpty']
+const NUM_OPS: FilterOp[] = ['is', 'isNot', 'between', 'gt', 'gte', 'lt', 'lte', 'isEmpty', 'isNotEmpty']
 const SELECT_OPS: FilterOp[] = ['is', 'isNot', 'isAnyOf', 'isEmpty', 'isNotEmpty']
 const BOOL_OPS: FilterOp[] = ['is']
 
@@ -282,7 +314,17 @@ export function matchesRule(field: FieldDefinition | undefined, value: unknown, 
     const left = comparable(field, value)
     const l = typeof left === 'number' ? left : null
     const isDate = type === 'date' || type === 'dateTime'
-    const right = isDate ? asTime(rule.value) : asNum(rule.value)
+    const read = (v: unknown) => (isDate ? asTime(v) : asNum(v))
+    if (rule.op === 'between') {
+      const [lo, hi] = rangeOf(rule.value)
+      const from = lo === undefined ? null : read(lo)
+      const to = hi === undefined ? null : read(hi)
+      if (l == null) return false
+      // A range that ends on a day takes that day whole: "to Oct 30" keeps the 30th's afternoon.
+      const end = to != null && isDate && isDay(hi) ? to + DAY - 1 : to
+      return (from == null || l >= from) && (end == null || l <= end)
+    }
+    const right = read(rule.value)
     if (l == null || right == null) return rule.op === 'isNot'
     switch (rule.op) {
       case 'is': return l === right
@@ -306,11 +348,20 @@ export function matchesRule(field: FieldDefinition | undefined, value: unknown, 
   }
 }
 
-/** Keep records that satisfy EVERY rule (AND). Empty rules → all records. */
-export function filterRecords(records: Record_[], filters: FilterRule[], fields: FieldDefinition[]): Record_[] {
-  const active = filters.filter((r) => r.op === 'isEmpty' || r.op === 'isNotEmpty' || r.value != null)
+/**
+ * Keep records that satisfy every active rule (`and`, the default) or any one of
+ * them (`or`). No active rule → all records.
+ */
+export function filterRecords(
+  records: Record_[],
+  filters: FilterRule[],
+  fields: FieldDefinition[],
+  match: FilterMatch = 'and',
+): Record_[] {
+  const active = filters.filter(isActiveRule)
   if (active.length === 0) return records.slice()
-  return records.filter((rec) => active.every((rule) => matchesRule(fieldByName(fields, rule.field), rec[rule.field], rule)))
+  const holds = (rec: Record_) => (rule: FilterRule) => matchesRule(fieldByName(fields, rule.field), rec[rule.field], rule)
+  return records.filter((rec) => (match === 'or' ? active.some(holds(rec)) : active.every(holds(rec))))
 }
 
 // ── quick search (across all text-ish fields) ─────────────────────────────────

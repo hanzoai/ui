@@ -76,8 +76,23 @@ export interface DataTableProps {
 
   // pagination (0 / undefined → show all)
   pageSize?: number
+  /**
+   * The rows are one page a server answered: `records` is shown as it is, and the
+   * pager reads `total` and moves by `onPage`. Unset, the table pages `records`
+   * itself.
+   */
+  remote?: RemotePage
   /** Row height; unset, the density's (44, or 32 under `<Density value="compact">`). */
   rowHeight?: number
+}
+
+/** One page of a server's answer: where it sits, how many there are, how to move. */
+export interface RemotePage {
+  /** 1-based page shown. */
+  page: number
+  /** How many records the query admits in all. */
+  total: number
+  onPage: (page: number) => void
 }
 
 export function DataTable(props: DataTableProps) {
@@ -88,6 +103,7 @@ export function DataTable(props: DataTableProps) {
     editable, onEditCommit, fieldOptions,
     columnOrder, onColumnOrderChange, hiddenFields,
     pageSize = 25,
+    remote,
   } = props
   const geo = GEOMETRY[useDensity()]
   const rowHeight = props.rowHeight ?? geo.row
@@ -110,11 +126,27 @@ export function DataTable(props: DataTableProps) {
     [getRowKey],
   )
 
-  const pageData = useMemo(
-    () => (pageSize > 0 ? paginate(records, page, pageSize) : { items: records, page: 1, pageCount: 1, total: records.length, from: records.length ? 1 : 0, to: records.length }),
-    [records, page, pageSize],
-  )
-  useEffect(() => { if (page > pageData.pageCount) setPage(pageData.pageCount) }, [page, pageData.pageCount])
+  const pageData = useMemo(() => {
+    if (remote) {
+      const size = pageSize > 0 ? pageSize : Math.max(1, records.length)
+      const from = remote.total === 0 || records.length === 0 ? 0 : (remote.page - 1) * size + 1
+      return {
+        items: records,
+        page: remote.page,
+        pageCount: Math.max(1, Math.ceil(remote.total / size)),
+        total: remote.total,
+        from,
+        to: from === 0 ? 0 : from + records.length - 1,
+      }
+    }
+    return pageSize > 0 ? paginate(records, page, pageSize) : { items: records, page: 1, pageCount: 1, total: records.length, from: records.length ? 1 : 0, to: records.length }
+  }, [records, page, pageSize, remote])
+  useEffect(() => { if (!remote && page > pageData.pageCount) setPage(pageData.pageCount) }, [remote, page, pageData.pageCount])
+  const goTo = (p: number) => {
+    const next = Math.min(Math.max(1, p), pageData.pageCount)
+    if (remote) remote.onPage(next)
+    else setPage(next)
+  }
 
   const emit = useCallback((next: Set<string>) => { setSelected(next); onSelectionChange?.([...next]) }, [onSelectionChange])
   const pageKeys = pageData.items.map((r, i) => keyOf(r, i))
@@ -362,13 +394,13 @@ export function DataTable(props: DataTableProps) {
       {/* footer / pagination */}
       {!loading && pageSize > 0 && pageData.total > 0 ? (
         <XStack items="center" justify="space-between" px={geo.pad} py="$1" bg="$panel" borderTopWidth={1} borderColor="$borderColor">
-          <Text fontSize="$1" color="$hint">{`${pageData.from}–${pageData.to} of ${pageData.total}`}</Text>
+          <Text fontSize="$1" color="$hint">{`${pageData.from.toLocaleString()}–${pageData.to.toLocaleString()} of ${pageData.total.toLocaleString()}`}</Text>
           <XStack items="center" gap="$1">
-            <Button size="icon-xs" variant="ghost" emphasis="subtle" aria-label="Previous page" disabled={pageData.page <= 1} onPress={() => setPage((p) => Math.max(1, p - 1))}>
+            <Button size="icon-xs" variant="ghost" emphasis="subtle" aria-label="Previous page" disabled={pageData.page <= 1} onPress={() => goTo(pageData.page - 1)}>
               <ChevronLeft />
             </Button>
-            <Text fontSize="$1" px="$1" color="$hint">{`${pageData.page} / ${pageData.pageCount}`}</Text>
-            <Button size="icon-xs" variant="ghost" emphasis="subtle" aria-label="Next page" disabled={pageData.page >= pageData.pageCount} onPress={() => setPage((p) => Math.min(pageData.pageCount, p + 1))}>
+            <Text fontSize="$1" px="$1" color="$hint">{`${pageData.page.toLocaleString()} / ${pageData.pageCount.toLocaleString()}`}</Text>
+            <Button size="icon-xs" variant="ghost" emphasis="subtle" aria-label="Next page" disabled={pageData.page >= pageData.pageCount} onPress={() => goTo(pageData.page + 1)}>
               <ChevronRight />
             </Button>
           </XStack>
