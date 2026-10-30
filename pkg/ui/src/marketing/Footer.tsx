@@ -128,7 +128,8 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
           {copyright}
         </Line>
       ) : null}
-      <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8}>
+      {/* Shrinks to the row, so its links wrap on a phone instead of standing past the window. */}
+      <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8} shrink={1} minW={0}>
         {legal.map((l) => (
           <Anchor
             key={l.label}
@@ -147,7 +148,7 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
         ))}
       </XStack>
       {wordmark ? (
-        <XStack marginInlineStart="auto" items="center">
+        <XStack marginInlineStart="auto" items="center" shrink={1} minW={0} maxW="100%">
           {wordmark}
         </XStack>
       ) : null}
