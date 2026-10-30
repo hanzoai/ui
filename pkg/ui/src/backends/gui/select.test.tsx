@@ -98,6 +98,47 @@ describe('Picker', () => {
   })
 })
 
+describe('Picker placeholder', () => {
+  const options = (markup: string) => markup.match(/<option[^>]*>[^<]*<\/option>/g) ?? []
+
+  it('shows the hint dim while nothing is chosen, and every choice at full ink', () => {
+    const markup = html(
+      <Picker aria-label="Team size" placeholder="Choose" value="" onChange={() => {}}>
+        <option value="1">Just me</option>
+        <option value="10">2-10</option>
+      </Picker>,
+    )
+    expect(tag(markup, 'picker')).toMatch(/_col-placeholder/)
+    const [hint, ...rest] = options(markup)
+    expect(hint).toMatch(/value=""/)
+    expect(hint).toMatch(/disabled/)
+    expect(hint).toMatch(/>Choose</)
+    expect(rest).toHaveLength(2)
+    for (const o of rest) expect(o).toMatch(/_col-color/)
+    expect(rest[0]).toMatch(/value="1"/)
+    expect(rest[0]).toMatch(/>Just me</)
+  })
+
+  it('takes the field ink once a choice is made', () => {
+    const markup = html(
+      <Picker aria-label="Team size" placeholder="Choose" value="10" onChange={() => {}}>
+        <option value="10">2-10</option>
+      </Picker>,
+    )
+    expect(tag(markup, 'picker')).toMatch(/_col-color/)
+    expect(tag(markup, 'picker')).not.toMatch(/_col-placeholder/)
+  })
+
+  it('without one, the options are the caller\'s own', () => {
+    const markup = html(
+      <Picker aria-label="x" defaultValue="a">
+        <option value="a">A</option>
+      </Picker>,
+    )
+    expect(options(markup)).toEqual(['<option value="a" selected="">A</option>'])
+  })
+})
+
 describe('the open list', () => {
   let host: HTMLDivElement
   let root: Root

@@ -19,7 +19,8 @@
      blink    on/off, 1s                               Caret
      shimmer  a highlight sweeps a placeholder         product Skeleton
      unfold   a sheet turns open about its hinge       unfold()
-     run      a light sweeps a set, child by child     Run                      */
+     run      a light sweeps a set, child by child     Run
+     grow     scales up and comes up from half as its section scrolls through  */
 
 @keyframes rise {
   from {
@@ -173,6 +174,41 @@
 [data-motion='run'] > [data-beat='13'] { animation-delay: calc(13 * var(--run-step, 0.22s)); }
 [data-motion='run'] > [data-beat='14'] { animation-delay: calc(14 * var(--run-step, 0.22s)); }
 [data-motion='run'] > [data-beat='15'] { animation-delay: calc(15 * var(--run-step, 0.22s)); }
+
+/* Grow — driven by the scroll, not the clock: as the section holding it crosses
+   the viewport the element grows from 95% and comes up from half opacity, whole
+   when the section's middle meets the viewport's and opaque a third of the way
+   in. The section names that timeline with `data-timeline`; with none, the
+   element's own crossing drives it. Both resolve against the nearest scroll
+   container, so a section that only clips says `overflow: clip`: `hidden` makes
+   it a scroller that never moves, and the element would stand half grown. A
+   browser with no scroll timeline gives the animation no duration, and it
+   stands at its end. */
+@keyframes grow {
+  from {
+    scale: 0.95;
+  }
+}
+
+@keyframes surface {
+  from {
+    opacity: 0.5;
+  }
+}
+
+[data-timeline] {
+  view-timeline: --section block;
+}
+
+[data-motion='grow'] {
+  animation: grow linear both, surface linear both;
+  animation-timeline: view(), view();
+  animation-range: cover 0% cover 50%, cover 0% cover 30%;
+}
+
+[data-timeline] [data-motion='grow'] {
+  animation-timeline: --section, --section;
+}
 
 @media (prefers-reduced-motion: reduce) {
   [data-motion],

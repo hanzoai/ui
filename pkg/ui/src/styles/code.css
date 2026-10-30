@@ -1,0 +1,24 @@
+/* @hanzo/ui code — the inks of a code block highlighted on a server.
+
+   Import once at the app root:  import '@hanzo/ui/styles/code.css'
+
+   KEYED ON `data-code`, NEVER ON A CLASS. A highlighter run on a server writes
+   spans, the one case no prop can reach. Each span says what it is —
+   `data-code="string"`, read off the colour `codeTheme` wrote with `codeInk` —
+   and takes the code theme's key for it, which gui-config publishes per scheme,
+   so the block follows the theme it sits in as CodeEditor and JsonTree do. With
+   no gui sheet mounted, each falls back to its step of the ladder in either
+   scheme. `codeInks` in code-theme.ts is this table; code-theme.test.ts holds
+   the two to each other. */
+
+[data-code='dim'] { color: var(--codeDim, light-dark(var(--neutral-600), var(--neutral-400))); }
+[data-code='ink'] { color: var(--codeInk, light-dark(var(--neutral-700), var(--neutral-300))); }
+[data-code='bright'] { color: var(--codeBright, light-dark(var(--neutral-950), var(--neutral-50))); }
+[data-code='key'] { color: var(--codeKey, light-dark(var(--neutral-700), var(--neutral-300))); }
+[data-code='string'] { color: var(--codeString, light-dark(var(--neutral-950), var(--neutral-50))); }
+[data-code='number'] { color: var(--codeNumber, light-dark(var(--neutral-950), var(--neutral-50))); }
+[data-code='boolean'] { color: var(--codeBoolean, light-dark(var(--neutral-950), var(--neutral-50))); }
+[data-code='null'] { color: var(--codeNull, light-dark(var(--neutral-950), var(--neutral-50))); }
+[data-code='punctuation'] { color: var(--codePunctuation, light-dark(var(--neutral-600), var(--neutral-400))); }
+[data-code='comment'] { color: var(--codeComment, light-dark(var(--neutral-600), var(--neutral-400))); }
+[data-code='keyword'] { color: var(--codeKeyword, light-dark(var(--neutral-950), var(--neutral-50))); }

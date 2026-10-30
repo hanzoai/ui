@@ -13,4 +13,4 @@
 export { cn } from './cn'
 export { fonts, fontSans, fontMono, FONT_SANS_VAR, FONT_MONO_VAR } from './fonts'
 export * from './tokens'
-export { codeTheme, face, syntax, type CodeTheme, type CodeToken } from '../code-theme'
+export { codeInk, codeInks, codeTheme, face, syntax, type CodeInk, type CodeTheme, type CodeToken } from '../code-theme'
