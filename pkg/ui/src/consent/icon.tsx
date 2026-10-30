@@ -1,12 +1,13 @@
 /**
  * The privacy options icon California publishes for the "Your Privacy Choices"
  * link (Cal. Code Regs. tit. 11, § 7015(b)): a toggle, its white half checked
- * and its blue half crossed, drawn on the published 30×14 box at any height.
+ * and its blue half crossed, drawn on the published 30×14 box at any height:
+ * 11 high by default, so 24 wide, the widest an icon stands beside words here.
  *
  * Beside the words "Your Privacy Choices" it is decorative, and the words are
  * the link's name. Alone, pass `label` and it is named itself.
  */
-export const PrivacyChoicesIcon = ({ size = 14, label }: { size?: number; label?: string }) => (
+export const PrivacyChoicesIcon = ({ size = 11, label }: { size?: number; label?: string }) => (
   <svg
     width={(size * 30) / 14}
     height={size}
