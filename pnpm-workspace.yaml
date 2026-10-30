@@ -33,7 +33,7 @@ catalog:
   '@hanzo/brand': '1.4.8'
   '@hanzo/dashboard': '0.2.0'
   '@hanzo/data': '1.2.4'
-  '@hanzo/design': '0.5.37'
+  '@hanzo/design': '0.5.38'
   '@hanzo/event': '^0.3.58'
   '@hanzo/events': '0.3.1'
   '@hanzo/font': '1.9.2'

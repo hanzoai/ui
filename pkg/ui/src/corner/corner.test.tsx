@@ -356,6 +356,10 @@ describe('faces', () => {
     expect(chosen()).toEqual({ font: 'mono', arabic: 'sans' })
     expect(document.documentElement.style.getPropertyValue('--font-arabic')).toBe('var(--font-arabic-sans)')
     expect(document.documentElement.style.getPropertyValue('--font-sans')).toBe('var(--font-mono)')
+    // A choice goes back to the card, which stays open for the next one.
+    pick('arabic', 'Plex')
+    expect(chosen()).toEqual({ font: 'mono', arabic: 'plex' })
+    expect(document.documentElement.style.getPropertyValue('--font-arabic')).toBe('var(--font-arabic-plex)')
   })
 
   it('under <Hanzo>, writes the face through the root’s appearance', () => {
