@@ -164,3 +164,15 @@ export const codeInks = Object.fromEntries(
     return [ink, { key: key(ink), light: ramp.light[rung], dark: ramp.dark[rung] }]
   }),
 ) as Record<CodeInk, { key: string; light: string; dark: string }>
+
+/**
+ * A highlighted token's weight and slant, as `data-face` says them: shiki's
+ * font-style bits (italic 1, bold 2) read as words, so `code.css` sets a bold
+ * keyword and an italic comment the way the theme wrote them. Upright at the
+ * text's weight is undefined.
+ */
+export const codeFace = (fontStyle: number | undefined): string | undefined => {
+  if (!fontStyle || fontStyle < 0) return undefined
+  const words = [fontStyle & 2 ? 'bold' : '', fontStyle & 1 ? 'italic' : ''].filter(Boolean)
+  return words.length ? words.join(' ') : undefined
+}

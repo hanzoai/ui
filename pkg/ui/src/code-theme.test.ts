@@ -14,7 +14,7 @@ import { createRequire } from 'node:module'
 import { pathToFileURL } from 'node:url'
 import { beforeAll, describe, expect, it } from 'vitest'
 
-import { codeInk, codeInks, codeTheme, face, ramp, syntax, type CodeInk, type CodeToken } from './code-theme'
+import { codeFace, codeInk, codeInks, codeTheme, face, ramp, syntax, type CodeInk, type CodeToken } from './code-theme'
 
 /** The slice of shiki's API these tests call. */
 interface Token {
@@ -165,6 +165,16 @@ describe('the code theme in shiki', () => {
     }
     expect([...seen].sort()).toEqual(expect.arrayContaining(['comment', 'ink', 'keyword', 'string']))
     expect(codeInk('#ff0000')).toBeUndefined()
+    // A token's face, single-theme: a keyword bold, a comment italic, a name upright.
+    const { tokens: one } = (shiki as unknown as { codeToTokens(c: string, o: { lang: string; theme: unknown }): { tokens: (Token & { fontStyle?: number })[][] } }).codeToTokens(TS, { lang: 'ts', theme: codeTheme.dark })
+    const at = (text: string) => one.flat().find((t) => t.content.trim() === text)
+    expect(codeFace(at('const')?.fontStyle)).toBe('bold')
+    expect(codeFace(at('// one client, every model')?.fontStyle ?? one[0][0].fontStyle)).toBe('italic')
+    expect(codeFace(at('client')?.fontStyle)).toBeUndefined()
+    expect(codeFace(3)).toBe('bold italic')
+    const sheet2 = readFileSync(new URL('./styles/code.css', import.meta.url), 'utf8')
+    expect(sheet2).toContain("[data-face~='bold'] { font-weight: 700; }")
+    expect(sheet2).toContain("[data-face~='italic'] { font-style: italic; }")
     expect(codeInk('var(--codeGround, var(--neutral-900))')).toBeUndefined()
   })
 
