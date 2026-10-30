@@ -462,6 +462,13 @@ describe('monochrome is config minus the hues', () => {
   it('shares the radius and font decisions, which live in one place', () => {
     expect(monochrome.tokens.radius).toEqual(config.tokens.radius)
     expect(monochrome.fonts.mono.family).toBe(config.fonts.mono.family)
+    expect(monochrome.fonts.serif.family).toBe(config.fonts.serif.family)
+  })
+
+  it('names design\'s serif as `$serif`, on the body\'s ladder', () => {
+    expect(config.fonts.serif.family).toBe('var(--font-serif, Georgia, serif)')
+    expect(config.fonts.serif.size).toEqual(config.fonts.body.size)
+    expect(config.fonts.serif.lineHeight).toEqual(config.fonts.body.lineHeight)
   })
 })
 
