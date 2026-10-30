@@ -182,6 +182,9 @@ describe('the panel', () => {
     expect(stored(KEY)).toEqual({ font: 'serif', arabic: 'sans' })
     press('Arabic in Kufi')
     expect(prop('--font-arabic')).toBe('var(--font-arabic-kufi)')
+    press('Arabic in Plex')
+    expect(prop('--font-arabic')).toBe('var(--font-arabic-plex)')
+    expect(stored(KEY)).toEqual({ font: 'serif', arabic: 'plex' })
   })
 
   it('marks the companion the page draws when nobody chose', () => {
