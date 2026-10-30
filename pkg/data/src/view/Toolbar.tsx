@@ -49,10 +49,19 @@ export interface RecordsToolbarProps {
   onSaveAsView?: () => void
 }
 
+/**
+ * The props a popover trigger hands its child (`asChild`): the press that opens it,
+ * its ref, its aria state. A trigger that drops them opens nothing, which is how the
+ * Filter, Sort and Group menus of this toolbar stayed shut.
+ */
+type Passed = Record<string, unknown> & { style?: Record<string, unknown> }
+
 /** A compact bordered control used as a Menu trigger. */
-function Control({ icon, label, count, active }: { icon: ReactNode; label: string; count?: number; active?: boolean }) {
+function Control({ icon, label, count, active, style, ...passed }: { icon: ReactNode; label: string; count?: number; active?: boolean } & Passed) {
   return (
     <XStack
+      {...({ role: 'button', tabIndex: 0, 'aria-label': label } as object)}
+      {...passed}
       items="center"
       gap={6}
       px={10}
@@ -61,7 +70,7 @@ function Control({ icon, label, count, active }: { icon: ReactNode; label: strin
       borderWidth={1}
       cursor="pointer"
       hoverStyle={{ borderColor: tokens.textMuted }}
-      style={{ borderColor: active ? tokens.accent : tokens.border, backgroundColor: active ? tokens.hover : 'transparent' }}
+      style={{ ...style, borderColor: active ? tokens.accent : tokens.border, backgroundColor: active ? tokens.hover : 'transparent' }}
     >
       {icon}
       <Text fontSize={13} fontWeight="600" style={{ color: active ? tokens.text : tokens.textMuted }}>{label}</Text>
@@ -129,9 +138,20 @@ function OpPicker({ ops, value, onPick }: { ops: FilterOp[]; value: FilterOp; on
   )
 }
 
-function PillText({ text }: { text: string }) {
+function PillText({ text, style, ...passed }: { text: string } & Passed) {
   return (
-    <XStack items="center" px={8} py={5} rounded={7} borderWidth={1} cursor="pointer" hoverStyle={{ borderColor: tokens.textMuted }} style={{ borderColor: tokens.border, backgroundColor: tokens.surface }}>
+    <XStack
+      {...({ role: 'button', tabIndex: 0 } as object)}
+      {...passed}
+      items="center"
+      px={8}
+      py={5}
+      rounded={7}
+      borderWidth={1}
+      cursor="pointer"
+      hoverStyle={{ borderColor: tokens.textMuted }}
+      style={{ ...style, borderColor: tokens.border, backgroundColor: tokens.surface }}
+    >
       <Text fontSize={12} numberOfLines={1} style={{ color: tokens.text }}>{text}</Text>
     </XStack>
   )
