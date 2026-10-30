@@ -980,6 +980,9 @@ importers:
       react:
         specifier: 19.2.8
         version: 19.2.8
+      react-dom:
+        specifier: 19.2.8
+        version: 19.2.8(react@19.2.8)
       tsup:
         specifier: 'catalog:'
         version: 8.5.1(@swc/core@1.16.1(@swc/helpers@0.5.23))(jiti@2.6.1)(postcss@8.5.26)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)

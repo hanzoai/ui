@@ -223,13 +223,17 @@ export class Observer {
   private raged = false
 
   constructor(config: ObserveConfig) {
+    // Each default is taken where the caller left a key unset OR set it to
+    // undefined. A binding passes its props straight through, an omitted one
+    // as `undefined`, and a spread of that object over the defaults put the
+    // undefined in their place: no provider ever watched [data-hz-view].
     this.cfg = {
-      enabled: true,
-      nav: true,
-      viewSelector: '[data-hz-view]',
-      inputDebounceMs: 400,
-      maxDepth: 12,
       ...config,
+      enabled: config.enabled ?? true,
+      nav: config.nav ?? true,
+      viewSelector: config.viewSelector ?? '[data-hz-view]',
+      inputDebounceMs: config.inputDebounceMs ?? 400,
+      maxDepth: config.maxDepth ?? 12,
     }
     this.root = config.root ?? (isBrowser() ? document : ({} as Document))
     this.stream = new Stream<Interaction>(config.bufferSize ?? 500)

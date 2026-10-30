@@ -171,6 +171,42 @@ group('Observer', () => {
     scoped.stop()
   })
 
+  it('takes its defaults for keys a binding passed as undefined', () => {
+    vi.useFakeTimers()
+    try {
+      document.body.innerHTML = '<input name="q" value=""><div data-hz-view="x"></div>'
+      const e = start({ viewSelector: undefined, inputDebounceMs: undefined, maxDepth: undefined, nav: false })
+      const input = document.querySelector('input')!
+      input.dispatchEvent(new Event('input', { bubbles: true }))
+      vi.advanceTimersByTime(399)
+      expect(sink).toHaveLength(0) // the 400 ms default, not a 0 ms timer
+      vi.advanceTimersByTime(1)
+      expect(sink).toHaveLength(1)
+      expect(sink[0].semantic.path.length).toBeGreaterThan(0)
+      expect(e.capturing).toBe(true)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('keeps an explicit empty viewSelector as off', () => {
+    const watched: Element[] = []
+    vi.stubGlobal(
+      'IntersectionObserver',
+      class {
+        observe(el: Element) {
+          watched.push(el)
+        }
+        unobserve() {}
+        disconnect() {}
+      },
+    )
+    document.body.innerHTML = '<div data-hz-view="x"></div>'
+    start({ viewSelector: '' })
+    expect(watched).toHaveLength(0)
+    vi.unstubAllGlobals()
+  })
+
   it('is fail-soft: a throwing sink never surfaces to the dispatcher', () => {
     document.body.innerHTML = '<button>x</button>'
     engine = new Observer({
