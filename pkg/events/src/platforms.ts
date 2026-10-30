@@ -28,6 +28,7 @@ export type PlatformName = 'ga4' | 'meta' | 'linkedin' | 'x' | 'tiktok'
 export type StandardName =
   | 'page_view'
   | 'view_content'
+  | 'search'
   | 'view_item_list'
   | 'select_item'
   | 'lead'
@@ -112,6 +113,15 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
   },
   waitlist_joined: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm' },
   referral_used: { standard: 'lead' },
+  newsletter_subscribed: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm' },
+  beta_submitted: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm' },
+  research_access_applied: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm' },
+
+  // ── Audiences: what retargeting is built from ──────────────────
+  product_viewed: { standard: 'view_content', ga4: 'view_item', meta: 'ViewContent', tiktok: 'ViewContent' },
+  search_performed: { standard: 'search', ga4: 'search', meta: 'Search', tiktok: 'Search' },
+  // A custom event on each: no platform has a standard name for a pressed button.
+  cta_clicked: { ga4: 'cta_click', meta: 'CTAClicked', tiktok: 'ClickButton' },
 }
 
 /** The names an event goes by on a platform: [] when the platform is not sent it. */
