@@ -149,19 +149,10 @@ const tools = [
 - `useHanzo()` - Access complete Hanzo context
 - `useMessage()` - Send messages and manage state
 - `useStreaming()` - Stream AI responses in real-time
-- `useThread()` - Manage conversation threads
 
-### Component & Tool Hooks
-- `useComponent()` - Dynamically register/render components
-- `useTool()` - Execute and manage AI tools
-- `useGenerativeUI()` - Generate UI components on the fly
-
-### Utility Hooks
-- `useSuggestions()` - Provide intelligent suggestions
-- `useModelConfig()` - Configure and switch AI models
-- `useAttachments()` - Handle file attachments
-- `useAuth()` - Manage user authentication
-- `useMCP()` - Model Context Protocol integration
+Additional hooks (`useThread`, `useComponent`, `useTool`, `useSuggestions`,
+`useModelConfig`, `useAttachments`, `useAuth`, `useMCP`) are planned but not
+yet implemented.
 
 ## Examples
 
