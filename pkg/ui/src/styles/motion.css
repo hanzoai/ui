@@ -181,7 +181,9 @@
    in. The section names that timeline with `data-timeline`; with none, the
    element's own crossing drives it. Both resolve against the nearest scroll
    container, so a section that only clips says `overflow: clip`: `hidden` makes
-   it a scroller that never moves, and the element would stand half grown. A
+   it a scroller that never moves, and the element would stand half grown. The
+   range is the whole viewport (inset 0), not the scroll-padding a fixed header
+   asks of the page, so it is useScroll's `["start end", "end start"]` exactly. A
    browser with no scroll timeline gives the animation no duration, and it
    stands at its end. */
 @keyframes grow {
@@ -198,11 +200,12 @@
 
 [data-timeline] {
   view-timeline: --section block;
+  view-timeline-inset: 0px;
 }
 
 [data-motion='grow'] {
   animation: grow linear both, surface linear both;
-  animation-timeline: view(), view();
+  animation-timeline: view(block 0px), view(block 0px);
   animation-range: cover 0% cover 50%, cover 0% cover 30%;
 }
 
