@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/data",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "type": "module",
   "description": "Hanzo Data — cross-platform, metadata-driven data-app components (typed fields, record table, kanban board, record detail, saved views) on @hanzo/gui. The universal object/field/record/view layer that powers any Base-backed CRM, CMS, or commerce app on web, native (iOS), and desktop.",
   "exports": {

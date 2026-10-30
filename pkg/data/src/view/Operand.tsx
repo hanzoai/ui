@@ -14,7 +14,9 @@ import { useMemo } from 'react'
 import { Text, XStack } from '@hanzo/gui'
 import type { FieldDefinition, SelectOption } from '../field/types'
 import { FieldInput } from '../field/FieldInput'
-import { rangeOf, type FilterRule } from '../table/logic'
+import type { FilterRule } from '../table/logic'
+import { rangeOf } from '../table/logic'
+import { operandField } from './operands'
 import { tokens } from '../theme'
 
 export interface OperandProps {
@@ -22,14 +24,6 @@ export interface OperandProps {
   rule: FilterRule
   onChange: (value: unknown) => void
   fieldOptions?: (field: FieldDefinition) => SelectOption[] | undefined
-}
-
-/** The editor a rule's operand is entered with. */
-export function operandField(field: FieldDefinition, rule: FilterRule, options?: SelectOption[]): FieldDefinition {
-  const numeric = field.type === 'currency' || field.type === 'percent' || field.type === 'rating'
-  const base: FieldDefinition =
-    rule.op === 'isAnyOf' ? { ...field, type: 'multiSelect' } : numeric ? { ...field, type: 'number' } : field
-  return options ? { ...base, metadata: { ...(base.metadata as object), options } as FieldDefinition['metadata'] } : base
 }
 
 /** Whether a rule takes an operand at all. */
@@ -53,17 +47,4 @@ export function Operand({ field, rule, onChange, fieldOptions }: OperandProps) {
   )
 }
 
-/** A rule's operand in words, for a chip: `a, b`, `1 to 5`, `from 1`, `to 5`. */
-export function operandText(rule: FilterRule, field: FieldDefinition | undefined): string {
-  const options = (field?.metadata as { options?: { value: string; label: string }[] } | undefined)?.options
-  const label = (v: unknown) => options?.find((o) => o.value === v)?.label ?? String(v)
-  if (rule.op === 'between') {
-    const [from, to] = rangeOf(rule.value)
-    if (from !== undefined && to !== undefined) return `${label(from)} to ${label(to)}`
-    if (from !== undefined) return `from ${label(from)}`
-    if (to !== undefined) return `to ${label(to)}`
-    return ''
-  }
-  if (rule.value == null || rule.value === '') return ''
-  return Array.isArray(rule.value) ? rule.value.map(label).join(', ') : label(rule.value)
-}
+export { operandField, operandText } from './operands'
