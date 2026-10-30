@@ -129,6 +129,22 @@ describe('Picker placeholder', () => {
     expect(tag(markup, 'picker')).not.toMatch(/_col-placeholder/)
   })
 
+  it('a `color` is the field\'s ink: the choice and the list, never the hint', () => {
+    const markup = html(
+      <Picker aria-label="Team size" placeholder="Choose" value="" color="$ink" onChange={() => {}}>
+        <option value="1">Just me</option>
+      </Picker>,
+    )
+    expect(tag(markup, 'picker')).toMatch(/_col-placeholder/)
+    expect(options(markup)[1]).toMatch(/_col-ink/)
+    const chosen = html(
+      <Picker aria-label="Team size" placeholder="Choose" value="1" color="$ink" onChange={() => {}}>
+        <option value="1">Just me</option>
+      </Picker>,
+    )
+    expect(tag(chosen, 'picker')).toMatch(/_col-ink/)
+  })
+
   it('without one, the options are the caller\'s own', () => {
     const markup = html(
       <Picker aria-label="x" defaultValue="a">
