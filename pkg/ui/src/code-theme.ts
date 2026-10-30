@@ -136,3 +136,31 @@ function theme(s: Scheme): CodeTheme {
 
 /** The code theme in shiki's format, one per scheme: pass it as `themes`. */
 export const codeTheme = { dark: theme('dark'), light: theme('light') } as const
+
+/** What a span of highlighted code is: a kind of token, or the rung it sits on. */
+export type CodeInk = CodeToken | Exclude<CodeRung, 'ground' | 'line'>
+
+const INKS: readonly CodeInk[] = ['dim', 'ink', 'bright', ...(Object.keys(INK) as CodeToken[])]
+
+/**
+ * What a colour `codeTheme` wrote names: `var(--codeString, …)` is `string`, and
+ * `light-dark()` of two is the same, since every rule names one key in both
+ * schemes. A block highlighted on a server marks each span with it as
+ * `data-code`, and `@hanzo/ui/styles/code.css` inks the span with that theme
+ * key, so the block follows the theme it sits in as the editors do and carries
+ * no colour of its own. A colour the theme did not write is undefined.
+ */
+export const codeInk = (color: string | undefined): CodeInk | undefined => {
+  const m = color && /var\(--code([A-Z]\w*),/.exec(color)
+  if (!m) return undefined
+  const name = `${m[1][0].toLowerCase()}${m[1].slice(1)}` as CodeInk
+  return INKS.includes(name) ? name : undefined
+}
+
+/** Every ink `codeInk` answers, with the colour `code.css` gives it in each scheme. */
+export const codeInks = Object.fromEntries(
+  INKS.map((ink) => {
+    const rung = (ink in INK ? INK[ink as CodeToken] : ink) as Exclude<CodeRung, 'ground' | 'line'>
+    return [ink, { key: key(ink), light: ramp.light[rung], dark: ramp.dark[rung] }]
+  }),
+) as Record<CodeInk, { key: string; light: string; dark: string }>

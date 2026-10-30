@@ -24,6 +24,7 @@ import {
   forwardRef,
   isValidElement,
   useContext,
+  useState,
   type ComponentProps,
   type ReactNode,
 } from "react"
@@ -295,7 +296,27 @@ export type PickerProps = Omit<TextProps, "render" | "size" | keyof Native> &
     size?: FieldSize
     /** On the raised ground instead of a bare edge (control.ts `FILL`). */
     fill?: boolean
+    /**
+     * The hint the closed picker shows while nothing is chosen: a first option
+     * nobody can pick, in the placeholder ink, as an Input's empty field. The
+     * open list keeps the field's ink, so a choice never reads as dimmed.
+     */
+    placeholder?: string
   }
+
+/**
+ * An `<option>` in the field's ink. The list inherits the select's colour, so a
+ * picker showing its placeholder would otherwise hand the dim hint to every
+ * choice in the list the platform opens.
+ */
+const inked = (child: ReactNode) =>
+  isValidElement<ComponentProps<"option">>(child) && child.type === "option" ? (
+    <Text render={cloneElement(child, { children: undefined })} color="$color">
+      {child.props.children}
+    </Text>
+  ) : (
+    child
+  )
 
 /**
  * Picker — the platform's own select, wearing the field.
@@ -306,11 +327,17 @@ export type PickerProps = Omit<TextProps, "render" | "size" | keyof Native> &
  * middle by the riser rather than left to the UA, the same gutter less the
  * select's own 4px, and the Input theme's ink, edge and two edge states (`EDGE`)
  * — a native control gui does not draw, so it names what gui's Input carries.
+ * A `placeholder` is its empty field: the hint as an option nobody can pick,
+ * dim while it shows, and every choice in the open list at full ink.
  */
 const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(function Picker(
-  { id, name, value, defaultValue, onChange, required, disabled, autoComplete, children, size, fill = false, ...props },
+  { id, name, value, defaultValue, onChange, required, disabled, autoComplete, children, size, fill = false, placeholder, ...props },
   ref,
 ) {
+  // What an uncontrolled picker holds, so its ink follows a choice as a
+  // controlled one's does.
+  const [held, hold] = useState(defaultValue ?? "")
+  const hinting = placeholder !== undefined && (value ?? held) === ""
   const density = useDensity()
   const resolved = fieldSize(size, density)
   const box = BOX[resolved]
@@ -323,8 +350,11 @@ const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(functi
           id={id}
           name={name}
           value={value}
-          defaultValue={defaultValue}
-          onChange={onChange}
+          defaultValue={placeholder !== undefined && value === undefined ? (defaultValue ?? "") : defaultValue}
+          onChange={(e) => {
+            hold(e.target.value)
+            onChange?.(e)
+          }}
           required={required}
           disabled={disabled}
           autoComplete={autoComplete}
@@ -350,14 +380,23 @@ const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(functi
       // in a 32px box. They take no vertical padding and let the floor decide;
       // the menulist centres its own text.
       py={dense ? 0 : box.riser}
-      color="$color"
+      color={hinting ? "$placeholderColor" : "$color"}
       fontFamily="$body"
       fontSize={box.font}
       lineHeight={dense ? 16 : "$3"}
       cursor="pointer"
       {...props}
     >
-      {children}
+      {placeholder === undefined ? (
+        children
+      ) : (
+        <>
+          <option value="" disabled>
+            {placeholder}
+          </option>
+          {Children.map(children, inked)}
+        </>
+      )}
     </Text>
   )
 })
