@@ -89,9 +89,12 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
         {ask}
       </YStack>
     ) : null}
+    {/* A phone stacks the columns, each one a heading over its links two
+        across, so no short column stands beside a long one; from 640px they
+        sit side by side, each its own list. */}
     <XStack flexWrap="wrap" gap={28} $sm={{ gap: 40 }}>
       {columns.map((c) => (
-        <YStack key={c.id} render="nav" aria-label={c.title} flexBasis="40%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
+        <YStack key={c.id} render="nav" aria-label={c.title} flexBasis="100%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
           {c.href ? (
             <Anchor
               href={c.href}
@@ -111,9 +114,11 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
               {c.title}
             </Line>
           )}
-          {c.links.map((l) => (
-            <Door key={l.label} link={l} />
-          ))}
+          <YStack display="grid" gridTemplateColumns="repeat(2, minmax(0, 1fr))" columnGap={16} $sm={{ display: 'flex', flexDirection: 'column' }}>
+            {c.links.map((l) => (
+              <Door key={l.label} link={l} />
+            ))}
+          </YStack>
         </YStack>
       ))}
     </XStack>
