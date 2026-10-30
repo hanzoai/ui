@@ -197,6 +197,23 @@ describe('Footer', () => {
     expect(out).toMatch(/<a[^>]*href="https:\/\/docs\.hanzo\.ai"[^>]*target="_blank"/)
     expect(out).toMatch(/<nav[^>]*aria-label="Terms &amp; Policies"/)
   })
+
+  it('puts the copyright and the legal line first on the last row, the wordmark at its end, and the site’s own line under it', () => {
+    const out = html(
+      <Footer
+        columns={[]}
+        legal={[{ label: 'Terms', href: '/terms' }]}
+        copyright="© Hanzo"
+        wordmark={<span data-mark="">Hanzo AI</span>}
+        after={<nav aria-label="Socials" />}
+      />,
+    )
+    const at = (s: string) => out.indexOf(s)
+    expect(at('© Hanzo')).toBeLessThan(at('Terms'))
+    expect(at('Terms')).toBeLessThan(at('data-mark'))
+    expect(at('data-mark')).toBeLessThan(at('aria-label="Socials"'))
+    expect(at('aria-label="Socials"')).toBeLessThan(at('</footer>'))
+  })
 })
 
 describe('Faq', () => {

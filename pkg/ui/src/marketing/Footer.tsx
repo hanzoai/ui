@@ -10,7 +10,13 @@
  *   ask       a slot above the columns for the site's composer, so it lives
  *             where a page ends and never floats over one.
  *   columns   titled lists of links; a title may itself be a link.
- *   wordmark  a slot; the legal line sits beside it.
+ *   wordmark  a slot at the far end of the last row; the copyright and the
+ *             legal line share that row's start.
+ *   after     a slot under that row, inside the footer, for the site's own
+ *             last line (its social links).
+ *
+ * It stands on the panel's ground ($panel), a step off the page's, so the page
+ * visibly ends where the footer begins.
  *
  * Plain anchors. A link that leaves the site opens a new tab and is marked with
  * ↗ by the host's own data (`out`).
@@ -33,6 +39,8 @@ export type FooterProps = {
   legal?: readonly FooterLink[]
   /** The side gutter, shared with the header. */
   gutter?: string
+  /** A last line inside the footer, under the legal row: the site's social links. */
+  after?: ReactNode
 }
 
 const open = (out?: boolean) => (out ? { target: '_blank', rel: 'noreferrer' } : {})
@@ -56,11 +64,12 @@ const Door = ({ link }: { link: FooterLink }) => (
   </Anchor>
 )
 
-const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)' }: FooterProps) => (
+const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)', after }: FooterProps) => (
   <YStack
     {...slot('footer')}
     render="footer"
     width="100%"
+    bg="$panel"
     borderTopWidth={1}
     borderColor="$edge"
     pt={48}
@@ -101,14 +110,13 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
         </YStack>
       ))}
     </XStack>
-    <XStack flexWrap="wrap" items="center" gap={20} rowGap={8}>
-      {wordmark}
+    <XStack flexWrap="wrap" items="center" gap={20} rowGap={12}>
       {copyright ? (
         <Line size="sm" tone="dim">
           {copyright}
         </Line>
       ) : null}
-      <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8} marginInlineStart={0} width="100%" $sm={{ marginInlineStart: 'auto', width: 'auto' }}>
+      <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8}>
         {legal.map((l) => (
           <Anchor
             key={l.label}
@@ -126,7 +134,13 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
           </Anchor>
         ))}
       </XStack>
+      {wordmark ? (
+        <XStack marginInlineStart="auto" items="center">
+          {wordmark}
+        </XStack>
+      ) : null}
     </XStack>
+    {after}
   </YStack>
 )
 
