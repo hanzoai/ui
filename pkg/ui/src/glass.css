@@ -114,15 +114,80 @@
     background-position: 0 1px !important;
   }
 
-  /* The composer's fill, under a name of its own. A host darkens the composer
-     (a private chat) by setting `--composer-fill` on it or any ancestor, and
-     leaves design's `--background`, which everything else reads, alone. Unset,
-     the fallback is the material's own fill, written out the same, so the
-     composer is the glass every other surface is. The slot and the class
-     outweigh the material's bare `.glass`, so of the two !important fills
-     this one is the composer's. */
+  /* The composer's ground, under the material's fill: `--composer-ground` (below),
+     or what a host sets as `--composer-fill` on it or any ancestor. No prism along
+     its lip: the composer is the thing a reader looks at longest, and a coloured
+     line across its top read as a stroke somebody drew. The slot and the class
+     outweigh the material's bare `.glass`, so of the two !important fills this
+     one is the composer's. */
   [data-slot="composer"].glass {
-    background-color: var(--composer-fill, color-mix(in oklab, var(--background) 72%, transparent)) !important;
+    background-color: var(--composer-fill, var(--composer-ground)) !important;
+    background-image: none !important;
+  }
+}
+
+/* ── The composer ────────────────────────────────────────────────────────────
+   ONE rounded rectangle a step above the ground it stands on, ONE even 1px edge
+   all the way round, and nothing inset along its top: the rungs' lit lip
+   (`--edge-highlight`) is right for a menu and on the composer read as a
+   doubled, brighter top edge against three plain sides.
+
+   Dark: a white wash over whatever is under it — a #2a card on the app's #14
+   pane, a #1e one on the bare page — under design's hairline (`--border`, white
+   10%). Light: design's emphasis card (#fdfdfd) under the control edge
+   (`--border-control`, black 15%) with a soft, wide drop, since on white a
+   ground step alone moves no pixels. The edge brightens a little under a
+   pointer and a little more on focus — design's `--ring`, softened, so focus is
+   the edge itself and never a glow.
+
+   A CONVERSATION NOTHING KEEPS (`data-forgetful`, a private chat) is the same
+   frame with no ground and no drop, its edge dashed: the one cue, where the
+   field is.
+
+   Ground, edge and drop ease (design's fast duration, ease-out); under reduced
+   motion nothing eases. */
+:root {
+  --composer-ground: var(--white-10, rgb(255 255 255 / .10));
+  --composer-edge: var(--border, rgb(255 255 255 / .10));
+  --composer-drop: none;
+}
+.light, :root.t_light, .t_light {
+  --composer-ground: var(--surface-card-emphasis, #fdfdfd);
+  --composer-edge: var(--border-control, rgb(0 0 0 / .15));
+  --composer-drop: 0 1px 2px rgb(0 0 0 / .04), 0 4px 16px -4px rgb(0 0 0 / .06);
+}
+[data-slot="composer"].glass {
+  border-color: var(--composer-edge) !important;
+  box-shadow: var(--composer-drop) !important;
+  transition:
+    background-color var(--duration-fast, 150ms) var(--ease-out, ease-out),
+    border-color var(--duration-fast, 150ms) var(--ease-out, ease-out),
+    box-shadow var(--duration-fast, 150ms) var(--ease-out, ease-out);
+}
+[data-slot="composer"].glass:hover {
+  border-color: color-mix(in srgb, var(--ring, rgb(255 255 255 / .4)) 40%, var(--composer-edge)) !important;
+}
+[data-slot="composer"][data-forgetful].glass {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-style: dashed !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+/* The field grows a line at a time, eased; below its ceiling it never shows a
+   scrollbar while it catches up (Textarea marks `data-capped` at the ceiling). */
+[data-slot="composer-field"] {
+  transition: height var(--duration-fast, 150ms) var(--ease-out, ease-out);
+}
+[data-slot="composer-field"]:not([data-capped]) {
+  overflow-y: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="composer"].glass,
+  [data-slot="composer-field"],
+  [data-slot="composer"] *,
+  [data-slot="composer-foot"] * {
+    transition: none !important;
   }
 }
 
@@ -322,9 +387,9 @@
    as one control the way a chat composer everywhere does, and focus is drawn on
    that box rather than round the field inside it. An offset ring stood a gap
    outside the box and read as a second frame; the box's own 1px edge, lifted
-   from the hairline to a third of the ink, says the same thing in place, in both
-   themes, for a pointer and a keyboard alike (a textarea is :focus-visible on
-   any focus).
+   from the hairline toward design's `--ring` (two thirds of the way), says the
+   same thing in place, softly, in both themes, for a pointer and a keyboard
+   alike (a textarea is :focus-visible on any focus).
 
    THE FIELD DOES NOT ABSTAIN, and control.ts is right that it must not: gui
    compiles `focusVisibleStyle` to `:root:root:root:root … !important`, past any
@@ -341,8 +406,8 @@
 /* `:root` first, because gui writes each edge's colour as `:root ._btc-x._btc-x`
    (0,3,0), injected after this sheet: at equal weight the later rule won and
    the edge never moved. One more step of weight is the whole fix. */
-:root [data-slot='composer']:has([data-slot='composer-field']:focus-visible) {
-  border-color: color-mix(in srgb, var(--foreground) 32%, transparent);
+:root [data-slot='composer'].glass:has([data-slot='composer-field']:focus-visible) {
+  border-color: color-mix(in srgb, var(--ring, rgb(255 255 255 / .4)) 66%, var(--composer-edge)) !important;
 }
 
 [data-slot='composer']:has([data-slot='composer-field']:focus-visible)

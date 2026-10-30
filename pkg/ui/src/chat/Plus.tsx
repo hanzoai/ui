@@ -49,7 +49,7 @@ import {
 } from '../backends/gui'
 import { useMemo, useState, type ReactNode } from 'react'
 
-import { RING } from './ring'
+import { GHOST, GLYPH, RING, STROKE } from './look'
 
 /** One thing a shelf holds. `on` marks what the conversation already has. */
 export interface Row {
@@ -252,11 +252,11 @@ export function Plus(p: PlusProps) {
           shrink={0}
           cursor={p.disabled ? 'default' : 'pointer'}
           opacity={p.disabled ? 0.4 : 1}
-          bg={open ? '$hover' : 'transparent'}
-          hoverStyle={{ bg: '$hover' }}
+          {...GHOST}
+          {...(open ? { bg: '$hover', color: '$ink' } : null)}
           focusVisibleStyle={RING}
         >
-          <PlusIcon size={18} color="$ink" />
+          <PlusIcon size={GLYPH} strokeWidth={STROKE} color="currentColor" />
         </XStack>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" minW={240} data-slot="plus-menu">

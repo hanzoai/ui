@@ -424,9 +424,15 @@ describe('The composer’s fill is a hook of our own name', () => {
   const supports = sheet.slice(sheet.indexOf('@supports (backdrop-filter'), sheet.indexOf('[data-material="solid"]'))
   const material = supports.match(/\.glass,[^{]*\{\s*background-color:\s*([^;]+?)\s*!important;/)![1]!
 
-  it('defaults to exactly the material’s fill', () => {
+  it('defaults to the composer’s own ground, declared for each theme', () => {
     expect(material).toBe('color-mix(in oklab, var(--background) 72%, transparent)')
-    expect(fallbacks(sheet, 'composer-fill')).toEqual([material])
+    expect(fallbacks(sheet, 'composer-fill')).toEqual(['var(--composer-ground)'])
+    expect(sheet.match(/--composer-ground\s*:/g)?.length).toBe(2)
+  })
+
+  it('wears no prism along its lip', () => {
+    const at = supports.indexOf('[data-slot="composer"].glass')
+    expect(supports.slice(at, supports.indexOf('}', at))).toMatch(/background-image:\s*none\s*!important/)
   })
 
   it('is read by the composer’s glass alone, where the material is, and declared by no sheet', () => {

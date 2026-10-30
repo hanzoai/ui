@@ -147,12 +147,16 @@ const CHIP_H = 24
 const BARE = 30
 
 /**
- * The height of the row a chip stands in, px: the composer's pills, which stand
- * as tall as its round controls. There a labelled chip is a pill — fully round,
- * a hairline, no fill — so the pills and the controls read as one set. Outside
- * that row, the 24px chip.
+ * The height of the row a chip stands in, px: the line of words under the
+ * composer's frame. There a labelled chip is a WORD — its label in the full ink
+ * at the 14px rung and a small chevron, no edge and no fill until a pointer
+ * gives it the soft hover ground — so where a run goes and the model, the
+ * effort and the mode read as one quiet line. Outside that row, the 24px chip.
  */
 export const Pills = createContext<number | null>(null)
+
+/** A word's own gutter, px: its ground under a pointer reaches this far past its letters. */
+const WORD_GUTTER = 5
 
 
 const MOVES = new Set<Move>(['ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 'PageUp'])
@@ -547,13 +551,13 @@ export function ChipSelect<T extends ChipItem>({
           aria-controls={open ? listId : undefined}
           aria-disabled={disabled || undefined}
           height={pill ? row : CHIP_H}
-          rounded={pill ? 999 : '$2'}
+          rounded={pill ? 8 : '$2'}
           // A chip of its icon alone stands with the composer's round controls, round as they are.
-          {...(bare ? { width: box, height: box, justify: 'center', rounded: 999 } : { px: pill ? 12 : '$2' })}
-          gap="$1.5"
+          {...(bare ? { width: box, height: box, justify: 'center', rounded: 999 } : { px: pill ? WORD_GUTTER : '$2' })}
+          gap={pill ? 4 : '$1.5'}
           items="center"
           shrink={0}
-          borderWidth={quiet ? 0 : 1}
+          borderWidth={quiet || pill ? 0 : 1}
           borderColor="$borderColor"
           bg={quiet || pill ? 'transparent' : '$raised'}
           cursor={disabled ? 'default' : 'pointer'}
@@ -571,7 +575,7 @@ export function ChipSelect<T extends ChipItem>({
             </XStack>
           ) : null}
           {bare ? null : (
-            <SizableText size="$2" color={quiet ? '$quiet' : '$ink'} numberOfLines={1} maxW={200}>
+            <SizableText size={pill ? '$3' : '$2'} color={quiet ? '$quiet' : '$ink'} numberOfLines={1} maxW={200}>
               {label}
             </SizableText>
           )}

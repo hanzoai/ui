@@ -2,7 +2,8 @@
 
 /**
  * The row under the composer's frame: the surface's chips at its start, and at
- * its end the model, the effort (dim) and the mode, each opening its choices.
+ * its end the model, the effort and the mode — quiet words, each opening its
+ * choices, all three drawn alike so the row reads as one line.
  *
  * The model is `ModelPicker` in its quiet look — the one picker, here as a word
  * in a row — and is drawn only where the person turned the model selector on
@@ -17,11 +18,12 @@
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
 import { Check } from '@hanzogui/lucide-icons-2'
-import { useState, type ReactNode } from 'react'
+import { forwardRef, useState, type ReactNode } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui'
 import { grants, modelName, type ModelCatalogEntry, type PauseSource } from '../models/catalog'
 import { ModelPicker } from '../models/ModelPicker'
+import { RING } from './look'
 import type { Way } from './ways'
 
 /** Which model answers: the host's store (Chat and Dev share one), as the composer reads it. */
@@ -54,29 +56,43 @@ export interface Chip {
   onPress: () => void
 }
 
-/** A text button in the row. */
-function Word({ children, dim = false, label, open }: { children: ReactNode; dim?: boolean; label: string; open: boolean }) {
-  return (
-    <XStack
-      render="button"
-      aria-label={label}
-      aria-expanded={open}
-      items="center"
-      height={24}
-      px={6}
-      rounded={6}
-      cursor="pointer"
-      bg={open ? '$hover' : 'transparent'}
-      hoverStyle={{ bg: '$hover' }}
-      focusVisibleStyle={{ outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' }}
-      $max-sm={{ height: 44, px: 8 }}
-    >
-      <SizableText fontSize={14} fontWeight={dim ? '400' : '500'} color={dim ? '$hint' : '$ink'} numberOfLines={1}>
-        {children}
-      </SizableText>
-    </XStack>
-  )
-}
+/**
+ * A word in the row under the frame: 14px, no edge and no fill until a pointer
+ * gives it the soft hover ground, eased. `dim` sets it in the muted ink — the
+ * effort, which qualifies the model beside it. A phone stands it as tall as the
+ * frame's controls. As a popover's trigger it IS the trigger, so the trigger's
+ * state lands on the button itself.
+ */
+const Word = forwardRef<HTMLElement, { children: ReactNode; label: string; slotName: string; open: boolean; dim?: boolean; disabled?: boolean } & Record<string, unknown>>(
+  function Word({ children, label, slotName, open, dim = false, disabled = false, ...trigger }, ref) {
+    return (
+      <XStack
+        ref={ref as never}
+        render="button"
+        data-slot={slotName}
+        {...trigger}
+        aria-label={label}
+        aria-expanded={open}
+        aria-disabled={disabled || undefined}
+        items="center"
+        height={28}
+        px={5}
+        rounded={8}
+        cursor={disabled ? 'default' : 'pointer'}
+        opacity={disabled ? 0.5 : 1}
+        bg={open ? '$hover' : 'transparent'}
+        hoverStyle={disabled ? undefined : { bg: '$hover' }}
+        transition="quickest"
+        focusVisibleStyle={RING}
+        $max-sm={{ height: 36 }}
+      >
+        <SizableText size="$3" color={dim ? '$soft' : '$ink'} numberOfLines={1}>
+          {children}
+        </SizableText>
+      </XStack>
+    )
+  },
+)
 
 /** A titled list of choices, a check on the one in force. */
 export function Choices<T extends string>({ title, items, value, onPick }: { title: string; items: readonly Way<T>[]; value: T; onPick: (id: T) => void }) {
@@ -121,39 +137,14 @@ export function Choices<T extends string>({ title, items, value, onPick }: { tit
 }
 
 /** A word in the row that opens a panel of choices. */
-function Opens({ label, word, dim, pill, children }: { label: string; word: ReactNode; dim?: boolean; pill?: boolean; children: (close: () => void) => ReactNode }) {
+function Opens({ label, word, slotName, dim, disabled, children }: { label: string; word: ReactNode; slotName: string; dim?: boolean; disabled?: boolean; children: (close: () => void) => ReactNode }) {
   const [open, setOpen] = useState(false)
   return (
-    <Popover open={open} onOpenChange={setOpen} allowFlip placement="top-end">
+    <Popover open={open} onOpenChange={(o) => setOpen(disabled ? false : o)} allowFlip placement="top-end">
       <PopoverTrigger asChild>
-        {pill ? (
-          <XStack
-            render="button"
-            data-slot="mode"
-            aria-label={label}
-            aria-expanded={open}
-            items="center"
-            height={24}
-            px={8}
-            marginInlineStart={4}
-            rounded={6}
-            bg="$hover"
-            cursor="pointer"
-            hoverStyle={{ bg: '$raised' }}
-            focusVisibleStyle={{ outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' }}
-            $max-sm={{ height: 44, px: 12 }}
-          >
-            <SizableText fontSize={14} color="$ink">
-              {word}
-            </SizableText>
-          </XStack>
-        ) : (
-          <XStack>
-            <Word label={label} dim={dim} open={open}>
-              {word}
-            </Word>
-          </XStack>
-        )}
+        <Word label={label} slotName={slotName} open={open} dim={dim} disabled={disabled}>
+          {word}
+        </Word>
       </PopoverTrigger>
       <PopoverContent solid p={6} width={288} maxW="calc(100vw - 24px)">
         {children(() => setOpen(false))}
@@ -162,10 +153,10 @@ function Opens({ label, word, dim, pill, children }: { label: string; word: Reac
   )
 }
 
-/** The surface's chips: one tap each, the one in force marked. */
+/** The surface's chips, as words: one tap each, the one in force in the full ink. */
 export function Chips({ chips }: { chips: readonly Chip[] }) {
   return (
-    <XStack data-slot="composer-chips" items="center" gap={4} flexWrap="wrap" rowGap={4} minW={0} shrink={1} maxW="100%">
+    <XStack data-slot="composer-chips" items="center" gap={2} flexWrap="wrap" rowGap={2} minW={0} shrink={1} maxW="100%">
       {chips.map((c) => (
         <XStack
           key={c.id}
@@ -175,20 +166,19 @@ export function Chips({ chips }: { chips: readonly Chip[] }) {
           onPress={c.onPress}
           items="center"
           gap={6}
-          height={26}
-          px={10}
-          rounded={999}
-          borderWidth={1}
-          borderColor={c.on ? '$rim' : '$borderColor'}
-          bg={c.on ? '$hover' : 'transparent'}
+          height={28}
+          px={5}
+          rounded={8}
+          bg="transparent"
           cursor="pointer"
           hoverStyle={{ bg: '$hover' }}
-          focusVisibleStyle={{ outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' }}
-          $max-sm={{ height: 36, px: 12 }}
+          transition="quickest"
+          focusVisibleStyle={RING}
+          $max-sm={{ height: 36 }}
         >
           {/* The mark goes on a phone, where the row would not fit one line with it. */}
           {c.icon ? <XStack aria-hidden $max-sm={{ display: 'none' }}>{c.icon}</XStack> : null}
-          <SizableText fontSize={13} color={c.on ? '$ink' : '$quiet'} numberOfLines={1}>
+          <SizableText size="$3" color={c.on ? '$ink' : '$soft'} numberOfLines={1}>
             {c.label}
           </SizableText>
         </XStack>
@@ -197,22 +187,47 @@ export function Chips({ chips }: { chips: readonly Chip[] }) {
   )
 }
 
-/** The row's end: the model where it is shown, and the mode. The effort is the composer's dial. */
+/** One of the surface's short lists, as a word that opens it. */
+function Pick({ title, label, slotName, modes, dim, disabled }: { title: string; label: (now: string) => string; slotName: string; modes: Modes; dim?: boolean; disabled?: boolean }) {
+  const { t } = useI18n()
+  const now = modes.items.find((m) => m.id === modes.value) ?? modes.items[0]
+  if (!now) return null
+  return (
+    <Opens label={label(t(now.label))} word={t(now.label)} slotName={slotName} dim={dim} disabled={disabled}>
+      {(close) => (
+        <Choices
+          title={title}
+          items={modes.items}
+          value={modes.value}
+          onPick={(m) => {
+            modes.set(m)
+            close()
+          }}
+        />
+      )}
+    </Opens>
+  )
+}
+
+/** The row's end: the model where it is shown, the effort, and the mode. */
 export function Tune({
   mind,
+  effort,
   mode,
   onUpgrade,
   limits,
+  disabled,
 }: {
   mind?: Mind | null
+  effort?: Modes | null
   mode?: Modes | null
   onUpgrade?: (model: string) => void
   limits?: PauseSource | null
+  disabled?: boolean
 }) {
   const { t } = useI18n()
-  const now = mode ? mode.items.find((m) => m.id === mode.value) : undefined
   return (
-    <XStack data-slot="tune" items="center" gap={2} marginInlineStart="auto" shrink={0}>
+    <XStack data-slot="tune" items="center" gap={0} shrink={0} flexWrap="wrap">
       {mind ? (
         <XStack data-slot="mind">
           <ModelPicker
@@ -231,20 +246,12 @@ export function Tune({
           />
         </XStack>
       ) : null}
-      {mode && now ? (
-        <Opens label={t('Mode: {mode}', { mode: t(now.label) })} word={t(now.label)} pill>
-          {(close) => (
-            <Choices
-              title={t('Mode')}
-              items={mode.items}
-              value={mode.value}
-              onPick={(m) => {
-                mode.set(m)
-                close()
-              }}
-            />
-          )}
-        </Opens>
+      {effort ? <Pick title={t('Effort')} label={(level) => t('Effort: {level}', { level })} slotName="effort" modes={effort} dim disabled={disabled} /> : null}
+      {mode ? (
+        // The mode stands a step apart: the model and its effort are one thought, the mode another.
+        <XStack marginInlineStart={12}>
+          <Pick title={t('Mode')} label={(m) => t('Mode: {mode}', { mode: m })} slotName="mode" modes={mode} />
+        </XStack>
       ) : null}
     </XStack>
   )

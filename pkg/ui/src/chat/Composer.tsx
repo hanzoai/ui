@@ -1,24 +1,40 @@
 'use client'
 
 /**
- * Composer — the one composer every Hanzo surface draws: Chat, Dev, Studio, a
- * room, a reply, a run being steered. A surface hands it slots and defaults and
- * nothing else; the field, the keys, the controls and their look are here once.
+ * Composer — the one composer every Hanzo surface draws: Chat, Dev, Studio, the
+ * browser extension, a room, a reply, a run being steered. A surface hands it
+ * slots and defaults and nothing else; the field, the keys, the controls and
+ * their look are here once.
  *
- *   ┌ pills ───────────────────────────────┐   where a run goes, which repository
+ *   ╭──────────────────────────────────────╮
  *   │ the field                            │
- *   │ +  carried…  children     ✦  🎙  ⬆   │   + menu, what the draft carries,
- *   └──────────────────────────────────────┘   commands, dictation, send / stop
- *     chips…                 model effort mode
+ *   │                                      │
+ *   │ +  carried…  children    ✦  🎙⌄  ◌  │   + menu, what the draft carries,
+ *   ╰──────────────────────────────────────╯   commands, dictation, voice ⇄ send
+ *     Project ⌄  chips…   usage  Model Effort Mode
+ *
+ * ONE SURFACE: a rounded rectangle a step above the ground it stands on
+ * (`--composer-ground`), one even 1px edge all the way round and nothing inset
+ * along its top. The edge brightens softly under a pointer and on focus. A
+ * conversation nothing keeps (`forgetful`) is the same frame with no ground, its
+ * edge dashed — the one cue, so nothing above the composer has to say it.
+ *
+ * ONE ROW of controls inside the frame's foot: ghosts on one centreline, one
+ * glyph size, their ink lifting under a pointer. The last place is voice mode
+ * while the draft is empty and send once it has words — send fades and grows in
+ * there, so the row never shifts as the draft fills.
+ *
+ * UNDER THE FRAME, one quiet line of words at the frame's text edge: where a
+ * run goes (the surface's pills) and its chips at the start; the host's usage,
+ * the model, the effort and the mode at the end. It wraps on a phone.
  *
  * Above the frame: the surface's `head`, the `/` or `@` list, and the `note`.
- * Under it, one row: the surface's chips, then the model, the effort and the mode.
  *
  * THE PERSON'S SETTING (@hanzo/appearance `useComposing`, Settings →
  * Appearance) decides which key sends and whether the chips, the model
  * selector and the mode are drawn, everywhere at once. An axis they left on
- * Auto takes the surface's `defaults`, and the model selector is off until
- * they turn it on.
+ * Auto takes the surface's `defaults`; the model is drawn until they turn it
+ * off.
  *
  * Its paint is @hanzo/design's: `$` tokens and `--primary`, sized through
  * `--density` (the round controls are @hanzo/composer's `Control`), so text
@@ -41,13 +57,12 @@ import { slot } from '../backends/gui/slot'
 import { glass } from '../glass'
 import type { PauseSource } from '../models/catalog'
 import { Pills } from '../product/ChipSelect'
-import { Dial } from './Dial'
 import { Dictation } from './Dictation'
 import { Mention, trigger } from './Mention'
 import { Palette, type Command } from './Palette'
 import { Plus, type PlusProps, type Shelf } from './Plus'
 import { ready, sends, type Mods } from './send'
-import { RING } from './ring'
+import { GHOST, GLYPH, RING, STROKE } from './look'
 import { useComposerStatus } from './Status'
 import { Chips, Tune, type Chip, type Mind, type Modes } from './Tune'
 
@@ -70,29 +85,59 @@ export const GAP = 20
 /** The composer's width under a thread: the measure less its 0.75rem gutters, centred, so its edges are the text's. */
 export const measure = { width: 'calc(100% - 1.5rem)', maxW: `calc(${MEASURE} - 1.5rem)`, mx: 'auto' } as const
 
-/** The round controls' box, px, and a phone's, a thumb's width kept small so the frame is a slim glass bar: `+`, the effort, the mic, its chevron and send all take it, so they share one centreline. The pills stand as tall. */
+/** The round controls' box, px, and a phone's, a thumb's width kept small so the frame stays a slim bar: `+`, the mic, voice and send all take it, so they share one centreline. */
 export const ROUND = 32
 const TAP = 36
 
-/** The space between two things in a row of the frame, px: one gap, so a row reads evenly set. */
+/** The space between two things in a row, px: one gap, so a row reads evenly set. */
 const SPACE = 4
 
-/** The frame's corner, px: 12 on a laptop; on a phone the inset plus a control's radius, so the send's circle and the frame's corner are concentric. */
-const CORNER = 12
-const CORNER_PHONE = 24
+/** The frame's corner, px. */
+const CORNER = 16
 
-/** How tall the field grows before it scrolls, px. */
-const CEILING = 200
+/** The frame's edge, px: one whole pixel, so it lands on the pixel grid at every ratio. */
+const EDGE = 1
+
+/** How far the controls stand in from the frame's edge, px. */
+const INSET = 6
+
+/** Where the words stand in from the frame's outer edge, px: the field's text, and the words of the row under it. */
+const TEXT = 16
+
+/** A word's own gutter under the frame, px, so its ground under a pointer reaches past its letters. */
+const GUTTER = 5
+
+/** The field at rest, px: two lines' room on a laptop, so the frame reads as a place to write; one on a phone. */
+const REST = 52
+const REST_PHONE = 40
+
+/** How tall the field grows before it scrolls, px: ten lines on a laptop, six on a phone, where the keyboard has the rest. */
+const CEILING = 240
+const CEILING_PHONE = 160
 
 /** The ink on a filled round: the accent's own foreground. */
 const ON = 'var(--primary-foreground)'
 
-/** A round control with no ground of its own until it is pointed at. */
-const QUIET = { bg: 'transparent', color: 'var(--foreground)', hoverStyle: { bg: '$hover' } } as const
-
-/** What the draft carries, as a chip: a filled tab after `+` on a laptop; on a phone a pill in a row of its own above the field, the pills' shape (round, a hairline, no fill) as tall as the controls, so the controls' row never wraps. */
-const CARRIED = { height: 28, rounded: 8, bg: '$hover', paddingInlineStart: 8 } as const
+/** What the draft carries, as a chip: a filled pill after `+` on a laptop; on a phone a pill in a row of its own above the field, round with a hairline and no fill, as tall as the controls, so the controls' row never wraps. */
+const CARRIED = { height: 28, rounded: 999, bg: '$hover', paddingInlineStart: 10 } as const
 const pill = (height: number) => ({ height, rounded: 999, borderWidth: 1, borderColor: '$borderColor', bg: 'transparent', paddingInlineStart: 12 }) as const
+
+/** One of the two layers in the row's last place: shown, it is there; hidden, it fades and shrinks to 0.9 and takes no press. */
+const layer = (shown: boolean) =>
+  ({
+    position: 'absolute',
+    t: 0,
+    l: 0,
+    r: 0,
+    b: 0,
+    items: 'center',
+    justify: 'center',
+    transition: 'quickest',
+    opacity: shown ? 1 : 0,
+    scale: shown ? 1 : 0.9,
+    pointerEvents: shown ? 'auto' : 'none',
+    ...(shown ? null : { 'aria-hidden': true }),
+  }) as const
 
 /**
  * Under a coarse pointer @hanzo/design floors every button at `--tap-target`,
@@ -130,19 +175,19 @@ export interface ComposerProps extends Stack {
   label?: string
   /** Row floor for the field. It grows with the draft from here. */
   rows?: number
-  /** Ceiling for that growth, px. Past it the field scrolls. */
+  /** Ceiling for that growth, px. Past it the field scrolls. Unset, ten lines on a laptop and six on a phone. */
   maxHeight?: number
   /** The field's own props — a ref, a testid, a paste handler. */
   field?: FieldProps
   /** A word at the end of the tool row, before the controls: a status. */
   hint?: string
-  /** Account usage and context control; null hides a host-provided control. */
+  /** Account usage and context, a word under the frame; null hides a host-provided control. */
   status?: ReactNode
   /** The tool row's start, after `+` and what the draft carries. */
   children?: ReactNode
   /** Above the frame, at its width: what the draft is sent with, a banner. */
   head?: ReactNode
-  /** The frame's first row: the surface's pills — where a run goes, which repository, which branch. */
+  /** Under the frame, at the row's start, as words: where a run goes, which repository, which branch. */
   pills?: ReactNode
   /** What the draft carries, as chips after `+`. */
   carried?: readonly Carried[]
@@ -170,7 +215,7 @@ export interface ComposerProps extends Stack {
   /** The language dictation listens in, null for Auto, and how to change it. */
   language?: string | null
   onLanguage?: (id: string | null) => void
-  /** A spoken conversation (@hanzo/voice `useTalk`): the round button while the draft is empty. */
+  /** A spoken conversation (@hanzo/voice `useTalk`): the row's last place while the draft is empty. */
   talk?: Machine
   /** Above the frame, nearest it: the person's suggestions, at every width. */
   starters?: ReactNode
@@ -178,9 +223,9 @@ export interface ComposerProps extends Stack {
   note?: ReactNode
   /** At the reading column's width (`measure`), centred: the composer under a thread, so its edges are the text's. Absent, the width of what holds it. */
   column?: boolean
-  /** Drawn on a pane: the frame floats as a pane of its own. */
-  framed?: boolean
-  /** A phone: every control is 36px, the pills as tall, each row evenly set. Absent, the viewport decides. */
+  /** A conversation nothing keeps (a private chat): the frame drops its ground and its drop and keeps its edge, dashed — the one cue, so nothing above the composer has to say it. */
+  forgetful?: boolean
+  /** A phone: every control is 36px and every word under the frame as tall, each row evenly set. Absent, the viewport decides. */
   narrow?: boolean
   /** This surface's answer where the person left an axis on Auto. */
   defaults?: Composing
@@ -252,7 +297,7 @@ export function Composer({
   placeholder,
   label,
   rows = 1,
-  maxHeight = CEILING,
+  maxHeight,
   field,
   hint,
   status,
@@ -277,7 +322,7 @@ export function Composer({
   starters,
   note,
   column = false,
-  framed = false,
+  forgetful = false,
   narrow: narrowProp,
   defaults,
   ...props
@@ -291,7 +336,7 @@ export function Composer({
   const chosen = useComposing()
   const rule = chosen.send ?? defaults?.send ?? 'enter'
   const showChips = chosen.chips ?? defaults?.chips ?? true
-  const showModel = chosen.model ?? defaults?.model ?? false
+  const showModel = chosen.model ?? defaults?.model ?? true
   const showMode = chosen.mode ?? defaults?.mode ?? true
 
   const lit = readyProp ?? ready(value)
@@ -354,12 +399,15 @@ export function Composer({
       borderWidth={0}
       fontSize={16}
       lineHeight={24}
-      px={8}
-      pt={2}
-      pb={0}
-      minH={26}
-      maxH={maxHeight}
+      // The text stands `TEXT` in from the frame's outer edge, where the words under the frame stand.
+      px={TEXT - EDGE - INSET}
+      pt={6}
+      pb={6}
+      minH={narrow ? REST_PHONE : REST}
+      maxH={maxHeight ?? (narrow ? CEILING_PHONE : CEILING)}
       bg="transparent"
+      color="$ink"
+      placeholderTextColor="$placeholderColor"
       aria-label={label ?? placeholder ?? t(ASK)}
       {...field}
       // After `field`: a caller's `onKeyDown` runs first and can claim the key,
@@ -373,7 +421,11 @@ export function Composer({
     />
   )
 
-  const round = (
+  // The row's last place: send (stop while a turn runs) once there is something
+  // to send, voice mode while the draft is empty. Both stand in one box, so the
+  // row never moves; the one that is not wanted fades and shrinks out.
+  const sending = busy || lit
+  const send = (
     <Control
       type="button"
       size={hit}
@@ -382,7 +434,8 @@ export function Composer({
       {...slot('composer-send')}
       aria-label={t(busy ? 'Stop' : 'Send')}
       aria-disabled={!live || undefined}
-      opacity={live ? 1 : 0.4}
+      tabIndex={sending ? 0 : -1}
+      pressStyle={{ scale: 0.92 }}
       focusVisibleStyle={RING}
       onClick={() => {
         if (!live) return
@@ -390,8 +443,27 @@ export function Composer({
         else onSend()
       }}
     >
-      {busy ? <Square size={13} color={ON} fill={ON} /> : <ArrowUp size={16} strokeWidth={2.5} color={ON} />}
+      {busy ? <Square size={12} color={ON} fill={ON} /> : <ArrowUp size={GLYPH} strokeWidth={2} color={ON} />}
     </Control>
+  )
+  const last = (
+    <XStack {...slot('composer-last')} position="relative" width={hit} height={hit} shrink={0}>
+      {talk ? (
+        <XStack {...layer(!sending)}>
+          <Control asChild size={hit} rounded={999} {...GHOST} focusVisibleStyle={RING}>
+            <Voice
+              voice={talk}
+              disabled={disabled || sending}
+              data-slot="composer-talk"
+              says={{ idle: t('Voice mode'), listening: t('In conversation — click to hang up'), speaking: t('Hanzo is speaking — talk to interrupt') }}
+            >
+              {() => <AudioLines size={GLYPH} strokeWidth={STROKE} color="currentColor" />}
+            </Voice>
+          </Control>
+        </XStack>
+      ) : null}
+      <XStack {...layer(sending)}>{send}</XStack>
+    </XStack>
   )
 
   const mention =
@@ -423,7 +495,7 @@ export function Composer({
         onPress={c.onRemove}
         width={20}
         height={20}
-        rounded={narrow ? 999 : 6}
+        rounded={999}
         items="center"
         justify="center"
         hoverStyle={{ bg: '$raised' }}
@@ -435,37 +507,62 @@ export function Composer({
   ))
 
   const shown = showChips && chips?.length ? chips : null
-  const tuned = (showModel && mind) || (showMode && mode)
+  const usage = status === undefined ? inheritedStatus : status
+  const tuned = (showModel && mind) || effort || (showMode && mode)
+  const word = narrow ? TAP : 28
   const under =
-    shown || tuned ? (
-      <XStack {...slot('composer-foot')} items="center" gap={6} flexWrap="wrap" rowGap={4} width="100%" style={FLOOR}>
+    pills || shown || usage || tuned ? (
+      <XStack
+        {...slot('composer-foot')}
+        items="center"
+        gap={2}
+        flexWrap="wrap"
+        rowGap={2}
+        width="100%"
+        // A word's letters stand where the field's do: TEXT in, less the word's own gutter.
+        px={TEXT - GUTTER}
+        style={FLOOR}
+      >
+        {pills ? (
+          <XStack {...slot('composer-pills')} items="center" gap={2} flexWrap="wrap" rowGap={2}>
+            <Pills.Provider value={word}>{pills}</Pills.Provider>
+          </XStack>
+        ) : null}
         {shown ? <Chips chips={shown} /> : null}
-        {tuned ? <Tune mind={showModel ? mind : null} mode={showMode ? mode : null} onUpgrade={onUpgrade} limits={limits} /> : null}
+        {usage || tuned ? (
+          <XStack items="center" gap={2} marginInlineStart="auto" shrink={0} flexWrap="wrap">
+            {usage ? (
+              <XStack {...slot('composer-status')} items="center">
+                {usage}
+              </XStack>
+            ) : null}
+            {tuned ? (
+              <Tune mind={showModel ? mind : null} effort={effort} mode={showMode ? mode : null} onUpgrade={onUpgrade} limits={limits} disabled={disabled} />
+            ) : null}
+          </XStack>
+        ) : null}
       </XStack>
     ) : null
 
   return (
-    <YStack {...slot('composer-shell')} {...(column ? measure : { width: '100%' })} gap={6} {...(lift ? { mb: lift } : null)} {...props}>
+    <YStack {...slot('composer-shell')} {...(column ? measure : { width: '100%' })} gap={8} {...(lift ? { mb: lift } : null)} {...props}>
       {above}
       <YStack
         {...slot('composer')}
         width="100%"
         rounded={CORNER}
-        borderWidth={1}
+        borderWidth={EDGE}
         {...glass(2)}
-        p={6}
-        pt={pills || (narrow && things.length) ? 6 : 10}
+        p={INSET}
         gap={SPACE}
-        $max-sm={{ rounded: CORNER_PHONE }}
-        {...(framed ? { boxShadow: 'var(--shadow-sheet-1)' } : null)}
+        cursor="text"
+        {...(forgetful ? { 'data-forgetful': '' } : null)}
+        // A press on the frame's own ground is a press in the field: the whole surface is the target.
+        onPress={(e: any) => {
+          if (e?.target === e?.currentTarget) (e.currentTarget as HTMLElement).querySelector<HTMLTextAreaElement>('[data-slot="composer-field"]')?.focus()
+        }}
         style={FLOOR}
       >
-        {pills ? (
-          // The pills stand as tall as the controls (`Pills`), at the controls' edge, so the frame's rows share one rhythm.
-          <XStack {...slot('composer-pills')} items="center" gap={SPACE} flexWrap="wrap" rowGap={SPACE}>
-            <Pills.Provider value={hit}>{pills}</Pills.Provider>
-          </XStack>
-        ) : null}
         {narrow && things.length ? (
           <XStack {...slot('composer-carry')} items="center" gap={SPACE} flexWrap="wrap" rowGap={SPACE}>
             {things}
@@ -480,29 +577,13 @@ export function Composer({
           </XStack>
           <XStack {...slot('composer-end')} items="center" gap={SPACE} shrink={0}>
             {hint ? (
-              <SizableText size="$1" color="$soft" numberOfLines={1}>
+              <SizableText size="$1" color="$soft" numberOfLines={1} paddingInlineEnd={4}>
                 {hint}
               </SizableText>
             ) : null}
-            {status === undefined ? inheritedStatus : status}
-            {effort ? <Dial effort={effort} size={hit} narrow={narrow} disabled={disabled} /> : null}
             {commands?.length ? <Palette commands={commands} open={palette} onOpenChange={setPalette} size={hit} disabled={disabled} /> : null}
-            {voice ? <Dictation voice={voice} disabled={disabled} size={hit} gap={narrow ? SPACE : 0} language={language} {...(onLanguage ? { onLanguage } : {})} /> : null}
-            {!busy && !lit && talk ? (
-              // Voice mode is a plain mark on a laptop, as the mic is, and the filled round on a phone.
-              <Control asChild size={hit} fill={narrow} rounded={999} {...(narrow ? null : QUIET)} focusVisibleStyle={RING}>
-                <Voice
-                  voice={talk}
-                  disabled={disabled}
-                  data-slot="composer-talk"
-                  says={{ idle: t('Voice mode'), listening: t('In conversation — click to hang up'), speaking: t('Hanzo is speaking — talk to interrupt') }}
-                >
-                  {() => <AudioLines size={16} color={narrow ? ON : 'var(--foreground)'} />}
-                </Voice>
-              </Control>
-            ) : (
-              round
-            )}
+            {voice ? <Dictation voice={voice} disabled={disabled} size={hit} language={language} {...(onLanguage ? { onLanguage } : {})} /> : null}
+            {last}
           </XStack>
         </XStack>
       </YStack>

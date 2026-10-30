@@ -139,6 +139,21 @@ describe('the composer is wired to its own rules', () => {
     expect(onSend).not.toHaveBeenCalled()
   })
 
+  it("gives the row's last place to voice mode while the draft is empty and to send once it has words", () => {
+    const talk = { state: 'idle', open: false, level: 0, blocked: null, reason: null, refusal: null, toggle: () => {} } as const
+    const hidden = (sel: string) => host.querySelector(sel)!.closest('[aria-hidden="true"]') !== null
+    mount(<Composer value="" onChange={() => {}} onSend={() => {}} talk={talk as never} />)
+    const last = host.querySelector('[data-slot="composer-last"]')!
+    expect(last.querySelector('[data-slot="composer-send"]')?.getAttribute('aria-disabled')).toBe('true')
+    expect(hidden('[data-slot="composer-send"]')).toBe(true)
+    expect(hidden('[data-slot="composer-talk"]')).toBe(false)
+    expect(host.querySelector('[data-slot="composer-send"]')!.getAttribute('tabindex')).toBe('-1')
+    mount(<Composer value="hi" onChange={() => {}} onSend={() => {}} talk={talk as never} />)
+    expect(host.querySelector('[data-slot="composer-send"]')!.getAttribute('aria-disabled')).toBeNull()
+    expect(hidden('[data-slot="composer-send"]')).toBe(false)
+    expect(hidden('[data-slot="composer-talk"]')).toBe(true)
+  })
+
   it('turns the send control into stop while busy', () => {
     mount(<Composer value="hi" busy onSend={() => {}} onStop={() => {}} onChange={() => {}} />)
     expect(host.querySelector('[data-slot="composer-send"]')?.getAttribute('aria-label')).toBe('Stop')
@@ -151,11 +166,14 @@ describe('the field is bounded at both ends', () => {
    *  in a browser. */
   const classes = () => field().className
 
-  it('stands one line tall, not three', () => {
+  it('stands one line tall, not three, and grows ten lines on a laptop and six on a phone', () => {
     // `Textarea` defaults to 64px, three lines of chrome for a composer.
-    mount(<Composer value="" onChange={() => {}} onSend={() => {}} />)
-    expect(classes()).toContain('_maxH-200px')
-    expect(classes()).toContain('_minH-26px')
+    mount(<Composer narrow={false} value="" onChange={() => {}} onSend={() => {}} />)
+    expect(classes()).toContain('_maxH-240px')
+    expect(classes()).toContain('_minH-52px')
+    mount(<Composer narrow value="" onChange={() => {}} onSend={() => {}} />)
+    expect(classes()).toContain('_maxH-160px')
+    expect(classes()).toContain('_minH-40px')
   })
 
   it('takes a ceiling, for a surface with a narrower frame', () => {
@@ -165,7 +183,7 @@ describe('the field is bounded at both ends', () => {
 })
 
 describe('the slots', () => {
-  it('draws `head` above the frame, `pills` inside it, and the chips under it', () => {
+  it('draws `head` above the frame, and the pills and the chips under it', () => {
     mount(
       <Composer
         value=""
@@ -181,7 +199,8 @@ describe('the slots', () => {
     expect(parts).toEqual(['composer-head', 'composer', 'composer-foot'])
     const frame = host.querySelector('[data-slot="composer"]')!
     expect(frame.querySelector('[data-testid="banner"]')).toBeNull()
-    expect(frame.querySelector('[data-slot="composer-pills"] [data-testid="pill"]')).not.toBeNull()
+    expect(frame.querySelector('[data-testid="pill"]')).toBeNull()
+    expect(host.querySelector('[data-slot="composer-foot"] [data-slot="composer-pills"] [data-testid="pill"]')).not.toBeNull()
     expect(host.querySelector('[data-slot="composer-foot"] [data-slot="composer-chip"]')?.textContent).toBe('Issues')
   })
 
@@ -219,12 +238,12 @@ describe('a phone draws one slim bar', () => {
   const pills = <ChipSelect name="Branch" label="main" onChange={() => {}} items={[]} />
   const carried = [{ id: 'f', label: 'notes.md', onRemove: () => {} }]
 
-  it('stands the pills as tall as the controls, round, a hairline and no fill', () => {
+  it('stands the pills as words under the frame, a thumb tall on a phone', () => {
     mount(<Composer narrow value="" onChange={() => {}} onSend={() => {}} pills={pills} />)
-    const pill = cls('[data-slot="composer-pills"] [data-slot="chip-select"]')
-    for (const c of ['_height-36px', '_btlr-999px', '_btw-1px', '_bg-transparent']) expect(pill).toContain(c)
+    const pill = cls('[data-slot="composer-foot"] [data-slot="chip-select"]')
+    for (const c of ['_height-36px', '_btw-0px', '_bg-transparent']) expect(pill).toContain(c)
     mount(<Composer narrow={false} value="" onChange={() => {}} onSend={() => {}} pills={pills} />)
-    expect(cls('[data-slot="composer-pills"] [data-slot="chip-select"]')).toContain('_height-32px')
+    expect(cls('[data-slot="composer-foot"] [data-slot="chip-select"]')).toContain('_height-28px')
   })
 
   it('carries the draft in a row of its own above the field, so the controls never wrap; a laptop after `+`', () => {
@@ -268,16 +287,25 @@ describe("the person's setting is the one every composer reads", () => {
   })
 })
 
-describe('the model selector', () => {
+describe('the model', () => {
   const mind = { model: 'enso-auto', models: [], loading: false, error: null, note: '', free: false, pick: () => {} }
   const effort = { value: 'auto', set: () => {}, items: [{ id: 'auto', label: 'Auto', note: 'Adaptive' }] }
 
-  it('is not drawn until the person turns it on, and the effort always is', () => {
+  it('is a word under the frame until the person turns it off, and the effort always is', () => {
     mount(<Composer value="" onChange={() => {}} onSend={() => {}} mind={mind} effort={effort} />)
+    expect(host.querySelector('[data-slot="composer-foot"] [data-slot="mind"]')).not.toBeNull()
+    expect(host.querySelector('[data-slot="composer-foot"] [aria-label="Effort: Auto"]')).not.toBeNull()
+    expect(host.querySelector('[data-slot="composer"] [aria-label="Effort: Auto"]')).toBeNull()
+    act(() => writeComposing({ model: false }))
     expect(host.querySelector('[data-slot="mind"]')).toBeNull()
-    expect(host.querySelector('[aria-label="Effort: Auto"]')).not.toBeNull()
-    act(() => writeComposing({ model: true }))
-    expect(host.querySelector('[data-slot="mind"]')).not.toBeNull()
+  })
+
+  it('a conversation nothing keeps marks the frame, and nothing else', () => {
+    mount(<Composer value="" onChange={() => {}} onSend={() => {}} forgetful />)
+    expect(host.querySelector('[data-slot="composer"]')!.hasAttribute('data-forgetful')).toBe(true)
+    expect(host.querySelector('[data-slot="composer-head"]')).toBeNull()
+    mount(<Composer value="" onChange={() => {}} onSend={() => {}} />)
+    expect(host.querySelector('[data-slot="composer"]')!.hasAttribute('data-forgetful')).toBe(false)
   })
 })
 
@@ -315,11 +343,11 @@ describe('accessibility', () => {
 
 
 describe('host account usage slot', () => {
-  it('shows the inherited control and lets a surface replace or suppress it', () => {
+  it('shows the inherited control under the frame and lets a surface replace or suppress it', () => {
     const props = { value: '', onChange: () => {}, onSend: () => {} }
     const inherited = <button type="button" data-usage="account">Usage</button>
     mount(<ComposerStatusProvider value={inherited}><Composer {...props} /></ComposerStatusProvider>)
-    expect(host.querySelector('[data-usage="account"]')).not.toBeNull()
+    expect(host.querySelector('[data-slot="composer-foot"] [data-slot="composer-status"] [data-usage="account"]')).not.toBeNull()
     mount(<ComposerStatusProvider value={inherited}><Composer {...props} status={<button data-usage="conversation">Context</button>} /></ComposerStatusProvider>)
     expect(host.querySelector('[data-usage="account"]')).toBeNull()
     expect(host.querySelector('[data-usage="conversation"]')).not.toBeNull()

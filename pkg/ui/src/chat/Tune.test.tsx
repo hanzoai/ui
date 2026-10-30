@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 
 /**
- * The row under the composer: the model, the effort only for a model that
- * reasons, the mode — and the surface's chips, which the person may hide.
+ * The row under the composer: the model, the effort and the mode as one set of
+ * quiet words — and the surface's chips, which the person may hide.
  */
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
@@ -83,16 +83,39 @@ describe('Tune', () => {
         }}
       />,
     )
-    const pill = host.querySelector<HTMLElement>('[data-slot="mode"]')!
-    expect(pill.getAttribute('aria-label')).toBe('Mode: Auto')
-    act(() => pill.click())
+    const word = host.querySelector<HTMLElement>('[data-slot="mode"]')!
+    expect(word.tagName).toBe('BUTTON')
+    expect(word.getAttribute('aria-label')).toBe('Mode: Auto')
+    act(() => word.click())
     const plan = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((o) => o.textContent?.startsWith('Plan'))!
     act(() => plan.click())
     expect(set).toHaveBeenCalledWith('plan')
   })
 
-  it('draws nothing where the surface has no model and no mode', () => {
-    mount(<Tune mind={null} mode={null} />)
+  it('names the effort in force as a word of the same row, and changes it from its own list', () => {
+    const set = vi.fn()
+    mount(
+      <Tune
+        effort={{
+          value: 'high',
+          set,
+          items: [
+            { id: 'auto', label: 'Auto', note: 'Adaptive' },
+            { id: 'high', label: 'High', note: 'Thinks longer' },
+          ],
+        }}
+      />,
+    )
+    const word = host.querySelector<HTMLElement>('[data-slot="effort"]')!
+    expect(word.getAttribute('aria-label')).toBe('Effort: High')
+    act(() => word.click())
+    const auto = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((o) => o.textContent?.startsWith('Auto'))!
+    act(() => auto.click())
+    expect(set).toHaveBeenCalledWith('auto')
+  })
+
+  it('draws nothing where the surface has no model, no effort and no mode', () => {
+    mount(<Tune mind={null} effort={null} mode={null} />)
     expect(host.querySelector('[data-slot="tune"]')?.children.length).toBe(0)
   })
 })

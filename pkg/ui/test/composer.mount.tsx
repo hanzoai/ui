@@ -1,8 +1,10 @@
 // The one composer at the foot of a page, the way Chat and Dev hand it their
-// slots: `?case=chat` the effort, `+`, dictation and voice mode; `?case=dev` the
-// three pills (where the run goes, the repository, the branch), a file the draft
-// carries, the commands and the chips under the frame. `scripts/composer.mjs`
-// measures it in a real browser; it is also the page to open by hand.
+// slots: `?case=chat` the model, the effort, `+`, dictation and voice mode;
+// `?case=dev` the three pills (where the run goes, the repository, the branch),
+// a file the draft carries, the commands and the chips, the effort and the
+// mode. `&forgetful` draws it for a conversation nothing keeps.
+// `scripts/composer.mjs` measures it in a real browser; it is also the page to
+// open by hand.
 import { useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Paragraph, YStack } from '@hanzo/gui'
@@ -19,7 +21,9 @@ import { BranchSelect } from '../src/product/BranchSelect'
 import { ChipSelect } from '../src/product/ChipSelect'
 import { RepoSelect } from '../src/product/RepoSelect'
 
-const dev = new URLSearchParams(location.search).get('case') === 'dev'
+const query = new URLSearchParams(location.search)
+const dev = query.get('case') === 'dev'
+const forgetful = query.has('forgetful')
 
 /** A microphone at rest: dictation and voice mode drawn, nothing listening. */
 const IDLE: Machine = { state: 'idle', open: false, level: 0, blocked: null, reason: null, refusal: null, toggle: () => {} }
@@ -40,10 +44,11 @@ function Page() {
     effort: { value: effort, set: setEffort, items: dev ? EFFORTS.filter((e) => ['auto', 'high', 'xhigh', 'max'].includes(e.id)) : EFFORTS },
     voice: IDLE,
     talk: IDLE,
+    forgetful,
+    mind: { model: 'opus-5.5', models: [{ id: 'opus-5.5', name: 'Opus 5.5' } as never], loading: false, error: null, note: '', free: false, pick: () => {} },
   }
   const slots: Partial<ComposerProps> = dev
     ? {
-        framed: true,
         label: 'Describe a task or ask a question',
         placeholder: 'Ask, build, or run anything…',
         pills: (
@@ -55,6 +60,7 @@ function Page() {
         ),
         carried: [{ id: 'f', label: 'notes.md', icon: <FileText size={13} color="$soft" />, onRemove: () => {} }],
         commands: [{ id: 'run', label: 'Run', run: () => {} }],
+        mode: { value: 'manual', set: () => {}, items: [{ id: 'auto', label: 'Auto', note: 'Runs on its own' }, { id: 'manual', label: 'Manual', note: 'Asks first' }] },
         chips: [
           { id: 'repos', label: 'Repos', icon: <Code size={13} color="$soft" />, onPress: () => {} },
           { id: 'issues', label: 'Issues', icon: <CircleDot size={13} color="$soft" />, onPress: () => {} },
