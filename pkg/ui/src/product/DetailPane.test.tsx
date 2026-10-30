@@ -114,8 +114,9 @@ describe('a docked pane', () => {
     expect(pane().getAttribute('aria-hidden')).toBe('false')
     expect(host.querySelector('[role="dialog"]')).toBeNull()
     // The column animates its width to the kept one; the page inside holds it.
-    expect(pane().style.width).toBe('var(--span)')
-    expect(pane().style.getPropertyValue('--span')).toBe('400px')
+    // Both are gui classes (useSpan's props), not a style on the element.
+    expect(pane().className).toMatch(/span-400px/)
+    expect(pane().getAttribute('style') ?? '').not.toMatch(/width|--span/)
   })
 
   it('draws the record frame: the bar with the title and close, the body, the footer', () => {
@@ -169,7 +170,9 @@ describe('a docked pane', () => {
     act(() => api.open({ title: 'Acme', content: <span>body</span> }))
     // jsdom lays nothing out; the column is as wide as its kept span.
     const rect = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
-      const w = this.dataset.slot === 'detail-pane' ? parseFloat(this.style.getPropertyValue('--span')) || 0 : 0
+      // The kept width is the class useSpan's props draw until a drag writes the property.
+      const kept = (el: HTMLElement) => parseFloat(el.style.getPropertyValue('--span')) || Number(/span-(\d+)px/.exec(el.className)?.[1]) || 0
+      const w = this.dataset.slot === 'detail-pane' ? kept(this) : 0
       return { x: 0, y: 0, top: 0, left: 0, bottom: 0, right: w, width: w, height: 800, toJSON: () => ({}) } as DOMRect
     })
     const grip = host.querySelector('[data-slot="grip"]') as HTMLElement
@@ -193,7 +196,7 @@ describe('a docked pane', () => {
     let api!: DetailPaneApi
     docked((a) => (api = a))
     act(() => api.open({ title: 'Acme', content: <span>body</span> }))
-    expect(pane().style.getPropertyValue('--span')).toBe('512px')
+    expect(pane().className).toMatch(/span-512px/)
   })
 
   it('passes axe, open', async () => {

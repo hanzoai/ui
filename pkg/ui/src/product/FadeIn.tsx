@@ -25,7 +25,12 @@ export type FadeInProps = Omit<ComponentProps<typeof View>, 'children'> & {
 export function FadeIn({ children, index = 0, step = 50, delayMs, ...props }: FadeInProps) {
   const delay = delayMs ?? index * step
   return (
-    <View data-motion="rise" display="block" $platform-web={{ animationDelay: `${delay}ms` }} {...props}>
+    <View
+      data-motion="rise"
+      display="block"
+      $platform-web={{ animationDelay: `${delay}ms` }}
+      {...props}
+    >
       {children}
     </View>
   )
