@@ -189,7 +189,7 @@ describe('Grip', () => {
 function Column() {
   const col = useSpan('grip.test.column', 240, 200, 400)
   return (
-    <YStack ref={col.ref as never} style={col.style} position="relative" data-testid="column">
+    <YStack ref={col.ref as never} {...col.props} position="relative" data-testid="column">
       <Grip side="left" span={col.span} floor={200} ceil={400} reset={240} onSpan={col.move} onKeep={col.keep} label="Resize column" />
     </YStack>
   )
@@ -200,15 +200,18 @@ describe('useSpan', () => {
     localStorage.removeItem('grip.test.column')
     const ui = mount(<Column />)
     const column = () => ui.host.querySelector<HTMLElement>('[data-testid="column"]')!
-    expect(column().style.getPropertyValue('--span')).toBe('240px')
+    // The width React knows is gui's class, not a style on the element; a drag writes the property itself.
+    expect(column().className).toMatch(/span-240px/)
+    expect(column().getAttribute('style') ?? '').not.toMatch(/--span/)
     ui.drawn(240)
     ui.key('ArrowRight', true)
     expect(localStorage.getItem('grip.test.column')).toBe('272')
     expect(column().style.getPropertyValue('--span')).toBe('272px')
+    expect(column().className).toMatch(/span-272px/)
     ui.cleanup()
 
     const again = mount(<Column />)
-    expect(again.host.querySelector<HTMLElement>('[data-testid="column"]')!.style.getPropertyValue('--span')).toBe('272px')
+    expect(again.host.querySelector<HTMLElement>('[data-testid="column"]')!.className).toMatch(/span-272px/)
     expect(again.grip.getAttribute('aria-valuenow')).toBe('272')
     again.cleanup()
   })

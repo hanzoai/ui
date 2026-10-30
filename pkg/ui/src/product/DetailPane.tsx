@@ -273,11 +273,9 @@ function Dock({
         }
         expandKey(onExpand)(e)
       }) as never}
-      style={{
-        ...span.style,
-        width: open ? 'var(--span)' : 0,
-        transition: 'width var(--duration-base, 300ms) var(--ease-out, ease)',
-      }}
+      width={open ? 'var(--span)' : 0}
+      // `--span` as useSpan's props carry it, beside the width's own ease.
+      $platform-web={{ '--span': `${span.span}px`, transition: 'width var(--duration-base, 300ms) var(--ease-out, ease)' } as object}
     >
       <YStack
         width="var(--span)"
