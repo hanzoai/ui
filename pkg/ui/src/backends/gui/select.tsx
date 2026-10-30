@@ -299,7 +299,8 @@ export type PickerProps = Omit<TextProps, "render" | "size" | keyof Native> &
     /**
      * The hint the closed picker shows while nothing is chosen: a first option
      * nobody can pick, in the placeholder ink, as an Input's empty field. The
-     * open list keeps the field's ink, so a choice never reads as dimmed.
+     * open list keeps the field's ink (`color`, the Input's own unless given),
+     * so a choice never reads as dimmed.
      */
     placeholder?: string
   }
@@ -309,9 +310,9 @@ export type PickerProps = Omit<TextProps, "render" | "size" | keyof Native> &
  * picker showing its placeholder would otherwise hand the dim hint to every
  * choice in the list the platform opens.
  */
-const inked = (child: ReactNode) =>
+const inked = (ink: TextProps["color"]) => (child: ReactNode) =>
   isValidElement<ComponentProps<"option">>(child) && child.type === "option" ? (
-    <Text render={cloneElement(child, { children: undefined })} color="$color">
+    <Text render={cloneElement(child, { children: undefined })} color={ink}>
       {child.props.children}
     </Text>
   ) : (
@@ -331,7 +332,7 @@ const inked = (child: ReactNode) =>
  * dim while it shows, and every choice in the open list at full ink.
  */
 const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(function Picker(
-  { id, name, value, defaultValue, onChange, required, disabled, autoComplete, children, size, fill = false, placeholder, ...props },
+  { id, name, value, defaultValue, onChange, required, disabled, autoComplete, children, size, fill = false, placeholder, color = "$color", ...props },
   ref,
 ) {
   // What an uncontrolled picker holds, so its ink follows a choice as a
@@ -380,7 +381,7 @@ const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(functi
       // in a 32px box. They take no vertical padding and let the floor decide;
       // the menulist centres its own text.
       py={dense ? 0 : box.riser}
-      color={hinting ? "$placeholderColor" : "$color"}
+      color={hinting ? "$placeholderColor" : color}
       fontFamily="$body"
       fontSize={box.font}
       lineHeight={dense ? 16 : "$3"}
@@ -394,7 +395,7 @@ const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(functi
           <option value="" disabled>
             {placeholder}
           </option>
-          {Children.map(children, inked)}
+          {Children.map(children, inked(color))}
         </>
       )}
     </Text>
