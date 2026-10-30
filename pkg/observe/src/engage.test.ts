@@ -138,6 +138,16 @@ group('engaged time', () => {
     expect(leaves()).toHaveLength(1)
   })
 
+  it('sends one report when the page is unloaded and then hidden', () => {
+    start()
+    now += 1_000
+    window.dispatchEvent(new Event('pagehide'))
+    now += 5
+    hide()
+    expect(leaves()).toHaveLength(1)
+    expect(leaves()[0].props).toMatchObject({ $reason: 'pagehide', $active_ms: 1_000 })
+  })
+
   it('times each section while it is in view and the page is active', () => {
     document.body.innerHTML = '<section data-hz-view="hero"></section><section id="plans"></section><div data-hz-view="faq"></div>'
     start('[data-hz-view],section[id]')

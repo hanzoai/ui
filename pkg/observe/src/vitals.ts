@@ -55,11 +55,12 @@ export function vitals(): Vitals {
   }
 
   watch('paint', (entries) => {
-    for (const e of entries) if (e.name === 'first-contentful-paint') out.$fcp_ms = Math.round(e.startTime)
+    for (const e of entries) if (e.name === 'first-contentful-paint' && e.startTime > 0) out.$fcp_ms = Math.round(e.startTime)
   })
   watch('largest-contentful-paint', (entries) => {
     const e = entries[entries.length - 1]
-    if (e) out.$lcp_ms = Math.round(e.startTime)
+    // A start of 0 is a page drawn before it was shown (prerendered or restored), not a time.
+    if (e && e.startTime > 0) out.$lcp_ms = Math.round(e.startTime)
   })
   watch('layout-shift', (entries) => {
     for (const e of entries as Shift[]) {

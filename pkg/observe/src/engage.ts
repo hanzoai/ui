@@ -213,7 +213,13 @@ export class Engagement {
     else this.input = Date.now()
   }
 
-  private onPageHide = () => this.leave('pagehide')
+  /** Unloading: report, then stop the clock, so the `visibilitychange` a browser
+   *  fires beside `pagehide` finds nothing new and sends nothing. A page restored
+   *  from the back-forward cache is visible again and counts from there. */
+  private onPageHide = () => {
+    this.leave('pagehide')
+    this.on = false
+  }
 
   private onInput = () => {
     const t = Date.now()
