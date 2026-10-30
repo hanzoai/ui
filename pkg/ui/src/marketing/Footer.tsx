@@ -45,8 +45,15 @@ export type FooterProps = {
 
 const open = (out?: boolean) => (out ? { target: '_blank', rel: 'noreferrer' } : {})
 
-/** The link to the consent sheet (`#choices`) carries California's privacy options icon before its words. */
-const CHOICES = { display: 'inline-flex', alignItems: 'center', gap: 6 } as const
+/**
+ * A legal link's box. @hanzo/design gives every link a 24px floor, taller than
+ * the line, and a plain block anchor sets its words at the top of it, 3px above
+ * the box's middle; the copyright beside them, and the consent sheet's link
+ * (`#choices`, its words beside California's privacy options icon), sat on the
+ * middle. Every link centres its words in the floor, so the row shares one
+ * centre line.
+ */
+const LEGAL = { display: 'inline-flex', alignItems: 'center', gap: 6 } as const
 
 const Door = ({ link }: { link: FooterLink }) => (
   <Anchor
@@ -127,7 +134,7 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
             lineHeight="$2"
             textDecorationLine="none"
             hoverStyle={{ color: '$ink' }}
-            {...(l.href.endsWith('#choices') ? CHOICES : null)}
+            {...LEGAL}
           >
             {l.href.endsWith('#choices') ? <PrivacyChoicesIcon /> : null}
             {l.label}
