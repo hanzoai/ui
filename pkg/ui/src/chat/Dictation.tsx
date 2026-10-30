@@ -182,8 +182,8 @@ export function Dictation({ voice, disabled = false, size = 36, language = null,
             {...(open ? { bg: '$hover', color: '$ink' } : null)}
             focusVisibleStyle={RING}
           >
-            {/* The small mark of a menu: a whole-pixel size, its line a touch heavier so it reads at 1x. */}
-            <ChevronDown size={14} strokeWidth={2.25} color="currentColor" />
+            {/* The small mark of a menu: 16px drawn at a 2px line, so at 1x it is an 8px chevron and not a smudge. */}
+            <ChevronDown size={16} strokeWidth={2} color="currentColor" />
           </XStack>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" minW={200} data-slot="dictation-panel">
