@@ -41,8 +41,8 @@ export interface Semantic {
 }
 
 /** The observed interaction kinds. Each maps to a reserved autocapture event name
- *  on the wire ($click/$input/$change/$submit/$pageview/$view). */
-export type InteractionKind = 'click' | 'input' | 'change' | 'submit' | 'nav' | 'view'
+ *  on the wire ($click/$input/$change/$submit/$pageview/$view/$scroll/$rageclick). */
+export type InteractionKind = 'click' | 'input' | 'change' | 'submit' | 'nav' | 'view' | 'scroll' | 'rageclick'
 
 /** A redacted, structured view of a form field's state. The raw value is withheld
  *  by default; what remains (kind, length, checked, selected label) is safe. */
@@ -64,7 +64,8 @@ export interface RedactedValue {
 /** One observed interaction — what the engine emits to its sink and its stream. */
 export interface Interaction {
   kind: InteractionKind
-  /** Reserved autocapture event name ($click/$input/$change/$submit/$pageview/$view). */
+  /** Reserved autocapture event name ($click/$input/$change/$submit/$pageview/$view/
+   *  $scroll/$rageclick). */
   name: string
   /** Client timestamp (ms since epoch). */
   at: number
@@ -72,7 +73,8 @@ export interface Interaction {
   semantic: Semantic
   /** Redacted value context — set on input/change interactions. */
   value?: RedactedValue
-  /** Extra properties (nav path, visibility ratio, …). */
+  /** Extra properties: where it happened ($href/$id/$section), a pointer's position
+   *  ($x/$y/$el_x/$el_y/…), a scroll's depth, a nav path, a visibility ratio. */
   props?: Record<string, unknown>
 }
 

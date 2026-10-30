@@ -36,8 +36,7 @@ export function Root({ children }) {
 ```
 
 Every interaction now arrives on the pipe as a reserved
-autocapture event (`$click`, `$input`, `$change`, `$submit`, `$pageview`, `$view`)
-with properties like:
+autocapture event with properties like:
 
 ```jsonc
 {
@@ -45,9 +44,58 @@ with properties like:
   "$role": "button",
   "$testid": "save",
   "$component": "SaveButton",
-  "$path": ["Dashboard", "UserCard", "button[save]"]
+  "$path": ["Dashboard", "UserCard", "button[save]"],
+  "$href": "/pricing",                        // the link it follows
+  "$id": "save",                              // the target's own id
+  "$section": "plans"                         // the section of the page it sits in
 }
 ```
+
+## Events
+
+| Event | When | Properties beyond the annotation |
+|---|---|---|
+| `$click` | every click | position (below), when a pointer pressed it |
+| `$rageclick` | the third press inside 1 s and 30 px of the last; once a burst | position |
+| `$input` | a field's keystrokes, debounced per field (400 ms) | `$value` (redacted) |
+| `$change` | a field settled | `$value` (redacted) |
+| `$submit` | a form submitted | |
+| `$view` | a `[data-hz-view]` element once half of it is in view, or what is in view of it covers half the viewport (so a section taller than two viewports is still seen); once per element; elements mounted after `start()` included | `ratio` |
+| `$scroll` | the document scrolled to 25, 50, 75 and 100 % of its height, each once a page view | `depth`, `$page_width`, `$page_height`, `$viewport_width`, `$viewport_height` |
+| `$pageview` | an SPA navigation, when `nav` is on | `path` |
+
+Every event carries the annotation (`$el`, `$role`, `$path`, and `$testid`,
+`$name`, `$component`, `$kind` when the target has them) and, when it has them,
+where it happened:
+
+- **`$href`** — the closest `a[href]`, the target or an ancestor: a pathname on
+  this origin, origin + pathname on another, the bare scheme (`mailto:`, `tel:`)
+  for anything that is not http(s). Never a query or a fragment.
+- **`$id`** — the target's own id.
+- **`$section`** — the closest `section[id]` or `[data-hz-view]`: its
+  `data-hz-view` value, else its id.
+
+Each is at most 256 characters, and dropped rather than clipped past that.
+
+**Position**, on `$click` and `$rageclick`, is what a heat map is drawn from:
+
+| Key | Value |
+|---|---|
+| `$x`, `$y` | the pointer in page coordinates (viewport coordinates for a fixed or sticky target) |
+| `$target_fixed` | whether the target stays put when the page scrolls |
+| `$el_x`, `$el_y` | the pointer inside the target's box, from its top left |
+| `$viewport_width`, `$viewport_height` | the window it was measured in |
+| `$page_width`, `$page_height` | the document's `scrollWidth` / `scrollHeight` |
+
+All rounded to the pixel. A click no pointer pressed — a keyboard activation,
+`el.click()`, a label forwarding to its field (`detail === 0`) — carries none,
+and never counts toward a rage click.
+
+Scroll depth is measured once a frame from a passive listener that only reads,
+and asks for no frames once a page view has reached every milestone. A new
+address starts the milestones again, with `nav` on or off; the top of a page is
+not a scroll, so a router putting the next page there reports nothing. Only an
+engine on `document` measures it.
 
 ## The semantic hierarchy
 
