@@ -82,3 +82,4 @@ app/public/api/
 
 # Local symlinks to LLM.md
 CLAUDE.md
+.aider*
