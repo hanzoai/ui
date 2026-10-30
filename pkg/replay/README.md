@@ -107,11 +107,19 @@ goes away (`visibilitychange` → hidden, and `pagehide`).
 
 **A batch is at most 512 KiB, counted in UTF-8 with its envelope**, because that
 is the most the ingest accepts (`MAX_BATCH_BYTES`; over it cloud answers 413).
-`maxBytes` can lower it, never raise it. An event over the bound on its own — in
-practice a full DOM snapshot of a very large page — cannot be sent at all: it is
-reported through `onError` and dropped, and a recording without its full snapshot
-does not play. Measured 2026-10-29: hanzo.ai/pricing snapshots at about 400 KB
-and fits; the hanzo.ai landing at 0.9–1.07 MB does not.
+`maxBytes` can lower it, never raise it.
+
+**Large events go compressed, in the encoding the player reads** (`compress.ts`).
+A full snapshot always, and a mutation or style rule once its JSON passes 4 KiB
+(`COMPRESS_FROM`), are gzipped and carried as a latin-1 string under
+`cv: "2024-10"`; type, timestamp and every other field stay as they were, so the
+ingester still reads the clicks and page metadata it summarises a session from.
+The insights player opens exactly these parts (`common/replay-shared`
+`decompressEvent`). Measured 2026-10-30 with rrweb 2.1.1: the hanzo.ai landing's
+full snapshot is 1.32 MB raw (refused before) and 314 KB on the wire; /pricing
+541 KB raw and 167 KB on the wire. An event still over the bound once compressed
+is reported through `onError` and dropped, and a recording without its full
+snapshot does not play.
 
 The unload flush uses `navigator.sendBeacon`, which cannot set headers, so the key
 rides `?ingest_key=` on that path only — and only if it is publishable. A secret

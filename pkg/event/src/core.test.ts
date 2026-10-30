@@ -276,6 +276,18 @@ describe('Analytics capture', () => {
     // to a server. Stamped from window.location.href, it reached /v1/event on
     // every event of the page, and a 43-character base64url secret matches no
     // other secret shape. The fragment is dropped from every stamped location.
+    it('files an event about a page already left under that page, scrubbed', () => {
+      withLocation('https://hanzo.ai/pricing', '', () => {
+        const a = mk()
+        a.capture('$pageleave', { $active_ms: 1200 }, { url: 'https://hanzo.ai/?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.QWxnSWdub3JlZA&x=1', path: '/' })
+        a.flush()
+        const e = tx.all[0]
+        expect(e.path).toBe('/')
+        expect(e.url).toContain('https://hanzo.ai/?')
+        expect(e.url).not.toContain('eyJhbGciOiJIUzI1NiJ9')
+      })
+    })
+
     it('never sends a fragment', () => {
       const secret = 'Zq3LwX0p-Tf9_aB7kQmN2rS8vY1cD4eF6gH5jK0lMnO'
       withLocation('https://hanzo.ai/chat/shared#' + secret, 'https://hanzo.ai/login#' + secret, () => {

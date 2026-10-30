@@ -63,6 +63,7 @@ autocapture event with properties like:
 | `$view` | a `[data-hz-view]` element once half of it is in view, or what is in view of it covers half the viewport (so a section taller than two viewports is still seen); once per element; elements mounted after `start()` included | `ratio` |
 | `$scroll` | the document scrolled to 25, 50, 75 and 100 % of its height, each once a page view | `depth`, `$page_width`, `$page_height`, `$viewport_width`, `$viewport_height` |
 | `$pageview` | an SPA navigation, when `nav` is on | `path` |
+| `$pageleave` | a page view's engaged time, in segments: when the page is hidden, unloaded, routed away from, or the engine stops | below |
 
 Every event carries the annotation (`$el`, `$role`, `$path`, and `$testid`,
 `$name`, `$component`, `$kind` when the target has them) and, when it has them,
@@ -96,6 +97,36 @@ and asks for no frames once a page view has reached every milestone. A new
 address starts the milestones again, with `nav` on or off; the top of a page is
 not a scroll, so a router putting the next page there reports nothing. Only an
 engine on `document` measures it.
+
+## Engaged time
+
+`$pageleave` says how long a page view held the visitor. **Active** time is
+time the document was visible, the window had focus, and the visitor did
+something (pointer, key, wheel, touch, scroll) in the last 60 s (`IDLE_MS`), so a
+tab left open overnight does not read as eight hours on one page.
+
+A view reports in **segments**: when the page is hidden (the last moment a phone
+reliably runs script), when it is unloaded, when the router leaves it, and when
+the engine stops. A view that comes back reports again with only what it added,
+and a segment that added nothing is not sent. **The time on a page view is the
+sum of `$active_ms` over its `$view_id`**; nothing is counted twice. A segment is
+filed under the page it measured (the event's `url`/`path`), not the address the
+router has already moved to. The bindings send a hidden or unloaded page's
+segment at once by beacon.
+
+| Key | Value |
+|---|---|
+| `$view_id`, `$seq` | the page view, and the segment's place in it (0 first) |
+| `$reason` | `hidden`, `pagehide`, `nav` or `stop` |
+| `$active_ms` | active milliseconds in this segment |
+| `$elapsed_ms` | wall time since the view began (the first view: since navigation start) |
+| `$sections` | `{ name: ms }`: active time each watched section (`viewSelector`, named by `data-hz-view` or id) was in view in this segment, by the `$view` rule |
+| `$scroll_max` | the furthest the view was scrolled, in px from the top (a running maximum) |
+| `$depth_max` | how much of the page that showed, in percent |
+| `$page_*`, `$viewport_*` | the sizes it was measured against |
+| `$ttfb_ms`, `$fcp_ms`, `$lcp_ms`, `$cls`, `$inp_ms` | the page load's timings and Core Web Vitals, on the hard-loaded view only, as they stand; a browser that does not time one omits it |
+
+Only an engine on `document` measures it; `engage: false` turns it off.
 
 ## The semantic hierarchy
 

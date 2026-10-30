@@ -8,6 +8,7 @@
 
 import { afterEach, beforeEach, describe as group, expect, it, vi } from 'vitest'
 import { record } from './index'
+import { readable } from './player.test.util'
 import type { Recorder, ReplayTransport, eventWithTime, recordOptions } from './types'
 
 // happy-dom declares `DOMTokenList` on window without a value, so rrweb's
@@ -33,7 +34,7 @@ function spy(): { sent: Sent[]; transport: ReplayTransport; bodies: () => Array<
       send: (url, payload, opts) =>
         void sent.push({ url, payload, beacon: opts.beacon, ingestKey: opts.ingestKey }),
     },
-    bodies: () => sent.map((s) => JSON.parse(s.payload)),
+    bodies: () => sent.map((s) => JSON.parse(readable(s.payload))),
   }
 }
 
@@ -126,7 +127,9 @@ group('what leaves the browser (real rrweb)', () => {
     const replay = record({ ...config, ingestKey: config.ingestKey || KEY, transport: s.transport })
     replay.stop() // flushes the full snapshot rrweb takes on start
     expect(s.sent.length).toBeGreaterThan(0)
-    return { replay, payload: s.sent.map((x) => x.payload).join(''), bodies: s.bodies() }
+    // Read as the player reads it, so an absence is a fact about what was
+    // recorded and not about the bytes being compressed.
+    return { replay, payload: s.sent.map((x) => readable(x.payload)).join(''), bodies: s.bodies() }
   }
 
   it('masks input values by default, keeping only the length', () => {

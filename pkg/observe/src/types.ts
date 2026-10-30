@@ -41,8 +41,18 @@ export interface Semantic {
 }
 
 /** The observed interaction kinds. Each maps to a reserved autocapture event name
- *  on the wire ($click/$input/$change/$submit/$pageview/$view/$scroll/$rageclick). */
-export type InteractionKind = 'click' | 'input' | 'change' | 'submit' | 'nav' | 'view' | 'scroll' | 'rageclick'
+ *  on the wire ($click/$input/$change/$submit/$pageview/$view/$scroll/$rageclick/
+ *  $pageleave). */
+export type InteractionKind =
+  | 'click'
+  | 'input'
+  | 'change'
+  | 'submit'
+  | 'nav'
+  | 'view'
+  | 'scroll'
+  | 'rageclick'
+  | 'leave'
 
 /** A redacted, structured view of a form field's state. The raw value is withheld
  *  by default; what remains (kind, length, checked, selected label) is safe. */
@@ -74,8 +84,12 @@ export interface Interaction {
   /** Redacted value context — set on input/change interactions. */
   value?: RedactedValue
   /** Extra properties: where it happened ($href/$id/$section), a pointer's position
-   *  ($x/$y/$el_x/$el_y/…), a scroll's depth, a nav path, a visibility ratio. */
+   *  ($x/$y/$el_x/$el_y/…), a scroll's depth, a nav path, a visibility ratio, a
+   *  page view's engaged time. */
   props?: Record<string, unknown>
+  /** The page the interaction belongs to, when it is not the current address: a
+   *  `leave` is noticed after the router has moved, and is the page left's. */
+  page?: { url: string; path: string }
 }
 
 /** The privacy policy the engine applies before it captures anything. */
@@ -105,6 +119,10 @@ export interface ObserveConfig {
   enabled?: boolean
   /** Capture SPA navigations by observing history + popstate (default true). */
   nav?: boolean
+  /** Report each page view's engaged time — active milliseconds, per section,
+   *  scroll reach and the load's web vitals — as `$pageleave` (default true). The
+   *  document engine's alone. */
+  engage?: boolean
   /** Selector whose matches are watched for visibility ($view). Default
    *  "[data-hz-view]" — opt-in, so the stream isn't flooded. Empty string disables. */
   viewSelector?: string

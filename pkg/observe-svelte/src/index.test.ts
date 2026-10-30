@@ -13,6 +13,10 @@ function fakeClient(): FakeClient {
 
 let client: FakeClient
 
+/** What a client captured beyond the page leaves the engine reports on its own. */
+const interactions = (c: FakeClient) => c.capture.mock.calls.filter(([name]) => name !== '$pageleave')
+const leaves = (c: FakeClient) => c.capture.mock.calls.filter(([name]) => name === '$pageleave')
+
 beforeEach(() => {
   document.body.innerHTML = ''
   client = fakeClient()
@@ -37,7 +41,10 @@ group('createObserver', () => {
     createObserver(client as unknown as Analytics, { nav: true })
     history.pushState({}, '', '/pricing')
     expect(client.pageview).toHaveBeenCalledTimes(1)
-    expect(client.capture).not.toHaveBeenCalled()
+    // The page left reports its engaged time, filed under itself; nothing else is captured.
+    expect(interactions(client)).toHaveLength(0)
+    expect(leaves(client)).toHaveLength(1)
+    expect(leaves(client)[0][2]).toMatchObject({ path: '/' })
   })
 
   it('is idempotent — a second call replaces the first engine', () => {
@@ -46,9 +53,9 @@ group('createObserver', () => {
     const second = fakeClient()
     createObserver(second as unknown as Analytics, { nav: false })
     document.querySelector('button')!.dispatchEvent(new Event('click', { bubbles: true }))
-    // only the live (second) engine emits
-    expect(client.capture).not.toHaveBeenCalled()
-    expect(second.capture).toHaveBeenCalledTimes(1)
+    // only the live (second) engine emits; the first reported its view as it stopped
+    expect(interactions(client)).toHaveLength(0)
+    expect(interactions(second)).toHaveLength(1)
   })
 
   it('stopObserver halts capture', () => {
@@ -56,7 +63,9 @@ group('createObserver', () => {
     createObserver(client as unknown as Analytics, { nav: false })
     stopObserver()
     document.querySelector('button')!.dispatchEvent(new Event('click', { bubbles: true }))
-    expect(client.capture).not.toHaveBeenCalled()
+    // Stopping reports the view under way, and nothing after it.
+    expect(interactions(client)).toHaveLength(0)
+    expect(leaves(client)).toHaveLength(1)
   })
 })
 

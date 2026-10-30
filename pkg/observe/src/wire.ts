@@ -17,3 +17,23 @@ export function wireProps(i: Interaction): Record<string, unknown> {
   if (i.props) Object.assign(props, i.props)
   return props
 }
+
+/** What a binding hands an interaction to: the @hanzo/event client's surface. */
+export interface Client {
+  pageview(path?: string): void
+  capture(name: string, properties?: Record<string, unknown>, fields?: { url?: string; path?: string }): void
+  flush(beacon?: boolean): void
+}
+
+/** The one delivery every binding makes: a navigation is a page view; anything
+ *  else is a capture, filed under its own page when it has one. A page being
+ *  hidden or unloaded is the last moment anything leaves it, so its `$pageleave`
+ *  goes at once, by the unload-safe road. */
+export function deliver(client: Client, i: Interaction): void {
+  if (i.kind === 'nav') {
+    client.pageview(typeof i.props?.path === 'string' ? (i.props.path as string) : undefined)
+    return
+  }
+  client.capture(i.name, wireProps(i), i.page)
+  if (i.kind === 'leave' && (i.props?.$reason === 'hidden' || i.props?.$reason === 'pagehide')) client.flush(true)
+}

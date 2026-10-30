@@ -49,6 +49,7 @@ group('bindTauri', () => {
     bridge = bindTauri(client as unknown as Analytics, { dom: true })
     bridge.stop()
     document.querySelector('button')!.dispatchEvent(new Event('click', { bubbles: true }))
-    expect(client.capture).not.toHaveBeenCalled()
+    // Stopping reports the view under way ($pageleave), and nothing after it.
+    expect(client.capture.mock.calls.map(([name]: [string]) => name)).toEqual(['$pageleave'])
   })
 })

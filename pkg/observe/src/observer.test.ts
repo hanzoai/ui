@@ -17,7 +17,7 @@ afterEach(() => {
 })
 
 function start(config: Partial<ConstructorParameters<typeof Observer>[0]> = {}): Observer {
-  engine = new Observer({ sink: (i) => sink.push(i), nav: false, viewSelector: '', ...config })
+  engine = new Observer({ sink: (i) => sink.push(i), nav: false, viewSelector: '', engage: false, ...config })
   engine.start()
   return engine
 }

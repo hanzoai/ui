@@ -134,7 +134,8 @@ group('flush triggers', () => {
     const errs: unknown[] = []
     const b = batch(transport, { batchSize: 1000, maxBytes: 300, onError: (e) => errs.push(e) })
     b.add(ev(1))
-    b.add({ type: 2, data: { blob: 'x'.repeat(500) }, timestamp: 2 } as unknown as eventWithTime)
+    // An incremental event (a full snapshot would be compressed far below 300).
+    b.add({ type: 3, data: { source: 2, blob: 'x'.repeat(500) }, timestamp: 2 } as unknown as eventWithTime)
     b.add(ev(3))
     b.flush()
     expect(errs).toHaveLength(1)

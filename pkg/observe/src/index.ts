@@ -15,7 +15,10 @@ export { Observer } from './observer'
 export { Stream } from './stream'
 export { annotate, accessibleName, componentName, describe, labelFor, roleOf } from './annotate'
 export { isPrivate, redactValue, sensitiveKey } from './redact'
-export { wireProps } from './wire'
+export { deliver, wireProps } from './wire'
+export type { Client } from './wire'
+export { Engagement, IDLE_MS } from './engage'
+export type { Leave, LeaveReason } from './engage'
 export type {
   Interaction,
   InteractionKind,

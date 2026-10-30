@@ -28,7 +28,7 @@ import {
 import { useAnalytics } from '@hanzo/event/react'
 import type { Analytics } from '@hanzo/event'
 import { Observer } from './observer'
-import { wireProps } from './wire'
+import { deliver } from './wire'
 import type { Interaction, RedactionPolicy } from './types'
 
 const ObserveCtx = createContext<Observer | null>(null)
@@ -63,12 +63,7 @@ export function ObserveProvider(props: ObserveProviderProps): ReactNode {
     if (!enabled || typeof window === 'undefined') return
     const sink = (i: Interaction) => {
       try {
-        const c = clientRef.current
-        if (i.kind === 'nav') {
-          c.pageview(typeof i.props?.path === 'string' ? (i.props.path as string) : undefined)
-          return
-        }
-        c.capture(i.name, wireProps(i))
+        deliver(clientRef.current, i)
       } catch {
         /* never surface a telemetry error into render */
       }

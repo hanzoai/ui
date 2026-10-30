@@ -2,13 +2,15 @@
 // or the clock ran — plus the page going away, which is the only one that cannot
 // be retried.
 //
-// Events are serialized ON ARRIVAL, once. A full snapshot is the largest thing
-// this package ever holds, and stringifying it again at flush time would double
-// the cost of the most expensive event in the recording. Serializing early also
-// contains damage: one unserializable event is dropped where it is found instead
-// of taking the whole batch with it.
+// Events are serialized ON ARRIVAL, once, and compressed where it pays
+// (compress.ts): a full snapshot always, so a landing page's megabyte of DOM fits
+// one message. Stringifying again at flush time would double the cost of the most
+// expensive event in the recording. Serializing early also contains damage: one
+// unserializable event is dropped where it is found instead of taking the whole
+// batch with it.
 
 import { readConsent, renderConsent } from '@hanzo/event'
+import { encode } from './compress'
 import type { ReplayIds, ReplayTransport, eventWithTime } from './types'
 
 /** The ONE replay ingest entry point: cloud serves it beside the event ingest
@@ -147,7 +149,7 @@ export class Batch {
   add(e: eventWithTime): void {
     let part: string
     try {
-      part = JSON.stringify(e)
+      part = encode(e)
     } catch (err) {
       this.cfg.onError?.(err)
       return // one poisoned event, never the batch
@@ -155,7 +157,7 @@ export class Batch {
     const size = utf8Length(part) + 1 // and its comma
     if (this.head + size > this.cfg.maxBytes) {
       this.cfg.onError?.(
-        new Error(`replay: a ${size - 1}-byte event cannot fit a ${this.cfg.maxBytes}-byte batch; not sent`),
+        new Error(`replay: a ${size - 1}-byte event, compressed, cannot fit a ${this.cfg.maxBytes}-byte batch; not sent`),
       )
       return
     }

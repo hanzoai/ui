@@ -8,6 +8,7 @@
 // the host app: telemetry is strictly best-effort.
 
 import { annotate, attribution } from './annotate'
+import { Engagement, VIEW_STEPS, inView, pageKey, type Leave } from './engage'
 import { isPrivate, redactValue } from './redact'
 import { Stream } from './stream'
 import type { Interaction, InteractionKind, ObserveConfig } from './types'
@@ -55,6 +56,7 @@ const NAME: Record<InteractionKind, string> = {
   view: '$view',
   scroll: '$scroll',
   rageclick: '$rageclick',
+  leave: '$pageleave',
 }
 
 /** SPA-navigation notifier. history.pushState/replaceState don't emit an event, so
@@ -97,11 +99,6 @@ function uninstallHistory(): void {
     history.replaceState = histOriginals.replace
     histOriginals = null
   }
-}
-
-/** The address a page view is: its path and query, never its fragment. */
-function pageKey(): string {
-  return location.pathname + location.search
 }
 
 /** Resolve the Element an event landed on (text nodes → their parent). */
@@ -177,22 +174,6 @@ function positionOf(e: Event, el: Element | null): Record<string, unknown> | und
  *  often someone scrolled it. */
 const DEPTHS = [25, 50, 75, 100] as const
 
-/** Seen: half of the element is in view, or what is in view of it covers half the
- *  viewport. The second is the only way an element taller than two viewports — a
- *  landing section on a phone — can ever be seen: half of it never fits. */
-function inView(e: IntersectionObserverEntry): boolean {
-  if (e.intersectionRatio >= 0.5) return true
-  const viewport = e.rootBounds?.height ?? window.innerHeight
-  return viewport > 0 && e.intersectionRect.height >= viewport / 2
-}
-
-/** The ratios a callback runs at. An element k viewports tall covers half the
- *  viewport once its ratio reaches 1/(2k), and each step is at most double the one
- *  before it, so one always falls between that and the 1/k it can reach: every
- *  element up to 32 viewports tall is caught, and the first half-in-view of a
- *  short one is the 1/2 step. */
-const VIEW_STEPS = [0, 1 / 64, 1 / 32, 1 / 16, 1 / 8, 1 / 4, 1 / 2, 1]
-
 /** A rage click: this many presses, inside this long, inside this far of the last
  *  one. Reported once a burst, on the press that makes it one. */
 const RAGE_CLICKS = 3
@@ -201,7 +182,9 @@ const RAGE_PX = 30
 
 export class Observer {
   readonly stream: Stream<Interaction>
-  private cfg: Required<Pick<ObserveConfig, 'enabled' | 'nav' | 'viewSelector' | 'inputDebounceMs' | 'maxDepth'>> &
+  private cfg: Required<
+    Pick<ObserveConfig, 'enabled' | 'nav' | 'viewSelector' | 'inputDebounceMs' | 'maxDepth' | 'engage'>
+  > &
     ObserveConfig
   private root: Document | Element
   private started = false
@@ -221,6 +204,10 @@ export class Observer {
   /** The pointer presses of the burst under way, and whether it was reported. */
   private presses: { t: number; x: number; y: number }[] = []
   private raged = false
+  /** Engaged time per page view and section ($pageleave); the document engine's alone. */
+  private engage?: Engagement
+  /** Whether this engine took a reference on the history notifier. */
+  private history = false
 
   constructor(config: ObserveConfig) {
     // Each default is taken where the caller left a key unset OR set it to
@@ -233,6 +220,7 @@ export class Observer {
       nav: config.nav ?? true,
       viewSelector: config.viewSelector ?? '[data-hz-view]',
       inputDebounceMs: config.inputDebounceMs ?? 400,
+      engage: config.engage ?? true,
       maxDepth: config.maxDepth ?? 12,
     }
     this.root = config.root ?? (isBrowser() ? document : ({} as Document))
@@ -254,14 +242,26 @@ export class Observer {
     roots.add(this.root)
     this.started = true
     const r = this.root as Document
+    // Engaged time is the document's, like its scroll: a scoped engine beside the
+    // document engine would time every view a second time.
+    if (this.cfg.engage && this.root === document) {
+      this.engage = new Engagement(
+        (l: Leave) => this.fire('leave', document.body, l.props, l.page),
+        (el) => el.getAttribute('data-hz-view') || el.id || undefined,
+      )
+      this.engage.start()
+    }
     r.addEventListener('click', this.onClick, { capture: true, passive: true })
     r.addEventListener('input', this.onInput, { capture: true, passive: true })
     r.addEventListener('change', this.onChange, { capture: true, passive: true })
     r.addEventListener('submit', this.onSubmit, { capture: true, passive: true })
-    if (this.cfg.nav) {
+    // A route change is a page view (`nav`) and the end of the one before it
+    // (engaged time): either one needs the history notifier.
+    if (this.cfg.nav || this.engage) {
+      this.history = true
       installHistory()
-      window.addEventListener('popstate', this.onNav)
-      window.addEventListener(HISTORY_EVENT, this.onNav)
+      window.addEventListener('popstate', this.onHistory)
+      window.addEventListener(HISTORY_EVENT, this.onHistory)
     }
     // The document's scroll is the document engine's alone: a scoped engine
     // beside it would report every milestone a second time.
@@ -275,6 +275,9 @@ export class Observer {
   /** Remove listeners, release the root, and free resources. Idempotent. */
   stop(): void {
     if (!this.started) return
+    // The view under way reports before anything is let go.
+    this.engage?.stop()
+    this.engage = undefined
     this.started = false
     claimed().delete(this.root)
     const r = this.root as Document
@@ -282,9 +285,10 @@ export class Observer {
     r.removeEventListener('input', this.onInput, { capture: true } as EventListenerOptions)
     r.removeEventListener('change', this.onChange, { capture: true } as EventListenerOptions)
     r.removeEventListener('submit', this.onSubmit, { capture: true } as EventListenerOptions)
-    if (this.cfg.nav) {
-      window.removeEventListener('popstate', this.onNav)
-      window.removeEventListener(HISTORY_EVENT, this.onNav)
+    if (this.history) {
+      this.history = false
+      window.removeEventListener('popstate', this.onHistory)
+      window.removeEventListener(HISTORY_EVENT, this.onHistory)
       uninstallHistory()
     }
     window.removeEventListener('scroll', this.onScroll)
@@ -397,6 +401,12 @@ export class Observer {
 
   private onSubmit = (e: Event) => this.fire('submit', elementOf(e.target))
 
+  /** The address moved: the view left reports, then the new one is counted. */
+  private onHistory = () => {
+    this.engage?.route()
+    if (this.cfg.nav) this.onNav()
+  }
+
   private onNav = () => {
     if (!isBrowser()) return
     this.fire('nav', document.body, { path: pageKey() })
@@ -410,6 +420,7 @@ export class Observer {
     } catch {
       /* no-op */
     }
+    this.engage?.watch(el)
   }
 
   private installView(): void {
@@ -437,8 +448,16 @@ export class Observer {
         if (el.matches(sel)) act(el)
         el.querySelectorAll(sel).forEach(act)
       }
-      const watch = (n: Element) => io.observe(n)
-      const forget = (n: Element) => io.unobserve(n)
+      // A section is watched twice: once until it is first seen ($view), and for
+      // as long as it is in the tree by the engaged-time clock.
+      const watch = (n: Element) => {
+        io.observe(n)
+        this.engage?.watch(n)
+      }
+      const forget = (n: Element) => {
+        io.unobserve(n)
+        this.engage?.forget(n)
+      }
       // The matches already in the tree, then every one mounted later: a section
       // that renders once its data answers is in no tree start() could have read.
       // Only the roots a mutation added or removed are searched, never the whole
@@ -464,7 +483,12 @@ export class Observer {
   }
 
   /** Build and dispatch an Interaction. The single choke point; fully guarded. */
-  private fire(kind: InteractionKind, el: Element | null, props?: Record<string, unknown>): void {
+  private fire(
+    kind: InteractionKind,
+    el: Element | null,
+    props?: Record<string, unknown>,
+    page?: Interaction['page'],
+  ): void {
     if (!this.cfg.enabled) return
     try {
       if (!el || isPrivate(el, this.cfg.redaction)) return
@@ -473,6 +497,7 @@ export class Observer {
       const where = attribution(el)
       const all = props || Object.keys(where).length ? { ...where, ...props } : undefined
       const interaction: Interaction = { kind, name: NAME[kind], at: Date.now(), semantic, value, props: all }
+      if (page) interaction.page = page
       this.stream.emit(interaction)
       this.cfg.sink(interaction)
     } catch {
