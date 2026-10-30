@@ -18,13 +18,12 @@
  *
  * The 5.x originals imported `next/link` directly, which is why they could only
  * ever live in a `primitives/next/` folder that a non-Next host could not touch.
+ *
+ * This module imports nothing that draws: every marketing control reads the
+ * context, so whatever it imports rides every page of every host. The link that
+ * wears a button's clothes, which needs the Button, is ./link-element.
  */
 import * as React from 'react'
-import { css } from '../../css'
-import { tw } from '../../tw'
-import { cn } from '../../core/cn'
-import type { LinkDef } from '../../types'
-import { Button, type ButtonSize, type ButtonVariant, buttonVariants } from './button'
 
 /** Anything that takes an `href` and renders children. */
 export type LinkComponent = React.ElementType
@@ -38,7 +37,7 @@ export const Link = /* @__PURE__ */ React.createContext<LinkComponent>('a')
 export const useLink = (): LinkComponent => React.useContext(Link)
 
 /** True when the href leaves the app, and so must not go through a router. */
-const external = (href: string) => /^(https?:|mailto:|tel:)/.test(href)
+export const external = (href: string) => /^(https?:|mailto:|tel:)/.test(href)
 
 /**
  * A link in authored content — the `a` an .mdx file produces.
@@ -64,134 +63,5 @@ export const MDXLink = ({
     <a href={href} target="_blank" rel="noreferrer noopener" {...rest}>
       {children}
     </a>
-  )
-}
-
-export type LinkElementProps = React.PropsWithChildren<{
-  def: LinkDef
-  /** Fires alongside the navigation — e.g. to close the drawer it sits in. */
-  onClick?: () => void
-  /** Overrides `def`. */
-  variant?: ButtonVariant | null
-  /** Overrides `def`. */
-  size?: ButtonSize | null
-  /** Overrides `def`. */
-  icon?: React.ReactNode
-  /** Overrides `def`. */
-  iconAfter?: boolean
-  /**
-   * Only classes that carry a rule — this renders a host anchor, so whatever
-   * arrives here reaches the document verbatim. Layout goes in `style`.
-   */
-  className?: string
-  style?: React.CSSProperties
-  /**
-   * `page` on the link to where you already are. It is how a screen reader
-   * says "this one" in a navigation list — the colour that marks it visually
-   * says nothing at all.
-   */
-  'aria-current'?: 'page' | 'true' | false
-}>
-
-/**
- * A link wearing a button's clothes, described by a {@link LinkDef}.
- *
- * Given children, they replace the whole label — `title`, `icon` and
- * `iconAfter` are then ignored, since the caller has said what to render.
- */
-export const LinkElement = ({
-  def,
-  // No defaults on anything that also appears in `def` — a default here would
-  // outrank the def it is supposed to fall back to.
-  onClick,
-  size,
-  variant,
-  icon,
-  iconAfter,
-  className,
-  style,
-  children,
-  'aria-current': current,
-}: LinkElementProps) => {
-  const Comp = useLink()
-  const { href, newTab, title } = def
-
-  const nav: Record<string, unknown> = {}
-  if (current) nav['aria-current'] = current
-  // The scheme decides unless the def says otherwise. It can only be wrong in
-  // one direction — a same-origin absolute url that is not really a departure —
-  // so the derivation is the default and the field is the override.
-  if (def.external ?? external(href)) {
-    nav.rel = 'noreferrer noopener'
-    // An external link opens in a new tab unless the def says otherwise.
-    if (newTab ?? true) nav.target = '_blank'
-  } else if (newTab) {
-    nav.target = '_blank'
-  }
-
-  const label = () => {
-    if (React.Children.count(children) > 0) return children
-    // Props beat def fields beat defaults.
-    const mark = icon ?? def.icon
-    const after = iconAfter ?? def.iconAfter ?? false
-    // `title` is optional: an icon-only link is a legal one.
-    return (
-      <>
-        {mark && !after && <span style={{ paddingInlineEnd: 4 }}>{mark}</span>}
-        {title && <span>{title}</span>}
-        {mark && after && <span style={{ paddingInlineStart: 4 }}>{mark}</span>}
-      </>
-    )
-  }
-
-  const classes = cn(
-    buttonVariants({
-      variant: variant ?? def.variant ?? 'link',
-      size: size ?? def.size ?? 'default',
-    }),
-    className,
-  )
-
-  const anchor = (
-    <Comp
-      href={href}
-      // The host's link component takes a `style` and forwards everything else
-      // to the anchor, so notation is CONVERTED here rather than handed over:
-      // `w-full` on an <a> is two characters of nothing otherwise. What tw does
-      // not read stays a class, which is how a host's own selectors keep working.
-      className={tw(classes).rest || undefined}
-      // A def with no href and no handler is a LABEL, not a link. Written as a
-      // style rather than a utility class because this renders a bare `<a>` and
-      // nothing in the shipped stylesheet defines `pointer-events-none` — the
-      // class would have been three dead tokens and a clickable label.
-      style={{
-        ...css(classes),
-        ...style,
-        ...(href.length > 0 || onClick ? null : { pointerEvents: 'none' }),
-      }}
-      {...(onClick ? { onClick } : {})}
-      {...nav}
-    >
-      {label()}
-    </Comp>
-  )
-
-  // A link that LOOKS like a button IS one, rendering an anchor.
-  //
-  // `buttonVariants` names a variant — `btn btn-primary` — and nothing defines
-  // those selectors: they are a handle for a host to hook, not a rule. So a def
-  // asking for `variant: 'primary'` used to come out as underlined body text,
-  // measured on every call-to-action across the lux sites. Appearance is decided
-  // in exactly one place, the Button, and `asChild` hands it this anchor.
-  //
-  // `link` and its two relatives are the exception on purpose: they mean "look
-  // like a link", which is what the bare anchor already is.
-  const look = variant ?? def.variant ?? 'link'
-  if (look === 'link' || look === 'linkFG' || look === 'linkMuted') return anchor
-
-  return (
-    <Button asChild variant={look} size={size ?? def.size ?? 'default'}>
-      {anchor}
-    </Button>
   )
 }
