@@ -6,26 +6,33 @@
 // the Grip that drives it.
 //
 //   const col = useSpan('hanzo.app.column', 272, 220, 420)
-//   <YStack ref={col.ref} style={col.style} width="var(--span)">
+//   <YStack ref={col.ref} {...col.props} width="var(--span)">
 //   <Grip side="left" span={col.span} onSpan={col.move} onKeep={col.keep} … />
 //
-// `move` writes the property on the element and nothing else; `keep` is where
-// React and storage learn the width, once per drag, key or double-click.
+// `props` carries the width React knows as gui's own class (`--span: 272px`), so
+// a prerendered column is drawn at it before a script runs and the host spreads no
+// style. `move` writes the property on the element and nothing else; `keep` writes
+// it there too, so the element and the class say one width, and is where React and
+// storage learn it, once per drag, key or double-click.
 //
 // Storage is read in a layout effect, not during render: the rooms are
 // prerendered, and a render that reads storage draws different HTML on the
 // server and the client. A layout effect runs before the browser paints, so a
 // kept width is on screen from the first frame and the column never jumps.
 
-import { useCallback, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 
 export interface Span {
   /** The width React knows, px: the kept one, or `initial`. */
   span: number
   /** The element whose `--span` is the width. */
   ref: (node: unknown) => void
-  /** Spread on that element: it carries `--span`. */
-  style: CSSProperties
+  /**
+   * Spread on that element: gui props that carry `--span`. gui emits a custom
+   * property from `$platform-web` as its own class; its types name only CSS
+   * properties, so the props are handed over as a bag.
+   */
+  props: object
   /** The width while a drag moves it, px. */
   move: (n: number) => void
   /** The width it settled on, px: drawn, known and kept. */
@@ -63,5 +70,5 @@ export function useSpan(store: string, initial: number, floor: number, ceil: num
     },
     [store],
   )
-  return { span, ref, style: { '--span': `${span}px` } as CSSProperties, move, keep }
+  return { span, ref, props: { '$platform-web': { '--span': `${span}px` } }, move, keep }
 }
