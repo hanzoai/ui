@@ -392,7 +392,7 @@ group('the recording handle', () => {
     expect(s.sent).toHaveLength(0)
     f.emit(ev(3))
     expect(s.sent).toHaveLength(1)
-    expect(s.sent[0].url).toBe('https://api.hanzo.ai/v1/replay')
+    expect(s.sent[0].url).toBe('https://api.hanzo.ai/v1/event/replay')
     expect(s.sent[0].ingestKey).toBe(KEY)
     expect(s.sent[0].beacon).toBe(false)
     expect((s.bodies()[0].events as unknown[]).length).toBe(3)
@@ -444,7 +444,17 @@ group('the recording handle', () => {
     })
     f.emit(ev(1))
     replay.flush()
-    expect(s.sent[0].url).toBe('http://localhost:8080/v1/replay')
+    expect(s.sent[0].url).toBe('http://localhost:8080/v1/event/replay')
+  })
+
+  it('never sends a batch over the ingest’s 512 KiB, whatever maxBytes asked for', () => {
+    const f = fakeRecorder()
+    const s = spy()
+    record({ ingestKey: KEY, recorder: f.recorder, transport: s.transport, batchSize: 1000, maxBytes: 8 << 20 })
+    const chunk = { type: 3, data: { blob: 'x'.repeat(100_000) }, timestamp: 1 } as unknown as eventWithTime
+    for (let n = 0; n < 8; n++) f.emit(chunk)
+    expect(s.sent.length).toBeGreaterThan(0)
+    for (const b of s.sent) expect(new TextEncoder().encode(b.payload).length).toBeLessThanOrEqual(512 * 1024)
   })
 
   it('hands rrweb the privacy gate, not the caller’s idea of it', () => {

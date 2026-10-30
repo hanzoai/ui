@@ -21,7 +21,7 @@ They answer different questions and both ship.
 |---|---|---|
 | Captures | what the user **did** | what the user **saw** |
 | Produces | a readable semantic hierarchy | a DOM movie |
-| Endpoint | `POST /v1/event` | `POST /v1/replay` |
+| Endpoint | `POST /v1/event` | `POST /v1/event/replay` |
 
 The player is rrweb-native, which is why this package is rrweb-native: raw
 `eventWithTime` events go on the wire, so playback needs no translation layer.
@@ -81,7 +81,7 @@ or plugins but cannot widen the gate.
 ## The wire
 
 ```
-POST {endpoint}/v1/replay
+POST {endpoint}/v1/event/replay
 Authorization: Bearer pk-…
 Content-Type: application/json
 
@@ -89,18 +89,37 @@ Content-Type: application/json
   "sessionId":  "019fd31b-…",
   "windowId":   "019fd31b-…",
   "distinctId": "019fd31b-…",
+  "consent":    "analytics",
   "events":     [ /* raw rrweb eventWithTime */ ]
 }
 ```
 
+That is the body cloud reads (`hanzo-inc/cloud` `apps/event/replay.go`): `sessionId`
+1–70 ASCII letters, digits or `-` (it is the partition key), at least one event,
+and `consent` the choice the batch was recorded under — cloud keeps a recording
+only under Analytics. The answer is `{accepted: 1}`, or `{withheld: 1}` for a
+batch recorded without the grant.
+
 Attributed by a **publishable** `pk-` key, like every other Hanzo write. A batch
-flushes when it gets long (`batchSize`, default 50), when it gets big (`maxBytes`,
-default 512 KiB), on the interval (`flushIntervalMs`, default 5000), and when the
-page goes away (`visibilitychange` → hidden, and `pagehide`).
+flushes when it gets long (`batchSize`, default 50), before it would pass
+`maxBytes`, on the interval (`flushIntervalMs`, default 5000), and when the page
+goes away (`visibilitychange` → hidden, and `pagehide`).
+
+**A batch is at most 512 KiB, counted in UTF-8 with its envelope**, because that
+is the most the ingest accepts (`MAX_BATCH_BYTES`; over it cloud answers 413).
+`maxBytes` can lower it, never raise it. An event over the bound on its own — in
+practice a full DOM snapshot of a very large page — cannot be sent at all: it is
+reported through `onError` and dropped, and a recording without its full snapshot
+does not play. Measured 2026-10-29: hanzo.ai/pricing snapshots at about 400 KB
+and fits; the hanzo.ai landing at 0.9–1.07 MB does not.
 
 The unload flush uses `navigator.sendBeacon`, which cannot set headers, so the key
 rides `?ingest_key=` on that path only — and only if it is publishable. A secret
-key falls back to `fetch(keepalive)` rather than being written into a URL.
+key falls back to `fetch(keepalive)` rather than being written into a URL. Both
+carry at most 64 KiB (`KEEPALIVE_BYTES`, the Fetch standard's keepalive quota); a
+larger tail goes as an ordinary `fetch`, and every other flush is an ordinary
+`fetch` too, since a keepalive request over the quota is refused by the browser
+before it is sent.
 
 The ids are read from the storage `@hanzo/event` already owns (`hz_session`,
 `hz_anon_id`, legacy `hz_id`) and minted into those same keys when a page has none,
@@ -119,7 +138,7 @@ interface ReplayConfig {
   windowId?: string              // default: this tab
   distinctId?: string            // default: the shared anonymous id
   batchSize?: number             // default 50
-  maxBytes?: number              // default 512 * 1024
+  maxBytes?: number              // default and ceiling 512 * 1024
   flushIntervalMs?: number       // default 5000
   blockSelector?: string         // extra app selectors, never captured
   maskTextSelector?: string      // extra app selectors, captured as asterisks
@@ -148,8 +167,8 @@ a recording never throws into the app.
 Also exported, for apps that need the pieces: `isCredentialRoute`,
 `CREDENTIAL_ROUTES`, `privateSelector`, `maskInput`, `maskText`, `fieldIdentity`,
 `recorderOptions`, `CREDENTIAL_SELECTOR`, `scrubEvent`, `encodeBatch`, `replayUrl`,
-`publishable`, `REPLAY_PATH`, `DEFAULT_ENDPOINT`, `sessionId`, `windowId`,
-`distinctId`.
+`publishable`, `REPLAY_PATH`, `MAX_BATCH_BYTES`, `KEEPALIVE_BYTES`,
+`DEFAULT_ENDPOINT`, `sessionId`, `windowId`, `distinctId`.
 
 ## Install
 

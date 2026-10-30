@@ -16,7 +16,7 @@
 
 import { CONSENT_EVENT, readConsent } from '@hanzo/event'
 import { record as rrwebRecord } from 'rrweb'
-import { Batch, DEFAULT_ENDPOINT, defaultTransport, publishable, replayUrl } from './batch'
+import { Batch, DEFAULT_ENDPOINT, MAX_BATCH_BYTES, defaultTransport, publishable, replayUrl } from './batch'
 import { distinctId, forgetWindow, sessionId, windowId } from './identity'
 import { recorderOptions } from './policy'
 import { refused } from './routes'
@@ -26,7 +26,15 @@ import type { ReplayConfig, ReplayHandle, eventWithTime } from './types'
 export { CREDENTIAL_ROUTES, isCredentialRoute } from './routes'
 export { CREDENTIAL_SELECTOR, fieldIdentity, maskInput, maskText, privateSelector, recorderOptions } from './policy'
 export { scrubEvent } from './scrub'
-export { DEFAULT_ENDPOINT, REPLAY_PATH, encodeBatch, publishable, replayUrl } from './batch'
+export {
+  DEFAULT_ENDPOINT,
+  KEEPALIVE_BYTES,
+  MAX_BATCH_BYTES,
+  REPLAY_PATH,
+  encodeBatch,
+  publishable,
+  replayUrl,
+} from './batch'
 export { distinctId, sessionId, windowId } from './identity'
 export type {
   RedactionPolicy,
@@ -88,7 +96,8 @@ export function record(config: ReplayConfig): ReplayHandle {
     ingestKey: config.ingestKey,
     url: replayUrl(config.endpoint || DEFAULT_ENDPOINT),
     batchSize: config.batchSize ?? 50,
-    maxBytes: config.maxBytes ?? 512 * 1024,
+    // The ingest's own bound is the most a batch can be, whatever was asked for.
+    maxBytes: Math.min(config.maxBytes ?? MAX_BATCH_BYTES, MAX_BATCH_BYTES),
     flushIntervalMs: config.flushIntervalMs ?? 5000,
     transport: config.transport || defaultTransport,
     // An SPA can route onto a callback with nothing left to mutate, so the clock

@@ -18,9 +18,11 @@ export interface ReplayIds {
   distinctId: string
 }
 
-/** The wire body of POST /v1/replay. Raw rrweb events, no re-encoding: the
+/** The wire body of POST /v1/event/replay. Raw rrweb events, no re-encoding: the
  *  player already speaks this. */
 export interface ReplayBatch extends ReplayIds {
+  /** The choice the batch was recorded under, as @hanzo/event renders it. */
+  consent: string
   events: eventWithTime[]
 }
 
@@ -57,7 +59,8 @@ export interface ReplayConfig {
 
   /** Flush after this many events. Default 50. */
   batchSize?: number
-  /** Flush once the buffered payload reaches this many bytes. Default 512 KiB. */
+  /** The most bytes one batch's body may take. Default, and ceiling, 512 KiB: the
+   *  ingest's own bound. An event bigger than this on its own is not sent. */
   maxBytes?: number
   /** Flush at least this often, in ms. Default 5000. */
   flushIntervalMs?: number
