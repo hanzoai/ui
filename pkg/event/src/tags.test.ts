@@ -151,8 +151,11 @@ describe('eu', () => {
     acceptAll()
     await tick()
     expect(consents().at(-1)).toEqual(['consent', 'update', { analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' }])
+    // fbevents had not arrived, so it is handed no revoke to undo: a revoke and a
+    // grant waiting in its queue together leave it revoked and the PageView unsent.
     const q = fbq()
-    expect(q.findIndex((a) => a[0] === 'consent' && a[1] === 'grant')).toBeGreaterThan(q.findIndex((a) => a[0] === 'init'))
+    expect(q.filter((a) => a[0] === 'consent')).toEqual([])
+    expect(q.findIndex((a) => a[0] === 'track' && a[1] === 'PageView')).toBeGreaterThan(q.findIndex((a) => a[0] === 'init'))
     expect(views()).toBe(1)
     expect(hosts(b)).toEqual(EVERY)
     expect(reload).not.toHaveBeenCalled()
