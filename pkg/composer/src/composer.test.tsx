@@ -46,7 +46,7 @@ describe('the composer draws itself', () => {
   })
 
   it('hoists the sweep once, keyed on data-slots and never a class', () => {
-    expect(page.match(/prism-orbit/g)?.length).toBeGreaterThan(0)
+    expect(page.match(/prism-spin/g)?.length).toBeGreaterThan(0)
     expect(SHEET).not.toMatch(/(^|[\s,{(])\.[a-z]/)
     for (const q of [
       'prefers-reduced-motion: reduce',
@@ -55,6 +55,18 @@ describe('the composer draws itself', () => {
       'forced-colors: active',
     ])
       expect(SHEET).toContain(`@media (${q})`)
+  })
+
+  it('turns the ring by transform alone, keeps the halo still and pauses off screen', () => {
+    // Only a transform animates: a property feeding the gradient repaints every frame.
+    const frames = SHEET.match(/@keyframes[^{]*\{([^}]*\{[^}]*\})*\}/g) ?? []
+    expect(frames.length).toBe(1)
+    expect(frames[0]).toMatch(/^@keyframes prism-spin\{to\{transform:[^;}]*\}\}$/)
+    expect(SHEET).not.toMatch(/@property/)
+    expect(SHEET).not.toMatch(/prism-halo'\]\{[^}]*animation/)
+    expect(page).toContain('data-slot="prism-sweep"')
+    expect(SHEET).toContain("[data-slot='prism'][data-still] [data-slot='prism-sweep']{animation-play-state:paused}")
+    expect(SHEET).toContain("@media (prefers-reduced-motion: reduce){[data-slot='prism-sweep']{animation:none}}")
   })
 
   it('sizes the controls from the host, scaled by density and floored at 24px', () => {

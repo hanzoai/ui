@@ -13,12 +13,11 @@
  * Every paint is a gui prop reading a @hanzo/design token, so a host writes no
  * rule against this package: `--radius-composer` shapes the host, `--density`
  * sizes the controls, `--muted` / `--primary` paint them. The one stylesheet is
- * the sweep itself — a conic angle animates only through `@property` and
- * `@keyframes`, which no prop can say — and it is keyed on the data-slots
- * below, rendered once through React's hoisted `<style>`.
+ * the sweep itself — a turn, which no prop can say as `@keyframes` — and it is
+ * keyed on the data-slots below, rendered once through React's hoisted `<style>`.
  */
 import { Input, Text, View, styled } from '@hanzo/gui'
-import { createContext, useContext, type ComponentProps } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState, type ComponentProps } from 'react'
 
 /**
  * A value the style types have no literal for: a design token read through
@@ -43,8 +42,8 @@ export const SLOT = 'prism'
 export const SPECTRUM =
   'rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.1)'
 
-/** The sweep both layers paint. The angle falls back to rest where `@property` is unknown. */
-const SWEEP = `conic-gradient(from var(--prism-angle, 0deg), ${SPECTRUM})`
+/** The sweep both layers paint. */
+const SWEEP = `conic-gradient(${SPECTRUM})`
 
 /**
  * The mask that leaves only the padding band: `content-box` is the hole, the
@@ -60,14 +59,25 @@ const ROUND = 'var(--radius-composer, 9999px)'
  * The sweep and the four preferences that quiet it. Keyed on data-slots, never
  * a class. `!important` where it overrides a gui prop, because a compiled prop
  * is an atomic class in a sheet inserted after this one.
+ *
+ * THE RING TURNS ON THE COMPOSITOR. It used to animate a registered `<angle>`
+ * property feeding `conic-gradient(from …)` on both layers, which no compositor
+ * can run: every frame restyled and repainted the ring, and the halo's 16px blur
+ * with it, measured as the most long tasks on an idle landing on a 4x-throttled
+ * phone. A conic gradient turned by `rotate()` is the same gradient from that
+ * angle, so the ring's band now masks a square (`prism-sweep`), as long on each
+ * side as the band's diagonal, that turns by transform alone. The halo is still,
+ * as its blur would otherwise be redone every frame. `data-still` on the host
+ * (no part of it on screen, or the tab hidden) pauses the turn.
  */
 export const SHEET = [
-  '@property --prism-angle{syntax:"<angle>";initial-value:0deg;inherits:false}',
-  '@keyframes prism-orbit{to{--prism-angle:360deg}}',
-  ":is([data-slot='prism-ring'],[data-slot='prism-halo']){animation:prism-orbit 10s linear infinite}",
-  "@media (prefers-reduced-motion: reduce){:is([data-slot='prism-ring'],[data-slot='prism-halo']){animation:none}}",
+  '@keyframes prism-spin{to{transform:translate(-50%,-50%) rotate(1turn)}}',
+  "[data-slot='prism-ring']{container-type:size}",
+  "[data-slot='prism-sweep']{position:absolute;left:50%;top:50%;width:150%;width:hypot(100cqw,100cqh);aspect-ratio:1;transform:translate(-50%,-50%);animation:prism-spin 10s linear infinite;will-change:transform}",
+  "[data-slot='prism'][data-still] [data-slot='prism-sweep']{animation-play-state:paused}",
+  "@media (prefers-reduced-motion: reduce){[data-slot='prism-sweep']{animation:none}}",
   "@media (prefers-reduced-transparency: reduce){[data-slot='prism-halo']{display:none}[data-slot='prism-ring']{opacity:1!important}}",
-  "@media (prefers-contrast: more){[data-slot='prism-halo']{display:none}[data-slot='prism-ring']{opacity:1!important;background:#fff!important;animation:none}}",
+  "@media (prefers-contrast: more){[data-slot='prism-halo'],[data-slot='prism-sweep']{display:none}[data-slot='prism-ring']{opacity:1!important;background:#fff!important}}",
   "@media (forced-colors: active){:is([data-slot='prism-ring'],[data-slot='prism-halo']){display:none}[data-slot='prism']{outline:1px solid CanvasText}}",
 ].join('\n')
 
@@ -89,10 +99,36 @@ const Ring = styled(View, {
   r: 0,
   b: 0,
   l: 0,
+  overflow: 'hidden',
   pointerEvents: 'none',
   opacity: REST,
   '$group-hover': { opacity: LIFT },
 })
+
+/**
+ * Whether any part of `node` is on screen in a showing tab: the turn pauses
+ * otherwise. Read by an observer, never per frame, and written to the host as
+ * `data-still`, which the sheet reads.
+ */
+function useSeen(node: Element | null): boolean {
+  const [seen, setSeen] = useState(true)
+  useEffect(() => {
+    if (!node || typeof IntersectionObserver === 'undefined') return
+    let near = true
+    const update = () => setSeen(near && document.visibilityState === 'visible')
+    const io = new IntersectionObserver(([e]) => {
+      near = !!e?.isIntersecting
+      update()
+    })
+    io.observe(node)
+    document.addEventListener('visibilitychange', update)
+    return () => {
+      io.disconnect()
+      document.removeEventListener('visibilitychange', update)
+    }
+  }, [node])
+  return seen
+}
 
 /**
  * The halo: the same sweep, blurred, outside the box, lighting the air round the
@@ -131,11 +167,22 @@ export type ComposerProps = ComponentProps<typeof Host> & {
  * disagree. Both layers sit under the panel (negative z in the host's own
  * stacking context), so the panel and anything it draws stay on top.
  */
-export function Composer({ band = 1.5, halo = 6, control = 34, children, ...props }: ComposerProps) {
+export function Composer({ band = 1.5, halo = 6, control = 34, children, ref, ...props }: ComposerProps) {
   const fade = { transition: 'opacity 200ms ease' } as const
+  const [node, setNode] = useState<Element | null>(null)
+  // The host's node for the observer, and still the caller's own ref.
+  const host = useCallback(
+    (el: unknown) => {
+      setNode(el instanceof Element ? el : null)
+      if (typeof ref === 'function') ref(el as never)
+      else if (ref && typeof ref === 'object') (ref as { current: unknown }).current = el
+    },
+    [ref],
+  )
+  const seen = useSeen(node)
   return (
     <Size.Provider value={control}>
-      <Host data-slot={SLOT} group p={band} {...props}>
+      <Host ref={host as never} data-slot={SLOT} data-still={seen ? undefined : ''} group p={band} {...props}>
         <style href="hanzo-composer" precedence="default">
           {SHEET}
         </style>
@@ -157,11 +204,12 @@ export function Composer({ band = 1.5, halo = 6, control = 34, children, ...prop
           aria-hidden
           p={band}
           rounded="inherit"
-          backgroundImage={SWEEP}
           mask={MASK}
           maskComposite="exclude"
           style={{ zIndex: -1, ...fade }}
-        />
+        >
+          <View data-slot="prism-sweep" backgroundImage={SWEEP} />
+        </Ring>
         {children}
       </Host>
     </Size.Provider>
