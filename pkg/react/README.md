@@ -116,8 +116,6 @@ const { sendMessage, isLoading, error } = useMessage()
 // Streaming responses
 const { streamMessage, currentMessage, progress } = useStreaming()
 
-// Thread management
-const { threads, activeThread, createThread, switchThread } = useThread()
 ```
 
 ### Tool Calling
@@ -145,23 +143,11 @@ const tools = [
 
 ## Available Hooks
 
-### Core Hooks
 - `useHanzo()` - Access complete Hanzo context
 - `useMessage()` - Send messages and manage state
 - `useStreaming()` - Stream AI responses in real-time
-- `useThread()` - Manage conversation threads
 
-### Component & Tool Hooks
-- `useComponent()` - Dynamically register/render components
-- `useTool()` - Execute and manage AI tools
-- `useGenerativeUI()` - Generate UI components on the fly
-
-### Utility Hooks
-- `useSuggestions()` - Provide intelligent suggestions
-- `useModelConfig()` - Configure and switch AI models
-- `useAttachments()` - Handle file attachments
-- `useAuth()` - Manage user authentication
-- `useMCP()` - Model Context Protocol integration
+Planned: `useThread`, `useComponent`, `useTool`, `useGenerativeUI`, `useSuggestions`, `useModelConfig`, `useAttachments`, `useAuth`, and `useMCP` are not implemented yet.
 
 ## Examples
 
