@@ -784,4 +784,4 @@ export { config, type Conf } from './gui-config'
 // (`syntax`) and slant or weight (`face`) CodeEditor and JsonTree paint each kind
 // of token with. A server module (a shiki block rendered in an RSC or at build
 // time) reads the same from `@hanzo/ui/core`, which is not a client boundary.
-export { codeInk, codeInks, codeTheme, face, syntax, type CodeInk, type CodeTheme, type CodeToken } from './code-theme'
+export { codeFace, codeInk, codeInks, codeTheme, face, syntax, type CodeInk, type CodeTheme, type CodeToken } from './code-theme'

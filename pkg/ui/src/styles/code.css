@@ -9,7 +9,8 @@
    so the block follows the theme it sits in as CodeEditor and JsonTree do. With
    no gui sheet mounted, each falls back to its step of the ladder in either
    scheme. `codeInks` in code-theme.ts is this table; code-theme.test.ts holds
-   the two to each other. */
+   the two to each other. A span's weight and slant, where the theme gives it
+   one, is `data-face` (`codeFace`): a keyword bold, a comment italic. */
 
 [data-code='dim'] { color: var(--codeDim, light-dark(var(--neutral-600), var(--neutral-400))); }
 [data-code='ink'] { color: var(--codeInk, light-dark(var(--neutral-700), var(--neutral-300))); }
@@ -22,3 +23,6 @@
 [data-code='punctuation'] { color: var(--codePunctuation, light-dark(var(--neutral-600), var(--neutral-400))); }
 [data-code='comment'] { color: var(--codeComment, light-dark(var(--neutral-600), var(--neutral-400))); }
 [data-code='keyword'] { color: var(--codeKeyword, light-dark(var(--neutral-950), var(--neutral-50))); }
+
+[data-face~='bold'] { font-weight: 700; }
+[data-face~='italic'] { font-style: italic; }
