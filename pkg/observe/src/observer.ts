@@ -465,6 +465,7 @@ export class Observer {
       // detached nodes.
       const root = this.root as Document
       root.querySelectorAll?.(sel).forEach(watch)
+      this.passed(io, sel)
       if (typeof MutationObserver === 'undefined') return
       this.mo = new MutationObserver((records) => {
         try {
@@ -479,6 +480,37 @@ export class Observer {
       this.mo.observe(root, { childList: true, subtree: true })
     } catch {
       /* visibility capture is optional */
+    }
+  }
+
+  /** The sections a reader scrolled past before the engine started.
+   *
+   *  The engine starts after hydration and after its own chunk loads, so a reader
+   *  who scrolls at once (a fast phone flick, a slow phone) can carry the first
+   *  sections through the viewport and out of it before anything watches them; an
+   *  observer installed then only ever sees them above the viewport, and they
+   *  would never count. A page that opened at its top, freshly navigated with no
+   *  fragment, has had every section that now sits wholly above the viewport pass
+   *  through it, which is all `$view` claims. Each is reported once, marked
+   *  `passed: true` because its moment was inferred from where it is rather than
+   *  measured, with no `ratio`. A section with no box is not inferred. A reload or a back/forward restores the scroll
+   *  position, so nothing above it is inferred there; and only the document
+   *  engine, at install, infers anything. */
+  private passed(io: IntersectionObserver, sel: string): void {
+    try {
+      if (this.root !== document || location.hash) return
+      const nav = performance.getEntriesByType?.('navigation')?.[0] as PerformanceNavigationTiming | undefined
+      if (nav && nav.type !== 'navigate') return
+      document.querySelectorAll(sel).forEach((el) => {
+        // A section with no box (hidden, not laid out) was never on screen.
+        const box = el.getBoundingClientRect()
+        if (this.seen.has(el) || box.height <= 0 || box.bottom > 0) return
+        io.unobserve(el)
+        this.seen.add(el)
+        this.fire('view', el, { passed: true })
+      })
+    } catch {
+      /* inference is optional */
     }
   }
 

@@ -60,7 +60,7 @@ autocapture event with properties like:
 | `$input` | a field's keystrokes, debounced per field (400 ms) | `$value` (redacted) |
 | `$change` | a field settled | `$value` (redacted) |
 | `$submit` | a form submitted | |
-| `$view` | a `[data-hz-view]` element once half of it is in view, or what is in view of it covers half the viewport (so a section taller than two viewports is still seen); once per element; elements mounted after `start()` included | `ratio` |
+| `$view` | a `[data-hz-view]` element once half of it is in view, or what is in view of it covers half the viewport (so a section taller than two viewports is still seen); once per element; elements mounted after `start()` included. A section already wholly above the viewport when the engine starts, on a page freshly opened at its top (no fragment, not a reload or back/forward), was scrolled past before anything watched it: it is reported then with `passed: true` and no `ratio` | `ratio`, or `passed` |
 | `$scroll` | the document scrolled to 25, 50, 75 and 100 % of its height, each once a page view | `depth`, `$page_width`, `$page_height`, `$viewport_width`, `$viewport_height` |
 | `$pageview` | an SPA navigation, when `nav` is on | `path` |
 | `$pageleave` | a page view's engaged time, in segments: when the page is hidden, unloaded, routed away from, or the engine stops | below |

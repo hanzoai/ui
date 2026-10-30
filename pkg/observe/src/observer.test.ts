@@ -697,6 +697,39 @@ group('visibility of nodes mounted later', () => {
     expect(steps).toContain(0.5)
   })
 
+  it('counts a section the reader scrolled past before the engine started, marked passed', () => {
+    document.body.innerHTML = '<div data-hz-view="hero"></div><div data-hz-view="products"></div><div data-hz-view="plans"></div>'
+    const [hero, products, plans] = Array.from(document.querySelectorAll('[data-hz-view]'))
+    vi.spyOn(hero, 'getBoundingClientRect').mockReturnValue({ top: -2400, bottom: -1600, height: 800 } as DOMRect)
+    vi.spyOn(products, 'getBoundingClientRect').mockReturnValue({ top: -1600, bottom: -20, height: 1580 } as DOMRect)
+    vi.spyOn(plans, 'getBoundingClientRect').mockReturnValue({ top: -20, bottom: 700, height: 720 } as DOMRect)
+    start({ viewSelector: '[data-hz-view]' })
+    const views = sink.filter((i) => i.kind === 'view')
+    expect(views.map((v) => v.props?.$section)).toEqual(['hero', 'products'])
+    expect(views[0].props).toMatchObject({ passed: true })
+    expect(views[0].props?.ratio).toBeUndefined()
+    // Passed sections are watched no longer; the one in view still is.
+    expect(FakeIO.all[0].watched.has(hero)).toBe(false)
+    expect(FakeIO.all[0].watched.has(plans)).toBe(true)
+    // And are not reported twice.
+    FakeIO.all[0].show(products)
+    expect(sink.filter((i) => i.kind === 'view')).toHaveLength(2)
+  })
+
+  it('infers nothing on a page opened at a fragment or restored by reload', () => {
+    document.body.innerHTML = '<div data-hz-view="hero"></div>'
+    vi.spyOn(document.querySelector('div')!, 'getBoundingClientRect').mockReturnValue({ top: -900, bottom: -10, height: 890 } as DOMRect)
+    history.replaceState(null, '', '/#plans')
+    start({ viewSelector: '[data-hz-view]' })
+    expect(sink.filter((i) => i.kind === 'view')).toHaveLength(0)
+    engine!.stop()
+    engine = undefined
+    history.replaceState(null, '', '/')
+    vi.spyOn(performance, 'getEntriesByType').mockReturnValue([{ type: 'reload' }] as unknown as PerformanceEntryList)
+    start({ viewSelector: '[data-hz-view]' })
+    expect(sink.filter((i) => i.kind === 'view')).toHaveLength(0)
+  })
+
   it('watches nothing added once stopped', async () => {
     start({ viewSelector: '[data-hz-view]' }).stop()
     document.body.innerHTML = '<div data-hz-view="x"></div>'
