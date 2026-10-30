@@ -541,6 +541,9 @@ function shape(platform: 'meta' | 'tiktok' | 'x', p: Record<string, unknown>): R
   const out: Record<string, unknown> = {}
   if (typeof p.value === 'number') out.value = p.value
   out.currency = typeof p.currency === 'string' ? p.currency : 'USD'
+  // A search names what was asked: Meta's and TikTok's standard parameter, and
+  // what a search audience is built from.
+  if (typeof p.search_string === 'string' && p.search_string && platform !== 'x') out[platform === 'tiktok' ? 'query' : 'search_string'] = p.search_string
   if (!items.length) return out
   if (platform === 'meta') {
     out.content_type = 'product'
