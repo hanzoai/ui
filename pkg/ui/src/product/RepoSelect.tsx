@@ -71,13 +71,24 @@ export interface RepoSelectProps {
 /** `owner/name`, from whichever the host has. */
 export const address = (repo: Repo): string => repo.full_name || `${repo.owner}/${repo.name}`
 
-const item = (repo: Repo): RepoItem => ({
-  id: address(repo),
-  label: address(repo),
-  hint: repo.private ? 'Private' : undefined,
-  icon: repo.private ? <Lock size={12} color="$soft" /> : <Code size={12} color="$soft" />,
-  repo,
-})
+/**
+ * A row reads as the whole address, but its `/name` is the tail, so a narrow list
+ * cuts the owner short and keeps the name: a host that writes the address with
+ * its git host (`github.com/owner/name`) would otherwise show every row of one
+ * owner as the same `github.com/owner…`.
+ */
+const item = (repo: Repo): RepoItem => {
+  const whole = address(repo)
+  const cut = whole.lastIndexOf('/')
+  return {
+    id: whole,
+    label: cut > 0 ? whole.slice(0, cut) : whole,
+    tail: cut > 0 ? whole.slice(cut) : undefined,
+    hint: repo.private ? 'Private' : undefined,
+    icon: repo.private ? <Lock size={12} color="$soft" /> : <Code size={12} color="$soft" />,
+    repo,
+  }
+}
 
 /**
  * Whether an address may be followed from here: a path on this origin, or

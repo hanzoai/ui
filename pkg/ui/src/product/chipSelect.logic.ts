@@ -14,6 +14,13 @@ import type { ReactNode } from 'react'
 export interface ChipItem {
   id: string
   label: string
+  /**
+   * The end of the label that must stay readable, drawn right after it: a
+   * repository's `/name` after its owner. A narrow row cuts the label short
+   * before this, so `github.com/Darkhorse7stars/ThoughtfulAI` reads
+   * `github.com/Darkhor…/ThoughtfulAI`, never the owner alone.
+   */
+  tail?: string
   /** A quieter second word on the row — `Private`, a machine's state. */
   hint?: string
   /** Drawn before the label: what kind of row this is. */
@@ -56,11 +63,14 @@ export function merge<T extends ChipItem>(listed: readonly T[], page: readonly T
  * empty search, or one its label contains — so typing narrows the list instead
  * of leaving an unrelated row stuck on top.
  */
+/** What a row says, label and tail together: what a search is held against. */
+export const said = (i: ChipItem): string => i.label + (i.tail ?? '')
+
 export function pin<T extends ChipItem>(items: readonly T[], chosen: T | null | undefined, q = ''): T[] {
   const rest = items.filter((i) => !chosen || i.id !== chosen.id)
   if (!chosen) return rest
   const needle = q.trim().toLowerCase()
-  if (needle && !chosen.label.toLowerCase().includes(needle)) return rest
+  if (needle && !said(chosen).toLowerCase().includes(needle)) return rest
   return [chosen, ...rest]
 }
 
@@ -73,7 +83,7 @@ export function narrow<T extends ChipItem>(items: readonly T[], q: string): T[] 
   const needle = q.trim().toLowerCase()
   if (!needle) return items.slice()
   return items.filter(
-    (i) => i.label.toLowerCase().includes(needle) || (i.hint ?? '').toLowerCase().includes(needle),
+    (i) => said(i).toLowerCase().includes(needle) || (i.hint ?? '').toLowerCase().includes(needle),
   )
 }
 
