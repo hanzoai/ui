@@ -200,6 +200,15 @@ describe('RepoSelect', () => {
     expect(onPress).toHaveBeenCalledWith(REPOS[0])
   })
 
+  it('keeps a row’s name as its tail, so a long owner is what gives way', async () => {
+    const thoughtful: Repo = { owner: 'Darkhorse7stars', name: 'ThoughtfulAI', full_name: 'github.com/Darkhorse7stars/ThoughtfulAI' }
+    mount(<RepoSelect onChange={() => {}} load={async () => ({ repos: [thoughtful] })} />)
+    act(() => chip().click())
+    await settle()
+    expect(labels()).toEqual(['github.com/Darkhorse7stars/ThoughtfulAI'])
+    expect(document.querySelector('[data-slot="chip-select-tail"]')?.textContent).toBe('/ThoughtfulAI')
+  })
+
   it('has no axe violations open', async () => {
     mount(
       <RepoSelect

@@ -657,9 +657,21 @@ export function ChipSelect<T extends ChipItem>({
                       {item.icon}
                     </XStack>
                   ) : null}
-                  <SizableText size="$2" color="$ink" numberOfLines={1} flex={1} minW={0}>
-                    {item.label}
-                  </SizableText>
+                  {item.tail ? (
+                    // The label gives way first: its tail (a repository's `/name`) is the part that tells rows apart.
+                    <XStack flex={1} minW={0} items="center">
+                      <SizableText size="$2" color="$ink" numberOfLines={1} shrink={1} minW={0}>
+                        {item.label}
+                      </SizableText>
+                      <SizableText {...slot('chip-select-tail')} size="$2" color="$ink" numberOfLines={1} shrink={0} maxW="100%">
+                        {item.tail}
+                      </SizableText>
+                    </XStack>
+                  ) : (
+                    <SizableText size="$2" color="$ink" numberOfLines={1} flex={1} minW={0}>
+                      {item.label}
+                    </SizableText>
+                  )}
                   {item.hint ? (
                     <SizableText size="$1" color="$soft" numberOfLines={1} shrink={0}>
                       {item.hint}
