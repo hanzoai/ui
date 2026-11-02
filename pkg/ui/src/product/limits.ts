@@ -95,10 +95,8 @@ export interface Refusal {
   message: string
   class: LimitClass | null
   resets_at: string | null
-  /** The window that was used up, as the server names it (`day`, `5h`), when it names one. */
-  limit: string | null
   actions: LimitAction[]
-  /** Seconds, from Retry-After on a 429, else the body's `retry_after`. */
+  /** Seconds, from Retry-After on a 429, when it names none to a day (`WAIT`). */
   retry: number | null
 }
 
@@ -253,30 +251,37 @@ export function servedOf(headers: { get(name: string): string | null }): Served 
 }
 
 /**
- * The limit codes sent on a 429 that is not a `billing_error`: the two caps the
- * gateway sends as a `rate_limit_error` (ai `routers/filter_balance.go`
- * `limitReached`), and the Free allowance's spent window, `allowance_spent`
- * (cloud zen `freeSpent`, typed `insufficient_quota`). Each lifts by itself at a
- * reset, so the wire calls it a limit; each is still the plan speaking, and the
- * reader is owed the same notice.
+ * The limit codes sent on a 429 that is not a `billing_error`, each under the
+ * one type its server sends it with: the two caps the gateway sends as a
+ * `rate_limit_error` (ai `routers/filter_balance.go` `limitReached`), and the
+ * Free allowance's spent window, `allowance_spent` (cloud zen `freeSpent`,
+ * `insufficient_quota`). Each lifts by itself at a reset, so the wire calls it a
+ * limit; each is still the plan speaking, and the reader is owed the same notice.
  */
-const CAPS: readonly string[] = ['free_plan_cap', 'usage_cap_exceeded', 'allowance_spent']
+const CAPS: ReadonlyMap<string, string> = new Map([
+  ['free_plan_cap', 'rate_limit_error'],
+  ['usage_cap_exceeded', 'rate_limit_error'],
+  ['allowance_spent', 'insufficient_quota'],
+])
+
+/** The longest Retry-After believed, in seconds: a day. A longer or negative one names no retry. */
+const WAIT = 86_400
 
 /** A billing refusal's envelope, or null for any other error. */
 export function refusalOf(body: unknown, status: number, retryAfter?: string | null): Refusal | null {
   const e = record(record(body)?.error)
   if (!e) return null
-  if (e.type !== 'billing_error' && !CAPS.includes(text(e.code) ?? '')) return null
-  const retry = retryAfter ? Number(retryAfter) : typeof e.retry_after === 'number' ? e.retry_after : NaN
+  const code = text(e.code) ?? ''
+  if (e.type !== 'billing_error' && (!CAPS.has(code) || CAPS.get(code) !== e.type)) return null
+  const retry = retryAfter ? Number(retryAfter) : NaN
   return {
     status,
-    code: text(e.code) ?? '',
+    code,
     message: text(e.message) ?? '',
     class: one(CLASSES, e.class),
     resets_at: text(e.resets_at),
-    limit: text(e.limit),
     actions: actionsOf(e.actions),
-    retry: Number.isFinite(retry) ? retry : null,
+    retry: retry >= 0 && retry <= WAIT ? retry : null,
   }
 }
 
