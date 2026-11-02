@@ -20,7 +20,8 @@
  * which is also how the last hardcoded hex left this layer.
  */
 import { useCallback, useMemo, useState } from 'react'
-import { Button, Card, Input, Text, XStack, YStack } from '@hanzo/gui'
+import { Button, Input, Text, XStack, YStack } from '@hanzo/gui'
+import { Plate as Card } from '../backends/gui/plate'
 import { ArrowDown, ArrowUp, GripVertical, Plus, Trash2, TriangleAlert } from '@hanzogui/lucide-icons-2'
 
 import { FieldSwitch } from '../product/Field'

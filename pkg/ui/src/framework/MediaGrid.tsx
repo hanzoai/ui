@@ -24,7 +24,8 @@
  * other file-touching components in this layer.
  */
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
-import { Button, Card, Text, XStack, YStack } from '@hanzo/gui'
+import { Button, Text, XStack, YStack } from '@hanzo/gui'
+import { Plate as Card } from '../backends/gui/plate'
 import { Image as ImageIcon, Trash2, Upload } from '@hanzogui/lucide-icons-2'
 
 import { EmptyState } from '../product/EmptyState'

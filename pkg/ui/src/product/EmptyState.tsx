@@ -14,7 +14,8 @@
  * surface a module shows in place of its table.
  */
 import type { ReactElement, ReactNode } from 'react'
-import { Button, Card, Text, XStack, YStack } from '@hanzo/gui'
+import { Button, Text, XStack, YStack } from '@hanzo/gui'
+import { Plate as Card } from '../backends/gui/plate'
 import { ArrowRight, Check, ExternalLink } from '@hanzogui/lucide-icons-2'
 
 import type { IconLike } from './color'
@@ -66,7 +67,7 @@ export function EmptyState({
       p="$6"
       gap="$4"
       items="center"
-      maxWidth={640}
+      maxW={640}
       self="center"
       width="100%"
     >

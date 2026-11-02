@@ -13,7 +13,8 @@
  */
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { Button, Card, Text, XStack, YStack } from '@hanzo/gui'
+import { Button, Text, XStack, YStack } from '@hanzo/gui'
+import { Plate as Card } from '../backends/gui/plate'
 import { CircleCheck, CircleX, Info, TriangleAlert, X } from '@hanzogui/lucide-icons-2'
 
 import { useEmit } from './instrument'
@@ -84,7 +85,7 @@ function ToastCard({ t, onClose }: { t: Toast; onClose: () => void }) {
   return (
     <Card
       width={360}
-      maxWidth="90%"
+      maxW="90%"
       p="$3"
       gap="$2"
       bg="$panel"
