@@ -67,6 +67,15 @@ export const SCHEMA: Readonly<Record<string, EventSpec>> = {
     props: NONE,
   },
   logout_completed: { summary: 'The session ended and the visitor is signed out.', props: NONE },
+  signin_failed: {
+    summary: 'A sign-in or sign-up was refused, counted by the kind of refusal and never by its words.',
+    props: {
+      reason: { type: 'string', doc: "IAM's code for the refusal, else the error's class; never a sentence." },
+      method: { type: 'string', doc: 'The way in: a provider, email, phone or wallet.' },
+      step: { type: 'string', doc: 'The step of the sign-in it was refused at.' },
+      mode: { type: 'string', doc: 'Whether it was a sign-up or a sign-in.', values: ['signup', 'login'] },
+    },
+  },
   first_action: {
     summary:
       'Activation: the first moment of real value. ONE event for every product — ' +
@@ -94,6 +103,14 @@ export const SCHEMA: Readonly<Record<string, EventSpec>> = {
       plan: { type: 'string', doc: 'The plan name as the catalog spells it.' },
       interval: { type: 'string', doc: 'Billing interval.', values: ['monthly', 'annual'] },
       from: { type: 'string', doc: 'Where the plan was pressed.' },
+    },
+  },
+  checkout_viewed: {
+    summary: 'The card step was shown with its plan and price to a visitor not signed in yet.',
+    props: {
+      plan: { type: 'string', doc: 'The plan the card step names, by its catalog slug.' },
+      interval: { type: 'string', doc: 'The term the card step prices: month or year.' },
+      method: { type: 'string', doc: 'The way of paying the step is for, such as card.' },
     },
   },
   checkout_started: {
