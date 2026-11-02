@@ -154,6 +154,17 @@ describe('refusalOf', () => {
     expect(refusalOf({ error: { type: 'rate_limit_error', code: 'rate_limit_exceeded', message: 'slow down' } }, 429)).toBeNull()
   })
 
+  it('reads the Free allowance spent in its window, with the window and when to retry', () => {
+    const body = { error: { message: 'Usage reached', type: 'insufficient_quota', code: 'allowance_spent', limit: '5h', resets_at: '2026-11-02T17:00:00Z', retry_after: 240 } }
+    expect(refusalOf(body, 429)).toMatchObject({ status: 429, code: 'allowance_spent', message: 'Usage reached', limit: '5h', resets_at: '2026-11-02T17:00:00Z', retry: 240 })
+    // Retry-After, when the server sends one, is the word on when to come back.
+    expect(refusalOf(body, 429, '60')?.retry).toBe(60)
+    // A reset hours away names no retry.
+    expect(refusalOf({ error: { ...body.error, retry_after: undefined } }, 429)?.retry).toBeNull()
+    // An insufficient_quota that is not the allowance is no plan refusal.
+    expect(refusalOf({ error: { type: 'insufficient_quota', code: 'quota_exceeded', message: 'x' } }, 429)).toBeNull()
+  })
+
   it('is null for any other error', () => {
     expect(refusalOf({ error: { type: 'invalid_request_error', message: 'x' } }, 400)).toBeNull()
     expect(refusalOf({ message: 'x' }, 402)).toBeNull()
