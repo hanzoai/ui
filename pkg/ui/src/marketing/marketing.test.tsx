@@ -235,6 +235,14 @@ describe('ClosingCta', () => {
     expect(out).not.toContain('Start free')
     expect(out).not.toContain('Choose plan')
   })
+
+  it('is named by its own headline, so a host that says the words in a language names it in that language', () => {
+    const out = html(<ClosingCta title="ابنِ ما هو قادم." />)
+    expect(out).not.toContain('aria-label="Try Hanzo"')
+    const id = out.match(/aria-labelledby="([^"]+)"/)?.[1]
+    expect(id).toBeTruthy()
+    expect(out).toMatch(new RegExp(`<h2[^>]*id="${id}"[^>]*>ابنِ ما هو قادم.`))
+  })
 })
 
 describe('page blocks', () => {
