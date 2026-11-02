@@ -48,7 +48,7 @@ export function LimitActions({
   const shown = onAction ? actions : actions.filter(navigable)
   if (!shown.length && !children) return null
   return (
-    <XStack gap="$2" shrink={0} flexWrap="wrap" items="center">
+    <XStack gap="$2" shrink={0} maxW="100%" flexWrap="wrap" items="center">
       {shown.map((a, i) => (
         <Button
           key={`${a.kind}:${a.url ?? a.model ?? i}`}
