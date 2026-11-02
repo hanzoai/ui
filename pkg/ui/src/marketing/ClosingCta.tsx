@@ -5,8 +5,11 @@
  * read more. The way in is "Try Hanzo" to sign-in, payment second: `/login`, or
  * `/login?next=<checkout>` when the page names a plan (`next`).
  *
- * `onCta` hears both links, named `try_hanzo` and `read_docs`.
+ * `onCta` hears both links, named `try_hanzo` and `read_docs`. The section is named
+ * by its own headline (`aria-labelledby`), so a host that passes its words in the
+ * reader's language names it in that language too.
  */
+import { useId } from 'react'
 import { XStack, YStack } from '@hanzo/gui'
 
 import { slot } from '../backends/gui/slot'
@@ -30,11 +33,13 @@ const ClosingCta = ({
   primary = { label: 'Try Hanzo', href: next ? `/login?next=${encodeURIComponent(next)}` : '/login' },
   secondary = { label: 'Read the docs', href: 'https://docs.hanzo.ai' },
   onCta,
-}: ClosingCtaProps) => (
+}: ClosingCtaProps) => {
+  const id = useId()
+  return (
   <YStack
     {...slot('closing-cta')}
     render="section"
-    aria-label="Try Hanzo"
+    aria-labelledby={id}
     width="100%"
     maxW={1240}
     mx="auto"
@@ -44,7 +49,7 @@ const ClosingCta = ({
     py={56}
     $md={{ py: 96 }}
   >
-    <Line render="h2" m={0} align="center" fontSize="$9" lineHeight="$9" fontWeight={500} $md={{ fontSize: '$11', lineHeight: '$11' }} style={TIGHT}>
+    <Line render="h2" id={id} m={0} align="center" fontSize="$9" lineHeight="$9" fontWeight={500} $md={{ fontSize: '$11', lineHeight: '$11' }} style={TIGHT}>
       {title}
     </Line>
     <XStack flexWrap="wrap" justify="center" gap="$4">
@@ -58,6 +63,7 @@ const ClosingCta = ({
       ) : null}
     </XStack>
   </YStack>
-)
+  )
+}
 
 export { ClosingCta }
