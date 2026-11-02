@@ -29,7 +29,7 @@ import { RecordsView, type FieldDefinition } from '@hanzo/data'
   onOpen={openDetail}                            // expand a record
   onEditCommit={(rec, field, value) => save(rec, field, value)}  // inline cell / board edit
   onCreate={createRecord}
-  savedViews={{ views, activeId, onSelect, onSave, onDelete }}    // optional named views
+  savedViews={{ views, activeId, onSelect, onSave, onDelete, deletable }}  // optional named views; deletable(id) keeps built-ins
 />
 ```
 

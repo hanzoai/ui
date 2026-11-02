@@ -30,6 +30,11 @@ export interface SavedViews {
   onSelect: (id: string) => void
   onSave: (view: ViewConfig) => void
   onDelete?: (id: string) => void
+  /**
+   * Whether a view may be deleted: a host's built-in views may not, its saved ones
+   * may. Unset, every view may while there is more than one.
+   */
+  deletable?: (id: string) => boolean
 }
 
 export interface RecordsViewProps {
@@ -196,8 +201,17 @@ function SavedViewsBar({ saved, current, onLoad }: { saved: SavedViews; current:
             hoverStyle={active ? undefined : { bg: tokens.surfaceRaised }}
           >
             <Text fontSize={13} fontWeight={active ? '700' : '500'} style={{ color: active ? tokens.text : tokens.textMuted }}>{v.name}</Text>
-            {saved.onDelete && saved.views.length > 1 ? (
-              <YStack cursor="pointer" onPress={() => saved.onDelete?.(v.id)}><X size={12} color={tokens.textFaint} /></YStack>
+            {saved.onDelete && saved.views.length > 1 && (saved.deletable?.(v.id) ?? true) ? (
+              <YStack
+                {...({ role: 'button', tabIndex: 0, 'aria-label': `Delete view ${v.name}` } as object)}
+                cursor="pointer"
+                onPress={(e: { stopPropagation?: () => void }) => {
+                  e?.stopPropagation?.()
+                  saved.onDelete?.(v.id)
+                }}
+              >
+                <X size={12} color={tokens.textFaint} />
+              </YStack>
             ) : null}
           </XStack>
         )
