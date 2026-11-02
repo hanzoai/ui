@@ -154,6 +154,26 @@ describe('refusalOf', () => {
     expect(refusalOf({ error: { type: 'rate_limit_error', code: 'rate_limit_exceeded', message: 'slow down' } }, 429)).toBeNull()
   })
 
+  it('reads the Free allowance spent, under the one type its server sends it with', () => {
+    const body = { error: { message: 'Usage reached', type: 'insufficient_quota', code: 'allowance_spent', limit: '5h', resets_at: '2026-11-02T17:00:00Z', retry_after: 240 } }
+    expect(refusalOf(body, 429)).toEqual({ status: 429, code: 'allowance_spent', message: 'Usage reached', class: null, resets_at: '2026-11-02T17:00:00Z', actions: [], retry: null })
+    expect(refusalOf(body, 429, '60')?.retry).toBe(60)
+    // Each cap counts under its own type and no other, and a code alone is nothing.
+    expect(refusalOf({ error: { ...body.error, type: 'rate_limit_error' } }, 429)).toBeNull()
+    expect(refusalOf({ error: { type: 'insufficient_quota', code: 'usage_cap_exceeded', message: 'x' } }, 429)).toBeNull()
+    expect(refusalOf({ error: { type: 'invalid_request_error', code: 'free_plan_cap', message: 'x' } }, 429)).toBeNull()
+    expect(refusalOf({ error: { code: 'allowance_spent', message: 'x' } }, 429)).toBeNull()
+    expect(refusalOf({ error: { type: 'insufficient_quota', code: 'quota_exceeded', message: 'x' } }, 429)).toBeNull()
+    expect(refusalOf({ error: { type: 'insufficient_quota', code: 'constructor', message: 'x' } }, 429)).toBeNull()
+  })
+
+  it('believes a Retry-After from none to a day, and nothing else', () => {
+    const body = { error: { type: 'billing_error', code: 'free_plan_cap', message: 'm' } }
+    for (const [after, retry] of [['0', 0], ['60', 60], ['86400', 86400], ['-5', null], ['86401', null], ['1e308', null], ['Wed, 21 Oct 2015 07:28:00 GMT', null], ['', null]] as const) {
+      expect(refusalOf(body, 429, after)?.retry).toBe(retry)
+    }
+  })
+
   it('is null for any other error', () => {
     expect(refusalOf({ error: { type: 'invalid_request_error', message: 'x' } }, 400)).toBeNull()
     expect(refusalOf({ message: 'x' }, 402)).toBeNull()
