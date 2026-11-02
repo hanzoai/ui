@@ -145,6 +145,18 @@ describe('behaviour', () => {
     expect(host.querySelector('input')).toBeNull()
   })
 
+  it('the editor fills its cell and takes its field\'s height, so it sits on its own row', () => {
+    mount({ editable: true })
+    const cell = [...host.querySelectorAll<HTMLElement>('[role="cell"] [class*="_cur-"]')].find((c) => c.textContent === 'Acme')!
+    act(() => cell.click())
+    const field = host.querySelector<HTMLInputElement>('input')!
+    // The editor's own box is a column. A flex-basis of 0 there (`flex={1}`) is a
+    // height of 0 with the field overflowing it: the box a person sees is drawn a
+    // row-height low, over the row beneath, and its outline with it.
+    const box = field.closest('div')!
+    expect(box.className).not.toMatch(/_fb-0px/)
+  })
+
   it('an editable row opens through its named action, not a row press', () => {
     const onOpen = vi.fn()
     mount({ editable: true, onOpen })
