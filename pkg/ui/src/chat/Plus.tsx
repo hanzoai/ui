@@ -10,17 +10,23 @@ import { SizableText, useMedia, XStack } from '@hanzo/gui'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 import {
+  AppWindow,
   Blocks,
   Bot,
   Briefcase,
   Brain,
+  Check,
+  Folder,
+  Globe,
+  Image as ImageIcon,
   Monitor,
   Palette,
   Paperclip,
+  PenTool,
   Plug,
   Plus as PlusIcon,
   ScrollText,
-  Check,
+  Telescope,
 } from '@hanzogui/lucide-icons-2'
 import {
   DropdownMenu,
@@ -105,90 +111,6 @@ export interface PlusProps {
 }
 
 const ICON = 18
-
-function IconFolder() {
-  return (
-    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="rgba(228,228,231,0.9)" stroke="rgba(228,228,231,0.95)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
-    </svg>
-  )
-}
-
-function IconCreateImage() {
-  return (
-    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="hz-img-bg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#38bdf8" />
-          <stop offset="55%" stopColor="#818cf8" />
-          <stop offset="100%" stopColor="#fbbf24" />
-        </linearGradient>
-        <linearGradient id="hz-img-hill" x1="3" y1="13" x2="21" y2="21" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#34d399" />
-          <stop offset="100%" stopColor="#eab308" />
-        </linearGradient>
-      </defs>
-      <rect x="3" y="3" width="18" height="18" rx="4.5" fill="url(#hz-img-bg)" />
-      <circle cx="8.8" cy="8.8" r="2.1" fill="#ffffff" />
-      <path d="M3 16.8 8.6 12c.7-.6 1.7-.6 2.4 0l3.2 2.8 2.3-1.8c.65-.5 1.6-.45 2.2.12L21 15.4V16.5A4.5 4.5 0 0 1 16.5 21h-9A4.5 4.5 0 0 1 3 16.5Z" fill="url(#hz-img-hill)" />
-    </svg>
-  )
-}
-
-function IconBrowserTabs() {
-  return (
-    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="3" y="4" width="18" height="16" rx="3.5" fill="#e4e4e7" />
-      <path d="M3 7.5A3.5 3.5 0 0 1 6.5 4h11A3.5 3.5 0 0 1 21 7.5V9H3V7.5Z" fill="#38bdf8" />
-      <circle cx="6.2" cy="6.5" r="0.9" fill="#ffffff" />
-      <circle cx="9" cy="6.5" r="0.9" fill="#ffffff" />
-    </svg>
-  )
-}
-
-function IconWebGlobe() {
-  return (
-    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M3.6 9h16.8" />
-      <path d="M3.6 15h16.8" />
-      <path d="M11.5 3a15 15 0 0 0 0 18" />
-      <path d="M12.5 3a15 15 0 0 1 0 18" />
-    </svg>
-  )
-}
-
-function IconTelescopeBlue() {
-  return (
-    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="m10.065 12.493-6.18 1.318a.934.934 0 0 1-1.108-.702l-.537-2.15a1.07 1.07 0 0 1 .691-1.265l13.504-4.44" />
-      <path d="m13.56 11.747 4.332-.924" />
-      <path d="m16 21-3.105-6.21" />
-      <path d="M16.485 5.94a2 2 0 0 1 1.455-2.425l1.09-.272a1 1 0 0 1 1.212.727l1.515 6.06a1 1 0 0 1-.727 1.213l-1.09.272a2 2 0 0 1-2.425-1.455z" />
-      <path d="m6.158 8.633 1.114 4.456" />
-      <path d="m8 21 3.105-6.21" />
-      <circle cx="12" cy="13" r="2" />
-    </svg>
-  )
-}
-
-function IconSketchSquiggle() {
-  return (
-    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M4 8.5c2.5-3 6-3.5 7-.5s-5.5 6.5-4.5 9.5c.8 2.4 5-.5 7.5-3s3.2-2.5 4.2-.5c.8 1.6-.2 4 2.3 4" />
-    </svg>
-  )
-}
-
-function IconThinkingBrain() {
-  return (
-    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />
-      <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" />
-      <path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4" />
-    </svg>
-  )
-}
 
 const SHELVES = [
   { key: 'agents', label: phrase('Agents'), note: phrase('Bring specialized agents into this chat'), search: phrase('Search agents'), reading: phrase('Reading agents'), none: phrase('No agents yet'), icon: <Bot size={ICON} /> },
@@ -293,7 +215,7 @@ export function Plus(p: PlusProps) {
             p.library?.()
           }}
         >
-          <Line icon={<IconFolder />} label={t('Add from library')} note={t('Browse and search your files')} />
+          <Line icon={<Folder size={ICON} />} label={t('Add from library')} note={t('Browse and search your files')} />
         </DropdownMenuItem>
       ) : null}
       {p.createImage ? (
@@ -304,7 +226,7 @@ export function Plus(p: PlusProps) {
             p.createImage?.()
           }}
         >
-          <Line icon={<IconCreateImage />} label={t('Create image')} note={t('Visualize anything')} />
+          <Line icon={<ImageIcon size={ICON} color="var(--primary)" />} label={t('Create image')} note={t('Visualize anything')} />
         </DropdownMenuItem>
       ) : null}
       {p.browserTabs ? (
@@ -315,7 +237,7 @@ export function Plus(p: PlusProps) {
             p.browserTabs?.()
           }}
         >
-          <Line icon={<IconBrowserTabs />} label={t('Add browser tabs')} note={t('Ask about your open tabs')} />
+          <Line icon={<AppWindow size={ICON} color="var(--primary)" />} label={t('Add browser tabs')} note={t('Ask about your open tabs')} />
         </DropdownMenuItem>
       ) : null}
       {p.webSearch ? (
@@ -326,7 +248,7 @@ export function Plus(p: PlusProps) {
             p.webSearch?.()
           }}
         >
-          <Line icon={<IconWebGlobe />} label={t('Web search')} note={t('Find real-time news and info')} />
+          <Line icon={<Globe size={ICON} color="var(--primary)" />} label={t('Web search')} note={t('Find real-time news and info')} />
         </DropdownMenuItem>
       ) : null}
       {p.research ? (
@@ -337,7 +259,7 @@ export function Plus(p: PlusProps) {
           aria-checked={p.research.on}
           data-slot="plus-research"
         >
-          <Line icon={<IconTelescopeBlue />} label={t('Deep research')} note={t('Get a detailed report')} on={p.research.on} />
+          <Line icon={<Telescope size={ICON} color="var(--primary)" />} label={t('Deep research')} note={t('Get a detailed report')} on={p.research.on} />
         </DropdownMenuItem>
       ) : null}
       {p.sketch ? (
@@ -348,7 +270,7 @@ export function Plus(p: PlusProps) {
             p.sketch?.()
           }}
         >
-          <Line icon={<IconSketchSquiggle />} label={t('Sketch')} note={t('Draw and attach an image')} />
+          <Line icon={<PenTool size={ICON} color="var(--primary)" />} label={t('Sketch')} note={t('Draw and attach an image')} />
         </DropdownMenuItem>
       ) : null}
       {p.thinking ? (
@@ -359,7 +281,7 @@ export function Plus(p: PlusProps) {
           aria-checked={p.thinking.on}
           data-slot="plus-thinking"
         >
-          <Line icon={<IconThinkingBrain />} label={t('Thinking')} note={t('For detailed answers')} on={p.thinking.on} />
+          <Line icon={<Brain size={ICON} />} label={t('Thinking')} note={t('For detailed answers')} on={p.thinking.on} />
         </DropdownMenuItem>
       ) : null}
       {shelves.length ? <DropdownMenuSeparator /> : null}
