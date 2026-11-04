@@ -1,18 +1,10 @@
 'use client'
 
 /**
- * The composer's `+`: files, then what the conversation works with — agents,
- * skills, connectors, a design system, plugins, a device — then the Research
- * and Memory switches. A row is drawn only when the surface hands it a shelf:
- * a shelf is what is there (`rows`), what picking one does, and the ways to
- * make, manage and find more. A row with nothing behind it is not drawn.
- *
- * On a laptop each shelf opens beside the menu; on a phone it is a page of the
- * same menu, with Back.
- *
- * The menu's own words are the reader's language (@hanzo/i18n `t`); what a
- * shelf holds — its rows, its links, its search and empty words — is the
- * surface's, drawn as given.
+ * The composer's `+`: rich creation & attachment tools (Add photos & files,
+ * Add from library, Create image, Add browser tabs, Web search, Deep research,
+ * Sketch, Thinking), followed by what the conversation works with — agents,
+ * skills, connectors, a design system, plugins, a device — and Memory.
  */
 import { SizableText, useMedia, XStack } from '@hanzo/gui'
 import { phrase } from '@hanzo/i18n'
@@ -28,7 +20,6 @@ import {
   Plug,
   Plus as PlusIcon,
   ScrollText,
-  Telescope,
   Check,
 } from '@hanzogui/lucide-icons-2'
 import {
@@ -88,6 +79,18 @@ export interface Switch {
 export interface PlusProps {
   /** Upload or add files (Ctrl+U). */
   upload?: () => void
+  /** Add from library. */
+  library?: () => void
+  /** Create an image. */
+  createImage?: () => void
+  /** Add or ask about browser tabs. */
+  browserTabs?: () => void
+  /** Search the web. */
+  webSearch?: () => void
+  /** Draw and attach a sketch. */
+  sketch?: () => void
+  /** Toggle extended thinking. */
+  thinking?: Switch
   agents?: Shelf
   skills?: Shelf
   connectors?: Shelf
@@ -101,20 +104,99 @@ export interface PlusProps {
   size?: number
 }
 
-const ICON = 16
+const ICON = 18
 
-/**
- * The shelves, in the menu's order, with their names and marks, and the three
- * sentences a shelf says of itself: its search's name, while it reads, and
- * when it holds nothing. Whole sentences, so a language puts the noun where it goes.
- */
+function IconFolder() {
+  return (
+    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="rgba(228,228,231,0.9)" stroke="rgba(228,228,231,0.95)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
+    </svg>
+  )
+}
+
+function IconCreateImage() {
+  return (
+    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="hz-img-bg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#38bdf8" />
+          <stop offset="55%" stopColor="#818cf8" />
+          <stop offset="100%" stopColor="#fbbf24" />
+        </linearGradient>
+        <linearGradient id="hz-img-hill" x1="3" y1="13" x2="21" y2="21" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#34d399" />
+          <stop offset="100%" stopColor="#eab308" />
+        </linearGradient>
+      </defs>
+      <rect x="3" y="3" width="18" height="18" rx="4.5" fill="url(#hz-img-bg)" />
+      <circle cx="8.8" cy="8.8" r="2.1" fill="#ffffff" />
+      <path d="M3 16.8 8.6 12c.7-.6 1.7-.6 2.4 0l3.2 2.8 2.3-1.8c.65-.5 1.6-.45 2.2.12L21 15.4V16.5A4.5 4.5 0 0 1 16.5 21h-9A4.5 4.5 0 0 1 3 16.5Z" fill="url(#hz-img-hill)" />
+    </svg>
+  )
+}
+
+function IconBrowserTabs() {
+  return (
+    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="16" rx="3.5" fill="#e4e4e7" />
+      <path d="M3 7.5A3.5 3.5 0 0 1 6.5 4h11A3.5 3.5 0 0 1 21 7.5V9H3V7.5Z" fill="#38bdf8" />
+      <circle cx="6.2" cy="6.5" r="0.9" fill="#ffffff" />
+      <circle cx="9" cy="6.5" r="0.9" fill="#ffffff" />
+    </svg>
+  )
+}
+
+function IconWebGlobe() {
+  return (
+    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3.6 9h16.8" />
+      <path d="M3.6 15h16.8" />
+      <path d="M11.5 3a15 15 0 0 0 0 18" />
+      <path d="M12.5 3a15 15 0 0 1 0 18" />
+    </svg>
+  )
+}
+
+function IconTelescopeBlue() {
+  return (
+    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="m10.065 12.493-6.18 1.318a.934.934 0 0 1-1.108-.702l-.537-2.15a1.07 1.07 0 0 1 .691-1.265l13.504-4.44" />
+      <path d="m13.56 11.747 4.332-.924" />
+      <path d="m16 21-3.105-6.21" />
+      <path d="M16.485 5.94a2 2 0 0 1 1.455-2.425l1.09-.272a1 1 0 0 1 1.212.727l1.515 6.06a1 1 0 0 1-.727 1.213l-1.09.272a2 2 0 0 1-2.425-1.455z" />
+      <path d="m6.158 8.633 1.114 4.456" />
+      <path d="m8 21 3.105-6.21" />
+      <circle cx="12" cy="13" r="2" />
+    </svg>
+  )
+}
+
+function IconSketchSquiggle() {
+  return (
+    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 8.5c2.5-3 6-3.5 7-.5s-5.5 6.5-4.5 9.5c.8 2.4 5-.5 7.5-3s3.2-2.5 4.2-.5c.8 1.6-.2 4 2.3 4" />
+    </svg>
+  )
+}
+
+function IconThinkingBrain() {
+  return (
+    <svg width={ICON} height={ICON} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />
+      <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" />
+      <path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4" />
+    </svg>
+  )
+}
+
 const SHELVES = [
-  { key: 'agents', label: phrase('Agents'), search: phrase('Search agents'), reading: phrase('Reading agents'), none: phrase('No agents yet'), icon: <Bot size={ICON} /> },
-  { key: 'skills', label: phrase('Skills'), search: phrase('Search skills'), reading: phrase('Reading skills'), none: phrase('No skills yet'), icon: <ScrollText size={ICON} /> },
-  { key: 'connectors', label: phrase('Connectors'), search: phrase('Search connectors'), reading: phrase('Reading connectors'), none: phrase('No connectors yet'), icon: <Blocks size={ICON} /> },
-  { key: 'design', label: phrase('Design system'), search: phrase('Search design system'), reading: phrase('Reading design system'), none: phrase('No design system yet'), icon: <Palette size={ICON} /> },
-  { key: 'plugins', label: phrase('Plugins'), search: phrase('Search plugins'), reading: phrase('Reading plugins'), none: phrase('No plugins yet'), icon: <Plug size={ICON} /> },
-  { key: 'devices', label: phrase('Devices'), search: phrase('Search devices'), reading: phrase('Reading devices'), none: phrase('No devices yet'), icon: <Monitor size={ICON} /> },
+  { key: 'agents', label: phrase('Agents'), note: phrase('Bring specialized agents into this chat'), search: phrase('Search agents'), reading: phrase('Reading agents'), none: phrase('No agents yet'), icon: <Bot size={ICON} /> },
+  { key: 'skills', label: phrase('Skills'), note: phrase('Use workspace skills and workflows'), search: phrase('Search skills'), reading: phrase('Reading skills'), none: phrase('No skills yet'), icon: <ScrollText size={ICON} /> },
+  { key: 'connectors', label: phrase('Connectors'), note: phrase('Sync connected knowledge sources'), search: phrase('Search connectors'), reading: phrase('Reading connectors'), none: phrase('No connectors yet'), icon: <Blocks size={ICON} /> },
+  { key: 'design', label: phrase('Design system'), note: phrase('Apply brand tokens and UI components'), search: phrase('Search design system'), reading: phrase('Reading design system'), none: phrase('No design system yet'), icon: <Palette size={ICON} /> },
+  { key: 'plugins', label: phrase('Plugins'), note: phrase('Connect external tools and APIs'), search: phrase('Search plugins'), reading: phrase('Reading plugins'), none: phrase('No plugins yet'), icon: <Plug size={ICON} /> },
+  { key: 'devices', label: phrase('Devices'), note: phrase('Run on a connected machine'), search: phrase('Search devices'), reading: phrase('Reading devices'), none: phrase('No devices yet'), icon: <Monitor size={ICON} /> },
 ] as const
 
 type Words = (typeof SHELVES)[number]
@@ -124,13 +206,13 @@ type Key = (typeof SHELVES)[number]['key']
 /** A row's anatomy: its mark, its label, a dim note, and a check when it is on. */
 function Line({ icon, label, note, on, tail }: { icon?: ReactNode; label: string; note?: string; on?: boolean; tail?: ReactNode }) {
   return (
-    <XStack flex={1} minW={0} items="center" gap={10}>
+    <XStack flex={1} minW={0} items="center" gap={10} py={1}>
       {icon ? (
-        <XStack width={ICON} height={ICON} items="center" justify="center" shrink={0} aria-hidden>
+        <XStack width={20} height={20} items="center" justify="center" shrink={0} aria-hidden>
           {icon}
         </XStack>
       ) : null}
-      <SizableText fontSize={14} color="$ink" numberOfLines={1} shrink={0}>
+      <SizableText fontSize={14} fontWeight="500" color="$ink" numberOfLines={1} shrink={0}>
         {label}
       </SizableText>
       {note ? (
@@ -141,7 +223,7 @@ function Line({ icon, label, note, on, tail }: { icon?: ReactNode; label: string
         <XStack flex={1} />
       )}
       {tail}
-      {on ? <Check size={ICON} color="var(--primary)" aria-hidden /> : null}
+      {on ? <Check size={16} color="var(--primary)" aria-hidden /> : null}
     </XStack>
   )
 }
@@ -165,7 +247,7 @@ function Contents({ shelf, words, close }: { shelf: Shelf; words: Words; close: 
         </DropdownMenuItem>
       ))}
       {links.length ? <DropdownMenuSeparator /> : null}
-      {links.map((l, i) => (
+      {links.map((l) => (
         <DropdownMenuItem
           key={l.label}
           onSelect={() => {
@@ -186,14 +268,9 @@ export function Plus(p: PlusProps) {
   const media = useMedia()
   const wide = media.sm
   const [open, setOpen] = useState(false)
-  // The shelf open beside the menu.
   const [sub, setSub] = useState<string | null>(null)
   const close = () => setOpen(false)
   const shelves = useMemo(() => SHELVES.filter((s) => p[s.key as Key]), [p])
-  const switches = [
-    p.research ? { key: 'research', label: t('Research'), icon: <Telescope size={ICON} />, s: p.research } : null,
-    p.memory ? { key: 'memory', label: t('Memory'), icon: <Brain size={ICON} />, s: p.memory } : null,
-  ].filter((x): x is NonNullable<typeof x> => x !== null)
 
   const main = (
     <>
@@ -205,35 +282,117 @@ export function Plus(p: PlusProps) {
             p.upload?.()
           }}
         >
-          <Line icon={<Paperclip size={ICON} />} label={t('Upload or add files')} tail={<DropdownMenuShortcut data-i18n-ltr>Ctrl+U</DropdownMenuShortcut>} />
+          <Line icon={<Paperclip size={ICON} />} label={t('Add photos & files')} note={t('Upload from computer')} tail={<DropdownMenuShortcut data-i18n-ltr>Ctrl+U</DropdownMenuShortcut>} />
         </DropdownMenuItem>
       ) : null}
-      {p.upload && shelves.length ? <DropdownMenuSeparator /> : null}
+      {p.library ? (
+        <DropdownMenuItem
+          data-slot="plus-library"
+          onSelect={() => {
+            close()
+            p.library?.()
+          }}
+        >
+          <Line icon={<IconFolder />} label={t('Add from library')} note={t('Browse and search your files')} />
+        </DropdownMenuItem>
+      ) : null}
+      {p.createImage ? (
+        <DropdownMenuItem
+          data-slot="plus-create-image"
+          onSelect={() => {
+            close()
+            p.createImage?.()
+          }}
+        >
+          <Line icon={<IconCreateImage />} label={t('Create image')} note={t('Visualize anything')} />
+        </DropdownMenuItem>
+      ) : null}
+      {p.browserTabs ? (
+        <DropdownMenuItem
+          data-slot="plus-browser-tabs"
+          onSelect={() => {
+            close()
+            p.browserTabs?.()
+          }}
+        >
+          <Line icon={<IconBrowserTabs />} label={t('Add browser tabs')} note={t('Ask about your open tabs')} />
+        </DropdownMenuItem>
+      ) : null}
+      {p.webSearch ? (
+        <DropdownMenuItem
+          data-slot="plus-web-search"
+          onSelect={() => {
+            close()
+            p.webSearch?.()
+          }}
+        >
+          <Line icon={<IconWebGlobe />} label={t('Web search')} note={t('Find real-time news and info')} />
+        </DropdownMenuItem>
+      ) : null}
+      {p.research ? (
+        <DropdownMenuItem
+          preventCloseOnSelect
+          onSelect={() => p.research!.set(!p.research!.on)}
+          role="menuitemcheckbox"
+          aria-checked={p.research.on}
+          data-slot="plus-research"
+        >
+          <Line icon={<IconTelescopeBlue />} label={t('Deep research')} note={t('Get a detailed report')} on={p.research.on} />
+        </DropdownMenuItem>
+      ) : null}
+      {p.sketch ? (
+        <DropdownMenuItem
+          data-slot="plus-sketch"
+          onSelect={() => {
+            close()
+            p.sketch?.()
+          }}
+        >
+          <Line icon={<IconSketchSquiggle />} label={t('Sketch')} note={t('Draw and attach an image')} />
+        </DropdownMenuItem>
+      ) : null}
+      {p.thinking ? (
+        <DropdownMenuItem
+          preventCloseOnSelect
+          onSelect={() => p.thinking!.set(!p.thinking!.on)}
+          role="menuitemcheckbox"
+          aria-checked={p.thinking.on}
+          data-slot="plus-thinking"
+        >
+          <Line icon={<IconThinkingBrain />} label={t('Thinking')} note={t('For detailed answers')} on={p.thinking.on} />
+        </DropdownMenuItem>
+      ) : null}
+      {shelves.length ? <DropdownMenuSeparator /> : null}
       {shelves.map((s) =>
         wide ? (
-          <DropdownMenuSub key={s.key} open={sub === s.key} onOpenChange={(o) => setSub(o ? s.key : sub === s.key ? null : sub)}>
+          <DropdownMenuSub key={s.key} open={sub === s.key} onOpenChange={(o: boolean) => setSub(o ? s.key : sub === s.key ? null : sub)}>
             <DropdownMenuSubTrigger data-slot={`plus-${s.key}`} onPress={() => setSub(s.key)}>
-              <Line icon={s.icon} label={t(s.label)} />
+              <Line icon={s.icon} label={t(s.label)} note={t(s.note)} />
             </DropdownMenuSubTrigger>
-            {/* Drawn only while open: a closed shelf stays laid out under the menu, and its rows would take its clicks. */}
             {sub === s.key ? (
-            <DropdownMenuSubContent minW={200} maxW={340} maxH={420} pointerEvents="auto" style={{ overflowY: "auto" }}>
-              <Contents shelf={p[s.key as Key]!} words={s} close={close} />
-            </DropdownMenuSubContent>
+              <DropdownMenuSubContent minW={240} maxW={360} maxH={420} pointerEvents="auto" style={{ overflowY: 'auto' }}>
+                <Contents shelf={p[s.key as Key]!} words={s} close={close} />
+              </DropdownMenuSubContent>
             ) : null}
           </DropdownMenuSub>
         ) : (
           <DropdownMenuItem key={s.key} page={s.key} data-slot={`plus-${s.key}`}>
-            <Line icon={s.icon} label={t(s.label)} />
+            <Line icon={s.icon} label={t(s.label)} note={t(s.note)} />
           </DropdownMenuItem>
         ),
       )}
-      {switches.length && (p.upload || shelves.length) ? <DropdownMenuSeparator /> : null}
-      {switches.map((w) => (
-        <DropdownMenuItem key={w.key} preventCloseOnSelect onSelect={() => w.s.set(!w.s.on)} role={'menuitemcheckbox' as never} aria-checked={w.s.on} data-slot={`plus-${w.key}`}>
-          <Line icon={w.icon} label={w.label} on={w.s.on} />
+      {p.memory ? <DropdownMenuSeparator /> : null}
+      {p.memory ? (
+        <DropdownMenuItem
+          preventCloseOnSelect
+          onSelect={() => p.memory!.set(!p.memory!.on)}
+          role="menuitemcheckbox"
+          aria-checked={p.memory.on}
+          data-slot="plus-memory"
+        >
+          <Line icon={<Brain size={ICON} />} label={t('Memory')} note={t('Remember context across chats')} on={p.memory.on} />
         </DropdownMenuItem>
-      ))}
+      ) : null}
     </>
   )
 
@@ -259,7 +418,7 @@ export function Plus(p: PlusProps) {
           <PlusIcon size={GLYPH} strokeWidth={STROKE} color="currentColor" />
         </XStack>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" minW={240} data-slot="plus-menu">
+      <DropdownMenuContent align="start" minW={360} maxW={440} data-slot="plus-menu">
         {wide ? (
           main
         ) : (
