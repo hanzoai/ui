@@ -66,7 +66,7 @@ describe('Step', () => {
   it('marks a failed step with an edge, never a colour', () => {
     // `product/tone.ts` marks `stopped` with a border, so it survives a brand
     // that retunes the ramp.
-    expect(html(<Step name="s" status="error" />)).toContain('_btc-borderColor')
+    expect(html(<Step name="s" status="error" />)).toContain('_btc-faint')
     expect(html(<Step name="s" status="done" />)).toContain('_btc-borderColor')
   })
 
