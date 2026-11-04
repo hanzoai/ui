@@ -348,7 +348,7 @@ export function Composer({
   const [closed, setClosed] = useState<string | null>(null)
   const typed = trigger(value)
   const shelf = typed ? (typed.char === '/' ? slash : at) : undefined
-  const listed = shelf && typed && closed !== value ? shelf.rows.filter((r) => r.label.toLowerCase().includes(typed.query)).slice(0, 8) : null
+  const listed = shelf && typed && closed !== value ? shelf.rows.filter((r) => r.label.toLowerCase().includes(typed.query) || (typeof r.note === 'string' && r.note.toLowerCase().includes(typed.query))) : null
   const row = Math.min(index, Math.max(0, (listed?.length ?? 1) - 1))
   useEffect(() => setIndex(0), [typed?.char, typed?.query])
   const pick = (id: string) => {
