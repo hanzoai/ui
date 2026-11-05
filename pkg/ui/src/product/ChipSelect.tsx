@@ -630,7 +630,7 @@ export function ChipSelect<T extends ChipItem>({
           <YStack
             {...slot('chip-select-list')}
             id={listId}
-            role="listbox"
+            {...({ role: 'listbox' } as object)}
             aria-label={name}
             gap="$0"
           >
@@ -654,7 +654,7 @@ export function ChipSelect<T extends ChipItem>({
                   cursor={item.disabled ? 'default' : 'pointer'}
                   opacity={item.disabled ? 0.5 : 1}
                   bg={on ? '$raised' : 'transparent'}
-                  onHoverIn={() => setAt(i)}
+                  {...({ onHoverIn: () => setAt(i) } as object)}
                   onPress={() => choose(item)}
                 >
                   {item.icon ? (

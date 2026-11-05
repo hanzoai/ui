@@ -1,0 +1,78 @@
+---
+title: 排版
+description: Zen 与 Zen Mono，每个组件都在读的一架字号阶梯，以及一个装你没写过的文字的正文容器。
+---
+
+## 字体
+
+Zen 是阅读用的字体；Zen Mono 给代码、标识符和一切数字。两者都随包交付，并绑在两条按角色而不是按字体命名的自定义属性上：
+
+```css
+--font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+--font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
+```
+
+组件读的是这两个变量，从不读一个字体族的名字。想用自己字体的宿主绑定 `--font-sans-provided`；包自己的绑定坐在一个层叠层里，宿主那条没有层的声明就会胜出。什么都不绑的宿主得到的是 Zen。
+
+<Preview>
+  <YStack gap="$2">
+    <Text fontSize="$8" fontWeight="600">The quick brown fox jumps over the lazy dog</Text>
+    <Text fontSize="$4" color="$color11">Zen at the section and body rungs, tracked and leaded for the size.</Text>
+    <Text fontFamily="$mono" fontSize="$3">pnpm add @hanzo/ui — Zen Mono for code and numbers 0123456789</Text>
+  </YStack>
+</Preview>
+
+## 阶梯
+
+字号阶梯只有一架，每个组件都在上面。`Text` 接受 `fontSize="$n"`，并带上那一档的行距和字距；标题和 `Paragraph` 接受 `size="$n"`，把这三样一起定下。
+
+```tsx
+import { H1, H2, Paragraph, SizableText, Text } from '@hanzo/ui'
+
+<H1>A page title</H1>
+<H2 size="$6">A section</H2>
+<Paragraph size="$4">Body copy at the base rung.</Paragraph>
+<SizableText size="$2" color="$color11">A label.</SizableText>
+<Text fontFamily="$mono" fontSize="$2">an identifier</Text>
+```
+
+永远不要写数字。`fontSize={14}` 钉死在 14；`fontSize="$3"` 今天是 14，明天是一个人的字号比例把它做成的样子，因为这一档通过 `var(--text-base)` 解析，旋钮再去乘那条坡道。表在 [主题](/docs/theming) 那一页。
+
+## 正文
+
+写好的内容——CMS 字段、一份 Markdown、一块的正文——到来时是裸标签。里面没有任何东西能带 prop，所以样式必须从一个祖先来，按标签往下够。`ApplyTypography` 就是那个祖先。
+
+```tsx
+import { ApplyTypography } from '@hanzo/ui'
+
+<ApplyTypography size="base">
+  <h2>Install</h2>
+  <p>
+    Add the package, then wrap the app once at the root. The full guide is
+    at <a href="https://ui.hanzo.ai">ui.hanzo.ai</a>.
+  </p>
+  <pre>
+    <code>{"pnpm add @hanzo/ui\npnpm dev"}</code>
+  </pre>
+  <ol>
+    <li>
+      Render <strong>Hanzo</strong> once, around the whole tree.
+    </li>
+    <li>
+      Import <code>Button</code> or any other component from the same
+      package.
+    </li>
+    <li>Pass it the props its type declares.</li>
+  </ol>
+  <blockquote>
+    Components read their colours from the theme, so a token changed there
+    changes every surface at once.
+  </blockquote>
+</ApplyTypography>
+```
+
+<Preview>
+  <ProseBlocks />
+</Preview>
+
+`size` 默认是 `responsive`——唯一会跟着视口走的那一档——或者是 `sm`、`base`、`lg`、`xl`，这些停在原地，因为调用者选定的尺寸是一个决定，不是一条建议。`asTag` 挑选元素，可以是 `div`、`section`、`nav`、`main`、`article`、`aside` 中的任何一个。规则住在样式表的 `.hz-prose` 下面，带了命名空间，这样一份正从别的排版插件上搬到一半的站点，不会有两张表抢同一个选择器。[正文](/ui/prose) 那一页画出每一档，以及套在容器里的容器。

@@ -39,7 +39,12 @@ export type ToastInput = {
 }
 
 /** A toast on screen: an input with its defaults resolved, and an id. */
-export type Toast = ToastInput & { id: number; kind: ToastKind; durationMs: number; showIcon: boolean }
+export type Toast = ToastInput & {
+  id: number
+  kind: ToastKind
+  durationMs: number
+  showIcon: boolean
+}
 
 /**
  * What `useToast()` answers. Exported because a consumer that passes the api
@@ -127,7 +132,15 @@ function ToastViewport({ toasts, dismiss }: { toasts: Toast[]; dismiss: (id: num
   useEffect(() => setMounted(true), [])
   if (!mounted || typeof document === 'undefined') return null
   return createPortal(
-    <div style={{ position: 'fixed', top: 16, insetInlineEnd: 16, zIndex: 100000, pointerEvents: 'none' }}>
+    <div
+      style={{
+        position: 'fixed',
+        top: 16,
+        insetInlineEnd: 16,
+        zIndex: 100000,
+        pointerEvents: 'none',
+      }}
+    >
       <YStack gap="$2" items="flex-end">
         {toasts.map((t) => (
           <YStack key={t.id} pointerEvents="auto">
@@ -136,7 +149,7 @@ function ToastViewport({ toasts, dismiss }: { toasts: Toast[]; dismiss: (id: num
         ))}
       </YStack>
     </div>,
-    document.body,
+    document.body
   )
 }
 
@@ -161,19 +174,31 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       const kind = input.kind ?? 'info'
       const durationMs = input.durationMs ?? DURATION[kind]
       const showIcon = input.showIcon ?? true
-      track({ component: 'Toast', action: kind === 'error' ? 'error' : 'view', id: input.title, value: kind })
+      track({
+        component: 'Toast',
+        action: kind === 'error' ? 'error' : 'view',
+        id: input.title,
+        value: kind,
+      })
       setToasts((ts) => [
         ...ts,
-        { id, kind, title: input.title, description: input.description, durationMs, showIcon },
+        {
+          id,
+          kind,
+          title: input.title,
+          description: input.description,
+          durationMs,
+          showIcon,
+        },
       ])
       if (durationMs > 0) {
         timers.current.set(
           id,
-          setTimeout(() => dismiss(id), durationMs),
+          setTimeout(() => dismiss(id), durationMs)
         )
       }
     },
-    [dismiss, track],
+    [dismiss, track]
   )
 
   // Clear any pending timers on unmount.
@@ -195,7 +220,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       info: (title, description) => toast({ title, description, kind: 'info' }),
       dismiss,
     }),
-    [toast, dismiss],
+    [toast, dismiss]
   )
 
   return (

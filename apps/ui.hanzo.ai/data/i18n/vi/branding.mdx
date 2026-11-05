@@ -1,0 +1,80 @@
+---
+title: Thương hiệu
+description: Thương hiệu được quyết một lần, lúc build, và tới mọi bề mặt như một giá trị. Không gì trong thành phần gọi tên một nhà.
+---
+
+Không gì trong thư viện mang một thương hiệu. Thành phần đọc một token, token
+đọc một thuộc tính tùy biến, và thuộc tính là bất cứ điều gì bản dựng đã khai
+báo. Một trang, một dấu, một tên, một màu và một mặt chữ mỗi thứ là một giá trị
+ở một chỗ, nên bản dựng cho tổ chức khác không mang gì của tổ chức này.
+
+## Trang này
+
+Tài liệu này được dựng từ biến môi trường `BRAND`. `brand.ts` đọc nó một lần
+rồi công bố tên, tổ chức, dấu dưới dạng SVG nội tuyến, favicon dưới dạng URI
+dữ liệu suy từ dấu ấy, các liên kết, và liên kết framework khi thương hiệu có.
+
+```bash
+BRAND=lux pnpm build
+```
+
+Mọi chuỗi trên trang đến từ mô-đun ấy — đầu trang, chân trang, tiêu đề, và
+các trang bạn đang đọc, vốn viết `brand.name` chứ không viết một tên. Mẫu mã
+được viết lại thành gói mà bản dựng đang ghi tài liệu, và danh mục bỏ mọi
+mô-đun hoặc thành viên mang tên nhà khỏi bản dựng cho thương hiệu khác, nên
+`index.html` của thương hiệu kia không còn dấu vết của thương hiệu này.
+
+## Bản sắc
+
+`@hanzo/ui/product/pure` công bố bộ thương hiệu mà các dấu được vẽ từ đó —
+`HANZO`, `LUX`, `ZOO`, `PARS` — và `resolveBrand`, trả một id bằng bản sắc,
+lùi về nhà khi không khớp.
+
+```ts
+import { BRANDS, resolveBrand, type BrandIdentity } from '@hanzo/ui/product/pure'
+
+const brand: BrandIdentity = resolveBrand('lux')
+brand.name     // 'Lux'
+brand.viewBox  // '0 0 100 100'
+brand.content  // the mark's inner SVG, drawn in currentColor
+brand.href     // 'https://lux.network'
+```
+
+Các dấu dùng `currentColor`, nên một tài sản phục vụ cả hai chủ đề; dấu mang
+màu tô riêng nói `fullColor`. Logo động ở lớp sản phẩm nhận bản sắc như một prop:
+
+```tsx
+import { AnimatedLogo } from '@hanzo/ui/product'
+import { LUX } from '@hanzo/ui/product/pure'
+
+<AnimatedLogo surface="Cloud" brand={LUX} />
+```
+
+## Màu và mặt chữ
+
+Một thương hiệu chỉnh lại bản sắc bằng cách khai báo cùng các thuộc tính tùy
+biến ấy muộn hơn trong tầng lớp. Hai trong số đó cũng là núm diện mạo mà một
+người kéo, và ý kiến hẹp nhất thắng từng trục một — cài đặt, rồi tổ chức, rồi
+người.
+
+```css
+:root {
+  --primary: #808000;
+  --accent: #808000;
+  --font-sans-provided: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+`--font-sans-provided` chứ không phải `--font-sans`: sự buộc của gói ngồi trong
+một layer của tầng lớp để khai báo không layer từ host thắng dù độ đặc hiệu thế
+nào, và đó là điều khiến mặt chữ của host là mặt được vẽ.
+
+Lớp tổ chức của `@hanzo/appearance` mang cùng các núm ấy từ một hàng trên máy
+chủ. `current({ install, org, orgId })` phân giải người trong một tổ chức trên
+một thiết bị nên thấy gì, và `bootScript({ org, base })` nướng mặc định của bản
+cài và của tổ chức vào script đầu để lần vẽ đầu đã đúng thương hiệu.
+
+## Phần còn lại
+
+Gói giữ tên npm của nó, vì việc của mẫu mã là được dán. Tên ấy và framework nó
+được dựng trên là hai thứ một bản dựng cho thương hiệu khác vẫn nói.

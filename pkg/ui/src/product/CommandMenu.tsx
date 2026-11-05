@@ -38,11 +38,11 @@ import { ChevronRight, Search } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 
 import { score, step } from '../backends/gui/command.logic'
+import { mirror } from '../backends/gui/dir'
 import { Kbd } from '../backends/gui/kbd'
 import { Shortcut, type ShortcutKeys } from '../backends/gui/shortcut'
 import { slot } from '../backends/gui/slot'
 import { usePane } from './DetailPane'
-import { mirror } from '../backends/gui/dir'
 
 export type CommandMenuItem = {
   id: string
@@ -88,10 +88,24 @@ export type CommandMenuProps = {
  * sits at `pad + inset` from the edge and the text at `text`, the field's and
  * the headings' as much as the rows'.
  */
-export const COMMAND = { bar: 52, pad: 8, inset: 8, icon: 16, gap: 12, header: 28, row: 36, phone: 44, empty: 64 } as const
+export const COMMAND = {
+  bar: 52,
+  pad: 8,
+  inset: 8,
+  icon: 16,
+  gap: 12,
+  header: 28,
+  row: 36,
+  phone: 44,
+  empty: 64,
+} as const
 const TEXT = COMMAND.inset + COMMAND.icon + COMMAND.gap
 
-type Key = { key: string; preventDefault: () => void; stopPropagation: () => void }
+type Key = {
+  key: string
+  preventDefault: () => void
+  stopPropagation: () => void
+}
 
 export function CommandMenu({
   groups,
@@ -124,12 +138,10 @@ export function CommandMenu({
       groups
         .map((g) => ({
           ...g,
-          items: g.items.filter(
-            (it) => score(it.label, query, [...(it.keywords ?? []), ...(it.contextual ? [it.contextual] : [])]) > 0,
-          ),
+          items: g.items.filter((it) => score(it.label, query, [...(it.keywords ?? []), ...(it.contextual ? [it.contextual] : [])]) > 0),
         }))
         .filter((g) => g.items.length > 0),
-    [groups, query],
+    [groups, query]
   )
   const reachable = useMemo(() => shown.flatMap((g) => g.items.filter((it) => !it.disabled)), [shown])
   const [active, setActive] = useState<string | undefined>(undefined)
@@ -182,16 +194,7 @@ export function CommandMenu({
 
   return (
     <YStack {...slot('command-menu')} shrink={1} minH={0}>
-      <XStack
-        {...slot('command-menu-bar')}
-        height={COMMAND.bar}
-        shrink={0}
-        items="center"
-        gap={COMMAND.gap}
-        px={COMMAND.pad + COMMAND.inset}
-        borderBottomWidth={1}
-        borderColor="$borderColor"
-      >
+      <XStack {...slot('command-menu-bar')} height={COMMAND.bar} shrink={0} items="center" gap={COMMAND.gap} px={COMMAND.pad + COMMAND.inset} borderBottomWidth={1} borderColor="$borderColor">
         <Search size={COMMAND.icon} color="$hint" aria-hidden />
         <Input
           ref={field as never}
@@ -252,7 +255,7 @@ export function CommandMenu({
                     {g.label}
                   </Text>
                 </XStack>
-                <YStack role="listbox" aria-labelledby={head}>
+                <YStack {...({ role: 'listbox' } as object)} aria-labelledby={head}>
                   {g.items.map((it, i) => {
                     const on = current?.id === it.id
                     return (
@@ -260,7 +263,11 @@ export function CommandMenu({
                         key={it.id}
                         id={optionId(it.id)}
                         {...slot('command-menu-item')}
-                        {...({ role: 'option', 'aria-selected': on, 'aria-disabled': it.disabled || undefined } as object)}
+                        {...({
+                          role: 'option',
+                          'aria-selected': on,
+                          'aria-disabled': it.disabled || undefined,
+                        } as object)}
                         data-active={on ? '' : undefined}
                         items="center"
                         gap={COMMAND.gap}
@@ -271,7 +278,7 @@ export function CommandMenu({
                         cursor={it.disabled ? 'default' : 'pointer'}
                         opacity={it.disabled ? 0.5 : 1}
                         bg={on ? '$hover' : 'transparent'}
-                        onHoverIn={it.disabled ? undefined : () => setActive(it.id)}
+                        {...({ onHoverIn: it.disabled ? undefined : () => setActive(it.id) } as object)}
                         onPress={it.disabled ? undefined : it.onSelect}
                         style={i === 0 ? { scrollMarginTop: COMMAND.header + COMMAND.pad } : undefined}
                       >

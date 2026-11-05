@@ -1,0 +1,59 @@
+---
+title: ブランディング
+description: ブランドはビルドのときに一度決まり、値としてすべての面へ届く。コンポーネントの中で、本家の名を書いているところはない。
+---
+
+ライブラリはブランドを持ちません。コンポーネントはトークンを読み、トークンはカスタムプロパティを読み、プロパティはビルドが宣言したものです。サイト、マーク、名前、色、書体は、それぞれ一箇所の一つの値です。別の組織向けのビルドは、こちらのものを何も持ちません。
+
+## このサイト
+
+このドキュメントは、環境変数 `BRAND` から組まれます。`brand.ts` はそれを一度読み、名前、組織、インライン SVG としてのマーク、そのマークから導いた data URI のファビコン、リンク、そしてブランドが持っているときのフレームワークのリンクを公開します。
+
+```bash
+BRAND=lux pnpm build
+```
+
+ページ上の文字列は、どれもそのモジュールから来ます。ヘッダー、フッター、タイトル、そしていま読んでいるページです。ページは名前ではなく `brand.name` と書きます。コードの見本は、そのビルドが説明するパッケージへ書き換わります。カタログは、本家の名前を持つモジュールやメンバーを、別ブランド向けのビルドから落とします。相手のブランドの `index.html` には、こちらの痕跡が残りません。
+
+## 正体
+
+`@hanzo/ui/product/pure` は、マークが描かれる元のブランドセット、`HANZO`、`LUX`、`ZOO`、`PARS` と、id に正体を返す `resolveBrand` を公開します。見つからなければ本家へ戻ります。
+
+```ts
+import { BRANDS, resolveBrand, type BrandIdentity } from '@hanzo/ui/product/pure'
+
+const brand: BrandIdentity = resolveBrand('lux')
+brand.name     // 'Lux'
+brand.viewBox  // '0 0 100 100'
+brand.content  // the mark's inner SVG, drawn in currentColor
+brand.href     // 'https://lux.network'
+```
+
+マークは `currentColor` を使うので、一つのアセットが両方のテーマに使えます。自分の塗りを持つマークは `fullColor` と言います。プロダクト層のアニメーションするロゴは、正体を prop として取ります。
+
+```tsx
+import { AnimatedLogo } from '@hanzo/ui/product'
+import { LUX } from '@hanzo/ui/product/pure'
+
+<AnimatedLogo surface="Cloud" brand={LUX} />
+```
+
+## 色と書体
+
+ブランドは、カスケードのあとで同じカスタムプロパティを宣言して、正体を調整します。そのうち二つは、人が動かす見た目のノブでもあります。いちばん狭い意見が、軸ごとに勝ちます。インストール、次に組織、次に人です。
+
+```css
+:root {
+  --primary: #808000;
+  --accent: #808000;
+  --font-sans-provided: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+`--font-sans` ではなく `--font-sans-provided` です。パッケージ自身の結びつきはカスケードレイヤーの中にあるので、ホストからのレイヤーのない宣言は、詳細度にかかわらず勝ちます。ホストの書体が、実際に塗られる書体になるのはそのためです。
+
+`@hanzo/appearance` の組織の層は、サーバー上の一行から同じノブを運びます。`current({ install, org, orgId })` は、あるデバイス上の組織にいる人が見るべきものを解決します。`bootScript({ org, base })` は、インストールと組織の既定を head のスクリプトへ焼き込むので、最初の描画からすでにブランドの上にいます。
+
+## 残るもの
+
+パッケージは npm の名前を保ちます。コードの見本の仕事は、貼り付けられることです。その名前と、それが組まれているフレームワークの二つは、別ブランド向けのビルドでも、まだ言われます。

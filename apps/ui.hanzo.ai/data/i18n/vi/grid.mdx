@@ -1,0 +1,139 @@
+---
+title: Lưới
+description: Một lưới CSS thật mà các rãnh đến từ khung chứa, không từ con. Một prop cho cột, và không có điểm ngắt.
+---
+
+Một lưới xếp tay — mỗi con ở `width: calc(25% - 7.5px)` — chỉ đều khi mọi con
+đồng ý, và một từ dài làm hàng răng cưa. Không gì sửa được bằng cách xoay con
+số. Ở đây cha mẹ khai báo rãnh một lần và con không có tiếng nói: cột đều là
+cấu trúc, và không con nào nới rãnh của mình được.
+
+```tsx
+import { Cell, Grid } from '@hanzo/ui/grid'
+```
+
+`Grid` ở đường con riêng vì nó dựng một `div` với `display: grid`, và cả hai
+đều không có trên React Native. API được đặt tên bằng từ của lưới CSS —
+`columns` và `rows` là danh sách rãnh, `Cell` đặt và trải — nên một máy lưới
+native đổi tệp ấy, không đổi chỗ gọi.
+
+## Cột
+
+`columns` nhận mọi cách viết của một danh sách rãnh: một số đếm, một danh sách,
+hoặc danh sách rãnh viết sẵn.
+
+```tsx
+<Grid columns={3} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={3} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+  </Grid>
+</Preview>
+
+Một số đếm thành `repeat(3, minmax(0, 1fr))` chứ không phải `1fr`, vì `1fr`
+một mình nghĩa là `minmax(auto, 1fr)` và `auto` chặn rãnh ở nội dung — một
+chuỗi không gãy rồi đẩy cột của nó rộng hơn. Đó là hàng răng cưa mà thành phần
+này tồn tại để ngăn, nên cách viết dài hơn chính là điểm.
+
+```tsx
+<Grid columns={['2fr', '1fr']} gap="$3">
+  <Tile>main</Tile>
+  <Tile>aside</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={['2fr', '1fr']} gap="$3">
+    <Tile>main</Tile>
+    <Tile>aside</Tile>
+  </Grid>
+</Preview>
+
+Một số trong danh sách là pixel; còn lại đã là kích thước rãnh.
+
+## Nhiều đến mức vừa
+
+Dạng đáp ứng là một giá trị của `columns`, không phải prop thứ hai, và trong
+đó không có điểm ngắt. `min` là chỗ hẹp nhất một cột được phép trước khi lưới
+bỏ một cột, và `max` chặn số đếm.
+
+```tsx
+<Grid columns={{ min: 160, max: 4 }} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Tile>5</Tile>
+  <Tile>6</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={{ min: 160, max: 4 }} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Tile>5</Tile>
+    <Tile>6</Tile>
+  </Grid>
+</Preview>
+
+Đổi cỡ cửa sổ: số đếm theo cột mà lưới đang nằm, nên cùng một khối vẫn đúng
+bên trong một thanh bên nó chưa từng thấy. `min` được viết là
+`min(160px, 100%)` chứ không phải `160px` trần, nên điện thoại hẹp hơn sàn
+được một rãnh đầy chiều rộng, thay vì cuộn ngang. `max` gập vào cùng sàn ấy —
+một phần M của hàng, trừ khoảng — nên trần không tốn gì trên màn nhỏ.
+
+## Ô
+
+Một con thường không cần lớp bọc. `Cell` tồn tại để trải hoặc để đặt: một số
+trải bấy nhiêu rãnh, một chuỗi là `grid-column` đúng như đã viết.
+
+```tsx
+<Grid columns={4} gap="$3">
+  <Cell col={2}><Tile>col=2</Tile></Cell>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={4} gap="$3">
+    <Cell col={2}><Tile>col=2</Tile></Cell>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+  </Grid>
+</Preview>
+
+`row` cũng vậy, xuống trang. `rows` trên lưới định cỡ các rãnh hàng; không có
+nó thì hàng co theo nội dung.
+
+## Khoảng
+
+`gap` là một token khoảng cách hoặc một số pixel thô. Token đọc thang trong
+tài liệu — `gap="$4"` là `var(--space-4)` — nên người kéo mật độ trong bảng
+diện mạo kéo mọi lưới theo. Một số phân giải lúc dựng thì khóa lúc dựng.
+
+## Chính danh sách rãnh
+
+`tracks(columns, gap)` được xuất, vì đó là toàn bộ quyết định của thành phần:
+mọi cách viết của `columns` tới một danh sách rãnh nó muốn nói, với hai bất
+biến ở trên nằm bên trong.
+
+```ts
+import { tracks } from '@hanzo/ui/grid'
+
+tracks(3)                       // 'repeat(3, minmax(0, 1fr))'
+tracks({ min: 240 })            // 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))'
+```

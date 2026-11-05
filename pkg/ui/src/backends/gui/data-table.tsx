@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo, useState, type ReactNode } from 'react'
 /**
  * DataTable — a sortable, filterable, paginated grid over an array of rows,
  * driven by a column-definition array exactly the way the upstream guide's
@@ -23,17 +24,11 @@
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown } from '@hanzogui/lucide-icons-2'
-import { useMemo, useState, type ReactNode } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 import { Cell, Grid } from '../../grid'
 import { Button } from './button'
 import { Checkbox } from './checkbox'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from './dropdown-menu'
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from './dropdown-menu'
 import { ink } from './ink'
 import { Input } from './input'
 import { slot } from './slot'
@@ -131,21 +126,14 @@ function DataTableColumnHeader<TData>({ column, title, className }: DataTableCol
 
   const sorted = column.getIsSorted()
   return (
-    <Button
-      {...slot('data-table-column-header')}
-      variant="ghost"
-      size="sm"
-      className={className}
-      onClick={() => column.toggleSorting(sorted === 'asc')}
-    >
+    <Button {...slot('data-table-column-header')} variant="ghost" size="sm" className={className} onClick={() => column.toggleSorting(sorted === 'asc')}>
       {title}
       {sorted === 'desc' ? <ArrowDown size={14} /> : sorted === 'asc' ? <ArrowUp size={14} /> : <ArrowUpDown size={14} />}
     </Button>
   )
 }
 
-const cellValue = <TData,>(column: DataTableColumnDef<TData>, row: TData): unknown =>
-  column.accessorKey !== undefined ? row[column.accessorKey] : undefined
+const cellValue = <TData,>(column: DataTableColumnDef<TData>, row: TData): unknown => (column.accessorKey !== undefined ? row[column.accessorKey] : undefined)
 
 const sortKey = <TData,>(column: DataTableColumnDef<TData>, row: TData): string | number => {
   if (column.sortingValue) return column.sortingValue(row)
@@ -153,14 +141,11 @@ const sortKey = <TData,>(column: DataTableColumnDef<TData>, row: TData): string 
   return typeof v === 'number' ? v : String(v ?? '')
 }
 
-const filterText = <TData,>(column: DataTableColumnDef<TData>, row: TData): string =>
-  column.filterValue ? column.filterValue(row) : String(cellValue(column, row) ?? '')
+const filterText = <TData,>(column: DataTableColumnDef<TData>, row: TData): string => (column.filterValue ? column.filterValue(row) : String(cellValue(column, row) ?? ''))
 
-const track = (width: number | string | undefined): string =>
-  width === undefined ? '1fr' : typeof width === 'number' ? `${width}px` : width
+const track = (width: number | string | undefined): string => (width === undefined ? '1fr' : typeof width === 'number' ? `${width}px` : width)
 
-const justify = (a: DataTableAlign | undefined): 'flex-start' | 'center' | 'flex-end' =>
-  a === 'right' ? 'flex-end' : a === 'center' ? 'center' : 'flex-start'
+const justify = (a: DataTableAlign | undefined): 'flex-start' | 'center' | 'flex-end' => (a === 'right' ? 'flex-end' : a === 'center' ? 'center' : 'flex-start')
 
 type Entry<TData> = { row: TData; id: string }
 
@@ -182,8 +167,12 @@ function DataTable<TData>({
   const [pageIndex, setPageIndex] = useState(0)
 
   const withIds = useMemo<Entry<TData>[]>(
-    () => data.map((row, i) => ({ row, id: getRowId ? getRowId(row, i) : String(i) })),
-    [data, getRowId],
+    () =>
+      data.map((row, i) => ({
+        row,
+        id: getRowId ? getRowId(row, i) : String(i),
+      })),
+    [data, getRowId]
   )
 
   const filterColumn = filterColumnId ? columns.find((c) => c.id === filterColumnId) : undefined
@@ -198,7 +187,10 @@ function DataTable<TData>({
     if (!sorting) return filtered
     const column = columns.find((c) => c.id === sorting.id)
     if (!column) return filtered
-    const keyed = filtered.map((entry) => ({ entry, key: sortKey(column, entry.row) }))
+    const keyed = filtered.map((entry) => ({
+      entry,
+      key: sortKey(column, entry.row),
+    }))
     keyed.sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))
     if (sorting.desc) keyed.reverse()
     return keyed.map((k) => k.entry)
@@ -245,7 +237,10 @@ function DataTable<TData>({
     getCanHide: () => column.enableHiding !== false,
     getIsVisible: () => hidden[column.id] !== true,
     toggleVisibility: (visible) =>
-      setHidden((h) => ({ ...h, [column.id]: visible === undefined ? h[column.id] !== true : !visible })),
+      setHidden((h) => ({
+        ...h,
+        [column.id]: visible === undefined ? h[column.id] !== true : !visible,
+      })),
   })
 
   const pageIds = paged.map((e) => e.id)
@@ -260,7 +255,9 @@ function DataTable<TData>({
     getAllColumns: () => columns.map(columnApi),
     getRowModel: () => ({ rows: paged.map(rowApi) }),
     getFilteredRowModel: () => ({ rows: filtered.map(rowApi) }),
-    getFilteredSelectedRowModel: () => ({ rows: filtered.filter((e) => selected[e.id]).map(rowApi) }),
+    getFilteredSelectedRowModel: () => ({
+      rows: filtered.filter((e) => selected[e.id]).map(rowApi),
+    }),
     getIsAllPageRowsSelected: () => allPageSelected,
     getIsSomePageRowsSelected: () => somePageSelected,
     toggleAllPageRowsSelected: (value) => toggleAllPage(value ?? !allPageSelected),
@@ -285,7 +282,11 @@ function DataTable<TData>({
         />
       )
     if (typeof column.header === 'function') return column.header({ column: columnApi(column) })
-    return ink(column.header ?? column.id, SizableText, { size: '$2', fontWeight: '600', color: '$quiet' })
+    return ink(column.header ?? column.id, SizableText, {
+      size: '$2',
+      fontWeight: '600',
+      color: '$quiet',
+    })
   }
 
   const cellContent = (column: DataTableColumnDef<TData>, entry: Entry<TData>): ReactNode => {
@@ -298,7 +299,9 @@ function DataTable<TData>({
         />
       )
     if (column.cell) return column.cell({ row: rowApi(entry) })
-    return ink(String(cellValue(column, entry.row) ?? ''), SizableText, { size: '$2' })
+    return ink(String(cellValue(column, entry.row) ?? ''), SizableText, {
+      size: '$2',
+    })
   }
 
   const ariaSort = (column: DataTableColumnDef<TData>): 'ascending' | 'descending' | 'none' => {
@@ -330,11 +333,7 @@ function DataTable<TData>({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 {hideable.map((column) => (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    checked={hidden[column.id] !== true}
-                    onCheckedChange={(value: boolean) => setHidden((h) => ({ ...h, [column.id]: !value }))}
-                  >
+                  <DropdownMenuCheckboxItem key={column.id} checked={hidden[column.id] !== true} onCheckedChange={(value: boolean) => setHidden((h) => ({ ...h, [column.id]: !value }))}>
                     {column.id}
                   </DropdownMenuCheckboxItem>
                 ))}
@@ -353,7 +352,12 @@ function DataTable<TData>({
                 role="columnheader"
                 aria-sort={ariaSort(column)}
                 {...slot('data-table-head')}
-                style={{ display: 'flex', alignItems: 'center', padding: 12, justifyContent: justify(column.align) }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: 12,
+                  justifyContent: justify(column.align),
+                }}
               >
                 {headerContent(column)}
               </Cell>
@@ -371,20 +375,19 @@ function DataTable<TData>({
           paged.map((entry) => {
             const isSelected = selected[entry.id] === true
             return (
-              <YStack
-                key={entry.id}
-                data-state={isSelected ? 'selected' : undefined}
-                borderBottomWidth={1}
-                borderBottomColor="$borderColor"
-                bg={isSelected ? '$hover' : undefined}
-              >
+              <YStack key={entry.id} data-state={isSelected ? 'selected' : undefined} borderBottomWidth={1} borderBottomColor="$borderColor" bg={isSelected ? '$hover' : undefined}>
                 <Grid role="row" {...slot('data-table-row')} data-state={isSelected ? 'selected' : undefined} columns={trackList} gap={0}>
                   {visibleColumns.map((column) => (
                     <Cell
                       key={column.id}
                       role="cell"
                       {...slot('data-table-cell')}
-                      style={{ display: 'flex', alignItems: 'center', padding: 12, justifyContent: justify(column.align) }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: 12,
+                        justifyContent: justify(column.align),
+                      }}
                     >
                       {cellContent(column, entry)}
                     </Cell>

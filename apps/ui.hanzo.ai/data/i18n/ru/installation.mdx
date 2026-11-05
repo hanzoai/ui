@@ -1,0 +1,87 @@
+---
+title: Установка
+description: Поставьте пакет, смонтируйте корень и скажите сборщику одну вещь.
+---
+
+Настройка одна и та же на каждом хосте. Меняется только то, куда кладётся настройка сборщика, и у каждого хоста для этого своя страница.
+
+## Установка
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` и `react-dom` — peer-зависимости версии 19 или новее. `@hanzo/gui` — peer нарочно: он отдаёт контекст React, и вторая физическая копия была бы вторым контекстом. Корень писал бы в один, а каждый компонент читал бы другой. Оставьте одну версию, объявленную приложением.
+
+## Смонтировать корень
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+`Hanzo` — единственное, что монтирует приложение. Он несёт конфиг gui как значение, импортирует сгенерированную таблицу стилей и ставит тему — тёмную по умолчанию, `theme="light"`, чтобы переключить. Любой компонент без корневой темы бросает ошибку, так что забыть её — падение на первой отрисовке, а не страница, которая тихо рисуется без стилей.
+
+В разработке корень проверяет, дошла ли таблица до документа, и пишет в консоль, если нет. Исправление, которое он называет, — один импорт, `@hanzo/ui/styles.css`, для сборщика, который выбросил таблицу самого пакета.
+
+## Сказать сборщику
+
+Граф зависимостей движка называет `react-native`, и один пакет в нём, `react-native-svg` под набором иконок, публикует нативный вход рядом с соседним `.web.js`. Возьмите нативный на веб-сборке — и ошибка будет сбоем разбора исходника Flow внутри зависимости. Это читается как сломанный пакет, а не как пропущенная настройка. Две настройки это предотвращают:
+
+- `react-native` разрешается в `react-native-web`.
+- `.web.js` старше `.js`.
+
+В Next обе — одна обёртка, `@hanzo/ui/next`. В Vite — две строки `resolve`. В One фреймворк уже делает и то и другое. В Expo задавать нечего: Metro говорит на react-native сам.
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo и React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## Что-нибудь отрисовать
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## Шрифты
+
+Пакет привозит Zen и Zen Mono и привязывает их к `--font-sans` и `--font-mono`, так что хост, который ничего не привязывает, получает гарнитуры без работы. Хост со своей гарнитурой задаёт `--font-sans-provided` и побеждает — см. [Типографика](/docs/typography).

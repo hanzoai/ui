@@ -1,0 +1,87 @@
+---
+title: 설치
+description: 패키지를 넣고, 루트를 마운트하고, 번들러에게 한 가지만 알립니다.
+---
+
+설정은 어느 호스트에서나 같습니다. 다른 점은 번들러 설정이 어디에 들어가는지뿐이고, 호스트마다 페이지가 있습니다.
+
+## 설치
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` 와 `react-dom` 은 19 이후의 피어입니다. `@hanzo/gui` 를 피어로 둔 것은 의도입니다. 이것은 React 컨텍스트를 건네므로, 물리적인 사본이 둘이면 컨텍스트도 둘이 되어 루트는 한쪽에 쓰고 컴포넌트는 다른 쪽을 읽습니다. 버전은 하나로 유지하고, 앱이 선언합니다.
+
+## 루트 마운트
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+앱이 마운트하는 것은 `Hanzo` 뿐입니다. gui 설정을 값으로 지니고, 생성된 스타일시트를 가져오고, 테마를 정합니다. 기본은 다크이고 `theme="light"` 로 바꿉니다. 루트 테마가 없으면 모든 컴포넌트가 예외를 던집니다. 빠뜨리면 첫 페인트에서 죽고, 스타일 없이 조용히 그려지는 페이지가 되지는 않습니다.
+
+개발 중에는 루트가 스타일시트가 문서에 닿았는지 확인하고, 닿지 않았으면 콘솔에 그렇게 말합니다. 그때 지목하는 고침은 임포트 하나, `@hanzo/ui/styles.css` 입니다. 패키지 자신의 시트를 떨어뜨린 번들러를 위한 것입니다.
+
+## 번들러에게 알리기
+
+엔진의 의존 그래프는 `react-native` 라는 이름을 쓰고, 그 안의 하나인 아이콘 세트 아래의 `react-native-svg` 는 네이티브 엔트리와 `.web.js` 형제를 함께 내보냅니다. 웹 빌드에서 네이티브 쪽을 집으면, 의존 안의 Flow 소스를 파싱하다 죽습니다. 깨진 패키지처럼 보이고, 빠진 설정으로는 보이지 않습니다. 그것을 막는 설정은 둘입니다.
+
+- `react-native` 는 `react-native-web` 으로 풀린다.
+- `.web.js` 가 `.js` 보다 앞선다.
+
+Next 에서는 이 둘이 래퍼 하나, `@hanzo/ui/next` 입니다. Vite 에서는 `resolve` 두 줄입니다. One 에서는 프레임워크가 이미 둘 다 합니다. Expo 에서는 설정할 것이 없습니다. Metro 가 react-native 를 네이티브로 말하기 때문입니다.
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo 와 React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## 무언가 그려 보기
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## 글꼴
+
+패키지는 Zen 과 Zen Mono 를 담고 `--font-sans` 와 `--font-mono` 에 묶습니다. 아무것도 묶지 않는 호스트는 수고 없이 그 글꼴을 얻습니다. 자기 글꼴이 있는 호스트는 `--font-sans-provided` 를 두면 그것이 이깁니다. [타이포그래피](/docs/typography) 를 보세요.

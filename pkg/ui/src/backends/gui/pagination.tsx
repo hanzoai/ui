@@ -12,14 +12,14 @@
  * label; `PaginationEllipsis` is a decorative gap, `aria-hidden`, with its own
  * "More pages" line for whoever is not looking at it.
  */
-import * as React from 'react'
 import { VisuallyHidden, XStack, styled } from '@hanzo/gui'
+import * as React from 'react'
 import { ChevronLeft, ChevronRight, MoreHorizontal } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 
 import { Button, type ButtonSize } from './button'
-import { slot } from './slot'
 import { mirror } from './dir'
+import { slot } from './slot'
 
 const ICON = 16
 
@@ -47,9 +47,7 @@ const List = styled(XStack, {
 
 export type PaginationContentProps = React.ComponentProps<typeof List>
 
-export const PaginationContent = (props: PaginationContentProps) => (
-  <List {...slot('pagination-content')} {...props} />
-)
+export const PaginationContent = (props: PaginationContentProps) => <List {...slot('pagination-content')} {...props} />
 
 const Item = styled(XStack, {
   name: 'PaginationItem',
@@ -58,9 +56,7 @@ const Item = styled(XStack, {
 
 export type PaginationItemProps = React.ComponentProps<typeof Item>
 
-export const PaginationItem = (props: PaginationItemProps) => (
-  <Item {...slot('pagination-item')} {...props} />
-)
+export const PaginationItem = (props: PaginationItemProps) => <Item {...slot('pagination-item')} {...props} />
 
 export type PaginationLinkProps = {
   isActive?: boolean
@@ -69,22 +65,8 @@ export type PaginationLinkProps = {
 } & Omit<React.ComponentProps<typeof Button>, 'variant' | 'size' | 'asChild'>
 
 /** One page number, or any other stop in the trail. Renders as an anchor. */
-export const PaginationLink = ({
-  isActive,
-  size = 'icon',
-  href,
-  children,
-  ...props
-}: PaginationLinkProps) => (
-  <Button
-    asChild
-    {...slot('pagination-link')}
-    data-active={isActive || undefined}
-    aria-current={isActive ? 'page' : undefined}
-    variant={isActive ? 'outline' : 'ghost'}
-    size={size}
-    {...props}
-  >
+export const PaginationLink = ({ isActive, size = 'icon', href, children, ...props }: PaginationLinkProps) => (
+  <Button asChild {...slot('pagination-link')} data-active={isActive || undefined} aria-current={isActive ? 'page' : undefined} variant={isActive ? 'outline' : 'ghost'} size={size} {...props}>
     <a href={href}>{children}</a>
   </Button>
 )

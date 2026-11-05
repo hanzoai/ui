@@ -102,7 +102,7 @@ describe('RepoSelect', () => {
     expect(onChange).toHaveBeenCalledWith(REPOS[0])
   })
 
-  it('links out to troubleshoot, as a real anchor, and says nothing it was not handed', async () => {
+  it('links out to troubleshoot, as a real anchor, and shows the default partial-list note', async () => {
     mount(
       <RepoSelect
         onChange={() => {}}
@@ -113,7 +113,7 @@ describe('RepoSelect', () => {
     act(() => chip().click())
     await settle()
     const footer = document.querySelector('[data-slot="chip-select-footer"]')!
-    expect(footer.textContent).toBe('Troubleshoot GitHub connection')
+    expect(footer.textContent).toBe('Not all repositories are shown. Type to search.Troubleshoot GitHub connection')
     const link = footer.querySelector('a')!
     expect(link.textContent).toBe('Troubleshoot GitHub connection')
     expect(link.getAttribute('href')).toBe('/platform/plugins?tab=github')

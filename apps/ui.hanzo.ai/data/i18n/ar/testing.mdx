@@ -1,0 +1,88 @@
+---
+title: الاختبارات
+description: ركّب تحت الجذر، وجد بالخانة، وحل التتالي بنفسك، ودع المتصفح يحسب الباقي.
+---
+
+يختم كل مكوّن `data-slot` باسمه، فيجد الاختبار عنصر تحكم من غير أن يعتمد على وسم قد تغيّره نسخة. ركّب تحت `Hanzo` كما يفعل التطبيق؛ يحمل الجذر الإعداد الذي يُحل مقابله كل رمز، والمكوّن بلا سمة جذر يرمي خطأ.
+
+## اختبارات الوحدة
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+الاسم المستعار هو الذي يحمله المُجمِّع. قائمة `inline` تهم: حزم المحرّك تُنشر CommonJS يعيد تصدير ESM، وإن تُركت خارجية حلّت إلى نسخة ثانية من الوحدة التي تملك السمة، فيكتب الموفّر سياقًا ويقرأ كل مكوّن مُسمّى سياقًا آخر ويرمي `Missing theme`.
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## الألوان في DOM بلا تتالٍ
+
+لا يحل jsdom الدالة `var()`؛ يسلّم الاختبار النص بحروفه. درجات السمة مكتوبة `var(--border, rgb(255 255 255 / .10))` عن قصد — اتبع التتالي الحي حيث تُركَّب ورقة design، وأبقِ الحرفي المدقَّق حيث لا تُركَّب — فالجزم بتباين حد في jsdom كان يقارن لونًا بنداء دالة. يأخذ `substitute` الخطوة التي لا يأخذها jsdom.
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+بلا خريطة `vars` هذا دقيق لا تقريبي: لا يركّب jsdom ورقة design، فلا شيء يعلن `--border`، فالبديل هو ما كان المتصفح سيحسبه في الشروط نفسها. مرّر خريطة لتمثيل مُضيف يعلن رموزه. الوحدة لا تستورد شيئًا وتصدر بالتنسيقين، فتحمَّل تحت أي مشغّل.
+
+## ما حسبه متصفح
+
+ينجح البناء وفحص الأنواع واختبار الوحدة كلها على ورقة أنماط لم تبلغ الصفحة قط. البرهان متصفح: ابنِ التطبيق، وقدّمه، واجزم بالأنماط المحسوبة لا بادعاءات الوسم.
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+هكذا تختبر الحزمة نفسها. معرضها قائمة واحدة بكل مكوّن في كل تنويعة؛ مولّد ورقة الأنماط يصيّر تلك القائمة، واختبار وحدة يصيّرها تحت الموفّر الحقيقي ويتحقق من وصول كل علامة خانة، واختبار مستهلِك يحزم الأرشيف، ويثبّته في تطبيق خارج المستودع — لا رابط workspace أبدًا، فهو يُحل عبر شجرة المصدر ويخفي ملفًا غائبًا عن الأرشيف — ثم يبني، ويجزم بالأنماط المحسوبة ولقطات الشاشة عند 390 و1280 في السمتين. رابط workspace كان سينشر كل عيب وُجد ذلك الاختبار ليمسكه.

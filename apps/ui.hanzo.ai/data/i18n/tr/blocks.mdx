@@ -1,0 +1,113 @@
+---
+title: Bloklar
+description: Veri olarak içerik. Bir sayfa blok listesidir; her biri türünü adlandırır, tür render’ı seçer ve render gerisini okur.
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+Bir blok veridir: `blockType` render’ı seçer ve diğer alanlar o render’ın girdisidir. Bir sayfa bir CMS’te yazılabilir, bir depoya işlenebilir veya bir sunucu tarafından üretilebilir ve her durumda tiplidir. Her `specifiers` alanı, render’ın okuduğu, boşlukla ayrılmış bir yerleşim ipucu torbasıdır; bir birleşim değil bir dizedir, bu yüzden bir site bir ipucu eklemek için onu yazar ve bilinmeyen bir ipucu derlemeyi düşürmek yerine yok sayılır.
+
+## Bir sayfa
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## Sözlük
+
+| Tür | Ne çizer |
+| --- | --- |
+| `heading` | İsteğe bağlı bir alt satırı olan bir başlık, paragraf için `level` 0 ve etiketler için 1 ile 6. |
+| `enh-heading` | Adlandırılmış parçalar: üstte bir ön başlık, başlık, altta bir alt satır; her birinin kendi düzeyi ve kenar boşluğu. |
+| `image` | Bir `ImageDef`’ten bir görüntü — `src`, `alt`, `dim` — hizalama ve `specifiers` içinde telefon ipuçlarıyla. |
+| `video` | Bir `VideoDef`: kaynaklar, bir poster, basamak başına boyut. |
+| `space` | Aralık biriminde dikey boşluk, basamak başına veya hepsi için tek sayı. |
+| `cta` | Bağlantı ve düğme sırası: `fill`, `left`, `right` ve telefon ipuçları. |
+| `card` | Ortam, içerik ve bir eylem çağrısı olan başlıklı bir panel. |
+| `bullet-cards` | Tek satırlık kart ızgarası, her biri metninin yanında bir ikon. |
+| `grid` | `cells` üzerinde bir `GridDef` — basamak başına kolon ve gap, artan sırada. |
+| `group` | `elements` üzerinde bir sarmalayıcı, hepsine uygulanan ipuçları için. |
+| `accordian` | Tetikler ve içerikleri. |
+| `carte-blanche` | Serbest bir panel: üstte herhangi bir şey, bir başlık, altta herhangi bir şey, dipte bir eylem çağrısı. |
+| `screenful` | Bir ekran dolusu: bir ile üç kolonun üzerinde isteğe bağlı bir şerit, telefon sırasıyla. |
+| `element` | Yazarın çoktan kurduğu bir düğüm. Tasarım gereği render’ı yoktur; bir blok sayfasının her şeyi tutmasını sağlayan budur. |
+
+Her biçim aynı subpath’ten bir tip olarak dışa aktarılır — `HeadingBlock`, `CTABlock`, `ScreenfulBlock` ve gerisi — paylaştıkları tanımların yanında: `GridDef`, `ImageDef`, `VideoDef`, `LinkDef`, `ButtonDef`. `http` veya `mailto` href’i olan bir `LinkDef` kendiliğinden dışsaldır ve `rel="noreferrer noopener"` ile yeni bir sekmede açılır; `external` ancak şemanın söyleyemediği yerde belirtin.
+
+## Aygıt bir prop’tur
+
+Her render bir media query okumak yerine aygıt sınıfı olan `agent` alır. Bu bloklar, ilk seferde doğru işaretlemeyi vermesi gereken bir sunucuda render edilir: masaüstü işaretlemesi olarak gelip hidrasyonda kendini düzelten bir telefon yerleşimi görünür bir sıçramadır ve video blokları için boşa bir indirmedir.
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## Kendi türleriniz
+
+Türden render’a giden harita genişleme noktasıdır. Bir host kendi türünü ekler veya birini değiştirir — bir Next uygulamasının iyileştiren görüntüsünü koyması ve kütüphanenin getirmediği her şeyin sayfaya ulaşması böyle olur.
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+`has(specifiers, token)` bir ipucunun torbada olup olmadığını yanıtlar ve `fit(dim, within)` bir en-boy oranının bir diğerinin içindeki en büyük kutusudur; ikisi de kendi render’ınız için dışa aktarılır. [Bloklar](/blocks) kataloğu her render’ın örneklerini tiplerinin yanında render eder.

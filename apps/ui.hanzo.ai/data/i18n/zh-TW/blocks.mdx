@@ -1,0 +1,113 @@
+---
+title: 區塊
+description: 內容就是資料。一頁是一串區塊；每塊先報出型別，型別再去挑繪製器，剩下的欄位由繪製器來讀。
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+一塊區塊就是資料。`blockType` 決定繪製器，其他欄位是餵給那個繪製器的輸入。因此一頁可以在 CMS 裡寫成，可以交進儲存庫，也可以由伺服器產生，哪一條路都帶著型別。每個 `specifiers` 欄位是一袋以空白分開的版面提示，繪製器會去讀它。它是字串，不是聯合型別，所以網站要多一條提示，打上去就好；不認識的提示會被略過，建置不會因此失敗。
+
+## 一頁
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## 詞彙
+
+| 型別 | 它畫什麼 |
+| --- | --- |
+| `heading` | 一個標題，可帶一行副標。`level` 為 0 是段落，1 到 6 是對應的標籤。 |
+| `enh-heading` | 點了名的幾部分：上面一行前導，中間標題，下面一行副標，各自有自己的級別和外距。 |
+| `image` | 來自 `ImageDef` 的一張圖——`src`、`alt`、`dim`——對齊和手機提示放在 `specifiers` 裡。 |
+| `video` | 一個 `VideoDef`：來源、海報、按階的尺寸。 |
+| `space` | 以間距單位計的垂直空白，按階，或一個數字管全部。 |
+| `cta` | 一列連結和按鈕：`fill`、`left`、`right`，以及手機提示。 |
+| `card` | 一塊帶標題的面板，有媒體、內容和行動號召。 |
+| `bullet-cards` | 一格一格的單列卡片，每張是圖示旁邊一行字。 |
+| `grid` | 一個 `GridDef`——按階的欄和間隙，升序——蓋在 `cells` 上。 |
+| `group` | 蓋在 `elements` 上的一層包裝，給那些要作用到整組的提示。 |
+| `accordian` | 觸發器，以及它們的內容。 |
+| `carte-blanche` | 一塊自由面板：上面任意，一個標題，下面任意，腳上一個行動號召。 |
+| `screenful` | 滿滿一螢幕：可選的橫幅下面一到三欄，並帶手機上的順序。 |
+| `element` | 作者已經做好的一個節點。它故意沒有繪製器，一頁區塊因此什麼都能裝下。 |
+
+每一種形狀都從同一條子路徑匯出為型別——`HeadingBlock`、`CTABlock`、`ScreenfulBlock` 以及其餘——旁邊是它們共用的定義：`GridDef`、`ImageDef`、`VideoDef`、`LinkDef`、`ButtonDef`。帶 `http` 或 `mailto` href 的 `LinkDef` 自己就是外部的，會在新分頁開啟，並帶上 `rel="noreferrer noopener"`；只有方案本身說不清的時候，才去宣告 `external`。
+
+## 裝置是一個 prop
+
+每個繪製器接收 `agent`，也就是裝置類別，而不是去讀一條媒體查詢。這些區塊在伺服器上繪製，伺服器第一次就必須吐出正確的標記：手機版面若以桌面標記到來、再在注水時改自己，會是一次看得見的跳動，對影片區塊來說還是一次浪費的下載。
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## 你自己的型別
+
+從型別到繪製器的這張表就是擴充點。宿主可以加一種自己的型別，或替換一種——Next 應用就是這樣換上它自己的最佳化圖片，函式庫沒有交付的東西也是這樣到達頁面。
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+`has(specifiers, token)` 回答一條提示在不在袋子裡，`fit(dim, within)` 是一種寬高比的盒子放進另一種裡面時最大的那一個；兩者都匯出，給自己寫的繪製器用。[區塊](/blocks) 目錄把每個繪製器的範例畫在它的型別旁邊。

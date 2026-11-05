@@ -6,21 +6,21 @@ import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 import { PALETTE } from '@hanzo/pay'
 import { load, pin, PRODUCTION, SANDBOX, style } from '@hanzo/pay/web'
+
+import { bearer, currentOrg } from '../auth/session'
 import { Checkbox } from '../backends/gui/checkbox'
+import { ChoiceCard, ChoiceGroup, RadioCircle } from '../backends/gui/choice'
 import { Field, FieldError, FieldLabel } from '../backends/gui/field'
 import { Input } from '../backends/gui/input'
-import { Anchor, Heading, Paragraph, XStack, YStack } from '../backends/gui/layout'
+import { Anchor, Heading, Paragraph, SizableText, XStack, YStack } from '../backends/gui/layout'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../backends/gui/select'
-import { bearer, currentOrg } from '../auth/session'
-import { ApiError, API, call } from './api'
+import { API, ApiError, call } from './api'
 import { keyFor, purchase, settle, uncharged } from './attempt'
 import { useCatalog } from './catalog'
 import { IntervalToggle, Line, Page, Panel } from './frame'
-import { IntervalChoice, Primary } from './screens'
 import type { Track } from './hooks'
-import { ChoiceCard, ChoiceGroup, RadioCircle } from '../backends/gui/choice'
-import { SizableText } from '../backends/gui/layout'
 import { item, lines, money, offer, period, saving, SLUG, unit, usd, type Interval, type PlanId } from './plans'
+import { IntervalChoice, Primary } from './screens'
 
 /**
  * THE checkout: one component for the personal path, the team path and every
@@ -74,7 +74,11 @@ const renews = (interval: Interval): string => {
   const d = new Date()
   if (interval === 'annual') d.setFullYear(d.getFullYear() + 1)
   else d.setMonth(d.getMonth() + 1)
-  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric' })
+  return d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  })
 }
 
 export function Checkout(props: CheckoutProps) {
@@ -99,16 +103,42 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
   const [busy, setBusy] = useState(false)
   const [wrong, setWrong] = useState<string | null>(null)
   const [agree, setAgree] = useState(true)
-  const [form, setForm] = useState({ name: '', country: 'US', address: '', invoice: '' })
-  const card = useRef<{ tokenize: () => Promise<{ status: string; token?: string; errors?: { message?: string }[] }>; destroy: () => Promise<void> } | null>(null)
+  const [form, setForm] = useState({
+    name: '',
+    country: 'US',
+    address: '',
+    invoice: '',
+  })
+  const card = useRef<{
+    tokenize: () => Promise<{
+      status: string
+      token?: string
+      errors?: { message?: string }[]
+    }>
+    destroy: () => Promise<void>
+  } | null>(null)
   const started = useRef(false)
 
   // The billing form is shown with a total: checkout has started.
   useEffect(() => {
     if (started.current) return
     started.current = true
-    track?.('plan_selected', { plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
-    track?.('checkout_started', { plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
+    track?.('plan_selected', {
+      plan,
+      interval,
+      seats: l.seats,
+      value: l.subtotal,
+      currency: 'USD',
+      items: [item(plan, interval, seats)],
+    })
+    track?.('checkout_started', {
+      plan,
+      interval,
+      seats: l.seats,
+      value: l.subtotal,
+      currency: 'USD',
+      items: [item(plan, interval, seats)],
+    })
     // Once per mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -132,7 +162,22 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
     void (async () => {
       try {
         await load((settings.environment ?? 'production').toLowerCase() === 'production' ? PRODUCTION : SANDBOX)
-        const square = (window as unknown as { Square?: { payments: (a: string, l: string) => Promise<{ card: (o: unknown) => Promise<typeof card.current & { attach: (sel: string) => Promise<void> }> }> } }).Square
+        const square = (
+          window as unknown as {
+            Square?: {
+              payments: (
+                a: string,
+                l: string
+              ) => Promise<{
+                card: (o: unknown) => Promise<
+                  typeof card.current & {
+                    attach: (sel: string) => Promise<void>
+                  }
+                >
+              }>
+            }
+          }
+        ).Square
         if (cancelled || !square) return
         const payments = await square.payments(settings.applicationId, settings.locationId)
         const c = await payments.card({ style: style(PALETTE[theme]) })
@@ -158,11 +203,18 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
 
   const fail = useCallback(
     (reason: string, say: string) => {
-      track?.('checkout_failed', { reason, plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD' })
+      track?.('checkout_failed', {
+        reason,
+        plan,
+        interval,
+        seats: l.seats,
+        value: l.subtotal,
+        currency: 'USD',
+      })
       setWrong(say)
       setBusy(false)
     },
-    [track, plan, interval, l.seats, l.subtotal],
+    [track, plan, interval, l.seats, l.subtotal]
   )
 
   async function submit(e?: FormEvent) {
@@ -205,20 +257,46 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
         fail('card', result.errors?.[0]?.message ?? `${t('The card could not be read.')} ${t('Check the details and try again.')}`)
         return
       }
-      track?.('payment_info_added', { plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
-      const paid = await call<{ subscriptionId: string; invoiceId: string; eventId?: string }>(
+      track?.('payment_info_added', {
+        plan,
+        interval,
+        seats: l.seats,
+        value: l.subtotal,
+        currency: 'USD',
+        items: [item(plan, interval, seats)],
+      })
+      const paid = await call<{
+        subscriptionId: string
+        invoiceId: string
+        eventId?: string
+      }>(
         api,
         '/v1/billing/subscribe/card',
         {
           method: 'POST',
           headers: { ...scope, 'X-Idempotency-Key': keyFor(sale) },
           // The visitor's choice rides the sale: cloud sends the sale to an ad platform only under it.
-          body: JSON.stringify({ sourceId: result.token, planId: SLUG[plan], quantity: l.seats, consent: renderConsent(readConsent()), ...(interval === 'annual' ? { interval: 'year' } : {}) }),
+          body: JSON.stringify({
+            sourceId: result.token,
+            planId: SLUG[plan],
+            quantity: l.seats,
+            consent: renderConsent(readConsent()),
+            ...(interval === 'annual' ? { interval: 'year' } : {}),
+          }),
         },
-        token,
+        token
       )
       settle(sale)
-      track?.('order_completed', { ...(paid.eventId ? { event_id: paid.eventId } : {}), order_id: paid.invoiceId || paid.subscriptionId, plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
+      track?.('order_completed', {
+        ...(paid.eventId ? { event_id: paid.eventId } : {}),
+        order_id: paid.invoiceId || paid.subscriptionId,
+        plan,
+        interval,
+        seats: l.seats,
+        value: l.subtotal,
+        currency: 'USD',
+        items: [item(plan, interval, seats)],
+      })
       onPaid({ orderId: paid.invoiceId || paid.subscriptionId })
     } catch (err) {
       settle(sale)
@@ -249,7 +327,12 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
                 <IntervalToggle
                   interval={interval}
                   onChange={(i) => {
-                    track?.('plan_changed', { from: interval, to: i, field: 'interval', plan })
+                    track?.('plan_changed', {
+                      from: interval,
+                      to: i,
+                      field: 'interval',
+                      plan,
+                    })
                     setInterval(i)
                   }}
                   name={o.name}
@@ -286,7 +369,12 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
               save={saving(plan)}
               interval={interval}
               setInterval={(i) => {
-                track?.('plan_changed', { from: interval, to: i, field: 'interval', plan })
+                track?.('plan_changed', {
+                  from: interval,
+                  to: i,
+                  field: 'interval',
+                  plan,
+                })
                 setInterval(i)
               }}
               price={(i) => {

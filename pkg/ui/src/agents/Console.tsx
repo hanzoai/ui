@@ -35,7 +35,7 @@ import { Button } from '../backends/gui/button'
 import { drag, type DragEvent } from '../backends/gui/gesture'
 import { Input } from '../backends/gui/input'
 import { slot } from '../backends/gui/slot'
-import { ceiling, count, HEAD, type Level, type Line, OPEN, opened, resolve, STEP } from './log'
+import { ceiling, count, HEAD, OPEN, opened, resolve, STEP, type Level, type Line } from './log'
 
 type Col = Omit<ComponentProps<typeof YStack>, 'children' | 'height'>
 
@@ -112,7 +112,11 @@ export function Console({
 
   const grip = drag({
     begin: (e: DragEvent) => {
-      start.current = { y: e.clientY ?? 0, base: open ? height : HEAD, moved: false }
+      start.current = {
+        y: e.clientY ?? 0,
+        base: open ? height : HEAD,
+        moved: false,
+      }
     },
     move: (e: DragEvent) => {
       const s = start.current
@@ -132,19 +136,7 @@ export function Console({
   const all: { id: string; label: string }[] = [{ id: 'log', label }, ...tabs]
 
   return (
-    <YStack
-      {...slot('console')}
-      render="section"
-      aria-label={label}
-      shrink={0}
-      minW={0}
-      overflow="hidden"
-      borderTopWidth={1}
-      borderColor="$borderColor"
-      bg="$background"
-      style={{ height: Math.max(height, HEAD) }}
-      {...rest}
-    >
+    <YStack {...slot('console')} render="section" aria-label={label} shrink={0} minW={0} overflow="hidden" borderTopWidth={1} borderColor="$borderColor" bg="$background" style={{ height: Math.max(height, HEAD) }} {...rest}>
       <YStack
         {...slot('console-grip')}
         role="separator"
@@ -159,13 +151,15 @@ export function Console({
         cursor="row-resize"
         hoverStyle={{ bg: '$edge' }}
         focusVisibleStyle={{ bg: '$rim' }}
-        onKeyDown={((e: KeyboardEvent) => {
-          if (e.key === 'ArrowUp') nudge(e.shiftKey ? STEP * 4 : STEP)
-          else if (e.key === 'ArrowDown') nudge(-(e.shiftKey ? STEP * 4 : STEP))
-          else if (e.key === 'Enter' || e.key === ' ') toggle()
-          else return
-          e.preventDefault()
-        }) as never}
+        onKeyDown={
+          ((e: KeyboardEvent) => {
+            if (e.key === 'ArrowUp') nudge(e.shiftKey ? STEP * 4 : STEP)
+            else if (e.key === 'ArrowDown') nudge(-(e.shiftKey ? STEP * 4 : STEP))
+            else if (e.key === 'Enter' || e.key === ' ') toggle()
+            else return
+            e.preventDefault()
+          }) as never
+        }
         {...(grip as object)}
       />
       <XStack items="center" gap="$2" px="$2" minH={HEAD - 6} shrink={0}>
@@ -254,15 +248,7 @@ export function Console({
                             {l.source}
                           </SizableText>
                         ) : null}
-                        <SizableText
-                          size="$1"
-                          color={TONE[l.level]}
-                          fontFamily="$mono"
-                          flex={1}
-                          minW={0}
-                          whiteSpace="pre-wrap"
-                          style={{ wordBreak: 'break-word' }}
-                        >
+                        <SizableText size="$1" color={TONE[l.level]} fontFamily="$mono" flex={1} minW={0} whiteSpace="pre-wrap" style={{ wordBreak: 'break-word' }}>
                           {l.text}
                         </SizableText>
                       </XStack>
@@ -283,14 +269,20 @@ export function Console({
                     aria-label={t('Run a command')}
                     placeholder={busy ? t('Running…') : t('Run a command')}
                     onChangeText={setCommand}
-                    onKeyDown={((e: KeyboardEvent & { nativeEvent?: { isComposing?: boolean } }) => {
-                      if (e.key !== 'Enter' || e.nativeEvent?.isComposing) return
-                      const typed = command.trim()
-                      if (!typed || busy) return
-                      e.preventDefault()
-                      onRun(typed)
-                      setCommand('')
-                    }) as never}
+                    onKeyDown={
+                      ((
+                        e: KeyboardEvent & {
+                          nativeEvent?: { isComposing?: boolean }
+                        }
+                      ) => {
+                        if (e.key !== 'Enter' || e.nativeEvent?.isComposing) return
+                        const typed = command.trim()
+                        if (!typed || busy) return
+                        e.preventDefault()
+                        onRun(typed)
+                        setCommand('')
+                      }) as never
+                    }
                     flex={1}
                     height={28}
                     borderWidth={0}

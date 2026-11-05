@@ -80,7 +80,15 @@ export const ShortcutsSheet: React.FC<ShortcutsSheetProps> = ({
         onClick={(e) => e.stopPropagation()}
         aria-label={t('Keyboard Shortcuts')}
       >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: 12 }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            paddingBottom: 12,
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 18 }}>⌨️</span>
             <Text render="h2" fontSize={14} fontWeight="600" color={'#ffffff' as never} m={0}>
@@ -90,14 +98,31 @@ export const ShortcutsSheet: React.FC<ShortcutsSheetProps> = ({
           {onClose && (
             <button
               onClick={onClose}
-              style={{ color: '#a3a3a3', fontSize: 12, padding: '4px 8px', borderRadius: 4, backgroundColor: 'rgba(255, 255, 255, 0.05)', border: 'none', cursor: 'pointer' }}
+              style={{
+                color: '#a3a3a3',
+                fontSize: 12,
+                padding: '4px 8px',
+                borderRadius: 4,
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                border: 'none',
+                cursor: 'pointer',
+              }}
             >
               {t('Close ({key})', { key: 'Esc' })}
             </button>
           )}
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxHeight: 384, overflowY: 'auto', paddingInlineEnd: 4 }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 16,
+            maxHeight: 384,
+            overflowY: 'auto',
+            paddingInlineEnd: 4,
+          }}
+        >
           {categories.map((cat) => (
             <div key={cat} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <h3 style={{ fontSize: 11, fontWeight: 600, color: '#a3a3a3', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
@@ -109,14 +134,38 @@ export const ShortcutsSheet: React.FC<ShortcutsSheetProps> = ({
                   .map((s, idx) => (
                     <div
                       key={idx}
-                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '4px 8px', borderRadius: 8, backgroundColor: 'rgba(255, 255, 255, 0.05)', fontSize: 12, color: '#e5e5e5' }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '4px 8px',
+                        borderRadius: 8,
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        fontSize: 12,
+                        color: '#e5e5e5',
+                      }}
                     >
                       <span>{s.description}</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 4,
+                        }}
+                      >
                         {s.key.split(' ').map((k, kIdx) => (
                           <kbd
                             key={kIdx}
-                            style={{ padding: '2px 8px', borderRadius: 4, backgroundColor: '#262626', border: '1px solid rgba(255, 255, 255, 0.1)', fontSize: 11, fontFamily: 'monospace', color: '#d4d4d4', fontWeight: 600 }}
+                            style={{
+                              padding: '2px 8px',
+                              borderRadius: 4,
+                              backgroundColor: '#262626',
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                              fontSize: 11,
+                              fontFamily: 'monospace',
+                              color: '#d4d4d4',
+                              fontWeight: 600,
+                            }}
                           >
                             {k}
                           </kbd>

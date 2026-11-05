@@ -1,0 +1,108 @@
+---
+title: Installation
+description: Installez le paquet, montez la racine, et dites une seule chose à votre bundler.
+---
+
+La mise en place est la même sur chaque hôte. La seule part qui change, c'est
+l'endroit où va le réglage du bundler, et chaque hôte a sa page.
+
+## Installer
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` et `react-dom` sont des peers en 19 ou plus. `@hanzo/gui` est un peer
+exprès : il fournit un contexte React, et une seconde copie physique serait un
+second contexte, la racine écrivant dans l'un pendant que chaque composant lit
+l'autre. Gardez-en une seule version, déclarée par l'app.
+
+## Monter la racine
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+`Hanzo` est la seule chose qu'une app monte. Il porte la config gui comme une
+valeur, importe la feuille de styles générée et pose le thème — sombre par
+défaut, `theme="light"` pour le retoucher. Chaque composant lève une erreur
+sans thème à la racine, donc l'oublier plante au premier affichage, jamais une
+page qui se rend en silence, sans styles.
+
+En développement, la racine vérifie que la feuille a bien atteint le document
+et le dit dans la console quand ce n'est pas le cas. Le correctif qu'elle
+nomme est un import, `@hanzo/ui/styles.css`, pour un bundler qui a laissé
+tomber celle du paquet.
+
+## Le dire au bundler
+
+Le graphe de dépendances du moteur nomme `react-native`, et un paquet dedans,
+`react-native-svg` sous le jeu d'icônes, publie une entrée native à côté d'une
+sœur `.web.js`. Prenez la native dans un build web et l'erreur est un échec
+d'analyse dans du source Flow, au sein d'une dépendance, ce qui se lit comme
+un paquet cassé plutôt que comme un réglage manquant. Deux réglages l'évitent :
+
+- `react-native` se résout vers `react-native-web`.
+- `.web.js` passe devant `.js`.
+
+Sous Next, les deux sont un seul enrobage, `@hanzo/ui/next`. Sous Vite, ce
+sont deux lignes de `resolve`. Sous One, le framework fait déjà les deux.
+Sous Expo, il n'y a rien à régler, parce que Metro parle react-native
+nativement.
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo et React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## Rendre quelque chose
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## Polices
+
+Le paquet embarque Zen et Zen Mono et les lie à `--font-sans` et
+`--font-mono`, donc un hôte qui ne lie rien obtient les polices sans rien
+faire. Un hôte qui a la sienne pose `--font-sans-provided` et l'emporte — voir
+[Typographie](/docs/typography).

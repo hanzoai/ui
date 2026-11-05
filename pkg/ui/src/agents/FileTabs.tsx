@@ -21,10 +21,10 @@ import { type ComponentProps, type KeyboardEvent, type ReactNode, useRef } from 
 import { useI18n } from '@hanzo/i18n/react'
 
 import { CodeEditor } from '../backends/gui/code-editor'
+import { along } from '../backends/gui/dir'
 import { slot } from '../backends/gui/slot'
 import { glyph } from './FileTree'
 import { base, language } from './tree'
-import { along } from '../backends/gui/dir'
 
 type Col = Omit<ComponentProps<typeof YStack>, 'children' | 'onChange'>
 
@@ -55,8 +55,8 @@ export interface FileTabsProps extends Col {
 }
 
 export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...rest }: FileTabsProps) {
-  const tabs = useRef<(HTMLElement | null)[]>([])
   const { t } = useI18n()
+  const tabs = useRef<(HTMLElement | null)[]>([])
   const shown = files.find((f) => f.path === value) ?? files[0]
 
   if (!shown) {
@@ -72,12 +72,7 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
   const move = (e: KeyboardEvent, index: number) => {
     const last = files.length - 1
     const key = along(e)
-    const to =
-      key === 'ArrowRight' ? Math.min(index + 1, last)
-      : key === 'ArrowLeft' ? Math.max(index - 1, 0)
-      : e.key === 'Home' ? 0
-      : e.key === 'End' ? last
-      : -1
+    const to = key === 'ArrowRight' ? Math.min(index + 1, last) : key === 'ArrowLeft' ? Math.max(index - 1, 0) : e.key === 'Home' ? 0 : e.key === 'End' ? last : -1
     if (to >= 0) {
       e.preventDefault()
       onSelect(files[to]!.path)
@@ -109,11 +104,17 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
           return (
             <XStack
               key={file.path}
-              ref={((el: HTMLElement | null) => {
-                tabs.current[index] = el
-              }) as never}
+              ref={
+                ((el: HTMLElement | null) => {
+                  tabs.current[index] = el
+                }) as never
+              }
               render="button"
-              {...({ type: 'button', title: file.path, 'aria-keyshortcuts': onClose ? 'Delete' : undefined } as object)}
+              {...({
+                type: 'button',
+                title: file.path,
+                'aria-keyshortcuts': onClose ? 'Delete' : undefined,
+              } as object)}
               role="tab"
               aria-selected={on}
               aria-label={file.dirty ? t('{path}, unsaved', { path: file.path }) : file.path}
@@ -133,15 +134,18 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
               borderBottomColor={on ? '$ink' : 'transparent'}
               bg={on ? '$hover' : 'transparent'}
               hoverStyle={{ bg: '$hover' }}
-              focusVisibleStyle={{ outlineWidth: 2, outlineStyle: 'solid', outlineColor: '$rim', outlineOffset: -2 }}
+              focusVisibleStyle={{
+                outlineWidth: 2,
+                outlineStyle: 'solid',
+                outlineColor: '$rim',
+                outlineOffset: -2,
+              }}
             >
               {glyph(name, 13)}
               <SizableText size="$2" color={on ? '$ink' : '$quiet'} numberOfLines={1} maxW={180}>
                 {name}
               </SizableText>
-              {file.dirty ? (
-                <YStack width={6} height={6} rounded={3} bg="$ink" aria-hidden {...slot('file-tabs-dirty')} />
-              ) : null}
+              {file.dirty ? <YStack width={6} height={6} rounded={3} bg="$ink" aria-hidden {...slot('file-tabs-dirty')} /> : null}
               {onClose ? (
                 // A pointer's way to close. Not a second focus stop inside a
                 // tab (a control in a control): the keyboard's way is Delete on
@@ -156,10 +160,12 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
                   justify="center"
                   opacity={on ? 0.8 : 0.5}
                   hoverStyle={{ bg: '$raised', opacity: 1 }}
-                  onClick={((e: { stopPropagation?: () => void }) => {
-                    e.stopPropagation?.()
-                    onClose(file.path)
-                  }) as never}
+                  onClick={
+                    ((e: { stopPropagation?: () => void }) => {
+                      e.stopPropagation?.()
+                      onClose(file.path)
+                    }) as never
+                  }
                 >
                   <X size={12} />
                 </XStack>
@@ -183,21 +189,7 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
             </SizableText>
           </YStack>
         ) : (
-          <CodeEditor
-            key={shown.path}
-            value={shown.content}
-            language={language(shown.path)}
-            readOnly={!editable}
-            label={shown.path}
-            onChange={editable ? (text) => onChange?.(shown.path, text) : undefined}
-            showLanguageSelector={false}
-            showCopyButton={false}
-            height="100%"
-            fontSize={13}
-            flex={1}
-            rounded={0}
-            borderWidth={0}
-          />
+          <CodeEditor key={shown.path} value={shown.content} language={language(shown.path)} readOnly={!editable} label={shown.path} onChange={editable ? (text) => onChange?.(shown.path, text) : undefined} showLanguageSelector={false} showCopyButton={false} height="100%" fontSize={13} flex={1} rounded={0} borderWidth={0} />
         )}
       </YStack>
     </YStack>

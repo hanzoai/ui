@@ -42,7 +42,14 @@ export const SwarmBar: React.FC<SwarmBarProps> = ({
       }}
       aria-label={t('Multi-Agent Swarm Bar')}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, overflowX: 'auto' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          overflowX: 'auto',
+        }}
+      >
         {agents.map((agent) => {
           const isSelected = agent.id === selectedAgentId
           return (

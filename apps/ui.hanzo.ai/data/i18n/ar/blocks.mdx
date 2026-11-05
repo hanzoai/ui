@@ -1,0 +1,113 @@
+---
+title: الكتل
+description: المحتوى بيانات. الصفحة قائمة كتل؛ كل واحدة تسمّي نوعها، والنوع يختار الراسم، والراسم يقرأ الباقي.
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+الكتلة بيانات: `blockType` يختار الراسم وبقية الحقول دخل ذلك الراسم. فيمكن تأليف الصفحة في نظام إدارة، أو إيداعها في مستودع، أو إنتاجها من خادم، وهي منمّطة في كل حال. كل حقل `specifiers` كيس تلميحات تخطيط مفصولة بمسافة يقرأها الراسم؛ هو سلسلة لا اتحاد، فيضيف الموقع تلميحًا بكتابته، والتلميح المجهول يُتجاهل ولا يُسقط البناء.
+
+## صفحة
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## المفردات
+
+| النوع | ما يرسمه |
+| --- | --- |
+| `heading` | عنوان مع سطر تابع اختياري، `level` 0 لفقرة و1 إلى 6 للوسوم. |
+| `enh-heading` | الأجزاء المسماة: عنوان تمهيدي فوق، والعنوان، وسطر تابع تحت، ولكل مستواه وهامشه. |
+| `image` | صورة من `ImageDef` — `src` و`alt` و`dim` — مع المحاذاة وتلميحات الهاتف في `specifiers`. |
+| `video` | `VideoDef`: مصادر، وملصق، ومقاس لكل درجة. |
+| `space` | فراغ رأسي بوحدات التباعد، لكل درجة أو رقم واحد للكل. |
+| `cta` | صف روابط وأزرار: `fill` و`left` و`right`، وتلميحات الهاتف. |
+| `card` | لوح معنون بوسائط ومحتوى ودعوة إلى فعل. |
+| `bullet-cards` | شبكة بطاقات من سطر، كل واحدة أيقونة إلى جانب نصها. |
+| `grid` | `GridDef` — أعمدة وفراغ لكل درجة، تصاعديًا — فوق `cells`. |
+| `group` | غلاف فوق `elements`، لتلميحات تنطبق على الجملة. |
+| `accordian` | المحفّزات ومحتواها. |
+| `carte-blanche` | لوح حر: أي شيء فوق، وعنوان، وأي شيء تحت، ودعوة إلى فعل في القدم. |
+| `screenful` | ملء شاشة: شريط اختياري فوق عمود إلى ثلاثة، مع ترتيب على الهاتف. |
+| `element` | عقدة بناها المؤلف سلفًا. ليس لها راسم، عن قصد، وهذا ما يدع صفحة الكتل تمسك أي شيء. |
+
+كل شكل يُصدَّر نوعًا من subpath نفسه — `HeadingBlock` و`CTABlock` و`ScreenfulBlock` والباقي — إلى جانب التعريفات التي تشترك فيها: `GridDef` و`ImageDef` و`VideoDef` و`LinkDef` و`ButtonDef`. `LinkDef` ذو href من نوع `http` أو `mailto` خارجي من نفسه ويفتح في لسان جديد مع `rel="noreferrer noopener"`؛ اذكر `external` فقط حيث لا يستطيع المخطط أن يقول.
+
+## الجهاز prop
+
+يأخذ كل راسم `agent`، صنف الجهاز، بدل أن يقرأ استعلام وسيط. هذه الكتل تُصيَّر على خادم عليه أن يُخرج الوسم الصحيح من أول مرة: تخطيط هاتف يصل وسم سطح مكتب ثم يصحّح نفسه عند الإماهة قفزة مرئية، ولكتل الفيديو تنزيل ضائع.
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## أنواعك أنت
+
+الخريطة من النوع إلى الراسم هي نقطة التوسعة. يضيف المُضيف نوعًا له، أو يستبدل واحدًا — وهكذا يضع تطبيق Next صورته المحسِّنة، وهكذا يبلغ الصفحة ما لا تشحنه المكتبة.
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+يجيب `has(specifiers, token)` هل التلميح في الكيس، و`fit(dim, within)` هو أكبر صندوق لنسبة داخل أخرى؛ والاثنان مصدَّران لراسمك. فهرس [الكتل](/blocks) يصيّر أمثلة كل راسم إلى جانب أنواعه.

@@ -1,0 +1,55 @@
+---
+title: Vite
+description: Две строки resolve и корень.
+---
+
+## Создайте проект
+
+```bash
+pnpm create vite@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+`react-native-web` — то, во что `react-native` разрешается на вебе, поэтому приложение объявляет его так же, как объявляет `react-dom`.
+
+## Настройте Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+Это вся конфигурация. Записи для пакета в ней нет — ни псевдонима на него, ни конвейера CSS, ни плагина, ни списка транспиляции. Три разрешения принадлежат react-native-web, и каждое приложение, которое рендерит через него, их несёт: веб-сборка react-native-svg импортирует голый `react-native`, её вход доходит до этой сборки только когда `.web.js` старше `.js`, а путь ассета называет `@react-native/assets-registry/registry`, который на вебе — собственный модуль AssetRegistry из react-native-web.
+
+## Смонтируйте корень
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+В `index.html` нет ссылки на таблицу стилей и нет `class="dark"`: и то и другое приносит корень.
+
+## Тёмная и светлая
+
+`Hanzo` принимает `theme`. Чтобы выбор остался за человеком, держите его в состоянии и отдавайте корню и переключателю — [Тёмная тема](/docs/dark-mode).

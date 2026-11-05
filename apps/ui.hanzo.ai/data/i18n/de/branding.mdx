@@ -1,0 +1,88 @@
+---
+title: Marke
+description: Die Marke wird einmal entschieden, zur Build-Zeit, und erreicht jede Fläche als Wert. Nichts in den Komponenten nennt ein Haus.
+---
+
+Nichts in der Bibliothek trägt eine Marke. Eine Komponente liest ein Token,
+das Token liest eine benutzerdefinierte Eigenschaft, und die Eigenschaft ist,
+was der Build deklariert hat. Eine Site, ein Signet, ein Name, eine Farbe und
+eine Schrift sind jeweils ein Wert an einem Ort, also trägt ein Build für eine
+andere Organisation nichts von dieser.
+
+## Diese Site
+
+Diese Dokumentation wird aus der Umgebungsvariable `BRAND` gebaut. `brand.ts`
+liest sie einmal und veröffentlicht den Namen, die Organisation, das Signet
+als Inline-SVG, das Favicon als Data-URI, abgeleitet von diesem Signet, die
+Links und den Link zum Framework, wenn die Marke einen hat.
+
+```bash
+BRAND=lux pnpm build
+```
+
+Jede Zeichenkette auf der Seite kommt aus diesem Modul — die Kopfzeile, die
+Fußzeile, die Titel und die Seiten, die du liest, die `brand.name` schreiben
+statt eines Namens. Codebeispiele werden auf das Paket umgeschrieben, das der
+Build dokumentiert, und der Katalog lässt in einem Build für eine andere Marke
+jedes Modul und jedes Mitglied weg, das den Namen des Hauses trägt, sodass
+die `index.html` der anderen Marke keine Spur von dieser enthält.
+
+## Die Identität
+
+`@hanzo/ui/product/pure` veröffentlicht den Markensatz, aus dem die Signets
+gezeichnet werden — `HANZO`, `LUX`, `ZOO`, `PARS` — und `resolveBrand`, das
+auf eine Id mit der Identität antwortet und sonst auf das Haus zurückfällt.
+
+```ts
+import { BRANDS, resolveBrand, type BrandIdentity } from '@hanzo/ui/product/pure'
+
+const brand: BrandIdentity = resolveBrand('lux')
+brand.name     // 'Lux'
+brand.viewBox  // '0 0 100 100'
+brand.content  // the mark's inner SVG, drawn in currentColor
+brand.href     // 'https://lux.network'
+```
+
+Die Signets nutzen `currentColor`, also dient eine Datei beiden Themes; ein
+Signet, das eigene Füllungen trägt, sagt `fullColor`. Das animierte Logo in
+der Produktschicht nimmt die Identität als Prop:
+
+```tsx
+import { AnimatedLogo } from '@hanzo/ui/product'
+import { LUX } from '@hanzo/ui/product/pure'
+
+<AnimatedLogo surface="Cloud" brand={LUX} />
+```
+
+## Die Farben und die Schrift
+
+Eine Marke stimmt die Identität um, indem sie dieselben benutzerdefinierten
+Eigenschaften später in der Kaskade deklariert. Zwei davon sind auch die
+Regler der Erscheinung, die eine Person bewegt, und die engste Meinung
+gewinnt, Achse für Achse — Installation, dann Organisation, dann Person.
+
+```css
+:root {
+  --primary: #808000;
+  --accent: #808000;
+  --font-sans-provided: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+`--font-sans-provided` und nicht `--font-sans`: die eigene Bindung des Pakets
+sitzt in einer Kaskadenebene, sodass eine Deklaration ohne Ebene vom Host
+gewinnt, ganz gleich wie spezifisch sie ist, und genau das lässt die Schrift
+des Hosts die sein, die gezeichnet wird.
+
+Die Organisationsschicht von `@hanzo/appearance` trägt dieselben Regler aus
+einer Zeile auf einem Server. `current({ install, org, orgId })` löst auf,
+was eine Person in einer Organisation auf einem Gerät sehen soll, und
+`bootScript({ org, base })` schreibt die Vorgaben der Installation und der
+Organisation in das Script im Kopf, sodass der erste Paint schon zur Marke
+passt.
+
+## Was bleibt
+
+Das Paket behält seinen npm-Namen, weil ein Codebeispiel dazu da ist,
+eingefügt zu werden. Dieser Name und das Framework, auf dem es aufbaut, sind
+die zwei Dinge, die ein Build für eine andere Marke weiterhin sagt.

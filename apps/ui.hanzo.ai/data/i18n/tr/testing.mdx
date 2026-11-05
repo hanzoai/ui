@@ -1,0 +1,88 @@
+---
+title: Testler
+description: Kökün altında monte edin, slot ile bulun, kaskadı kendiniz çözün ve gerisini bir tarayıcı hesaplasın.
+---
+
+Her bileşen adıyla bir `data-slot` basar, bu yüzden bir test, bir sürümün değiştirebileceği işaretlemeye bağlı kalmadan bir kontrol bulabilir. Uygulamanın yaptığı gibi `Hanzo` altında monte edin; kök, her token’ın çözüldüğü yapılandırmayı taşır ve kök teması olmayan bir bileşen hata fırlatır.
+
+## Birim testleri
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+Alias, bundler’ın taşıdığı alias’tır. `inline` listesi önemlidir: motorun paketleri ESM’i yeniden dışa aktaran CommonJS olarak yayımlanır ve dışarıda bırakılırlarsa temaya sahip modülün ikinci bir kopyasına çözülür, böylece sağlayıcı bir bağlam yazar, her temalı bileşen diğerini okur ve `Missing theme` fırlatır.
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## Kaskadı olmayan bir DOM’da renkler
+
+jsdom `var()` çözmez; teste metni olduğu gibi verir. Tema basamakları bilerek `var(--border, rgb(255 255 255 / .10))` yazılır — bir design sayfası monte edilmişse canlı kaskadı izleyin, değilse denetlenmiş sabiti tutun — bu yüzden jsdom’da bir kenarlığın kontrastını ileri sürmek bir rengi bir fonksiyon çağrısıyla karşılaştırmaktı. `substitute`, jsdom’un atmadığı adımı atar.
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+Bir `vars` haritası olmadan bu yaklaşık değil, kesindir: jsdom bir design sayfası monte etmez, bu yüzden hiçbir şey `--border` bildirmez, dolayısıyla yedek, bir tarayıcının aynı koşullarda hesaplayacağı şeydir. Kendi token’larını bildiren bir host’u modellemek için bir harita geçirin. Modül hiçbir şey içe aktarmaz ve iki biçimde de çıkar, bu yüzden herhangi bir çalıştırıcı altında yüklenir.
+
+## Bir tarayıcının hesapladığı
+
+Bir derleme, bir tip denetimi ve bir birim testi, sayfaya hiç ulaşmamış bir stil sayfasında da geçer. Kanıt bir tarayıcıdır: uygulamayı derleyin, sunun ve işaretlemenin iddiaları yerine hesaplanmış stilleri ileri sürun.
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+Paket kendini böyle test eder. Galerisi, her varyantta her bileşenin tek bir listesidir; stil sayfası üreteci o listeyi render eder, bir birim testi onu gerçek sağlayıcı altında render eder ve her slot işaretinin geldiğini denetler, bir tüketici testi tarball’ı paketler, depunun dışındaki bir uygulamaya kurar — asla bir workspace bağlantısı değil, o kaynak ağacı üzerinden çözülür ve tarball’da eksik bir dosyayı gizler — derler ve iki temada 390 ile 1280’de hesaplanmış stilleri ve ekran görüntülerini ileri sürer. Bir workspace bağlantısı, o testin yakalamak için var olduğu kusurların her birini yayımlardı.

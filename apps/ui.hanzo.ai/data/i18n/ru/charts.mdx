@@ -1,0 +1,157 @@
+---
+title: Графики
+description: Тренд, ряд, доля и распределение. Встроенный SVG, ни одной зависимости и ни одной выдуманной точки.
+---
+
+```tsx
+import { BarChart, BarRows, Donut, LineChart, Sparkline } from '@hanzo/ui/product'
+```
+
+Графики рисуются встроенным SVG и берут цвета из живой темы, поэтому инвертируются вместе с ней. Они честны по построению: sparkline меньше чем с двумя точками не рисует ничего, кольцо без положительного значения рисует длинное тире, и ни один график не выдумывает тренд. Вызывающий передаёт настоящие ряды.
+
+Данные несут две формы. `ChartPoint` — подписанное значение на последовательной оси; `Slice` — подписанная величина на категориальной, с необязательным цветом и подсказкой.
+
+```ts
+type ChartPoint = { label: string; value: number }
+type Slice = { label: string; value: number; color?: string; hint?: string }
+```
+
+## Sparkline
+
+Тренд фиксированного размера для карточки метрики. `values` — простой массив; `width`, `height` и `color` необязательны.
+
+```tsx
+<Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+```
+
+<Preview>
+  <Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+</Preview>
+
+## Линейный график
+
+Значение во времени. Он меряет контейнер, поэтому шириной равен коробке, в которой сидит, а наведение читает ближайшую точку рядом с направляющей. `formatValue` форматирует показание.
+
+```tsx
+<LineChart
+  data={[
+    { label: 'Mon', value: 120 },
+    { label: 'Tue', value: 180 },
+    { label: 'Wed', value: 150 },
+    { label: 'Thu', value: 260 },
+    { label: 'Fri', value: 230 },
+    { label: 'Sat', value: 310 },
+    { label: 'Sun', value: 290 },
+  ]}
+  height={200}
+  formatValue={(v) => `${v} req`}
+/>
+```
+
+<Preview>
+  <LineChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+    formatValue={(v) => `${v} req`}
+  />
+</Preview>
+
+## Столбчатый график
+
+Те же данные, столбцами. Те же пропы.
+
+```tsx
+<BarChart data={points} height={200} />
+```
+
+<Preview>
+  <BarChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+  />
+</Preview>
+
+## Кольцо
+
+Доля. Цвет — это данные, а не режим: сектор с `color` рисуется им, а сектор без цвета берёт монохромную шкалу от переднего плана, так что один компонент служит и категориальному графику, и графику в бренде. `center` рендерится внутри кольца; `legend` рисует встроенный список подписи и процента и выключена по умолчанию, чтобы потребитель мог собрать список богаче.
+
+```tsx
+<Donut
+  slices={[
+    { label: 'zen-4', value: 62 },
+    { label: 'zen-3', value: 28 },
+    { label: 'other', value: 10 },
+  ]}
+  center="62%"
+  legend
+/>
+```
+
+<Preview>
+  <XStack gap="$8" flexWrap="wrap" items="center">
+    <Donut
+      slices={[
+        { label: 'zen-4', value: 62 },
+        { label: 'zen-3', value: 28 },
+        { label: 'other', value: 10 },
+      ]}
+      center="62%"
+      legend
+    />
+    <Donut
+      slices={[
+        { label: 'compute', value: 540, color: '#7c5cff' },
+        { label: 'storage', value: 220, color: '#23c562' },
+        { label: 'egress', value: 90, color: '#ff9f45' },
+      ]}
+      size={120}
+      thickness={16}
+    />
+  </XStack>
+</Preview>
+
+`CHART_PALETTE` — восемь различимых оттенков для категориального ряда, настроенных под тёмный фон; `CHART_OTHER` — приглушённый тон остатка.
+
+## Ряды столбцов
+
+Распределение подписанными горизонтальными столбцами, нарисованными примитивами раскладки, чтобы тема шла как у оболочки. Принимает ту же форму `Slice`.
+
+```tsx
+<BarRows
+  bars={[
+    { label: 'us-east', value: 1240 },
+    { label: 'eu-west', value: 860 },
+    { label: 'ap-south', value: 410 },
+  ]}
+/>
+```
+
+<Preview>
+  <BarRows
+    bars={[
+      { label: 'us-east', value: 1240 },
+      { label: 'eu-west', value: 860 },
+      { label: 'ap-south', value: 410 },
+    ]}
+  />
+</Preview>
+
+## Измерить коробку
+
+Экспортируется и `useContainerWidth`: `ref` и ширина, которую он измерил в последний раз, её держит `ResizeObserver`. Им пользуются линейный и столбчатый графики, и им может воспользоваться ваш график, чтобы рисовать в данную ему коробку, а не в число, которое он угадал.

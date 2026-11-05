@@ -1,0 +1,138 @@
+---
+title: Thème
+description: Les tokens se résolvent sur le thème, les propriétés personnalisées portent l'identité, et trois molettes permettent à une personne de tout retoucher.
+---
+
+Rien dans la bibliothèque ne nomme une couleur. Un composant demande
+`$background` ou `$color12`, le thème répond, et la réponse diffère entre
+sombre et clair sans que le composant le sache. Une marque change la réponse
+en posant une propriété personnalisée ; une personne la change en tournant
+une molette par laquelle les rampes se multiplient.
+
+## Tokens
+
+Une valeur de prop qui commence par `$` est un token. La rampe de couleurs va
+de la surface au texte : `$color1` est le fond le plus discret, `$color12` le
+texte le plus fort.
+
+| Token | Ce que c'est |
+| --- | --- |
+| `$background` | Le fond de la page. Il lit `--background`, donc la feuille de la marque y répond. |
+| `$color` | La couleur de texte par défaut. |
+| `$color1` – `$color12` | La rampe neutre : `$color2`/`$color3` sont des surfaces relevées, `$color10`/`$color11` du texte en sourdine, `$color12` le plus fort. |
+| `$borderColor` | Le filet. Translucide, il se lit comme un trait plus clair sur n'importe quelle surface, et non comme un gris sans rapport. |
+| `$accentBackground` / `$accentColor` | Le seul contrôle fort qu'une page a le droit d'avoir. Ils lisent `--primary`, donc la molette d'accent les atteint. |
+
+<Preview>
+  <XStack gap="$2" flexWrap="wrap">
+    <Button>Default</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="destructive">Destructive</Button>
+  </XStack>
+  <XStack gap="$2" flexWrap="wrap">
+    <Badge>default</Badge>
+    <Badge variant="secondary">secondary</Badge>
+    <Badge variant="destructive">destructive</Badge>
+    <Badge variant="outline">outline</Badge>
+  </XStack>
+</Preview>
+
+## Les échelles
+
+Taille, espace et rayon sont les mêmes nombres sur chaque hôte, et chaque
+barreau porte une molette.
+
+**Caractères.** `fontSize="$n"`, jamais un nombre. Douze barreaux lisent la
+rampe de design, de `--text-xs` à `--text-9xl`, et les quatre barreaux
+intermédiaires interpolent leurs voisins, si bien que l'échelle d'une
+personne déplace les seize et que l'échelle reste une échelle.
+
+| Barreau | `$1` | `$2` | `$3` | `$4` | `$5` | `$6` | `$7` | `$8` | `$9` | `$10` | `$11` | `$14` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| px | 11 | 13 | 14 | 15 | 15 | 17 | 21 | 26 | 26 | 32 | 40 | 64 |
+
+`$1` est une étiquette, `$2` la navigation et le corps dense, `$3` la base,
+`$6` un titre de section, `$7` un titre de page, `$8` et au-dessus le display.
+Les barreaux de display resserrent leur interligne et leur tracking à
+−0.025em, ce qui fait la différence entre un caractère composé et un
+caractère qui est seulement grand.
+
+**Espace.** La rampe de 4px, et rien que celle-là : `$1` 4, `$2` 8, `$3` 12,
+`$4` 16, `$5` 24, `$6` 32, `$8` 48, `$10` 64. Chaque cran est multiplié par
+`--density`.
+
+**Rayon.** Quatre valeurs. `$1` et `$2` valent 6, un contrôle ; `$3` et `$4`
+valent 8, un champ ou une ligne ; de `$5` à `$9`, 12, un panneau ; `$10` et
+au-dessus, la pilule. Tout, sauf la pilule, est multiplié par
+`--radius-scale`.
+
+## Propriétés personnalisées
+
+L'identité est un jeu de propriétés personnalisées sur `:root`, le sombre
+d'abord, et `.light` les retouche. `Hanzo` pose `.t_dark` ou `.t_light` sur
+le body et le CSS répond aux deux graphies, donc les tokens des composants et
+la feuille de styles nomment un seul thème.
+
+```css
+:root {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --primary: #fafafa;
+  --border: rgb(255 255 255 / .10);
+  --ring: rgb(255 255 255 / .40);
+  --font-sans: 'Zen', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Zen Mono', ui-monospace, monospace;
+}
+```
+
+Le jeu complet est `--background`, `--foreground`, `--card`, `--popover`,
+`--primary`, `--secondary`, `--muted`, `--accent`, `--destructive`, chacun
+avec son `-foreground`, puis `--border`, `--input`, `--ring`, `--radius`, de
+`--chart-1` à `--chart-5`, et la famille `--sidebar-*`. Ils viennent de
+`@hanzo/design` et sont composés dans la feuille que la racine importe ; un
+hôte qui monte aussi la feuille propre à design la suit en direct.
+
+Une marque retouche en déclarant les mêmes noms plus tard dans la cascade. Un
+hôte qui apporte sa propre police lie `--font-sans-provided` plutôt que
+`--font-sans`, parce que la liaison du paquet vit dans une couche et qu'une
+déclaration hors couche l'emporte, quelle que soit sa spécificité.
+
+## Les molettes d'apparence
+
+`@hanzo/design` publie trois molettes par lesquelles chaque rampe se
+multiplie, et `@hanzo/appearance` est le panneau qui les règle pour une
+personne :
+
+| Molette | Ce qu'elle déplace |
+| --- | --- |
+| `--type-scale` | Chaque barreau `--text-*`, et avec lui chaque `fontSize="$n"`. |
+| `--type-ratio` | L'écart entre les barreaux. |
+| `--density` | Chaque cran `--space-*`, et chaque gap et padding de gui. |
+| `--primary` / `--accent` | La seule couleur forte. |
+| `--font-sans` | La police de lecture : celle de la marque, celle du système, une serif, ou mono. |
+| `--container-max` / `--container-prose` / `--container-wide` | Les trois mesures sur lesquelles une page se compose. |
+
+Elles atterrissent en propriétés en ligne sur `html`, qui est `:root`, donc
+elles l'emportent sur toute feuille sans qu'un sélecteur ait à les dépasser
+en spécificité, et elles atteignent les composants parce que gui résout une
+taille en JavaScript sous la forme `var(--text-base)` et que la variable lit
+encore la cascade sur l'élément. Un axe que personne n'a réglé est absent,
+pas neutre : écrire `1` aurait le même aspect et passerait en silence devant
+une marque qui a publié sa propre échelle.
+
+```tsx
+import { Appearance } from '@hanzo/appearance'
+import { bootScript } from '@hanzo/appearance/state'
+
+// In <head>, so the first paint is already correct.
+<script dangerouslySetInnerHTML={{ __html: bootScript() }} />
+
+// Wherever the product keeps settings.
+<Appearance />
+```
+
+`Hanzo` réapplique la préférence enregistrée à chaque montage, donc un choix
+fait sur une page tient sur la suivante. Le contrôle dans l'en-tête de ce
+site, c'est ce panneau.

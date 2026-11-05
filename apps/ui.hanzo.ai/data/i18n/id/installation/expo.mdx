@@ -1,0 +1,52 @@
+---
+title: Expo dan React Native
+description: Impor yang sama, tanpa alias yang perlu dipasang. Metro sudah berbicara react-native.
+---
+
+Pustaka merender lewat @hanzo/gui, yang mengutamakan React Native: sebuah
+stack adalah `View`, teks adalah `Text`, dan prop gaya adalah sebuah gaya.
+Jadi komponen yang sama yang menggambar `div` di web menggambar tampilan
+native di sini, dan token tema, tangga jarak, serta tangga huruf berarti hal
+yang sama di keduanya.
+
+## Pasang
+
+```bash
+pnpm create expo-app@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+Tidak ada pengaturan bundler. Alias `react-native` yang dipasang host web
+adalah yang membuat bundler web membaca sebuah paket native; Metro adalah
+bundler native, dan membacanya sebagaimana ditulis. Impor lembar gaya yang
+dibawa akar tidak melakukan apa pun di bawah Metro pada native dan berlaku di Expo web.
+
+## Pasang akar
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Stack } from 'expo-router'
+
+export default function Layout() {
+  return (
+    <Hanzo>
+      <Stack />
+    </Hanzo>
+  )
+}
+```
+
+## Yang tetap di web
+
+`@hanzo/ui/grid` merender sebuah `div` dengan `display: grid`, dan keduanya
+tidak ada di React Native — Yoga tidak punya algoritma kisi — itulah sebabnya
+ia dikirim di subpath sendiri, bukan di barrel akar. Tata letak di sana dengan
+`XStack` dan `YStack`; sebuah mesin kisi native mengubah berkas itu saja dan
+tidak satu pun titik panggil. Grafik di `@hanzo/ui/product` menggambar SVG
+inline dan mengukur wadahnya dengan `ResizeObserver`, jadi hari ini mereka pun
+komponen web.
+
+Sasaran sentuh memenuhi lantai 44 poin lewat `hitSlop`, tidak pernah lewat
+padding, jadi kotak sebuah kontrol berukuran sama di kedua platform dan area
+yang dapat disentuhnya tidak.

@@ -103,23 +103,7 @@ export function Choices<T extends string>({ title, items, value, onPick }: { tit
         {title}
       </SizableText>
       {items.map((c) => (
-        <XStack
-          key={c.id}
-          render="button"
-          role="option"
-          aria-selected={c.id === value}
-          aria-disabled={c.off || undefined}
-          onPress={() => !c.off && onPick(c.id)}
-          items="flex-start"
-          gap={12}
-          px={10}
-          py={8}
-          rounded={8}
-          width="100%"
-          cursor={c.off ? 'default' : 'pointer'}
-          opacity={c.off ? 0.5 : 1}
-          hoverStyle={c.off ? undefined : { bg: '$hover' }}
-        >
+        <XStack key={c.id} render="button" role="option" aria-selected={c.id === value} aria-disabled={c.off || undefined} onPress={() => !c.off && onPick(c.id)} items="flex-start" gap={12} px={10} py={8} rounded={8} width="100%" cursor={c.off ? 'default' : 'pointer'} opacity={c.off ? 0.5 : 1} hoverStyle={c.off ? undefined : { bg: '$hover' }}>
           <YStack flex={1} minW={0} items="flex-start" gap={2}>
             {/* inline-style: a button centres its words; a list reads from its start. */}
             <SizableText fontSize={14} color="$ink" style={{ textAlign: 'start' }}>
@@ -234,7 +218,13 @@ export function Tune({
             quiet
             size="sm"
             name={t('Model')}
-            describe={t('Model: {name}', { name: modelName(mind.models.find((m) => m.id === mind.model) ?? { id: mind.model }) })}
+            describe={t('Model: {name}', {
+              name: modelName(
+                mind.models.find((m) => m.id === mind.model) ?? {
+                  id: mind.model,
+                }
+              ),
+            })}
             models={mind.models}
             value={mind.model}
             onChange={mind.pick}

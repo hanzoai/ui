@@ -1,0 +1,72 @@
+---
+title: Tauri
+description: Vite 빌드 위의 웹 뷰. Vite 설정과, 프레임워크가 필요 없는 테마 토글.
+---
+
+Tauri 앱은 네이티브 창 안의 Vite 앱입니다. 웹 설정이 설정의 전부입니다. 별칭, 확장자 순서, 루트는 [Vite](/docs/installation/vite) 페이지에 있는 것입니다.
+
+## 프로젝트 만들기
+
+```bash
+pnpm create tauri-app@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Vite 설정
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  clearScreen: false,
+  server: { port: 1420, strictPort: true },
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+`server.port` 와 `clearScreen` 은 개발 창을 위한 Tauri 자신의 관례입니다. `resolve` 블록은 라이브러리의 것입니다.
+
+## 루트 마운트
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+## 프레임워크 없는 테마 토글
+
+`@hanzo/ui/product` 의 `ThemeToggle` 은 프레임워크 의존 없이 동작합니다. 제어되면 버튼을 그리고 다음 테마를 알립니다. 앱이 값을 갖고 루트에 넘깁니다.
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App() {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+    </Hanzo>
+  )
+}
+```
+
+같은 토글의 Next 연결은 자기 서브패스 `@hanzo/ui/product/theme-toggle-next` 에 있습니다. Tauri, Vite, Express 호스트가 프로덕트 층을 임포트하는 것만으로 Next 를 그래프에 끌어들이지 않게 하기 위해서입니다.

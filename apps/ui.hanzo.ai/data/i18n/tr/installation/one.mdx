@@ -1,0 +1,64 @@
+---
+title: One
+description: Bu sitenin kurulduğu framework. Alias, dedupe listesi ve belgedeki kök.
+---
+
+[One](https://onestack.dev), dosya rotaları olan, React ve React Native için bir Vite framework’üdür. Bu site, statik HTML’e render edilmiş bir One uygulamasıdır ve aşağıdaki yapılandırma kendisinindir.
+
+## Projeyi oluşturun
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Vite’ı yapılandırın
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+Alias, her host’un kurduğu alias’tır. Dedupe listesi, motoru istemci ve sunucu paketleri arasında tek bir örnekte tutan şeydir: tema bir React bağlamıdır ve ona sahip modülün iki kopyası iki bağlamdır.
+
+## Kökü monte edin
+
+One tüm belgeyi `_layout.tsx` dosyasından render eder, bu yüzden kök oraya gider.
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## Statik render
+
+`defaultRenderMode: 'ssg'` ile her rota derleme sırasında bir kez gerçek bir HTML dosyasına render edilir ve paketin stil sayfası o dosyadadır — sayfa, bir tarayıcı bir bileşeni ilk kez render ettiğinde değil, paket yayımlanırken üretilir ve statik bir sayfayı herhangi bir betik çalışmadan önce doğru kılan budur.

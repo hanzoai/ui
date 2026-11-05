@@ -1,0 +1,59 @@
+---
+title: 品牌
+description: 品牌在建置時決定一次，然後作為一個值到達每一個表面。元件裡沒有任何一處寫下本家的名字。
+---
+
+函式庫裡不攜帶品牌。元件讀一個權杖，權杖讀一條自訂屬性，屬性是建置所宣告的那個。網站、標誌、名字、顏色和字型，各自是一處的一個值，於是給另一個組織做的建置，不會帶上這一家的任何東西。
+
+## 本站
+
+這份文件由環境變數 `BRAND` 建置。`brand.ts` 讀它一次，並公布名字、組織、作為內嵌 SVG 的標誌、從那枚標誌導出的 data URI 網站圖示、連結，以及品牌擁有框架時的那條框架連結。
+
+```bash
+BRAND=lux pnpm build
+```
+
+頁面上的每一條字串都來自那個模組——頁首、頁尾、標題，以及你正在讀的這些頁面，它們寫的是 `brand.name`，而不是一個名字。程式碼範例會被改寫成這次建置所記錄的那個套件，目錄會從給另一個品牌做的建置裡丟掉任何帶著本家名字的模組或成員，於是另一個品牌的 `index.html` 裡找不到這一家的痕跡。
+
+## 身份
+
+`@hanzo/ui/product/pure` 公布標誌所從出的那套品牌——`HANZO`、`LUX`、`ZOO`、`PARS`——以及 `resolveBrand`，它用身份回答一個 id，找不到就退回本家。
+
+```ts
+import { BRANDS, resolveBrand, type BrandIdentity } from '@hanzo/ui/product/pure'
+
+const brand: BrandIdentity = resolveBrand('lux')
+brand.name     // 'Lux'
+brand.viewBox  // '0 0 100 100'
+brand.content  // the mark's inner SVG, drawn in currentColor
+brand.href     // 'https://lux.network'
+```
+
+標誌使用 `currentColor`，所以一份資源服務兩個主題；自己帶著填色的標誌會說 `fullColor`。產品層裡那個會動的標誌把身份當作一個 prop：
+
+```tsx
+import { AnimatedLogo } from '@hanzo/ui/product'
+import { LUX } from '@hanzo/ui/product/pure'
+
+<AnimatedLogo surface="Cloud" brand={LUX} />
+```
+
+## 顏色和字型
+
+品牌要改調身份，就在層疊的後面宣告同樣的自訂屬性。其中兩條同時也是一個人會去轉的外觀旋鈕，最窄的那份意見按軸勝出——先是安裝，然後是組織，然後是人。
+
+```css
+:root {
+  --primary: #808000;
+  --accent: #808000;
+  --font-sans-provided: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+用 `--font-sans-provided`，不用 `--font-sans`：套件自己的繫結坐在一個層疊層裡，於是宿主一條沒有層的宣告不論特異性都會勝出，宿主的字型因此就是被畫上去的那一款。
+
+`@hanzo/appearance` 的組織層從伺服器上的一列帶著同樣的旋鈕。`current({ install, org, orgId })` 解析出一個人在某台裝置上、身處某個組織時應該看到什麼，`bootScript({ org, base })` 把安裝和組織的預設值烤進 head 裡的指令碼，於是第一次繪製就已經在品牌上。
+
+## 留下來的
+
+套件保留它的 npm 名字，因為程式碼範例的工作就是被人貼走。這個名字，以及它建置在其上的框架，是給另一個品牌做的建置仍然會說出來的兩件事。

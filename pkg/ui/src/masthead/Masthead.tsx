@@ -5,7 +5,7 @@ import { Anchor, Text, View, XStack, YStack, type AnchorProps, type GuiElement }
 import { HanzoCommandPalette, HanzoIdentity, HanzoWordmark, MARKS, type GlyphName, type HanzoCommandEntry } from '@hanzogui/shell'
 import { useI18n, type Say } from '@hanzo/i18n/react'
 
-import { ACCOUNT, COMPANY, DOCS, LOGIN, MENUS, OPEN, TRY, at, leaves, type Link, type Menu } from './nav'
+import { ACCOUNT, at, COMPANY, DOCS, leaves, LOGIN, MENUS, OPEN, TRY, type Link, type Menu } from './nav'
 
 /**
  * hanzo.ai's header, for every site that wears it: one nav tree (`./nav`) for
@@ -112,8 +112,7 @@ const TOP = 2147483647
  * sets with the theme. The dimmest is PUSHED rather than mirrored — .45 black on
  * white is 3.35:1, .56 is 4.5:1 on the bar and on the panel.
  */
-const ink = (dark: number, light: number) =>
-  `light-dark(color-mix(in srgb, var(--pure-black) ${light}%, transparent), color-mix(in srgb, var(--pure-white) ${dark}%, transparent))`
+const ink = (dark: number, light: number) => `light-dark(color-mix(in srgb, var(--pure-black) ${light}%, transparent), color-mix(in srgb, var(--pure-white) ${dark}%, transparent))`
 const INK = {
   '--white-92': ink(92, 92),
   '--white-60': ink(60, 60),
@@ -137,10 +136,26 @@ const BAR = {
 } as const
 
 /** The name of the place, lit under the pointer and while the company menu is open. */
-const BRAND = { items: 'center', shrink: 0, height: 34, marginInlineStart: -4, rounded: 999, hoverStyle: { bg: WASH, boxShadow: RING } } as const
+const BRAND = {
+  items: 'center',
+  shrink: 0,
+  height: 34,
+  marginInlineStart: -4,
+  rounded: 999,
+  hoverStyle: { bg: WASH, boxShadow: RING },
+} as const
 
 /** The wordmark: home, and never dim. */
-const NAME = { display: 'flex', items: 'center', height: '100%', pl: 12, pr: 12, color: 'var(--foreground)', whiteSpace: 'nowrap', textDecorationLine: 'none' } as const
+const NAME = {
+  display: 'flex',
+  items: 'center',
+  height: '100%',
+  pl: 12,
+  pr: 12,
+  color: 'var(--foreground)',
+  whiteSpace: 'nowrap',
+  textDecorationLine: 'none',
+} as const
 
 /** A pill in the bar: dim at rest, lit under the pointer. A button's own padding is the browser's, so it is stated. */
 const PILL = {
@@ -158,7 +173,15 @@ const PILL = {
 } as const
 
 /** A pill that opens a menu: its label, then a chevron. */
-const TRIGGER = { ...PILL, gap: 6, px: 12, fontSize: '$2', lineHeight: 20, fontWeight: '500', whiteSpace: 'nowrap' } as const
+const TRIGGER = {
+  ...PILL,
+  gap: 6,
+  px: 12,
+  fontSize: '$2',
+  lineHeight: 20,
+  fontWeight: '500',
+  whiteSpace: 'nowrap',
+} as const
 
 /** The one filled control, in the bar and in the sheet. */
 const ACT = {
@@ -179,7 +202,10 @@ const ACT = {
 } as const
 
 /** What hangs from the bar arrives: up 4px, faded in. */
-const ARRIVE = { enterStyle: { opacity: 0, y: -4 }, transition: 'quickest' } as const
+const ARRIVE = {
+  enterStyle: { opacity: 0, y: -4 },
+  transition: 'quickest',
+} as const
 
 /**
  * A row in a plane. As wide as its words, so a keyboard ring hugs the words it
@@ -198,8 +224,23 @@ const ROW = {
   focusVisibleStyle: { color: 'var(--foreground)' },
 } as const
 /** The destinations someone arrives wanting, in display type. */
-const LEAD = { ...ROW, py: 2, fontSize: '$8', lineHeight: 33.28, fontWeight: '400', letterSpacing: -0.26, color: 'var(--foreground)' } as const
-const PLAIN = { ...ROW, py: 5, fontSize: '$2', lineHeight: 20, fontWeight: '500', color: 'var(--muted-foreground)' } as const
+const LEAD = {
+  ...ROW,
+  py: 2,
+  fontSize: '$8',
+  lineHeight: 33.28,
+  fontWeight: '400',
+  letterSpacing: -0.26,
+  color: 'var(--foreground)',
+} as const
+const PLAIN = {
+  ...ROW,
+  py: 5,
+  fontSize: '$2',
+  lineHeight: 20,
+  fontWeight: '500',
+  color: 'var(--muted-foreground)',
+} as const
 
 /** A row in the sheet: a thumb's height, the column's width. */
 const LINE = {
@@ -214,7 +255,16 @@ const LINE = {
   focusVisibleStyle: { color: 'var(--foreground)' },
 } as const
 /** The sheet's doors: Log in's rows, or the reader's own page. */
-const DOOR = { display: 'flex', items: 'center', justify: 'flex-start', minH: 44, fontSize: '$4', lineHeight: 20, fontWeight: '400', color: 'var(--foreground)' } as const
+const DOOR = {
+  display: 'flex',
+  items: 'center',
+  justify: 'flex-start',
+  minH: 44,
+  fontSize: '$4',
+  lineHeight: 20,
+  fontWeight: '400',
+  color: 'var(--foreground)',
+} as const
 
 /** Where a row goes, and whether it says ↗ — one reading for the bar, the sheet and ⌘K. */
 interface Place {
@@ -346,19 +396,8 @@ function entries(company: Menu, menus: readonly Menu[], login: readonly Link[], 
     }))
 }
 
-export function Masthead({
-  label = 'Hanzo AI',
-  home = '/',
-  origin = '',
-  here = '',
-  tree = {},
-  person,
-  onSignOut,
-  commands = [],
-  onAsk,
-  askHref,
-  bare = false,
-}: MastheadProps) {
+export function Masthead({ label = 'Hanzo AI', home = '/', origin = '', here = '', tree = {}, person, onSignOut, commands = [], onAsk, askHref, bare = false }: MastheadProps) {
+  const { t } = useI18n()
   const company = tree.company ?? COMPANY
   const menus = tree.menus ?? MENUS
   const login = tree.login ?? LOGIN
@@ -366,7 +405,6 @@ export function Masthead({
   const act = person ? (tree.open ?? OPEN) : (tree.try ?? TRY)
   const place: Place = { origin, here }
   const homeHref = at(home, origin, here)
-  const { t } = useI18n()
 
   const [open, setOpen] = useState<string | null>(null)
   const [sheet, setSheet] = useState(false)
@@ -508,15 +546,7 @@ export function Masthead({
   )
 
   const trigger = (item: Menu) => (
-    <Text
-      render="button"
-      {...TRIGGER}
-      {...lit(item.id)}
-      aria-expanded={open === item.id}
-      aria-controls={`menu-${item.id}`}
-      onClick={press(item.id)}
-      onKeyDown={step(item.id)}
-    >
+    <Text render="button" {...TRIGGER} {...lit(item.id)} aria-expanded={open === item.id} aria-controls={`menu-${item.id}`} onClick={press(item.id)} onKeyDown={step(item.id)}>
       <Mark name={item.glyph} bar />
       {t(item.label)}
       <Chevron turned={open === item.id} />
@@ -584,7 +614,7 @@ export function Masthead({
             >
               <Chevron turned={open === company.id} />
             </Text>
-          </XStack>,
+          </XStack>
         )}
         <XStack render="nav" aria-label={t('Main')} display="none" $lg={{ display: 'flex' }} items="center" gap={2}>
           {menus.map((item) => (
@@ -716,17 +746,7 @@ export function Masthead({
           </Text>
         </XStack>
       </XStack>
-      {sheet ? (
-        <Sheet
-          company={company}
-          menus={menus}
-          login={login}
-          door={person ? account : null}
-          act={act}
-          place={place}
-          onClose={() => setSheet(false)}
-        />
-      ) : null}
+      {sheet ? <Sheet company={company} menus={menus} login={login} door={person ? account : null} act={act} place={place} onClose={() => setSheet(false)} /> : null}
       {/* A fixed box of no size is a stacking context at TOP, and the palette's
           scrim and panel, fixed to the window themselves, stack inside it. */}
       <View position="fixed" z={TOP}>
@@ -766,9 +786,9 @@ function Sheet({
   place: Place
   onClose: () => void
 }) {
+  const { t } = useI18n()
   const first = useRef<GuiElement>(null)
   const [section, setSection] = useState<string | null>(null)
-  const { t } = useI18n()
   useEffect(() => node(first.current)?.focus(), [])
   return (
     <View
@@ -784,7 +804,10 @@ function Sheet({
       b={0}
       z="var(--z-overlay)"
       overflowY="auto"
-      $platform-web={{ overscrollBehaviorX: 'contain', overscrollBehaviorY: 'contain' }}
+      $platform-web={{
+        overscrollBehaviorX: 'contain',
+        overscrollBehaviorY: 'contain',
+      }}
       pt={4}
       px="var(--page-gutter)"
       pb="calc(24px + env(safe-area-inset-bottom))"
@@ -808,19 +831,7 @@ function Sheet({
             borderBottomWidth={1}
             borderColor="var(--border)"
           >
-            <Text
-              ref={i === 0 ? first : undefined}
-              render="summary"
-              display="flex"
-              items="center"
-              gap={10}
-              minH={56}
-              fontSize="$6"
-              lineHeight={20}
-              fontWeight="500"
-              color="var(--foreground)"
-              cursor="pointer"
-            >
+            <Text ref={i === 0 ? first : undefined} render="summary" display="flex" items="center" gap={10} minH={56} fontSize="$6" lineHeight={20} fontWeight="500" color="var(--foreground)" cursor="pointer">
               <Mark name={item.glyph} />
               {t(item.label)}
               <Chevron turned={section === item.id} end />

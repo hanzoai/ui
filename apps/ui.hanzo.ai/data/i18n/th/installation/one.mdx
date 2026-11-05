@@ -1,0 +1,64 @@
+---
+title: One
+description: เฟรมเวิร์กที่ไซต์นี้สร้างด้วย นามแฝง รายการ dedupe และรูทในเอกสาร
+---
+
+[One](https://onestack.dev) เป็นเฟรมเวิร์ก Vite สำหรับ React และ React Native พร้อมเส้นทางตามไฟล์ ไซต์นี้เป็นแอป One ที่เรนเดอร์เป็น HTML คงที่ และการตั้งค่าด้านล่างเป็นของมันเอง
+
+## สร้างโปรเจกต์
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## ตั้งค่า Vite
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+นามแฝงเป็นอันเดียวกับที่ทุกโฮสต์ตั้ง รายการ dedupe คือสิ่งที่รักษาให้เอนจินเป็นอินสแตนซ์เดียวข้ามบันเดิลไคลเอนต์และเซิร์ฟเวอร์ ธีมเป็นบริบทของ React และสองสำเนาของโมดูลที่เป็นเจ้าของมันคือสองบริบท
+
+## ติดตั้งรูท
+
+One เรนเดอร์ทั้งเอกสารจาก `_layout.tsx` ดังนั้นรูทไปอยู่ที่นั่น
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## การเรนเดอร์คงที่
+
+ด้วย `defaultRenderMode: 'ssg'` ทุกเส้นทางถูกเรนเดอร์ครั้งเดียวตอนบิลด์เป็นไฟล์ HTML จริง และสไตล์ชีตของแพ็กเกจอยู่ในไฟล์นั้น ชีตถูกสร้างตอนเผยแพร่แพ็กเกจ ไม่ใช่ตอนเบราว์เซอร์เรนเดอร์คอมโพเนนต์ครั้งแรก และนั่นคือสิ่งที่ทำให้หน้าคงที่ถูกต้องก่อนสคริปต์ใดจะรัน

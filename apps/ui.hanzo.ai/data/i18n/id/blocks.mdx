@@ -1,0 +1,133 @@
+---
+title: Blok
+description: Konten sebagai data. Sebuah halaman adalah daftar blok; masing-masing menamai tipenya, tipe memilih perender, dan perender membaca sisanya.
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+Sebuah blok adalah data: `blockType` memilih perender dan bidang lain adalah
+masukan perender itu. Jadi sebuah halaman dapat dikarang di CMS, dimasukkan ke
+repositori, atau dihasilkan server, dan tetap bertipe dengan cara mana pun.
+Setiap bidang `specifiers` adalah kantong petunjuk tata letak yang dipisah
+spasi dan dibaca perender; ia string, bukan union, jadi situs menambah petunjuk
+dengan mengetiknya dan petunjuk yang tidak dikenal diabaikan, bukan menggagalkan
+build.
+
+## Sebuah halaman
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## Kosakata
+
+| Tipe | Yang digambarnya |
+| --- | --- |
+| `heading` | Sebuah judul dengan byline opsional, `level` 0 untuk paragraf dan 1 sampai 6 untuk tag. |
+| `enh-heading` | Bagian yang dinamai: pra-judul di atas, judul, byline di bawah, masing-masing dengan level dan margin sendiri. |
+| `image` | Gambar dari sebuah `ImageDef` — `src`, `alt`, `dim` — dengan perataan dan petunjuk telepon di `specifiers`. |
+| `video` | Sebuah `VideoDef`: sumber, sebuah poster, ukuran per anak tangga. |
+| `space` | Ruang vertikal dalam satuan jarak, per anak tangga atau satu angka untuk semuanya. |
+| `cta` | Sebaris tautan dan tombol: `fill`, `left`, `right`, dan petunjuk telepon. |
+| `card` | Panel berjudul dengan media, konten, dan ajakan bertindak. |
+| `bullet-cards` | Kisi kartu satu baris, masing-masing sebuah ikon di samping teksnya. |
+| `grid` | Sebuah `GridDef` — kolom dan celah per anak tangga, urutan menaik — di atas `cells`. |
+| `group` | Pembungkus di atas `elements`, untuk petunjuk yang berlaku pada seluruhnya. |
+| `accordian` | Pemicu dan kontennya. |
+| `carte-blanche` | Panel bebas: apa pun di atas, sebuah judul, apa pun di bawah, ajakan bertindak di kaki. |
+| `screenful` | Satu layar penuh: banner opsional di atas satu sampai tiga kolom, dengan urutan telepon. |
+| `element` | Simpul yang sudah dibangun penulis. Ia tidak punya perender, memang demikian, dan itulah yang membuat halaman blok dapat menampung apa pun. |
+
+Setiap bentuk diekspor sebagai tipe dari subpath yang sama — `HeadingBlock`,
+`CTABlock`, `ScreenfulBlock`, dan sisanya — di samping definisi yang mereka
+bagi: `GridDef`, `ImageDef`, `VideoDef`, `LinkDef`, `ButtonDef`. `LinkDef`
+dengan href `http` atau `mailto` bersifat eksternal dengan sendirinya dan
+terbuka di tab baru dengan `rel="noreferrer noopener"`; nyatakan `external`
+hanya bila skema tidak bisa memberitahu.
+
+## Perangkat adalah sebuah prop
+
+Setiap perender menerima `agent`, kelas perangkat, alih-alih membaca kueri
+media. Blok ini merender di server yang harus mengeluarkan markup yang tepat
+pada kali pertama: tata letak telepon yang datang sebagai markup desktop lalu
+membetulkan diri saat hidrasi adalah lompatan yang terlihat, dan untuk blok
+video sebuah unduhan yang sia-sia.
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## Tipe Anda sendiri
+
+Peta dari tipe ke perender adalah titik perluasan. Host menambah tipe sendiri,
+atau mengganti satu — begitulah aplikasi Next mengganti gambar pengoptimalnya,
+dan begitulah apa pun yang tidak dikirim pustaka sampai ke halaman.
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+`has(specifiers, token)` menjawab apakah sebuah petunjuk ada di kantong, dan
+`fit(dim, within)` adalah kotak terbesar dari satu rasio aspek di dalam yang
+lain; keduanya diekspor untuk perender milik Anda. Katalog [Blok](/blocks)
+merender contoh tiap perender di samping tipenya.

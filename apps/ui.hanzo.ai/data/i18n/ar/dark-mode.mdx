@@ -1,0 +1,78 @@
+---
+title: الوضع الداكن
+description: الداكن أولًا، والفاتح بـ prop واحدة، ومبدّل لأي مُضيف كنت عليه.
+---
+
+الهوية داكنة. `:root` يمسك اللوحة الداكنة و`.light` يخرج منها، وهذا عكس أكثر أوراق الأنماط، وهو مقصود: الصفحة التي تركّب الجذر ولا تقول شيئًا آخر تخرج على أرض العلامة، لا على الأبيض.
+
+## الجذر يقرّر
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` هي الواجهة كلها. يختم الجذر `.t_light` أو `.t_dark` على body، ويُحل كل رمز مقابل تلك السمة، وتجيب الخصائص المخصصة في الورقة عن الصنف نفسه. المُضيف الذي يريد أن يكون الاختيار لشخص يبقيه في الحالة ويسلّمه إلى الجذر.
+
+## مبدّل
+
+يرسم `ThemeToggle` من `@hanzo/ui/product` الزر ويبلّغ السمة التالية. وهو مضبوط، فيكون سطرًا واحدًا إلى جانب الجذر:
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+ومن غير ضبط — `<ThemeToggle onThemeChange={fn} />` — يقلّب صنفَي `.dark` و`.light` على عنصر المستند نفسه، ويذكر الاختيار تحت المفتاح `theme` في localStorage، لمُضيف ليس عنده حالة يبقيه فيها. وفي الحالين يُظهر الهدف: شمس في الوضع الداكن، وقمر في الفاتح.
+
+## Next
+
+مُضيفو Next يشغّلون `@hanzogui/next-theme` سلفًا، وربط المبدّل به في subpath خاص به حتى لا يسحب مُضيف آخر Next إلى بيانه باستيراد طبقة المنتج.
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+يبلغ `<ThemeToggle />` بلا props أصلًا الربط نفسه باستيراد ديناميكي، ويرتد إلى مبدّل المستند حيث يغيب.
+
+## One وVite
+
+يبقي هذا الموقع الاختيار مع `@vxrn/color-scheme`، وهو يثبّت المخطط المخزون قبل أول رسم ويبلّغه إلى الجذر:
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+يكشف `useUserScheme` أيضًا `setting` — `system` أو `dark` أو `light` — و`set`، وهو ما يسوقه المبدّل في ترويسة هذا الموقع.
+
+## بلا وميض
+
+أيًا كان المُضيف، لا بد أن يكون صنف السمة على المستند قبل أن تدهن ورقة الأنماط، وإلا دهنت الصفحة داكنًا ثم أعادت الدهن فاتحًا. ربط Next و`@vxrn/color-scheme` يكتبانه من نص برمجي مضمّن؛ والمبدّل المكتوب يدويًا يفعل المثل. ضع `suppressHydrationWarning` على عنصر `html`، لأن الصنف الذي كتبه النص ليس الذي صيّره React.

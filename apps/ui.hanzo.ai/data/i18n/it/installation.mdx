@@ -1,0 +1,108 @@
+---
+title: Installazione
+description: Installa il pacchetto, monta la radice, e di' al bundler una cosa sola.
+---
+
+La messa in opera è la stessa su ogni host. L'unica parte che cambia è dove
+va l'impostazione del bundler, e ogni host ha una pagina dedicata.
+
+## Installare
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` e `react-dom` sono peer dalla 19 in poi. `@hanzo/gui` è un peer di
+proposito: consegna un contesto React, e una seconda copia fisica sarebbe un
+secondo contesto, con la radice che scrive in uno mentre ogni componente legge
+l'altro. Tienilo a una sola versione, dichiarata dall'app.
+
+## Montare la radice
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+`Hanzo` è l'unica cosa che un'app monta. Porta la config di gui come valore,
+importa il foglio di stile generato e imposta il tema — scuro per default,
+`theme="light"` per ritoccarlo. Ogni componente lancia un errore se manca un
+tema alla radice, quindi dimenticarlo è un crash al primo paint, mai una
+pagina che si renderizza in silenzio, senza stili.
+
+In sviluppo la radice controlla che il foglio sia arrivato al documento e lo
+dice in console quando non è arrivato. La correzione che nomina è un import,
+`@hanzo/ui/styles.css`, per un bundler che ha lasciato cadere quello del
+pacchetto.
+
+## Dirlo al bundler
+
+Il grafo delle dipendenze del motore nomina `react-native`, e un pacchetto al
+suo interno, `react-native-svg` sotto l'insieme delle icone, pubblica un
+ingresso nativo accanto a un fratello `.web.js`. Scegli quello nativo in una
+build web e l'errore è un fallimento di parsing in sorgente Flow dentro una
+dipendenza, che si legge come un pacchetto rotto e non come un'impostazione
+che manca. Due impostazioni lo evitano:
+
+- `react-native` si risolve in `react-native-web`.
+- `.web.js` precede `.js`.
+
+Sotto Next le due sono un solo wrapper, `@hanzo/ui/next`. Sotto Vite sono due
+righe di `resolve`. Sotto One il framework fa già entrambe. Sotto Expo non
+c'è niente da impostare, perché Metro parla react-native in modo nativo.
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo e React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## Renderizzare qualcosa
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## Caratteri
+
+Il pacchetto porta Zen e Zen Mono e li lega a `--font-sans` e `--font-mono`,
+così un host che non lega niente ottiene i caratteri senza lavoro. Un host
+con un carattere proprio imposta `--font-sans-provided` e vince — vedi
+[Tipografia](/docs/typography).

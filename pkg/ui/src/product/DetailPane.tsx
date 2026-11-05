@@ -42,29 +42,20 @@
  * Escape closes a docked pane while focus is inside it (the overlay's
  * SlideOver already does); ⌘/Ctrl+Enter runs the page's `onExpand`.
  */
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ReactNode,
-} from 'react'
-import { Button as GuiButton, ScrollView, Text, XStack, YStack, useMedia } from '@hanzo/gui'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { Button as GuiButton, ScrollView, Text, useMedia, XStack, YStack } from '@hanzo/gui'
 import { ChevronLeft, Maximize2, X } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 
-import { SlideOver } from './SlideOver'
-import { asColor, type IconLike } from './color'
 import { Button, type ButtonProps } from '../backends/gui/button'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../backends/gui/tooltip'
-import { Grip } from '../backends/gui/grip'
-import { useSpan } from '../backends/gui/span'
 import { useDensity } from '../backends/gui/density'
-import { slot } from '../backends/gui/slot'
 import { mirror } from '../backends/gui/dir'
+import { Grip } from '../backends/gui/grip'
+import { slot } from '../backends/gui/slot'
+import { useSpan } from '../backends/gui/span'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../backends/gui/tooltip'
+import { asColor, type IconLike } from './color'
+import { SlideOver } from './SlideOver'
 
 export type DetailDescriptor = {
   /** Pane title (the item's name). */
@@ -134,7 +125,10 @@ export function DetailPane({ children, zIndex, mode = 'overlay', store = 'hanzo.
   const { t } = useI18n()
   // One state, so every transition is one pure update: whether it is open, and
   // the pages it holds (kept through a close, so the exit animates with them).
-  const [state, setState] = useState<{ open: boolean; stack: DetailDescriptor[] }>({ open: false, stack: [] })
+  const [state, setState] = useState<{
+    open: boolean
+    stack: DetailDescriptor[]
+  }>({ open: false, stack: [] })
   const { open: isOpen, stack } = state
   const density = useDensity()
   const media = useMedia()
@@ -144,28 +138,21 @@ export function DetailPane({ children, zIndex, mode = 'overlay', store = 'hanzo.
   const open = useCallback((descriptor: DetailDescriptor) => setState({ open: true, stack: [descriptor] }), [])
   const push = useCallback(
     (descriptor: DetailDescriptor) =>
-      setState((s) => ({ open: true, stack: s.open ? [...s.stack, descriptor] : [descriptor] })),
-    [],
+      setState((s) => ({
+        open: true,
+        stack: s.open ? [...s.stack, descriptor] : [descriptor],
+      })),
+    []
   )
   const close = useCallback(() => setState((s) => ({ ...s, open: false })), [])
-  const back = useCallback(
-    () => setState((s) => (s.stack.length > 1 ? { ...s, stack: s.stack.slice(0, -1) } : { ...s, open: false })),
-    [],
-  )
+  const back = useCallback(() => setState((s) => (s.stack.length > 1 ? { ...s, stack: s.stack.slice(0, -1) } : { ...s, open: false })), [])
 
   const depth = isOpen ? stack.length : 0
-  const api = useMemo<DetailPaneApi>(
-    () => ({ open, push, back, close, isOpen, depth }),
-    [open, push, back, close, isOpen, depth],
-  )
+  const api = useMemo<DetailPaneApi>(() => ({ open, push, back, close, isOpen, depth }), [open, push, back, close, isOpen, depth])
   const desc = stack[stack.length - 1] ?? null
   const title = typeof desc?.title === 'string' ? desc.title : t('Details')
 
-  const page = desc ? (
-    <PageCtx.Provider value={desc}>
-      {record || desc.bare ? <RecordPage desc={desc} /> : <SheetPage desc={desc} close={close} />}
-    </PageCtx.Provider>
-  ) : null
+  const page = desc ? <PageCtx.Provider value={desc}>{record || desc.bare ? <RecordPage desc={desc} /> : <SheetPage desc={desc} close={close} />}</PageCtx.Provider> : null
 
   if (docked)
     return (
@@ -184,14 +171,7 @@ export function DetailPane({ children, zIndex, mode = 'overlay', store = 'hanzo.
   return (
     <Ctx.Provider value={api}>
       {children}
-      <SlideOver
-        open={isOpen}
-        onClose={close}
-        side="end"
-        size={desc?.size ?? (record ? PANE.w : 460)}
-        ariaLabel={title}
-        zIndex={zIndex}
-      >
+      <SlideOver open={isOpen} onClose={close} side="end" size={desc?.size ?? (record ? PANE.w : 460)} ariaLabel={title} zIndex={zIndex}>
         {record && desc ? (
           <YStack flex={1} minH={0} bg="$background" onKeyDown={expandKey(desc.onExpand) as never}>
             {page}
@@ -216,21 +196,7 @@ const expandKey = (onExpand?: () => void) => (e: { key?: string; metaKey?: boole
  * (its width is the pane's); the INNER box holds the target width throughout, so
  * the page slides in already laid out.
  */
-function Dock({
-  open,
-  title,
-  store,
-  onClose,
-  onExpand,
-  children,
-}: {
-  open: boolean
-  title: string
-  store: string
-  onClose: () => void
-  onExpand?: () => void
-  children: ReactNode
-}) {
+function Dock({ open, title, store, onClose, onExpand, children }: { open: boolean; title: string; store: string; onClose: () => void; onExpand?: () => void; children: ReactNode }) {
   const span = useSpan(store, PANE.w, PANE.min, PANE.max)
   const { t } = useI18n()
   const node = useRef<HTMLElement | null>(null)
@@ -251,10 +217,12 @@ function Dock({
 
   return (
     <YStack
-      ref={((el: unknown) => {
-        span.ref(el)
-        node.current = el instanceof HTMLElement ? el : null
-      }) as never}
+      ref={
+        ((el: unknown) => {
+          span.ref(el)
+          node.current = el instanceof HTMLElement ? el : null
+        }) as never
+      }
       {...slot('detail-pane')}
       data-mode="docked"
       data-open={open ? '' : undefined}
@@ -280,14 +248,7 @@ function Dock({
       // `--span` as useSpan's props carry it, beside the width's own ease.
       $platform-web={{ '--span': `${span.span}px`, transition: 'width var(--duration-base, 300ms) var(--ease-out, ease)' } as object}
     >
-      <YStack
-        width="var(--span)"
-        flex={1}
-        minH={0}
-        bg="$background"
-        borderInlineStartWidth={1}
-        borderColor="$borderColor"
-      >
+      <YStack width="var(--span)" flex={1} minH={0} bg="$background" borderInlineStartWidth={1} borderColor="$borderColor">
         {children}
       </YStack>
       {open ? (
@@ -392,18 +353,7 @@ export function PaneBar({ children, actions }: PaneBarProps) {
   const expand = page?.onExpand
   const { t } = useI18n()
   return (
-    <XStack
-      {...slot('pane-bar')}
-      height={PANE.bar}
-      shrink={0}
-      items="center"
-      justify="space-between"
-      gap="$4"
-      px="$2"
-      bg="$panel"
-      borderBottomWidth={1}
-      borderColor="$borderColor"
-    >
+    <XStack {...slot('pane-bar')} height={PANE.bar} shrink={0} items="center" justify="space-between" gap="$4" px="$2" bg="$panel" borderBottomWidth={1} borderColor="$borderColor">
       <XStack flex={1} minW={0} items="center" gap="$1">
         {pane && pane.depth > 1 ? (
           <Tool tip={t('Back')} onPress={pane.back}>
@@ -462,18 +412,7 @@ export function PaneBody({ children, padded = true }: { children?: ReactNode; pa
 /** The record frame's footer: the panel ground, a hairline above, its actions at the end, 8 apart. */
 export function PaneFoot({ children }: { children?: ReactNode }) {
   return (
-    <XStack
-      {...slot('pane-foot')}
-      shrink={0}
-      items="center"
-      justify="flex-end"
-      gap="$2"
-      px="$3"
-      py="$2"
-      bg="$panel"
-      borderTopWidth={1}
-      borderColor="$borderColor"
-    >
+    <XStack {...slot('pane-foot')} shrink={0} items="center" justify="flex-end" gap="$2" px="$3" py="$2" bg="$panel" borderTopWidth={1} borderColor="$borderColor">
       {children}
     </XStack>
   )

@@ -1,0 +1,98 @@
+---
+title: テーマ
+description: トークンはテーマに対して解決され、カスタムプロパティが見た目を運び、三つのノブでその全体を人が調整できる。
+---
+
+ライブラリの中で、色の名前を書いているところはありません。コンポーネントは `$background` や `$color12` を求め、テーマが答えます。答えはダークとライトで違い、コンポーネントはそれを知りません。ブランドはカスタムプロパティを置いて答えを変え、人はランプが掛けるノブを動かして変えます。
+
+## トークン
+
+`$` で始まる prop の値はトークンです。色のランプは地から文字へ向かいます。`$color1` がいちばん静かな地、`$color12` がいちばん強い文字です。
+
+| トークン | 中身 |
+| --- | --- |
+| `$background` | ページの地。`--background` を読むので、ブランドのスタイルシートがそれに応えます。 |
+| `$color` | 既定の文字色。 |
+| `$color1` – `$color12` | ニュートラルのランプ。`$color2` と `$color3` は浮いた面、`$color10` と `$color11` は抑えた文字、`$color12` がいちばん強い。 |
+| `$borderColor` | ヘアライン。半透明なので、関係のないグレーではなく、どの面の上でも細い線として読めます。 |
+| `$accentBackground` / `$accentColor` | ページに許された、一つだけの強いコントロール。`--primary` を読むので、アクセントのノブがここへ届きます。 |
+
+<Preview>
+  <XStack gap="$2" flexWrap="wrap">
+    <Button>Default</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="destructive">Destructive</Button>
+  </XStack>
+  <XStack gap="$2" flexWrap="wrap">
+    <Badge>default</Badge>
+    <Badge variant="secondary">secondary</Badge>
+    <Badge variant="destructive">destructive</Badge>
+    <Badge variant="outline">outline</Badge>
+  </XStack>
+</Preview>
+
+## 階段
+
+サイズ、間隔、角丸は、どのホストでも同じ数値で、どの段にもノブが付いています。
+
+**タイプ。** `fontSize="$n"` であり、数値にはしません。十二の段がデザインのランプ、`--text-xs` から `--text-9xl` までを読み、その間の四段は隣を補間します。人のスケールは十六段すべてを動かし、階段は階段のままです。
+
+| 段 | `$1` | `$2` | `$3` | `$4` | `$5` | `$6` | `$7` | `$8` | `$9` | `$10` | `$11` | `$14` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| px | 11 | 13 | 14 | 15 | 15 | 17 | 21 | 26 | 26 | 32 | 40 | 64 |
+
+`$1` はラベル、`$2` はナビゲーションと密な本文、`$3` は基準、`$6` は節の見出し、`$7` はページのタイトル、`$8` から上がディスプレイです。ディスプレイの段は行間と字間を −0.025em まで締めます。組まれた文字と、ただ大きい文字の違いがそこです。
+
+**間隔。** 4px のランプだけで、ほかにはありません。`$1` は 4、`$2` は 8、`$3` は 12、`$4` は 16、`$5` は 24、`$6` は 32、`$8` は 48、`$10` は 64。どの段も `--density` が掛けられます。
+
+**角丸。** 値は四つです。`$1` と `$2` は 6 で、コントロール。`$3` と `$4` は 8 で、入力か行。`$5` から `$9` は 12 で、パネル。`$10` 以上はピルです。ピル以外はすべて `--radius-scale` が掛けられます。
+
+## カスタムプロパティ
+
+見た目は `:root` のカスタムプロパティの一組で、先にダークがあり、`.light` がそれを調整します。`Hanzo` は body に `.t_dark` か `.t_light` を押し、CSS は両方の綴りに応えます。コンポーネントのトークンとスタイルシートは、一つのテーマを名指しします。
+
+```css
+:root {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --primary: #fafafa;
+  --border: rgb(255 255 255 / .10);
+  --ring: rgb(255 255 255 / .40);
+  --font-sans: 'Zen', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Zen Mono', ui-monospace, monospace;
+}
+```
+
+一式は `--background`、`--foreground`、`--card`、`--popover`、`--primary`、`--secondary`、`--muted`、`--accent`、`--destructive` で、それぞれに `-foreground` が付き、そのあと `--border`、`--input`、`--ring`、`--radius`、`--chart-1` から `--chart-5`、そして `--sidebar-*` の一族です。これらは `@hanzo/design` から来て、ルートが読み込むスタイルシートへ組まれます。design 自身のシートもマウントするホストは、それにライブで従います。
+
+ブランドは、カスケードのあとで同じ名前を宣言して調整します。自分の書体を持ち込むホストは、`--font-sans` ではなく `--font-sans-provided` を結びます。パッケージの結びつきはレイヤーの中にあり、レイヤーのない宣言は詳細度にかかわらず勝つからです。
+
+## 見た目のノブ
+
+`@hanzo/design` は、すべてのランプが掛ける三つのノブを公開し、`@hanzo/appearance` は人のためにそれを置くパネルです。
+
+| ノブ | 動かすもの |
+| --- | --- |
+| `--type-scale` | すべての `--text-*` の段と、それに伴うすべての `fontSize="$n"`。 |
+| `--type-ratio` | 段と段の隔たり。 |
+| `--density` | すべての `--space-*` の段と、gui の gap と padding のすべて。 |
+| `--primary` / `--accent` | 一つだけの強い色。 |
+| `--font-sans` | 読む書体。ブランドのもの、システムのもの、セリフ、モノ。 |
+| `--container-max` / `--container-prose` / `--container-wide` | ページが組む、三つの行長。 |
+
+これらは `html` のインラインプロパティとして着地します。そこは `:root` なので、より強いセレクタがなくても、どのスタイルシートにも勝ちます。コンポーネントへ届くのは、gui が JavaScript の中でサイズを `var(--text-base)` として解決し、その var が要素の位置でまだカスケードを読むからです。誰も置かなかった軸は、中立ではなく不在です。`1` と書くと同じに見えて、自分のスケールを公開したブランドを黙って上回ります。
+
+```tsx
+import { Appearance } from '@hanzo/appearance'
+import { bootScript } from '@hanzo/appearance/state'
+
+// In <head>, so the first paint is already correct.
+<script dangerouslySetInnerHTML={{ __html: bootScript() }} />
+
+// Wherever the product keeps settings.
+<Appearance />
+```
+
+`Hanzo` はマウントのたびに、保存された好みを掛け直します。あるページで選んだことは、次のページでも保たれます。このサイトのヘッダーのコントロールが、そのパネルです。

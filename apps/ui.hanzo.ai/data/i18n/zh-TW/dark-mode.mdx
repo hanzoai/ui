@@ -1,0 +1,78 @@
+---
+title: 深色模式
+description: 先是深色。要淺色，一個 prop 就夠。開關則跟著你所在的宿主走。
+---
+
+這套身份以深色為準。深色調色盤放在 `:root`，`.light` 才是退出。多數樣式表反過來做，這裡是刻意的：頁面只掛上根、其他什麼都不講，畫出來的是品牌的底色，不是一片白。
+
+## 根說了算
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` 就是全部的 API。根會在 body 蓋上 `.t_light` 或 `.t_dark`，每個權杖都對著那個主題解析，樣式表裡的自訂屬性也認同一個類別。宿主若要把選擇留給人，就放進 state，再交給根。
+
+## 開關
+
+`ThemeToggle` 來自 `@hanzo/ui/product`。它畫出按鈕，並把下一個主題回報出來。受控的時候，它就是根旁邊的一行。
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+沒有受控時，`<ThemeToggle onThemeChange={fn} />` 會在文件元素自己身上切換 `.dark` 與 `.light`，並把選擇記在 localStorage 的 `theme` 鍵。這是給沒有 state 可放的宿主。兩種做法顯示的都是將要去的那一側：深色時是太陽，淺色時是月亮。
+
+## Next
+
+Next 的宿主本來就在跑 `@hanzogui/next-theme`。開關對它的繫結放在自己的子路徑，免得其他宿主一匯入產品層，就把 Next 拉進相依圖。
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+完全不給 props 的 `<ThemeToggle />` 會用動態匯入摸到同一條繫結；那裡沒有這條繫結時，就退回文件上的開關。
+
+## One 與 Vite
+
+這個網站把選擇交給 `@vxrn/color-scheme`。存好的方案會在第一次繪製之前定下來，再回報給根：
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` 另外露出 `setting`，也就是 `system`、`dark` 或 `light`，以及 `set`。本站頁首的開關驅動的就是這個。
+
+## 別讓它閃一下
+
+不論哪一種宿主，主題類別都得在樣式表上色之前就在文件上。否則頁面會先塗深色，再改塗淺色。Next 的繫結和 `@vxrn/color-scheme` 都用一段內嵌指令碼寫上；手寫的開關也該這樣。請在 `html` 元素放上 `suppressHydrationWarning`，因為指令碼寫下的類別，不是 React 繪製出來的那個。

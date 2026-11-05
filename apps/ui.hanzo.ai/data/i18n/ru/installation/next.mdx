@@ -1,0 +1,61 @@
+---
+title: Next
+description: Одна обёртка для обоих сборщиков и корень на клиентской границе.
+---
+
+## Создайте проект
+
+```bash
+pnpm create next-app@latest my-app --typescript --app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Оберните конфигурацию
+
+```js title="next.config.js"
+const withGui = require('@hanzo/ui/next')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = withGui(nextConfig, __dirname)
+```
+
+`withGui` задаёт три вещи сразу для webpack и Turbopack: `.web.*` разрешается первым, `react-native` — это `react-native-web`, и каждый пакет `@hanzogui/*` в `node_modules` транспилируется, чтобы первые две дошли внутрь них. Он складывается с тем, что уже есть: существующий хук `webpack()`, настройки Turbopack и `transpilePackages` сохраняются и расширяются. Передайте `__dirname`, чтобы пакет находился из `node_modules` самого приложения, а не оттуда, где оказался запускатель задач.
+
+Объявляется один раз для обоих сборщиков, потому что настройка только для webpack под Turbopack молча отсутствует, и тогда `next dev` и `next build` расходятся в том, собирается ли приложение.
+
+## Смонтируйте корень
+
+Корень — клиентский компонент, поэтому он живёт в файле с директивой, а layout его рендерит.
+
+```tsx title="app/providers.tsx"
+'use client'
+
+import { Hanzo } from '@hanzo/ui'
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+```tsx title="app/layout.tsx"
+import { Providers } from './providers'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+`suppressHydrationWarning` на `html` нужен для класса темы, который переключатель пишет туда до монтирования React — см. [Тёмная тема](/docs/dark-mode).
+
+## Серверные компоненты
+
+Всё под `@hanzo/ui` — клиентская граница. Серверный компонент рендерит это импортом, как любой клиентский компонент. Правила без прикреплённого компонента — `pages`, `masked`, `tone`, `resolveBrand` — лежат в `@hanzo/ui/product/pure` и ничего не импортируют, поэтому серверный компонент или обработчик маршрута может вызвать их, не загружая дерево компонентов.

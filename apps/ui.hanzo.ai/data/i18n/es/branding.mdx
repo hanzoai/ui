@@ -1,0 +1,88 @@
+---
+title: Marca
+description: La marca se decide una vez, en el momento del build, y llega a cada superficie como un valor. Nada en los componentes nombra una casa.
+---
+
+Nada en la biblioteca lleva una marca. Un componente lee un token, el token
+lee una propiedad personalizada, y la propiedad es lo que haya declarado el
+build. Un sitio, un signo, un nombre, un color y una familia son, cada uno, un
+valor en un solo lugar, así que un build para otra organización no se lleva
+nada de esta.
+
+## Este sitio
+
+Esta documentación se construye a partir de la variable de entorno `BRAND`.
+`brand.ts` la lee una vez y publica el nombre, la organización, el signo como
+SVG en línea, el favicon como data URI sacado de ese signo, los enlaces, y el
+enlace al framework cuando la marca lo tiene.
+
+```bash
+BRAND=lux pnpm build
+```
+
+Cada cadena de la página sale de ese módulo: la cabecera, el pie, los títulos,
+y las páginas que estás leyendo, que escriben `brand.name` en vez de un
+nombre. Las muestras de código se reescriben al paquete que el build
+documenta, y el catálogo deja fuera, en un build para otra marca, cualquier
+módulo o miembro que lleve el nombre de la casa, así que el `index.html` de la
+otra marca no contiene ni rastro de esta.
+
+## La identidad
+
+`@hanzo/ui/product/pure` publica el conjunto de marcas del que salen los
+signos — `HANZO`, `LUX`, `ZOO`, `PARS` — y `resolveBrand`, que responde a un
+id con la identidad y, si no la encuentra, cae a la casa.
+
+```ts
+import { BRANDS, resolveBrand, type BrandIdentity } from '@hanzo/ui/product/pure'
+
+const brand: BrandIdentity = resolveBrand('lux')
+brand.name     // 'Lux'
+brand.viewBox  // '0 0 100 100'
+brand.content  // the mark's inner SVG, drawn in currentColor
+brand.href     // 'https://lux.network'
+```
+
+Los signos usan `currentColor`, así que un solo recurso sirve para los dos
+temas; un signo que trae sus propios rellenos dice `fullColor`. El logotipo
+animado de la capa de producto toma la identidad como prop:
+
+```tsx
+import { AnimatedLogo } from '@hanzo/ui/product'
+import { LUX } from '@hanzo/ui/product/pure'
+
+<AnimatedLogo surface="Cloud" brand={LUX} />
+```
+
+## Los colores y la familia
+
+Una marca reajusta la identidad declarando las mismas propiedades
+personalizadas más tarde en la cascada. Dos de ellas son también los mandos de
+apariencia que mueve una persona, y gana la opinión más estrecha, eje a eje:
+la instalación, luego la organización, luego la persona.
+
+```css
+:root {
+  --primary: #808000;
+  --accent: #808000;
+  --font-sans-provided: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+`--font-sans-provided` y no `--font-sans`: el enlace del paquete vive en una
+capa de cascada, así que una declaración sin capa que venga del host gana, sea
+cual sea su especificidad, y eso es lo que hace que la que se pinte sea la
+familia del host.
+
+La capa de organización de `@hanzo/appearance` trae los mismos mandos desde
+una fila en un servidor. `current({ install, org, orgId })` resuelve lo que
+debe ver una persona de una organización, en un dispositivo, y
+`bootScript({ org, base })` deja escritos en el script de la cabecera los
+valores por defecto de la instalación y de la organización, así que el primer
+pintado ya va con la marca.
+
+## Lo que se queda
+
+El paquete conserva su nombre de npm, porque una muestra de código está para
+pegarla. Ese nombre, y el framework sobre el que está hecho, son las dos cosas
+que un build para otra marca sigue diciendo.

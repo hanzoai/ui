@@ -1,0 +1,86 @@
+---
+title: Merek
+description: Merek diputuskan sekali, saat build, dan menjangkau setiap permukaan sebagai sebuah nilai. Tidak ada di komponen yang menamai sebuah rumah.
+---
+
+Tidak ada di pustaka yang membawa merek. Komponen membaca token, token membaca
+properti kustom, dan properti itu apa pun yang dinyatakan build. Sebuah situs,
+sebuah tanda, sebuah nama, sebuah warna, dan sebuah wajah masing-masing satu
+nilai di satu tempat, jadi build untuk organisasi lain tidak membawa apa pun
+dari yang ini.
+
+## Situs ini
+
+Dokumentasi ini dibangun dari variabel lingkungan `BRAND`. `brand.ts`
+membacanya sekali dan menerbitkan nama, organisasi, tanda sebagai SVG inline,
+favicon sebagai URI data yang diturunkan dari tanda itu, tautan, dan tautan
+framework bila merek memilikinya.
+
+```bash
+BRAND=lux pnpm build
+```
+
+Setiap string di halaman datang dari modul itu — header, footer, judul, dan
+halaman yang sedang Anda baca, yang menulis `brand.name` alih-alih sebuah
+nama. Contoh kode ditulis ulang ke paket yang didokumentasikan build, dan
+katalog menjatuhkan modul atau anggota mana pun yang membawa nama rumah dari
+build untuk merek lain, jadi `index.html` merek lain tidak memuat jejak yang
+ini.
+
+## Identitas
+
+`@hanzo/ui/product/pure` menerbitkan set merek yang menjadi sumber gambar
+tanda — `HANZO`, `LUX`, `ZOO`, `PARS` — dan `resolveBrand`, yang menjawab
+sebuah id dengan identitas, jatuh kembali ke rumah.
+
+```ts
+import { BRANDS, resolveBrand, type BrandIdentity } from '@hanzo/ui/product/pure'
+
+const brand: BrandIdentity = resolveBrand('lux')
+brand.name     // 'Lux'
+brand.viewBox  // '0 0 100 100'
+brand.content  // the mark's inner SVG, drawn in currentColor
+brand.href     // 'https://lux.network'
+```
+
+Tanda memakai `currentColor`, jadi satu aset melayani kedua tema; tanda yang
+membawa isiannya sendiri mengatakan `fullColor`. Logo beranimasi di lapisan
+produk menerima identitas sebagai prop:
+
+```tsx
+import { AnimatedLogo } from '@hanzo/ui/product'
+import { LUX } from '@hanzo/ui/product/pure'
+
+<AnimatedLogo surface="Cloud" brand={LUX} />
+```
+
+## Warna dan wajah
+
+Sebuah merek menyetel ulang identitas dengan menyatakan properti kustom yang
+sama lebih kemudian di kaskade. Dua di antaranya juga kenop tampilan yang
+digeser seseorang, dan pendapat yang paling sempit menang sumbu demi sumbu —
+pasang, lalu organisasi, lalu orang.
+
+```css
+:root {
+  --primary: #808000;
+  --accent: #808000;
+  --font-sans-provided: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+`--font-sans-provided`, bukan `--font-sans`: ikatan milik paket duduk di
+sebuah layer kaskade agar deklarasi tanpa layer dari host menang berapa pun
+spesifisitasnya, dan itulah yang membuat wajah host menjadi yang mengecat.
+
+Lapisan organisasi dari `@hanzo/appearance` membawa kenop yang sama dari
+sebuah baris di server. `current({ install, org, orgId })` menyelesaikan apa
+yang seharusnya dilihat seseorang dalam sebuah organisasi pada sebuah perangkat,
+dan `bootScript({ org, base })` memanggang bawaan pemasangan dan organisasi ke
+dalam skrip head agar cat pertama sudah sesuai merek.
+
+## Yang tetap
+
+Paket mempertahankan nama npm-nya, karena tugas contoh kode adalah untuk
+ditempel. Nama itu dan framework yang menjadi landasannya adalah dua hal yang
+tetap diucapkan build untuk merek lain.

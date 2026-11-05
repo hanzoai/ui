@@ -1,0 +1,113 @@
+---
+title: परीक्षण
+description: रूट के नीचे लगाएँ, स्लॉट से ढूँढें, कैस्केड खुद सुलझाएँ, और बाकी ब्राउज़र को गणना करने दें।
+---
+
+हर कंपोनेंट अपने नाम के साथ `data-slot` छापता है, इसलिए परीक्षण उस मार्कअप
+पर निर्भर किए बिना नियंत्रण ढूँढ सकता है जिसे कोई संस्करण बदल सकता है।
+`Hanzo` के नीचे लगाएँ, जैसे ऐप करता है; रूट वह कॉन्फ़िग लेकर चलता है जिसके
+विरुद्ध हर टोकन सुलझता है, और बिना रूट थीम वाला कंपोनेंट फेंकता है।
+
+## इकाई परीक्षण
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+एलियास वही है जो बंडलर लेकर चलता है। `inline` सूची मायने रखती है: इंजन के
+पैकेज CommonJS की तरह शिप होते हैं जो ESM को फिर एक्सपोर्ट करते हैं, और
+बाहरी छोड़ देने पर वे उस मॉड्यूल की दूसरी प्रति पर सुलझते हैं जिसके पास
+थीम है, इसलिए प्रोवाइडर एक कॉन्टेक्स्ट लिखता है और हर थीम वाला कंपोनेंट
+दूसरी पढ़कर `Missing theme` फेंकता है।
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## बिना कैस्केड वाले DOM में रंग
+
+jsdom `var()` नहीं सुलझाता; वह परीक्षण को पाठ ज्यों का त्यों देता है। थीम
+के डंडे जान-बूझकर `var(--border, rgb(255 255 255 / .10))` लिखे जाते हैं —
+जहाँ डिज़ाइन शीट लगी हो वहाँ जीवित कैस्केड का अनुसरण करें, जहाँ न हो वहाँ
+जाँचा हुआ अक्षरशः मान रखें — इसलिए jsdom में बॉर्डर के कंट्रास्ट का दावा
+एक रंग की तुलना एक फ़ंक्शन कॉल से करता था। `substitute` वह कदम उठाता है जो
+jsdom नहीं उठाता।
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+बिना `vars` नक्शे के वह अनुमान नहीं, सटीक है: jsdom कोई डिज़ाइन शीट नहीं
+लगाता, इसलिए कुछ भी `--border` घोषित नहीं करता, इसलिए फ़ॉलबैक वही है जिसे
+ब्राउज़र उन्हीं स्थितियों में गणना करता। अपने टोकन घोषित करने वाले होस्ट का
+मॉडल बनाने के लिए नक्शा दें। मॉड्यूल कुछ आयात नहीं करता और दोनों प्रारूप
+शिप करता है, इसलिए वह किसी भी रनर के नीचे लोड होता है।
+
+## जो ब्राउज़र ने गणना की
+
+बिल्ड, टाइपचेक और इकाई परीक्षण सब उस स्टाइलशीट पर पास हो जाते हैं जो पृष्ठ
+तक कभी नहीं पहुँची। प्रमाण ब्राउज़र है: ऐप बिल्ड करें, परोसें, और मार्कअप
+के दावों की जगह गणना की हुई स्टाइल पर दावा करें।
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+पैकेज खुद को ऐसे ही परखता है। उसकी गैलरी हर वैरिएंट में हर कंपोनेंट की एक
+सूची है; स्टाइलशीट जनरेटर उस सूची को रेंडर करता है, एक इकाई परीक्षण उसे
+असली प्रोवाइडर के नीचे रेंडर करके जाँचता है कि हर स्लॉट चिह्न पहुँचा, और
+एक उपभोक्ता परीक्षण टारबॉल पैक करता है, उसे रिपॉज़िटरी के बाहर एक ऐप में
+स्थापित करता है — कभी वर्कस्पेस कड़ी नहीं, जो स्रोत वृक्ष से सुलझती है और
+टारबॉल से छूटी फ़ाइल छिपा देती है — उसे बिल्ड करता है, और दोनों थीम में
+390 तथा 1280 पर गणना की हुई स्टाइल और स्क्रीनशॉट पर दावा करता है। वर्कस्पेस
+कड़ी उन हर दोषों को शिप कर चुकी होती जिन्हें यह परीक्षण पकड़ने के लिए है।

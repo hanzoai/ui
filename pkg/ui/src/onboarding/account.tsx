@@ -1,10 +1,10 @@
 'use client'
 
+import { Button } from '../backends/gui/button'
 import { useState } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 import { Checkbox } from '../backends/gui/checkbox'
 import { FieldError } from '../backends/gui/field'
-import { Button } from '../backends/gui/button'
 import { Anchor, Paragraph, SizableText, XStack } from '../backends/gui/layout'
 import { Page, Panel } from './frame'
 import { Primary } from './screens'

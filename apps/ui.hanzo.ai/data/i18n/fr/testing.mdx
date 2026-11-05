@@ -1,0 +1,116 @@
+---
+title: Tests
+description: Montez sous la racine, trouvez par le slot, résolvez vous-même la cascade, et laissez un navigateur calculer le reste.
+---
+
+Chaque composant pose un `data-slot` à son nom, donc un test peut trouver un
+contrôle sans dépendre d'un balisage qu'une version peut changer. Montez sous
+`Hanzo`, comme le fait l'app ; la racine porte la config sur laquelle chaque
+token se résout, et un composant sans thème à la racine lève une erreur.
+
+## Tests unitaires
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+L'alias est le même que celui du bundler. La liste `inline` compte : les
+paquets du moteur sont livrés en CommonJS qui réexporte de l'ESM, et laissés
+externes ils se résolvent vers une seconde copie du module qui possède le
+thème, donc le provider écrit un contexte et chaque composant thématisé en
+lit un autre et lève `Missing theme`.
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## Des couleurs dans un DOM sans cascade
+
+jsdom ne résout pas `var()` ; il remet au test le texte tel quel. Les
+barreaux du thème sont écrits `var(--border, rgb(255 255 255 / .10))` exprès
+— suivre la cascade en direct là où une feuille de design est montée, garder
+le littéral revu là où elle ne l'est pas — si bien qu'affirmer le contraste
+d'une bordure dans jsdom comparait une couleur à un appel de fonction.
+`substitute` fait le pas que jsdom ne fait pas.
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+Sans carte `vars`, c'est exact et non approché : jsdom ne monte aucune feuille
+de design, donc rien ne déclare `--border`, donc la valeur de repli est ce
+qu'un navigateur calculerait dans les mêmes conditions. Passez une carte pour
+modéliser un hôte qui déclare ses propres tokens. Le module n'importe rien et
+est livré dans les deux formats, donc il se charge sous n'importe quel
+runner.
+
+## Ce qu'un navigateur a calculé
+
+Un build, une vérification de types et un test unitaire passent tous sur une
+feuille qui n'a jamais atteint la page. La preuve, c'est un navigateur :
+construisez l'app, servez-la, et affirmez des styles calculés plutôt que ce
+que le balisage prétend.
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+C'est ainsi que le paquet se teste lui-même. Sa galerie est une seule liste
+de chaque composant dans chaque variante ; le générateur de feuille rend
+cette liste, un test unitaire la rend sous le vrai provider et vérifie que
+chaque marqueur de slot est arrivé, et un test consommateur emballe le
+tarball, l'installe dans une app hors du dépôt — jamais un lien de workspace,
+qui se résout à travers l'arbre des sources et cache un fichier absent du
+tarball — la construit, et affirme des styles calculés et des captures à 390
+et à 1280 dans les deux thèmes. Un lien de workspace aurait livré chacun des
+défauts que ce test existe pour attraper.

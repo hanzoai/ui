@@ -1,0 +1,72 @@
+---
+title: Tauri
+description: Bir Vite derlemesinin üzerinde bir web görünümü. Vite kurulumu ve framework gerektirmeyen bir tema anahtarı.
+---
+
+Bir Tauri uygulaması, yerel bir penceredeki Vite uygulamasıdır, bu yüzden web kurulumu kurulumun tamamıdır: alias, uzantı sırası ve kök, [Vite](/docs/installation/vite) sayfasındakilerdir.
+
+## Projeyi oluşturun
+
+```bash
+pnpm create tauri-app@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Vite’ı yapılandırın
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  clearScreen: false,
+  server: { port: 1420, strictPort: true },
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+`server.port` ve `clearScreen`, geliştirme penceresi için Tauri’nin kendi kurallarıdır; `resolve` bloğu kütüphanenindir.
+
+## Kökü monte edin
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+## Framework’süz tema anahtarı
+
+`@hanzo/ui/product` içindeki `ThemeToggle`, framework bağımlılığı olmadan çalışır. Kontrollü olduğunda düğmeyi çizer ve sonraki temayı bildirir; uygulama değeri tutar ve köke verir.
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App() {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+    </Hanzo>
+  )
+}
+```
+
+Aynı anahtarın Next bağlaması kendi subpath’inde yaşar, `@hanzo/ui/product/theme-toggle-next`, tam olarak bir Tauri, Vite veya Express host’unun ürün katmanını içe aktararak Next’i grafına çekmemesi için.

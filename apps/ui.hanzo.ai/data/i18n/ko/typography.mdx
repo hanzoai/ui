@@ -1,0 +1,78 @@
+---
+title: 타이포그래피
+description: Zen 과 Zen Mono, 모든 컴포넌트가 읽는 타입 사다리, 그리고 직접 쓰지 않은 글을 위한 산문 컨테이너.
+---
+
+## 글꼴
+
+읽는 글꼴은 Zen 이고, 코드와 식별자와 숫자 류는 Zen Mono 입니다. 둘 다 패키지에 들어 있고, 글꼴 이름이 아니라 역할을 부르는 두 커스텀 프로퍼티에 묶여 있습니다.
+
+```css
+--font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+--font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
+```
+
+컴포넌트가 읽는 것은 이 두 변수뿐이고, 패밀리 이름은 읽지 않습니다. 자기 글꼴을 원하는 호스트는 `--font-sans-provided` 를 묶습니다. 패키지 자신의 묶음은 캐스케이드 레이어 안에 있으므로, 호스트의 레이어 없는 선언이 이깁니다. 아무것도 묶지 않는 호스트는 Zen 을 얻습니다.
+
+<Preview>
+  <YStack gap="$2">
+    <Text fontSize="$8" fontWeight="600">The quick brown fox jumps over the lazy dog</Text>
+    <Text fontSize="$4" color="$color11">Zen at the section and body rungs, tracked and leaded for the size.</Text>
+    <Text fontFamily="$mono" fontSize="$3">pnpm add @hanzo/ui — Zen Mono for code and numbers 0123456789</Text>
+  </YStack>
+</Preview>
+
+## 사다리
+
+타입 사다리는 하나이고 모든 컴포넌트가 그 위에 있습니다. `Text` 는 `fontSize="$n"` 을 받고 그 단의 행간과 자간도 함께입니다. 제목과 `Paragraph` 는 `size="$n"` 을 받아 셋을 한꺼번에 정합니다.
+
+```tsx
+import { H1, H2, Paragraph, SizableText, Text } from '@hanzo/ui'
+
+<H1>A page title</H1>
+<H2 size="$6">A section</H2>
+<Paragraph size="$4">Body copy at the base rung.</Paragraph>
+<SizableText size="$2" color="$color11">A label.</SizableText>
+<Text fontFamily="$mono" fontSize="$2">an identifier</Text>
+```
+
+숫자는 쓰지 않습니다. `fontSize={14}` 는 14 에 고정됩니다. `fontSize="$3"` 은 오늘은 14 이고, 사람의 타입 스케일이 그것을 무엇으로 읽느냐에 따릅니다. 단이 `var(--text-base)` 를 통해 풀리고 노브가 램프에 곱해지기 때문입니다. 표는 [테마](/docs/theming) 페이지에 있습니다.
+
+## 산문
+
+작성된 내용, CMS 필드, Markdown 파일, 블록의 본문은 맨 태그로 도착합니다. 안의 아무것도 prop 을 질 수 없으므로, 스타일은 조상에서 와 태그를 타고 내려가야 합니다. `ApplyTypography` 가 그 조상입니다.
+
+```tsx
+import { ApplyTypography } from '@hanzo/ui'
+
+<ApplyTypography size="base">
+  <h2>Install</h2>
+  <p>
+    Add the package, then wrap the app once at the root. The full guide is
+    at <a href="https://ui.hanzo.ai">ui.hanzo.ai</a>.
+  </p>
+  <pre>
+    <code>{"pnpm add @hanzo/ui\npnpm dev"}</code>
+  </pre>
+  <ol>
+    <li>
+      Render <strong>Hanzo</strong> once, around the whole tree.
+    </li>
+    <li>
+      Import <code>Button</code> or any other component from the same
+      package.
+    </li>
+    <li>Pass it the props its type declares.</li>
+  </ol>
+  <blockquote>
+    Components read their colours from the theme, so a token changed there
+    changes every surface at once.
+  </blockquote>
+</ApplyTypography>
+```
+
+<Preview>
+  <ProseBlocks />
+</Preview>
+
+`size` 의 기본은 `responsive` 입니다. 뷰포트와 함께 움직이는 유일한 단입니다. 또는 `sm`, `base`, `lg`, `xl` 이고, 이들은 움직이지 않습니다. 호출부가 고른 크기는 결정이지 제안이 아니기 때문입니다. `asTag` 는 요소를 고르며, `div`, `section`, `nav`, `main`, `article`, `aside` 중 하나입니다. 규칙은 스타일시트의 `.hz-prose` 아래에 있고 이름공간이 붙어 있어서, 다른 타이포그래피 플러그인에서 반쯤 벗어난 사이트가 한 셀렉터를 두고 시트 둘이 다투지 않습니다. [산문](/ui/prose) 페이지는 모든 단과, 컨테이너 안에 중첩된 컨테이너를 렌더합니다.

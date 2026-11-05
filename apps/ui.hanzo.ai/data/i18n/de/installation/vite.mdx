@@ -1,0 +1,66 @@
+---
+title: Vite
+description: Zwei Zeilen resolve, und die Wurzel.
+---
+
+## Das Projekt anlegen
+
+```bash
+pnpm create vite@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+`react-native-web` ist das, worauf `react-native` auf dem Web auflöst, also
+deklariert die App es so, wie sie `react-dom` deklariert.
+
+## Vite einrichten
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+Das ist die ganze Konfiguration. Es gibt darin keinen Eintrag für das Paket —
+keinen Alias darauf, keine CSS-Pipeline, kein Plugin, keine Transpile-Liste.
+Die drei Auflösungen gehören zu react-native-web, und jede App, die darüber
+rendert, trägt sie: der Web-Build von react-native-svg importiert nacktes
+`react-native`, sein Einstieg erreicht diesen Build nur, wenn `.web.js` über
+`.js` steht, und sein Asset-Pfad nennt
+`@react-native/assets-registry/registry`, das auf dem Web das eigene
+AssetRegistry-Modul von react-native-web ist.
+
+## Die Wurzel einhängen
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+Kein Stylesheet-Link in `index.html` und kein `class="dark"` darauf: die
+Wurzel bringt beides mit.
+
+## Dunkel und hell
+
+`Hanzo` nimmt `theme`. Damit eine Person wählen kann, halt die Wahl im State
+und reich sie an die Wurzel und an einen Schalter —
+[Dunkelmodus](/docs/dark-mode).

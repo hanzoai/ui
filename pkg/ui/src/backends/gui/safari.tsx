@@ -110,28 +110,8 @@ export function Safari({
 }: SafariProps) {
   const { t } = useI18n()
   return (
-    <YStack
-      {...slot('safari')}
-      width="100%"
-      maxW={960}
-      self="center"
-      rounded="$5"
-      borderWidth={1}
-      borderColor="$borderColor"
-      overflow="hidden"
-      shadowColor="$shadowColor"
-      shadowRadius={24}
-    >
-      <XStack
-        {...slot('safari-chrome')}
-        items="center"
-        gap="$2"
-        px="$3"
-        py="$2"
-        bg="$panel"
-        borderBottomWidth={1}
-        borderColor="$borderColor"
-      >
+    <YStack {...slot('safari')} width="100%" maxW={960} self="center" rounded="$5" borderWidth={1} borderColor="$borderColor" overflow="hidden" shadowColor="$shadowColor" shadowRadius={24}>
+      <XStack {...slot('safari-chrome')} items="center" gap="$2" px="$3" py="$2" bg="$panel" borderBottomWidth={1} borderColor="$borderColor">
         <XStack {...slot('safari-traffic-lights')} gap="$2">
           <Light tone="close" />
           <Light tone="minimize" />
@@ -159,17 +139,7 @@ export function Safari({
           </IconButton>
         </XStack>
 
-        <XStack
-          {...slot('safari-url-bar')}
-          mx="$3"
-          flex={1}
-          items="center"
-          gap="$2"
-          rounded="$4"
-          bg="$background"
-          px="$3"
-          py="$1.5"
-        >
+        <XStack {...slot('safari-url-bar')} mx="$3" flex={1} items="center" gap="$2" rounded="$4" bg="$background" px="$3" py="$1.5">
           <Lock size={14} color="$quiet" />
           <SizableText {...slot('safari-url-text')} flex={1} size="$2" color="$quiet" numberOfLines={1}>
             {url}
@@ -219,16 +189,7 @@ export function Safari({
       </XStack>
 
       {showToolbar ? (
-        <XStack
-          {...slot('safari-secondary-toolbar')}
-          items="center"
-          gap="$4"
-          px="$4"
-          py="$2"
-          bg="$panel"
-          borderBottomWidth={1}
-          borderColor="$borderColor"
-        >
+        <XStack {...slot('safari-secondary-toolbar')} items="center" gap="$4" px="$4" py="$2" bg="$panel" borderBottomWidth={1} borderColor="$borderColor">
           {TOOLBAR_ITEMS.map(({ item, label, icon: Icon }) => (
             <ToolbarButton
               key={item}

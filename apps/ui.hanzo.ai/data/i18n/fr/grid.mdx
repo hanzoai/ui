@@ -1,0 +1,148 @@
+---
+title: Grille
+description: Un vrai CSS grid dont les pistes viennent du conteneur, pas des enfants. Une prop pour les colonnes, et aucun breakpoint.
+---
+
+Une grille faite à la main — chaque enfant à `width: calc(25% - 7.5px)` —
+n'est régulière que tant que chaque enfant est d'accord, et un mot long rend
+la ligne irrégulière. Rien ne se répare en ajustant le nombre. Ici le parent
+déclare les pistes une fois et les enfants n'ont pas voix au chapitre : des
+colonnes égales sont une affaire de structure, et aucun enfant ne peut
+élargir sa propre piste.
+
+```tsx
+import { Cell, Grid } from '@hanzo/ui/grid'
+```
+
+`Grid` est sur son propre subpath parce qu'il rend un `div` avec
+`display: grid`, et ni l'un ni l'autre n'existe dans React Native. L'API est
+nommée dans les termes du CSS grid — `columns` et `rows` sont des listes de
+pistes, `Cell` place et étend — donc un moteur de grille natif change le
+fichier et pas les sites d'appel.
+
+## Colonnes
+
+`columns` prend n'importe quelle façon d'écrire une liste de pistes : un
+compte, une liste, ou une liste de pistes déjà écrite.
+
+```tsx
+<Grid columns={3} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={3} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+  </Grid>
+</Preview>
+
+Un compte devient `repeat(3, minmax(0, 1fr))` et non `1fr`, parce que `1fr`
+seul signifie `minmax(auto, 1fr)` et qu'`auto` cale le plancher de la piste
+sur le contenu : une chaîne qui ne se coupe pas pousse alors sa propre
+colonne plus large. C'est la ligne irrégulière que le composant existe pour
+empêcher, donc la graphie longue est le but.
+
+```tsx
+<Grid columns={['2fr', '1fr']} gap="$3">
+  <Tile>main</Tile>
+  <Tile>aside</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={['2fr', '1fr']} gap="$3">
+    <Tile>main</Tile>
+    <Tile>aside</Tile>
+  </Grid>
+</Preview>
+
+Un nombre dans une liste, ce sont des pixels ; tout le reste est déjà une
+taille de piste.
+
+## Autant qu'il en tient
+
+La forme responsive est une valeur de `columns`, pas une seconde prop, et il
+n'y a pas de breakpoint dedans. `min` est le plus étroit qu'une colonne peut
+devenir avant que la grille en lâche une, et `max` plafonne le compte.
+
+```tsx
+<Grid columns={{ min: 160, max: 4 }} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Tile>5</Tile>
+  <Tile>6</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={{ min: 160, max: 4 }} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Tile>5</Tile>
+    <Tile>6</Tile>
+  </Grid>
+</Preview>
+
+Redimensionnez la fenêtre : le compte suit la colonne dans laquelle la grille
+se trouve, donc le même bloc est juste à l'intérieur d'une barre latérale
+qu'il n'a jamais vue. `min` s'écrit `min(160px, 100%)` plutôt qu'un `160px`
+nu, donc un téléphone plus étroit que le plancher obtient une piste en pleine
+largeur au lieu d'un défilement de côté. `max` se replie dans le même
+plancher — un M-ième de la ligne, gaps retranchés — donc le plafond ne coûte
+rien sur un petit écran.
+
+## Cellules
+
+Un enfant ordinaire n'a pas besoin d'enveloppe. Une `Cell` existe pour
+s'étendre ou pour se placer : un nombre s'étend sur autant de pistes, une
+chaîne est un `grid-column` tel qu'écrit.
+
+```tsx
+<Grid columns={4} gap="$3">
+  <Cell col={2}><Tile>col=2</Tile></Cell>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={4} gap="$3">
+    <Cell col={2}><Tile>col=2</Tile></Cell>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+  </Grid>
+</Preview>
+
+`row` est la même chose en descendant la page. `rows` sur la grille dimensionne
+les pistes de ligne ; sans lui, les lignes se taillent sur le contenu.
+
+## Écart
+
+`gap` est un token d'espace ou un nombre brut de pixels. Un token lit la
+rampe dans le document — `gap="$4"` vaut `var(--space-4)` — donc une personne
+qui bouge la densité dans le panneau d'apparence bouge chaque grille avec
+elle. Un nombre résolu au rendu est figé au rendu.
+
+## La liste de pistes elle-même
+
+`tracks(columns, gap)` est exporté, parce que c'est toute la décision du
+composant : n'importe quelle graphie de `columns` vers l'unique liste de
+pistes qu'elle signifie, avec les deux invariants ci-dessus dedans.
+
+```ts
+import { tracks } from '@hanzo/ui/grid'
+
+tracks(3)                       // 'repeat(3, minmax(0, 1fr))'
+tracks({ min: 240 })            // 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))'
+```

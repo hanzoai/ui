@@ -1,0 +1,89 @@
+---
+title: Marque
+description: La marque se décide une fois, au moment du build, et atteint chaque surface comme une valeur. Rien dans les composants ne nomme une maison.
+---
+
+Rien dans la bibliothèque ne porte une marque. Un composant lit un token, le
+token lit une propriété personnalisée, et la propriété est ce que le build a
+déclaré. Un site, un signe, un nom, une couleur et une police sont chacun une
+valeur en un seul endroit, donc un build pour une autre organisation
+n'emporte rien de celle-ci.
+
+## Ce site
+
+Cette documentation est construite à partir de la variable d'environnement
+`BRAND`. `brand.ts` la lit une fois et publie le nom, l'organisation, le
+signe en SVG en ligne, le favicon en data URI dérivé de ce signe, les liens,
+et le lien vers le framework quand la marque en a un.
+
+```bash
+BRAND=lux pnpm build
+```
+
+Chaque chaîne de la page vient de ce module — l'en-tête, le pied, les
+titres, et les pages que vous lisez, qui écrivent `brand.name` plutôt qu'un
+nom. Les échantillons de code sont réécrits vers le paquet que le build
+documente, et le catalogue laisse tomber, dans un build pour une autre
+marque, tout module ou membre qui porte le nom de la maison, si bien que le
+`index.html` de l'autre marque ne contient aucune trace de celle-ci.
+
+## L'identité
+
+`@hanzo/ui/product/pure` publie le jeu de marques d'où sont dessinés les
+signes — `HANZO`, `LUX`, `ZOO`, `PARS` — et `resolveBrand`, qui répond à un
+id par l'identité et, à défaut, retombe sur la maison.
+
+```ts
+import { BRANDS, resolveBrand, type BrandIdentity } from '@hanzo/ui/product/pure'
+
+const brand: BrandIdentity = resolveBrand('lux')
+brand.name     // 'Lux'
+brand.viewBox  // '0 0 100 100'
+brand.content  // the mark's inner SVG, drawn in currentColor
+brand.href     // 'https://lux.network'
+```
+
+Les signes utilisent `currentColor`, donc un seul fichier sert les deux
+thèmes ; un signe qui porte ses propres remplissages dit `fullColor`. Le
+logo animé de la couche produit prend l'identité en prop :
+
+```tsx
+import { AnimatedLogo } from '@hanzo/ui/product'
+import { LUX } from '@hanzo/ui/product/pure'
+
+<AnimatedLogo surface="Cloud" brand={LUX} />
+```
+
+## Les couleurs et la police
+
+Une marque retouche l'identité en déclarant les mêmes propriétés
+personnalisées plus tard dans la cascade. Deux d'entre elles sont aussi les
+molettes d'apparence qu'une personne déplace, et l'avis le plus étroit
+l'emporte axe par axe — l'installation, puis l'organisation, puis la
+personne.
+
+```css
+:root {
+  --primary: #808000;
+  --accent: #808000;
+  --font-sans-provided: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+`--font-sans-provided` plutôt que `--font-sans` : la liaison propre au paquet
+vit dans une couche de cascade, donc une déclaration hors couche venue de
+l'hôte l'emporte quelle que soit sa spécificité, et c'est ce qui fait que la
+police de l'hôte est celle qui se peint.
+
+La couche d'organisation de `@hanzo/appearance` porte les mêmes molettes
+depuis une ligne sur un serveur. `current({ install, org, orgId })` résout
+ce qu'une personne d'une organisation, sur un appareil, doit voir, et
+`bootScript({ org, base })` inscrit dans le script d'en-tête les valeurs par
+défaut de l'installation et de l'organisation, si bien que le premier
+affichage est déjà à la marque.
+
+## Ce qui reste
+
+Le paquet garde son nom npm, parce qu'un échantillon de code est là pour être
+collé. Ce nom, et le framework sur lequel il est construit, sont les deux
+choses qu'un build pour une autre marque dit encore.

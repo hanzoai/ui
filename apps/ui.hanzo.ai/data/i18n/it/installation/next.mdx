@@ -1,0 +1,77 @@
+---
+title: Next
+description: Un wrapper per i due bundler, e la radice in un confine client.
+---
+
+## Creare il progetto
+
+```bash
+pnpm create next-app@latest my-app --typescript --app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Avvolgere la configurazione
+
+```js title="next.config.js"
+const withGui = require('@hanzo/ui/next')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = withGui(nextConfig, __dirname)
+```
+
+`withGui` imposta tre cose, per webpack e Turbopack insieme: `.web.*` si
+risolve per primo, `react-native` è `react-native-web`, e ogni pacchetto
+`@hanzogui/*` in `node_modules` viene transpilato così che le prime due
+arrivino fin dentro. Si compone con ciò che c'è già — un hook `webpack()`
+esistente, le impostazioni di Turbopack e `transpilePackages` si conservano e
+si estendono. Passa `__dirname` perché il pacchetto si scopra dal
+`node_modules` dell'app stessa, e non da dove capita di stare il task runner.
+
+Dichiarato una volta per i due bundler, perché un'impostazione solo di
+webpack manca in silenzio sotto Turbopack, e allora `next dev` e `next build`
+non si trovano d'accordo sul fatto che l'app compili.
+
+## Montare la radice
+
+La radice è un componente client, quindi vive in un file con la direttiva e
+il layout la renderizza.
+
+```tsx title="app/providers.tsx"
+'use client'
+
+import { Hanzo } from '@hanzo/ui'
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+```tsx title="app/layout.tsx"
+import { Providers } from './providers'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+`suppressHydrationWarning` su `html` è per la classe di tema che un
+interruttore scrive lì prima che React monti — vedi
+[Modalità scura](/docs/dark-mode).
+
+## Componenti server
+
+Tutto ciò che sta sotto `@hanzo/ui` è un confine client; un componente server
+lo renderizza importandolo, come farebbe con qualunque componente client. Le
+regole senza un componente attaccato — `pages`, `masked`, `tone`,
+`resolveBrand` — stanno in `@hanzo/ui/product/pure` e non importano niente,
+così un componente server o un route handler può chiamarle senza caricare un
+albero di componenti.

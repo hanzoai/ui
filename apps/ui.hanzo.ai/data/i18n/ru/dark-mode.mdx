@@ -1,0 +1,78 @@
+---
+title: Тёмная тема
+description: Сначала тёмная, светлая — одним пропом, и переключатель для того хоста, на котором вы сидите.
+---
+
+Идентичность тёмная. `:root` держит тёмную палитру, а `.light` из неё выходит — наоборот относительно большинства таблиц стилей, и это нарочно: страница, которая монтирует корень и больше ничего не говорит, выходит на фоне бренда, а не на белом.
+
+## Решает корень
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` — весь API. Корень ставит на body `.t_light` или `.t_dark`, каждый токен разрешается относительно этой темы, и пользовательские свойства таблицы отвечают на тот же класс. Хост, который хочет оставить выбор человеку, держит его в состоянии и отдаёт корню.
+
+## Переключатель
+
+`ThemeToggle` из `@hanzo/ui/product` рисует кнопку и сообщает следующую тему. В управляемом режиме это одна строка рядом с корнем:
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+Без управления — `<ThemeToggle onThemeChange={fn} />` — он переключает классы `.dark` и `.light` на самом элементе документа и помнит выбор под ключом `theme` в localStorage, для хоста, которому негде держать состояние. В обоих случаях он показывает цель: солнце в тёмной теме, луна в светлой.
+
+## Next
+
+Хосты на Next уже запускают `@hanzogui/next-theme`, и привязка переключателя к нему лежит на собственном subpath, чтобы никакой другой хост не затащил Next в граф, импортируя слой продукта.
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+`<ThemeToggle />` совсем без пропов доходит до той же привязки динамическим импортом и откатывается к переключателю документа там, где её нет.
+
+## One и Vite
+
+Этот сайт хранит выбор через `@vxrn/color-scheme`: тот устанавливает сохранённую схему до первой отрисовки и сообщает её корню:
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` также отдаёт `setting` — `system`, `dark` или `light` — и `set`, которым крутится переключатель в шапке этого сайта.
+
+## Без вспышки
+
+На любом хосте класс темы должен быть на документе до того, как таблица стилей покрасит страницу, иначе страница красится тёмной и перекрашивается в светлую. Привязка Next и `@vxrn/color-scheme` пишут его из встроенного скрипта; переключатель, написанный вручную, должен делать то же. Поставьте `suppressHydrationWarning` на элемент `html`: класс, который записал скрипт, — не тот, который отрендерил React.

@@ -1,0 +1,32 @@
+---
+title: Acerca de
+description: De qué está hecha la biblioteca, y los términos con los que se publica.
+---
+
+{brand.name} es la biblioteca de componentes de {brand.org}. Es un paquete
+sobre un solo sustrato, y el sustrato es la razón por la que una importación
+corre en la web, en un teléfono y en una ventana de escritorio.
+
+## De qué está hecha
+
+| Paquete | Qué aporta |
+| --- | --- |
+| [@hanzo/gui](https://gui.hanzo.ai) | El motor de estilos: estilos como props, compilados a CSS atómico en la web y a estilos nativos en el teléfono, con el comportamiento — foco, portales, teclado — de cada primitivo. |
+| `@hanzo/design` | Los tokens: la paleta monocroma, la rampa tipográfica, el espaciado, el radio, la elevación, el movimiento, y los tres mandos por los que se multiplica cada rampa. |
+| `@hanzo/font` | Zen y Zen Mono, autoalojadas, bajo la SIL Open Font License. |
+| `@hanzo/appearance` | La lectura que una persona hace del sistema — tamaño de tipo, densidad, acento — guardada y aplicada. |
+
+Los componentes son una implementación original sobre esos cuatro. No hay
+Radix, ni Tailwind, ni class-variance-authority, ni un registro debajo; la
+identidad son propiedades CSS personalizadas, y la hoja de estilos se produce
+renderizando cada componente cuando se publica el paquete.
+
+## Dónde
+
+- Código e incidencias: [{brand.github}]({brand.github})
+- Paquete: [{brand.npm}]({brand.npm})
+- Este sitio: [{brand.site}]({brand.site})
+
+## Licencia
+
+Apache-2.0 o MIT, a tu elección.

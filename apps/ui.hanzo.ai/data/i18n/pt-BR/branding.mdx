@@ -1,0 +1,59 @@
+---
+title: Marca
+description: A marca é decidida uma vez, na hora do build, e chega a cada superfície como um valor. Nada nos componentes nomeia uma casa.
+---
+
+Nada na biblioteca carrega uma marca. Um componente lê um token, o token lê uma propriedade personalizada, e a propriedade é o que o build declarou. Um site, um sinal, um nome, uma cor e uma fonte são cada um um valor num lugar só, então um build para outra organização não carrega nada desta.
+
+## Este site
+
+Esta documentação é construída a partir da variável de ambiente `BRAND`. `brand.ts` a lê uma vez e publica o nome, a organização, o sinal como um SVG inline, o favicon como um data URI derivado desse sinal, os links, e o link do framework quando a marca tem um.
+
+```bash
+BRAND=lux pnpm build
+```
+
+Cada string da página vem desse módulo — o cabeçalho, o rodapé, os títulos, e as páginas que você está lendo, que escrevem `brand.name` em vez de um nome. As amostras de código são reescritas para o pacote que o build documenta, e o catálogo deixa de fora qualquer módulo ou membro que carregue o nome da casa num build para outra marca, então o `index.html` da outra marca não contém vestígio desta.
+
+## A identidade
+
+`@hanzo/ui/product/pure` publica o conjunto de marcas de onde os sinais são desenhados — `HANZO`, `LUX`, `ZOO`, `PARS` — e `resolveBrand`, que responde a um id com a identidade, caindo de volta na casa.
+
+```ts
+import { BRANDS, resolveBrand, type BrandIdentity } from '@hanzo/ui/product/pure'
+
+const brand: BrandIdentity = resolveBrand('lux')
+brand.name     // 'Lux'
+brand.viewBox  // '0 0 100 100'
+brand.content  // the mark's inner SVG, drawn in currentColor
+brand.href     // 'https://lux.network'
+```
+
+Os sinais usam `currentColor`, então um asset serve os dois temas; um sinal que carrega os próprios preenchimentos diz `fullColor`. O logo animado na camada de produto recebe a identidade como prop:
+
+```tsx
+import { AnimatedLogo } from '@hanzo/ui/product'
+import { LUX } from '@hanzo/ui/product/pure'
+
+<AnimatedLogo surface="Cloud" brand={LUX} />
+```
+
+## As cores e a fonte
+
+Uma marca reajusta a identidade declarando as mesmas propriedades personalizadas mais tarde na cascata. Duas delas também são os controles de aparência que uma pessoa move, e a opinião mais estreita ganha eixo por eixo — instalação, depois org, depois pessoa.
+
+```css
+:root {
+  --primary: #808000;
+  --accent: #808000;
+  --font-sans-provided: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+`--font-sans-provided` em vez de `--font-sans`: a ligação do próprio pacote fica numa cascade layer, então uma declaração fora de layer vinda do host ganha qualquer que seja a especificidade, e é isso que deixa a fonte do host ser a que pinta.
+
+A camada de org de `@hanzo/appearance` carrega os mesmos controles a partir de uma linha num servidor. `current({ install, org, orgId })` resolve o que uma pessoa numa org num dispositivo deve ver, e `bootScript({ org, base })` grava os padrões da instalação e da org no script do head, então a primeira pintura já está na marca.
+
+## O que fica
+
+O pacote mantém o nome no npm, porque o trabalho de uma amostra de código é ser colada. Esse nome e o framework sobre o qual ele é construído são as duas coisas que um build para outra marca ainda diz.

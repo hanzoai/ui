@@ -1,0 +1,133 @@
+---
+title: Temas
+description: Los tokens se resuelven contra el tema, las propiedades personalizadas llevan la identidad, y tres mandos dejan que una persona reajuste todo.
+---
+
+Nada en la biblioteca nombra un color. Un componente pide `$background` o
+`$color12`, el tema responde, y la respuesta cambia entre oscuro y claro sin
+que el componente lo sepa. Una marca cambia la respuesta fijando una propiedad
+personalizada; una persona la cambia moviendo un mando por el que se
+multiplican las rampas.
+
+## Tokens
+
+Un valor de prop que empieza por `$` es un token. La rampa de color va de la
+superficie al texto: `$color1` es el fondo más quieto, `$color12` el texto más
+fuerte.
+
+| Token | Qué es |
+| --- | --- |
+| `$background` | El fondo de la página. Lee `--background`, así que lo responde la hoja de la marca. |
+| `$color` | El color de texto por defecto. |
+| `$color1` – `$color12` | La rampa neutra: `$color2`/`$color3` son superficies elevadas, `$color10`/`$color11` texto atenuado, `$color12` el más fuerte. |
+| `$borderColor` | El filete. Translúcido, así que se lee como una línea más clara sobre cualquier superficie, y no como un gris que no viene a cuento. |
+| `$accentBackground` / `$accentColor` | El único control fuerte que se le permite a una página. Leen `--primary`, así que les llega el mando de acento. |
+
+<Preview>
+  <XStack gap="$2" flexWrap="wrap">
+    <Button>Default</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="destructive">Destructive</Button>
+  </XStack>
+  <XStack gap="$2" flexWrap="wrap">
+    <Badge>default</Badge>
+    <Badge variant="secondary">secondary</Badge>
+    <Badge variant="destructive">destructive</Badge>
+    <Badge variant="outline">outline</Badge>
+  </XStack>
+</Preview>
+
+## Las escalas
+
+El tamaño, el espacio y el radio son los mismos números en cada host, y cada
+peldaño lleva un mando.
+
+**Tipo.** `fontSize="$n"`, nunca un número. Doce peldaños leen la rampa de
+diseño, de `--text-xs` a `--text-9xl`, y los cuatro peldaños de en medio
+interpolan a sus vecinos, así que la escala de una persona mueve los dieciséis
+y la escala sigue siendo una escala.
+
+| Peldaño | `$1` | `$2` | `$3` | `$4` | `$5` | `$6` | `$7` | `$8` | `$9` | `$10` | `$11` | `$14` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| px | 11 | 13 | 14 | 15 | 15 | 17 | 21 | 26 | 26 | 32 | 40 | 64 |
+
+`$1` es una etiqueta, `$2` la navegación y el cuerpo denso, `$3` la base, `$6`
+un título de sección, `$7` un título de página, `$8` y lo que sigue el display.
+Los peldaños de display aprietan la interlínea y el tracking a −0.025em, que es
+la diferencia entre un tipo compuesto y un tipo que solamente es grande.
+
+**Espacio.** La rampa de 4px, y solo esa: `$1` 4, `$2` 8, `$3` 12, `$4` 16,
+`$5` 24, `$6` 32, `$8` 48, `$10` 64. Cada paso se multiplica por `--density`.
+
+**Radio.** Cuatro valores. `$1` y `$2` son 6, un control; `$3` y `$4` son 8, un
+campo o una fila; de `$5` a `$9` son 12, un panel; `$10` y por encima son la
+píldora. Todo, menos la píldora, se multiplica por `--radius-scale`.
+
+## Propiedades personalizadas
+
+La identidad es un conjunto de propiedades personalizadas en `:root`, el oscuro
+primero, y `.light` las reajusta. `Hanzo` pone `.t_dark` o `.t_light` en el
+body y el CSS responde a las dos grafías, así que los tokens de los componentes
+y la hoja de estilos nombran un solo tema.
+
+```css
+:root {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --primary: #fafafa;
+  --border: rgb(255 255 255 / .10);
+  --ring: rgb(255 255 255 / .40);
+  --font-sans: 'Zen', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Zen Mono', ui-monospace, monospace;
+}
+```
+
+El conjunto entero es `--background`, `--foreground`, `--card`, `--popover`,
+`--primary`, `--secondary`, `--muted`, `--accent`, `--destructive`, cada uno
+con su `-foreground`, luego `--border`, `--input`, `--ring`, `--radius`, de
+`--chart-1` a `--chart-5`, y la familia `--sidebar-*`. Vienen de
+`@hanzo/design` y se componen en la hoja que importa la raíz; un host que
+también monta la hoja propia de design la sigue en directo.
+
+Una marca reajusta declarando los mismos nombres más tarde en la cascada. Un
+host que trae su propia familia ata `--font-sans-provided` y no `--font-sans`,
+porque el enlace del paquete vive en una capa y una declaración sin capa gana,
+sea cual sea su especificidad.
+
+## Los mandos de apariencia
+
+`@hanzo/design` publica tres mandos por los que se multiplica cada rampa, y
+`@hanzo/appearance` es el panel que los fija para una persona:
+
+| Mando | Qué mueve |
+| --- | --- |
+| `--type-scale` | Cada peldaño `--text-*`, y con él cada `fontSize="$n"`. |
+| `--type-ratio` | Cuánto se separan los peldaños. |
+| `--density` | Cada paso `--space-*`, y cada gap y cada padding de gui. |
+| `--primary` / `--accent` | El único color fuerte. |
+| `--font-sans` | La familia de lectura: la de la marca, la del sistema, una serif, o mono. |
+| `--container-max` / `--container-prose` / `--container-wide` | Las tres medidas a las que se compone una página. |
+
+Caen como propiedades en línea sobre `html`, que es `:root`, así que le ganan a
+cualquier hoja sin necesidad de un selector que las supere en especificidad, y
+llegan a los componentes porque gui resuelve un tamaño en JavaScript como
+`var(--text-base)` y la variable sigue leyendo la cascada en el elemento. Un
+eje que nadie ha fijado está ausente, no en neutro: escribir `1` se vería igual
+y, en silencio, le ganaría a una marca que publicó su propia escala.
+
+```tsx
+import { Appearance } from '@hanzo/appearance'
+import { bootScript } from '@hanzo/appearance/state'
+
+// In <head>, so the first paint is already correct.
+<script dangerouslySetInnerHTML={{ __html: bootScript() }} />
+
+// Wherever the product keeps settings.
+<Appearance />
+```
+
+`Hanzo` vuelve a aplicar la preferencia guardada en cada montaje, así que una
+elección hecha en una página se mantiene en la siguiente. El control de la
+cabecera de este sitio es ese panel.

@@ -1,0 +1,61 @@
+---
+title: Next
+description: غلاف واحد للمُجمِّعين، والجذر في حدّ العميل.
+---
+
+## أنشئ المشروع
+
+```bash
+pnpm create next-app@latest my-app --typescript --app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## غلّف الضبط
+
+```js title="next.config.js"
+const withGui = require('@hanzo/ui/next')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = withGui(nextConfig, __dirname)
+```
+
+يضع `withGui` ثلاثة أشياء، لـ webpack وTurbopack معًا: `.web.*` يُحل أولًا، و`react-native` هو `react-native-web`، وكل حزمة `@hanzogui/*` في `node_modules` تُترجم حتى يصل الأولان إلى داخلها. يتآلف مع ما هو موجود — خطاف `webpack()` قائم، وضبط Turbopack، و`transpilePackages` تُبقى وتُوسَّع. مرّر `__dirname` كي تُكتشف الحزمة من `node_modules` الخاص بالتطبيق، لا من حيث اتفق أن يكون مشغّل المهام.
+
+يُعلَن مرة واحدة للمُجمِّعين، لأن ضبطًا خاصًا بـ webpack يغيب بصمت تحت Turbopack، ثم يختلف `next dev` و`next build` في هل يُترجَم التطبيق.
+
+## ركّب الجذر
+
+الجذر مكوّن عميل، فيعيش في ملف فيه التوجيه، ويصيّره التخطيط.
+
+```tsx title="app/providers.tsx"
+'use client'
+
+import { Hanzo } from '@hanzo/ui'
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+```tsx title="app/layout.tsx"
+import { Providers } from './providers'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+`suppressHydrationWarning` على `html` من أجل صنف السمة الذي يكتبه مبدّل هناك قبل أن يركّب React — انظر [الوضع الداكن](/docs/dark-mode).
+
+## مكوّنات الخادم
+
+كل ما تحت `@hanzo/ui` حدّ عميل؛ يصيّره مكوّن الخادم باستيراده، كما يفعل مع أي مكوّن عميل. القواعد التي لا مكوّن ملصقًا بها — `pages` و`masked` و`tone` و`resolveBrand` — في `@hanzo/ui/product/pure` ولا تستورد شيئًا، فيستطيع مكوّن خادم أو معالج مسار أن يناديها من غير تحميل شجرة مكوّنات.

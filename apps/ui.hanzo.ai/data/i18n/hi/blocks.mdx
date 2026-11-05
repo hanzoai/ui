@@ -1,0 +1,131 @@
+---
+title: ब्लॉक
+description: डेटा के रूप में सामग्री। पृष्ठ ब्लॉकों की सूची है; हर एक अपना प्रकार नाम लेता है, प्रकार रेंडरर चुनता है, और रेंडरर बाकी पढ़ता है।
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+ब्लॉक डेटा है: `blockType` रेंडरर चुनता है और बाकी फ़ील्ड उस रेंडरर का इनपुट
+हैं। इसलिए पृष्ठ CMS में लिखा जा सकता है, रिपॉज़िटरी में जाँचा जा सकता है
+या सर्वर से बन सकता है, और दोनों तरह टाइप किया रहता है। हर `specifiers`
+फ़ील्ड लेआउट संकेतों का स्पेस से अलग थैला है जिसे रेंडरर पढ़ता है; वह यूनियन
+नहीं, स्ट्रिंग है, इसलिए साइट एक संकेत टाइप करके जोड़ती है और अनजान संकेत
+बिल्ड गिराता नहीं, अनदेखा हो जाता है।
+
+## एक पृष्ठ
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## शब्दावली
+
+| प्रकार | वह क्या खींचता है |
+| --- | --- |
+| `heading` | एक शीर्षक, वैकल्पिक बायलाइन के साथ, अनुच्छेद के लिए `level` 0 और टैग के लिए 1 से 6। |
+| `enh-heading` | नाम वाले हिस्से: ऊपर एक पूर्व-शीर्षक, शीर्षक, नीचे एक बायलाइन, हर एक का अपना स्तर और मार्जिन। |
+| `image` | `ImageDef` से एक चित्र — `src`, `alt`, `dim` — संरेखण और फ़ोन के संकेत `specifiers` में। |
+| `video` | एक `VideoDef`: स्रोत, एक पोस्टर, हर डंडे पर आकार। |
+| `space` | अंतर की इकाइयों में ऊर्ध्व स्थान, हर डंडे पर या सबके लिए एक अंक। |
+| `cta` | कड़ियों और बटनों की एक पंक्ति: `fill`, `left`, `right`, और फ़ोन के संकेत। |
+| `card` | मीडिया, सामग्री और एक आह्वान वाला शीर्षक-युक्त पैनल। |
+| `bullet-cards` | एक पंक्ति वाले कार्डों का ग्रिड, हर एक अपने पाठ के बगल एक आइकन। |
+| `grid` | `cells` के ऊपर एक `GridDef` — हर डंडे पर स्तंभ और गैप, बढ़ते क्रम में। |
+| `group` | `elements` के ऊपर एक आवरण, उन संकेतों के लिए जो पूरे समूह पर लगते हैं। |
+| `accordian` | ट्रिगर और उनकी सामग्री। |
+| `carte-blanche` | मुक्त पैनल: ऊपर कुछ भी, एक शीर्षक, नीचे कुछ भी, पैर पर एक आह्वान। |
+| `screenful` | एक स्क्रीन भर: वैकल्पिक बैनर के नीचे एक से तीन स्तंभ, फ़ोन के क्रम के साथ। |
+| `element` | एक नोड जो लेखक पहले ही बना चुका है। इसका कोई रेंडरर नहीं, जान-बूझकर, और यही ब्लॉकों के पृष्ठ को कुछ भी पकड़ने देता है। |
+
+हर आकृति उसी सबपाथ से एक प्रकार की तरह एक्सपोर्ट है — `HeadingBlock`,
+`CTABlock`, `ScreenfulBlock` और बाकी — उन परिभाषाओं के बगल जो वे साझा करते
+हैं: `GridDef`, `ImageDef`, `VideoDef`, `LinkDef`, `ButtonDef`। `http` या
+`mailto` href वाला `LinkDef` अपने आप बाहरी है और नए टैब में खुलता है,
+`rel="noreferrer noopener"` के साथ; `external` तभी लिखें जहाँ योजना खुद न
+बता सके।
+
+## उपकरण एक प्रॉप है
+
+हर रेंडरर `agent` लेता है, उपकरण का वर्ग, मीडिया क्वेरी पढ़ने की जगह। ये
+ब्लॉक ऐसे सर्वर पर रेंडर होते हैं जिसे पहली बार सही मार्कअप निकालना है:
+फ़ोन का लेआउट जो डेस्कटॉप मार्कअप बनकर आए और हाइड्रेशन पर खुद को सुधारे वह
+दिखने वाली छलांग है, और वीडियो ब्लॉकों के लिए व्यर्थ डाउनलोड।
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## अपने प्रकार
+
+प्रकार से रेंडरर तक का नक्शा विस्तार का बिंदु है। होस्ट अपना प्रकार जोड़ता
+है, या एक को बदलता है — इसी तरह Next ऐप अपनी अनुकूलक छवि लगाता है, और जो
+कुछ लाइब्रेरी शिप नहीं करती वह पृष्ठ तक पहुँचता है।
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+`has(specifiers, token)` बताता है कि संकेत थैले में है या नहीं, और
+`fit(dim, within)` एक आस्पेक्ट अनुपात का सबसे बड़ा बॉक्स है दूसरे के अंदर;
+दोनों आपके अपने रेंडरर के लिए एक्सपोर्ट हैं। [ब्लॉक](/blocks) कैटलॉग हर
+रेंडरर के उदाहरण उसके प्रकारों के बगल रेंडर करता है।

@@ -1,0 +1,78 @@
+---
+title: 深色模式
+description: 深色在先，浅色靠一个 prop，开关则看你在哪种宿主上。
+---
+
+身份是深色的。`:root` 握着深色调色板，`.light` 选择退出。这和大多数样式表相反，而且是故意的：一个页面挂上根、别的什么都不说，出来的是品牌的底，不是白底。
+
+## 由根来决定
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+整个 API 就是 `theme`。根在 body 上盖下 `.t_light` 或 `.t_dark`，每个令牌都对着那个主题解析，样式表的自定义属性也应答同一个类。宿主若想把选择交给一个人，就把它放在 state 里，再交给根。
+
+## 一个开关
+
+来自 `@hanzo/ui/product` 的 `ThemeToggle` 画出按钮，并报告下一个主题。受控时，它是根旁边的一行。
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+不受控时——`<ThemeToggle onThemeChange={fn} />`——它在文档元素自身上切换 `.dark` 和 `.light`，并把选择记在 localStorage 的 `theme` 键下，给那些没有 state 可放的宿主。无论哪种，它显示的是目标：深色里是太阳，浅色里是月亮。
+
+## Next
+
+Next 宿主已经在跑 `@hanzogui/next-theme`，开关对它的绑定住在自己的子路径上，这样别的宿主不会因为导入产品层就把 Next 拖进依赖图。
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+完全不带 props 的 `<ThemeToggle />` 会用动态导入走到同一条绑定，到了没有它的地方就退回文档上的开关。
+
+## One 与 Vite
+
+本站用 `@vxrn/color-scheme` 保管这个选择。它在第一次绘制之前定下存好的方案，再报告给根：
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` 还露出 `setting`——`system`、`dark` 或 `light`——以及 `set`，本站页眉里的开关驱动的就是它。
+
+## 不要闪一下
+
+无论哪种宿主，主题类都必须在样式表上色之前就在文档上，否则页面会先涂成深色再改涂浅色。Next 的绑定和 `@vxrn/color-scheme` 都用一段内联脚本把它写上；手写的开关也应该如此。在 `html` 元素上放 `suppressHydrationWarning`，因为脚本写下的类并不是 React 渲染出来的那个。

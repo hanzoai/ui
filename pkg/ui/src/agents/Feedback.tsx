@@ -32,13 +32,16 @@ export interface FeedbackProps extends Row {
 }
 
 export function Feedback({ text, verdict, onVerdict, ...rest }: FeedbackProps) {
+  const { t } = useI18n()
   const [held, setHeld] = useState<Verdict>(null)
   const [copied, setCopied] = useState(false)
-  const { t } = useI18n()
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  useEffect(() => () => {
-    if (timer.current) clearTimeout(timer.current)
-  }, [])
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current)
+    },
+    []
+  )
   const current = verdict === undefined ? held : verdict
 
   const judge = (next: 'up' | 'down') => {
@@ -58,7 +61,13 @@ export function Feedback({ text, verdict, onVerdict, ...rest }: FeedbackProps) {
     }
   }
 
-  const icon = { variant: 'ghost', size: 'icon-sm', minHeight: 28, minWidth: 28, type: 'button' } as const
+  const icon = {
+    variant: 'ghost',
+    size: 'icon-sm',
+    minHeight: 28,
+    minWidth: 28,
+    type: 'button',
+  } as const
   return (
     <XStack {...slot('feedback')} items="center" gap={2} {...rest}>
       {text ? (

@@ -1,0 +1,110 @@
+---
+title: Kiểm thử
+description: Gắn dưới gốc, tìm theo slot, tự phân giải tầng lớp, và để trình duyệt tính phần còn lại.
+---
+
+Mọi thành phần đóng dấu một `data-slot` với tên của nó, nên một phép thử tìm
+được điều khiển mà không phụ thuộc vào đánh dấu mà một phiên bản có thể đổi.
+Gắn dưới `Hanzo`, như ứng dụng làm; gốc mang cấu hình mà mọi token phân giải
+theo, và thành phần không có chủ đề gốc thì ném lỗi.
+
+## Kiểm thử đơn vị
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+Bí danh là cái mà trình đóng gói mang theo. Danh sách `inline` quan trọng: các
+gói của máy được phát hành dạng CommonJS tái xuất ESM, và nếu để ngoài chúng
+phân giải tới một bản thứ hai của mô-đun sở hữu chủ đề, nên provider ghi một
+ngữ cảnh và mọi thành phần có chủ đề đọc bản kia rồi ném `Missing theme`.
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## Màu trong DOM không có tầng lớp
+
+jsdom không phân giải `var()`; nó đưa cho phép thử đúng văn bản. Các bậc chủ đề
+được viết `var(--border, rgb(255 255 255 / .10))` có chủ đích — theo tầng lớp
+đang sống khi bảng thiết kế được gắn, giữ nguyên chữ đã kiểm khi không — nên
+khẳng định độ tương phản của một viền trong jsdom là so một màu với một lời gọi
+hàm. `substitute` làm bước mà jsdom không làm.
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+Không có bản đồ `vars` thì đó là chính xác, không phải xấp xỉ: jsdom không gắn
+bảng thiết kế, nên không gì khai báo `--border`, nên giá trị dự phòng là điều
+trình duyệt sẽ tính trong cùng điều kiện. Truyền một bản đồ để mô phỏng host
+khai báo token riêng. Mô-đun không nhập gì và phát hành cả hai định dạng, nên
+nó tải được dưới mọi trình chạy.
+
+## Những gì trình duyệt đã tính
+
+Một bản dựng, một lần kiểm kiểu và một kiểm thử đơn vị đều qua trên một bảng
+kiểu chưa từng tới trang. Bằng chứng là trình duyệt: dựng ứng dụng, phục vụ nó,
+và khẳng định kiểu đã tính chứ không phải điều đánh dấu tuyên bố.
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+Gói tự kiểm theo cách này. Phòng trưng bày của nó là một danh sách mọi thành
+phần trong mọi biến thể; bộ sinh bảng kiểu dựng danh sách ấy, một kiểm thử đơn
+vị dựng nó dưới provider thật và kiểm mọi dấu slot đã tới, và một kiểm thử
+người dùng đóng tarball, cài vào một ứng dụng ngoài kho — không bao giờ là liên
+kết workspace, vốn phân giải qua cây nguồn và giấu một tệp thiếu trong tarball
+— dựng nó, rồi khẳng định kiểu đã tính và ảnh chụp ở 390 và 1280 trong cả hai
+chủ đề. Một liên kết workspace đã phát hành mọi lỗi mà phép thử này có để bắt.

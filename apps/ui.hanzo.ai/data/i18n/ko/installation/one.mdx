@@ -1,0 +1,64 @@
+---
+title: One
+description: 이 사이트를 만든 프레임워크. 별칭, 중복 제거 목록, 문서 안의 루트.
+---
+
+[One](https://onestack.dev) 은 파일 라우트를 가진, React 와 React Native 를 위한 Vite 프레임워크입니다. 이 사이트는 정적 HTML 로 렌더되는 One 앱이고, 아래 설정은 사이트 자신의 것입니다.
+
+## 프로젝트 만들기
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Vite 설정
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+별칭은 모든 호스트가 두는 것과 같습니다. 중복 제거 목록은 클라이언트와 서버 번들을 가로질러 엔진을 하나의 인스턴스로 유지합니다. 테마는 React 컨텍스트이고, 그것을 가진 모듈의 사본이 둘이면 컨텍스트도 둘입니다.
+
+## 루트 마운트
+
+One 은 문서 전체를 `_layout.tsx` 에서 렌더하므로 루트는 거기에 둡니다.
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## 정적 렌더
+
+`defaultRenderMode: 'ssg'` 에서는 모든 라우트가 빌드 때 한 번, 진짜 HTML 파일로 렌더됩니다. 패키지의 스타일시트는 그 파일 안에 있습니다. 시트가 만들어지는 때는 패키지를 발행할 때이고, 브라우저가 컴포넌트를 처음 렌더할 때가 아닙니다. 그래서 정적 페이지는 스크립트가 돌기 전부터 맞습니다.

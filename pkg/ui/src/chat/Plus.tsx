@@ -193,6 +193,24 @@ export function Plus(p: PlusProps) {
   const [sub, setSub] = useState<string | null>(null)
   const close = () => setOpen(false)
   const shelves = useMemo(() => SHELVES.filter((s) => p[s.key as Key]), [p])
+  const switches = [
+    p.research
+      ? {
+          key: 'research',
+          label: t('Research'),
+          icon: <Telescope size={ICON} />,
+          s: p.research,
+        }
+      : null,
+    p.memory
+      ? {
+          key: 'memory',
+          label: t('Memory'),
+          icon: <Brain size={ICON} />,
+          s: p.memory,
+        }
+      : null,
+  ].filter((x): x is NonNullable<typeof x> => x !== null)
 
   const main = (
     <>
@@ -301,7 +319,7 @@ export function Plus(p: PlusProps) {
           <DropdownMenuItem key={s.key} page={s.key} data-slot={`plus-${s.key}`}>
             <Line icon={s.icon} label={t(s.label)} note={t(s.note)} />
           </DropdownMenuItem>
-        ),
+        )
       )}
       {p.memory ? <DropdownMenuSeparator /> : null}
       {p.memory ? (

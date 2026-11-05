@@ -1,0 +1,109 @@
+---
+title: Pemasangan
+description: Pasang paket, pasang akar, dan beri tahu bundler satu hal.
+---
+
+Penyiapan sama di setiap host. Satu bagian yang berbeda adalah tempat
+pengaturan bundler diletakkan, dan tiap host punya halaman untuk itu.
+
+## Pasang
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` dan `react-dom` adalah peer pada versi 19 atau yang lebih baru.
+`@hanzo/gui` dijadikan peer dengan sengaja: ia menyerahkan sebuah konteks
+React, dan salinan fisik kedua akan menjadi konteks kedua, dengan akar
+menulis ke yang satu sementara setiap komponen membaca yang lain. Biarkan
+satu versi, yang dinyatakan oleh aplikasi.
+
+## Pasang akar
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+`Hanzo` adalah satu-satunya yang dipasang aplikasi. Ia membawa konfigurasi
+gui sebagai sebuah nilai, mengimpor lembar gaya yang dihasilkan, dan
+menetapkan tema — gelap secara bawaan, `theme="light"` untuk menggantinya.
+Setiap komponen melempar bila tidak ada tema akar, jadi lupa memasangnya
+adalah kegagalan pada cat pertama, bukan halaman yang diam-diam tergambar
+tanpa gaya.
+
+Saat pengembangan, akar memeriksa bahwa lembar gaya sampai ke dokumen dan
+mengatakannya di konsol bila tidak. Perbaikan yang ia sebut adalah satu
+impor, `@hanzo/ui/styles.css`, untuk bundler yang menjatuhkan lembar milik
+paket sendiri.
+
+## Beri tahu bundler
+
+Graf dependensi mesin menyebut `react-native`, dan satu paket di dalamnya,
+`react-native-svg` di bawah set ikon, mengirim entri native di samping
+saudara `.web.js`. Pilih yang native pada build web dan galatnya adalah
+kegagalan parse pada sumber Flow di dalam sebuah dependensi, yang terbaca
+seperti paket rusak, bukan pengaturan yang hilang. Dua pengaturan mencegahnya:
+
+- `react-native` diselesaikan ke `react-native-web`.
+- `.web.js` mengungguli `.js`.
+
+Di Next keduanya adalah satu pembungkus, `@hanzo/ui/next`. Di Vite keduanya
+dua baris `resolve`. Di One framework sudah melakukan keduanya. Di Expo tidak
+ada yang perlu diatur, karena Metro berbicara react-native secara native.
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo dan React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## Render sesuatu
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## Font
+
+Paket mengirim Zen dan Zen Mono lalu mengikatnya ke `--font-sans` dan
+`--font-mono`, jadi host yang tidak mengikat apa pun mendapat wajah itu tanpa
+kerja. Host yang punya wajah sendiri menetapkan `--font-sans-provided` dan
+menang — lihat [Tipografi](/docs/typography).

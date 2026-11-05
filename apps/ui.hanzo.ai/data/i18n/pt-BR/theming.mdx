@@ -1,0 +1,98 @@
+---
+title: Temas
+description: Os tokens resolvem contra o tema, propriedades personalizadas carregam a identidade, e três controles deixam uma pessoa reajustar o conjunto inteiro.
+---
+
+Nada na biblioteca nomeia uma cor. Um componente pede `$background` ou `$color12`, o tema responde, e a resposta muda entre escuro e claro sem o componente saber. Uma marca muda a resposta definindo uma propriedade personalizada; uma pessoa muda movendo um controle pelo qual as rampas se multiplicam.
+
+## Tokens
+
+Um valor de prop que começa com `$` é um token. A rampa de cor vai da superfície ao texto: `$color1` é o fundo mais quieto, `$color12` o texto mais forte.
+
+| Token | O que é |
+| --- | --- |
+| `$background` | O fundo da página. Lê `--background`, então a folha de estilos de uma marca responde por ele. |
+| `$color` | A cor de texto padrão. |
+| `$color1` – `$color12` | A rampa neutra: `$color2`/`$color3` são superfícies elevadas, `$color10`/`$color11` texto atenuado, `$color12` o mais forte. |
+| `$borderColor` | O fio. Translúcido, então se lê como uma linha mais clara em qualquer superfície, e não como um cinza sem relação. |
+| `$accentBackground` / `$accentColor` | O único controle de destaque que uma página pode ter. Leem `--primary`, então o controle de acento chega até eles. |
+
+<Preview>
+  <XStack gap="$2" flexWrap="wrap">
+    <Button>Default</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="destructive">Destructive</Button>
+  </XStack>
+  <XStack gap="$2" flexWrap="wrap">
+    <Badge>default</Badge>
+    <Badge variant="secondary">secondary</Badge>
+    <Badge variant="destructive">destructive</Badge>
+    <Badge variant="outline">outline</Badge>
+  </XStack>
+</Preview>
+
+## As escalas
+
+Tamanho, espaço e raio são os mesmos números em todo host, e cada degrau carrega um controle.
+
+**Tipo.** `fontSize="$n"`, nunca um número. Doze degraus leem a rampa do design, `--text-xs` até `--text-9xl`, e os quatro entre degraus interpolam os vizinhos, então a escala de uma pessoa move os dezesseis e a escada continua uma escada.
+
+| Degrau | `$1` | `$2` | `$3` | `$4` | `$5` | `$6` | `$7` | `$8` | `$9` | `$10` | `$11` | `$14` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| px | 11 | 13 | 14 | 15 | 15 | 17 | 21 | 26 | 26 | 32 | 40 | 64 |
+
+`$1` é um rótulo, `$2` navegação e corpo denso, `$3` a base, `$6` um título de seção, `$7` um título de página, `$8` e acima display. Os degraus de display apertam a entrelinha e o tracking em −0.025em, que é a diferença entre tipo composto e tipo que é apenas grande.
+
+**Espaço.** A rampa de 4px, e só a rampa de 4px: `$1` 4, `$2` 8, `$3` 12, `$4` 16, `$5` 24, `$6` 32, `$8` 48, `$10` 64. Cada passo é multiplicado por `--density`.
+
+**Raio.** Quatro valores. `$1` e `$2` são 6, um controle; `$3` e `$4` são 8, um input ou uma linha; `$5` até `$9` são 12, um painel; `$10` e acima são a pílula. Tudo menos a pílula é multiplicado por `--radius-scale`.
+
+## Propriedades personalizadas
+
+A identidade é um conjunto de propriedades personalizadas em `:root`, escuro primeiro, com `.light` reajustando-as. `Hanzo` carimba `.t_dark` ou `.t_light` no body, e o CSS responde às duas grafias, então os tokens dos componentes e a folha de estilos nomeiam um só tema.
+
+```css
+:root {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --primary: #fafafa;
+  --border: rgb(255 255 255 / .10);
+  --ring: rgb(255 255 255 / .40);
+  --font-sans: 'Zen', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Zen Mono', ui-monospace, monospace;
+}
+```
+
+O conjunto completo é `--background`, `--foreground`, `--card`, `--popover`, `--primary`, `--secondary`, `--muted`, `--accent`, `--destructive`, cada um com o seu `-foreground`, depois `--border`, `--input`, `--ring`, `--radius`, `--chart-1` até `--chart-5`, e a família `--sidebar-*`. Eles vêm de `@hanzo/design` e são compostos na folha de estilos que a raiz importa; um host que também monta a folha do próprio design a acompanha ao vivo.
+
+Uma marca reajusta declarando os mesmos nomes mais tarde na cascata. Um host que traz a própria fonte liga `--font-sans-provided` em vez de `--font-sans`, porque a ligação do pacote fica numa layer e uma declaração fora de layer ganha qualquer que seja a especificidade.
+
+## Os controles de aparência
+
+`@hanzo/design` publica três controles pelos quais cada rampa se multiplica, e `@hanzo/appearance` é o painel que os define para uma pessoa:
+
+| Controle | O que move |
+| --- | --- |
+| `--type-scale` | Cada degrau `--text-*`, e com ele cada `fontSize="$n"`. |
+| `--type-ratio` | A distância entre os degraus. |
+| `--density` | Cada passo `--space-*`, e cada gap e padding do gui. |
+| `--primary` / `--accent` | A única cor de destaque. |
+| `--font-sans` | A fonte de leitura: a da marca, a do sistema, uma serifada, ou mono. |
+| `--container-max` / `--container-prose` / `--container-wide` | As três medidas nas quais uma página se dispõe. |
+
+Eles aterrissam como propriedades inline no `html`, que é `:root`, então ganham de toda folha de estilos sem um seletor para superar em especificidade, e chegam aos componentes porque o gui resolve um tamanho em JavaScript como `var(--text-base)` e a var ainda lê a cascata no elemento. Um eixo que ninguém definiu fica ausente, e não neutro: escrever `1` pareceria igual e, em silêncio, superaria uma marca que publicou a própria escala.
+
+```tsx
+import { Appearance } from '@hanzo/appearance'
+import { bootScript } from '@hanzo/appearance/state'
+
+// In <head>, so the first paint is already correct.
+<script dangerouslySetInnerHTML={{ __html: bootScript() }} />
+
+// Wherever the product keeps settings.
+<Appearance />
+```
+
+`Hanzo` reaplica a preferência guardada em cada montagem, então uma escolha feita numa página vale na seguinte. O controle no cabeçalho deste site é esse painel.

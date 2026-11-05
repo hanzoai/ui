@@ -17,8 +17,8 @@ import { AppWindow, Bot, CreditCard, Grip, LayoutGrid, MessageCircle, Settings2,
 import { useI18n } from '@hanzo/i18n/react'
 
 import { BrandMark } from './BrandMark'
-import { UserMenu, type UserMenuItem } from './UserMenu'
 import { otherSurfaces, type Surface, type SurfaceId } from './surfaces.data'
+import { UserMenu, type UserMenuItem } from './UserMenu'
 
 /** The per-surface glyph — keyed by `Surface.id`, so each surface reads distinctly. */
 const SURFACE_ICON = {
@@ -64,23 +64,7 @@ export type AppHeaderProps = {
   onSignOut?: () => void
 }
 
-export function AppHeader({
-  brand,
-  wordmark = 'Hanzo',
-  onBrand,
-  org,
-  children,
-  current,
-  surfaces,
-  open,
-  user,
-  menu,
-  theme,
-  onProfile,
-  onTeam,
-  onBilling,
-  onSignOut,
-}: AppHeaderProps) {
+export function AppHeader({ brand, wordmark = 'Hanzo', onBrand, org, children, current, surfaces, open, user, menu, theme, onProfile, onTeam, onBilling, onSignOut }: AppHeaderProps) {
   const [appsOpen, setAppsOpen] = useState(false)
   const { t } = useI18n()
   const items = surfaces ?? otherSurfaces(current)

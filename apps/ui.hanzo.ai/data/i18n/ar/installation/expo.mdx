@@ -1,0 +1,37 @@
+---
+title: Expo وReact Native
+description: الاستيراد نفسه، ولا اسم مستعار تضعه. Metro يتكلم react-native سلفًا.
+---
+
+تصيّر المكتبة عبر @hanzo/gui، وهو React Native أولًا: الـ stack هو `View`، والنص `Text`، وprop النمط نمط. فالمكوّنات التي ترسم `div` على الويب ترسم هنا عرضًا أصليًا، ورموز السمة وتدرّج التباعد وسُلّم الخط تعني الشيء نفسه على الجانبين.
+
+## التثبيت
+
+```bash
+pnpm create expo-app@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+لا ضبط للمُجمِّع. الاسم المستعار `react-native` الذي يضعه مُضيفو الويب هو ما يجعل مُجمِّع الويب يقرأ حزمة أصلية؛ Metro هو المُجمِّع الأصلي، ويقرأها كما كُتبت. استيراد ورقة الأنماط الذي يحمله الجذر لا يفعل شيئًا تحت Metro على الأصلي، ويُطبَّق على Expo للويب.
+
+## ركّب الجذر
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Stack } from 'expo-router'
+
+export default function Layout() {
+  return (
+    <Hanzo>
+      <Stack />
+    </Hanzo>
+  )
+}
+```
+
+## ما يبقى على الويب
+
+يصيّر `@hanzo/ui/grid` عنصر `div` بـ `display: grid`، ولا يوجد أي منهما على React Native — ليس في Yoga خوارزمية شبكة — ولهذا يخرج في subpath خاص به لا في برميل الجذر. صفّ هناك بـ `XStack` و`YStack`؛ محرّك شبكة أصلي يغيّر ذلك الملف وحده ولا موضع استدعاء. الرسوم في `@hanzo/ui/product` ترسم SVG مضمّنًا وتقيس حاويتها بـ `ResizeObserver`، فهي أيضًا مكوّنات ويب اليوم.
+
+أهداف اللمس تبلغ أرضية 44 نقطة عبر `hitSlop`، لا عبر padding، فيكون صندوق عنصر التحكم بالمقاس نفسه على المنصّتين، ومساحة لمسه ليست كذلك.

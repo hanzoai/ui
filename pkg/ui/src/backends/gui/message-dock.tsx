@@ -14,14 +14,14 @@
  * surface tokens. `onClose` only reports which id was dismissed, the same
  * contract `Banner.onClose` uses — the dock itself holds no visibility state.
  */
-import { XStack, YStack, SizableText, createStyledContext, styled } from '@hanzo/gui'
+import { createStyledContext, SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
+import { Button } from './button'
+import { touch } from './gesture'
 import { ink } from './ink'
 import { slot } from './slot'
-import { touch } from './gesture'
-import { Button } from './button'
 
 export type MessageDockMessageType = 'info' | 'success' | 'warning' | 'error'
 
@@ -37,7 +37,9 @@ export type MessageDockPosition = 'top' | 'bottom' | 'top-end' | 'bottom-end' | 
 const CLOSE = 24
 const CARD_MIN_WIDTH = 300
 
-const CardContext = /* @__PURE__ */ createStyledContext<{ type: MessageDockMessageType | 'default' }>({
+const CardContext = /* @__PURE__ */ createStyledContext<{
+  type: MessageDockMessageType | 'default'
+}>({
   type: 'default',
 })
 
@@ -147,14 +149,7 @@ function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: M
       {messages.map((message) => {
         const type = message.type ?? 'default'
         return (
-          <CardFrame
-            key={message.id}
-            {...slot('message-dock-card')}
-            data-message-id={message.id}
-            data-type={type}
-            type={type}
-            role="status"
-          >
+          <CardFrame key={message.id} {...slot('message-dock-card')} data-message-id={message.id} data-type={type} type={type} role="status">
             <XStack items="flex-start" justify="space-between" gap="$4">
               <YStack flex={1} paddingInlineEnd={onClose ? CLOSE : 0}>
                 <CardTitle type={type} {...slot('message-dock-card-title')}>

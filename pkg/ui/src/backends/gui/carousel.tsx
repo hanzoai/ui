@@ -88,7 +88,10 @@ const slides = (el: HTMLElement): HTMLElement[] => Array.from(el.children) as HT
  * document into view.
  */
 const center = (el: HTMLElement, k: HTMLElement, behavior: ScrollBehavior) =>
-  el.scrollTo({ left: k.offsetLeft - (el.clientWidth - k.offsetWidth) / 2, behavior })
+  el.scrollTo({
+    left: k.offsetLeft - (el.clientWidth - k.offsetWidth) / 2,
+    behavior,
+  })
 
 /**
  * The slide whose centre is nearest the scroller's.
@@ -276,7 +279,13 @@ export const Carousel = ({
 
   return (
     <CarouselCtx.Provider
-      value={{ scroller, api, selected, loop, align: options?.align ?? 'center' }}
+      value={{
+        scroller,
+        api,
+        selected,
+        loop,
+        align: options?.align ?? 'center',
+      }}
     >
       <Box
         className={cn('relative', className)}
@@ -320,7 +329,11 @@ export const CarouselContent = ({ className, ...props }: React.ComponentProps<ty
   )
 }
 
-const SNAP = { start: 'snap-start', center: 'snap-center', end: 'snap-end' } as const
+const SNAP = {
+  start: 'snap-start',
+  center: 'snap-center',
+  end: 'snap-end',
+} as const
 
 export const CarouselItem = ({ className, ...props }: React.ComponentProps<typeof Box>) => {
   // Read directly, not through `useCarousel`: an item is legible on its own and
@@ -347,19 +360,13 @@ type ArrowProps = Omit<React.ComponentProps<typeof Button>, 'onPress' | 'onClick
  * Disabled at the ends unless the carousel loops, because an arrow that does
  * nothing when pressed is worse than one that is visibly unavailable.
  */
-const arrow = (
-  name: string,
-  side: 'start' | 'end',
-  Icon: typeof ChevronLeft,
-  move: (a: CarouselApi) => void,
-  can: (a: CarouselApi) => boolean,
-) => {
+const arrow = (name: string, side: 'start' | 'end', Icon: typeof ChevronLeft, move: (a: CarouselApi) => void, can: (a: CarouselApi) => boolean) => {
   const Arrow = ({ className, ...props }: ArrowProps) => {
     // `selected` is not read for its value — it subscribes the arrow to slide
     // changes, which is what re-evaluates `can`. Without it an arrow disabled at
     // slide 0 stays disabled after the user drags away from it.
-    const { api, selected } = useCarousel()
     const { t } = useI18n()
+    const { api, selected } = useCarousel()
     // Before mount there is no scroller, so neither arrow can know whether it
     // has anywhere to go, and disabled is the honest answer.
     const live = selected === null ? null : api.current
@@ -395,7 +402,7 @@ export const CarouselPrevious = arrow(
   'start',
   ChevronLeft,
   (a) => a.scrollPrev(),
-  (a) => a.canScrollPrev(),
+  (a) => a.canScrollPrev()
 )
 
 export const CarouselNext = arrow(
@@ -403,5 +410,5 @@ export const CarouselNext = arrow(
   'end',
   ChevronRight,
   (a) => a.scrollNext(),
-  (a) => a.canScrollNext(),
+  (a) => a.canScrollNext()
 )

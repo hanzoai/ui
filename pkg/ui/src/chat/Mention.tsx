@@ -7,14 +7,20 @@
  * move it, so no surface carries that state.
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
-import { useI18n } from '@hanzo/i18n/react'
 
 import type { Shelf } from './Plus'
+import { useI18n } from '@hanzo/i18n/react'
 
 /** The `/` or `@` the caret ends on, and the words typed after it. */
 export function trigger(value: string): { char: '/' | '@'; query: string; at: number } | null {
   const m = /(^|\s)([/@])([^\s/@]*)$/.exec(value)
-  return m ? { char: m[2] as '/' | '@', query: m[3]!.toLowerCase(), at: m.index + m[1]!.length } : null
+  return m
+    ? {
+        char: m[2] as '/' | '@',
+        query: m[3]!.toLowerCase(),
+        at: m.index + m[1]!.length,
+      }
+    : null
 }
 
 /** The list a mark opens, above the frame. */

@@ -55,7 +55,7 @@ export type GanttProps = Omit<import('react').ComponentProps<typeof GanttFrame>,
 }
 
 export function Gantt({ tasks = [], ...props }: GanttProps) {
-  const { t } = useI18n()
+  const { t, format } = useI18n()
   return (
     <GanttFrame {...slot('gantt')} {...props}>
       {tasks.length === 0 ? (
@@ -72,15 +72,27 @@ export function Gantt({ tasks = [], ...props }: GanttProps) {
             return (
               <RowFrame key={task.id} {...slot('gantt-task')} data-progress={progress}>
                 <XStack justify="space-between" items="center">
-                  {ink(task.name, SizableText, { size: '$3', fontWeight: '600' })}
-                  {ink(`${progress}%`, SizableText, { size: '$3', color: '$quiet' })}
+                  {ink(task.name, SizableText, {
+                    size: '$3',
+                    fontWeight: '600',
+                  })}
+                  {ink(`${progress}%`, SizableText, {
+                    size: '$3',
+                    color: '$quiet',
+                  })}
                 </XStack>
                 <TrackFrame {...slot('gantt-track')}>
                   <BarFrame {...slot('gantt-bar')} width={`${progress}%`} />
                 </TrackFrame>
                 <XStack justify="space-between">
-                  {ink(task.start.toLocaleDateString(), SizableText, { size: '$1', color: '$quiet' })}
-                  {ink(task.end.toLocaleDateString(), SizableText, { size: '$1', color: '$quiet' })}
+                  {ink(format.date(task.start), SizableText, {
+                    size: '$1',
+                    color: '$quiet',
+                  })}
+                  {ink(format.date(task.end), SizableText, {
+                    size: '$1',
+                    color: '$quiet',
+                  })}
                 </XStack>
               </RowFrame>
             )

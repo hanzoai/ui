@@ -25,10 +25,10 @@ import { Button as KitButton } from '../backends/gui/button'
 import { useDensity } from '../backends/gui/density'
 import { Input as KitInput } from '../backends/gui/input'
 import { InputGroup } from '../backends/gui/input-group'
-import { useEmit } from './instrument'
 import { filterOptions, type ComboOption } from './combobox/filter'
-import { MenuItemView } from './menu/items'
+import { useEmit } from './instrument'
 import { FloatingMenu } from './menu/FloatingMenu'
+import { MenuItemView } from './menu/items'
 
 export type { ComboOption } from './combobox/filter'
 
@@ -77,7 +77,12 @@ export function ComboBox({
   const track = useEmit()
 
   const pick = (v: string) => {
-    track({ component: 'ComboBox', action: 'select', id: v, value: filtered.length })
+    track({
+      component: 'ComboBox',
+      action: 'select',
+      id: v,
+      value: filtered.length,
+    })
     onChange(v)
     setOpen(false)
   }
@@ -136,15 +141,7 @@ export function ComboBox({
       </XStack>
       )}
 
-      <FloatingMenu
-        open={open}
-        onClose={() => setOpen(false)}
-        anchorRect={anchorRect}
-        anchorEl={anchorEl}
-        autoFocus={false}
-        minWidth={minWidth}
-        maxHeight={300}
-      >
+      <FloatingMenu open={open} onClose={() => setOpen(false)} anchorRect={anchorRect} anchorEl={anchorEl} autoFocus={false} minWidth={minWidth} maxHeight={300}>
         {loading ? (
           <XStack items="center" gap="$2" px="$2" py="$2">
             <Spinner size="small" color="$quiet" />
@@ -166,15 +163,7 @@ export function ComboBox({
             {emptyText ?? t('No matches — press to use what you typed.')}
           </Text>
         ) : (
-          filtered.map((o) => (
-            <MenuItemView
-              key={o.value}
-              label={o.label ?? o.value}
-              description={o.hint}
-              selected={o.value === value}
-              onSelect={() => pick(o.value)}
-            />
-          ))
+          filtered.map((o) => <MenuItemView key={o.value} label={o.label ?? o.value} description={o.hint} selected={o.value === value} onSelect={() => pick(o.value)} />)
         )}
       </FloatingMenu>
     </>

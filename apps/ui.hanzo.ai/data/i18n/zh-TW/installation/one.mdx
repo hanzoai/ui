@@ -1,0 +1,64 @@
+---
+title: One
+description: 本站所使用的框架。別名、去重清單，以及文件裡的根。
+---
+
+[One](https://onestack.dev) 是面向 React 與 React Native 的 Vite 框架，帶檔案路由。本站是一個繪製成靜態 HTML 的 One 應用，下面的設定就是它自己的。
+
+## 建立專案
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## 設定 Vite
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+這條別名和每一種宿主所設的是同一條。去重清單讓引擎在用戶端套件包和伺服器套件包之間保持單一實例：主題是一份 React context，擁有它的模組若有兩份複本，就是兩份 context。
+
+## 掛上根
+
+One 從 `_layout.tsx` 繪製整份文件，所以根放在那裡。
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## 靜態繪製
+
+有了 `defaultRenderMode: 'ssg'`，每條路由都在建置時繪製一次，寫成真正的 HTML 檔，套件的樣式表就在那個檔案裡。樣式表在套件釋出時產生，不是在瀏覽器第一次繪製某個元件時產生，靜態頁面因此在任何指令碼執行之前就已經是對的。

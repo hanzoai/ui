@@ -1,0 +1,55 @@
+---
+title: Vite
+description: สองบรรทัดของ resolve และรูท
+---
+
+## สร้างโปรเจกต์
+
+```bash
+pnpm create vite@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+`react-native-web` คือสิ่งที่ `react-native` คลี่ไปหาบนเว็บ ดังนั้นแอปประกาศมันแบบเดียวกับที่ประกาศ `react-dom`
+
+## ตั้งค่า Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+นั่นคือค่าทั้งหมด ไม่มีรายการของแพ็กเกจในนั้น ไม่มีนามแฝงไปหามัน ไม่มีท่อ CSS ไม่มีปลั๊กอิน ไม่มีรายการ transpile การคลี่ทั้งสามเป็นของ react-native-web และทุกแอปที่เรนเดอร์ผ่านมันถือพวกนั้นไปด้วย บิลด์เว็บของ react-native-svg นำเข้า `react-native` เปล่า เอนทรีของมันไปถึงบิลด์นั้นเมื่อ `.web.js` อยู่เหนือ `.js` และเส้นทางแอสเซ็ตของมันเอ่ย `@react-native/assets-registry/registry` ซึ่งบนเว็บคือโมดูล AssetRegistry ของ react-native-web เอง
+
+## ติดตั้งรูท
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+ไม่มีลิงก์สไตล์ชีตใน `index.html` และไม่มี `class="dark"` บนมัน รูทนำทั้งสองมาให้
+
+## มืดและสว่าง
+
+`Hanzo` รับ `theme` ถ้าจะให้คนเลือก เก็บตัวเลือกใน state แล้วส่งให้รูทและตัวสลับ — [โหมดมืด](/docs/dark-mode)

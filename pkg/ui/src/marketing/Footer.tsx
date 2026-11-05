@@ -1,5 +1,6 @@
 'use client'
 
+import type { ReactNode } from 'react'
 /**
  * Footer — the foot of a marketing page: a place to ask, the doors, the legal line.
  *
@@ -23,14 +24,19 @@
  */
 import { Anchor, XStack, YStack } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
-import type { ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
-import { Line } from './type'
 import { PrivacyChoicesIcon } from '../consent/icon'
+import { Line } from './type'
 
 export type FooterLink = { label: string; href: string; out?: boolean }
-export type FooterColumn = { id: string; title: string; href?: string; out?: boolean; links: readonly FooterLink[] }
+export type FooterColumn = {
+  id: string
+  title: string
+  href?: string
+  out?: boolean
+  links: readonly FooterLink[]
+}
 
 export type FooterProps = {
   columns: readonly FooterColumn[]

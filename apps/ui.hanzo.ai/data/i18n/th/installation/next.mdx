@@ -1,0 +1,61 @@
+---
+title: Next
+description: ตัวหุ้มเดียวสำหรับตัวรวมโมดูลทั้งสอง และรูทอยู่ในขอบเขตไคลเอนต์
+---
+
+## สร้างโปรเจกต์
+
+```bash
+pnpm create next-app@latest my-app --typescript --app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## หุ้มค่าคอนฟิก
+
+```js title="next.config.js"
+const withGui = require('@hanzo/ui/next')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = withGui(nextConfig, __dirname)
+```
+
+`withGui` ตั้งสามสิ่ง ให้ webpack และ Turbopack พร้อมกัน `.web.*` คลี่ก่อน `react-native` คือ `react-native-web` และทุกแพ็กเกจ `@hanzogui/*` ใน `node_modules` ถูก transpile เพื่อให้สองอย่างแรกเข้าไปถึงข้างใน มันประกอบกับของที่มีอยู่ ฮุก `webpack()` เดิม ค่าของ Turbopack และ `transpilePackages` ถูกเก็บไว้แล้วขยาย ส่ง `__dirname` เพื่อให้พบแพ็กเกจจาก `node_modules` ของแอปเอง ไม่ใช่ที่ที่ตัวรันงานบังเอิญอยู่
+
+ประกาศครั้งเดียวสำหรับตัวรวมทั้งสอง เพราะค่าที่มีแค่ webpack จะหายไปเงียบๆ ใต้ Turbopack แล้ว `next dev` กับ `next build` จะไม่ตรงกันว่าแอปคอมไพล์ได้หรือไม่
+
+## ติดตั้งรูท
+
+รูทเป็นคอมโพเนนต์ไคลเอนต์ ดังนั้นมันอยู่ในไฟล์ที่มีไดเรกทิฟ และเลย์เอาต์เรนเดอร์มัน
+
+```tsx title="app/providers.tsx"
+'use client'
+
+import { Hanzo } from '@hanzo/ui'
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+```tsx title="app/layout.tsx"
+import { Providers } from './providers'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+`suppressHydrationWarning` บน `html` มีไว้สำหรับคลาสธีมที่ตัวสลับเขียนไว้ที่นั่นก่อน React จะเมานต์ — ดู [โหมดมืด](/docs/dark-mode)
+
+## คอมโพเนนต์เซิร์ฟเวอร์
+
+ทุกอย่างใต้ `@hanzo/ui` เป็นขอบเขตไคลเอนต์ คอมโพเนนต์เซิร์ฟเวอร์เรนเดอร์มันด้วยการนำเข้า แบบเดียวกับคอมโพเนนต์ไคลเอนต์ใดๆ กฎที่ไม่มีคอมโพเนนต์ติด — `pages`, `masked`, `tone`, `resolveBrand` — อยู่ที่ `@hanzo/ui/product/pure` และไม่นำเข้าอะไร ดังนั้นคอมโพเนนต์เซิร์ฟเวอร์หรือตัวจัดการ route เรียกพวกมันได้โดยไม่ต้องโหลดต้นไม้คอมโพเนนต์

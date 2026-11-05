@@ -11,10 +11,10 @@
  * that is never coming, which is the one event in a conversation that has to
  * interrupt.
  */
+import type { ComponentProps, ReactNode } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 import { XStack, YStack } from '@hanzo/gui'
 import { RefreshCw } from '@hanzogui/lucide-icons-2'
-import type { ComponentProps, ReactNode } from 'react'
 
 import { Button } from '../backends/gui'
 import { ink } from '../backends/gui/ink'

@@ -1,0 +1,78 @@
+---
+title: ダークモード
+description: まずダーク。ライトは prop 一つ。どのホストにいても使えるトグル。
+---
+
+見た目の基準はダークです。`:root` がダークのパレットを持ち、`.light` がそこから外れます。たいていのスタイルシートとは逆で、そうしてあります。ルートをマウントしてほかに何も言わないページは、ブランドの地の上に出ます。白の上には出ません。
+
+## 決めるのはルート
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+API の全部が `theme` です。ルートは body に `.t_light` か `.t_dark` を押し、どのトークンもそのテーマに対して解決され、スタイルシートのカスタムプロパティも同じクラスに応えます。選択を人のものにしたいホストは、それを state に持ち、ルートへ渡します。
+
+## トグル
+
+`@hanzo/ui/product` の `ThemeToggle` はボタンを描き、次のテーマを伝えます。制御された状態では、ルートの横の一行です。
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+制御しない場合、`<ThemeToggle onThemeChange={fn} />` は、文書要素そのものの `.dark` と `.light` を切り替え、選択を localStorage の `theme` キーの下に覚えておきます。入れておく state のないホストのためです。どちらにしても示すのは行き先です。ダークでは太陽、ライトでは月です。
+
+## Next
+
+Next のホストはすでに `@hanzogui/next-theme` を動かしていて、トグルからそこへの結線は自分のサブパスにあります。ほかのホストがプロダクト層をインポートしただけで、Next をグラフへ引き込まないようにするためです。
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+props をまったく付けない `<ThemeToggle />` は、動的インポートで同じ結線に届き、それがないところでは文書のトグルへ戻ります。
+
+## One と Vite
+
+このサイトは `@vxrn/color-scheme` で選択を持ちます。保存されたスキームを最初の描画の前に決め、ルートへ伝えます。
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` は `setting` も出します。`system`、`dark`、`light` のいずれかです。そして `set`。このサイトのヘッダーのトグルが動かしているのがそれです。
+
+## ちらつかせない
+
+どのホストでも、テーマのクラスはスタイルシートが塗る前に文書の上になければいけません。そうでないと、ページはダークで塗ってからライトで塗り直します。Next の結線も `@vxrn/color-scheme` も、インラインのスクリプトからそれを書きます。手書きのトグルも同じにするべきです。`html` 要素に `suppressHydrationWarning` を置いてください。スクリプトが書いたクラスは、React が描画したものではないからです。

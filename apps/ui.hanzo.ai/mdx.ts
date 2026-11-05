@@ -6,7 +6,7 @@
  * inside their loaders, so the compiler (a native binding) never meets the
  * browser bundle. Code samples are spelled as this build spells the package.
  */
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { getHeadings, getMDX } from '@vxrn/mdx-rust'
 
@@ -63,10 +63,22 @@ const outline = (source: string): Heading[] =>
     .filter((h) => h.priority === 2 || h.priority === 3)
     .map((h) => ({ id: h.id, title: h.title, level: h.priority as 2 | 3 }))
 
-export async function doc(slug: string): Promise<Doc> {
-  const source = sample(readFileSync(join(docsDir, `${slug}.mdx`), 'utf8'))
+/** A localized copy when one exists (`data/i18n/<locale>/<slug>.mdx`), otherwise English. */
+export function docFile(slug: string, locale?: string | null): string {
+  if (locale && locale !== 'en') {
+    const localized = join(process.cwd(), 'data', 'i18n', locale, `${slug}.mdx`)
+    if (existsSync(localized)) return localized
+  }
+  return join(docsDir, `${slug}.mdx`)
+}
+
+export async function doc(slug: string, locale?: string | null): Promise<Doc> {
+  const source = sample(readFileSync(docFile(slug, locale), 'utf8'))
   const highlight = await highlighter()
-  const { frontmatter, code } = await getMDX(source, { expressiveCode: false, hastPlugins: [fence(highlight)] })
+  const { frontmatter, code } = await getMDX(source, {
+    expressiveCode: false,
+    hastPlugins: [fence(highlight)],
+  })
   return {
     slug,
     title: frontmatter.title,

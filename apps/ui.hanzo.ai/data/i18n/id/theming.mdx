@@ -1,0 +1,136 @@
+---
+title: Tema
+description: Token diselesaikan terhadap tema, properti kustom membawa identitas, dan tiga kenop membiarkan seseorang menyetel ulang seluruhnya.
+---
+
+Tidak ada yang di pustaka ini menamai sebuah warna. Komponen meminta
+`$background` atau `$color12`, tema menjawab, dan jawabannya berbeda antara
+gelap dan terang tanpa komponen mengetahuinya. Sebuah merek mengubah jawaban
+dengan menetapkan properti kustom; seseorang mengubahnya dengan menggeser
+kenop yang mengalikan tangga.
+
+## Token
+
+Nilai prop yang diawali `$` adalah token. Tangga warna berjalan dari permukaan
+ke teks: `$color1` adalah dasar yang paling sunyi, `$color12` teks yang paling
+nyaring.
+
+| Token | Apa itu |
+| --- | --- |
+| `$background` | Dasar halaman. Membaca `--background`, jadi lembar gaya merek yang menjawabnya. |
+| `$color` | Warna teks bawaan. |
+| `$color1` – `$color12` | Tangga netral: `$color2`/`$color3` adalah permukaan terangkat, `$color10`/`$color11` teks redup, `$color12` yang paling nyaring. |
+| `$borderColor` | Garis rambut. Tembus pandang, jadi ia terbaca sebagai garis yang lebih terang di permukaan mana pun, bukan abu-abu yang tidak berhubungan. |
+| `$accentBackground` / `$accentColor` | Satu kontrol nyaring yang boleh dimiliki sebuah halaman. Membaca `--primary`, jadi kenop aksen menjangkau mereka. |
+
+<Preview>
+  <XStack gap="$2" flexWrap="wrap">
+    <Button>Default</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="destructive">Destructive</Button>
+  </XStack>
+  <XStack gap="$2" flexWrap="wrap">
+    <Badge>default</Badge>
+    <Badge variant="secondary">secondary</Badge>
+    <Badge variant="destructive">destructive</Badge>
+    <Badge variant="outline">outline</Badge>
+  </XStack>
+</Preview>
+
+## Tangga
+
+Ukuran, jarak, dan radius adalah angka yang sama di setiap host, dan setiap
+anak tangga membawa sebuah kenop.
+
+**Huruf.** `fontSize="$n"`, tidak pernah angka. Dua belas anak tangga membaca
+tangga desain, `--text-xs` sampai `--text-9xl`, dan empat yang berada di
+antara anak tangga menyisipkan tetangganya, jadi skala seseorang menggeser
+keenam belas dan tangga tetap sebuah tangga.
+
+| Anak tangga | `$1` | `$2` | `$3` | `$4` | `$5` | `$6` | `$7` | `$8` | `$9` | `$10` | `$11` | `$14` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| px | 11 | 13 | 14 | 15 | 15 | 17 | 21 | 26 | 26 | 32 | 40 | 64 |
+
+`$1` adalah label, `$2` navigasi dan isi yang rapat, `$3` dasar, `$6` judul
+bagian, `$7` judul halaman, `$8` ke atas adalah display. Anak tangga display
+mengencangkan leading dan menjejak pada −0.025em, dan itulah beda antara huruf
+yang ditata dan huruf yang sekadar besar.
+
+**Jarak.** Tangga 4px, dan hanya tangga 4px: `$1` 4, `$2` 8, `$3` 12, `$4`
+16, `$5` 24, `$6` 32, `$8` 48, `$10` 64. Setiap langkah dikalikan
+`--density`.
+
+**Radius.** Empat nilai. `$1` dan `$2` adalah 6, sebuah kontrol; `$3` dan
+`$4` adalah 8, sebuah input atau sebuah baris; `$5` sampai `$9` adalah 12,
+sebuah panel; `$10` dan di atasnya adalah pil. Semuanya kecuali pil dikalikan
+`--radius-scale`.
+
+## Properti kustom
+
+Identitas adalah sekumpulan properti kustom pada `:root`, gelap lebih dulu,
+dengan `.light` yang menyetelnya ulang. `Hanzo` menstempel `.t_dark` atau
+`.t_light` pada body dan CSS menjawab kedua ejaan, jadi token komponen dan
+lembar gaya menamai satu tema.
+
+```css
+:root {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --primary: #fafafa;
+  --border: rgb(255 255 255 / .10);
+  --ring: rgb(255 255 255 / .40);
+  --font-sans: 'Zen', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Zen Mono', ui-monospace, monospace;
+}
+```
+
+Set lengkapnya adalah `--background`, `--foreground`, `--card`, `--popover`,
+`--primary`, `--secondary`, `--muted`, `--accent`, `--destructive`, masing-masing
+dengan `-foreground`-nya, lalu `--border`, `--input`, `--ring`, `--radius`,
+`--chart-1` sampai `--chart-5`, dan keluarga `--sidebar-*`. Mereka datang dari
+`@hanzo/design` dan disusun ke dalam lembar gaya yang diimpor akar; host yang
+juga memasang lembar milik design mengikutinya secara langsung.
+
+Sebuah merek menyetel ulang dengan menyatakan nama yang sama lebih kemudian di
+kaskade. Host yang membawa wajah sendiri mengikat `--font-sans-provided`,
+bukan `--font-sans`, karena ikatan milik paket duduk di sebuah layer dan
+deklarasi tanpa layer menang berapa pun spesifisitasnya.
+
+## Kenop tampilan
+
+`@hanzo/design` menerbitkan tiga kenop yang mengalikan setiap tangga, dan
+`@hanzo/appearance` adalah panel yang menetapkannya untuk seseorang:
+
+| Kenop | Yang bergerak |
+| --- | --- |
+| `--type-scale` | Setiap anak tangga `--text-*`, dan bersamanya setiap `fontSize="$n"`. |
+| `--type-ratio` | Seberapa jauh anak tangga duduk satu sama lain. |
+| `--density` | Setiap langkah `--space-*`, dan setiap celah serta padding gui. |
+| `--primary` / `--accent` | Satu warna nyaring. |
+| `--font-sans` | Wajah baca: milik merek, milik sistem, serif, atau mono. |
+| `--container-max` / `--container-prose` / `--container-wide` | Tiga ukuran yang menjadi patokan tata letak halaman. |
+
+Mereka mendarat sebagai properti inline pada `html`, yang adalah `:root`,
+jadi mereka menang atas setiap lembar gaya tanpa selektor yang perlu dikalahkan,
+dan mereka menjangkau komponen karena gui menyelesaikan sebuah ukuran di
+JavaScript sebagai `var(--text-base)` dan var itu masih membaca kaskade pada
+elemen. Sumbu yang tidak ditetapkan siapa pun tidak hadir, bukan netral:
+menulis `1` akan terlihat sama dan diam-diam mengungguli merek yang menerbitkan
+skalanya sendiri.
+
+```tsx
+import { Appearance } from '@hanzo/appearance'
+import { bootScript } from '@hanzo/appearance/state'
+
+// In <head>, so the first paint is already correct.
+<script dangerouslySetInnerHTML={{ __html: bootScript() }} />
+
+// Wherever the product keeps settings.
+<Appearance />
+```
+
+`Hanzo` menerapkan kembali preferensi yang tersimpan pada setiap pemasangan,
+jadi pilihan yang dibuat di satu halaman bertahan di halaman berikutnya.
+Kontrol di header situs ini adalah panel itu.

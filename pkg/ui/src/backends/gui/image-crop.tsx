@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 /**
  * ImageCrop — a zoom, rotate and crop preview for a single image.
  *
@@ -11,7 +12,6 @@
  */
 import { Image, XStack, YStack, type YStackProps } from '@hanzo/gui'
 import { Crop, RotateCw, ZoomIn, ZoomOut } from '@hanzogui/lucide-icons-2'
-import { useState } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 import { AspectRatio } from './aspect-ratio'
 import { Button } from './button'
@@ -32,9 +32,9 @@ export interface ImageCropProps extends Omit<YStackProps, 'children'> {
 }
 
 export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps) {
+  const { t } = useI18n()
   const [zoom, setZoom] = useState(1)
   const [rotation, setRotation] = useState(0)
-  const { t } = useI18n()
 
   const zoomOut = () => setZoom((z) => Math.max(MIN_ZOOM, +(z - STEP).toFixed(2)))
   const zoomIn = () => setZoom((z) => Math.min(MAX_ZOOM, +(z + STEP).toFixed(2)))
@@ -42,13 +42,7 @@ export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps)
 
   return (
     <YStack {...slot('image-crop')} gap="$4" {...props}>
-      <AspectRatio
-        {...slot('image-crop-preview')}
-        ratio={aspect}
-        rounded="$4"
-        borderWidth={1}
-        borderColor="$borderColor"
-      >
+      <AspectRatio {...slot('image-crop-preview')} ratio={aspect} rounded="$4" borderWidth={1} borderColor="$borderColor">
         <Image
           src={src}
           alt={t('Crop preview')}

@@ -1,0 +1,72 @@
+---
+title: Tauri
+description: Веб-представление поверх сборки Vite. Настройка Vite и переключатель темы, которому не нужен фреймворк.
+---
+
+Приложение Tauri — это приложение Vite в нативном окне, поэтому веб-настройка и есть вся настройка: псевдоним, порядок расширений и корень те же, что на странице [Vite](/docs/installation/vite).
+
+## Создайте проект
+
+```bash
+pnpm create tauri-app@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Настройте Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  clearScreen: false,
+  server: { port: 1420, strictPort: true },
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+`server.port` и `clearScreen` — собственные соглашения Tauri для окна разработки; блок `resolve` принадлежит библиотеке.
+
+## Смонтируйте корень
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+## Переключатель темы без фреймворка
+
+`ThemeToggle` из `@hanzo/ui/product` работает без зависимости от фреймворка. В управляемом режиме он рисует кнопку и сообщает следующую тему; приложение хранит значение и отдаёт его корню.
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App() {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+    </Hanzo>
+  )
+}
+```
+
+Привязка того же переключателя к Next живёт на собственном subpath, `@hanzo/ui/product/theme-toggle-next`, именно чтобы хост на Tauri, Vite или Express не затащил Next в граф, импортируя слой продукта.

@@ -1,0 +1,93 @@
+---
+title: Kiểu chữ
+description: Zen và Zen Mono, một thang chữ mà mọi thành phần đọc, và một khung văn xuôi cho chữ bạn không viết.
+---
+
+## Các mặt chữ
+
+Zen là mặt để đọc; Zen Mono cho mã, định danh và mọi thứ dạng số. Cả hai đi
+cùng gói và được buộc vào hai thuộc tính tùy biến, gọi vai chứ không gọi mặt:
+
+```css
+--font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+--font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
+```
+
+Thành phần đọc hai biến ấy và không bao giờ đọc một tên họ. Host thích mặt
+riêng buộc `--font-sans-provided`; sự buộc của gói ngồi trong một layer của
+tầng lớp để bản không layer của host thắng. Host không buộc gì thì được Zen.
+
+<Preview>
+  <YStack gap="$2">
+    <Text fontSize="$8" fontWeight="600">The quick brown fox jumps over the lazy dog</Text>
+    <Text fontSize="$4" color="$color11">Zen at the section and body rungs, tracked and leaded for the size.</Text>
+    <Text fontFamily="$mono" fontSize="$3">pnpm add @hanzo/ui — Zen Mono for code and numbers 0123456789</Text>
+  </YStack>
+</Preview>
+
+## Thang
+
+Có một thang chữ và mọi thành phần đứng trên đó. `Text` nhận `fontSize="$n"`
+kèm leading và tracking của bậc ấy; các tiêu đề và `Paragraph` nhận
+`size="$n"` rồi đặt cả ba cùng lúc.
+
+```tsx
+import { H1, H2, Paragraph, SizableText, Text } from '@hanzo/ui'
+
+<H1>A page title</H1>
+<H2 size="$6">A section</H2>
+<Paragraph size="$4">Body copy at the base rung.</Paragraph>
+<SizableText size="$2" color="$color11">A label.</SizableText>
+<Text fontFamily="$mono" fontSize="$2">an identifier</Text>
+```
+
+Không bao giờ là số. `fontSize={14}` khóa ở 14; `fontSize="$3"` hôm nay là 14
+và là bất cứ điều gì thang chữ của một người làm ra từ nó, vì bậc phân giải
+qua `var(--text-base)` và núm nhân thang. Trang [Chủ đề](/docs/theming) có bảng.
+
+## Văn xuôi
+
+Nội dung được soạn — một trường CMS, một tệp Markdown, thân một khối — đến
+dưới dạng thẻ trần. Không gì bên trong mang được prop, nên kiểu phải đến từ
+tổ tiên rồi xuống theo thẻ. `ApplyTypography` là tổ tiên ấy.
+
+```tsx
+import { ApplyTypography } from '@hanzo/ui'
+
+<ApplyTypography size="base">
+  <h2>Install</h2>
+  <p>
+    Add the package, then wrap the app once at the root. The full guide is
+    at <a href="https://ui.hanzo.ai">ui.hanzo.ai</a>.
+  </p>
+  <pre>
+    <code>{"pnpm add @hanzo/ui\npnpm dev"}</code>
+  </pre>
+  <ol>
+    <li>
+      Render <strong>Hanzo</strong> once, around the whole tree.
+    </li>
+    <li>
+      Import <code>Button</code> or any other component from the same
+      package.
+    </li>
+    <li>Pass it the props its type declares.</li>
+  </ol>
+  <blockquote>
+    Components read their colours from the theme, so a token changed there
+    changes every surface at once.
+  </blockquote>
+</ApplyTypography>
+```
+
+<Preview>
+  <ProseBlocks />
+</Preview>
+
+`size` mặc định là `responsive` — bậc duy nhất dịch theo khung nhìn — hoặc
+`sm`, `base`, `lg`, `xl`, đứng yên, vì một cỡ người gọi đã chọn là một quyết
+định, không phải gợi ý. `asTag` chọn phần tử, một trong `div`, `section`,
+`nav`, `main`, `article`, `aside`. Quy tắc sống trong bảng kiểu dưới
+`.hz-prose`, đặt không gian tên để một trang đang dở bỏ plugin kiểu chữ khác
+không có hai bảng giành một bộ chọn. Trang [văn xuôi](/ui/prose) dựng mọi bậc,
+và một khung lồng trong một khung.

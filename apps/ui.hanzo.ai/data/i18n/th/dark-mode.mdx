@@ -1,0 +1,78 @@
+---
+title: โหมดมืด
+description: มืดก่อน สว่างด้วยพร็อพเดียว และตัวสลับสำหรับโฮสต์ที่คุณอยู่
+---
+
+ตัวตนคือมืด `:root` ถือจานสีมืด และ `.light` เลือกออก ซึ่งตรงข้ามกับสไตล์ชีตส่วนใหญ่ และตั้งใจให้เป็นเช่นนั้น หน้าที่ติดตั้งรูทแล้วไม่พูดอะไรอีกออกมาบนพื้นของแบรนด์ ไม่ใช่บนขาว
+
+## รูทเป็นผู้ตัดสิน
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` คือ API ทั้งหมด รูทประทับ `.t_light` หรือ `.t_dark` บน body ทุกโทเคนคลี่กับธีมนั้น และคุณสมบัติกำหนดเองของสไตล์ชีตตอบคลาสเดียวกัน โฮสต์ที่อยากให้ตัวเลือกเป็นของคนเก็บมันใน state แล้วส่งให้รูท
+
+## ตัวสลับ
+
+`ThemeToggle` จาก `@hanzo/ui/product` วาดปุ่มและรายงานธีมถัดไป เมื่อถูกควบคุม มันเป็นบรรทัดเดียวข้างรูท
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+ไม่ถูกควบคุม — `<ThemeToggle onThemeChange={fn} />` — มันสลับคลาส `.dark` และ `.light` บนอิลิเมนต์เอกสารเอง และจำตัวเลือกใต้คีย์ `theme` ใน localStorage สำหรับโฮสต์ที่ไม่มี state จะเก็บ ไม่ว่าทางใดมันแสดงเป้าหมาย ดวงอาทิตย์ในโหมดมืด พระจันทร์ในโหมดสว่าง
+
+## Next
+
+โฮสต์ Next รัน `@hanzogui/next-theme` อยู่แล้ว และการผูกของตัวสลับไปหามันอยู่ที่ซับพาธของตัวเอง เพื่อไม่ให้โฮสต์อื่นดึง Next เข้ากราฟเพียงเพราะนำเข้าชั้นผลิตภัณฑ์
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+`<ThemeToggle />` ที่ไม่มีพร็อพเลยไปถึงการผูกเดียวกันด้วยการนำเข้าแบบไดนามิก และถอยไปที่ตัวสลับบนเอกสารเมื่อการผูกนั้นไม่มี
+
+## One และ Vite
+
+ไซต์นี้เก็บตัวเลือกด้วย `@vxrn/color-scheme` ซึ่งตัดสินสกีมที่เก็บไว้ก่อนการเพนต์ครั้งแรก แล้วรายงานให้รูท
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` ยังเปิด `setting` — `system`, `dark` หรือ `light` — และ `set` ซึ่งเป็นสิ่งที่ตัวสลับในหัวของไซต์นี้ขับ
+
+## ไม่กระพริบ
+
+โฮสต์ใดก็ได้ คลาสธีมต้องอยู่บนเอกสารก่อนสไตล์ชีตเพนต์ ไม่งั้นหน้าเพนต์มืดแล้วเพนต์สว่างใหม่ การผูกของ Next และ `@vxrn/color-scheme` เขียนมันจากสคริปต์อินไลน์ทั้งคู่ ตัวสลับที่เขียนมือก็ควรทำเช่นกัน ใส่ `suppressHydrationWarning` บนอิลิเมนต์ `html` เพราะคลาสที่สคริปต์เขียนไม่ใช่คลาสที่ React เรนเดอร์

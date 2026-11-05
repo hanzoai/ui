@@ -1,0 +1,87 @@
+---
+title: Instalação
+description: Instale o pacote, monte a raiz e diga uma coisa só ao bundler.
+---
+
+A configuração é a mesma em todo host. A única parte que muda é onde entra o ajuste do bundler, e cada host tem uma página para isso.
+
+## Instalar
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` e `react-dom` são peers na 19 ou posterior. `@hanzo/gui` é um peer de propósito: ele entrega um contexto de React, e uma segunda cópia física seria um segundo contexto, com a raiz escrevendo num enquanto cada componente lê o outro. Deixe numa versão só, declarada pelo app.
+
+## Montar a raiz
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+`Hanzo` é a única coisa que um app monta. Ele carrega a config do gui como um valor, importa a folha de estilos gerada e define o tema — escuro por padrão, `theme="light"` para mudar. Todo componente lança um erro sem um tema na raiz, então esquecê-lo é uma quebra na primeira pintura, nunca uma página que renderiza em silêncio sem estilo.
+
+Em desenvolvimento a raiz confere se a folha chegou ao documento e avisa no console quando não chegou. O conserto que ela nomeia é uma importação, `@hanzo/ui/styles.css`, para um bundler que descartou a do próprio pacote.
+
+## Dizer ao bundler
+
+O grafo de dependências do motor nomeia `react-native`, e um pacote dentro dele, `react-native-svg` sob o conjunto de ícones, publica uma entrada nativa ao lado de uma irmã `.web.js`. Escolha a nativa num build web e o erro é uma falha de parse em código Flow dentro de uma dependência, que se lê como um pacote quebrado e não como um ajuste que falta. Dois ajustes evitam isso:
+
+- `react-native` resolve para `react-native-web`.
+- `.web.js` tem prioridade sobre `.js`.
+
+No Next os dois são um único wrapper, `@hanzo/ui/next`. No Vite são duas linhas de `resolve`. No One o framework já faz os dois. No Expo não há nada a definir, porque o Metro fala react-native de forma nativa.
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo e React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## Renderizar algo
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## Fontes
+
+O pacote traz Zen e Zen Mono e os liga a `--font-sans` e `--font-mono`, então um host que não liga nada recebe as famílias sem trabalho. Um host com uma família própria define `--font-sans-provided` e ganha — veja [Tipografia](/docs/typography).

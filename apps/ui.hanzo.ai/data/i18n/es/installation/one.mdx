@@ -1,0 +1,73 @@
+---
+title: One
+description: El framework con el que está hecho este sitio. El alias, la lista de dedupe, y la raíz en el documento.
+---
+
+[One](https://onestack.dev) es un framework de Vite para React y React Native,
+con rutas por archivo. Este sitio es una app de One renderizada a HTML
+estático, y la configuración de abajo es la suya.
+
+## Crear el proyecto
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Configurar Vite
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+El alias es el mismo que fija cada host. La lista de dedupe es lo que mantiene
+el motor en una sola instancia entre el bundle de cliente y el de servidor: el
+tema es un contexto de React, y dos copias del módulo que lo posee son dos
+contextos.
+
+## Montar la raíz
+
+One renderiza el documento entero desde `_layout.tsx`, así que la raíz va ahí.
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## Render estático
+
+Con `defaultRenderMode: 'ssg'` cada ruta se renderiza una vez, en el build, a
+un archivo HTML de verdad, y la hoja del paquete está dentro de ese archivo:
+la hoja se genera cuando se publica el paquete, no cuando un navegador
+renderiza un componente por primera vez, y eso es lo que hace que una página
+estática sea correcta antes de que corra ningún script.

@@ -13,8 +13,8 @@
  * live on native, and a second one per string would carry its own type scale
  * over the host's.
  */
-import { useState, type ComponentProps, type ReactNode } from 'react'
 import { SizableText, XStack, styled } from '@hanzo/gui'
+import { useState, type ComponentProps, type ReactNode } from 'react'
 import { X } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
@@ -50,14 +50,9 @@ export type AnnouncementProps = Omit<ComponentProps<typeof AnnouncementFrame>, '
   onDismiss?: () => void
 }
 
-export function Announcement({
-  children,
-  dismissible = true,
-  onDismiss,
-  ...props
-}: AnnouncementProps) {
-  const [visible, setVisible] = useState(true)
+export function Announcement({ children, dismissible = true, onDismiss, ...props }: AnnouncementProps) {
   const { t } = useI18n()
+  const [visible, setVisible] = useState(true)
   if (!visible) return null
 
   const dismiss = () => {

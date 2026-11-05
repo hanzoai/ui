@@ -11,11 +11,11 @@ import { Text, XStack, YStack } from '@hanzo/gui'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 import { Anchor } from '../backends/gui'
-import { Switch } from '../backends/gui/switch'
 import { slot } from '../backends/gui/slot'
+import { Switch } from '../backends/gui/switch'
 import { LimitActions, LimitedBanner } from './LimitedBanner'
-import { UsageMeter } from './UsageMeter'
 import { paidPlan, type LimitAction, type LimitNotice, type Limits } from './limits'
+import { UsageMeter } from './UsageMeter'
 
 /** What a paid plan includes, and what happens past it. English, drawn through the host's `t`. */
 export const PLAN_TERMS = [
@@ -34,11 +34,21 @@ export const FREE_TERMS = [
 export const CREDITS_TERMS = phrase("When your plan's included usage runs out, keep using any model and pay from your credits.")
 
 /** A slug as a name: "max-20x" reads "Max 20x". */
-const named = (slug: string) => slug.split('-').map((w) => (w ? w[0]!.toUpperCase() + w.slice(1) : w)).join(' ')
+const named = (slug: string) =>
+  slug
+    .split('-')
+    .map((w) => (w ? w[0]!.toUpperCase() + w.slice(1) : w))
+    .join(' ')
 
 const day = (iso?: string) => {
   const t = iso ? Date.parse(iso) : NaN
-  return Number.isNaN(t) ? '' : new Date(t).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })
+  return Number.isNaN(t)
+    ? ''
+    : new Date(t).toLocaleDateString('en-US', {
+        timeZone: 'UTC',
+        month: 'short',
+        day: 'numeric',
+      })
 }
 
 export interface PlanUsageProps {
@@ -137,9 +147,7 @@ export function PlanUsage({ limits, plan, notice, onAction, onCredits, creditsHr
           </Text>
         ))}
       </YStack>
-      {limits.creditsAfterAllowance !== undefined && onCredits ? (
-        <Credits on={limits.creditsAfterAllowance} onCredits={onCredits} creditsHref={creditsHref} addCreditsHref={addCreditsHref} />
-      ) : null}
+      {limits.creditsAfterAllowance !== undefined && onCredits ? <Credits on={limits.creditsAfterAllowance} onCredits={onCredits} creditsHref={creditsHref} addCreditsHref={addCreditsHref} /> : null}
       {!notice ? <LimitActions actions={limits.actions} onAction={onAction} /> : null}
     </YStack>
   )

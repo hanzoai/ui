@@ -1,0 +1,157 @@
+---
+title: 차트
+description: 추세, 계열, 몫, 분포. 인라인 SVG 이고, 의존은 없으며, 지어낸 점은 결코 두지 않습니다.
+---
+
+```tsx
+import { BarChart, BarRows, Donut, LineChart, Sparkline } from '@hanzo/ui/product'
+```
+
+차트는 인라인 SVG 로 그리고, 색은 살아있는 테마에서 가져오므로 테마와 함께 뒤집힙니다. 정직함은 구조입니다. 점이 둘에 못 미치는 스파크라인은 아무것도 그리지 않고, 양의 값이 없는 도넛은 전각 대시를 그리며, 어떤 차트도 추세를 발명하지 않습니다. 호출부가 진짜 계열을 넘깁니다.
+
+데이터를 나르는 형태는 둘입니다. `ChartPoint` 는 연속된 축 위의 라벨 있는 값입니다. `Slice` 는 범주 축 위의 라벨 있는 크기이고, 색과 힌트는 선택입니다.
+
+```ts
+type ChartPoint = { label: string; value: number }
+type Slice = { label: string; value: number; color?: string; hint?: string }
+```
+
+## 스파크라인
+
+지표 카드를 위한, 크기가 정해진 추세입니다. `values` 는 맨 배열이고, `width`, `height`, `color` 는 선택입니다.
+
+```tsx
+<Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+```
+
+<Preview>
+  <Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+</Preview>
+
+## 꺾은선
+
+시간 위의 값입니다. 컨테이너를 재므로 들어 있는 상자 너비만큼이 됩니다. 호버하면 안내선 옆에 가장 가까운 점을 읽어 냅니다. `formatValue` 가 그 읽기를 다듬습니다.
+
+```tsx
+<LineChart
+  data={[
+    { label: 'Mon', value: 120 },
+    { label: 'Tue', value: 180 },
+    { label: 'Wed', value: 150 },
+    { label: 'Thu', value: 260 },
+    { label: 'Fri', value: 230 },
+    { label: 'Sat', value: 310 },
+    { label: 'Sun', value: 290 },
+  ]}
+  height={200}
+  formatValue={(v) => `${v} req`}
+/>
+```
+
+<Preview>
+  <LineChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+    formatValue={(v) => `${v} req`}
+  />
+</Preview>
+
+## 막대
+
+같은 데이터를 막대로 만든 것입니다. props 도 같습니다.
+
+```tsx
+<BarChart data={points} height={200} />
+```
+
+<Preview>
+  <BarChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+  />
+</Preview>
+
+## 도넛
+
+몫입니다. 색은 모드가 아니라 데이터입니다. `color` 가 있는 조각은 그 색으로 그려지고, 없는 조각은 전경에서 모노크롬 램프를 가져옵니다. 하나의 컴포넌트가 범주 차트에도, 브랜드에 맞춘 차트에도 쓰입니다. `center` 는 고리 안을 그리고, `legend` 는 기본으로 들어 있는 라벨과 백분율 목록을 그립니다. 기본은 꺼져 있어서, 쓰는 쪽이 더 풍부한 것을 짤 수 있습니다.
+
+```tsx
+<Donut
+  slices={[
+    { label: 'zen-4', value: 62 },
+    { label: 'zen-3', value: 28 },
+    { label: 'other', value: 10 },
+  ]}
+  center="62%"
+  legend
+/>
+```
+
+<Preview>
+  <XStack gap="$8" flexWrap="wrap" items="center">
+    <Donut
+      slices={[
+        { label: 'zen-4', value: 62 },
+        { label: 'zen-3', value: 28 },
+        { label: 'other', value: 10 },
+      ]}
+      center="62%"
+      legend
+    />
+    <Donut
+      slices={[
+        { label: 'compute', value: 540, color: '#7c5cff' },
+        { label: 'storage', value: 220, color: '#23c562' },
+        { label: 'egress', value: 90, color: '#ff9f45' },
+      ]}
+      size={120}
+      thickness={16}
+    />
+  </XStack>
+</Preview>
+
+`CHART_PALETTE` 는 범주 계열을 위한, 서로 다른 여덟 색조이고 다크 바닥에 맞춰져 있습니다. `CHART_OTHER` 는 나머지를 위한 눌러 둔 색입니다.
+
+## 막대 행
+
+라벨 있는 수평 막대로 그린 분포입니다. 레이아웃 프리미티브로 그리므로 껍질과 같이 테마가 붙습니다. 같은 `Slice` 형태를 받습니다.
+
+```tsx
+<BarRows
+  bars={[
+    { label: 'us-east', value: 1240 },
+    { label: 'eu-west', value: 860 },
+    { label: 'ap-south', value: 410 },
+  ]}
+/>
+```
+
+<Preview>
+  <BarRows
+    bars={[
+      { label: 'us-east', value: 1240 },
+      { label: 'eu-west', value: 860 },
+      { label: 'ap-south', value: 410 },
+    ]}
+  />
+</Preview>
+
+## 상자 재기
+
+`useContainerWidth` 도 익스포트됩니다. `ref` 와 마지막으로 잰 너비이고, `ResizeObserver` 가 유지합니다. 꺾은선과 막대가 쓰는 것이고, 자기 차트가 짐작한 숫자가 아니라 주어진 상자에 그리기 위해서도 쓸 수 있습니다.

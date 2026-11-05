@@ -1,0 +1,115 @@
+---
+title: Pengantar
+description: Satu pustaka komponen untuk web, native, dan desktop, di atas satu landasan. Satu impor, satu akar, dan tidak ada yang perlu dikonfigurasi.
+---
+
+{brand.name} adalah pustaka komponen {brand.org}. Setiap komponen digambar
+lewat [@hanzo/gui](https://gui.hanzo.ai), mesin gaya untuk React dan React
+Native yang menerima gaya sebagai prop dan mengompilasinya menjadi CSS atomik
+di web. Karena mesinnya lintas platform, pustakanya juga: `Switch` yang sama
+menjadi `div` di peramban dan tampilan native di telepon.
+
+Di sini tidak ada build kelas utilitas. Tidak ada Tailwind, tidak ada plugin
+PostCSS, tidak ada primitif Radix di bawah komponen, tidak ada registri, tidak
+ada `components.json`, dan tidak ada CLI yang menyalin sumber ke repositori
+Anda. Pasang sebuah paket dan impor darinya.
+
+## Pasang dan render
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+```tsx title="main.tsx"
+import { Hanzo, Button } from '@hanzo/ui'
+
+export default function App() {
+  return (
+    <Hanzo>
+      <Button>Ship</Button>
+    </Hanzo>
+  )
+}
+```
+
+Itu seluruh penyiapannya. `Hanzo` adalah akar, dan ia membawa tiga hal yang
+dulu menjadi pekerjaan tiap aplikasi: konfigurasi gui yang menjadi patokan
+penyelesaian token, lembar gaya, dan tema. Tidak ada CSS untuk diimpor dan
+tidak ada generator untuk dijalankan — lembar itu dihasilkan saat paket
+diterbitkan, dengan merender setiap komponen dan memanen CSS yang dihasilkan
+render itu, sehingga cat pertama dan setiap render server sudah membawa
+aturannya.
+
+Satu hal yang masih dilakukan host adalah memberi tahu bundlernya bahwa
+`react-native` berarti `react-native-web`. Itu satu alias, dan setiap halaman
+host di [Pemasangan](/docs/installation) menunjukkan tempatnya.
+
+## Gaya adalah prop
+
+Sebuah gaya adalah prop pada komponen, dan gaya responsif adalah prop yang
+sama di bawah kunci breakpoint.
+
+```tsx
+import { Button, Text, XStack, YStack } from '@hanzo/ui'
+
+<YStack gap="$4" p="$5" $md={{ p: '$8' }}>
+  <Text fontSize="$5" color="$color11">
+    Balance
+  </Text>
+  <XStack gap="$2">
+    <Button>Send</Button>
+    <Button variant="outline">Receive</Button>
+  </XStack>
+</YStack>
+```
+
+Breakpoint adalah lebar minimum yang mengutamakan seluler: `$sm` 640, `$md`
+768, `$lg` 1024, `$xl` 1280. Nilai yang diawali `$` adalah token — warna,
+ukuran, satu anak tangga jarak — dan diselesaikan terhadap tema, jadi
+`$background` berwarna lain di terang dan di gelap tanpa titik panggil
+mengetahuinya. Ukuran font selalu token, bukan angka: `fontSize="$3"`, bukan
+`fontSize={14}`. Seseorang dapat menetapkan skala hurufnya sendiri dan tangga
+`$n` ikut bergerak; angka 14 yang ditulis mati tidak bisa.
+[Tema](/docs/theming) memuat tangga-tangga itu.
+
+## Tata letak
+
+Stack adalah flex. `XStack` menata dalam baris, `YStack` dalam kolom, dan
+keduanya menerima `gap`, `items`, dan `justify`. Kisi adalah kisi CSS yang
+sungguhan, di `@hanzo/ui/grid`, yang lintasannya datang dari wadah, bukan dari
+anak — lihat [Kisi](/docs/grid).
+
+## Apa ada di mana
+
+| Impor | Apa itu |
+| --- | --- |
+| `@hanzo/ui` | API komponen — setiap primitif, stack, skala huruf, dan `Hanzo`. |
+| `@hanzo/ui/product` | Lapisan aplikasi: grafik, bingkai halaman, label status, panel detail, pengalih tema. |
+| `@hanzo/ui/blocks` | Konten sebagai data, dan perender yang menggambarnya. |
+| `@hanzo/ui/grid` | `Grid` dan `Cell`, hanya web. |
+| `@hanzo/ui/product/pure` | Aturan yang menjalankan lapisan produk, tanpa komponen yang menempel. |
+| `@hanzo/ui/css` | `substitute`, untuk pengujian yang tidak bisa dijawab DOM tanpa kaskade. |
+| `@hanzo/ui/next` | Pembungkus Next yang memasang alias web untuk kedua bundler. |
+
+Halaman katalog situs ini — [Komponen](/ui), [Blok](/blocks),
+[Produk](/product) — dibaca dari paket itu sendiri: masing-masing merender
+contoh sebuah modul di samping sumbernya dan mengutip tipenya.
+
+## Pertanyaan
+
+**Apakah saya perlu Tailwind?** Tidak. Komponen menerima prop gaya, dan
+identitasnya adalah properti kustom CSS biasa. Jika sebuah aplikasi datang
+dengan string kelas, `Box`, `sx`, dan `css` membacanya lewat `tw` lalu
+mengubahnya menjadi prop yang sama; tidak ada yang sampai ke DOM sebagai kelas
+yang tidak didefinisikan paket.
+
+**Apakah ini salin-tempel?** Tidak. Pasang paket dan impor darinya. Komponen
+diversi bersama paket, dan peta ekspor adalah jalan yang dilalui sebuah
+subpath, jadi impor yang dalam tetap jalan lintas patch.
+
+**Framework yang mana?** Renderer React 19 mana pun, setelah bundler mengenal
+alias `react-native`. Ada halaman untuk [Vite](/docs/installation/vite),
+[Next](/docs/installation/next), [One](/docs/installation/one),
+[Expo](/docs/installation/expo), dan [Tauri](/docs/installation/tauri).
+
+**Boleh dipakai secara komersial?** Ya. Apache-2.0 atau MIT, sesuai pilihan Anda.

@@ -1,0 +1,61 @@
+---
+title: Next
+description: 两套打包器共用一个包装，根放在客户端边界里。
+---
+
+## 创建项目
+
+```bash
+pnpm create next-app@latest my-app --typescript --app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## 包住配置
+
+```js title="next.config.js"
+const withGui = require('@hanzo/ui/next')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = withGui(nextConfig, __dirname)
+```
+
+`withGui` 为 webpack 和 Turbopack 一起设三件事：`.web.*` 优先解析，`react-native` 即 `react-native-web`，并且 `node_modules` 里每一个 `@hanzogui/*` 包都会被转译，于是前两件事能进到它们内部。它和已经写好的配置合成——已有的 `webpack()` 钩子、Turbopack 设置和 `transpilePackages` 会保留并扩展。传入 `__dirname`，包就会从应用自己的 `node_modules` 里被找到，而不是从任务运行器恰好所在的地方。
+
+对两套打包器只声明一次。只写给 webpack 的设置在 Turbopack 下会悄无声息地缺席，然后 `next dev` 和 `next build` 会对应用能不能编译各说各话。
+
+## 挂上根
+
+根是客户端组件，所以它住在带有指令的文件里，由布局去渲染它。
+
+```tsx title="app/providers.tsx"
+'use client'
+
+import { Hanzo } from '@hanzo/ui'
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+```tsx title="app/layout.tsx"
+import { Providers } from './providers'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+`html` 上的 `suppressHydrationWarning` 是给开关在 React 挂载之前写到那里的主题类用的。见 [深色模式](/docs/dark-mode)。
+
+## 服务端组件
+
+`@hanzo/ui` 下面的一切都是客户端边界；服务端组件渲染它的方式，和渲染任何客户端组件一样，导入即可。没有挂上组件的那些规则——`pages`、`masked`、`tone`、`resolveBrand`——在 `@hanzo/ui/product/pure`，而且什么都不导入，所以服务端组件或路由处理函数可以调用它们，不必加载一棵组件树。

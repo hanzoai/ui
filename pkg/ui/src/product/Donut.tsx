@@ -47,19 +47,7 @@ export function Donut({
     .map((s) => {
       const frac = s.value / total
       const dash = frac * circ
-      const node = (
-        <circle
-          key={s.label}
-          cx={cx}
-          cy={cy}
-          r={r}
-          fill="none"
-          stroke={s.color}
-          strokeWidth={thickness}
-          strokeDasharray={`${dash} ${circ - dash}`}
-          strokeDashoffset={-offset}
-        />
-      )
+      const node = <circle key={s.label} cx={cx} cy={cy} r={r} fill="none" stroke={s.color} strokeWidth={thickness} strokeDasharray={`${dash} ${circ - dash}`} strokeDashoffset={-offset} />
       offset += dash
       return node
     })

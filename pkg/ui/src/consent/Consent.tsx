@@ -32,6 +32,7 @@
  */
 import { Paragraph, Text, XStack, YStack } from '@hanzo/gui'
 import { ChevronDown, X } from '@hanzogui/lucide-icons-2'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import {
   acceptAll,
   asks,
@@ -50,12 +51,11 @@ import {
 } from '@hanzo/event'
 import { phrase } from '@hanzo/i18n'
 import { useI18n, type Say } from '@hanzo/i18n/react'
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 
 import { Button } from '../backends/gui/button'
 import { align } from '../backends/gui/dir'
-import { Switch } from '../backends/gui/switch'
 import { slot } from '../backends/gui/slot'
+import { Switch } from '../backends/gui/switch'
 import { PrivacyChoicesIcon } from './icon'
 
 const OPEN = 'hzconsent-open'
@@ -172,7 +172,10 @@ const EDGE = {
  * concentric in their card: a button on `--radius-lg` (12px), the bar and the
  * sheet on `--radius-xl` (16px). Both follow `--radius-scale`; neither is a pill.
  */
-const ROUND = { button: 'var(--radius-lg, 12px)', card: 'var(--radius-xl, 16px)' } as const
+const ROUND = {
+  button: 'var(--radius-lg, 12px)',
+  card: 'var(--radius-xl, 16px)',
+} as const
 
 /** The panel both wear: the card's ground, edge, corner and floating shadow. */
 const PANEL = {
@@ -210,7 +213,12 @@ const frame = {
 const FIT = { width: 'fit-content' } as const
 
 /** The keyboard's mark on any control here: design's focus ring, outside the control. */
-const RING = { outlineColor: 'var(--ring)', outlineStyle: 'solid', outlineWidth: 2, outlineOffset: 2 } as const
+const RING = {
+  outlineColor: 'var(--ring)',
+  outlineStyle: 'solid',
+  outlineWidth: 2,
+  outlineOffset: 2,
+} as const
 
 /**
  * A button's every state from design's button tokens (colors.css), so it follows
@@ -245,8 +253,16 @@ const CLOSE = {
   rounded: ROUND.button,
   bg: 'transparent',
   borderColor: 'transparent',
-  hoverStyle: { bg: 'var(--secondary)', borderColor: 'transparent', opacity: 1 },
-  pressStyle: { bg: 'var(--secondary-hover)', borderColor: 'transparent', opacity: 1 },
+  hoverStyle: {
+    bg: 'var(--secondary)',
+    borderColor: 'transparent',
+    opacity: 1,
+  },
+  pressStyle: {
+    bg: 'var(--secondary-hover)',
+    borderColor: 'transparent',
+    opacity: 1,
+  },
   focusStyle: { borderColor: 'transparent' },
   focusVisibleStyle: RING,
 } as const
@@ -265,7 +281,11 @@ const CHOICES = {
 } as const
 
 /** A link in the sheet's intro: the line's own ink, underlined, never broken across lines. */
-const INLINE = { color: 'inherit', textDecoration: 'underline', whiteSpace: 'nowrap' } as const
+const INLINE = {
+  color: 'inherit',
+  textDecoration: 'underline',
+  whiteSpace: 'nowrap',
+} as const
 
 /** The sheet covers the window, on design's modal rung, over a scrim of its own. */
 const COVER = { position: 'fixed', t: 0, r: 0, b: 0, l: 0 } as const
@@ -307,7 +327,11 @@ const Consent = ({
   // The bar (eu) or the notice (global) at the foot of the window.
   const [shown, setShown] = useState(false)
   const [choosing, setChoosing] = useState(false)
-  const [draft, setDraft] = useState<Choice>({ analytics: false, marketing: false, ads: false })
+  const [draft, setDraft] = useState<Choice>({
+    analytics: false,
+    marketing: false,
+    ads: false,
+  })
   // The switches as they stand, for a handler registered once.
   const latest = useRef(draft)
   latest.current = draft
@@ -540,22 +564,12 @@ const Consent = ({
         items="center"
         justify="center"
         // The device's insets are physical sides, so the shorthand names them in order.
-        style={{ padding: `${EDGE.top} ${EDGE.right} ${EDGE.bottom} ${EDGE.left}` }}
+        style={{
+          padding: `${EDGE.top} ${EDGE.right} ${EDGE.bottom} ${EDGE.left}`,
+        }}
       >
         <YStack {...COVER} position="absolute" z={0} bg="rgba(0,0,0,0.6)" aria-hidden onPress={close} />
-        <YStack
-          {...slot('consent')}
-          {...PANEL}
-          ref={sheet as never}
-          role="dialog"
-          aria-modal
-          aria-labelledby={`${id}-title`}
-          position="relative"
-          width="100%"
-          maxW={560}
-          maxH="100%"
-          overflow="hidden"
-        >
+        <YStack {...slot('consent')} {...PANEL} ref={sheet as never} role="dialog" aria-modal aria-labelledby={`${id}-title`} position="relative" width="100%" maxW={560} maxH="100%" overflow="hidden">
           <XStack items="center" justify="space-between" gap="$3" pt="$5" pb="$3" paddingInlineStart="$5" paddingInlineEnd="$4">
             <Text render="h2" id={`${id}-title`} m={0} fontSize="$6" lineHeight="$6" fontWeight="600" color="$ink">
               {t('Cookie Preferences')}
@@ -597,21 +611,7 @@ const Consent = ({
                 <YStack key={k.id} {...slot('consent-section')} borderTopWidth={1} borderColor="$borderColor">
                   <XStack items="center" gap="$3" minH={52} py="$2">
                     <XStack render="h3" flex={1} minW={0} m={0}>
-                      <XStack
-                        render="button"
-                        {...BUTTON}
-                        aria-expanded={open}
-                        aria-controls={body}
-                        onPress={() => setExpanded({ ...expanded, [k.id]: !open })}
-                        flex={1}
-                        minW={0}
-                        items="center"
-                        gap="$2"
-                        p={0}
-                        bg="transparent"
-                        borderWidth={0}
-                        cursor="pointer"
-                      >
+                      <XStack render="button" {...BUTTON} aria-expanded={open} aria-controls={body} onPress={() => setExpanded({ ...expanded, [k.id]: !open })} flex={1} minW={0} items="center" gap="$2" p={0} bg="transparent" borderWidth={0} cursor="pointer">
                         <XStack shrink={0} rotate={open ? '180deg' : '0deg'} opacity={0.7}>
                           <ChevronDown size={16} />
                         </XStack>

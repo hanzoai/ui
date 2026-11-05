@@ -9,9 +9,9 @@
  * Only what the catalog lists is drawn, so a person on a catalog without Kai sees
  * no Kai. This is Chat's chip row, hidden until the person turns the chips on.
  */
-import { useI18n } from '@hanzo/i18n/react'
 import { useMemo } from 'react'
 
+import { useI18n } from '@hanzo/i18n/react'
 import { ENSO, FAMILIES, grants, sortModels, type ModelFamily } from '../models/catalog'
 import type { Chip, Mind } from './Tune'
 
@@ -23,7 +23,14 @@ export function useFamilies(mind: Mind, onUpgrade?: (model: string) => void): Ch
   return useMemo(() => {
     const router = mind.models.find((m) => m.id === ENSO)
     const rows: Chip[] = router
-      ? [{ id: 'auto', label: t('Auto'), on: mind.model === ENSO, onPress: () => mind.pick(ENSO) }]
+      ? [
+          {
+            id: 'auto',
+            label: t('Auto'),
+            on: mind.model === ENSO,
+            onPress: () => mind.pick(ENSO),
+          },
+        ]
       : []
     for (const id of NAMED) {
       const own = sortModels(mind.models.filter((m) => m.family === id && m.id !== ENSO && m.access !== 'research'))

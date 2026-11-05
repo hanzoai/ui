@@ -1,0 +1,98 @@
+---
+title: 主題
+description: 權杖對著主題求解，身份由自訂屬性帶走，三枚旋鈕讓人把整套重新調一遍。
+---
+
+函式庫裡沒有人寫下顏色的名字。元件開口要 `$background` 或 `$color12`，回答來自主題；深色和淺色答得不一樣，元件自己不知道。品牌改答案，靠的是設一條自訂屬性。人改答案，靠的是轉動一枚每條坡道都要乘上去的旋鈕。
+
+## 權杖
+
+prop 的值若以 `$` 起頭，那就是權杖。色階從底面走到文字：`$color1` 最安靜，`$color12` 最響。
+
+| 權杖 | 是什麼 |
+| --- | --- |
+| `$background` | 頁面的底。它讀 `--background`，所以品牌的樣式表來回答它。 |
+| `$color` | 預設的文字顏色。 |
+| `$color1` – `$color12` | 中性坡道：`$color2`/`$color3` 是抬起的表面，`$color10`/`$color11` 是壓低的文字，`$color12` 最響。 |
+| `$borderColor` | 髮絲線。半透明，所以在任何表面上讀起來都是一條更輕的線，而不是一塊不相干的灰。 |
+| `$accentBackground` / `$accentColor` | 一頁上被允許的那一個響亮控制項。它們讀 `--primary`，強調色旋鈕因此搆得著。 |
+
+<Preview>
+  <XStack gap="$2" flexWrap="wrap">
+    <Button>Default</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="destructive">Destructive</Button>
+  </XStack>
+  <XStack gap="$2" flexWrap="wrap">
+    <Badge>default</Badge>
+    <Badge variant="secondary">secondary</Badge>
+    <Badge variant="destructive">destructive</Badge>
+    <Badge variant="outline">outline</Badge>
+  </XStack>
+</Preview>
+
+## 階梯
+
+尺寸、間距、圓角這三樣，在每種宿主上都是同一組數字，而且每一階都掛著旋鈕。
+
+**字級。** 寫 `fontSize="$n"`，不要寫數字。十二階對上設計坡道，從 `--text-xs` 一直到 `--text-9xl`；夾在中間的四階，是向兩邊的鄰居內插出來的。人一改自己的比例，十六階一起動，梯子還是梯子。
+
+| 階 | `$1` | `$2` | `$3` | `$4` | `$5` | `$6` | `$7` | `$8` | `$9` | `$10` | `$11` | `$14` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| px | 11 | 13 | 14 | 15 | 15 | 17 | 21 | 26 | 26 | 32 | 40 | 64 |
+
+`$1` 用來做標籤，`$2` 是導覽和排得較密的正文，`$3` 是基準，`$6` 是小節的標題，`$7` 是整頁的標題，`$8` 往上則是展示用的字級。展示那幾階會把行距和字距收到 −0.025em。排過的字，和只是放大的字，差別就在這裡。
+
+**間距。** 坡道只有 4px 這一種：`$1` 是 4，`$2` 是 8，`$3` 是 12，`$4` 是 16，`$5` 是 24，`$6` 是 32，`$8` 是 48，`$10` 是 64。每一階都再乘上 `--density`。
+
+**圓角。** 一共四個值。`$1` 與 `$2` 是 6，給控制項；`$3` 與 `$4` 是 8，給輸入框或一列；`$5` 到 `$9` 是 12，給面板；`$10` 以上是膠囊。膠囊以外的全部，都乘上 `--radius-scale`。
+
+## 自訂屬性
+
+身份是放在 `:root` 上的一組自訂屬性。深色先就位，`.light` 再把它們調開。`Hanzo` 會在 body 蓋上 `.t_dark` 或 `.t_light`，CSS 兩種拼法都認，元件的權杖和樣式表因此指的是同一個主題。
+
+```css
+:root {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --primary: #fafafa;
+  --border: rgb(255 255 255 / .10);
+  --ring: rgb(255 255 255 / .40);
+  --font-sans: 'Zen', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Zen Mono', ui-monospace, monospace;
+}
+```
+
+整組名單是 `--background`、`--foreground`、`--card`、`--popover`、`--primary`、`--secondary`、`--muted`、`--accent`、`--destructive`，每一個都帶著自己的 `-foreground`，接著是 `--border`、`--input`、`--ring`、`--radius`，再來是 `--chart-1` 到 `--chart-5`，以及 `--sidebar-*` 那一族。出處是 `@hanzo/design`，並且被編進根所匯入的樣式表。宿主若同時掛上 design 自己的那張表，就會即時跟著它。
+
+品牌要改調，就在層疊較後面的地方，把同樣的名字再宣告一次。自帶字型時要繫的是 `--font-sans-provided`，不是 `--font-sans`。套件自己的繫結待在一個層裡，沒有層的宣告不管特異性多低都會贏。
+
+## 外觀的旋鈕
+
+`@hanzo/design` 公開了三枚旋鈕，每條坡道都要乘上它們。`@hanzo/appearance` 則是替某一個人把這些旋鈕設下去的那塊面板：
+
+| 旋鈕 | 帶動什麼 |
+| --- | --- |
+| `--type-scale` | 每一階 `--text-*`，以及隨之而來的每一個 `fontSize="$n"`。 |
+| `--type-ratio` | 各階之間隔多遠。 |
+| `--density` | 每一階 `--space-*`，以及 gui 的每一個 gap 和 padding。 |
+| `--primary` / `--accent` | 那一個響亮的顏色。 |
+| `--font-sans` | 閱讀用的字型：品牌的、系統的、襯線，或等寬。 |
+| `--container-max` / `--container-prose` / `--container-wide` | 一頁排版所對準的三種行長。 |
+
+這些值以內嵌屬性落在 `html` 上。那裡就是 `:root`，所以不用再找一條更特異的選擇器，也能壓過每一張樣式表。它們到得了元件，是因為 gui 在 JavaScript 裡把尺寸解成 `var(--text-base)`，而這個 var 到了元素上仍會去讀層疊。沒有人設過的軸是缺席，不是中性。若寫成 `1`，看起來沒差，卻會悄悄壓過一個已經公開自己比例的品牌。
+
+```tsx
+import { Appearance } from '@hanzo/appearance'
+import { bootScript } from '@hanzo/appearance/state'
+
+// In <head>, so the first paint is already correct.
+<script dangerouslySetInnerHTML={{ __html: bootScript() }} />
+
+// Wherever the product keeps settings.
+<Appearance />
+```
+
+`Hanzo` 每掛上一次，就會把存好的偏好再套用一次。在這一頁做的選擇，下一頁還在。本站頁首的那個控制項，就是這塊面板。

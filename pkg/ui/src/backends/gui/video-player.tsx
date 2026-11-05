@@ -31,10 +31,10 @@ import {
 import { useI18n } from '@hanzo/i18n/react'
 
 import { Button } from './button'
-import { Slider } from './slider'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu'
-import { Spinner } from './spinner'
+import { Slider } from './slider'
 import { slot } from './slot'
+import { Spinner } from './spinner'
 
 export type MediaSource = {
   src: string
@@ -100,10 +100,7 @@ const overlayButton = {
   hoverStyle: { bg: 'rgba(255,255,255,0.2)' },
 } as const
 
-export type MediaPlayerProps = Omit<
-  React.ComponentPropsWithoutRef<typeof Frame>,
-  'onPlay' | 'onPause' | 'onEnded' | 'children'
-> & {
+export type MediaPlayerProps = Omit<React.ComponentPropsWithoutRef<typeof Frame>, 'onPlay' | 'onPause' | 'onEnded' | 'children'> & {
   sources: MediaSource[]
   poster?: string
   subtitles?: MediaSubtitleTrack[]
@@ -124,34 +121,14 @@ export type MediaPlayerProps = Omit<
   onSpeedChange?: (speed: number) => void
 }
 
-export function MediaPlayer({
-  sources,
-  poster,
-  subtitles = [],
-  size = 'md',
-  autoPlay = false,
-  loop = false,
-  muted = false,
-  preload = 'metadata',
-  controls = true,
-  disableKeyboard = false,
-  disablePictureInPicture = false,
-  onPlay,
-  onPause,
-  onEnded,
-  onTimeUpdate,
-  onVolumeChange,
-  onQualityChange,
-  onSpeedChange,
-  ...props
-}: MediaPlayerProps) {
+export function MediaPlayer({ sources, poster, subtitles = [], size = 'md', autoPlay = false, loop = false, muted = false, preload = 'metadata', controls = true, disableKeyboard = false, disablePictureInPicture = false, onPlay, onPause, onEnded, onTimeUpdate, onVolumeChange, onQualityChange, onSpeedChange, ...props }: MediaPlayerProps) {
+  const { t } = useI18n()
   const videoRef = React.useRef<HTMLVideoElement>(null)
   const containerRef = React.useRef<HTMLDivElement>(null)
   const hideTimer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   // A player that goes away takes its pending hide with it.
   React.useEffect(() => () => clearTimeout(hideTimer.current), [])
 
-  const { t } = useI18n()
   const [isPlaying, setIsPlaying] = React.useState(false)
   const [currentTime, setCurrentTime] = React.useState(0)
   const [duration, setDuration] = React.useState(0)
@@ -160,9 +137,7 @@ export function MediaPlayer({
   const [isFullscreen, setIsFullscreen] = React.useState(false)
   const [showControls, setShowControls] = React.useState(true)
   const [playbackSpeed, setPlaybackSpeed] = React.useState(1)
-  const [currentQuality, setCurrentQuality] = React.useState(
-    sources.find((s) => s.quality)?.quality ?? 'auto',
-  )
+  const [currentQuality, setCurrentQuality] = React.useState(sources.find((s) => s.quality)?.quality ?? 'auto')
   const [showSubtitles, setShowSubtitles] = React.useState(false)
   const [isBuffering, setIsBuffering] = React.useState(false)
   const [isPictureInPicture, setIsPictureInPicture] = React.useState(false)
@@ -188,7 +163,7 @@ export function MediaPlayer({
     (seconds: number) => {
       seekTo(Math.max(0, Math.min(duration, currentTime + seconds)))
     },
-    [currentTime, duration, seekTo],
+    [currentTime, duration, seekTo]
   )
 
   const toggleMute = React.useCallback(() => {
@@ -213,7 +188,7 @@ export function MediaPlayer({
       setIsMuted(clamped === 0)
       onVolumeChange?.(clamped)
     },
-    [onVolumeChange],
+    [onVolumeChange]
   )
 
   const toggleFullscreen = React.useCallback(async () => {
@@ -250,7 +225,7 @@ export function MediaPlayer({
       setPlaybackSpeed(speed)
       onSpeedChange?.(speed)
     },
-    [onSpeedChange],
+    [onSpeedChange]
   )
 
   const changeQuality = React.useCallback(
@@ -267,12 +242,12 @@ export function MediaPlayer({
           video.currentTime = at
           if (wasPlaying) void video.play()
         },
-        { once: true },
+        { once: true }
       )
       setCurrentQuality(quality)
       onQualityChange?.(quality)
     },
-    [sources, onQualityChange],
+    [sources, onQualityChange]
   )
 
   const hideControlsAfterTimeout = React.useCallback(() => {
@@ -337,17 +312,7 @@ export function MediaPlayer({
     }
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [
-    disableKeyboard,
-    togglePlayPause,
-    toggleFullscreen,
-    toggleMute,
-    skip,
-    changeVolume,
-    volume,
-    togglePictureInPicture,
-    showControlsTemporarily,
-  ])
+  }, [disableKeyboard, togglePlayPause, toggleFullscreen, toggleMute, skip, changeVolume, volume, togglePictureInPicture, showControlsTemporarily])
 
   // Media element events.
   React.useEffect(() => {
@@ -438,65 +403,24 @@ export function MediaPlayer({
 
   return (
     <Frame ref={containerRef as never} size={size} tabIndex={0} {...slot('media-player')} {...props}>
-      <video
-        ref={videoRef}
-        data-slot="media-player-video"
-        poster={poster}
-        autoPlay={autoPlay}
-        loop={loop}
-        muted={muted}
-        preload={preload}
-        playsInline
-        onClick={togglePlayPause}
-        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-      >
+      <video ref={videoRef} data-slot="media-player-video" poster={poster} autoPlay={autoPlay} loop={loop} muted={muted} preload={preload} playsInline onClick={togglePlayPause} style={{ width: '100%', height: '100%', objectFit: 'contain' }}>
         {sources.map((source) => (
           <source key={source.src} src={source.src} type={source.type} />
         ))}
         {subtitles.map((track, index) => (
-          <track
-            key={track.src}
-            kind="subtitles"
-            src={track.src}
-            srcLang={track.srcLang}
-            label={track.label}
-            default={track.default ?? index === 0}
-          />
+          <track key={track.src} kind="subtitles" src={track.src} srcLang={track.srcLang} label={track.label} default={track.default ?? index === 0} />
         ))}
         {t('Your browser does not support the video tag.')}
       </video>
 
       {isBuffering && (
-        <YStack
-          {...slot('media-player-buffering')}
-          position="absolute"
-          l={0}
-          r={0}
-          t={0}
-          b={0}
-          items="center"
-          justify="center"
-          bg="rgba(0,0,0,0.5)"
-          pointerEvents="none"
-        >
+        <YStack {...slot('media-player-buffering')} position="absolute" l={0} r={0} t={0} b={0} items="center" justify="center" bg="rgba(0,0,0,0.5)" pointerEvents="none">
           <Spinner size={32} color="white" />
         </YStack>
       )}
 
       {controls && (
-        <YStack
-          {...slot('media-player-controls')}
-          position="absolute"
-          l={0}
-          r={0}
-          b={0}
-          t={0}
-          justify="flex-end"
-          bg="rgba(0,0,0,0.55)"
-          opacity={showControls ? 1 : 0}
-          pointerEvents={showControls ? 'auto' : 'none'}
-          style={{ transition: 'opacity 200ms ease' }}
-        >
+        <YStack {...slot('media-player-controls')} position="absolute" l={0} r={0} b={0} t={0} justify="flex-end" bg="rgba(0,0,0,0.55)" opacity={showControls ? 1 : 0} pointerEvents={showControls ? 'auto' : 'none'} style={{ transition: 'opacity 200ms ease' }}>
           <XStack px="$4" pb="$2">
             <Slider
               aria-label={t('Seek')}

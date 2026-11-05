@@ -1,0 +1,114 @@
+---
+title: Pruebas
+description: Monta bajo la raíz, busca por el slot, resuelve tú la cascada, y deja que un navegador calcule el resto.
+---
+
+Cada componente deja un `data-slot` con su nombre, así que una prueba puede
+encontrar un control sin depender de un marcado que una versión puede cambiar.
+Monta bajo `Hanzo`, como hace la app; la raíz lleva la configuración contra la
+que se resuelve cada token, y un componente sin tema raíz lanza un error.
+
+## Pruebas unitarias
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+El alias es el mismo que lleva el bundler. La lista `inline` importa: los
+paquetes del motor se publican como CommonJS que reexporta ESM, y dejados
+fuera resuelven a una segunda copia del módulo dueño del tema, así que el
+provider escribe un contexto y cada componente con tema lee otro y lanza
+`Missing theme`.
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## Colores en un DOM sin cascada
+
+jsdom no resuelve `var()`; le pasa a la prueba el texto tal cual. Los peldaños
+del tema se escriben `var(--border, rgb(255 255 255 / .10))` a propósito:
+seguir la cascada en vivo donde hay una hoja de diseño montada, y quedarse con
+el literal revisado donde no la hay. Por eso afirmar el contraste de un borde
+en jsdom comparaba un color con una llamada a función. `substitute` da el paso
+que jsdom no da.
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+Sin un mapa `vars`, eso es exacto y no aproximado: jsdom no monta ninguna hoja
+de diseño, así que nada declara `--border`, así que el fallback es lo que un
+navegador calcularía en las mismas condiciones. Pasa un mapa para modelar un
+host que declara sus propios tokens. El módulo no importa nada y se publica en
+los dos formatos, así que carga en cualquier runner.
+
+## Lo que calculó un navegador
+
+Un build, un chequeo de tipos y una prueba unitaria pasan igual con una hoja
+que nunca llegó a la página. La demostración es un navegador: construye la
+app, sírvela, y afirma estilos calculados, no lo que afirma el marcado.
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+Así se prueba el paquete a sí mismo. Su galería es una sola lista de cada
+componente en cada variante; el generador de la hoja renderiza esa lista, una
+prueba unitaria la renderiza bajo el provider de verdad y comprueba que llegó
+cada marca de slot, y una prueba de quien consume empaqueta el tarball, lo
+instala en una app fuera del repositorio — nunca un enlace de workspace, que
+resuelve por el árbol de fuentes y esconde un archivo ausente del tarball —,
+la construye, y afirma estilos calculados y capturas a 390 y a 1280 en los dos
+temas. Un enlace de workspace habría publicado precisamente los defectos que
+esa prueba existe para cazar.

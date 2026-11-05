@@ -12,9 +12,9 @@ import { Button, Text, XStack } from '@hanzo/gui'
 import { ChevronLeft, ChevronRight } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 
+import { mirror } from '../backends/gui/dir'
 import { useEmit } from './instrument'
 import { GAP, pages } from './pages'
-import { mirror } from '../backends/gui/dir'
 
 export { GAP, pages }
 
@@ -66,7 +66,7 @@ export function Pagination({ page, count, onChange, around = 1 }: PaginationProp
           >
             {String(slot)}
           </Button>
-        ),
+        )
       )}
       <Button
         size="$2"

@@ -1,0 +1,106 @@
+---
+title: Instalación
+description: Instala el paquete, monta la raíz y dile una sola cosa a tu bundler.
+---
+
+La puesta en marcha es la misma en cada host. Lo único que cambia es dónde va
+el ajuste del bundler, y cada host tiene una página para eso.
+
+## Instalar
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` y `react-dom` son peers en la 19 o posterior. `@hanzo/gui` es un peer a
+propósito: entrega un contexto de React, y una segunda copia física sería un
+segundo contexto, con la raíz escribiendo en uno mientras cada componente lee
+el otro. Déjalo en una sola versión, declarada por la app.
+
+## Montar la raíz
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+`Hanzo` es lo único que monta una app. Lleva la configuración de gui como un
+valor, importa la hoja de estilos generada y fija el tema — oscuro por defecto,
+`theme="light"` para cambiarlo. Todo componente lanza si no hay un tema raíz,
+así que olvidarlo es un fallo en el primer pintado, nunca una página que se
+renderiza en silencio sin estilos.
+
+En desarrollo la raíz comprueba que la hoja llegó al documento y lo dice en la
+consola cuando no. El arreglo que nombra es una importación,
+`@hanzo/ui/styles.css`, para un bundler que se comió la del propio paquete.
+
+## Decírselo al bundler
+
+El grafo de dependencias del motor nombra `react-native`, y un paquete dentro,
+`react-native-svg` bajo el conjunto de iconos, publica una entrada nativa junto
+a una hermana `.web.js`. Elige la nativa en un build web y el error es un fallo
+de parseo en código Flow dentro de una dependencia, que se lee como un paquete
+roto y no como un ajuste que falta. Dos ajustes lo evitan:
+
+- `react-native` resuelve a `react-native-web`.
+- `.web.js` gana a `.js`.
+
+En Next los dos son un solo envoltorio, `@hanzo/ui/next`. En Vite son dos
+líneas de `resolve`. En One el framework ya hace las dos. En Expo no hay nada
+que fijar, porque Metro habla react-native de forma nativa.
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo y React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## Renderizar algo
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## Fuentes
+
+El paquete incluye Zen y Zen Mono y los ata a `--font-sans` y `--font-mono`,
+así que un host que no ata nada obtiene las familias sin trabajo. Un host con
+una familia propia fija `--font-sans-provided` y gana — ver
+[Tipografía](/docs/typography).

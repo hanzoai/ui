@@ -1,0 +1,52 @@
+---
+title: Expo et React Native
+description: Le même import, et rien à aliaser. Metro parle déjà react-native.
+---
+
+La bibliothèque se rend à travers @hanzo/gui, qui est React Native d'abord :
+un stack est une `View`, le texte est `Text`, et une prop de style est un
+style. Donc les mêmes composants qui dessinent un `div` sur le web dessinent
+ici une vue native, et les tokens de thème, la rampe d'espacement et
+l'échelle de caractères veulent dire la même chose des deux côtés.
+
+## Installer
+
+```bash
+pnpm create expo-app@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+Il n'y a pas de réglage de bundler. L'alias `react-native` que posent les
+hôtes web est ce qui fait qu'un bundler web lit un paquet natif ; Metro est
+le bundler natif, et le lit tel qu'il est écrit. L'import de feuille que
+porte la racine ne fait rien sous Metro en natif, et s'applique sur Expo web.
+
+## Monter la racine
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Stack } from 'expo-router'
+
+export default function Layout() {
+  return (
+    <Hanzo>
+      <Stack />
+    </Hanzo>
+  )
+}
+```
+
+## Ce qui reste sur le web
+
+`@hanzo/ui/grid` rend un `div` avec `display: grid`, et ni l'un ni l'autre
+n'existe dans React Native — Yoga n'a pas d'algorithme de grille — c'est
+pourquoi il est livré sur son propre subpath plutôt que sur le barrel de la
+racine. Disposez là avec `XStack` et `YStack` ; un moteur de grille natif
+change ce seul fichier et aucun site d'appel. Les graphiques de
+`@hanzo/ui/product` dessinent du SVG en ligne et mesurent leur conteneur avec
+`ResizeObserver`, donc eux aussi sont des composants web, aujourd'hui.
+
+Les cibles tactiles atteignent le plancher de 44 points par `hitSlop`, jamais
+par le padding, donc la boîte d'un contrôle a la même taille sur les deux
+plateformes et sa zone tactile, non.

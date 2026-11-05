@@ -63,7 +63,12 @@ const ARROW = 36
 const CONTROL = 'a,button,input,select,textarea'
 const WHITE = (a: number) => `rgba(255,255,255,${a})` as const
 
-type Track = { origin: number; x: number; v: number; sample: { x: number; t: number } }
+type Track = {
+  origin: number
+  x: number
+  v: number
+  sample: { x: number; t: number }
+}
 
 /** Position, scale, opacity and stacking order for the card `offset` slots from the front. */
 const layerAt = (offset: number, cardCount: number, stackOffset: number, stackScale: number) => {
@@ -78,22 +83,10 @@ const layerAt = (offset: number, cardCount: number, stackOffset: number, stackSc
   }
 }
 
-const still = () =>
-  typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+const still = () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 
-export function AppleCardsCarousel({
-  cards,
-  autoPlay = false,
-  autoPlayInterval = 5000,
-  className,
-  cardClassName,
-  showArrows = true,
-  showDots = true,
-  parallaxOffset = 50,
-  stackOffset = 10,
-  stackScale = 0.95,
-  swipeThreshold = 50,
-}: AppleCardsCarouselProps) {
+export function AppleCardsCarousel({ cards, autoPlay = false, autoPlayInterval = 5000, className, cardClassName, showArrows = true, showDots = true, parallaxOffset = 50, stackOffset = 10, stackScale = 0.95, swipeThreshold = 50 }: AppleCardsCarouselProps) {
+  const { t } = useI18n()
   const [index, setIndex] = React.useState(0)
   const [hovering, setHovering] = React.useState(false)
   const [dragX, setDragX] = React.useState(0)
@@ -110,12 +103,8 @@ export function AppleCardsCarousel({
   React.useEffect(() => setCalm(still()), [])
 
   const count = cards.length
-  const { t } = useI18n()
 
-  const step = React.useCallback(
-    (by: number) => setIndex((i) => (count ? (i + by + count) % count : 0)),
-    [count],
-  )
+  const step = React.useCallback((by: number) => setIndex((i) => (count ? (i + by + count) % count : 0)), [count])
   const goNext = React.useCallback(() => step(1), [step])
   const goPrevious = React.useCallback(() => step(-1), [step])
 
@@ -130,7 +119,7 @@ export function AppleCardsCarousel({
       if (e.key === 'ArrowLeft') goPrevious()
       else if (e.key === 'ArrowRight') goNext()
     },
-    [goNext, goPrevious],
+    [goNext, goPrevious]
   )
 
   const begin = React.useCallback((e: DragEvent & { target?: unknown }) => {
@@ -142,7 +131,12 @@ export function AppleCardsCarousel({
       if (e.pointerId != null) card?.releasePointerCapture?.(e.pointerId)
       return
     }
-    track.current = { origin: dragPos(e, true), x: 0, v: 0, sample: { x: 0, t: Date.now() } }
+    track.current = {
+      origin: dragPos(e, true),
+      x: 0,
+      v: 0,
+      sample: { x: 0, t: Date.now() },
+    }
     setDragging(true)
   }, [])
 
@@ -204,9 +198,7 @@ export function AppleCardsCarousel({
           const layer = layerAt(i - index, count, stackOffset, stackScale)
           const active = i === index
           const x = layer.x + (active ? dragX : 0)
-          const parallax = active
-            ? Math.max(-parallaxOffset, Math.min(parallaxOffset, (-dragX / 200) * parallaxOffset))
-            : 0
+          const parallax = active ? Math.max(-parallaxOffset, Math.min(parallaxOffset, (-dragX / 200) * parallaxOffset)) : 0
 
           return (
             <YStack
@@ -235,21 +227,7 @@ export function AppleCardsCarousel({
               }}
               {...(active ? gesture : null)}
             >
-              <YStack
-                position="relative"
-                width="100%"
-                height="100%"
-                overflow="hidden"
-                rounded="$6"
-                borderWidth={1}
-                borderColor="$borderColor"
-                bg="$panel"
-                shadowColor="rgba(0,0,0,0.25)"
-                shadowOffset={{ width: 0, height: 25 }}
-                shadowRadius={50}
-                style={{ background: card.gradient }}
-                {...sx(cardClassName)}
-              >
+              <YStack position="relative" width="100%" height="100%" overflow="hidden" rounded="$6" borderWidth={1} borderColor="$borderColor" bg="$panel" shadowColor="rgba(0,0,0,0.25)" shadowOffset={{ width: 0, height: 25 }} shadowRadius={50} style={{ background: card.gradient }} {...sx(cardClassName)}>
                 {card.image ? (
                   <YStack
                     position="absolute"
@@ -263,7 +241,9 @@ export function AppleCardsCarousel({
                     <YStack
                       position="absolute"
                       inset={0}
-                      style={{ background: 'linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,.2), transparent)' }}
+                      style={{
+                        background: 'linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,.2), transparent)',
+                      }}
                     />
                   </YStack>
                 ) : null}
@@ -311,7 +291,12 @@ export function AppleCardsCarousel({
               position="absolute"
               display="none"
               $md={{ display: 'flex' }}
-              style={{ top: '50%', transform: 'translateY(-50%)', zIndex: 20, ...side }}
+              style={{
+                top: '50%',
+                transform: 'translateY(-50%)',
+                zIndex: 20,
+                ...side,
+              }}
               items="center"
               justify="center"
               width={ARROW}
@@ -333,7 +318,12 @@ export function AppleCardsCarousel({
       {showDots ? (
         <XStack
           position="absolute"
-          style={{ bottom: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 20 }}
+          style={{
+            bottom: 16,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 20,
+          }}
           gap="$2"
         >
           {cards.map((card, i) => (
@@ -350,7 +340,9 @@ export function AppleCardsCarousel({
               bg={i === index ? 'white' : WHITE(0.4)}
               hoverStyle={{ bg: i === index ? 'white' : WHITE(0.6) }}
               cursor="pointer"
-              style={{ transition: 'width .3s ease, background-color .3s ease' }}
+              style={{
+                transition: 'width .3s ease, background-color .3s ease',
+              }}
               // Vertical slop only: the dots sit 8px apart, and a sideways
               // overlay would lie over the neighbour and take its press.
               {...touch(8, 44, 'y')}
@@ -364,10 +356,7 @@ export function AppleCardsCarousel({
 }
 
 /** Pre-built CSS gradients for cards that skip `image`. */
-export const gradientPresets: Record<
-  'sunset' | 'ocean' | 'fire' | 'forest' | 'galaxy' | 'aurora' | 'peach' | 'lavender',
-  string
-> = {
+export const gradientPresets: Record<'sunset' | 'ocean' | 'fire' | 'forest' | 'galaxy' | 'aurora' | 'peach' | 'lavender', string> = {
   sunset: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
   ocean: 'linear-gradient(135deg, #667eea 0%, #4ca1af 100%)',
   fire: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',

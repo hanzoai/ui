@@ -11,21 +11,15 @@
  * `isWeb`, the same split `dropzone.tsx` uses for file drops — there is no
  * `@dnd-kit` in this workspace and none is needed for a same-tab reorder.
  */
-import { SizableText, XStack, YStack, isWeb, styled } from '@hanzo/gui'
+import { isWeb, SizableText, styled, XStack, YStack } from '@hanzo/gui'
+import { sx } from '../../sx'
 import { Calendar, MoreHorizontal, Plus, Search, User, X } from '@hanzogui/lucide-icons-2'
 import * as React from 'react'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 import { Badge } from './badge'
 import { Button } from './button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from './dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './dialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu'
 import { ink } from './ink'
 import { Input } from './input'
@@ -33,7 +27,6 @@ import { Label } from './label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select'
 import { slot } from './slot'
 import { Textarea } from './textarea'
-import { sx } from '../../sx'
 
 export interface KanbanLabel {
   id: string
@@ -86,12 +79,7 @@ const PRIORITY_WORD: Record<KanbanPriority, string> = {
 type Drag = { cardId: string; columnId: string }
 
 /** Move a card from its column to `toColumnId`, optionally before `beforeId`. */
-const moveCard = (
-  board: KanbanBoardData,
-  drag: Drag,
-  toColumnId: string,
-  beforeId?: string,
-): KanbanBoardData => {
+const moveCard = (board: KanbanBoardData, drag: Drag, toColumnId: string, beforeId?: string): KanbanBoardData => {
   const from = board.columns.find((col) => col.id === drag.columnId)
   const card = from?.cards.find((c) => c.id === drag.cardId)
   if (!from || !card) return board
@@ -106,13 +94,19 @@ const moveCard = (
         const rest = col.cards.filter((c) => c.id !== card.id)
         const at = beforeId ? rest.findIndex((c) => c.id === beforeId) : rest.length
         const index = at < 0 ? rest.length : at
-        return { ...col, cards: [...rest.slice(0, index), card, ...rest.slice(index)] }
+        return {
+          ...col,
+          cards: [...rest.slice(0, index), card, ...rest.slice(index)],
+        }
       }
       if (col.id === from.id) return { ...col, cards: col.cards.filter((c) => c.id !== card.id) }
       if (col.id === to.id) {
         const at = beforeId ? col.cards.findIndex((c) => c.id === beforeId) : col.cards.length
         const index = at < 0 ? col.cards.length : at
-        return { ...col, cards: [...col.cards.slice(0, index), card, ...col.cards.slice(index)] }
+        return {
+          ...col,
+          cards: [...col.cards.slice(0, index), card, ...col.cards.slice(index)],
+        }
       }
       return col
     }),
@@ -121,11 +115,7 @@ const moveCard = (
 
 const matches = (card: KanbanCard, query: string) => {
   const q = query.toLowerCase()
-  return (
-    card.title.toLowerCase().includes(q) ||
-    (card.description?.toLowerCase().includes(q) ?? false) ||
-    (card.labels?.some((label) => label.name.toLowerCase().includes(q)) ?? false)
-  )
+  return card.title.toLowerCase().includes(q) || (card.description?.toLowerCase().includes(q) ?? false) || (card.labels?.some((label) => label.name.toLowerCase().includes(q)) ?? false)
 }
 
 const BoardFrame = styled(YStack, { name: 'Kanban', flex: 1, height: '100%' })
@@ -197,7 +187,11 @@ function KanbanCardView({
         : null)}
     >
       <XStack justify="space-between" items="flex-start" gap="$2">
-        {ink(card.title, SizableText, { fontWeight: '600', fontSize: '$3', flex: 1 })}
+        {ink(card.title, SizableText, {
+          fontWeight: '600',
+          fontSize: '$3',
+          flex: 1,
+        })}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button {...slot('kanban-card-menu')} variant="ghost" size="icon-sm" aria-label={t('Card actions')}>
@@ -211,16 +205,17 @@ function KanbanCardView({
         </DropdownMenu>
       </XStack>
 
-      {card.description ? ink(card.description, SizableText, { fontSize: '$1', color: '$quiet' }) : null}
+      {card.description
+        ? ink(card.description, SizableText, {
+            fontSize: '$1',
+            color: '$quiet',
+          })
+        : null}
 
       {card.labels && card.labels.length > 0 ? (
         <XStack gap="$1" flexWrap="wrap">
           {card.labels.map((label) => (
-            <Badge
-              key={label.id}
-              variant="outline"
-              style={{ borderColor: label.color, color: label.color }}
-            >
+            <Badge key={label.id} variant="outline" style={{ borderColor: label.color, color: label.color }}>
               {label.name}
             </Badge>
           ))}
@@ -237,14 +232,20 @@ function KanbanCardView({
           {card.assignee ? (
             <XStack gap="$1" items="center">
               <User size={12} color="$quiet" />
-              {ink(card.assignee, SizableText, { fontSize: '$1', color: '$quiet' })}
+              {ink(card.assignee, SizableText, {
+                fontSize: '$1',
+                color: '$quiet',
+              })}
             </XStack>
           ) : null}
         </XStack>
         {card.dueDate ? (
           <XStack gap="$1" items="center">
             <Calendar size={12} color="$quiet" />
-            {ink(new Date(card.dueDate).toLocaleDateString(), SizableText, { fontSize: '$1', color: '$quiet' })}
+            {ink(new Date(card.dueDate).toLocaleDateString(), SizableText, {
+              fontSize: '$1',
+              color: '$quiet',
+            })}
           </XStack>
         ) : null}
       </XStack>
@@ -252,25 +253,7 @@ function KanbanCardView({
   )
 }
 
-function KanbanColumnView({
-  column,
-  drag,
-  onDragStart,
-  onDragEnd,
-  onDropOn,
-  onAddCard,
-  onEditCard,
-  onDeleteCard,
-}: {
-  column: KanbanColumn
-  drag: Drag | null
-  onDragStart: (card: KanbanCard) => (e: React.DragEvent) => void
-  onDragEnd: () => void
-  onDropOn: (columnId: string, beforeId?: string) => (e: React.DragEvent) => void
-  onAddCard: () => void
-  onEditCard: (card: KanbanCard) => void
-  onDeleteCard: (cardId: string) => void
-}) {
+function KanbanColumnView({ column, drag, onDragStart, onDragEnd, onDropOn, onAddCard, onEditCard, onDeleteCard }: { column: KanbanColumn; drag: Drag | null; onDragStart: (card: KanbanCard) => (e: React.DragEvent) => void; onDragEnd: () => void; onDropOn: (columnId: string, beforeId?: string) => (e: React.DragEvent) => void; onAddCard: () => void; onEditCard: (card: KanbanCard) => void; onDeleteCard: (cardId: string) => void }) {
   const full = column.limit != null && column.cards.length >= column.limit
   const { t } = useI18n()
 
@@ -287,10 +270,11 @@ function KanbanColumnView({
     >
       <XStack justify="space-between" items="center">
         <XStack gap="$2" items="center">
-          {ink(column.title, SizableText, { fontWeight: '600', fontSize: '$3' })}
-          <Badge variant="secondary">
-            {column.limit != null ? `${column.cards.length}/${column.limit}` : column.cards.length}
-          </Badge>
+          {ink(column.title, SizableText, {
+            fontWeight: '600',
+            fontSize: '$3',
+          })}
+          <Badge variant="secondary">{column.limit != null ? `${column.cards.length}/${column.limit}` : column.cards.length}</Badge>
         </XStack>
         <Button
           {...slot('kanban-add-card')}
@@ -306,41 +290,20 @@ function KanbanColumnView({
 
       <YStack gap="$3" minH={40}>
         {column.cards.map((card) => (
-          <KanbanCardView
-            key={card.id}
-            card={card}
-            drag={drag}
-            onDragStart={onDragStart(card)}
-            onDragEnd={onDragEnd}
-            onDropBefore={onDropOn(column.id, card.id)}
-            onEdit={() => onEditCard(card)}
-            onDelete={() => onDeleteCard(card.id)}
-          />
+          <KanbanCardView key={card.id} card={card} drag={drag} onDragStart={onDragStart(card)} onDragEnd={onDragEnd} onDropBefore={onDropOn(column.id, card.id)} onEdit={() => onEditCard(card)} onDelete={() => onDeleteCard(card.id)} />
         ))}
       </YStack>
     </ColumnFrame>
   )
 }
 
-function KanbanCardDialog({
-  open,
-  onOpenChange,
-  card,
-  labels,
-  onSave,
-}: {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  card?: KanbanCard
-  labels: KanbanLabel[]
-  onSave: (data: Partial<KanbanCard>) => void
-}) {
+function KanbanCardDialog({ open, onOpenChange, card, labels, onSave }: { open: boolean; onOpenChange: (open: boolean) => void; card?: KanbanCard; labels: KanbanLabel[]; onSave: (data: Partial<KanbanCard>) => void }) {
+  const { t } = useI18n()
   const [title, setTitle] = React.useState(card?.title ?? '')
   const [description, setDescription] = React.useState(card?.description ?? '')
   const [priority, setPriority] = React.useState<KanbanPriority>(card?.priority ?? 'low')
   const [assignee, setAssignee] = React.useState(card?.assignee ?? '')
   const [dueDate, setDueDate] = React.useState(card?.dueDate ?? '')
-  const { t } = useI18n()
 
   React.useEffect(() => {
     setTitle(card?.title ?? '')
@@ -353,7 +316,14 @@ function KanbanCardDialog({
   const submit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!title.trim()) return
-    onSave({ title, description, priority, assignee, dueDate, labels: card?.labels })
+    onSave({
+      title,
+      description,
+      priority,
+      assignee,
+      dueDate,
+      labels: card?.labels,
+    })
     onOpenChange(false)
   }
 
@@ -422,9 +392,9 @@ export type KanbanBoardProps = {
 }
 
 export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProps) {
+  const { t } = useI18n()
   const [query, setQuery] = React.useState('')
   const [drag, setDrag] = React.useState<Drag | null>(null)
-  const { t } = useI18n()
   const [dialogOpen, setDialogOpen] = React.useState(false)
   const [editingCard, setEditingCard] = React.useState<KanbanCard | undefined>(undefined)
   const [targetColumnId, setTargetColumnId] = React.useState('')
@@ -432,9 +402,15 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
   const shown: KanbanBoardData = React.useMemo(
     () =>
       query.trim()
-        ? { ...board, columns: board.columns.map((col) => ({ ...col, cards: col.cards.filter((c) => matches(c, query)) })) }
+        ? {
+            ...board,
+            columns: board.columns.map((col) => ({
+              ...col,
+              cards: col.cards.filter((c) => matches(c, query)),
+            })),
+          }
         : board,
-    [board, query],
+    [board, query]
   )
 
   const onDragStart = (card: KanbanCard) => (e: React.DragEvent) => {
@@ -466,7 +442,10 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
   const deleteCard = (cardId: string) =>
     onUpdateBoard({
       ...board,
-      columns: board.columns.map((col) => ({ ...col, cards: col.cards.filter((c) => c.id !== cardId) })),
+      columns: board.columns.map((col) => ({
+        ...col,
+        cards: col.cards.filter((c) => c.id !== cardId),
+      })),
     })
 
   const saveCard = (data: Partial<KanbanCard>) => {
@@ -523,27 +502,11 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
 
       <XStack {...slot('kanban-board')} gap="$4" p="$4" flex={1} overflow="scroll">
         {shown.columns.map((column) => (
-          <KanbanColumnView
-            key={column.id}
-            column={column}
-            drag={drag}
-            onDragStart={onDragStart}
-            onDragEnd={onDragEnd}
-            onDropOn={onDropOn}
-            onAddCard={() => openAdd(column.id)}
-            onEditCard={openEdit}
-            onDeleteCard={deleteCard}
-          />
+          <KanbanColumnView key={column.id} column={column} drag={drag} onDragStart={onDragStart} onDragEnd={onDragEnd} onDropOn={onDropOn} onAddCard={() => openAdd(column.id)} onEditCard={openEdit} onDeleteCard={deleteCard} />
         ))}
       </XStack>
 
-      <KanbanCardDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        card={editingCard}
-        labels={board.labels}
-        onSave={saveCard}
-      />
+      <KanbanCardDialog open={dialogOpen} onOpenChange={setDialogOpen} card={editingCard} labels={board.labels} onSave={saveCard} />
     </BoardFrame>
   )
 }

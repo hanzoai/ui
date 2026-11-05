@@ -1,0 +1,78 @@
+---
+title: Introdução
+description: Uma biblioteca de componentes para web, nativo e desktop, sobre um único substrato. Uma importação, uma raiz, e nada a configurar.
+---
+
+{brand.name} é a biblioteca de componentes da {brand.org}. Cada componente é renderizado através de [@hanzo/gui](https://gui.hanzo.ai), um motor de estilos para React e React Native que recebe os estilos como props e os compila em CSS atômico na web. Como o motor é multiplataforma, a biblioteca também é: o mesmo `Switch` vira um `div` no navegador e uma view nativa no telefone.
+
+Aqui não há um build de classes utilitárias. Nem Tailwind, nem um plugin de PostCSS, nem um primitivo do Radix por baixo de um componente, nem um registro, nem `components.json`, nem uma CLI que copia o código para o seu repositório. Você instala um pacote e importa dele.
+
+## Instalar e renderizar
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+```tsx title="main.tsx"
+import { Hanzo, Button } from '@hanzo/ui'
+
+export default function App() {
+  return (
+    <Hanzo>
+      <Button>Ship</Button>
+    </Hanzo>
+  )
+}
+```
+
+Essa é toda a configuração. `Hanzo` é a raiz, e carrega três coisas que antes eram trabalho de cada app: a config do gui contra a qual os tokens resolvem, a folha de estilos e o tema. Não há CSS para importar nem gerador para rodar — a folha nasce quando o pacote é publicado, renderizando cada componente e colhendo o CSS que esse render produz, de modo que a primeira pintura e cada render no servidor já chegam com as suas regras.
+
+A única coisa que o host ainda faz é dizer ao bundler que `react-native` significa `react-native-web`. É um alias, e cada página de host em [Instalação](/docs/installation) mostra onde ele entra.
+
+## O estilo são props
+
+Um estilo é uma prop do componente, e um estilo responsivo é a mesma prop sob uma chave de breakpoint.
+
+```tsx
+import { Button, Text, XStack, YStack } from '@hanzo/ui'
+
+<YStack gap="$4" p="$5" $md={{ p: '$8' }}>
+  <Text fontSize="$5" color="$color11">
+    Balance
+  </Text>
+  <XStack gap="$2">
+    <Button>Send</Button>
+    <Button variant="outline">Receive</Button>
+  </XStack>
+</YStack>
+```
+
+Os breakpoints são larguras mínimas, mobile-first: `$sm` 640, `$md` 768, `$lg` 1024, `$xl` 1280. Um valor que começa com `$` é um token — uma cor, um tamanho, um degrau da rampa de espaçamento — e resolve contra o tema, então `$background` é uma cor diferente no claro e no escuro sem que o ponto de chamada saiba. O tamanho da fonte é sempre um token, nunca um número: `fontSize="$3"`, não `fontSize={14}`. Uma pessoa pode definir a própria escala tipográfica e a rampa `$n` acompanha; um 14 escrito à mão não. [Temas](/docs/theming) tem as escalas.
+
+## Layout
+
+Os stacks são flex. `XStack` dispõe em linha, `YStack` em coluna, e ambos aceitam `gap`, `items` e `justify`. Uma grade é uma grade CSS de verdade, em `@hanzo/ui/grid`, cujas trilhas vêm do contêiner e não dos filhos — veja [Grade](/docs/grid).
+
+## O que fica onde
+
+| Import | O que é |
+| --- | --- |
+| `@hanzo/ui` | A API de componentes — cada primitivo, os stacks, a escala tipográfica e `Hanzo`. |
+| `@hanzo/ui/product` | A camada de app: gráficos, o chrome da página, etiquetas de estado, painéis de detalhe, o alternador de tema. |
+| `@hanzo/ui/blocks` | Conteúdo como dados, e os renderizadores que o desenham. |
+| `@hanzo/ui/grid` | `Grid` e `Cell`, só na web. |
+| `@hanzo/ui/product/pure` | As regras sobre as quais a camada de produto roda, sem um componente acoplado. |
+| `@hanzo/ui/css` | `substitute`, para testes que um DOM sem cascata não consegue responder. |
+| `@hanzo/ui/next` | O wrapper do Next que define os aliases de web para os dois bundlers. |
+
+As páginas de catálogo deste site — [Componentes](/ui), [Blocos](/blocks), [Produto](/product) — são lidas do próprio pacote: cada uma renderiza os exemplos de um módulo ao lado do código-fonte e cita os tipos.
+
+## Perguntas
+
+**Preciso do Tailwind?** Não. Os componentes recebem props de estilo, e a identidade são propriedades CSS personalizadas. Se um app chega com strings de classe, `Box`, `sx` e `css` as leem através de `tw` e as transformam nas mesmas props; nada chega ao DOM como uma classe que o pacote não tenha definido.
+
+**Isso é copiar e colar?** Não. Instale o pacote e importe dele. Os componentes são versionados com o pacote, e o mapa de exports é o caminho pelo qual um subpath resolve, então uma importação profunda continua funcionando entre patches.
+
+**Quais frameworks?** Qualquer renderer de React 19, desde que o bundler conheça o alias de `react-native`. Há páginas para [Vite](/docs/installation/vite), [Next](/docs/installation/next), [One](/docs/installation/one), [Expo](/docs/installation/expo) e [Tauri](/docs/installation/tauri).
+
+**Posso usar comercialmente?** Sim. Apache-2.0 ou MIT, à sua escolha.

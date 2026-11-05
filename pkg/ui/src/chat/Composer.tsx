@@ -43,14 +43,13 @@
  * Its own words are the reader's language (@hanzo/i18n `t`). A host's words —
  * its placeholder, a shelf's rows, a chip's label — are drawn as given.
  */
-import { SizableText, useMedia, XStack, YStack } from '@hanzo/gui'
+import { useEffect, useRef, useState, type ComponentProps, type CSSProperties, type ReactNode } from 'react'
 import { useComposing, type Composing } from '@hanzo/appearance'
 import { Control } from '@hanzo/composer'
+import { SizableText, useMedia, XStack, YStack } from '@hanzo/gui'
 import { phrase } from '@hanzo/i18n'
-import { useI18n } from '@hanzo/i18n/react'
-import { ArrowUp, AudioLines, Square, X } from '@hanzogui/lucide-icons-2'
 import { Voice, type Machine } from '@hanzo/voice'
-import { useEffect, useRef, useState, type ComponentProps, type CSSProperties, type ReactNode } from 'react'
+import { ArrowUp, AudioLines, Square, X } from '@hanzogui/lucide-icons-2'
 
 import { Textarea } from '../backends/gui'
 import { slot } from '../backends/gui/slot'
@@ -65,6 +64,7 @@ import { ready, sends, type Mods } from './send'
 import { GHOST, GLYPH, RING, STROKE } from './look'
 import { useComposerStatus } from './Status'
 import { Chips, Tune, type Chip, type Mind, type Modes } from './Tune'
+import { useI18n } from '@hanzo/i18n/react'
 
 /** `onChange` is dropped: here it carries the draft, not a DOM change event. */
 type Stack = Omit<ComponentProps<typeof YStack>, 'children' | 'onChange'>
@@ -83,7 +83,11 @@ export const MEASURE = 'var(--container-prose, 48rem)'
 export const GAP = 20
 
 /** The composer's width under a thread: the measure less its 0.75rem gutters, centred, so its edges are the text's. */
-export const measure = { width: 'calc(100% - 1.5rem)', maxW: `calc(${MEASURE} - 1.5rem)`, mx: 'auto' } as const
+export const measure = {
+  width: 'calc(100% - 1.5rem)',
+  maxW: `calc(${MEASURE} - 1.5rem)`,
+  mx: 'auto',
+} as const
 
 /** The round controls' box, px, and a phone's, a thumb's width kept small so the frame stays a slim bar: `+`, the mic, voice and send all take it, so they share one centreline. */
 export const ROUND = 32
@@ -466,8 +470,7 @@ export function Composer({
     </XStack>
   )
 
-  const mention =
-    listed && shelf && typed ? <Mention shelf={shelf} rows={listed} index={row} onPick={pick} skills={typed.char === '/'} /> : null
+  const mention = listed && shelf && typed ? <Mention shelf={shelf} rows={listed} index={row} onPick={pick} skills={typed.char === '/'} /> : null
 
   const above =
     starters || head || note || mention ? (

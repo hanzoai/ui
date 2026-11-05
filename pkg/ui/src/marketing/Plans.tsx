@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 /**
  * Plans — one card per plan on the chosen tab, each with its own way in.
  *
@@ -21,7 +22,6 @@ import { XStack, YStack } from '@hanzo/gui'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 import { Check } from '@hanzogui/lucide-icons-2'
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
 import { Switch } from '../backends/gui/switch'
@@ -41,7 +41,13 @@ const TABS: readonly [Audience, string][] = [
 /** The plan families the ladder sells. */
 const FAMILIES = new Set(['personal', 'team', 'enterprise'])
 
-export type PlanChoice = { plan: PlanRow; interval: Interval; tab: Audience; cta: string; way: 'card' | 'free' | 'sales' }
+export type PlanChoice = {
+  plan: PlanRow
+  interval: Interval
+  tab: Audience
+  cta: string
+  way: 'card' | 'free' | 'sales'
+}
 
 export type PlansProps = {
   plans: readonly PlanRow[]
@@ -90,7 +96,10 @@ const Plans = ({
   const shown = here.map((p) => p.id).join()
   useEffect(() => {
     if (!here.length) return
-    onView?.(tab, here.map((plan) => ({ plan, interval: termOf(plan, yearly) })))
+    onView?.(
+      tab,
+      here.map((plan) => ({ plan, interval: termOf(plan, yearly) }))
+    )
     // `shown` stands for the rows.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shown, tab])
@@ -155,19 +164,7 @@ const Plans = ({
           </ToggleGroup>
         ) : null}
         {most > 0 ? (
-          <XStack
-            render="label"
-            items="center"
-            gap="$3"
-            paddingInlineStart="$5"
-            paddingInlineEnd="$3"
-            py="$2"
-            rounded={9999}
-            borderWidth={1}
-            borderColor="$edge"
-            bg="$panel"
-            cursor="pointer"
-          >
+          <XStack render="label" items="center" gap="$3" paddingInlineStart="$5" paddingInlineEnd="$3" py="$2" rounded={9999} borderWidth={1} borderColor="$edge" bg="$panel" cursor="pointer">
             <Line size="sm" tone="muted">
               {label}
             </Line>
@@ -225,37 +222,14 @@ function Card({
   const cta = team ? t('Get {plan} plan', { plan: plan.name }) : label
 
   return (
-    <YStack
-      {...slot('plan')}
-      render="section"
-      aria-label={plan.name}
-      height="100%"
-      gap="$5"
-      p="$5"
-      $sm={{ p: '$6' }}
-      rounded="var(--radius-xl)"
-      borderWidth={1}
-      borderColor={plan.popular ? '$bound' : '$edge'}
-      bg={plan.popular ? '$hover' : '$panel'}
-    >
+    <YStack {...slot('plan')} render="section" aria-label={plan.name} height="100%" gap="$5" p="$5" $sm={{ p: '$6' }} rounded="var(--radius-xl)" borderWidth={1} borderColor={plan.popular ? '$bound' : '$edge'} bg={plan.popular ? '$hover' : '$panel'}>
       <YStack gap="$2">
         <XStack items="center" justify="space-between" gap="$3">
           <Line render="h3" m={0} size="xl" weight="600">
             {plan.name}
           </Line>
           {plan.popular ? (
-            <XStack
-              {...slot('plan-badge')}
-              display="inline-flex"
-              self="flex-start"
-              items="center"
-              px="$2"
-              py={2}
-              rounded={9999}
-              borderWidth={1}
-              borderColor="$edge"
-              bg="$raised"
-            >
+            <XStack {...slot('plan-badge')} display="inline-flex" self="flex-start" items="center" px="$2" py={2} rounded={9999} borderWidth={1} borderColor="$edge" bg="$raised">
               <Line fontSize={10} px={10} tone="soft" weight="700" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 {t('Most popular')}
               </Line>

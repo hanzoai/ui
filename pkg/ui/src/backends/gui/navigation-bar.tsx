@@ -14,15 +14,15 @@
  */
 import { ChevronRight, ChevronDown, Search, Bell, ShoppingCart, User, Users, Phone, Video, MessageSquare } from '@hanzogui/lucide-icons-2'
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
-import type { ReactNode } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
+import type { ReactNode } from 'react'
 
 import { Avatar, AvatarFallback, AvatarImage } from './avatar'
 import { Badge } from './badge'
 import { Button } from './button'
+import { mirror } from './dir'
 import { DropdownMenu } from './dropdown-menu'
 import { ink } from './ink'
-import { mirror } from './dir'
 
 export type NavigationBarLink = {
   label: string
@@ -42,36 +42,30 @@ export type NavigationBarOption = {
   icon?: ReactNode
 }
 
-export type NavigationBarVariant =
-  | 'simple'
-  | 'centered'
-  | 'breadcrumb'
-  | 'icon'
-  | 'dashboard'
-  | 'ecommerce'
-  | 'collaboration'
-  | 'communication'
-  | 'switcher'
+export type NavigationBarVariant = 'simple' | 'centered' | 'breadcrumb' | 'icon' | 'dashboard' | 'ecommerce' | 'collaboration' | 'communication' | 'switcher'
 
 const HEIGHT = 64
 const BREADCRUMB_HEIGHT = 48
 
 /** Retag helpers — the ONE way this file swaps the host element under a gui primitive. */
 const Nav = styled(XStack, { name: 'NavigationBar', render: 'nav' })
-const List = styled(XStack, { name: 'NavigationBarBreadcrumbList', render: 'ol' })
-const ListItem = styled(XStack, { name: 'NavigationBarBreadcrumbItem', render: 'li' })
+const List = styled(XStack, {
+  name: 'NavigationBarBreadcrumbList',
+  render: 'ol',
+})
+const ListItem = styled(XStack, {
+  name: 'NavigationBarBreadcrumbItem',
+  render: 'li',
+})
 const Anchor = styled(SizableText, { name: 'NavigationBarLink', render: 'a' })
-const IconAnchor = styled(YStack, { name: 'NavigationBarIconLink', render: 'a' })
+const IconAnchor = styled(YStack, {
+  name: 'NavigationBarIconLink',
+  render: 'a',
+})
 
 const Link = ({ item }: { item: NavigationBarLink }) =>
   item.href ? (
-    <Anchor
-      {...({ href: item.href } as object)}
-      size="$3"
-      fontWeight="500"
-      color="$ink"
-      hoverStyle={{ color: '$accentColor' }}
-    >
+    <Anchor {...({ href: item.href } as object)} size="$3" fontWeight="500" color="$ink" hoverStyle={{ color: '$accentColor' }}>
       {item.label}
     </Anchor>
   ) : (
@@ -88,14 +82,7 @@ const Links = ({ items }: { items: NavigationBarLink[] }) => (
   </XStack>
 )
 
-const IconButton = ({
-  children,
-  ...props
-}: {
-  children: ReactNode
-  'aria-label': string
-  onPress?: () => void
-}) => (
+const IconButton = ({ children, ...props }: { children: ReactNode; 'aria-label': string; onPress?: () => void }) => (
   <Button variant="ghost" size="icon" {...props}>
     {children}
   </Button>
@@ -172,17 +159,7 @@ export function NavigationBar({
   const height = variant === 'breadcrumb' ? BREADCRUMB_HEIGHT : HEIGHT
 
   return (
-    <Nav
-      data-slot="navigation-bar"
-      data-variant={variant}
-      borderBottomWidth={1}
-      borderColor="$borderColor"
-      minH={height}
-      px="$5"
-      items="center"
-      justify="space-between"
-      gap="$4"
-    >
+    <Nav data-slot="navigation-bar" data-variant={variant} borderBottomWidth={1} borderColor="$borderColor" minH={height} px="$5" items="center" justify="space-between" gap="$4">
       {variant === 'breadcrumb' ? (
         <List items="center" gap="$2" flex={1}>
           {items.map((item, i) => (
@@ -195,12 +172,7 @@ export function NavigationBar({
       ) : variant === 'icon' ? (
         <XStack flex={1} items="center" justify="center" gap="$6">
           {items.map((item) => (
-            <IconAnchor
-              key={item.href ?? item.label}
-              {...({ href: item.href, title: item.label } as object)}
-              items="center"
-              gap="$1"
-            >
+            <IconAnchor key={item.href ?? item.label} {...({ href: item.href, title: item.label } as object)} items="center" gap="$1">
               {item.icon}
               {ink(item.label, SizableText, { size: '$1' })}
             </IconAnchor>
@@ -246,11 +218,7 @@ export function NavigationBar({
                 <ShoppingCart size={18} />
               </IconButton>
               {cartCount > 0 ? (
-                <Badge
-                  data-slot="navigation-bar-cart-count"
-                  variant="default"
-                  style={{ position: 'absolute', top: -4, insetInlineEnd: -4 }}
-                >
+                <Badge data-slot="navigation-bar-cart-count" variant="default" style={{ position: 'absolute', top: -4, insetInlineEnd: -4 }}>
                   {cartCount}
                 </Badge>
               ) : null}

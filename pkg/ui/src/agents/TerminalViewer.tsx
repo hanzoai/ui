@@ -34,20 +34,11 @@ export interface TerminalViewerProps {
   onClearOutput?: (id: string) => void
 }
 
-export const TerminalViewer: React.FC<TerminalViewerProps> = ({
-  tabs,
-  activeTabId,
-  onSelectTab,
-  onCloseTab,
-  onNewTab,
-  onSendCommand,
-  onKillCommand,
-  onClearOutput,
-}) => {
+export const TerminalViewer: React.FC<TerminalViewerProps> = ({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, onSendCommand, onKillCommand, onClearOutput }) => {
+  const { t } = useI18n()
   const [commandInput, setCommandInput] = useState('')
   const [copied, setCopied] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
-  const { t } = useI18n()
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const activeTab = tabs.find((t) => t.id === activeTabId) || tabs[0]
@@ -82,13 +73,34 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({
         border: '1px solid var(--borderColor)',
         overflow: 'hidden',
         ...(isExpanded
-          ? { position: 'fixed', inset: 16, zIndex: 50, boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }
+          ? {
+              position: 'fixed',
+              inset: 16,
+              zIndex: 50,
+              boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+            }
           : { height: '100%', minHeight: 300 }),
       }}
     >
       {/* Tab bar */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: '#141418', borderBottom: '1px solid #24242a' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, overflowX: 'auto' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '8px 12px',
+          backgroundColor: '#141418',
+          borderBottom: '1px solid #24242a',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            overflowX: 'auto',
+          }}
+        >
           {tabs.map((tab) => {
             const isActive = tab.id === activeTabId
             return (
@@ -109,12 +121,35 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({
                 }}
               >
                 <TerminalIcon size={14} />
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 120 }}>{tab.title}</span>
+                <span
+                  style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    maxWidth: 120,
+                  }}
+                >
+                  {tab.title}
+                </span>
                 {tab.status === 'running' && (
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#34d399' }} />
+                  <span
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      backgroundColor: '#34d399',
+                    }}
+                  />
                 )}
                 {tab.status === 'failed' && (
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#f87171' }} />
+                  <span
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      backgroundColor: '#f87171',
+                    }}
+                  />
                 )}
               </button>
             )
@@ -160,7 +195,15 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({
       </div>
 
       {/* Output Console */}
-      <div style={{ flex: 1, padding: 16, overflowY: 'auto', fontSize: 12, lineHeight: 1.5 }}>
+      <div
+        style={{
+          flex: 1,
+          padding: 16,
+          overflowY: 'auto',
+          fontSize: 12,
+          lineHeight: 1.5,
+        }}
+      >
         {activeTab?.cwd && (
           <div style={{ color: '#6e6e7c', fontSize: 11, marginBottom: 8, fontFamily: 'sans-serif' }}>
             {t('Working directory: {path}', {
@@ -206,9 +249,25 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({
       {onSendCommand && activeTab && (
         <form
           onSubmit={handleSubmit}
-          style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', backgroundColor: '#121216', borderTop: '1px solid #24242a' }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '8px 12px',
+            backgroundColor: '#121216',
+            borderTop: '1px solid #24242a',
+          }}
         >
-          <span style={{ color: '#22d3ee', userSelect: 'none', fontSize: 12, fontWeight: 'bold' }}>$</span>
+          <span
+            style={{
+              color: '#22d3ee',
+              userSelect: 'none',
+              fontSize: 12,
+              fontWeight: 'bold',
+            }}
+          >
+            $
+          </span>
           <input
             type="text"
             value={commandInput}
@@ -220,7 +279,20 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({
             <button
               type="button"
               onClick={() => onKillCommand(activeTab.id)}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 8px', fontSize: 11, fontFamily: 'sans-serif', fontWeight: 600, color: '#fda4af', backgroundColor: 'rgba(76, 5, 25, 0.6)', border: '1px solid rgba(159, 18, 57, 0.5)', borderRadius: 4, cursor: 'pointer' }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4,
+                padding: '4px 8px',
+                fontSize: 11,
+                fontFamily: 'sans-serif',
+                fontWeight: 600,
+                color: '#fda4af',
+                backgroundColor: 'rgba(76, 5, 25, 0.6)',
+                border: '1px solid rgba(159, 18, 57, 0.5)',
+                borderRadius: 4,
+                cursor: 'pointer',
+              }}
             >
               <Square size={12} />
               <span>{t('Stop')}</span>

@@ -1,0 +1,88 @@
+---
+title: 測試
+description: 掛在根下面，按槽來找，層疊自己去解，其餘交給瀏覽器去算。
+---
+
+每個元件都用自己的名字蓋下一個 `data-slot`，於是測試可以找到一個控制項，而不必依賴某個版本可能會改掉的標記。像應用那樣掛在 `Hanzo` 下面；根帶著每個權杖對著解析的那份設定，沒有根主題的元件會擲出。
+
+## 單元測試
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+這條別名和打包工具所帶的是同一條。`inline` 這份清單要緊：引擎的套件以再匯出 ESM 的 CommonJS 形式交付，若留在外部，它們會解析到擁有主題的那個模組的第二份複本，於是提供者寫入一份 context，每個帶主題的元件去讀另一份，並擲出 `Missing theme`。
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## 沒有層疊的 DOM 裡的顏色
+
+jsdom 不解 `var()`；它把文字原樣交給測試。主題的各階故意寫成 `var(--border, rgb(255 255 255 / .10))`——設計表掛上了就跟隨活的層疊，沒掛上就留下審過的字面值——於是在 jsdom 裡斷言一條邊框的對比度，比的是一種顏色和一個函式呼叫。`substitute` 走的是 jsdom 不走的那一步。
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+沒有 `vars` 對照時，這是精確而不是近似：jsdom 不掛設計表，所以沒有東西宣告 `--border`，回退值就是瀏覽器在同樣條件下會算出的那個。傳入一張對照，用來模擬自己宣告了權杖的宿主。這個模組什麼都不匯入，兩種格式都交付，所以在任何執行器下都能載入。
+
+## 瀏覽器算出了什麼
+
+一次建置、一次型別檢查、一次單元測試，都能在一張從未到達頁面的樣式表上通過。證明是瀏覽器：建置應用，把它提供出來，斷言計算後的樣式，而不是標記自己的說法。
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+套件就是這樣測試自己的。它的展示廊是一份清單，裝著每一種變體裡的每一個元件；樣式表產生器繪製這份清單，單元測試在真正的提供者下面繪製它，並檢查每一個槽標記都到了，使用端測試則把 tarball 打包，裝進儲存庫之外的一個應用——絕不用工作區連結，那種連結穿過原始碼樹解析，會藏起 tarball 裡缺的檔案——再建置它，並在兩種主題下、於 390 和 1280 斷言計算後的樣式和截圖。若用了工作區連結，那個測試存在就是為了抓住的每一處缺陷，都會被送出去。

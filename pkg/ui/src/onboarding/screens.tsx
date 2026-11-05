@@ -3,6 +3,7 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 import { Check, ChevronDown, User, Users } from '@hanzogui/lucide-icons-2'
+
 import { Badge } from '../backends/gui/badge'
 import { Button } from '../backends/gui/button'
 import { Card, CardContent } from '../backends/gui/card'
@@ -14,7 +15,7 @@ import { Stepper } from '../backends/gui/stepper'
 import { Textarea } from '../backends/gui/textarea'
 import { ApiError, call } from './api'
 import { IntervalToggle, Line, Panel } from './frame'
-import { ENTERPRISE_FROM, MAX_SEATS, MIN_SEATS, has, lines, money, offer, saving, unit, usd, yearly, type Interval, type PlanId } from './plans'
+import { ENTERPRISE_FROM, has, lines, MAX_SEATS, MIN_SEATS, money, offer, saving, unit, usd, yearly, type Interval, type PlanId } from './plans'
 import type { Use } from './state'
 
 /** A team's IAM handle from its name: lowercase words joined by hyphens, 39 characters at most. */
@@ -113,7 +114,7 @@ function Features({ items }: { items: string[] }) {
               {f}
             </SizableText>
           </XStack>
-        ),
+        )
       )}
     </YStack>
   )
@@ -142,9 +143,7 @@ function PlanCard({ id, cta, onPick, interval, setInterval, toggle, from }: { id
             {interval === 'annual' && yearly(id) ? t('USD / month\nbilled yearly') : t('USD / month\nbilled monthly')}
           </SizableText>
         </XStack>
-        <Primary onClick={onPick}>
-          {cta}
-        </Primary>
+        <Primary onClick={onPick}>{cta}</Primary>
         {o.monthly > 0 ? (
           <Paragraph size="$1" color="$quiet" text="center" m={0}>
             {t('No commitment · Cancel anytime')}
@@ -284,9 +283,9 @@ export function IntervalChoice({ interval, setInterval, price, save }: { interva
                 {t('Save {n}%', { n: save })}
               </SizableText>
             ) : null}
-          </XStack>
-        </ChoiceCard>
-      ))}
+            </XStack>
+          </ChoiceCard>
+        ))}
     </ChoiceGroup>
   )
 }
@@ -399,7 +398,13 @@ export function Enterprise({ api, onSent }: { api: string; onSent: () => void })
     setBusy(true)
     setWrong(null)
     try {
-      await call(api, '/v1/marketing/leads', { method: 'POST', body: JSON.stringify({ ...f, source: `${window.location.hostname}/onboarding` }) })
+      await call(api, '/v1/marketing/leads', {
+        method: 'POST',
+        body: JSON.stringify({
+          ...f,
+          source: `${window.location.hostname}/onboarding`,
+        }),
+      })
       onSent()
     } catch {
       setWrong(`${t('That did not go through.')} ${t('Try again, or email {email}.', { email: 'sales@hanzo.ai' })}`)

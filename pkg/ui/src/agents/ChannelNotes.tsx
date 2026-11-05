@@ -12,18 +12,10 @@ export interface ChannelNotesProps {
   style?: React.CSSProperties
 }
 
-export const ChannelNotes: React.FC<ChannelNotesProps> = ({
-  channelName,
-  notes,
-  onSaveNotes,
-  onExtractActionItems,
-  isLiveNoteTakerActive = false,
-  className = '',
-  style,
-}) => {
+export const ChannelNotes: React.FC<ChannelNotesProps> = ({ channelName, notes, onSaveNotes, onExtractActionItems, isLiveNoteTakerActive = false, className = '', style }) => {
+  const { t } = useI18n()
   const [content, setContent] = useState(notes)
   const [isEditing, setIsEditing] = useState(false)
-  const { t } = useI18n()
 
   const handleSave = () => {
     onSaveNotes(content)
@@ -44,7 +36,13 @@ export const ChannelNotes: React.FC<ChannelNotesProps> = ({
       }}
       aria-label={t('Channel Collaborative Notes')}
     >
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 16 }}>📝</span>
           <h3 style={{ fontSize: 12, fontWeight: 600, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
@@ -72,14 +70,32 @@ export const ChannelNotes: React.FC<ChannelNotesProps> = ({
           {isEditing ? (
             <button
               onClick={handleSave}
-              style={{ padding: '4px 10px', fontSize: 12, fontWeight: 600, color: '#ffffff', backgroundColor: '#4f46e5', border: 'none', borderRadius: 8, cursor: 'pointer' }}
+              style={{
+                padding: '4px 10px',
+                fontSize: 12,
+                fontWeight: 600,
+                color: '#ffffff',
+                backgroundColor: '#4f46e5',
+                border: 'none',
+                borderRadius: 8,
+                cursor: 'pointer',
+              }}
             >
               {t('Save')}
             </button>
           ) : (
             <button
               onClick={() => setIsEditing(true)}
-              style={{ padding: '4px 10px', fontSize: 12, fontWeight: 500, color: '#d4d4d4', backgroundColor: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 8, cursor: 'pointer' }}
+              style={{
+                padding: '4px 10px',
+                fontSize: 12,
+                fontWeight: 500,
+                color: '#d4d4d4',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: 8,
+                cursor: 'pointer',
+              }}
             >
               {t('Edit')}
             </button>
@@ -93,7 +109,18 @@ export const ChannelNotes: React.FC<ChannelNotesProps> = ({
           onChange={(e) => setContent(e.target.value)}
           placeholder={t('Write shared channel notes, meeting agenda, or AI summaries...')}
           rows={6}
-          style={{ width: '100%', padding: 12, backgroundColor: 'rgba(10, 10, 10, 0.8)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 12, fontSize: 12, color: '#e5e5e5', fontFamily: 'monospace', outline: 'none', resize: 'vertical' }}
+          style={{
+            width: '100%',
+            padding: 12,
+            backgroundColor: 'rgba(10, 10, 10, 0.8)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: 12,
+            fontSize: 12,
+            color: '#e5e5e5',
+            fontFamily: 'monospace',
+            outline: 'none',
+            resize: 'vertical',
+          }}
         />
       ) : (
         <div style={{ padding: 12, backgroundColor: 'rgba(10, 10, 10, 0.4)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 12, fontSize: 12, color: '#d4d4d4', whiteSpace: 'pre-wrap', fontFamily: 'monospace', maxHeight: 240, overflowY: 'auto', lineHeight: 1.5 }}>

@@ -1,0 +1,106 @@
+---
+title: स्थापना
+description: पैकेज स्थापित करें, रूट लगाएँ, और अपने बंडलर को एक बात बताएँ।
+---
+
+तैयारी हर होस्ट पर एक जैसी है। जो हिस्सा बदलता है वह यह है कि बंडलर की
+सेटिंग कहाँ जाती है, और हर होस्ट का अपना पृष्ठ है।
+
+## स्थापित करें
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` और `react-dom` 19 या बाद के पीयर हैं। `@hanzo/gui` जान-बूझकर
+पीयर है: यह एक React कॉन्टेक्स्ट देता है, और दूसरी भौतिक प्रति दूसरी
+कॉन्टेक्स्ट होती, रूट एक में लिखता और हर कंपोनेंट दूसरी पढ़ता। इसे एक
+ही संस्करण रखें, जिसे ऐप घोषित करे।
+
+## रूट लगाएँ
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+`Hanzo` ही वह चीज़ है जिसे ऐप लगाता है। यह gui की कॉन्फ़िग को एक मान की
+तरह लेकर चलता है, बनी हुई स्टाइलशीट आयात करता है, और थीम लगाता है — गहरी
+डिफ़ॉल्ट, `theme="light"` से बदलें। बिना रूट थीम के हर कंपोनेंट फेंकता
+है, इसलिए भूलना पहले पेंट पर क्रैश है, कभी ऐसा पृष्ठ नहीं जो चुपचाप बिना
+स्टाइल रेंडर हो जाए।
+
+विकास में रूट जाँचता है कि स्टाइलशीट दस्तावेज़ तक पहुँची, और न पहुँची हो
+तो कंसोल में कहता है। जो सुधार वह नाम लेता है वह एक आयात है,
+`@hanzo/ui/styles.css`, उस बंडलर के लिए जिसने पैकेज की अपनी शीट गिरा दी।
+
+## बंडलर को बताएँ
+
+इंजन का डिपेंडेंसी ग्राफ़ `react-native` का नाम लेता है, और उसमें एक
+पैकेज, आइकन सेट के नीचे `react-native-svg`, एक नेटिव एंट्री के बगल
+`.web.js` फ़ाइल शिप करता है। वेब बिल्ड में नेटिव वाली चुनें और त्रुटि किसी
+डिपेंडेंसी के अंदर Flow स्रोत का पार्स फेल होना है, जो टूटे पैकेज जैसा
+पढ़ा जाता है, न कि छूटी सेटिंग जैसा। दो सेटिंग इसे रोकती हैं:
+
+- `react-native` `react-native-web` पर सुलझता है।
+- `.web.js` `.js` से ऊपर रहता है।
+
+Next में दोनों एक आवरण हैं, `@hanzo/ui/next`। Vite में वे `resolve` की
+दो पंक्तियाँ हैं। One में फ़्रेमवर्क दोनों पहले से करता है। Expo में
+लगाने को कुछ नहीं, क्योंकि Metro react-native को उसके अपने रूप में पढ़ता है।
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo और React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## कुछ रेंडर करें
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## फ़ॉन्ट
+
+पैकेज Zen और Zen Mono साथ लाता है और उन्हें `--font-sans` तथा
+`--font-mono` से बाँधता है, इसलिए जो होस्ट कुछ नहीं बाँधता उसे बिना काम
+के ये चेहरे मिलते हैं। जिसका अपना चेहरा हो वह `--font-sans-provided`
+लगाता है और जीतता है — देखें [टाइपोग्राफी](/docs/typography)।

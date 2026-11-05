@@ -15,12 +15,12 @@
  * new org.
  */
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react'
-import { sx } from '../sx'
 import { Button, Input, Popover, Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { Check, ChevronsUpDown, LayoutGrid, Plus, Search } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 
 import { press, RING } from '../backends/gui/press'
+import { sx } from '../sx'
 import { useEmit } from './instrument'
 import { menuKeyDown } from './menu/roving'
 import { MenuRow } from './MenuRow'
@@ -120,24 +120,7 @@ export type OrgSwitcherProps = {
   style?: CSSProperties
 }
 
-export function OrgSwitcher({
-  scope,
-  orgs,
-  pageSize = 20,
-  current: given,
-  create,
-  picker = false,
-  direction = 'down',
-  footer,
-  sub,
-  aria,
-  search,
-  heading,
-  lead = false,
-  testId,
-  className,
-  style,
-}: OrgSwitcherProps) {
+export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create, picker = false, direction = 'down', footer, sub, aria, search, heading, lead = false, testId, className, style }: OrgSwitcherProps) {
   const currentId = scope.currentOrg()
 
   const [open, setOpen] = useState(false)
@@ -192,7 +175,7 @@ export function OrgSwitcher({
         }
       }
     },
-    [orgs, pageSize],
+    [orgs, pageSize]
   )
 
   // (Re)load page 0 when the popover opens or the debounced query changes.
@@ -217,7 +200,12 @@ export function OrgSwitcher({
   // row, then a name synthesized from the scope id — never nothing.
   const current: Org = useMemo(() => {
     if (given && given.name === currentId) return given
-    return rows.find((o) => o.name === currentId) ?? { name: currentId, displayName: titleCase(currentId) }
+    return (
+      rows.find((o) => o.name === currentId) ?? {
+        name: currentId,
+        displayName: titleCase(currentId),
+      }
+    )
   }, [given, rows, currentId])
   const currentLabel = current.displayName || titleCase(current.name)
 
@@ -229,7 +217,7 @@ export function OrgSwitcher({
       setOpen(false)
       scope.switchOrg(org)
     },
-    [scope, track],
+    [scope, track]
   )
 
   const submitCreate = async () => {
@@ -253,13 +241,7 @@ export function OrgSwitcher({
     // near the TOP of a phone's account sheet, where upward is off the screen —
     // and a panel that cannot flip lands under the chrome it opened from:
     // present, measurable, and unclickable.
-    <Popover
-      open={open}
-      onOpenChange={setOpen}
-      placement={direction === 'up' ? 'top-start' : 'bottom-start'}
-      allowFlip
-      stayInFrame
-    >
+    <Popover open={open} onOpenChange={setOpen} placement={direction === 'up' ? 'top-start' : 'bottom-start'} allowFlip stayInFrame>
       <Popover.Trigger asChild>
         {/* Sized as the PEER of the account control — same height, same mark,
             same type, same hit area — so "which workspace" and "who I am" read
@@ -380,7 +362,7 @@ export function OrgSwitcher({
               </Text>
             ) : null}
 
-            {search ?? !!orgs ? (
+            {(search ?? !!orgs) ? (
               <XStack items="center" gap="$2" px="$2" py="$1" rounded="$3" borderWidth={1} borderColor="$borderColor">
                 <Search size={13} opacity={0.6} />
                 <Input
@@ -399,7 +381,12 @@ export function OrgSwitcher({
             ) : null}
 
             <div
-              style={{ maxHeight: 300, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}
+              style={{
+                maxHeight: 300,
+                overflowY: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
               onScroll={(e) => {
                 const el = e.currentTarget
                 if (el.scrollHeight - el.scrollTop - el.clientHeight < 48) loadMore()
@@ -423,13 +410,7 @@ export function OrgSwitcher({
                 // a `menu` may not own (MenuRow says why).
                 <YStack role="group" aria-label={t('Organizations')} gap="$1">
                   {visible.map((org) => (
-                    <MenuRow
-                      key={org.name}
-                      label={org.displayName || org.name}
-                      icon={<OrgMark org={org} />}
-                      active={org.name === currentId}
-                      onPress={() => select(org.name)}
-                    />
+                    <MenuRow key={org.name} label={org.displayName || org.name} icon={<OrgMark org={org} />} active={org.name === currentId} onPress={() => select(org.name)} />
                   ))}
                 </YStack>
               )}

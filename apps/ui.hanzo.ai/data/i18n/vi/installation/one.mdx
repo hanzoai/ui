@@ -1,0 +1,71 @@
+---
+title: One
+description: Framework dùng để dựng trang này. Bí danh, danh sách dedupe, và gốc trong tài liệu.
+---
+
+[One](https://onestack.dev) là một framework Vite cho React và React Native
+với route theo tệp. Trang này là một ứng dụng One được dựng thành HTML tĩnh,
+và cấu hình bên dưới là của chính nó.
+
+## Tạo dự án
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Cấu hình Vite
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+Bí danh là cái mà mọi host đều đặt. Danh sách dedupe là thứ giữ máy thành một
+thực thể qua các bó client và máy chủ: chủ đề là một ngữ cảnh React, và hai bản
+của mô-đun sở hữu nó là hai ngữ cảnh.
+
+## Gắn gốc
+
+One dựng cả tài liệu từ `_layout.tsx`, nên gốc nằm ở đó.
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## Dựng tĩnh
+
+Với `defaultRenderMode: 'ssg'` mọi route được dựng một lần lúc build thành một
+tệp HTML thật, và bảng kiểu của gói nằm trong tệp đó — bảng được sinh khi gói
+phát hành, không phải khi trình duyệt lần đầu dựng một thành phần, và đó là
+điều khiến trang tĩnh đúng trước khi script nào chạy.

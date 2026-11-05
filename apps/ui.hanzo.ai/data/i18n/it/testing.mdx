@@ -1,0 +1,115 @@
+---
+title: Test
+description: Monta sotto la radice, cerca per slot, risolvi tu la cascata, e lascia che un browser calcoli il resto.
+---
+
+Ogni componente lascia un `data-slot` col proprio nome, così un test può
+trovare un controllo senza dipendere da un markup che una versione può
+cambiare. Monta sotto `Hanzo`, come fa l'app; la radice porta la
+configurazione contro cui si risolve ogni token, e un componente senza tema
+alla radice lancia un errore.
+
+## Test unitari
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+L'alias è lo stesso che porta il bundler. La lista `inline` conta: i
+pacchetti del motore escono come CommonJS che riesporta ESM, e lasciati
+esterni si risolvono in una seconda copia del modulo che possiede il tema,
+così il provider scrive un contesto e ogni componente con tema ne legge un
+altro e lancia `Missing theme`.
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## Colori in un DOM senza cascata
+
+jsdom non risolve `var()`; consegna al test il testo tale e quale. I gradini
+del tema si scrivono `var(--border, rgb(255 255 255 / .10))` di proposito —
+seguire la cascata viva dove è montato un foglio di design, tenere il
+letterale rivisto dove non lo è — quindi affermare il contrasto di un bordo
+in jsdom confrontava un colore con una chiamata di funzione. `substitute` fa
+il passo che jsdom non fa.
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+Senza una mappa `vars` quello è esatto e non approssimato: jsdom non monta
+alcun foglio di design, quindi niente dichiara `--border`, quindi il fallback
+è ciò che un browser calcolerebbe nelle stesse condizioni. Passa una mappa
+per modellare un host che dichiara i propri token. Il modulo non importa
+niente ed esce in entrambi i formati, quindi si carica sotto qualunque runner.
+
+## Che cosa ha calcolato un browser
+
+Una build, un controllo dei tipi e un test unitario passano tutti su un foglio
+che non è mai arrivato alla pagina. La prova è un browser: costruisci l'app,
+servila, e afferma stili calcolati, non ciò che afferma il markup.
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+È così che il pacchetto mette alla prova se stesso. La sua galleria è una sola
+lista di ogni componente in ogni variante; il generatore del foglio renderizza
+quella lista, un test unitario la renderizza sotto il provider vero e
+controlla che sia arrivato ogni marcatore di slot, e un test di chi consuma
+impacchetta il tarball, lo installa in un'app fuori dal repository — mai un
+link di workspace, che si risolve attraverso l'albero dei sorgenti e nasconde
+un file assente dal tarball —, la costruisce, e afferma stili calcolati e
+catture a 390 e a 1280 nei due temi. Un link di workspace avrebbe pubblicato
+proprio i difetti che quel test esiste per prendere.

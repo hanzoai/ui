@@ -1,0 +1,157 @@
+---
+title: チャート
+description: 傾向、系列、割合、分布。インライン SVG で、依存はなく、でっち上げた点は決して置きません。
+---
+
+```tsx
+import { BarChart, BarRows, Donut, LineChart, Sparkline } from '@hanzo/ui/product'
+```
+
+チャートはインライン SVG で描き、色は生きているテーマから取るので、テーマと一緒に反転します。正直さは構造です。点が二つに満たないスパークラインは何も描かず、正の値のないドーナツは全角ダッシュを描き、どのチャートも傾向を発明しません。呼び出し側が本物の系列を渡します。
+
+データを運ぶ形は二つです。`ChartPoint` は連続した軸の上の、ラベル付きの値です。`Slice` はカテゴリの軸の上の、ラベル付きの大きさで、色とヒントは任意です。
+
+```ts
+type ChartPoint = { label: string; value: number }
+type Slice = { label: string; value: number; color?: string; hint?: string }
+```
+
+## スパークライン
+
+指標カードのための、大きさの決まった傾向です。`values` は素の配列で、`width`、`height`、`color` は任意です。
+
+```tsx
+<Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+```
+
+<Preview>
+  <Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+</Preview>
+
+## 折れ線
+
+時間の上の値です。コンテナを測るので、入っている箱の幅いっぱいになります。ホバーすると、ガイド線の横にいちばん近い点を読み出します。`formatValue` がその読み出しを整形します。
+
+```tsx
+<LineChart
+  data={[
+    { label: 'Mon', value: 120 },
+    { label: 'Tue', value: 180 },
+    { label: 'Wed', value: 150 },
+    { label: 'Thu', value: 260 },
+    { label: 'Fri', value: 230 },
+    { label: 'Sat', value: 310 },
+    { label: 'Sun', value: 290 },
+  ]}
+  height={200}
+  formatValue={(v) => `${v} req`}
+/>
+```
+
+<Preview>
+  <LineChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+    formatValue={(v) => `${v} req`}
+  />
+</Preview>
+
+## 棒
+
+同じデータを棒にしたものです。props も同じです。
+
+```tsx
+<BarChart data={points} height={200} />
+```
+
+<Preview>
+  <BarChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+  />
+</Preview>
+
+## ドーナツ
+
+割合です。色はモードではなくデータです。`color` を持つスライスはその色で描かれ、持たないスライスは前景からモノクロームのランプを取ります。一つのコンポーネントが、カテゴリのチャートにも、ブランドに沿ったチャートにも使えます。`center` は環の中を描き、`legend` は組み込みのラベルと百分率の一覧を描きます。既定ではオフなので、利用側はより豊かなものを組めます。
+
+```tsx
+<Donut
+  slices={[
+    { label: 'zen-4', value: 62 },
+    { label: 'zen-3', value: 28 },
+    { label: 'other', value: 10 },
+  ]}
+  center="62%"
+  legend
+/>
+```
+
+<Preview>
+  <XStack gap="$8" flexWrap="wrap" items="center">
+    <Donut
+      slices={[
+        { label: 'zen-4', value: 62 },
+        { label: 'zen-3', value: 28 },
+        { label: 'other', value: 10 },
+      ]}
+      center="62%"
+      legend
+    />
+    <Donut
+      slices={[
+        { label: 'compute', value: 540, color: '#7c5cff' },
+        { label: 'storage', value: 220, color: '#23c562' },
+        { label: 'egress', value: 90, color: '#ff9f45' },
+      ]}
+      size={120}
+      thickness={16}
+    />
+  </XStack>
+</Preview>
+
+`CHART_PALETTE` は、カテゴリの系列のための、互いに違う八つの色相で、ダークの地に合わせてあります。`CHART_OTHER` は、残りのための抑えた色です。
+
+## 棒の行
+
+ラベル付きの水平な棒としての分布です。レイアウトのプリミティブで描くので、外装と同じようにテーマが付きます。同じ `Slice` の形を取ります。
+
+```tsx
+<BarRows
+  bars={[
+    { label: 'us-east', value: 1240 },
+    { label: 'eu-west', value: 860 },
+    { label: 'ap-south', value: 410 },
+  ]}
+/>
+```
+
+<Preview>
+  <BarRows
+    bars={[
+      { label: 'us-east', value: 1240 },
+      { label: 'eu-west', value: 860 },
+      { label: 'ap-south', value: 410 },
+    ]}
+  />
+</Preview>
+
+## 箱を測る
+
+`useContainerWidth` もエクスポートされています。`ref` と、最後に測った幅で、`ResizeObserver` が保ちます。折れ線と棒が使っているもので、自分のチャートが、推測した数値ではなく与えられた箱へ描くためにも使えます。

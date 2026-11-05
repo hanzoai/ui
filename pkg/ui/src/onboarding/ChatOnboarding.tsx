@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ComponentType, type FormEvent, type ReactNode } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 import { Binoculars, Calendar, ChartLine, Clock, Code, Dna, EyeOff, FileText, Gavel, GraduationCap, HeartHandshake, LayoutGrid, Library, Lightbulb, MessageSquare, Palette, Pencil, Presentation, User } from '@hanzogui/lucide-icons-2'
+
 import { Button } from '../backends/gui/button'
 import { Field } from '../backends/gui/field'
 import { Input } from '../backends/gui/input'
@@ -11,9 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Switch } from '../backends/gui/switch'
 import { API } from './api'
 import { Page, Panel } from './frame'
-import { Primary } from './screens'
 import { useSession, type Track } from './hooks'
 import { OWN_TOPIC, ROLES, ROLES_PLACEHOLDER, ROLES_SUBTITLE, ROLES_TITLE, type Glyph } from './roles'
+import { Primary } from './screens'
 import { chatStep } from './state'
 
 /**
@@ -148,7 +149,10 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
   const pick = async (prompt?: string) => {
     if (busy || !chosen) return
     setBusy(true)
-    track?.('usage_selected', { use: session.progress.use ?? 'personal', role: chosen.role })
+    track?.('usage_selected', {
+      use: session.progress.use ?? 'personal',
+      role: chosen.role,
+    })
     await session.save({ role: chosen.role })
     onDone({ prompt, role: chosen.role })
   }

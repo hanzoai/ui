@@ -1,0 +1,78 @@
+---
+title: タイポグラフィ
+description: Zen と Zen Mono、すべてのコンポーネントが読むタイプの階段、そして自分で書いていない文章のための散文コンテナ。
+---
+
+## 書体
+
+読む書体は Zen、コードと識別子と数字の類は Zen Mono です。どちらもパッケージに同梱され、書体の名前ではなく役割を名指しする二つのカスタムプロパティに結ばれています。
+
+```css
+--font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+--font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
+```
+
+コンポーネントが読むのはこの二つの変数だけで、ファミリー名は読みません。自分の書体を望むホストは `--font-sans-provided` を結びます。パッケージ自身の結びつきはカスケードレイヤーの中にあるので、ホストのレイヤーのない宣言が勝ちます。何も結ばないホストは Zen を得ます。
+
+<Preview>
+  <YStack gap="$2">
+    <Text fontSize="$8" fontWeight="600">The quick brown fox jumps over the lazy dog</Text>
+    <Text fontSize="$4" color="$color11">Zen at the section and body rungs, tracked and leaded for the size.</Text>
+    <Text fontFamily="$mono" fontSize="$3">pnpm add @hanzo/ui — Zen Mono for code and numbers 0123456789</Text>
+  </YStack>
+</Preview>
+
+## 階段
+
+タイプの階段は一つで、どのコンポーネントもその上にいます。`Text` は `fontSize="$n"` を取り、その段の行間と字間も一緒です。見出しと `Paragraph` は `size="$n"` を取り、三つをまとめて決めます。
+
+```tsx
+import { H1, H2, Paragraph, SizableText, Text } from '@hanzo/ui'
+
+<H1>A page title</H1>
+<H2 size="$6">A section</H2>
+<Paragraph size="$4">Body copy at the base rung.</Paragraph>
+<SizableText size="$2" color="$color11">A label.</SizableText>
+<Text fontFamily="$mono" fontSize="$2">an identifier</Text>
+```
+
+数値にはしません。`fontSize={14}` は 14 に固定されます。`fontSize="$3"` は今日は 14 で、人のタイプスケールがそれをどう読むかはその人次第です。段は `var(--text-base)` を通して解決され、ノブがランプに掛けられるからです。表は [テーマ](/docs/theming) のページにあります。
+
+## 散文
+
+書かれた内容、CMS のフィールド、Markdown のファイル、ブロックの本文は、裸のタグとして届きます。中の何も prop を持てないので、スタイルは祖先から来て、タグを伝って降りなければなりません。`ApplyTypography` がその祖先です。
+
+```tsx
+import { ApplyTypography } from '@hanzo/ui'
+
+<ApplyTypography size="base">
+  <h2>Install</h2>
+  <p>
+    Add the package, then wrap the app once at the root. The full guide is
+    at <a href="https://ui.hanzo.ai">ui.hanzo.ai</a>.
+  </p>
+  <pre>
+    <code>{"pnpm add @hanzo/ui\npnpm dev"}</code>
+  </pre>
+  <ol>
+    <li>
+      Render <strong>Hanzo</strong> once, around the whole tree.
+    </li>
+    <li>
+      Import <code>Button</code> or any other component from the same
+      package.
+    </li>
+    <li>Pass it the props its type declares.</li>
+  </ol>
+  <blockquote>
+    Components read their colours from the theme, so a token changed there
+    changes every surface at once.
+  </blockquote>
+</ApplyTypography>
+```
+
+<Preview>
+  <ProseBlocks />
+</Preview>
+
+`size` の既定は `responsive` です。ビューポートとともに動く、ただ一つの段です。あるいは `sm`、`base`、`lg`、`xl` で、これらは動きません。呼び出し側が選んだサイズは決定であって、提案ではないからです。`asTag` は要素を選び、`div`、`section`、`nav`、`main`、`article`、`aside` のどれかです。ルールはスタイルシートの `.hz-prose` の下にあり、名前空間が付いているので、別のタイポグラフィプラグインから途中まで離れたサイトで、一つのセレクタを二つのシートが奪い合いません。[散文](/ui/prose) のページは、すべての段と、コンテナの中に入れ子になったコンテナを描きます。

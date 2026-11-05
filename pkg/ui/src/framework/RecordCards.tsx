@@ -16,15 +16,15 @@
  * behaves identically in both, and search is the pure `searchRecords` — no second
  * filtering model.
  */
+import { FieldDisplay, searchRecords, type FieldDefinition } from '@hanzo/data'
 import { useMemo, useState, type ReactNode } from 'react'
 import { Input, Text, XStack, YStack } from '@hanzo/gui'
 import { Plate as Card } from '../backends/gui/plate'
 import { ChevronRight, Search } from '@hanzogui/lucide-icons-2'
-import { FieldDisplay, searchRecords, type FieldDefinition } from '@hanzo/data'
 import { useI18n, type Say } from '@hanzo/i18n/react'
 
-import { Action, Loading, Meta, WRAP_ANYWHERE } from './parts'
 import { mirror } from '../backends/gui/dir'
+import { Action, Loading, Meta, WRAP_ANYWHERE } from './parts'
 
 export interface RecordCardsProps {
   /** The field shown as the card's headline (the DocType's titleField). */
@@ -73,16 +73,7 @@ export function RecordCards({
       {/* Toolbar: search takes the full row on a phone; the create action sits
           below it at full width, so both are thumb-reachable and neither clips. */}
       <YStack gap="$2" width="100%">
-        <XStack
-          items="center"
-          gap="$2"
-          px="$3"
-          minH={44}
-          rounded="$3"
-          borderWidth={1}
-          borderColor="$borderColor"
-          width="100%"
-        >
+        <XStack items="center" gap="$2" px="$3" minH={44} rounded="$3" borderWidth={1} borderColor="$borderColor" width="100%">
           <Search size={15} opacity={0.6} />
           <Input
             unstyled
@@ -121,19 +112,7 @@ export function RecordCards({
         {visible.map((rec, i) => {
           const key = String(rec.name ?? rec.id ?? i)
           return (
-            <Card
-              key={key}
-              borderWidth={1}
-              borderColor="$borderColor"
-              rounded="$3"
-              p="$3"
-              width="100%"
-              cursor={onOpen ? 'pointer' : undefined}
-              pressStyle={onOpen ? { bg: '$color3' } : undefined}
-              hoverStyle={onOpen ? { borderColor: '$color8' } : undefined}
-              onPress={onOpen ? () => onOpen(rec) : undefined}
-              style={WRAP_ANYWHERE}
-            >
+            <Card key={key} borderWidth={1} borderColor="$borderColor" rounded="$3" p="$3" width="100%" cursor={onOpen ? 'pointer' : undefined} pressStyle={onOpen ? { bg: '$color3' } : undefined} hoverStyle={onOpen ? { borderColor: '$color8' } : undefined} onPress={onOpen ? () => onOpen(rec) : undefined} style={WRAP_ANYWHERE}>
               <YStack gap="$2" width="100%">
                 <XStack items="center" gap="$2" width="100%">
                   <Text fontSize="$4" fontWeight="700" flex={1} minW={0} numberOfLines={2}>

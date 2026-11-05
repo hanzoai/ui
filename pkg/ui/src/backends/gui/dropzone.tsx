@@ -11,8 +11,8 @@
  * accepted or rejected against `accept`/`maxFiles`/`maxSize`.
  */
 import { SizableText, XStack, YStack, isWeb, styled } from '@hanzo/gui'
-import { File as FileIcon, Upload, X } from '@hanzogui/lucide-icons-2'
 import { useId, useRef, useState, type DragEvent as ReactDragEvent, type KeyboardEvent } from 'react'
+import { File as FileIcon, Upload, X } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 import { ink } from './ink'
 import { slot } from './slot'
@@ -85,11 +85,7 @@ const matches = (file: File, accept: DropzoneAccept) =>
     return extensions.some((ext) => file.name.toLowerCase().endsWith(ext.toLowerCase()))
   })
 
-const sortFiles = (
-  incoming: File[],
-  accept: DropzoneAccept | undefined,
-  maxSize: number,
-) => {
+const sortFiles = (incoming: File[], accept: DropzoneAccept | undefined, maxSize: number) => {
   const accepted: File[] = []
   const rejected: File[] = []
   for (const file of incoming) {
@@ -115,9 +111,9 @@ export function Dropzone({
   disabled = false,
   ...props
 }: DropzoneProps) {
+  const { t } = useI18n()
   const [files, setFiles] = useState<File[]>([])
   const [active, setActive] = useState(false)
-  const { t } = useI18n()
   const inputRef = useRef<HTMLInputElement>(null)
   const inputId = useId()
 
@@ -189,7 +185,7 @@ export function Dropzone({
           {ink(
             t('or click to browse (max {n} files, {size}MB each)', { n: maxFiles, size: Math.round(maxSize / 1024 / 1024) }),
             SizableText,
-            { fontSize: '$1', color: '$quiet' },
+            { fontSize: '$1', color: '$quiet' }
           )}
         </YStack>
       </Frame>
@@ -197,16 +193,7 @@ export function Dropzone({
       {files.length > 0 && (
         <YStack {...slot('dropzone-list')} gap="$2" mt="$4">
           {files.map((file, index) => (
-            <XStack
-              {...slot('dropzone-item')}
-              key={`${file.name}-${file.lastModified}-${index}`}
-              items="center"
-              gap="$2"
-              rounded="$3"
-              borderWidth={1}
-              borderColor="$borderColor"
-              p="$2"
-            >
+            <XStack {...slot('dropzone-item')} key={`${file.name}-${file.lastModified}-${index}`} items="center" gap="$2" rounded="$3" borderWidth={1} borderColor="$borderColor" p="$2">
               <FileIcon size={16} color="$quiet" />
               {ink(file.name, SizableText, {
                 flex: 1,

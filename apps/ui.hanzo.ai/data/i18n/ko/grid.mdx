@@ -1,0 +1,117 @@
+---
+title: 그리드
+description: 트랙이 자식이 아니라 컨테이너에서 나오는 진짜 CSS 그리드. 열은 prop 하나이고, 브레이크포인트는 없습니다.
+---
+
+손으로 짠 그리드, 자식이 모두 `width: calc(25% - 7.5px)` 인 것은 자식이 모두 동의하는 동안만 고릅니다. 긴 단어 하나가 있으면 행이 들쭉날쭉해집니다. 숫자를 만진다고 고쳐지지 않습니다. 여기서는 부모가 트랙을 한 번 선언하고 자식에게는 발언권이 없습니다. 같은 열은 구조이고, 자기 트랙을 넓힐 수 있는 자식은 없습니다.
+
+```tsx
+import { Cell, Grid } from '@hanzo/ui/grid'
+```
+
+`Grid` 가 자기 서브패스에 있는 것은 `display: grid` 인 `div` 를 렌더하기 때문입니다. 둘 다 React Native 에는 없습니다. API 이름은 CSS 그리드 용어입니다. `columns` 와 `rows` 는 트랙 목록이고, `Cell` 은 배치와 스팬입니다. 네이티브 그리드 엔진은 파일을 바꾸고 호출부는 바꾸지 않습니다.
+
+## 열
+
+`columns` 는 트랙 목록의 어떤 표기도 받습니다. 개수, 목록, 풀어 쓴 트랙 목록입니다.
+
+```tsx
+<Grid columns={3} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={3} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+  </Grid>
+</Preview>
+
+개수는 `repeat(3, minmax(0, 1fr))` 가 되고 `1fr` 이 되지 않습니다. `1fr` 단독은 `minmax(auto, 1fr)` 를 뜻하고, `auto` 는 트랙의 하한을 내용에 두기 때문입니다. 끊기지 않는 문자열 하나가 있으면 자기 열을 밀어 넓힙니다. 컴포넌트가 막으려고 있는 것이 그 들쭉날쭉한 행입니다. 긴 철자에 이유가 있습니다.
+
+```tsx
+<Grid columns={['2fr', '1fr']} gap="$3">
+  <Tile>main</Tile>
+  <Tile>aside</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={['2fr', '1fr']} gap="$3">
+    <Tile>main</Tile>
+    <Tile>aside</Tile>
+  </Grid>
+</Preview>
+
+목록 안의 숫자는 픽셀입니다. 그 밖은 이미 트랙 크기입니다.
+
+## 들어가는 만큼
+
+반응형 형태는 `columns` 의 값이지 두 번째 prop 이 아니고, 그 안에 브레이크포인트는 없습니다. `min` 은 그리드가 하나를 빼기 전에 열이 가질 수 있는 가장 좁은 너비입니다. `max` 는 개수의 상한입니다.
+
+```tsx
+<Grid columns={{ min: 160, max: 4 }} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Tile>5</Tile>
+  <Tile>6</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={{ min: 160, max: 4 }} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Tile>5</Tile>
+    <Tile>6</Tile>
+  </Grid>
+</Preview>
+
+창 크기를 바꿔 보세요. 개수는 그리드가 들어 있는 열을 따릅니다. 같은 블록이 본 적 없는 사이드바 안에서도 맞게 들어갑니다. `min` 은 맨 `160px` 가 아니라 `min(160px, 100%)` 로 적히므로, 하한보다 좁은 휴대폰은 가로 스크롤 대신 너비 가득한 트랙 하나를 얻습니다. `max` 는 같은 하한으로 접힙니다. 행의 M 분의 일에서 gap 을 뺀 것입니다. 상한은 작은 화면에서 비용이 없습니다.
+
+## 셀
+
+맨 자식에게 래퍼는 필요 없습니다. `Cell` 이 있는 것은 스팬하거나 배치하기 위해서입니다. 숫자는 그 수만큼의 트랙을 가로지르고, 문자열은 적은 그대로의 `grid-column` 입니다.
+
+```tsx
+<Grid columns={4} gap="$3">
+  <Cell col={2}><Tile>col=2</Tile></Cell>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={4} gap="$3">
+    <Cell col={2}><Tile>col=2</Tile></Cell>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+  </Grid>
+</Preview>
+
+`row` 는 페이지 아래 방향에서 같습니다. 그리드의 `rows` 는 행 트랙의 크기를 정합니다. 없으면 행은 내용 크기가 됩니다.
+
+## 간격
+
+`gap` 은 간격 토큰이거나 생 픽셀 수입니다. 토큰은 문서 안의 램프를 읽습니다. `gap="$4"` 는 `var(--space-4)` 입니다. 모습 패널에서 밀도를 움직이면 모든 그리드가 함께 움직입니다. 렌더 때 풀린 숫자는 렌더 때 고정됩니다.
+
+## 트랙 목록 자체
+
+`tracks(columns, gap)` 이 익스포트되는 것은 그것이 컴포넌트 결정의 전부이기 때문입니다. `columns` 의 어떤 표기도 그것이 뜻하는 하나의 트랙 목록으로 바꾸고, 위의 두 불변 조건을 안에 담습니다.
+
+```ts
+import { tracks } from '@hanzo/ui/grid'
+
+tracks(3)                       // 'repeat(3, minmax(0, 1fr))'
+tracks({ min: 240 })            // 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))'
+```

@@ -28,7 +28,12 @@ function computeDiff(original: string, modified: string): DiffLine[] {
   while (i < origLines.length || j < modLines.length) {
     if (i < origLines.length && j < modLines.length) {
       if (origLines[i] === modLines[j]) {
-        lines.push({ type: 'same', content: origLines[i], oldNum: i + 1, newNum: j + 1 })
+        lines.push({
+          type: 'same',
+          content: origLines[i],
+          oldNum: i + 1,
+          newNum: j + 1,
+        })
         i++
         j++
       } else {
@@ -49,16 +54,9 @@ function computeDiff(original: string, modified: string): DiffLine[] {
   return lines
 }
 
-export const DiffViewer: React.FC<DiffViewerProps> = ({
-  originalCode,
-  modifiedCode,
-  filename = 'changes.diff',
-  language = 'typescript',
-  className = '',
-  style,
-}) => {
-  const diffLines = useMemo(() => computeDiff(originalCode, modifiedCode), [originalCode, modifiedCode])
+export const DiffViewer: React.FC<DiffViewerProps> = ({ originalCode, modifiedCode, filename = 'changes.diff', language = 'typescript', className = '', style }) => {
   const { t } = useI18n()
+  const diffLines = useMemo(() => computeDiff(originalCode, modifiedCode), [originalCode, modifiedCode])
 
   const additions = diffLines.filter((l) => l.type === 'add').length
   const deletions = diffLines.filter((l) => l.type === 'remove').length
@@ -79,7 +77,16 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
       aria-label={t('Code Diff Viewer')}
     >
       {filename && (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'rgba(23, 23, 23, 0.8)', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '8px 12px',
+            backgroundColor: 'rgba(23, 23, 23, 0.8)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          }}
+        >
           <span style={{ color: '#d4d4d4', fontWeight: 600 }}>{filename}</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ color: '#34d399', fontWeight: 600 }}>+{additions}</span>
@@ -98,18 +105,60 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
           return (
             <div
               key={idx}
-              style={{ display: 'flex', alignItems: 'flex-start', padding: '1px 8px', backgroundColor: bg, color: textColor }}
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                padding: '1px 8px',
+                backgroundColor: bg,
+                color: textColor,
+              }}
             >
-              <div style={{ width: 32, textAlign: 'right', paddingRight: 8, color: '#525252', userSelect: 'none', flexShrink: 0, fontFamily: 'monospace' }}>
+              <div
+                style={{
+                  width: 32,
+                  textAlign: 'right',
+                  paddingRight: 8,
+                  color: '#525252',
+                  userSelect: 'none',
+                  flexShrink: 0,
+                  fontFamily: 'monospace',
+                }}
+              >
                 {line.oldNum ?? ''}
               </div>
-              <div style={{ width: 32, textAlign: 'right', paddingRight: 8, color: '#525252', userSelect: 'none', flexShrink: 0, fontFamily: 'monospace' }}>
+              <div
+                style={{
+                  width: 32,
+                  textAlign: 'right',
+                  paddingRight: 8,
+                  color: '#525252',
+                  userSelect: 'none',
+                  flexShrink: 0,
+                  fontFamily: 'monospace',
+                }}
+              >
                 {line.newNum ?? ''}
               </div>
-              <div style={{ width: 16, textAlign: 'center', userSelect: 'none', flexShrink: 0 }}>
+              <div
+                style={{
+                  width: 16,
+                  textAlign: 'center',
+                  userSelect: 'none',
+                  flexShrink: 0,
+                }}
+              >
                 {isAdd ? '+' : isRemove ? '-' : ' '}
               </div>
-              <pre style={{ flex: 1, overflowX: 'auto', whiteSpace: 'pre', fontFamily: 'monospace', paddingLeft: 4, margin: 0 }}>
+              <pre
+                style={{
+                  flex: 1,
+                  overflowX: 'auto',
+                  whiteSpace: 'pre',
+                  fontFamily: 'monospace',
+                  paddingLeft: 4,
+                  margin: 0,
+                }}
+              >
                 {line.content || ' '}
               </pre>
             </div>

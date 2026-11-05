@@ -1,0 +1,96 @@
+---
+title: Chế độ tối
+description: Tối trước, sáng bằng một prop, và một nút chuyển cho host nào bạn đang dùng.
+---
+
+Bản sắc là tối. `:root` giữ bảng màu tối và `.light` chọn ra khỏi đó, ngược
+với hầu hết bảng kiểu, và đó là chủ đích: trang gắn gốc rồi không nói gì khác
+ra trên nền của thương hiệu, không phải trên trắng.
+
+## Gốc quyết định
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` là toàn bộ API. Gốc đóng dấu `.t_light` hoặc `.t_dark` lên body, mọi
+token phân giải theo chủ đề đó, và thuộc tính tùy biến của bảng kiểu trả lời
+cùng lớp ấy. Host muốn lựa chọn thuộc về một người thì giữ nó trong state rồi
+đưa cho gốc.
+
+## Một nút chuyển
+
+`ThemeToggle` từ `@hanzo/ui/product` vẽ nút và báo chủ đề kế tiếp. Khi được
+điều khiển, nó là một dòng cạnh gốc:
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+Không điều khiển — `<ThemeToggle onThemeChange={fn} />` — nó tự bật tắt lớp
+`.dark` và `.light` trên phần tử tài liệu và nhớ lựa chọn dưới khóa `theme`
+trong localStorage, cho host không có state để giữ. Cách nào nó cũng chỉ đích:
+mặt trời khi tối, mặt trăng khi sáng.
+
+## Next
+
+Các host Next đã chạy `@hanzogui/next-theme`, và phần buộc của nút chuyển tới
+nó nằm ở đường con riêng để host khác không kéo Next vào đồ thị chỉ vì nhập
+lớp sản phẩm.
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+`<ThemeToggle />` không có prop nào cũng tới cùng phần buộc ấy bằng nhập động
+và lùi về nút chuyển trên tài liệu ở nơi phần buộc vắng.
+
+## One và Vite
+
+Trang này giữ lựa chọn với `@vxrn/color-scheme`, vốn chốt sơ đồ đã lưu trước
+lần vẽ đầu và báo nó cho gốc:
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` cũng mở `setting` — `system`, `dark` hoặc `light` — và `set`,
+thứ mà nút chuyển ở đầu trang này điều khiển.
+
+## Không nháy
+
+Host nào cũng vậy, lớp chủ đề phải có trên tài liệu trước khi bảng kiểu vẽ,
+không thì trang vẽ tối rồi vẽ lại sáng. Phần buộc Next và `@vxrn/color-scheme`
+đều ghi nó từ một script nội tuyến; nút chuyển viết tay cũng nên làm vậy. Đặt
+`suppressHydrationWarning` trên phần tử `html`, vì lớp mà script đã viết không
+phải lớp React đã dựng.

@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
+import type { KeyboardEvent } from 'react'
 /**
  * Calendar — a month grid for picking one date, several dates, or a range.
  *
@@ -18,20 +20,15 @@
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import type { GuiElement } from '@hanzo/gui'
 import { ChevronLeft, ChevronRight } from '@hanzogui/lucide-icons-2'
-import { useEffect, useRef, useState } from 'react'
-import type { KeyboardEvent } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 
 import { Cell, Grid } from '../../grid'
 import { sx } from '../../sx'
 import { Button } from './button'
-import { slot } from './slot'
 import { along, mirror } from './dir'
+import { slot } from './slot'
 
-const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-]
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 
 type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -129,49 +126,26 @@ const pick = (props: CalendarProps, d: Date) => {
 /** Where a key moves focus from `d`, or nothing for a key that does not. */
 const step = (k: string, d: Date, weekStartsOn: Weekday): Date | undefined => {
   const dow = (d.getDay() - weekStartsOn + 7) % 7
-  return k === 'ArrowLeft' ? shift(d, -1)
-    : k === 'ArrowRight' ? shift(d, 1)
-    : k === 'ArrowUp' ? shift(d, -7)
-    : k === 'ArrowDown' ? shift(d, 7)
-    : k === 'Home' ? shift(d, -dow)
-    : k === 'End' ? shift(d, 6 - dow)
-    : k === 'PageUp' ? page(d, -1)
-    : k === 'PageDown' ? page(d, 1)
-    : undefined
+  return k === 'ArrowLeft' ? shift(d, -1) : k === 'ArrowRight' ? shift(d, 1) : k === 'ArrowUp' ? shift(d, -7) : k === 'ArrowDown' ? shift(d, 7) : k === 'Home' ? shift(d, -dow) : k === 'End' ? shift(d, 6 - dow) : k === 'PageUp' ? page(d, -1) : k === 'PageDown' ? page(d, 1) : undefined
 }
 
 function Calendar(props: CalendarProps) {
-  const {
-    month: monthProp,
-    defaultMonth,
-    onMonthChange,
-    numberOfMonths = 1,
-    weekStartsOn = 0,
-    showOutsideDays = true,
-    disabled,
-    initialFocus,
-    className,
-  } = props
-
   const { t } = useI18n()
+  const { month: monthProp, defaultMonth, onMonthChange, numberOfMonths = 1, weekStartsOn = 0, showOutsideDays = true, disabled, initialFocus, className } = props
+
   const [own, setOwn] = useState(() => first(defaultMonth ?? new Date()))
   const head = monthProp ? first(monthProp) : own
   const months = Array.from({ length: numberOfMonths }, (_, i) => first(head, i))
   const grid = months.map((m) => cells(m, weekStartsOn, showOutsideDays))
-  const inside = (d?: Date): d is Date =>
-    !!d && at(d) >= at(head) && at(d) < at(first(head, numberOfMonths))
+  const inside = (d?: Date): d is Date => !!d && at(d) >= at(head) && at(d) < at(first(head, numberOfMonths))
   const shown = (d: Date) => grid.some((g) => g.some((c) => same(c, d)))
-  const labels = [...WEEKDAYS.slice(weekStartsOn), ...WEEKDAYS.slice(0, weekStartsOn)]
+  const labels = [...WEEKDAYS.slice(weekStartsOn), ...WEEKDAYS.slice(0, weekStartsOn)].map((day) => t(day))
   const today = new Date()
   const range: CalendarRange = props.mode === 'range' ? (props.selected ?? {}) : {}
 
   const [focused, setFocused] = useState<Date>()
-  const picks =
-    props.mode === 'multiple' ? (props.selected ?? [])
-    : props.mode === 'range' ? [props.selected?.from]
-    : [props.selected]
-  const focus =
-    focused && shown(focused) ? focused : (picks.find(inside) ?? (inside(today) ? today : head))
+  const picks = props.mode === 'multiple' ? (props.selected ?? []) : props.mode === 'range' ? [props.selected?.from] : [props.selected]
+  const focus = focused && shown(focused) ? focused : (picks.find(inside) ?? (inside(today) ? today : head))
 
   const root = useRef<GuiElement>(null)
   const pending = useRef(!!initialFocus)
@@ -218,7 +192,7 @@ function Calendar(props: CalendarProps) {
               )}
             </YStack>
             <SizableText {...slot('calendar-caption-label')} size="$3" fontWeight="500">
-              {MONTHS[m.getMonth()]} {m.getFullYear()}
+              {t(MONTHS[m.getMonth()]!)} {m.getFullYear()}
             </SizableText>
             <YStack width={32} items="flex-end">
               {i === months.length - 1 && (
@@ -253,27 +227,7 @@ function Calendar(props: CalendarProps) {
               const isToday = same(d, today)
               return (
                 <Cell key={j}>
-                  <Button
-                    {...slot('calendar-day')}
-                    data-date={key(d)}
-                    data-today={isToday || undefined}
-                    data-outside={outside || undefined}
-                    data-selected={selected || undefined}
-                    data-range-start={start || undefined}
-                    data-range-end={end || undefined}
-                    data-range-middle={middle || undefined}
-                    aria-selected={selected}
-                    aria-label={d.toDateString()}
-                    variant={selected && !middle ? 'primary' : middle || isToday ? 'secondary' : 'ghost'}
-                    size="icon"
-                    width="100%"
-                    opacity={outside ? 0.5 : 1}
-                    disabled={!!disabled?.(d)}
-                    tabIndex={same(d, focus) && (!outside || !inside(focus)) ? 0 : -1}
-                    onFocus={() => setFocused(d)}
-                    onKeyDown={(e: KeyboardEvent<HTMLElement>) => move(e, d)}
-                    onClick={() => pick(props, d)}
-                  >
+                  <Button {...slot('calendar-day')} data-date={key(d)} data-today={isToday || undefined} data-outside={outside || undefined} data-selected={selected || undefined} data-range-start={start || undefined} data-range-end={end || undefined} data-range-middle={middle || undefined} aria-selected={selected} aria-label={d.toDateString()} variant={selected && !middle ? 'primary' : middle || isToday ? 'secondary' : 'ghost'} size="icon" width="100%" opacity={outside ? 0.5 : 1} disabled={!!disabled?.(d)} tabIndex={same(d, focus) && (!outside || !inside(focus)) ? 0 : -1} onFocus={() => setFocused(d)} onKeyDown={(e: KeyboardEvent<HTMLElement>) => move(e, d)} onClick={() => pick(props, d)}>
                     {d.getDate()}
                   </Button>
                 </Cell>

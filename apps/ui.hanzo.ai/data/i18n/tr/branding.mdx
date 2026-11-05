@@ -1,0 +1,59 @@
+---
+title: Marka
+description: Marka bir kez, derleme sırasında kararlaştırılır ve her yüzeye bir değer olarak ulaşır. Bileşenlerde hiçbir şey bir evi adlandırmaz.
+---
+
+Kütüphane bir marka taşımaz. Bir bileşen bir token okur, token bir özel özellik okur ve özellik derlemenin bildirdiği şeydir. Bir site, bir işaret, bir ad, bir renk ve bir yüz her biri tek bir yerde tek bir değerdir, bu yüzden başka bir kuruluş için derleme bunun hiçbirini taşımaz.
+
+## Bu site
+
+Bu belgeler `BRAND` ortam değişkeninden kurulur. `brand.ts` onu bir kez okur ve adı, kuruluşu, işareti satır içi bir SVG olarak, favicon’u o işaretten türetilmiş bir data URI olarak, bağlantıları ve markanın varsa framework bağlantısını yayımlar.
+
+```bash
+BRAND=lux pnpm build
+```
+
+Sayfadaki her dize o modülden gelir — başlık, dipnot, başlıklar ve okuduğunuz sayfalar, bir ad yerine `brand.name` yazar. Kod örnekleri derlemenin belgelediği pakete yeniden yazılır ve katalog, başka bir marka için derlemeden evin adını taşıyan her modülü veya üyeyi düşürür, böylece öteki markanın `index.html` dosyasında bunun izi kalmaz.
+
+## Kimlik
+
+`@hanzo/ui/product/pure`, işaretlerin çizildiği marka kümesini yayımlar — `HANZO`, `LUX`, `ZOO`, `PARS` — ve bir id’ye kimlikle yanıtlayan, eve düşen `resolveBrand`.
+
+```ts
+import { BRANDS, resolveBrand, type BrandIdentity } from '@hanzo/ui/product/pure'
+
+const brand: BrandIdentity = resolveBrand('lux')
+brand.name     // 'Lux'
+brand.viewBox  // '0 0 100 100'
+brand.content  // the mark's inner SVG, drawn in currentColor
+brand.href     // 'https://lux.network'
+```
+
+İşaretler `currentColor` kullanır, bu yüzden tek bir asset iki temaya da hizmet eder; kendi dolgularını taşıyan bir işaret `fullColor` der. Ürün katmanındaki animasyonlu logo kimliği bir prop olarak alır:
+
+```tsx
+import { AnimatedLogo } from '@hanzo/ui/product'
+import { LUX } from '@hanzo/ui/product/pure'
+
+<AnimatedLogo surface="Cloud" brand={LUX} />
+```
+
+## Renkler ve yüz
+
+Bir marka kimliği, aynı özel özellikleri kaskatta daha sonra bildirerek yeniden akort eder. İkisi aynı zamanda bir kişinin oynattığı görünüm ayarlarıdır ve en dar görüş eksen eksen kazanır — önce kurulum, sonra kuruluş, sonra kişi.
+
+```css
+:root {
+  --primary: #808000;
+  --accent: #808000;
+  --font-sans-provided: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+`--font-sans` değil `--font-sans-provided`: paketin kendi bağlaması bir kaskad katmanında durur, bu yüzden host’tan katmansız bir bildirim özgüllüğü ne olursa olsun kazanır ve boyayan yüzün host’unki olmasını sağlayan budur.
+
+`@hanzo/appearance` içindeki kuruluş katmanı aynı ayarları sunucudaki bir satırdan taşır. `current({ install, org, orgId })` bir kuruluştaki bir kişinin bir aygıtta ne görmesi gerektiğini çözer ve `bootScript({ org, base })` kurulumun ve kuruluşun varsayılanlarını head betiğine yazar, böylece ilk boyama zaten markadadır.
+
+## Kalanlar
+
+Paket npm adını korur, çünkü bir kod örneğinin işi yapıştırılmaktır. Bu ad ve üzerine kurulduğu framework, başka bir marka için derlemenin hâlâ söylediği iki şeydir.

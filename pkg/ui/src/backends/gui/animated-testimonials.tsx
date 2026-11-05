@@ -82,14 +82,9 @@ export type AnimatedTestimonialsProps = Omit<React.ComponentProps<typeof Frame>,
   duration?: number
 }
 
-export function AnimatedTestimonials({
-  testimonials,
-  autoPlay = true,
-  duration = 5000,
-  ...props
-}: AnimatedTestimonialsProps) {
-  const [activeIndex, setActiveIndex] = React.useState(0)
+export function AnimatedTestimonials({ testimonials, autoPlay = true, duration = 5000, ...props }: AnimatedTestimonialsProps) {
   const { t } = useI18n()
+  const [activeIndex, setActiveIndex] = React.useState(0)
 
   React.useEffect(() => {
     if (!autoPlay || testimonials.length < 2) return

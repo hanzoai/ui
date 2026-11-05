@@ -1,0 +1,50 @@
+---
+title: Expo và React Native
+description: Cùng một lần nhập, không có bí danh nào phải đặt. Metro đã nói react-native.
+---
+
+Thư viện dựng qua @hanzo/gui, vốn là React Native trước: một stack là `View`,
+chữ là `Text`, và một prop kiểu là một kiểu. Nên những thành phần vẽ `div`
+trên web thì ở đây vẽ một view native, và token chủ đề, thang khoảng cách cùng
+thang chữ có cùng nghĩa ở cả hai nơi.
+
+## Cài
+
+```bash
+pnpm create expo-app@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+Không có thiết lập trình đóng gói. Bí danh `react-native` mà các host web đặt
+là thứ khiến trình đóng gói web đọc được một gói native; Metro là trình đóng
+gói native, và đọc đúng như đã viết. Lần nhập bảng kiểu mà gốc mang theo
+không làm gì dưới Metro trên native và có hiệu lực trên Expo web.
+
+## Gắn gốc
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Stack } from 'expo-router'
+
+export default function Layout() {
+  return (
+    <Hanzo>
+      <Stack />
+    </Hanzo>
+  )
+}
+```
+
+## Phần ở lại trên web
+
+`@hanzo/ui/grid` dựng một `div` với `display: grid`, và cả hai đều không có
+trên React Native — Yoga không có thuật toán lưới — đó là lý do nó phát hành
+ở đường con riêng chứ không trên barrel gốc. Ở đó hãy xếp bằng `XStack` và
+`YStack`; một máy lưới native đổi đúng một tệp ấy và không đổi chỗ gọi nào.
+Biểu đồ trong `@hanzo/ui/product` vẽ SVG nội tuyến và đo khung chứa bằng
+`ResizeObserver`, nên hôm nay chúng cũng là thành phần web.
+
+Vùng chạm đạt sàn 44 điểm qua `hitSlop`, không bao giờ qua padding, nên hộp
+của một điều khiển cùng kích thước trên cả hai nền tảng và vùng chạm được của
+nó thì không.

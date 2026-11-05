@@ -1,0 +1,113 @@
+---
+title: 블록
+description: 내용은 데이터입니다. 페이지는 블록의 목록이고, 각각이 타입을 부르면 타입이 렌더러를 고르고, 렌더러가 나머지를 읽습니다.
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+블록은 데이터입니다. `blockType` 이 렌더러를 고르고, 다른 필드는 그 렌더러의 입력입니다. 페이지는 CMS 에서 쓰거나, 저장소에 넣거나, 서버가 만들어도 되고, 어느 쪽이든 타입이 붙습니다. 모든 `specifiers` 필드는 렌더러가 읽는 레이아웃 힌트를 공백으로 나눈 주머니입니다. 유니언이 아니라 문자열이므로, 사이트는 힌트를 쳐 넣기만 하면 더할 수 있고 모르는 힌트는 빌드를 죽이지 않고 무시됩니다.
+
+## 페이지
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## 어휘
+
+| 타입 | 그리는 것 |
+| --- | --- |
+| `heading` | 선택적인 바이라인이 있는 제목. `level` 이 0 이면 문단, 1 부터 6 이면 그 태그. |
+| `enh-heading` | 이름이 붙은 부분. 위의 앞제목, 제목, 아래의 바이라인. 각각 레벨과 마진이 있습니다. |
+| `image` | `ImageDef` 에서 온 이미지. `src`, `alt`, `dim`. 정렬과 휴대폰 힌트는 `specifiers` 안. |
+| `video` | `VideoDef`. 소스, 포스터, 단마다의 크기. |
+| `space` | 간격 단위의 세로 빈칸. 단마다, 또는 전체에 숫자 하나. |
+| `cta` | 링크와 버튼의 행. `fill`, `left`, `right`, 그리고 휴대폰 힌트. |
+| `card` | 제목이 있는 패널. 미디어, 내용, 행동 촉구. |
+| `bullet-cards` | 한 줄 카드의 그리드. 각각 아이콘과 그 옆의 텍스트. |
+| `grid` | `cells` 위에 놓이는 `GridDef`. 단마다의 열과 gap 을 오름차순으로. |
+| `group` | `elements` 위의 래퍼. 한꺼번에 먹는 힌트를 위해. |
+| `accordian` | 트리거와 그 내용. |
+| `carte-blanche` | 자유로운 패널. 위에 무엇이든, 제목, 아래에 무엇이든, 발에 행동 촉구. |
+| `screenful` | 화면 한 장. 선택적인 배너 아래 한 열에서 세 열, 휴대폰 순서 포함. |
+| `element` | 쓴 사람이 이미 만든 노드. 설계상 렌더러가 없습니다. 블록 페이지가 무엇이든 담을 수 있는 이유입니다. |
+
+모든 형태는 같은 서브패스에서 타입으로 익스포트됩니다. `HeadingBlock`, `CTABlock`, `ScreenfulBlock` 과 나머지입니다. 함께 쓰는 정의 `GridDef`, `ImageDef`, `VideoDef`, `LinkDef`, `ButtonDef` 도 옆에 있습니다. `http` 또는 `mailto` href 를 가진 `LinkDef` 는 그것만으로 외부이고, 새 탭에서 `rel="noreferrer noopener"` 와 함께 열립니다. `external` 을 적는 곳은 스킴만으로는 알 수 없을 때뿐입니다.
+
+## 기기는 prop
+
+모든 렌더러는 미디어 쿼리를 읽는 대신 `agent`, 기기 구분을 받습니다. 이 블록들은 처음부터 올바른 마크업을 내야 하는 서버에서 렌더됩니다. 휴대폰 레이아웃이 데스크톱 마크업으로 도착해 하이드레이션에서 고쳐지면 눈에 보이는 뜀이 됩니다. 영상 블록에서는 낭비되는 다운로드이기도 합니다.
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## 자기 타입
+
+타입에서 렌더러로의 대응이 확장 지점입니다. 호스트는 자기 타입을 더하거나 있는 하나를 바꿉니다. Next 앱이 최적화하는 이미지를 갈아 끼우는 것도, 라이브러리가 내보내지 않는 것이 페이지에 닿는 것도 이 방법입니다.
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+`has(specifiers, token)` 는 힌트가 주머니 안에 있는지를 답합니다. `fit(dim, within)` 은 한 종횡비의 상자를 다른 상자 안에 넣었을 때의 가장 큰 상자입니다. 둘 다 자기 렌더러를 위해 익스포트되어 있습니다. [블록](/blocks) 카탈로그는 각 렌더러의 예제를 타입 옆에 렌더합니다.

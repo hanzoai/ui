@@ -1,0 +1,78 @@
+---
+title: Modo escuro
+description: Escuro primeiro, claro por uma prop, e um alternador para o host em que você estiver.
+---
+
+A identidade é escura. `:root` guarda a paleta escura e `.light` sai dela, o contrário da maioria das folhas de estilos, e é de propósito: uma página que monta a raiz e não diz mais nada sai no fundo da marca, não no branco.
+
+## A raiz decide
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` é a API inteira. A raiz carimba `.t_light` ou `.t_dark` no body, cada token resolve contra esse tema, e as propriedades personalizadas da folha de estilos respondem à mesma classe. Um host que quer que a escolha seja de uma pessoa a guarda no estado e a entrega à raiz.
+
+## Um alternador
+
+`ThemeToggle` de `@hanzo/ui/product` desenha o botão e informa o próximo tema. Controlado, é uma linha ao lado da raiz:
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+Sem controle — `<ThemeToggle onThemeChange={fn} />` — ele alterna as classes `.dark` e `.light` no próprio elemento do documento e lembra a escolha sob a chave `theme` no localStorage, para um host que não tem estado onde guardá-la. De um jeito ou de outro ele mostra o alvo: um sol no modo escuro, uma lua no claro.
+
+## Next
+
+Hosts Next já rodam `@hanzogui/next-theme`, e o binding do alternador com ele fica no próprio subpath para que nenhum outro host puxe o Next para o grafo ao importar a camada de produto.
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+`<ThemeToggle />` sem prop nenhuma alcança o mesmo binding por import dinâmico e cai no alternador do documento onde ele não existe.
+
+## One e Vite
+
+Este site guarda a escolha com `@vxrn/color-scheme`, que resolve o esquema guardado antes da primeira pintura e o informa à raiz:
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` também expõe `setting` — `system`, `dark` ou `light` — e `set`, que é o que o alternador no cabeçalho deste site aciona.
+
+## Sem flash
+
+Em qualquer host, a classe de tema tem de estar no documento antes de a folha pintar, senão a página pinta escura e repinta clara. O binding do Next e `@vxrn/color-scheme` escrevem os dois a partir de um script inline; um alternador escrito à mão deve fazer o mesmo. Coloque `suppressHydrationWarning` no elemento `html`, já que a classe que o script escreveu não é a que o React renderizou.

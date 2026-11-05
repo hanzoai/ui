@@ -1,0 +1,96 @@
+---
+title: डार्क मोड
+description: पहले गहरा, एक प्रॉप से हल्का, और जिस होस्ट पर आप हों उसके लिए एक टॉगल।
+---
+
+पहचान गहरी है। `:root` गहरा पैलेट रखता है और `.light` उससे बाहर निकलता है,
+जो अधिकतर स्टाइलशीट के उलट है, और यह जान-बूझकर है: जो पृष्ठ रूट लगाकर और
+कुछ न कहे वह ब्रांड की ज़मीन पर आता है, सफ़ेद पर नहीं।
+
+## रूट तय करता है
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` पूरी API है। रूट बॉडी पर `.t_light` या `.t_dark` छापता है, हर टोकन
+उस थीम के विरुद्ध सुलझता है, और स्टाइलशीट की कस्टम प्रॉपर्टी उसी क्लास का
+जवाब देती हैं। जो होस्ट चाहे कि चुनाव व्यक्ति का हो, वह उसे स्टेट में रखता
+है और रूट को देता है।
+
+## एक टॉगल
+
+`@hanzo/ui/product` का `ThemeToggle` बटन खींचता है और अगली थीम बताता है।
+नियंत्रित होने पर वह रूट के बगल एक पंक्ति है:
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+अनियंत्रित — `<ThemeToggle onThemeChange={fn} />` — वह दस्तावेज़ तत्व पर
+खुद `.dark` और `.light` क्लास टॉगल करता है और चुनाव `theme` कुंजी के नीचे
+localStorage में याद रखता है, उस होस्ट के लिए जिसके पास रखने को स्टेट न हो।
+दोनों तरह वह लक्ष्य दिखाता है: गहरे मोड में सूरज, हल्के में चाँद।
+
+## Next
+
+Next होस्ट पहले से `@hanzogui/next-theme` चलाते हैं, और टॉगल का उससे बंधन
+अपने सबपाथ पर है ताकि कोई और होस्ट उत्पाद परत आयात करके अपने ग्राफ़ में
+Next न खींचे।
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+बिना किसी प्रॉप का `<ThemeToggle />` डायनामिक आयात से उसी बंधन तक पहुँचता
+है और जहाँ वह न हो वहाँ दस्तावेज़ टॉगल पर वापस गिरता है।
+
+## One और Vite
+
+यह साइट चुनाव `@vxrn/color-scheme` के साथ रखती है, जो पहला पेंट होने से
+पहले सहेजी योजना तय कर देता है और उसे रूट को बताता है:
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` `setting` भी खोलता है — `system`, `dark` या `light` — और
+`set`, जिसे इस साइट के हेडर का टॉगल चलाता है।
+
+## कोई चमक नहीं
+
+जो भी होस्ट हो, थीम क्लास स्टाइलशीट के पेंट से पहले दस्तावेज़ पर होनी है,
+वरना पृष्ठ गहरा पेंट होता है और फिर हल्का फिर से पेंट होता है। Next का बंधन
+और `@vxrn/color-scheme` दोनों उसे इनलाइन स्क्रिप्ट से लिखते हैं; हाथ से
+लिखा टॉगल भी वही करे। `html` तत्व पर `suppressHydrationWarning` रखें, क्योंकि
+जो क्लास स्क्रिप्ट ने लिखी वह वह नहीं जिसे React ने रेंडर किया।

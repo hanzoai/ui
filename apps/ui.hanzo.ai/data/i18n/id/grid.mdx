@@ -1,0 +1,146 @@
+---
+title: Kisi
+description: Kisi CSS sungguhan yang lintasannya datang dari wadah, bukan dari anak. Satu prop untuk kolom, dan tanpa breakpoint.
+---
+
+Kisi yang disusun tangan — setiap anak pada `width: calc(25% - 7.5px)` —
+hanya rata selama setiap anak sepakat, dan satu kata panjang membuat baris
+compang-camping. Tidak ada yang memperbaikinya dengan mengutak-atik angkanya.
+Di sini induk menyatakan lintasan sekali dan anak tidak punya suara: kolom
+yang sama rata bersifat struktural, dan tidak ada anak yang bisa melebarkan
+lintasannya sendiri.
+
+```tsx
+import { Cell, Grid } from '@hanzo/ui/grid'
+```
+
+`Grid` ada di subpath sendiri karena ia merender sebuah `div` dengan
+`display: grid`, dan keduanya tidak ada di React Native. API dinamai dalam
+istilah kisi CSS — `columns` dan `rows` adalah daftar lintasan, `Cell`
+menempatkan dan merentang — jadi mesin kisi native mengubah berkas itu, bukan
+titik panggil.
+
+## Kolom
+
+`columns` menerima ejaan apa pun dari daftar lintasan: sebuah hitungan, sebuah
+daftar, atau daftar lintasan yang ditulis.
+
+```tsx
+<Grid columns={3} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={3} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+  </Grid>
+</Preview>
+
+Sebuah hitungan menjadi `repeat(3, minmax(0, 1fr))` dan bukan `1fr`, karena
+`1fr` sendiri berarti `minmax(auto, 1fr)` dan `auto` membatasi lintasan pada
+konten — satu string yang tidak terputus lalu mendorong kolomnya sendiri lebih
+lebar. Itulah baris compang-camping yang komponen ini ada untuk mencegah, jadi
+ejaan yang lebih panjang adalah intinya.
+
+```tsx
+<Grid columns={['2fr', '1fr']} gap="$3">
+  <Tile>main</Tile>
+  <Tile>aside</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={['2fr', '1fr']} gap="$3">
+    <Tile>main</Tile>
+    <Tile>aside</Tile>
+  </Grid>
+</Preview>
+
+Angka di dalam daftar adalah piksel; selain itu sudah merupakan ukuran lintasan.
+
+## Sebanyak yang muat
+
+Bentuk responsif adalah sebuah nilai `columns`, bukan prop kedua, dan tidak
+ada breakpoint di dalamnya. `min` adalah yang tersempit yang boleh dicapai
+sebuah kolom sebelum kisi menjatuhkan satu, dan `max` membatasi hitungan.
+
+```tsx
+<Grid columns={{ min: 160, max: 4 }} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Tile>5</Tile>
+  <Tile>6</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={{ min: 160, max: 4 }} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Tile>5</Tile>
+    <Tile>6</Tile>
+  </Grid>
+</Preview>
+
+Ubah ukuran jendela: hitungan mengikuti kolom tempat kisi berada, jadi blok
+yang sama tepat di dalam sidebar yang belum pernah ia lihat. `min` ditulis
+sebagai `min(160px, 100%)` dan bukan `160px` telanjang, jadi telepon yang lebih
+sempit dari lantai mendapat satu lintasan selebar penuh, bukan gulir ke samping.
+`max` melipat ke lantai yang sama — satu per M dari baris, celah dikurangi — jadi
+batas itu tidak memakan apa pun di layar kecil.
+
+## Sel
+
+Anak biasa tidak butuh pembungkus. `Cell` ada untuk merentang atau menempatkan:
+sebuah angka merentang sebanyak lintasan itu, sebuah string adalah `grid-column`
+sebagaimana ditulis.
+
+```tsx
+<Grid columns={4} gap="$3">
+  <Cell col={2}><Tile>col=2</Tile></Cell>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={4} gap="$3">
+    <Cell col={2}><Tile>col=2</Tile></Cell>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+  </Grid>
+</Preview>
+
+`row` sama, ke bawah halaman. `rows` pada kisi mengukur lintasan baris; tanpa
+itu baris berukuran sesuai konten.
+
+## Celah
+
+`gap` adalah token jarak atau angka piksel mentah. Token membaca tangga di
+dokumen — `gap="$4"` adalah `var(--space-4)` — jadi seseorang yang menggeser
+kerapatan di panel tampilan menggeser setiap kisi bersamanya. Angka yang
+diselesaikan saat render terkunci saat render.
+
+## Daftar lintasan itu sendiri
+
+`tracks(columns, gap)` diekspor, karena itu seluruh keputusan komponen: ejaan
+apa pun dari `columns` ke satu daftar lintasan yang dimaksudnya, dengan dua
+ketetapan di atas di dalamnya.
+
+```ts
+import { tracks } from '@hanzo/ui/grid'
+
+tracks(3)                       // 'repeat(3, minmax(0, 1fr))'
+tracks({ min: 240 })            // 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))'
+```

@@ -1,0 +1,78 @@
+---
+title: 简介
+description: 一套组件库，用同一层基底撑起 Web、原生和桌面。导入一次，根只有一个，没有要配置的东西。
+---
+
+{brand.name} 是 {brand.org} 的组件库。每个组件都经由 [@hanzo/gui](https://gui.hanzo.ai) 绘制。这是给 React 和 React Native 用的样式引擎，把样式当作 props 收下，在 Web 上编译成原子 CSS。引擎跨平台，库也就跨平台：同一个 `Switch`，在浏览器里是一个 `div`，在手机上是一个原生视图。
+
+这里没有一套工具类的构建。没有 Tailwind，没有 PostCSS 插件，组件底下没有 Radix 原语，没有注册表，没有 `components.json`，也没有把源码拷进仓库的 CLI。装上一个包，从里面导入。
+
+## 装上并画出来
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+```tsx title="main.tsx"
+import { Hanzo, Button } from '@hanzo/ui'
+
+export default function App() {
+  return (
+    <Hanzo>
+      <Button>Ship</Button>
+    </Hanzo>
+  )
+}
+```
+
+搭建到这里就结束了。`Hanzo` 是根，它带走了从前每个应用自己干的三件事：令牌对着解析的 gui 配置、样式表、主题。没有要导入的 CSS，也没有要跑的生成器。样式表在包发布的时候做好：把每个组件都渲染一遍，收走那次渲染产出的 CSS，于是第一次绘制和每一次服务端渲染一开始就带着规则。
+
+宿主还要做的只有一件事：告诉打包器，`react-native` 指的是 `react-native-web`。这是一条别名，每一种宿主该把它放在哪里，写在 [安装](/docs/installation) 下面各自的页面里。
+
+## 样式就是 props
+
+样式是组件上的一个 prop，响应式样式是同一个 prop，放在断点键下面。
+
+```tsx
+import { Button, Text, XStack, YStack } from '@hanzo/ui'
+
+<YStack gap="$4" p="$5" $md={{ p: '$8' }}>
+  <Text fontSize="$5" color="$color11">
+    Balance
+  </Text>
+  <XStack gap="$2">
+    <Button>Send</Button>
+    <Button variant="outline">Receive</Button>
+  </XStack>
+</YStack>
+```
+
+断点是移动优先的最小宽度：`$sm` 640，`$md` 768，`$lg` 1024，`$xl` 1280。以 `$` 开头的值是令牌，一种颜色、一个尺寸、间距坡道上的一档，对着主题解析。所以 `$background` 在浅色和深色里是不同的颜色，调用处不必知道。字号永远是令牌，不是数字：写 `fontSize="$3"`，不写 `fontSize={14}`。一个人可以定自己的字号比例，坡道上的 `$n` 会跟着走；写死的 14 不会。[主题](/docs/theming) 里有这架梯子。
+
+## 布局
+
+栈是 flex。`XStack` 横着排，`YStack` 竖着排，两者都接受 `gap`、`items` 和 `justify`。网格是真正的 CSS 网格，在 `@hanzo/ui/grid`，轨道来自容器而不是子节点。见 [网格](/docs/grid)。
+
+## 什么在哪里
+
+| 导入 | 是什么 |
+| --- | --- |
+| `@hanzo/ui` | 组件 API：每一种原语、栈、字号阶梯，以及 `Hanzo`。 |
+| `@hanzo/ui/product` | 应用层：图表、页面外壳、状态标签、详情窗格、主题切换。 |
+| `@hanzo/ui/blocks` | 作为数据的内容，以及把它画出来的渲染器。 |
+| `@hanzo/ui/grid` | `Grid` 和 `Cell`，仅 Web。 |
+| `@hanzo/ui/product/pure` | 产品层所依据的规则，没有挂上组件。 |
+| `@hanzo/ui/css` | `substitute`，给没有层叠的 DOM 答不上来的测试用。 |
+| `@hanzo/ui/next` | 给两套打包器都设好 Web 别名的 Next 包装。 |
+
+这个站点上的目录页——[组件](/ui)、[块](/blocks)、[产品](/product)——直接从包本身读出来：每一页把模块的示例画在源码旁边，并引用它的类型。
+
+## 问题
+
+**需要 Tailwind 吗？** 不需要。组件接收样式 props，身份就是普通的 CSS 自定义属性。如果一个应用带着类字符串进来，`Box`、`sx` 和 `css` 会通过 `tw` 读它们，转成同样的 props；没有任何东西会以包没有定义过的类到达 DOM。
+
+**这是复制粘贴吗？** 不是。装上包，从里面导入。组件随包一起标版本，子路径通过导出映射解析，所以深层导入跨补丁也继续有效。
+
+**哪些框架？** 任何 React 19 渲染器，只要打包器认识 `react-native` 这条别名。已有页面：[Vite](/docs/installation/vite)、[Next](/docs/installation/next)、[One](/docs/installation/one)、[Expo](/docs/installation/expo)、[Tauri](/docs/installation/tauri)。
+
+**可以商用吗？** 可以。Apache-2.0 或 MIT，任选其一。

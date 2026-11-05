@@ -36,7 +36,8 @@
  * sonner. `className`, `style`, `richColors` and the per-part `classNames` stay
  * accepted and inert.
  */
-import { SizableText, View, XStack, YStack, useMedia, type GuiElement } from '@hanzo/gui'
+import { SizableText, useMedia, View, XStack, YStack, type GuiElement } from '@hanzo/gui'
+import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Info, SquareCheck, TriangleAlert, X } from '@hanzogui/lucide-icons-2'
 import {
   Toast,
@@ -46,7 +47,6 @@ import {
   type ToasterProps as GuiToasterProps,
   type ToastT,
 } from '@hanzogui/toast/v2'
-import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 import { glass } from '../../glass'
@@ -55,18 +55,7 @@ import { paint, type FeedbackStatus } from './feedback'
 import { slot } from './slot'
 
 /** Sonner's per-part class hooks. Inert — see the note above. */
-export type ToasterClassNames = Partial<
-  Record<
-    | 'toast'
-    | 'title'
-    | 'description'
-    | 'icon'
-    | 'actionButton'
-    | 'cancelButton'
-    | 'closeButton',
-    string
-  >
->
+export type ToasterClassNames = Partial<Record<'toast' | 'title' | 'description' | 'icon' | 'actionButton' | 'cancelButton' | 'closeButton', string>>
 
 export interface ToasterProps extends Omit<GuiToasterProps, 'toastOptions'> {
   /** Inert. gui themes the viewport from tokens. */
@@ -177,32 +166,7 @@ export function ToastFace({ t, duration, paused = false, onClose, onHold }: Toas
           }
         : null)}
     >
-      {progress !== null ? (
-        <View
-          {...slot('toast-progress')}
-          position="absolute"
-          t={0}
-          insetInlineStart={0}
-          b={0}
-          bg={p.tint as never}
-          style={{ width: `${progress}%`, transition: 'width 300ms linear' }}
-          pointerEvents="none"
-        />
-      ) : duration !== undefined ? (
-        <View
-          {...slot('toast-countdown')}
-          data-motion="drain"
-          data-paused={paused ? '' : undefined}
-          position="absolute"
-          t={0}
-          l={0}
-          r={0}
-          b={0}
-          bg={p.tint as never}
-          pointerEvents="none"
-          style={{ ['--drain' as string]: `${duration}ms` }}
-        />
-      ) : null}
+      {progress !== null ? <View {...slot('toast-progress')} position="absolute" t={0} insetInlineStart={0} b={0} bg={p.tint as never} style={{ width: `${progress}%`, transition: 'width 300ms linear' }} pointerEvents="none" /> : duration !== undefined ? <View {...slot('toast-countdown')} data-motion="drain" data-paused={paused ? '' : undefined} position="absolute" t={0} l={0} r={0} b={0} bg={p.tint as never} pointerEvents="none" style={{ ['--drain' as string]: `${duration}ms` }} /> : null}
       <XStack {...slot('toast-header')} items="center" gap="$2" mb="$1" minH={24}>
         <View shrink={0} width={16} height={16} items="center" justify="center">
           {t.icon ?? <Icon size={16} color={p.ink as never} aria-label={i18n.t(SAID[status])} />}
@@ -262,17 +226,7 @@ export function ToastCard({ phone = false, ...props }: ToastFaceProps & { phone?
   )
 }
 
-function ToastItem({
-  t,
-  index,
-  fallback,
-  phone,
-}: {
-  t: ToastT
-  index: number
-  fallback: number
-  phone: boolean
-}) {
+function ToastItem({ t, index, fallback, phone }: { t: ToastT; index: number; fallback: number; phone: boolean }) {
   const progress = progressOf(t)
   const duration = t.duration ?? fallback
   const timed = progress === null && t.type !== 'loading' && Number.isFinite(duration) && duration > 0
@@ -305,12 +259,7 @@ function ToastItem({
   }
 
   return (
-    <Toast.Item
-      toast={held}
-      index={index}
-      {...frame(phone)}
-      data-status={STATUS[t.type ?? 'default'] ?? 'neutral'}
-    >
+    <Toast.Item toast={held} index={index} {...frame(phone)} data-status={STATUS[t.type ?? 'default'] ?? 'neutral'}>
       <ToastFace t={t} duration={timed ? duration : undefined} paused={paused} onClose={close} onHold={setPaused} />
     </Toast.Item>
   )
@@ -365,9 +314,7 @@ const Toaster = /* @__PURE__ */ forwardRef<GuiElement, ToasterProps>(function To
         {...(phone ? { width: '100%' } : null)}
       >
         <Limit limit={limit} />
-        <Toast.List
-          renderItem={({ toast: t, index }) => <ToastItem key={t.id} t={t} index={index} fallback={fallback} phone={phone} />}
-        />
+        <Toast.List renderItem={({ toast: t, index }) => <ToastItem key={t.id} t={t} index={index} fallback={fallback} phone={phone} />} />
       </Toast.Viewport>
     </Toast>
   )

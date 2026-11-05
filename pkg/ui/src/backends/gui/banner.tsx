@@ -30,8 +30,8 @@
  * `layout="compact"` is sized to its content up to 512, ends apart. With none
  * of those props a Banner renders exactly as it always has.
  */
-import { Children, createContext, isValidElement, useContext, type ComponentProps, type ReactNode } from 'react'
 import { SizableText, XStack, YStack, createStyledContext, styled } from '@hanzo/gui'
+import { Children, createContext, isValidElement, useContext, type ComponentProps, type ReactNode } from 'react'
 import { Info, X } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
@@ -45,7 +45,9 @@ const ICON = 16
 const ICON_GUTTER = 28
 const CLOSE = 24
 
-const BannerContext = /* @__PURE__ */ createStyledContext<{ variant: BannerVariant }>({
+const BannerContext = /* @__PURE__ */ createStyledContext<{
+  variant: BannerVariant
+}>({
   variant: 'default',
 })
 
@@ -137,7 +139,10 @@ export type BannerProps = Omit<ComponentProps<typeof BannerFrame>, 'variant' | '
 }
 
 /** The paint a record-shape banner was drawn with, for its action. */
-const PaintContext = /* @__PURE__ */ createContext<{ paint: FeedbackPaint; solid: boolean } | null>(null)
+const PaintContext = /* @__PURE__ */ createContext<{
+  paint: FeedbackPaint
+  solid: boolean
+} | null>(null)
 
 /**
  * A banner's own action: a small outline button whose edge is the banner's ink
@@ -149,17 +154,7 @@ export function BannerAction({ children, ...props }: Omit<ButtonProps, 'variant'
   const ink = ctx ? (ctx.solid ? ctx.paint.on : ctx.paint.ink) : '$ink'
   const mix = (n: number) => `color-mix(in srgb, ${ink.startsWith('$') ? `var(--${ink.slice(1)})` : ink} ${n}%, transparent)`
   return (
-    <Button
-      {...slot('banner-action')}
-      variant="outline"
-      size="xs"
-      bg="transparent"
-      borderColor={mix(25) as never}
-      hoverStyle={{ bg: mix(10) as never }}
-      pressStyle={{ bg: mix(20) as never }}
-      color={ink}
-      {...props}
-    >
+    <Button {...slot('banner-action')} variant="outline" size="xs" bg="transparent" borderColor={mix(25) as never} hoverStyle={{ bg: mix(10) as never }} pressStyle={{ bg: mix(20) as never }} color={ink} {...props}>
       {children}
     </Button>
   )
@@ -187,39 +182,13 @@ function RecordBanner({
   const inline = layout === 'inline'
   return (
     <PaintContext.Provider value={{ paint, solid }}>
-      <XStack
-        role="alert"
-        {...slot('banner')}
-        data-variant={solid ? 'solid' : 'soft'}
-        data-layout={layout}
-        data-color={hue}
-        width={compact ? 'auto' : '100%'}
-        maxW={compact ? 512 : undefined}
-        minH={compact ? undefined : 40}
-        p="$2"
-        gap={compact ? '$2' : '$3'}
-        items="center"
-        justify={compact ? 'space-between' : inline ? 'flex-start' : 'center'}
-        bg={(solid ? paint.fill : paint.tint) as never}
-        rounded={inline || compact ? '$3' : 0}
-        mb={inline && !embedded ? '$4' : 0}
-        {...props}
-      >
+      <XStack role="alert" {...slot('banner')} data-variant={solid ? 'solid' : 'soft'} data-layout={layout} data-color={hue} width={compact ? 'auto' : '100%'} maxW={compact ? 512 : undefined} minH={compact ? undefined : 40} p="$2" gap={compact ? '$2' : '$3'} items="center" justify={compact ? 'space-between' : inline ? 'flex-start' : 'center'} bg={(solid ? paint.fill : paint.tint) as never} rounded={inline || compact ? '$3' : 0} mb={inline && !embedded ? '$4' : 0} {...props}>
         {lead ? (
           <XStack {...slot('banner-icon')} shrink={0} width={16} height={16} items="center" justify="center">
             {lead}
           </XStack>
         ) : null}
-        <SizableText
-          {...slot('banner-message')}
-          render="div"
-          size="$2"
-          lineHeight={20}
-          fontWeight="500"
-          color={ink as never}
-          flex={compact || inline ? 1 : undefined}
-          minW={0}
-        >
+        <SizableText {...slot('banner-message')} render="div" size="$2" lineHeight={20} fontWeight="500" color={ink as never} flex={compact || inline ? 1 : undefined} minW={0}>
           {children}
         </SizableText>
         {action}
@@ -257,17 +226,7 @@ export function Banner({
   const record = [status, color, emphasis, layout, action, lead].some((v) => v !== undefined)
   if (record)
     return (
-      <RecordBanner
-        status={status}
-        color={color}
-        emphasis={emphasis}
-        layout={layout}
-        embedded={embedded}
-        action={action}
-        icon={lead}
-        onClose={onClose}
-        {...props}
-      >
+      <RecordBanner status={status} color={color} emphasis={emphasis} layout={layout} embedded={embedded} action={action} icon={lead} onClose={onClose} {...props}>
         {children}
       </RecordBanner>
     )
@@ -279,16 +238,8 @@ export function Banner({
 
   return (
     <BannerFrame role="alert" variant={resolved} {...slot('banner')} data-variant={resolved} {...props}>
-      {icon ? (
-        <IconSlot {...slot('banner-icon')}>
-          {icon}
-        </IconSlot>
-      ) : null}
-      <BannerText
-        {...slot('banner-message')}
-        paddingInlineStart={icon ? ICON_GUTTER : 0}
-        paddingInlineEnd={onClose ? CLOSE + 12 : 0}
-      >
+      {icon ? <IconSlot {...slot('banner-icon')}>{icon}</IconSlot> : null}
+      <BannerText {...slot('banner-message')} paddingInlineStart={icon ? ICON_GUTTER : 0} paddingInlineEnd={onClose ? CLOSE + 12 : 0}>
         {body}
       </BannerText>
       {onClose ? (

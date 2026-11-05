@@ -1,5 +1,6 @@
 'use client'
 
+import { useCallback, type ReactNode } from 'react'
 /**
  * BranchSelect — which branch a run starts from, as a composer chip.
  *
@@ -8,7 +9,6 @@
  * Like `RepoSelect` it knows no git host — the loader is the host's.
  */
 import { GitBranch } from '@hanzogui/lucide-icons-2'
-import { useCallback, type ReactNode } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 
 import { ChipSelect, type ChipPlacement } from './ChipSelect'
@@ -36,7 +36,11 @@ export interface BranchSelectProps {
   onOpenChange?: (open: boolean) => void
 }
 
-const item = (name: string): ChipItem => ({ id: name, label: name, icon: <GitBranch size={12} color="$soft" /> })
+const item = (name: string): ChipItem => ({
+  id: name,
+  label: name,
+  icon: <GitBranch size={12} color="$soft" />,
+})
 
 export function BranchSelect({
   value = null,
@@ -52,9 +56,12 @@ export function BranchSelect({
   const pages = useCallback(
     async (q: string, after?: string | null): Promise<ChipPage<ChipItem>> => {
       const page = await load(q, after)
-      return { items: page.branches.map((b) => item(branchName(b))), next: page.next ?? null }
+      return {
+        items: page.branches.map((b) => item(branchName(b))),
+        next: page.next ?? null,
+      }
     },
-    [load],
+    [load]
   )
 
   return (

@@ -1,0 +1,157 @@
+---
+title: Gráficos
+description: Uma tendência, uma série, uma fatia e uma distribuição. SVG inline, sem dependência, e nunca um ponto inventado.
+---
+
+```tsx
+import { BarChart, BarRows, Donut, LineChart, Sparkline } from '@hanzo/ui/product'
+```
+
+Os gráficos desenham com SVG inline e tiram as cores do tema ao vivo, então invertem com ele. São honestos por construção: uma sparkline com menos de dois pontos não renderiza nada, uma rosca sem valor positivo renderiza um travessão, e nenhum gráfico inventa uma tendência. Quem chama passa séries reais.
+
+Duas formas carregam os dados. Um `ChartPoint` é um valor rotulado num eixo sequencial; um `Slice` é uma magnitude rotulada num eixo categórico, com uma cor opcional e uma dica.
+
+```ts
+type ChartPoint = { label: string; value: number }
+type Slice = { label: string; value: number; color?: string; hint?: string }
+```
+
+## Sparkline
+
+Uma tendência de tamanho fixo para um card de métrica. `values` é um array simples; `width`, `height` e `color` são opcionais.
+
+```tsx
+<Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+```
+
+<Preview>
+  <Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+</Preview>
+
+## Gráfico de linhas
+
+Um valor ao longo do tempo. Ele mede o contêiner, então fica tão largo quanto a caixa em que está, e o hover lê o ponto mais próximo ao lado de uma linha guia. `formatValue` formata a leitura.
+
+```tsx
+<LineChart
+  data={[
+    { label: 'Mon', value: 120 },
+    { label: 'Tue', value: 180 },
+    { label: 'Wed', value: 150 },
+    { label: 'Thu', value: 260 },
+    { label: 'Fri', value: 230 },
+    { label: 'Sat', value: 310 },
+    { label: 'Sun', value: 290 },
+  ]}
+  height={200}
+  formatValue={(v) => `${v} req`}
+/>
+```
+
+<Preview>
+  <LineChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+    formatValue={(v) => `${v} req`}
+  />
+</Preview>
+
+## Gráfico de barras
+
+Os mesmos dados, em barras. As mesmas props.
+
+```tsx
+<BarChart data={points} height={200} />
+```
+
+<Preview>
+  <BarChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+  />
+</Preview>
+
+## Rosca
+
+Uma fatia do todo. Cor é dado, não um modo: uma fatia com `color` é desenhada nela, e uma fatia sem cor pega uma rampa monocromática a partir do foreground, então um componente serve um gráfico categórico e um na marca. `center` renderiza dentro do anel; `legend` desenha uma lista embutida de rótulo e porcentagem, desligada por padrão para quem consome poder compor uma mais rica.
+
+```tsx
+<Donut
+  slices={[
+    { label: 'zen-4', value: 62 },
+    { label: 'zen-3', value: 28 },
+    { label: 'other', value: 10 },
+  ]}
+  center="62%"
+  legend
+/>
+```
+
+<Preview>
+  <XStack gap="$8" flexWrap="wrap" items="center">
+    <Donut
+      slices={[
+        { label: 'zen-4', value: 62 },
+        { label: 'zen-3', value: 28 },
+        { label: 'other', value: 10 },
+      ]}
+      center="62%"
+      legend
+    />
+    <Donut
+      slices={[
+        { label: 'compute', value: 540, color: '#7c5cff' },
+        { label: 'storage', value: 220, color: '#23c562' },
+        { label: 'egress', value: 90, color: '#ff9f45' },
+      ]}
+      size={120}
+      thickness={16}
+    />
+  </XStack>
+</Preview>
+
+`CHART_PALETTE` são os oito matizes distintos para uma série categórica, afinados para o fundo escuro; `CHART_OTHER` é o tom atenuado de um resto.
+
+## Fileiras de barras
+
+Uma distribuição como barras horizontais rotuladas, desenhadas com os primitivos de layout para que o tema acompanhe a casca. Recebe a mesma forma `Slice`.
+
+```tsx
+<BarRows
+  bars={[
+    { label: 'us-east', value: 1240 },
+    { label: 'eu-west', value: 860 },
+    { label: 'ap-south', value: 410 },
+  ]}
+/>
+```
+
+<Preview>
+  <BarRows
+    bars={[
+      { label: 'us-east', value: 1240 },
+      { label: 'eu-west', value: 860 },
+      { label: 'ap-south', value: 410 },
+    ]}
+  />
+</Preview>
+
+## Medir a caixa
+
+`useContainerWidth` também é exportado: um `ref` e a largura que ele mediu por último, mantida por um `ResizeObserver`. É o que os gráficos de linhas e de barras usam, e o que um gráfico seu pode usar para desenhar na caixa que recebeu, em vez de um número que adivinhou.
