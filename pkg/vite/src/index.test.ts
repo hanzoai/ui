@@ -17,9 +17,43 @@ describe('@hanzo/vite', () => {
     // A bare-string alias is a PREFIX match in Vite, which would rewrite
     // `react-native/Libraries/*` too — and those files expect the real package.
     const entry = find(hanzo({}, { root: ROOT }), /^react-native$/)
-    expect(entry?.replacement).toBe('react-native-web')
+    // The exact match points at the shim, which re-exports react-native-web
+    // wholesale plus the vendored TurboModuleRegistry (see shims/).
+    expect(entry?.replacement).toContain('shims/react-native-web')
     expect(entry?.find).toBeInstanceOf(RegExp)
     expect(String((entry!.find as RegExp).test('react-native/Libraries/x'))).toBe('false')
+  })
+
+  it('routes the native codegen entry at the inert stub, not the Flow source', () => {
+    // react-native-svg's fabric components call codegenNativeComponent at module
+    // scope. The real one is Flow and unparseable by Vite; the stub returns an
+    // inert component, which is all the web build needs because it never mounts it.
+    const entry = find(hanzo({}, { root: ROOT }), /^react-native\/Libraries\/Utilities\/codegenNativeComponent$/)
+    expect(entry?.replacement).toContain('shims/codegenNativeComponent')
+  })
+
+  it('routes the deep TurboModuleRegistry path at the vendored copy', () => {
+    const entry = find(hanzo({}, { root: ROOT }), /^react-native\/TurboModule\/TurboModuleRegistry$/)
+    expect(entry?.replacement).toBe('react-native-web/dist/vendor/react-native/TurboModule/TurboModuleRegistry')
+  })
+
+  it('keeps react-native-svg out of the dev pre-bundler', () => {
+    // The optimizer crawls node_modules without resolve.extensions, so it would
+    // pre-bundle the native half and die on TurboModuleRegistry. Excluding it
+    // forces the web entry through the normal pipeline.
+    const out = hanzo({}, { root: ROOT }) as any
+    expect(out.optimizeDeps.exclude).toContain('react-native-svg')
+    expect(out.optimizeDeps.include).toEqual(
+      expect.arrayContaining(['react', 'react-dom/client', 'react-native-web']),
+    )
+  })
+
+  it('merges the app optimizeDeps as a set, never replacing the defaults', () => {
+    const out = hanzo({ optimizeDeps: { include: ['zustand'], exclude: ['lodash'] } }, { root: ROOT }) as any
+    expect(out.optimizeDeps.include).toContain('zustand')
+    expect(out.optimizeDeps.include).toContain('react-native-web')
+    expect(out.optimizeDeps.exclude).toContain('react-native-svg')
+    expect(out.optimizeDeps.exclude).toContain('lodash')
   })
 
   it('points the native asset registry at the one react-native-web implements', () => {

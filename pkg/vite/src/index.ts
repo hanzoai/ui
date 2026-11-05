@@ -24,6 +24,18 @@
  *    the failure is not a crash — it is a component that renders unstyled, or a
  *    hook that reads a default nobody set.
  *
+ * 5. react-native-svg's native half names TWO things react-native-web has no
+ *    spelling of: `TurboModuleRegistry` from bare `react-native`, and
+ *    `codegenNativeComponent` from `react-native/Libraries/Utilities/...`.
+ *    The web entry avoids both, but only while `.web.js` wins — and Vite's
+ *    dev pre-bundler (optimizeDeps) does not run `resolve.extensions` when it
+ *    crawls `node_modules`, so in `vite dev` the native half is what gets
+ *    pre-bundled and the build dies on a named import no bare alias can fix.
+ *    The fix is one shim: bare `react-native` resolves to a module that
+ *    re-exports react-native-web WHOLESALE plus the vendored TurboModuleRegistry,
+ *    and the deep codegen path is aliased to a stub that returns an inert
+ *    component. Both exist only to be bundled, never to be called on the web.
+ *
  * `preserveSymlinks: false` is Vite's default and is CORRECT here, unlike the
  * webpack side: Vite dedupes by resolved id, so `dedupe` does the work that
  * keeping symlinks does under webpack. One runtime either way, two mechanisms —
@@ -54,6 +66,18 @@ const WEB_FIRST = ['.web.tsx', '.web.ts', '.web.jsx', '.web.js']
 const DEFAULT_EXT = ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json']
 
 /**
+ * `react-native-svg` must be transpiled on the web AND kept out of the dev
+ * pre-bundler. Excluding it from optimizeDeps is what stops Vite's esbuild
+ * crawl from picking the native `lib/module/ReactNativeSVG.js` (which pulls
+ * `fabric/*` -> `TurboModuleRegistry`) just because the crawler ignores
+ * `resolve.extensions`. `include` names the packages Vite may pre-bundle;
+ * `react-native-web` and the gui runtime are already ESM-clean. Apps that
+ * state their own `optimizeDeps` keep theirs: `include` is merged as a set.
+ */
+const SVG_EXCLUDE = ['react-native-svg']
+const OPTIMIZE_INCLUDE = ['react', 'react-dom/client', 'react-native-web']
+
+/**
  * Wrap an app's own Vite config with the shared answers.
  *
  * The app WINS on every key it states; `resolve` is merged rather than replaced,
@@ -65,10 +89,17 @@ export function hanzo(config: Config = {}, options: Options): Config {
 
   // Vite matches an alias array in order and a RegExp entry exactly, which is
   // what keeps `react-native/Libraries/*` resolving to the real package.
+  // The shim path is this package's own compiled output, resolved against THIS
+  // file (not the app root) so a consumer never has to see it on disk. The
+  // compiled dist (not src) matters: src is a .ts file Vite cannot load when
+  // the consumer is a packed tarball with no tsconfig for it.
+  const here = dirname(new URL(import.meta.url).pathname)
+  const shim = resolve(here, 'shims/react-native-web.js')
+  const codegenShim = resolve(here, 'shims/codegenNativeComponent.js')
   const aliases = [
     ...(Array.isArray(appResolve.alias) ? appResolve.alias : []),
     ...Object.entries(alias).map(([find, to]) => ({ find, replacement: resolve(root, to) })),
-    { find: /^react-native$/, replacement: 'react-native-web' },
+    { find: /^react-native$/, replacement: shim },
     // The asset registry is react-native's, and react-native-web reimplements it
     // with the same `getAssetByID`. react-native-svg's web build reaches for the
     // native one by name, so without this the bundle resolves nothing and the
@@ -78,6 +109,11 @@ export function hanzo(config: Config = {}, options: Options): Config {
       find: /^@react-native\/assets-registry\/registry$/,
       replacement: 'react-native-web/dist/modules/AssetRegistry',
     },
+    {
+      find: /^react-native\/Libraries\/Utilities\/codegenNativeComponent$/,
+      replacement: codegenShim,
+    },
+    { find: /^react-native\/TurboModule\/TurboModuleRegistry$/, replacement: 'react-native-web/dist/vendor/react-native/TurboModule/TurboModuleRegistry' },
     // The source runtime is this package's dependency, not the app's, and an
     // isolated node_modules does not let the app see it. Naming the resolved
     // copy here is what keeps an app on `hanzo()` free of configuration.
@@ -87,6 +123,7 @@ export function hanzo(config: Config = {}, options: Options): Config {
   const appBuild = (config.build as Record<string, unknown>) ?? {}
   const appPlugins = Array.isArray(config.plugins) ? (config.plugins as unknown[]) : []
   const appDefine = (config.define as Record<string, string>) ?? {}
+  const appOptimize = (config.optimizeDeps as Record<string, any>) ?? {}
 
   return {
     ...config,
@@ -100,6 +137,11 @@ export function hanzo(config: Config = {}, options: Options): Config {
     // error report and an edit widget all read that map; without it every one
     // of them points at a minified line.
     build: { sourcemap: true, ...appBuild },
+    optimizeDeps: {
+      ...appOptimize,
+      include: [...new Set([...OPTIMIZE_INCLUDE, ...(appOptimize.include ?? [])])],
+      exclude: [...new Set([...SVG_EXCLUDE, ...(appOptimize.exclude ?? [])])],
+    },
     plugins: [...appPlugins, source(root)],
     resolve: {
       ...appResolve,
