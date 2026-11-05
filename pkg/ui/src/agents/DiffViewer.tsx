@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react'
-
-import { useTranslate } from '../i18n/react'
+import { useI18n } from '@hanzo/i18n/react'
 
 export interface DiffViewerProps {
   originalCode: string
@@ -56,7 +55,7 @@ function computeDiff(original: string, modified: string): DiffLine[] {
 }
 
 export const DiffViewer: React.FC<DiffViewerProps> = ({ originalCode, modifiedCode, filename = 'changes.diff', language = 'typescript', className = '', style }) => {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const diffLines = useMemo(() => computeDiff(originalCode, modifiedCode), [originalCode, modifiedCode])
 
   const additions = diffLines.filter((l) => l.type === 'add').length
@@ -75,7 +74,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({ originalCode, modifiedCo
         fontFamily: 'monospace',
         ...style,
       }}
-      aria-label={tr('Code Diff Viewer')}
+      aria-label={t('Code Diff Viewer')}
     >
       {filename && (
         <div

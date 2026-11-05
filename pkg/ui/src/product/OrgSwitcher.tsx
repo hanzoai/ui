@@ -17,9 +17,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react'
 import { Button, Input, Popover, Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { Check, ChevronsUpDown, LayoutGrid, Plus, Search } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { press, RING } from '../backends/gui/press'
-import { useTranslate } from '../i18n/react'
 import { sx } from '../sx'
 import { useEmit } from './instrument'
 import { menuKeyDown } from './menu/roving'
@@ -121,7 +121,6 @@ export type OrgSwitcherProps = {
 }
 
 export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create, picker = false, direction = 'down', footer, sub, aria, search, heading, lead = false, testId, className, style }: OrgSwitcherProps) {
-  const tr = useTranslate()
   const currentId = scope.currentOrg()
 
   const [open, setOpen] = useState(false)
@@ -135,6 +134,7 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
   const [newName, setNewName] = useState('')
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const { t } = useI18n()
   // Closing hands focus back to the trigger. The popover's own return goes
   // through a trigger ref an `asChild` child never fills, so it is ours.
   const trigger = useRef<HTMLElement | null>(null)
@@ -229,7 +229,7 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
       const org = await create(name)
       scope.switchOrg(org)
     } catch (e) {
-      setErr(e instanceof Error ? e.message : 'Could not create the organization.')
+      setErr(e instanceof Error ? e.message : t('Could not create the organization.'))
       setBusy(false)
     }
   }
@@ -246,7 +246,15 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
         {/* Sized as the PEER of the account control — same height, same mark,
             same type, same hit area — so "which workspace" and "who I am" read
             as the two halves of one identity, not a caption over a control. */}
-        <Button ref={trigger as never} chromeless height={lead ? 56 : 44} px="$2" justify="flex-start" data-testid={testId} aria-label={aria ?? `${currentLabel} · switch organization`}>
+        <Button
+          ref={trigger as never}
+          chromeless
+          height={lead ? 56 : 44}
+          px="$2"
+          justify="flex-start"
+          data-testid={testId}
+          aria-label={aria ?? t('{org} · switch organization', { org: currentLabel })}
+        >
           <XStack items="center" gap="$2.5" flex={1} minW={0}>
             <OrgMark org={current} size={lead ? 36 : 30} />
             {/* One line when the control names only an org; two when a caller
@@ -317,9 +325,16 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
         {creating ? (
           <YStack gap="$2">
             <Text fontSize="$2" color="$ink" fontWeight="700">
-              Create organization
+              {t('Create organization')}
             </Text>
-            <Input size="$3" placeholder={tr('Organization name')} value={newName} onChangeText={setNewName} autoCapitalize="words" onSubmitEditing={() => void submitCreate()} />
+            <Input
+              size="$3"
+              placeholder={t('Organization name')}
+              value={newName}
+              onChangeText={setNewName}
+              autoCapitalize="words"
+              onSubmitEditing={() => void submitCreate()}
+            />
             {err ? (
               <Text fontSize="$1" color="$red10">
                 {err}
@@ -327,10 +342,15 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
             ) : null}
             <XStack gap="$2" justify="flex-end">
               <Button size="$2" chromeless onPress={() => setCreating(false)} disabled={busy}>
-                Cancel
+                {t('Cancel')}
               </Button>
-              <Button size="$2" onPress={() => void submitCreate()} disabled={busy || !newName.trim()} icon={busy ? <Spinner size="small" /> : <Plus size={14} />}>
-                Create
+              <Button
+                size="$2"
+                onPress={() => void submitCreate()}
+                disabled={busy || !newName.trim()}
+                icon={busy ? <Spinner size="small" /> : <Plus size={14} />}
+              >
+                {t('Create')}
               </Button>
             </XStack>
           </YStack>
@@ -345,7 +365,18 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
             {(search ?? !!orgs) ? (
               <XStack items="center" gap="$2" px="$2" py="$1" rounded="$3" borderWidth={1} borderColor="$borderColor">
                 <Search size={13} opacity={0.6} />
-                <Input flex={1} size="$2" borderWidth={0} bg="transparent" placeholder={tr('Find an organization')} aria-label={tr('Find an organization')} value={query} onChangeText={setQuery} autoCapitalize="none" autoCorrect={false} />
+                <Input
+                  flex={1}
+                  size="$2"
+                  borderWidth={0}
+                  bg="transparent"
+                  placeholder={t('Find an organization')}
+                  aria-label={t('Find an organization')}
+                  value={query}
+                  onChangeText={setQuery}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
               </XStack>
             ) : null}
 
@@ -365,19 +396,19 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
                 <XStack items="center" gap="$2" px="$2" py="$3">
                   <Spinner size="small" color="$quiet" />
                   <Text fontSize="$2" color="$soft">
-                    Loading organizations…
+                    {t('Loading organizations…')}
                   </Text>
                 </XStack>
               ) : visible.length === 0 ? (
                 <Text px="$2" py="$2" fontSize="$2" color="$soft">
-                  {query.trim() ? `No organizations match “${query.trim()}”.` : 'No organizations yet.'}
+                  {query.trim() ? t('No organizations match “{query}”.', { query: query.trim() }) : t('No organizations yet.')}
                 </Text>
               ) : (
                 // A set of organizations exactly one of which holds is a named
                 // `group` of `menuitemradio`s — not a bag of divs, which is what
                 // assistive tech was being handed, and not a `radiogroup`, which
                 // a `menu` may not own (MenuRow says why).
-                <YStack role="group" aria-label={tr('Organizations')} gap="$1">
+                <YStack role="group" aria-label={t('Organizations')} gap="$1">
                   {visible.map((org) => (
                     <MenuRow key={org.name} label={org.displayName || org.name} icon={<OrgMark org={org} />} active={org.name === currentId} onPress={() => select(org.name)} />
                   ))}
@@ -388,13 +419,13 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
                 <XStack items="center" gap="$2" px="$2" py="$2">
                   <Spinner size="small" color="$quiet" />
                   <Text fontSize="$1" color="$soft">
-                    Loading more…
+                    {t('Loading more…')}
                   </Text>
                 </XStack>
               ) : hasMore ? (
                 <XStack onPress={loadMore} cursor="pointer" items="center" justify="center" px="$2" py="$1.5" rounded="$3" hoverStyle={{ bg: '$edge' }}>
                   <Text fontSize="$1" color="$quiet" fontWeight="600">
-                    Load more
+                    {t('Load more')}
                   </Text>
                 </XStack>
               ) : null}
@@ -425,7 +456,7 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
                   <Plus size={14} />
                 </YStack>
                 <Text fontSize="$2" color="$ink">
-                  Create organization
+                  {t('Create organization')}
                 </Text>
               </XStack>
             ) : null}
@@ -450,7 +481,7 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
                   <LayoutGrid size={14} />
                 </YStack>
                 <Text fontSize="$2" color="$ink">
-                  All organizations
+                  {t('All organizations')}
                 </Text>
               </XStack>
             ) : null}

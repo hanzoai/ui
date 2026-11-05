@@ -14,10 +14,10 @@
  * because a sheet flicked away should go away.
  */
 import * as React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Box, type BoxProps } from '../../box'
 import { cn } from '../../core/cn'
-import { useTranslate } from '../../i18n/react'
 
 /** A height: `'620px'`, or a fraction of the viewport. */
 export type SnapPoint = number | string
@@ -168,13 +168,13 @@ export const Drawer = ({ open = false, onOpenChange, modal = true, snapPoints, a
  * misses.
  */
 export const DrawerHandle = ({ className, ...props }: React.ComponentProps<typeof Box>) => {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const { drag, handleHandleClicked, extendHandleDragRegion } = useDrawer()
   return (
     <Box
       role="separator"
       aria-orientation="horizontal"
-      aria-label={tr('Resize')}
+      aria-label={t('Resize')}
       className={cn('grid place-items-center cursor-grab', className)}
       style={{
         paddingBlock: extendHandleDragRegion ? 20 : 8,

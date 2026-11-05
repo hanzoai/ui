@@ -20,6 +20,7 @@
  * widget on screen.
  */
 import { YStack, isWeb, type YStackProps } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 
 export type TechnicalAnalysisInterval =
@@ -101,6 +102,7 @@ const TechnicalAnalysis = ({
     showIntervalTabs,
     displayMode,
   })
+  const { t } = useI18n()
   const src = EMBED + encodeURIComponent(JSON.stringify(s))
   return (
     <YStack
@@ -120,7 +122,7 @@ const TechnicalAnalysis = ({
         <iframe
           key={src}
           src={src}
-          title={`${s.symbol} technical analysis`}
+          title={t('{symbol} technical analysis', { symbol: s.symbol })}
           loading="lazy"
           scrolling="no"
           style={{ display: 'block', width: '100%', height: '100%', border: 0 }}

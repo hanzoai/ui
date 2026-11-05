@@ -19,8 +19,8 @@ import type { ComponentProps } from 'react'
  * which this package's own house rule forbids.
  */
 import { Text, XStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 
-import { useTranslate } from '../../i18n/react'
 import { ink } from './ink'
 import { slot } from './slot'
 
@@ -28,8 +28,8 @@ type Row = ComponentProps<typeof XStack>
 type Words = ComponentProps<typeof Text>
 
 export const Breadcrumb = (props: Row) => {
-  const tr = useTranslate()
-  return <XStack {...slot('breadcrumb')} render="nav" aria-label={tr('Breadcrumb')} minH={32} items="center" overflow="hidden" minW={0} {...props} />
+  const { t } = useI18n()
+  return <XStack {...slot('breadcrumb')} render="nav" aria-label={t('Breadcrumb')} minH={32} items="center" overflow="hidden" minW={0} {...props} />
 }
 
 export const BreadcrumbList = ({ children, ...props }: Row) => (

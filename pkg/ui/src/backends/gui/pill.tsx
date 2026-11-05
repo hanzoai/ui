@@ -1,6 +1,5 @@
 'use client'
 
-import * as React from 'react'
 /**
  * Pill — a small rounded label for a status, a tag or a filter, with an
  * optional remove control. `variant`, `onRemove`, `pillVariants`, and the
@@ -16,8 +15,8 @@ import * as React from 'react'
  */
 import { createStyledContext, SizableText, styled, XStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
-
-import { useTranslate } from '../../i18n/react'
+import * as React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { sx } from '../../sx'
 import { Button } from './button'
 import { touch } from './gesture'
@@ -93,13 +92,23 @@ export type PillProps = React.ComponentProps<'span'> & {
 }
 
 export function Pill({ className, variant = 'default', onRemove, children, ...props }: PillProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const resolved = variant ?? 'default'
   return (
     <PillFrame {...slot('pill')} data-variant={resolved} variant={resolved} {...sx([pillVariants({ variant: resolved }), className].filter(Boolean).join(' '))} {...(props as React.ComponentProps<typeof PillFrame>)}>
       {ink(children, PillText)}
       {onRemove ? (
-        <Button {...slot('pill-remove')} variant="ghost" size="icon" minH={REMOVE} minW={REMOVE} rounded={999} {...touch(REMOVE, MIN_TOUCH)} aria-label={tr('Remove')} onPress={onRemove}>
+        <Button
+          {...slot('pill-remove')}
+          variant="ghost"
+          size="icon"
+          minH={REMOVE}
+          minW={REMOVE}
+          rounded={999}
+          {...touch(REMOVE, MIN_TOUCH)}
+          aria-label={t('Remove')}
+          onPress={onRemove}
+        >
           <X size={12} />
         </Button>
       ) : null}

@@ -1,7 +1,5 @@
 'use client'
 
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
-import { acceptAll, asks, consentPolicy, consentSheet, declined, notice, noticed, POLICY_EVENT, readConsent, rejectAll, saveConsent, storedConsent, type Choice, type Mode } from '@hanzo/event'
 /**
  * Consent — the one cookie banner every Hanzo, Lux and Zoo site mounts.
  *
@@ -34,12 +32,30 @@ import { acceptAll, asks, consentPolicy, consentSheet, declined, notice, noticed
  */
 import { Paragraph, Text, XStack, YStack } from '@hanzo/gui'
 import { ChevronDown, X } from '@hanzogui/lucide-icons-2'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
+import {
+  acceptAll,
+  asks,
+  consentPolicy,
+  consentSheet,
+  declined,
+  notice,
+  noticed,
+  POLICY_EVENT,
+  readConsent,
+  rejectAll,
+  saveConsent,
+  storedConsent,
+  type Choice,
+  type Mode,
+} from '@hanzo/event'
+import { phrase } from '@hanzo/i18n'
+import { useI18n, type Say } from '@hanzo/i18n/react'
 
 import { Button } from '../backends/gui/button'
 import { align } from '../backends/gui/dir'
 import { slot } from '../backends/gui/slot'
 import { Switch } from '../backends/gui/switch'
-import { useTranslate } from '../i18n/react'
 import { PrivacyChoicesIcon } from './icon'
 
 const OPEN = 'hzconsent-open'
@@ -100,37 +116,48 @@ function linked(): boolean {
 
 type Kind = { id: string; key?: keyof Choice; title: string; body: string }
 
-const kinds = (brand: string, strict: boolean, locked: boolean): Kind[] => [
+const kinds = (t: Say, brand: string, strict: boolean, locked: boolean): Kind[] => [
   {
     id: 'necessary',
-    title: 'Strictly Necessary Cookies',
-    body: `These are needed for the site to work, so they are always on. They keep you signed in and your session secure, protect forms against cross-site request forgery, spread traffic across servers, remember the choice you make here, and keep what you have typed into a form. They include ${brand}'s own first-party analytics, which counts visits and finds what is broken for ${brand} alone and is never sold or shared.`,
+    title: t('Strictly Necessary Cookies'),
+    body: t(
+      "These are needed for the site to work, so they are always on. They keep you signed in and your session secure, protect forms against cross-site request forgery, spread traffic across servers, remember the choice you make here, and keep what you have typed into a form. They include {brand}'s own first-party analytics, which counts visits and finds what is broken for {brand} alone and is never sold or shared.",
+      { brand },
+    ),
   },
   {
     id: 'analytics',
     key: 'analytics',
-    title: 'Performance Cookies',
-    body: `Google Analytics: lets Google measure visits to ${brand} with its own cookies.`,
+    title: t('Performance Cookies'),
+    body: t('Google Analytics: lets Google measure visits to {brand} with its own cookies.', { brand }),
   },
   {
     id: 'marketing',
     key: 'marketing',
-    title: 'Marketing Cookies',
-    body: `The Meta pixel: lets Meta measure the sign-ups and orders ${brand}'s ads led to.`,
+    title: t('Marketing Cookies'),
+    body: t("The Meta pixel: lets Meta measure the sign-ups and orders {brand}'s ads led to.", { brand }),
   },
   {
     id: 'ads',
     key: 'ads',
-    title: 'Sell, Share, or Use Your Data for Targeted Advertising',
-    body: `Lets Google and Meta use your visits to choose the ads they show you on other sites and apps. Some US state privacy laws call this a “sale” or “sharing” of your personal information, or “targeted advertising”, and give you the right to opt out: ${locked ? 'your browser’s signal keeps it off.' : strict ? 'it stays off unless you turn it on.' : 'turn this off to opt out.'}`,
+    title: t('Sell, Share, or Use Your Data for Targeted Advertising'),
+    body: t(
+      'Lets Google and Meta use your visits to choose the ads they show you on other sites and apps. Some US state privacy laws call this a “sale” or “sharing” of your personal information, or “targeted advertising”, and give you the right to opt out: {rule}',
+      { rule: locked ? t('your browser’s signal keeps it off.') : strict ? t('it stays off unless you turn it on.') : t('turn this off to opt out.') },
+    ),
   },
 ]
 
 /** The sheet's opening line, by rule: what runs before the visitor does anything, and how to change it. */
-const intro = (strict: boolean, locked: boolean) => (locked ? 'We use cookies and similar technologies to provide our services. Essential cookies are required for the site to work and cannot be turned off. Learn more in our ' : strict ? 'We use cookies and similar technologies to provide our services, measure performance, and support advertising. Essential cookies are required for the site to work and cannot be turned off. You can allow or reject optional cookies below. Learn more in our ' : 'We use cookies and similar technologies to provide our services, measure performance, and support advertising. Google Analytics and the Meta pixel run on this site by default. Turn either off below, or turn off the last switch to opt out of the sale or sharing of your personal information for targeted advertising; each switch is saved as soon as you change it. Essential cookies are required for the site to work and cannot be turned off. Learn more in our ')
+const intro = (t: Say, strict: boolean, locked: boolean) =>
+  locked
+    ? t('We use cookies and similar technologies to provide our services. Essential cookies are required for the site to work and cannot be turned off. Learn more in our ')
+    : strict
+    ? t('We use cookies and similar technologies to provide our services, measure performance, and support advertising. Essential cookies are required for the site to work and cannot be turned off. You can allow or reject optional cookies below. Learn more in our ')
+    : t('We use cookies and similar technologies to provide our services, measure performance, and support advertising. Google Analytics and the Meta pixel run on this site by default. Turn either off below, or turn off the last switch to opt out of the sale or sharing of your personal information for targeted advertising; each switch is saved as soon as you change it. Essential cookies are required for the site to work and cannot be turned off. Learn more in our ')
 
-/** What a browser that sends Global Privacy Control or Do Not Track holds off, under every rule. */
-const REFUSAL = 'Your browser asks sites not to track you, so all of these stay off.'
+/** What a browser that sends Global Privacy Control or Do Not Track holds off, under every rule; drawn through `t`. */
+const REFUSAL = phrase('Your browser asks sites not to track you, so all of these stay off.')
 
 /** The bar's and the sheet's inset from the window's edges: 16px, or the device's inset and 8px where that is wider. */
 const EDGE = {
@@ -278,10 +305,23 @@ export type ConsentProps = {
   terms?: string
   /** Who is asking: the brand the visitor is on. */
   brand?: string
+  /**
+   * Whether a page that links to the sheet nowhere gets the small "Your Privacy
+   * Choices" button at the foot of the window. `false` for a host whose every page
+   * reaches the sheet another way, its footer or its Settings: on an app's panes
+   * the button stood on the composer.
+   */
+  floating?: boolean
 }
 
-const Consent = ({ cookies = 'https://hanzo.ai/cookies', privacy = 'https://hanzo.ai/privacy', terms = 'https://hanzo.ai/terms', brand = 'Hanzo' }: ConsentProps) => {
-  const tr = useTranslate()
+const Consent = ({
+  cookies = 'https://hanzo.ai/cookies',
+  privacy = 'https://hanzo.ai/privacy',
+  terms = 'https://hanzo.ai/terms',
+  brand = 'Hanzo',
+  floating = true,
+}: ConsentProps) => {
+  const { t } = useI18n()
   // The rule in force: undefined until cloud (or this tab) has said, and nothing is drawn meanwhile.
   const [mode, setMode] = useState<Mode | undefined>()
   // The bar (eu) or the notice (global) at the foot of the window.
@@ -532,34 +572,39 @@ const Consent = ({ cookies = 'https://hanzo.ai/cookies', privacy = 'https://hanz
         <YStack {...slot('consent')} {...PANEL} ref={sheet as never} role="dialog" aria-modal aria-labelledby={`${id}-title`} position="relative" width="100%" maxW={560} maxH="100%" overflow="hidden">
           <XStack items="center" justify="space-between" gap="$3" pt="$5" pb="$3" paddingInlineStart="$5" paddingInlineEnd="$4">
             <Text render="h2" id={`${id}-title`} m={0} fontSize="$6" lineHeight="$6" fontWeight="600" color="$ink">
-              Cookie Preferences
+              {t('Cookie Preferences')}
             </Text>
-            <Button type="button" size="icon" {...CLOSE} aria-label={tr('Close')} onClick={close}>
+            <Button type="button" size="icon" {...CLOSE} aria-label={t('Close')} onClick={close}>
               <X size={16} />
             </Button>
           </XStack>
           <YStack shrink={1} minH={0} overflowY="auto" px="$5" pb="$2" style={{ overscrollBehavior: 'contain' }}>
             <Paragraph size="$2" color="$aside" m={0} pb="$3">
-              {intro(strict, locked)}
-              <a href={cookies} style={INLINE}>
-                Cookie Policy
-              </a>
-              {', '}
-              <a href={privacy} style={INLINE}>
-                Privacy Policy
-              </a>
-              {', and '}
-              <a href={terms} style={INLINE}>
-                Terms of Service
-              </a>
-              .
+              {intro(t, strict, locked)}
+              {t('{cookies}, {privacy}, and {terms}.', {
+                cookies: (
+                  <a href={cookies} style={INLINE}>
+                    {t('Cookie Policy')}
+                  </a>
+                ),
+                privacy: (
+                  <a href={privacy} style={INLINE}>
+                    {t('Privacy Policy')}
+                  </a>
+                ),
+                terms: (
+                  <a href={terms} style={INLINE}>
+                    {t('Terms of Service')}
+                  </a>
+                ),
+              })}
             </Paragraph>
             {locked ? (
               <Paragraph size="$2" color="$ink" m={0} pb="$3">
-                {REFUSAL}
+                {t(REFUSAL)}
               </Paragraph>
             ) : null}
-            {kinds(brand, strict, locked).map((k) => {
+            {kinds(t, brand, strict, locked).map((k) => {
               const open = expanded[k.id] === true
               const body = `${id}-${k.id}`
               return (
@@ -586,7 +631,7 @@ const Consent = ({ cookies = 'https://hanzo.ai/cookies', privacy = 'https://hanz
                       />
                     ) : (
                       <Text fontSize="$2" fontWeight="600" color="$ink" whiteSpace="nowrap">
-                        Always Active
+                        {t('Always Active')}
                       </Text>
                     )}
                   </XStack>
@@ -605,18 +650,18 @@ const Consent = ({ cookies = 'https://hanzo.ai/cookies', privacy = 'https://hanz
                 {/* A browser that refused cannot accept here: there is nothing to accept. */}
                 {locked ? null : (
                   <Button type="button" {...SECONDARY} grow={1} onClick={done(acceptAll)}>
-                    Accept all
+                    {t('Accept all')}
                   </Button>
                 )}
                 {/* The sheet's answer: what the switches say, essential only when none is on. */}
                 <Button type="button" {...PRIMARY} grow={1} onClick={done(() => saveConsent(draft))}>
-                  Save preferences
+                  {t('Save preferences')}
                 </Button>
               </>
             ) : (
               // Each switch saved as it moved: nothing is left to save.
               <Button type="button" {...PRIMARY} grow={1} onClick={close}>
-                Done
+                {t('Done')}
               </Button>
             )}
           </XStack>
@@ -629,10 +674,22 @@ const Consent = ({ cookies = 'https://hanzo.ai/cookies', privacy = 'https://hanz
 
   // The way to the sheet on a page that draws none: small, quiet, at the foot of the window.
   const own =
-    !hosted && !shown ? (
-      <XStack {...slot('consent-choices')} position="fixed" b={EDGE.bottom} l={EDGE.left} z="var(--z-banner, 50)" px="$2.5" py="$1" bg="$background" borderWidth={1} borderColor="$borderColor" rounded={ROUND.button}>
+    floating && !hosted && !shown ? (
+      <XStack
+        {...slot('consent-choices')}
+        position="fixed"
+        b={EDGE.bottom}
+        l={EDGE.left}
+        z="var(--z-banner, 50)"
+        px="$2.5"
+        py="$1"
+        bg="$background"
+        borderWidth={1}
+        borderColor="$borderColor"
+        rounded={ROUND.button}
+      >
         <Button {...CHOICES} onClick={choose}>
-          Your Privacy Choices
+          {t('Your Privacy Choices')}
         </Button>
       </XStack>
     ) : null
@@ -642,16 +699,25 @@ const Consent = ({ cookies = 'https://hanzo.ai/cookies', privacy = 'https://hanz
   // The global notice: one line, the way to the choices, and a × that records it as seen.
   if (shown && mode === 'global')
     surface = (
-      <XStack {...frame} role="region" aria-label={tr('Cookie notice')} style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
+      <XStack {...frame} role="region" aria-label={t('Cookie notice')} style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
         <YStack shrink={1} minW={0}>
           <Paragraph size="$2" color="$ink" m={0}>
-            We use cookies to improve your experience. By continuing to browse, you agree.
+            {t('We use cookies to improve your experience. By continuing to browse, you agree.')}
           </Paragraph>
         </YStack>
         <Button {...CHOICES} onClick={choose}>
-          Your Privacy Choices
+          {t('Your Privacy Choices')}
         </Button>
-        <Button type="button" size="icon" {...CLOSE} aria-label={tr('Close')} position="absolute" t="$3" insetInlineEnd="$3" onClick={done(notice)}>
+        <Button
+          type="button"
+          size="icon"
+          {...CLOSE}
+          aria-label={t('Close')}
+          position="absolute"
+          t="$3"
+          insetInlineEnd="$3"
+          onClick={done(notice)}
+        >
           <X size={16} />
         </Button>
       </XStack>
@@ -662,25 +728,34 @@ const Consent = ({ cookies = 'https://hanzo.ai/cookies', privacy = 'https://hanz
   // the line over one row of buttons and nothing breaks mid-control.
   else if (shown && mode === 'eu')
     surface = (
-      <XStack {...frame} role="dialog" aria-label={tr('Cookie preferences')} style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$3">
-        <YStack shrink={1} minW={0}>
-          <Paragraph size="$2" color="$ink" m={0}>
-            {`Essential cookies keep ${brand} running. With your OK, optional cookies help us measure performance and ads.`}
-          </Paragraph>
-        </YStack>
-        <XStack gap="$2" marginInlineStart="auto" items="center" flexWrap="wrap">
-          <Button ref={manage as never} type="button" {...SECONDARY} onClick={choose}>
-            Manage preferences
-          </Button>
-          <Button type="button" {...PRIMARY} onClick={done(acceptAll)}>
-            Accept all
-          </Button>
-        </XStack>
-        {/* Essential cookies only: the refusal, as easy to give as Accept all. */}
-        <Button type="button" size="icon" {...CLOSE} aria-label={tr('Close and use essential cookies only')} position="absolute" t="$3" insetInlineEnd="$3" onClick={done(rejectAll)}>
-          <X size={16} />
+    <XStack {...frame} role="dialog" aria-label={t('Cookie preferences')} style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$3">
+      <YStack shrink={1} minW={0}>
+        <Paragraph size="$2" color="$ink" m={0}>
+          {t('Essential cookies keep {brand} running. With your OK, optional cookies help us measure performance and ads.', { brand })}
+        </Paragraph>
+      </YStack>
+      <XStack gap="$2" marginInlineStart="auto" items="center" flexWrap="wrap">
+        <Button ref={manage as never} type="button" {...SECONDARY} onClick={choose}>
+          {t('Manage preferences')}
+        </Button>
+        <Button type="button" {...PRIMARY} onClick={done(acceptAll)}>
+          {t('Accept all')}
         </Button>
       </XStack>
+      {/* Essential cookies only: the refusal, as easy to give as Accept all. */}
+      <Button
+        type="button"
+        size="icon"
+        {...CLOSE}
+        aria-label={t('Close and use essential cookies only')}
+        position="absolute"
+        t="$3"
+        insetInlineEnd="$3"
+        onClick={done(rejectAll)}
+      >
+        <X size={16} />
+      </Button>
+    </XStack>
     )
 
   return (
@@ -698,11 +773,12 @@ const Consent = ({ cookies = 'https://hanzo.ai/cookies', privacy = 'https://hanz
  * "Your Privacy Choices" with California's privacy options icon: the link to the
  * sheet, for a footer. A page that mounts one gets no second link from `Consent`.
  */
-const ConsentLink = ({ label = 'Your Privacy Choices' }: { label?: string }) => {
+const ConsentLink = ({ label }: { label?: string }) => {
+  const { t } = useI18n()
   useEffect(() => hold(), [])
   return (
     <Button {...slot('consent-link')} {...CHOICES} onClick={openConsent}>
-      {label}
+      {label ?? t('Your Privacy Choices')}
     </Button>
   )
 }

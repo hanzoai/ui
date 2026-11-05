@@ -1,27 +1,52 @@
 'use client'
 
 /**
- * The composer's `+`: files, then what the conversation works with — agents,
- * skills, connectors, a design system, plugins, a device — then the Research
- * and Memory switches. A row is drawn only when the surface hands it a shelf:
- * a shelf is what is there (`rows`), what picking one does, and the ways to
- * make, manage and find more. A row with nothing behind it is not drawn.
- *
- * On a laptop each shelf opens beside the menu; on a phone it is a page of the
- * same menu, with Back.
- *
- * The menu's own words are the reader's language (@hanzo/i18n `t`); what a
- * shelf holds — its rows, its links, its search and empty words — is the
- * surface's, drawn as given.
+ * The composer's `+`: rich creation & attachment tools (Add photos & files,
+ * Add from library, Create image, Add browser tabs, Web search, Deep research,
+ * Sketch, Thinking), followed by what the conversation works with — agents,
+ * skills, connectors, a design system, plugins, a device — and Memory.
  */
-import { useMemo, useState, type ReactNode } from 'react'
 import { SizableText, useMedia, XStack } from '@hanzo/gui'
 import { phrase } from '@hanzo/i18n'
-import { Blocks, Bot, Brain, Briefcase, Check, Monitor, Palette, Paperclip, Plug, Plus as PlusIcon, ScrollText, Telescope } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
+import {
+  AppWindow,
+  Blocks,
+  Bot,
+  Briefcase,
+  Brain,
+  Check,
+  Folder,
+  Globe,
+  Image as ImageIcon,
+  Monitor,
+  Palette,
+  Paperclip,
+  PenTool,
+  Plug,
+  Plus as PlusIcon,
+  ScrollText,
+  Telescope,
+} from '@hanzogui/lucide-icons-2'
+import {
+  DropdownMenu,
+  DropdownMenuBack,
+  DropdownMenuContent,
+  DropdownMenuEmpty,
+  DropdownMenuItem,
+  DropdownMenuLoading,
+  DropdownMenuPage,
+  DropdownMenuSearch,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '../backends/gui'
+import { useMemo, useState, type ReactNode } from 'react'
 
-import { DropdownMenu, DropdownMenuBack, DropdownMenuContent, DropdownMenuEmpty, DropdownMenuItem, DropdownMenuLoading, DropdownMenuPage, DropdownMenuSearch, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '../backends/gui'
-import { useTranslate } from '../i18n/react'
-import { RING } from './ring'
+import { GHOST, GLYPH, RING, STROKE } from './look'
 
 /** One thing a shelf holds. `on` marks what the conversation already has. */
 export interface Row {
@@ -60,6 +85,18 @@ export interface Switch {
 export interface PlusProps {
   /** Upload or add files (Ctrl+U). */
   upload?: () => void
+  /** Add from library. */
+  library?: () => void
+  /** Create an image. */
+  createImage?: () => void
+  /** Add or ask about browser tabs. */
+  browserTabs?: () => void
+  /** Search the web. */
+  webSearch?: () => void
+  /** Draw and attach a sketch. */
+  sketch?: () => void
+  /** Toggle extended thinking. */
+  thinking?: Switch
   agents?: Shelf
   skills?: Shelf
   connectors?: Shelf
@@ -73,62 +110,15 @@ export interface PlusProps {
   size?: number
 }
 
-const ICON = 16
+const ICON = 18
 
-/**
- * The shelves, in the menu's order, with their names and marks, and the three
- * sentences a shelf says of itself: its search's name, while it reads, and
- * when it holds nothing. Whole sentences, so a language puts the noun where it goes.
- */
 const SHELVES = [
-  {
-    key: 'agents',
-    label: phrase('Agents'),
-    search: phrase('Search agents'),
-    reading: phrase('Reading agents'),
-    none: phrase('No agents yet'),
-    icon: <Bot size={ICON} />,
-  },
-  {
-    key: 'skills',
-    label: phrase('Skills'),
-    search: phrase('Search skills'),
-    reading: phrase('Reading skills'),
-    none: phrase('No skills yet'),
-    icon: <ScrollText size={ICON} />,
-  },
-  {
-    key: 'connectors',
-    label: phrase('Connectors'),
-    search: phrase('Search connectors'),
-    reading: phrase('Reading connectors'),
-    none: phrase('No connectors yet'),
-    icon: <Blocks size={ICON} />,
-  },
-  {
-    key: 'design',
-    label: phrase('Design system'),
-    search: phrase('Search design system'),
-    reading: phrase('Reading design system'),
-    none: phrase('No design system yet'),
-    icon: <Palette size={ICON} />,
-  },
-  {
-    key: 'plugins',
-    label: phrase('Plugins'),
-    search: phrase('Search plugins'),
-    reading: phrase('Reading plugins'),
-    none: phrase('No plugins yet'),
-    icon: <Plug size={ICON} />,
-  },
-  {
-    key: 'devices',
-    label: phrase('Devices'),
-    search: phrase('Search devices'),
-    reading: phrase('Reading devices'),
-    none: phrase('No devices yet'),
-    icon: <Monitor size={ICON} />,
-  },
+  { key: 'agents', label: phrase('Agents'), note: phrase('Bring specialized agents into this chat'), search: phrase('Search agents'), reading: phrase('Reading agents'), none: phrase('No agents yet'), icon: <Bot size={ICON} /> },
+  { key: 'skills', label: phrase('Skills'), note: phrase('Use workspace skills and workflows'), search: phrase('Search skills'), reading: phrase('Reading skills'), none: phrase('No skills yet'), icon: <ScrollText size={ICON} /> },
+  { key: 'connectors', label: phrase('Connectors'), note: phrase('Sync connected knowledge sources'), search: phrase('Search connectors'), reading: phrase('Reading connectors'), none: phrase('No connectors yet'), icon: <Blocks size={ICON} /> },
+  { key: 'design', label: phrase('Design system'), note: phrase('Apply brand tokens and UI components'), search: phrase('Search design system'), reading: phrase('Reading design system'), none: phrase('No design system yet'), icon: <Palette size={ICON} /> },
+  { key: 'plugins', label: phrase('Plugins'), note: phrase('Connect external tools and APIs'), search: phrase('Search plugins'), reading: phrase('Reading plugins'), none: phrase('No plugins yet'), icon: <Plug size={ICON} /> },
+  { key: 'devices', label: phrase('Devices'), note: phrase('Run on a connected machine'), search: phrase('Search devices'), reading: phrase('Reading devices'), none: phrase('No devices yet'), icon: <Monitor size={ICON} /> },
 ] as const
 
 type Words = (typeof SHELVES)[number]
@@ -138,13 +128,13 @@ type Key = (typeof SHELVES)[number]['key']
 /** A row's anatomy: its mark, its label, a dim note, and a check when it is on. */
 function Line({ icon, label, note, on, tail }: { icon?: ReactNode; label: string; note?: string; on?: boolean; tail?: ReactNode }) {
   return (
-    <XStack flex={1} minW={0} items="center" gap={10}>
+    <XStack flex={1} minW={0} items="center" gap={10} py={1}>
       {icon ? (
-        <XStack width={ICON} height={ICON} items="center" justify="center" shrink={0} aria-hidden>
+        <XStack width={20} height={20} items="center" justify="center" shrink={0} aria-hidden>
           {icon}
         </XStack>
       ) : null}
-      <SizableText fontSize={14} color="$ink" numberOfLines={1} shrink={0}>
+      <SizableText fontSize={14} fontWeight="500" color="$ink" numberOfLines={1} shrink={0}>
         {label}
       </SizableText>
       {note ? (
@@ -155,14 +145,14 @@ function Line({ icon, label, note, on, tail }: { icon?: ReactNode; label: string
         <XStack flex={1} />
       )}
       {tail}
-      {on ? <Check size={ICON} color="var(--primary)" aria-hidden /> : null}
+      {on ? <Check size={16} color="var(--primary)" aria-hidden /> : null}
     </XStack>
   )
 }
 
 /** A shelf's rows, its status, then its ways to more. */
 function Contents({ shelf, words, close }: { shelf: Shelf; words: Words; close: () => void }) {
-  const t = useTranslate()
+  const { t } = useI18n()
   const [q, setQ] = useState('')
   const needle = q.trim().toLowerCase()
   const rows = needle ? shelf.rows.filter((r) => `${r.label} ${r.note ?? ''}`.toLowerCase().includes(needle)) : shelf.rows
@@ -179,7 +169,7 @@ function Contents({ shelf, words, close }: { shelf: Shelf; words: Words; close: 
         </DropdownMenuItem>
       ))}
       {links.length ? <DropdownMenuSeparator /> : null}
-      {links.map((l, i) => (
+      {links.map((l) => (
         <DropdownMenuItem
           key={l.label}
           onSelect={() => {
@@ -196,11 +186,10 @@ function Contents({ shelf, words, close }: { shelf: Shelf; words: Words; close: 
 
 /** The `+` and its menu. */
 export function Plus(p: PlusProps) {
-  const t = useTranslate()
+  const { t } = useI18n()
   const media = useMedia()
   const wide = media.sm
   const [open, setOpen] = useState(false)
-  // The shelf open beside the menu.
   const [sub, setSub] = useState<string | null>(null)
   const close = () => setOpen(false)
   const shelves = useMemo(() => SHELVES.filter((s) => p[s.key as Key]), [p])
@@ -233,46 +222,143 @@ export function Plus(p: PlusProps) {
             p.upload?.()
           }}
         >
-          <Line icon={<Paperclip size={ICON} />} label={t('Upload or add files')} tail={<DropdownMenuShortcut data-i18n-ltr>Ctrl+U</DropdownMenuShortcut>} />
+          <Line icon={<Paperclip size={ICON} />} label={t('Add photos & files')} note={t('Upload from computer')} tail={<DropdownMenuShortcut data-i18n-ltr>Ctrl+U</DropdownMenuShortcut>} />
         </DropdownMenuItem>
       ) : null}
-      {p.upload && shelves.length ? <DropdownMenuSeparator /> : null}
+      {p.library ? (
+        <DropdownMenuItem
+          data-slot="plus-library"
+          onSelect={() => {
+            close()
+            p.library?.()
+          }}
+        >
+          <Line icon={<Folder size={ICON} />} label={t('Add from library')} note={t('Browse and search your files')} />
+        </DropdownMenuItem>
+      ) : null}
+      {p.createImage ? (
+        <DropdownMenuItem
+          data-slot="plus-create-image"
+          onSelect={() => {
+            close()
+            p.createImage?.()
+          }}
+        >
+          <Line icon={<ImageIcon size={ICON} color="var(--primary)" />} label={t('Create image')} note={t('Visualize anything')} />
+        </DropdownMenuItem>
+      ) : null}
+      {p.browserTabs ? (
+        <DropdownMenuItem
+          data-slot="plus-browser-tabs"
+          onSelect={() => {
+            close()
+            p.browserTabs?.()
+          }}
+        >
+          <Line icon={<AppWindow size={ICON} color="var(--primary)" />} label={t('Add browser tabs')} note={t('Ask about your open tabs')} />
+        </DropdownMenuItem>
+      ) : null}
+      {p.webSearch ? (
+        <DropdownMenuItem
+          data-slot="plus-web-search"
+          onSelect={() => {
+            close()
+            p.webSearch?.()
+          }}
+        >
+          <Line icon={<Globe size={ICON} color="var(--primary)" />} label={t('Web search')} note={t('Find real-time news and info')} />
+        </DropdownMenuItem>
+      ) : null}
+      {p.research ? (
+        <DropdownMenuItem
+          preventCloseOnSelect
+          onSelect={() => p.research!.set(!p.research!.on)}
+          role="menuitemcheckbox"
+          aria-checked={p.research.on}
+          data-slot="plus-research"
+        >
+          <Line icon={<Telescope size={ICON} color="var(--primary)" />} label={t('Deep research')} note={t('Get a detailed report')} on={p.research.on} />
+        </DropdownMenuItem>
+      ) : null}
+      {p.sketch ? (
+        <DropdownMenuItem
+          data-slot="plus-sketch"
+          onSelect={() => {
+            close()
+            p.sketch?.()
+          }}
+        >
+          <Line icon={<PenTool size={ICON} color="var(--primary)" />} label={t('Sketch')} note={t('Draw and attach an image')} />
+        </DropdownMenuItem>
+      ) : null}
+      {p.thinking ? (
+        <DropdownMenuItem
+          preventCloseOnSelect
+          onSelect={() => p.thinking!.set(!p.thinking!.on)}
+          role="menuitemcheckbox"
+          aria-checked={p.thinking.on}
+          data-slot="plus-thinking"
+        >
+          <Line icon={<Brain size={ICON} />} label={t('Thinking')} note={t('For detailed answers')} on={p.thinking.on} />
+        </DropdownMenuItem>
+      ) : null}
+      {shelves.length ? <DropdownMenuSeparator /> : null}
       {shelves.map((s) =>
         wide ? (
-          <DropdownMenuSub key={s.key} open={sub === s.key} onOpenChange={(o) => setSub(o ? s.key : sub === s.key ? null : sub)}>
+          <DropdownMenuSub key={s.key} open={sub === s.key} onOpenChange={(o: boolean) => setSub(o ? s.key : sub === s.key ? null : sub)}>
             <DropdownMenuSubTrigger data-slot={`plus-${s.key}`} onPress={() => setSub(s.key)}>
-              <Line icon={s.icon} label={t(s.label)} />
+              <Line icon={s.icon} label={t(s.label)} note={t(s.note)} />
             </DropdownMenuSubTrigger>
-            {/* Drawn only while open: a closed shelf stays laid out under the menu, and its rows would take its clicks. */}
             {sub === s.key ? (
-              <DropdownMenuSubContent minW={200} maxW={340} maxH={420} pointerEvents="auto" style={{ overflowY: 'auto' }}>
+              <DropdownMenuSubContent minW={240} maxW={360} maxH={420} pointerEvents="auto" style={{ overflowY: 'auto' }}>
                 <Contents shelf={p[s.key as Key]!} words={s} close={close} />
               </DropdownMenuSubContent>
             ) : null}
           </DropdownMenuSub>
         ) : (
           <DropdownMenuItem key={s.key} page={s.key} data-slot={`plus-${s.key}`}>
-            <Line icon={s.icon} label={t(s.label)} />
+            <Line icon={s.icon} label={t(s.label)} note={t(s.note)} />
           </DropdownMenuItem>
         )
       )}
-      {switches.length && (p.upload || shelves.length) ? <DropdownMenuSeparator /> : null}
-      {switches.map((w) => (
-        <DropdownMenuItem key={w.key} preventCloseOnSelect onSelect={() => w.s.set(!w.s.on)} role={'menuitemcheckbox' as never} aria-checked={w.s.on} data-slot={`plus-${w.key}`}>
-          <Line icon={w.icon} label={w.label} on={w.s.on} />
+      {p.memory ? <DropdownMenuSeparator /> : null}
+      {p.memory ? (
+        <DropdownMenuItem
+          preventCloseOnSelect
+          onSelect={() => p.memory!.set(!p.memory!.on)}
+          role="menuitemcheckbox"
+          aria-checked={p.memory.on}
+          data-slot="plus-memory"
+        >
+          <Line icon={<Brain size={ICON} />} label={t('Memory')} note={t('Remember context across chats')} on={p.memory.on} />
         </DropdownMenuItem>
-      ))}
+      ) : null}
     </>
   )
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen} {...(wide ? null : { defaultPage: 'main' })}>
       <DropdownMenuTrigger asChild disabled={p.disabled}>
-        <XStack render="button" data-slot="plus" aria-label={t('Add files, agents, skills and more')} width={p.size ?? 36} height={p.size ?? 36} rounded={999} items="center" justify="center" shrink={0} cursor={p.disabled ? 'default' : 'pointer'} opacity={p.disabled ? 0.4 : 1} bg={open ? '$hover' : 'transparent'} hoverStyle={{ bg: '$hover' }} focusVisibleStyle={RING}>
-          <PlusIcon size={18} color="$ink" />
+        <XStack
+          render="button"
+          data-slot="plus"
+          aria-label={t('Add files, agents, skills and more')}
+          width={p.size ?? 36}
+          height={p.size ?? 36}
+          rounded={999}
+          items="center"
+          justify="center"
+          shrink={0}
+          cursor={p.disabled ? 'default' : 'pointer'}
+          opacity={p.disabled ? 0.4 : 1}
+          {...GHOST}
+          {...(open ? { bg: '$hover', color: '$ink' } : null)}
+          focusVisibleStyle={RING}
+        >
+          <PlusIcon size={GLYPH} strokeWidth={STROKE} color="currentColor" />
         </XStack>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" minW={240} data-slot="plus-menu">
+      <DropdownMenuContent align="start" minW={360} maxW={440} data-slot="plus-menu">
         {wide ? (
           main
         ) : (

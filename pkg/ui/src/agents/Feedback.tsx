@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useRef, useState, type ComponentProps } from 'react'
 /**
  * Feedback — copy a reply, and say whether it was good.
  *
@@ -14,10 +13,11 @@ import { useEffect, useRef, useState, type ComponentProps } from 'react'
  */
 import { XStack } from '@hanzo/gui'
 import { Check, Copy, ThumbsDown, ThumbsUp } from '@hanzogui/lucide-icons-2'
+import { type ComponentProps, useEffect, useRef, useState } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Button } from '../backends/gui/button'
 import { slot } from '../backends/gui/slot'
-import { useTranslate } from '../i18n/react'
 
 type Row = Omit<ComponentProps<typeof XStack>, 'children'>
 
@@ -32,7 +32,7 @@ export interface FeedbackProps extends Row {
 }
 
 export function Feedback({ text, verdict, onVerdict, ...rest }: FeedbackProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [held, setHeld] = useState<Verdict>(null)
   const [copied, setCopied] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -71,14 +71,28 @@ export function Feedback({ text, verdict, onVerdict, ...rest }: FeedbackProps) {
   return (
     <XStack {...slot('feedback')} items="center" gap={2} {...rest}>
       {text ? (
-        <Button {...icon} aria-label={copied ? 'Copied' : 'Copy reply'} title={copied ? 'Copied' : 'Copy'} onClick={copy}>
+        <Button {...icon} aria-label={copied ? t('Copied') : t('Copy reply')} title={copied ? t('Copied') : t('Copy')} onClick={copy}>
           {copied ? <Check size={13} /> : <Copy size={13} />}
         </Button>
       ) : null}
-      <Button {...icon} aria-label={tr('Good result')} title="Good result" aria-pressed={current === 'up'} bg={current === 'up' ? '$raised' : 'transparent'} onClick={() => judge('up')}>
+      <Button
+        {...icon}
+        aria-label={t('Good result')}
+        title={t('Good result')}
+        aria-pressed={current === 'up'}
+        bg={current === 'up' ? '$raised' : 'transparent'}
+        onClick={() => judge('up')}
+      >
         <ThumbsUp size={13} />
       </Button>
-      <Button {...icon} aria-label={tr('Bad result')} title="Bad result" aria-pressed={current === 'down'} bg={current === 'down' ? '$raised' : 'transparent'} onClick={() => judge('down')}>
+      <Button
+        {...icon}
+        aria-label={t('Bad result')}
+        title={t('Bad result')}
+        aria-pressed={current === 'down'}
+        bg={current === 'down' ? '$raised' : 'transparent'}
+        onClick={() => judge('down')}
+      >
         <ThumbsDown size={13} />
       </Button>
     </XStack>

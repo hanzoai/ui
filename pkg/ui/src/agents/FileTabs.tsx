@@ -1,6 +1,5 @@
 'use client'
 
-import { useRef, type ComponentProps, type KeyboardEvent, type ReactNode } from 'react'
 /**
  * FileTabs — the open files, one tab each, over the editor.
  *
@@ -18,11 +17,12 @@ import { useRef, type ComponentProps, type KeyboardEvent, type ReactNode } from 
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
+import { type ComponentProps, type KeyboardEvent, type ReactNode, useRef } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { CodeEditor } from '../backends/gui/code-editor'
 import { along } from '../backends/gui/dir'
 import { slot } from '../backends/gui/slot'
-import { useTranslate } from '../i18n/react'
 import { glyph } from './FileTree'
 import { base, language } from './tree'
 
@@ -55,7 +55,7 @@ export interface FileTabsProps extends Col {
 }
 
 export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...rest }: FileTabsProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const tabs = useRef<(HTMLElement | null)[]>([])
   const shown = files.find((f) => f.path === value) ?? files[0]
 
@@ -63,7 +63,7 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
     return (
       <YStack {...slot('file-tabs')} flex={1} minH={0} items="center" justify="center" p="$4" {...rest}>
         <SizableText size="$2" color="$soft" text="center">
-          {empty ?? 'Open a file to see it here.'}
+          {empty ?? t('Open a file to see it here.')}
         </SizableText>
       </YStack>
     )
@@ -88,7 +88,16 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
   const editable = Boolean(onChange) && !shown.readOnly
   return (
     <YStack {...slot('file-tabs')} flex={1} minH={0} minW={0} {...rest}>
-      <XStack role="tablist" aria-label={tr('Open files')} items="stretch" minH={36} shrink={0} overflow="scroll" borderBottomWidth={1} borderColor="$borderColor">
+      <XStack
+        role="tablist"
+        aria-label={t('Open files')}
+        items="stretch"
+        minH={36}
+        shrink={0}
+        overflow="scroll"
+        borderBottomWidth={1}
+        borderColor="$borderColor"
+      >
         {files.map((file, index) => {
           const on = file.path === shown.path
           const name = base(file.path)
@@ -108,7 +117,7 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
               } as object)}
               role="tab"
               aria-selected={on}
-              aria-label={file.dirty ? `${file.path}, unsaved` : file.path}
+              aria-label={file.dirty ? t('{path}, unsaved', { path: file.path }) : file.path}
               tabIndex={on ? 0 : -1}
               onPress={() => onSelect(file.path)}
               onKeyDown={((e: KeyboardEvent) => move(e, index)) as never}
@@ -176,7 +185,7 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
         ) : shown.content === undefined ? (
           <YStack flex={1} items="center" justify="center" p="$4">
             <SizableText size="$2" color="$soft">
-              Reading {base(shown.path)}…
+              {t('Reading {name}…', { name: base(shown.path) })}
             </SizableText>
           </YStack>
         ) : (

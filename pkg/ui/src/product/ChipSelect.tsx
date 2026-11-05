@@ -37,6 +37,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui/popover'
 import { RING } from '../backends/gui/press'
@@ -147,12 +148,16 @@ const CHIP_H = 24
 const BARE = 30
 
 /**
- * The height of the row a chip stands in, px: the composer's pills, which stand
- * as tall as its round controls. There a labelled chip is a pill — fully round,
- * a hairline, no fill — so the pills and the controls read as one set. Outside
- * that row, the 24px chip.
+ * The height of the row a chip stands in, px: the line of words under the
+ * composer's frame. There a labelled chip is a WORD — its label in the full ink
+ * at the 14px rung and a small chevron, no edge and no fill until a pointer
+ * gives it the soft hover ground — so where a run goes and the model, the
+ * effort and the mode read as one quiet line. Outside that row, the 24px chip.
  */
 export const Pills = createContext<number | null>(null)
+
+/** A word's own gutter, px: its ground under a pointer reaches this far past its letters. */
+const WORD_GUTTER = 5
 
 
 const MOVES = new Set<Move>(['ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 'PageUp'])
@@ -177,6 +182,7 @@ interface Pages<T> {
  */
 function usePages<T extends ChipItem>(load: ChipLoad<T> | undefined, q: string, delay: number, on: boolean, view?: string) {
   const [state, setState] = useState<Pages<T>>({ rows: [], next: null, loading: false, error: null })
+  const { t } = useI18n()
   const generation = useRef(0)
   const busy = useRef(false)
   // The loader is read at call time, not taken as a dependency: a host that
@@ -209,11 +215,11 @@ function usePages<T extends ChipItem>(load: ChipLoad<T> | undefined, q: string, 
         setState((s) => ({
           ...s,
           loading: false,
-          error: err instanceof Error && err.message ? err.message : 'Could not load the list.',
+          error: err instanceof Error && err.message ? err.message : t('Could not load the list.'),
         }))
       },
     )
-  }, [])
+  }, [t])
 
   const live = Boolean(load)
 
@@ -252,8 +258,8 @@ export function ChipSelect<T extends ChipItem>({
   loading: loadingProp = false,
   error: errorProp = null,
   delay = 200,
-  placeholder = 'Search…',
-  empty = 'No matches.',
+  placeholder: hint,
+  empty: none,
   footer,
   cta,
   action,
@@ -270,8 +276,11 @@ export function ChipSelect<T extends ChipItem>({
   onOpenChange,
 }: ChipSelectProps<T>) {
   const bare = !label
+  const { t } = useI18n()
   const row = useContext(Pills)
   const pill = row !== null && !bare && !quiet
+  const placeholder = hint ?? t('Search…')
+  const empty = none ?? t('No matches.')
   const [own, setOwn] = useState(false)
   const open = openProp ?? own
   const setOpen = useCallback(
@@ -541,19 +550,19 @@ export function ChipSelect<T extends ChipItem>({
           {...tip(name)}
           role="button"
           tabIndex={disabled ? -1 : 0}
-          aria-label={bare ? name : `${name}: ${label}`}
+          aria-label={bare ? name : t('{label}: {value}', { label: name, value: label })}
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-controls={open ? listId : undefined}
           aria-disabled={disabled || undefined}
           height={pill ? row : CHIP_H}
-          rounded={pill ? 999 : '$2'}
+          rounded={pill ? 8 : '$2'}
           // A chip of its icon alone stands with the composer's round controls, round as they are.
-          {...(bare ? { width: box, height: box, justify: 'center', rounded: 999 } : { px: pill ? 12 : '$2' })}
-          gap="$1.5"
+          {...(bare ? { width: box, height: box, justify: 'center', rounded: 999 } : { px: pill ? WORD_GUTTER : '$2' })}
+          gap={pill ? 4 : '$1.5'}
           items="center"
           shrink={0}
-          borderWidth={quiet ? 0 : 1}
+          borderWidth={quiet || pill ? 0 : 1}
           borderColor="$borderColor"
           bg={quiet || pill ? 'transparent' : '$raised'}
           cursor={disabled ? 'default' : 'pointer'}
@@ -571,7 +580,7 @@ export function ChipSelect<T extends ChipItem>({
             </XStack>
           ) : null}
           {bare ? null : (
-            <SizableText size="$2" color={quiet ? '$quiet' : '$ink'} numberOfLines={1} maxW={200}>
+            <SizableText size={pill ? '$3' : '$2'} color={quiet ? '$quiet' : '$ink'} numberOfLines={1} maxW={200}>
               {label}
             </SizableText>
           )}
@@ -621,7 +630,7 @@ export function ChipSelect<T extends ChipItem>({
           <YStack
             {...slot('chip-select-list')}
             id={listId}
-            role="listbox"
+            {...({ role: 'listbox' } as object)}
             aria-label={name}
             gap="$0"
           >
@@ -645,7 +654,7 @@ export function ChipSelect<T extends ChipItem>({
                   cursor={item.disabled ? 'default' : 'pointer'}
                   opacity={item.disabled ? 0.5 : 1}
                   bg={on ? '$raised' : 'transparent'}
-                  onHoverIn={() => setAt(i)}
+                  {...({ onHoverIn: () => setAt(i) } as object)}
                   onPress={() => choose(item)}
                 >
                   {item.icon ? (
@@ -653,9 +662,21 @@ export function ChipSelect<T extends ChipItem>({
                       {item.icon}
                     </XStack>
                   ) : null}
-                  <SizableText size="$2" color="$ink" numberOfLines={1} flex={1} minW={0}>
-                    {item.label}
-                  </SizableText>
+                  {item.tail ? (
+                    // The label gives way first: its tail (a repository's `/name`) is the part that tells rows apart.
+                    <XStack flex={1} minW={0} items="center">
+                      <SizableText size="$2" color="$ink" numberOfLines={1} shrink={1} minW={0}>
+                        {item.label}
+                      </SizableText>
+                      <SizableText {...slot('chip-select-tail')} size="$2" color="$ink" numberOfLines={1} shrink={0} maxW="100%">
+                        {item.tail}
+                      </SizableText>
+                    </XStack>
+                  ) : (
+                    <SizableText size="$2" color="$ink" numberOfLines={1} flex={1} minW={0}>
+                      {item.label}
+                    </SizableText>
+                  )}
                   {item.hint ? (
                     <SizableText size="$1" color="$soft" numberOfLines={1} shrink={0}>
                       {item.hint}
@@ -710,14 +731,14 @@ export function ChipSelect<T extends ChipItem>({
                     pages.retry()
                   }}
                 >
-                  Retry
+                  {t('Retry')}
                 </SizableText>
               ) : null}
             </XStack>
           ) : loading ? (
             <XStack {...slot('chip-select-loading')} px="$2" height={ROW_H} items="center" role="status">
               <SizableText size="$2" color="$soft">
-                {rows.length ? 'Loading more…' : 'Loading…'}
+                {rows.length ? t('Loading more…') : t('Loading…')}
               </SizableText>
             </XStack>
           ) : rows.length === 0 ? (

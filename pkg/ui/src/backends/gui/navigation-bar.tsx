@@ -1,7 +1,5 @@
 'use client'
 
-import type { ReactNode } from 'react'
-import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
 /**
  * NavigationBar — the top bar of a page, in the shapes real products use.
  *
@@ -14,9 +12,11 @@ import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
  * options. Every variant is the same frame wearing different content, so a
  * caller changing `variant` keeps the same height, border and props shape.
  */
-import { Bell, ChevronDown, ChevronRight, MessageSquare, Phone, Search, ShoppingCart, User, Users, Video } from '@hanzogui/lucide-icons-2'
+import { ChevronRight, ChevronDown, Search, Bell, ShoppingCart, User, Users, Phone, Video, MessageSquare } from '@hanzogui/lucide-icons-2'
+import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
+import type { ReactNode } from 'react'
 
-import { useTranslate } from '../../i18n/react'
 import { Avatar, AvatarFallback, AvatarImage } from './avatar'
 import { Badge } from './badge'
 import { Button } from './button'
@@ -134,8 +134,28 @@ export type NavigationBarProps = {
   children?: ReactNode
 }
 
-export function NavigationBar({ variant = 'simple', logo, items = [], leftItems = [], rightItems = [], title, user, collaborators = [], cartCount = 0, contactName, options = [], value, onValueChange, onSearch, onNotifications, onCall, onVideo, onMessage, children }: NavigationBarProps) {
-  const tr = useTranslate()
+export function NavigationBar({
+  variant = 'simple',
+  logo,
+  items = [],
+  leftItems = [],
+  rightItems = [],
+  title,
+  user,
+  collaborators = [],
+  cartCount = 0,
+  contactName,
+  options = [],
+  value,
+  onValueChange,
+  onSearch,
+  onNotifications,
+  onCall,
+  onVideo,
+  onMessage,
+  children,
+}: NavigationBarProps) {
+  const { t } = useI18n()
   const height = variant === 'breadcrumb' ? BREADCRUMB_HEIGHT : HEIGHT
 
   return (
@@ -168,10 +188,10 @@ export function NavigationBar({ variant = 'simple', logo, items = [], leftItems 
         <>
           {ink(title, SizableText, { size: '$5', fontWeight: '600' })}
           <XStack items="center" gap="$3">
-            <IconButton aria-label={tr('Search')} onPress={onSearch}>
+            <IconButton aria-label={t('Search')} onPress={onSearch}>
               <Search size={18} />
             </IconButton>
-            <IconButton aria-label={tr('Notifications')} onPress={onNotifications}>
+            <IconButton aria-label={t('Notifications')} onPress={onNotifications}>
               <Bell size={18} />
             </IconButton>
             {user ? (
@@ -187,14 +207,14 @@ export function NavigationBar({ variant = 'simple', logo, items = [], leftItems 
           {ink(logo, SizableText, { fontWeight: '700' })}
           <Links items={items} />
           <XStack items="center" gap="$1">
-            <IconButton aria-label={tr('Search')} onPress={onSearch}>
+            <IconButton aria-label={t('Search')} onPress={onSearch}>
               <Search size={18} />
             </IconButton>
-            <IconButton aria-label={tr('Account')}>
+            <IconButton aria-label={t('Account')}>
               <User size={18} />
             </IconButton>
             <XStack position="relative">
-              <IconButton aria-label={tr('Cart')}>
+              <IconButton aria-label={t('Cart')}>
                 <ShoppingCart size={18} />
               </IconButton>
               {cartCount > 0 ? (
@@ -217,13 +237,13 @@ export function NavigationBar({ variant = 'simple', logo, items = [], leftItems 
         <>
           {ink(contactName, SizableText, { size: '$4', fontWeight: '600' })}
           <XStack items="center" gap="$1">
-            <IconButton aria-label={tr('Call')} onPress={onCall}>
+            <IconButton aria-label={t('Call')} onPress={onCall}>
               <Phone size={18} />
             </IconButton>
-            <IconButton aria-label={tr('Video call')} onPress={onVideo}>
+            <IconButton aria-label={t('Video call')} onPress={onVideo}>
               <Video size={18} />
             </IconButton>
-            <IconButton aria-label={tr('Message')} onPress={onMessage}>
+            <IconButton aria-label={t('Message')} onPress={onMessage}>
               <MessageSquare size={18} />
             </IconButton>
           </XStack>
@@ -234,7 +254,7 @@ export function NavigationBar({ variant = 'simple', logo, items = [], leftItems 
             trigger={
               <Button variant="outline" data-slot="navigation-bar-switcher-trigger">
                 {options.find((o) => o.id === value)?.icon}
-                {options.find((o) => o.id === value)?.label ?? 'Select'}
+                {options.find((o) => o.id === value)?.label ?? t('Select')}
                 <ChevronDown size={14} />
               </Button>
             }

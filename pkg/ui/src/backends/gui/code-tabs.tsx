@@ -8,6 +8,7 @@
  */
 import { SizableText, YStack } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { CodeBlock, type CodeBlockSize, type CodeBlockTheme } from './code-block'
 import { slot } from './slot'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs'
@@ -41,11 +42,12 @@ export function CodeTabs({
   maxHeight,
   ...props
 }: CodeTabsProps) {
+  const { t } = useI18n()
   if (tabs.length === 0) {
     return (
       <YStack {...slot('code-tabs')} borderWidth={1} rounded="$4" p="$6" bg="$panel">
         <SizableText size="$2" color="$soft">
-          No code tabs available. Add tabs to display code snippets.
+          {t('No code tabs available. Add tabs to display code snippets.')}
         </SizableText>
       </YStack>
     )

@@ -1,6 +1,5 @@
 'use client'
 
-import type { ComponentProps } from 'react'
 /**
  * MessageDock — a fixed stack of dismissable status cards, anchored to a
  * corner or edge of the viewport (`top`, `bottom`, `top-end`, `bottom-end`, and
@@ -17,8 +16,8 @@ import type { ComponentProps } from 'react'
  */
 import { createStyledContext, SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
-
-import { useTranslate } from '../../i18n/react'
+import type { ComponentProps } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Button } from './button'
 import { touch } from './gesture'
 import { ink } from './ink'
@@ -144,10 +143,10 @@ export type MessageDockProps = Omit<ComponentProps<typeof DockFrame>, 'anchor' |
 
 function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: MessageDockProps) {
   const resolved = position ?? 'bottom-end'
+  const { t } = useI18n()
   return (
     <DockFrame {...slot('message-dock')} data-position={resolved} anchor={resolved} {...props}>
       {messages.map((message) => {
-        const tr = useTranslate()
         const type = message.type ?? 'default'
         return (
           <CardFrame key={message.id} {...slot('message-dock-card')} data-message-id={message.id} data-type={type} type={type} role="status">
@@ -163,7 +162,19 @@ function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: M
                 ) : null}
               </YStack>
               {onClose ? (
-                <Button {...slot('message-dock-card-close')} variant="ghost" size="icon" minH={CLOSE} minW={CLOSE} {...touch(CLOSE)} position="absolute" t="$3" insetInlineEnd="$3" aria-label={tr('Close')} onPress={() => onClose(message.id)}>
+                <Button
+                  {...slot('message-dock-card-close')}
+                  variant="ghost"
+                  size="icon"
+                  minH={CLOSE}
+                  minW={CLOSE}
+                  {...touch(CLOSE)}
+                  position="absolute"
+                  t="$3"
+                  insetInlineEnd="$3"
+                  aria-label={t('Close')}
+                  onPress={() => onClose(message.id)}
+                >
                   <X size={16} />
                 </Button>
               ) : null}

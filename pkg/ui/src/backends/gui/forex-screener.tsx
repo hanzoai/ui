@@ -17,6 +17,7 @@
  * without the key a changed `market` would leave the old table on screen.
  */
 import { YStack, isWeb, type YStackProps } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 
 /**
@@ -110,6 +111,7 @@ const ForexScreener = ({
     width,
     height,
   })
+  const { t } = useI18n()
   const src = `${EMBED}${s.locale}#${encodeURIComponent(JSON.stringify(s))}`
   return (
     <YStack
@@ -129,7 +131,7 @@ const ForexScreener = ({
         <iframe
           key={src}
           src={src}
-          title={`${market ?? 'forex'} screener`}
+          title={t('{market} screener', { market: market ?? 'forex' })}
           loading="lazy"
           scrolling="no"
           style={{ display: 'block', width: '100%', height: '100%', border: 0 }}

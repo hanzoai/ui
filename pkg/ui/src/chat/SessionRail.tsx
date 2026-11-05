@@ -47,6 +47,7 @@ import {
   Search,
   X,
 } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 import { useId, useRef, useState, type ComponentProps, type ReactNode } from 'react'
 
 import { Button } from '../backends/gui/button'
@@ -278,6 +279,7 @@ function Who({ account, rail }: { account: RailAccount; rail: boolean }) {
   const row = useRef<HTMLElement | null>(null)
   const menu = hasMenu(account)
   const acts = menu || Boolean(account.onPress)
+  const { t } = useI18n()
   const said = account.sub ? `${account.name} · ${account.sub}` : account.name
 
   const face = (
@@ -339,7 +341,7 @@ function Who({ account, rail }: { account: RailAccount; rail: boolean }) {
 
   if (!menu)
     return account.onPress ? (
-      <XStack {...look} {...press(account.onPress)} aria-label={`Account: ${said}`}>
+      <XStack {...look} {...press(account.onPress)} aria-label={t('Account: {name}', { name: said })}>
         {body}
       </XStack>
     ) : (
@@ -362,7 +364,7 @@ function Who({ account, rail }: { account: RailAccount; rail: boolean }) {
           {...look}
           role="button"
           tabIndex={0}
-          aria-label={`Account: ${said}`}
+          aria-label={t('Account: {name}', { name: said })}
           aria-haspopup="menu"
           aria-expanded={open}
           // The trigger opens on a press; the keyboard is this row's own (gui
@@ -379,7 +381,7 @@ function Who({ account, rail }: { account: RailAccount; rail: boolean }) {
       <PopoverContent
         {...slot('rail-menu')}
         role="menu"
-        aria-label="Account"
+        aria-label={t('Account')}
         sideOffset={6}
         // A menu's rows run its full width; gui's popper centres children.
         // 260 fits a 390 phone's drawer, and the popper keeps it in frame.
@@ -412,19 +414,19 @@ function Contents({
   brand,
   onBrand,
   onSearch,
-  searchLabel = 'Search',
+  searchLabel: searchLabelGiven,
   onNew,
-  newLabel = 'New',
+  newLabel: newLabelGiven,
   fresh = false,
   links = [],
   more = [],
-  moreLabel = 'More',
+  moreLabel: moreLabelGiven,
   recents,
-  recentsLabel = 'Recents',
+  recentsLabel: recentsLabelGiven,
   active = null,
   onOpen,
   onSort,
-  sortLabel = 'Sort and filter',
+  sortLabel: sortLabelGiven,
   empty,
   notice,
   account,
@@ -433,6 +435,13 @@ function Contents({
   mark,
   rail,
 }: SessionRailProps & { rail: boolean }) {
+  const { t } = useI18n()
+  // A host's own words are drawn as given; what it leaves out, in the reader's language.
+  const searchLabel = searchLabelGiven ?? t('Search')
+  const newLabel = newLabelGiven ?? t('New')
+  const moreLabel = moreLabelGiven ?? t('More')
+  const recentsLabel = recentsLabelGiven ?? t('Recents')
+  const sortLabel = sortLabelGiven ?? t('Sort and filter')
   const [unfolded, setUnfolded] = useState(false)
   const id = useId()
   const moreId = `${id}-more`
@@ -445,7 +454,7 @@ function Contents({
         // one, the panel glyph otherwise. It is never hover — it is a press.
         <YStack items="center" gap="$1" pb="$1">
           <SidebarIconButton
-            label="Expand sidebar"
+            label={t('Expand sidebar')}
             width={36}
             height={36}
             onPress={() => onCollapse?.(false)}
@@ -603,7 +612,7 @@ function Contents({
       >
         {account ? <Who account={account} rail={rail} /> : <XStack flex={1} />}
         {onCollapse && !rail ? (
-          <SidebarIconButton label="Collapse sidebar" onPress={() => onCollapse(!collapsed)}>
+          <SidebarIconButton label={t('Collapse sidebar')} onPress={() => onCollapse(!collapsed)}>
             <PanelLeft {...mirror} size={16} />
           </SidebarIconButton>
         ) : null}
@@ -624,10 +633,12 @@ export function SessionRail(props: SessionRailProps) {
     // column as a stray DOM attribute through `rest`.
     brand, onBrand, onSearch, searchLabel, onNew, newLabel, fresh, links, more, moreLabel,
     recents, recentsLabel, active, onOpen, onSort, sortLabel, empty, notice, account,
-    collapsed = false, onCollapse, mark, open = false, onOpenChange, label = 'Sessions',
+    collapsed = false, onCollapse, mark, open = false, onOpenChange, label: named,
     width = WIDTH,
     ...rest
   } = props
+  const { t } = useI18n()
+  const label = named ?? t('Sessions')
   const rail = collapsed
   // Where focus was when the drawer opened — the phone bar's menu button — and
   // where it goes back to when the drawer closes, by Escape or by a choice. A
@@ -763,9 +774,11 @@ export function RailNotice({
   action,
   onAction,
   onDismiss,
-  dismissLabel = 'Dismiss',
+  dismissLabel: dismissGiven,
   ...rest
 }: RailNoticeProps) {
+  const { t } = useI18n()
+  const dismissLabel = dismissGiven ?? t('Dismiss')
   const id = useId()
   return (
     <XStack
@@ -847,13 +860,16 @@ export interface RailBarProps extends Row {
  */
 export function RailBar({
   onMenu,
-  menuLabel = 'Open menu',
+  menuLabel: menuGiven,
   brand,
   onBrand,
   onSearch,
-  searchLabel = 'Search',
+  searchLabel: searchGiven,
   ...rest
 }: RailBarProps) {
+  const { t } = useI18n()
+  const menuLabel = menuGiven ?? t('Open menu')
+  const searchLabel = searchGiven ?? t('Search')
   return (
     <XStack
       {...slot('rail-bar')}

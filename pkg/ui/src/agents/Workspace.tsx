@@ -48,6 +48,8 @@ import {
   type Ref,
   useRef,
 } from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Button } from '../backends/gui/button'
 import { slot } from '../backends/gui/slot'
@@ -95,6 +97,7 @@ export function Workspace({
   ...rest
 }: WorkspaceProps) {
   const chatShown = pane === 'chat'
+  const { t } = useI18n()
   return (
     <YStack
       {...slot('workspace')}
@@ -144,7 +147,7 @@ export function Workspace({
         <YStack
           {...slot('workspace-chat')}
           render="section"
-          aria-label="Chat"
+          aria-label={t('Chat')}
           display={chatShown ? 'flex' : 'none'}
           width="100%"
           minH={0}
@@ -183,19 +186,19 @@ export interface View {
 
 /** The builder's four views, as v2's pane list named and drew them. */
 export const VIEWS: readonly View[] = [
-  { id: 'preview', label: 'Preview', icon: Globe },
-  { id: 'files', label: 'Files', icon: FileText },
-  { id: 'code', label: 'Code', icon: Code2 },
-  { id: 'layers', label: 'Layers', icon: Layers },
+  { id: 'preview', label: phrase('Preview'), icon: Globe },
+  { id: 'files', label: phrase('Files'), icon: FileText },
+  { id: 'code', label: phrase('Code'), icon: Code2 },
+  { id: 'layers', label: phrase('Layers'), icon: Layers },
 ]
 
 /** The phone's extra view: the chat itself, one pane at a time. */
-export const CHAT: View = { id: 'chat', label: 'Chat', icon: MessageSquare, narrow: true }
+export const CHAT: View = { id: 'chat', label: phrase('Chat'), icon: MessageSquare, narrow: true }
 
 /** The preview's two widths. */
 export const DEVICES: readonly View[] = [
-  { id: 'desktop', label: 'Desktop', icon: Monitor },
-  { id: 'mobile', label: 'Mobile', icon: Smartphone },
+  { id: 'desktop', label: phrase('Desktop'), icon: Monitor },
+  { id: 'mobile', label: phrase('Mobile'), icon: Smartphone },
 ]
 
 export interface ViewsProps extends Omit<ComponentProps<typeof XStack>, 'children' | 'onChange'> {
@@ -216,6 +219,7 @@ export interface ViewsProps extends Omit<ComponentProps<typeof XStack>, 'childre
  */
 export function Views({ views, value, onChange, label, labels = 'active', ...rest }: ViewsProps) {
   const refs = useRef<(HTMLElement | null)[]>([])
+  const { t } = useI18n()
   const move = (e: KeyboardEvent, index: number) => {
     const last = views.length - 1
     const key = along(e)
@@ -258,8 +262,8 @@ export function Views({ views, value, onChange, label, labels = 'active', ...res
             size={words ? 'sm' : 'icon-sm'}
             role="tab"
             aria-selected={on}
-            aria-label={view.label}
-            title={view.label}
+            aria-label={t(view.label)}
+            title={t(view.label)}
             tabIndex={on ? 0 : -1}
             onClick={() => onChange(view.id)}
             onKeyDown={(e: KeyboardEvent) => move(e, index)}
@@ -275,7 +279,7 @@ export function Views({ views, value, onChange, label, labels = 'active', ...res
             {Icon ? <Icon size={15} /> : null}
             {words ? (
               <SizableText size="$2" color={on ? '$ink' : '$soft'}>
-                {view.label}
+                {t(view.label)}
               </SizableText>
             ) : null}
           </Button>
@@ -302,13 +306,14 @@ export interface ProjectChipProps extends Omit<ComponentProps<typeof XStack>, 'c
  */
 export function ProjectChip({ name, mark, onPress, ref, ...rest }: ProjectChipProps) {
   const initial = name.trim().charAt(0).toUpperCase() || '·'
+  const { t } = useI18n()
   return (
     <XStack
       ref={ref as never}
       {...slot('project-chip')}
       render="button"
       {...({ type: 'button', 'aria-haspopup': 'menu' } as object)}
-      aria-label={`Project: ${name}`}
+      aria-label={t('Project: {name}', { name })}
       onPress={onPress}
       items="center"
       gap="$2"

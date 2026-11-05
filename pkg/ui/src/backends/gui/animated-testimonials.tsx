@@ -11,10 +11,9 @@
  * remounts the card and `data-motion="rise"` (styles/motion.css) plays. The outgoing
  * card unmounts with no exit.
  */
+import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import * as React from 'react'
-import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
-
-import { useTranslate } from '../../i18n/react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Avatar, AvatarFallback, AvatarImage } from './avatar'
 import { Card, CardContent } from './card'
 import { touch } from './gesture'
@@ -84,7 +83,7 @@ export type AnimatedTestimonialsProps = Omit<React.ComponentProps<typeof Frame>,
 }
 
 export function AnimatedTestimonials({ testimonials, autoPlay = true, duration = 5000, ...props }: AnimatedTestimonialsProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [activeIndex, setActiveIndex] = React.useState(0)
 
   React.useEffect(() => {
@@ -132,8 +131,18 @@ export function AnimatedTestimonials({ testimonials, autoPlay = true, duration =
       )}
 
       <XStack {...slot('animated-testimonials-dots')} justify="center" gap="$2">
-        {testimonials.map((t, i) => (
-          <Dot key={t.id} {...slot('animated-testimonials-dot')} render={<button type="button" />} active={i === index} aria-label={tr('Go to testimonial {n}', { n: i + 1 })} aria-current={i === index} style={{ transition: 'width .3s ease, background-color .3s ease' }} onPress={() => setActiveIndex(i)} {...touch(DOT, 44)} />
+        {testimonials.map((item, i) => (
+          <Dot
+            key={item.id}
+            {...slot('animated-testimonials-dot')}
+            render={<button type="button" />}
+            active={i === index}
+            aria-label={t('Go to testimonial {n}', { n: i + 1 })}
+            aria-current={i === index}
+            style={{ transition: 'width .3s ease, background-color .3s ease' }}
+            onPress={() => setActiveIndex(i)}
+            {...touch(DOT, 44)}
+          />
         ))}
       </XStack>
     </Frame>

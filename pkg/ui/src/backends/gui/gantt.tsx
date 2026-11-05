@@ -8,9 +8,8 @@
  * it renders on web, native (expo) and Tauri. An empty task list renders a
  * placeholder rather than nothing.
  */
-import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
-
-import { useLocale, useTranslate } from '../../i18n/react'
+import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { ink } from './ink'
 import { slot } from './slot'
 
@@ -56,14 +55,12 @@ export type GanttProps = Omit<import('react').ComponentProps<typeof GanttFrame>,
 }
 
 export function Gantt({ tasks = [], ...props }: GanttProps) {
-  const tr = useTranslate()
-  const { active, locale } = useLocale()
-  const when = (d: Date) => d.toLocaleDateString(active ? locale : undefined)
+  const { t, format } = useI18n()
   return (
     <GanttFrame {...slot('gantt')} {...props}>
       {tasks.length === 0 ? (
         <XStack {...slot('gantt-empty')} items="center" justify="center" p="$8">
-          {ink(tr('No tasks available. Add tasks to display Gantt chart.'), SizableText, {
+          {ink(t('No tasks available. Add tasks to display Gantt chart.'), SizableText, {
             size: '$2',
             color: '$quiet',
           })}
@@ -88,11 +85,11 @@ export function Gantt({ tasks = [], ...props }: GanttProps) {
                   <BarFrame {...slot('gantt-bar')} width={`${progress}%`} />
                 </TrackFrame>
                 <XStack justify="space-between">
-                  {ink(when(task.start), SizableText, {
+                  {ink(format.date(task.start), SizableText, {
                     size: '$1',
                     color: '$quiet',
                   })}
-                  {ink(when(task.end), SizableText, {
+                  {ink(format.date(task.end), SizableText, {
                     size: '$1',
                     color: '$quiet',
                   })}

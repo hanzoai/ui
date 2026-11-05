@@ -16,8 +16,8 @@ import { useCallback, useState, type ReactNode } from 'react'
  */
 import { SizableText, YStack } from '@hanzo/gui'
 import { Code, Lock } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
-import { useTranslate } from '../i18n/react'
 import { ChipSelect, type ChipAction, type ChipPlacement, type ChipTab } from './ChipSelect'
 import type { ChipItem, ChipPage } from './chipSelect.logic'
 
@@ -76,13 +76,24 @@ export interface RepoSelectProps {
 /** `owner/name`, from whichever the host has. */
 export const address = (repo: Repo): string => repo.full_name || `${repo.owner}/${repo.name}`
 
-const item = (repo: Repo): RepoItem => ({
-  id: address(repo),
-  label: address(repo),
-  hint: repo.private ? 'Private' : undefined,
-  icon: repo.private ? <Lock size={12} color="$soft" /> : <Code size={12} color="$soft" />,
-  repo,
-})
+/**
+ * A row reads as the whole address, but its `/name` is the tail, so a narrow list
+ * cuts the owner short and keeps the name: a host that writes the address with
+ * its git host (`github.com/owner/name`) would otherwise show every row of one
+ * owner as the same `github.com/owner…`.
+ */
+const item = (repo: Repo): RepoItem => {
+  const whole = address(repo)
+  const cut = whole.lastIndexOf('/')
+  return {
+    id: whole,
+    label: cut > 0 ? whole.slice(0, cut) : whole,
+    tail: cut > 0 ? whole.slice(cut) : undefined,
+    hint: repo.private ? 'Private' : undefined,
+    icon: repo.private ? <Lock size={12} color="$soft" /> : <Code size={12} color="$soft" />,
+    repo,
+  }
+}
 
 /**
  * Whether an address may be followed from here: a path on this origin, or
@@ -123,8 +134,23 @@ export function FooterLink({ label, href, onPress }: RepoLink) {
   )
 }
 
-export function RepoSelect({ value = null, onChange, load, troubleshoot, note, connect, action, tabs, placeholder = 'Repository', placement, disabled, open, onOpenChange }: RepoSelectProps) {
-  const tr = useTranslate()
+export function RepoSelect({
+  value = null,
+  onChange,
+  load,
+  troubleshoot,
+  note: given,
+  connect,
+  action,
+  tabs,
+  placeholder,
+  placement,
+  disabled,
+  open,
+  onOpenChange,
+}: RepoSelectProps) {
+  const { t } = useI18n()
+  const note = given ?? t('Not all repositories are shown. Type to search.')
   const [tab, setTab] = useState(tabs?.[0]?.id)
   const every = !tabs?.length || tab === tabs[0]!.id
   const pages = useCallback(
@@ -146,15 +172,15 @@ export function RepoSelect({ value = null, onChange, load, troubleshoot, note, c
 
   return (
     <ChipSelect<RepoItem>
-      name="Repository"
+      name={t('Repository')}
       icon={<Code size={12} color="$soft" />}
-      label={value ? value.name : placeholder}
+      label={value ? value.name : (placeholder ?? t('Repository'))}
       // On another tab the chosen row is not pinned: the tab lists what it says, and the check is on the tab the repository belongs to.
       chosen={value && (every || value.source === tab) ? item(value) : null}
       onChange={(i) => onChange(i.repo)}
       load={pages}
-      placeholder={tr('Search repositories…')}
-      empty="No repositories match."
+      placeholder={t('Search repositories…')}
+      empty={t('No repositories match.')}
       cta={connect}
       action={act}
       tabs={tabs}

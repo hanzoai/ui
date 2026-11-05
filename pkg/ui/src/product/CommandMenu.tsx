@@ -35,13 +35,13 @@
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Input, ScrollView, Text, XStack, YStack } from '@hanzo/gui'
 import { ChevronRight, Search } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { score, step } from '../backends/gui/command.logic'
 import { mirror } from '../backends/gui/dir'
 import { Kbd } from '../backends/gui/kbd'
 import { Shortcut, type ShortcutKeys } from '../backends/gui/shortcut'
 import { slot } from '../backends/gui/slot'
-import { useTranslate } from '../i18n/react'
 import { usePane } from './DetailPane'
 
 export type CommandMenuItem = {
@@ -107,8 +107,21 @@ type Key = {
   stopPropagation: () => void
 }
 
-export function CommandMenu({ groups, placeholder = 'Search or jump to…', empty = 'No results found', label = 'Commands', query: controlled, onQueryChange, onBack, onClose, autoFocus = true }: CommandMenuProps) {
-  const tr = useTranslate()
+export function CommandMenu({
+  groups,
+  placeholder: hint,
+  empty: none,
+  label: named,
+  query: controlled,
+  onQueryChange,
+  onBack,
+  onClose,
+  autoFocus = true,
+}: CommandMenuProps) {
+  const { t } = useI18n()
+  const placeholder = hint ?? t('Search or jump to…')
+  const empty = none ?? t('No results found')
+  const label = named ?? t('Commands')
   const pane = usePane()
   const base = useId()
   const [own, setOwn] = useState('')
@@ -213,20 +226,20 @@ export function CommandMenu({ groups, placeholder = 'Search or jump to…', empt
           placeholder={placeholder}
           placeholderTextColor="$hint"
           value={query}
-          onChangeText={(t: string) => {
-            setQuery(t)
+          onChangeText={(text: string) => {
+            setQuery(text)
             setActive(undefined)
           }}
           onKeyDown={onKey as never}
         />
         {close ? (
-          <XStack render="button" aria-label={tr('Close')} onPress={close} shrink={0} items="center" justify="center" cursor="pointer" opacity={0.7} hoverStyle={{ opacity: 1 }}>
+          <XStack render="button" aria-label={t('Close')} onPress={close} shrink={0} items="center" justify="center" cursor="pointer" opacity={0.7} hoverStyle={{ opacity: 1 }}>
             {/* A phone has no Escape key: it says Cancel. */}
             <XStack $max-md={{ display: 'none' }}>
               <Kbd>esc</Kbd>
             </XStack>
             <Text display="none" $max-md={{ display: 'flex' }} fontSize="$4" color="$ink">
-              Cancel
+              {t('Cancel')}
             </Text>
           </XStack>
         ) : null}
@@ -242,7 +255,7 @@ export function CommandMenu({ groups, placeholder = 'Search or jump to…', empt
                     {g.label}
                   </Text>
                 </XStack>
-                <YStack role="listbox" aria-labelledby={head}>
+                <YStack {...({ role: 'listbox' } as object)} aria-labelledby={head}>
                   {g.items.map((it, i) => {
                     const on = current?.id === it.id
                     return (
@@ -265,7 +278,7 @@ export function CommandMenu({ groups, placeholder = 'Search or jump to…', empt
                         cursor={it.disabled ? 'default' : 'pointer'}
                         opacity={it.disabled ? 0.5 : 1}
                         bg={on ? '$hover' : 'transparent'}
-                        onHoverIn={it.disabled ? undefined : () => setActive(it.id)}
+                        {...({ onHoverIn: it.disabled ? undefined : () => setActive(it.id) } as object)}
                         onPress={it.disabled ? undefined : it.onSelect}
                         style={i === 0 ? { scrollMarginTop: COMMAND.header + COMMAND.pad } : undefined}
                       >

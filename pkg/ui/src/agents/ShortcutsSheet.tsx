@@ -1,6 +1,7 @@
 import React from 'react'
-
-import { useTranslate } from '../i18n/react'
+import { Text } from '@hanzo/gui'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 
 export interface ShortcutItem {
   key: string
@@ -16,52 +17,35 @@ export interface ShortcutsSheetProps {
   style?: React.CSSProperties
 }
 
+/** How a category heading reads. */
+const CATEGORY: Record<ShortcutItem['category'], string> = {
+  navigation: phrase('navigation'),
+  actions: phrase('actions'),
+  tools: phrase('tools'),
+  workspace: phrase('workspace'),
+}
+
 const DEFAULT_SHORTCUTS: ShortcutItem[] = [
-  {
-    key: '⌘ + K',
-    description: 'Open Command Palette & Global Search',
-    category: 'navigation',
-  },
-  {
-    key: '⌘ + /',
-    description: 'Open Keyboard Shortcuts Sheet',
-    category: 'navigation',
-  },
-  {
-    key: '⌘ + .',
-    description: 'Toggle Live AI Voice Call',
-    category: 'actions',
-  },
-  {
-    key: '⌘ + J',
-    description: 'Toggle Artifacts Inspector & Code Diff',
-    category: 'workspace',
-  },
-  {
-    key: '⌘ + I',
-    description: 'Toggle Intelligence Dock (Channels & Roster)',
-    category: 'workspace',
-  },
-  {
-    key: '⌘ + B',
-    description: 'Toggle Left Channels & Conversation Rail',
-    category: 'workspace',
-  },
-  {
-    key: '⌘ + N',
-    description: 'Create New Conversation or Channel',
-    category: 'actions',
-  },
-  {
-    key: 'Esc',
-    description: 'Close Active Modal / Clear Selection',
-    category: 'actions',
-  },
+  { key: '⌘ + K', description: phrase('Open Command Palette & Global Search'), category: 'navigation' },
+  { key: '⌘ + /', description: phrase('Open Keyboard Shortcuts Sheet'), category: 'navigation' },
+  { key: '⌘ + .', description: phrase('Toggle Live AI Voice Call'), category: 'actions' },
+  { key: '⌘ + J', description: phrase('Toggle Artifacts Inspector & Code Diff'), category: 'workspace' },
+  { key: '⌘ + I', description: phrase('Toggle Intelligence Dock (Channels & Roster)'), category: 'workspace' },
+  { key: '⌘ + B', description: phrase('Toggle Left Channels & Conversation Rail'), category: 'workspace' },
+  { key: '⌘ + N', description: phrase('Create New Conversation or Channel'), category: 'actions' },
+  { key: 'Esc', description: phrase('Close Active Modal / Clear Selection'), category: 'actions' },
 ]
 
-export const ShortcutsSheet: React.FC<ShortcutsSheetProps> = ({ shortcuts = DEFAULT_SHORTCUTS, onClose, open = true, className = '', style }) => {
-  const tr = useTranslate()
+export const ShortcutsSheet: React.FC<ShortcutsSheetProps> = ({
+  shortcuts: given,
+  onClose,
+  open = true,
+  className = '',
+  style,
+}) => {
+  const { t } = useI18n()
   if (!open) return null
+  const shortcuts = given ?? DEFAULT_SHORTCUTS.map((s) => ({ ...s, description: t(s.description) }))
 
   const categories = Array.from(new Set(shortcuts.map((s) => s.category)))
 
@@ -94,7 +78,7 @@ export const ShortcutsSheet: React.FC<ShortcutsSheetProps> = ({ shortcuts = DEFA
           ...style,
         }}
         onClick={(e) => e.stopPropagation()}
-        aria-label={tr('Keyboard Shortcuts')}
+        aria-label={t('Keyboard Shortcuts')}
       >
         <div
           style={{
@@ -107,16 +91,9 @@ export const ShortcutsSheet: React.FC<ShortcutsSheetProps> = ({ shortcuts = DEFA
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 18 }}>⌨️</span>
-            <h2
-              style={{
-                fontSize: 14,
-                fontWeight: 600,
-                color: '#ffffff',
-                margin: 0,
-              }}
-            >
-              Keyboard Shortcuts
-            </h2>
+            <Text render="h2" fontSize={14} fontWeight="600" color={'#ffffff' as never} m={0}>
+              {t('Keyboard Shortcuts')}
+            </Text>
           </div>
           {onClose && (
             <button
@@ -131,7 +108,7 @@ export const ShortcutsSheet: React.FC<ShortcutsSheetProps> = ({ shortcuts = DEFA
                 cursor: 'pointer',
               }}
             >
-              Close (Esc)
+              {t('Close ({key})', { key: 'Esc' })}
             </button>
           )}
         </div>
@@ -148,17 +125,8 @@ export const ShortcutsSheet: React.FC<ShortcutsSheetProps> = ({ shortcuts = DEFA
         >
           {categories.map((cat) => (
             <div key={cat} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <h3
-                style={{
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: '#a3a3a3',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  margin: 0,
-                }}
-              >
-                {cat}
+              <h3 style={{ fontSize: 11, fontWeight: 600, color: '#a3a3a3', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
+                {CATEGORY[cat] ? t(CATEGORY[cat]) : cat}
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {shortcuts

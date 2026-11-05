@@ -7,14 +7,16 @@
  */
 import { TABULAR } from '../figures'
 import { Text, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import type { SocialSummary } from './api'
 
 export function SocialSummaryBar({ summary }: { summary: SocialSummary }) {
+  const { t } = useI18n()
   const cells: { label: string; value: number }[] = [
-    { label: 'Posts', value: summary.posts },
-    { label: 'Scheduled', value: summary.scheduled },
-    { label: 'Published', value: summary.published },
-    { label: 'Accounts', value: summary.accounts },
+    { label: t('Posts'), value: summary.posts },
+    { label: t('Scheduled'), value: summary.scheduled },
+    { label: t('Published'), value: summary.published },
+    { label: t('Accounts'), value: summary.accounts },
   ]
   return (
     <XStack gap="$3" flexWrap="wrap">

@@ -14,6 +14,7 @@
 import { XStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Badge, type BadgeVariant } from './badge'
 import { Tag as Coloured, type Tag } from './tag'
 import { slot } from './slot'
@@ -30,6 +31,7 @@ export type TagsProps = Omit<ComponentProps<typeof XStack>, 'children'> & {
 const REMOVE = 16
 
 export function Tags({ tags, onRemove, variant = 'default', ...props }: TagsProps) {
+  const { t } = useI18n()
   return (
     <XStack {...slot('tags')} flexWrap="wrap" gap="$2" {...props}>
       {tags.map((tag) => {
@@ -45,7 +47,7 @@ export function Tags({ tags, onRemove, variant = 'default', ...props }: TagsProp
               opacity={0.7}
               hoverStyle={{ opacity: 1, bg: '$hover' }}
               {...touch(REMOVE)}
-              aria-label={`Remove ${tag.label}`}
+              aria-label={t('Remove {name}', { name: tag.label })}
               onPress={() => onRemove(tag.id)}
             >
               <X size={12} />

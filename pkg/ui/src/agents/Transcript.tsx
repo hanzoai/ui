@@ -15,6 +15,7 @@
  */
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { useEffect, useRef, type ComponentProps, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { slot } from '../backends/gui/slot'
 
@@ -74,6 +75,7 @@ export interface TranscriptProps extends Scroll {
 
 export function Transcript({ blocks, follow = true, header, empty, ...rest }: TranscriptProps) {
   const foot = useRef<HTMLDivElement | null>(null)
+  const { t } = useI18n()
   useEffect(() => {
     if (follow) foot.current?.scrollIntoView({ block: 'end' })
   }, [blocks.length, follow])
@@ -85,7 +87,7 @@ export function Transcript({ blocks, follow = true, header, empty, ...rest }: Tr
         {!blocks.length
           ? empty ?? (
               <SizableText size="$2" color="$soft">
-                Nothing yet.
+                {t('Nothing yet.')}
               </SizableText>
             )
           : blocks.map((block) => (

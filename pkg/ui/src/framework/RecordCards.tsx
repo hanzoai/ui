@@ -16,13 +16,14 @@
  * behaves identically in both, and search is the pure `searchRecords` — no second
  * filtering model.
  */
-import { useMemo, useState, type ReactNode } from 'react'
 import { FieldDisplay, searchRecords, type FieldDefinition } from '@hanzo/data'
-import { Card, Input, Text, XStack, YStack } from '@hanzo/gui'
+import { useMemo, useState, type ReactNode } from 'react'
+import { Input, Text, XStack, YStack } from '@hanzo/gui'
+import { Plate as Card } from '../backends/gui/plate'
 import { ChevronRight, Search } from '@hanzogui/lucide-icons-2'
+import { useI18n, type Say } from '@hanzo/i18n/react'
 
 import { mirror } from '../backends/gui/dir'
-import { useTranslate } from '../i18n/react'
 import { Action, Loading, Meta, WRAP_ANYWHERE } from './parts'
 
 export interface RecordCardsProps {
@@ -43,16 +44,27 @@ export interface RecordCardsProps {
 }
 
 /** The headline for a card: the title field, else the record key. */
-function headline(record: Record<string, unknown>, titleField?: string): string {
-  const t = titleField ? record[titleField] : undefined
-  if (typeof t === 'string' && t.trim()) return t
-  if (typeof t === 'number') return String(t)
+function headline(record: Record<string, unknown>, t: Say, titleField?: string): string {
+  const title = titleField ? record[titleField] : undefined
+  if (typeof title === 'string' && title.trim()) return title
+  if (typeof title === 'number') return String(title)
   const name = record.name ?? record.id
-  return typeof name === 'string' && name ? name : 'Untitled'
+  return typeof name === 'string' && name ? name : t('Untitled')
 }
 
-export function RecordCards({ titleField, fields, cardFields, records, loading, empty, onOpen, onCreate, createLabel = 'New record', toolbarExtra }: RecordCardsProps) {
-  const tr = useTranslate()
+export function RecordCards({
+  titleField,
+  fields,
+  cardFields,
+  records,
+  loading,
+  empty,
+  onOpen,
+  onCreate,
+  createLabel,
+  toolbarExtra,
+}: RecordCardsProps) {
+  const { t } = useI18n()
   const [query, setQuery] = useState('')
   const visible = useMemo(() => searchRecords(records, query, fields), [records, query, fields])
 
@@ -63,24 +75,35 @@ export function RecordCards({ titleField, fields, cardFields, records, loading, 
       <YStack gap="$2" width="100%">
         <XStack items="center" gap="$2" px="$3" minH={44} rounded="$3" borderWidth={1} borderColor="$borderColor" width="100%">
           <Search size={15} opacity={0.6} />
-          <Input unstyled flex={1} minW={0} height={42} fontSize="$3" color="$color12" placeholder={tr('Search')} value={query} onChangeText={setQuery} autoCapitalize="none" />
+          <Input
+            unstyled
+            flex={1}
+            minW={0}
+            height={42}
+            fontSize="$3"
+            color="$color12"
+            placeholder={t('Search')}
+            value={query}
+            onChangeText={setQuery}
+            autoCapitalize="none"
+          />
         </XStack>
         <XStack gap="$2" items="center" flexWrap="wrap" width="100%">
           {onCreate ? (
             <Action phone primary onPress={onCreate}>
-              {createLabel}
+              {createLabel ?? t('New record')}
             </Action>
           ) : null}
           {toolbarExtra}
         </XStack>
       </YStack>
 
-      {loading ? <Loading label="Loading records…" /> : null}
+      {loading ? <Loading label={t('Loading records…')} /> : null}
 
       {!loading && visible.length === 0 ? (
         <Card borderWidth={1} borderColor="$borderColor" p="$4" width="100%">
           <Text fontSize="$3" color="$color10">
-            {query ? `No records match “${query}”.` : (empty ?? 'No records yet.')}
+            {query ? t('No records match “{query}”.', { query }) : empty ?? t('No records yet.')}
           </Text>
         </Card>
       ) : null}
@@ -93,7 +116,7 @@ export function RecordCards({ titleField, fields, cardFields, records, loading, 
               <YStack gap="$2" width="100%">
                 <XStack items="center" gap="$2" width="100%">
                   <Text fontSize="$4" fontWeight="700" flex={1} minW={0} numberOfLines={2}>
-                    {headline(rec, titleField)}
+                    {headline(rec, t, titleField)}
                   </Text>
                   {onOpen ? <ChevronRight {...mirror} size={16} opacity={0.5} /> : null}
                 </XStack>
@@ -118,8 +141,9 @@ export function RecordCards({ titleField, fields, cardFields, records, loading, 
 
       {visible.length ? (
         <Meta>
-          {visible.length} of {records.length} record
-          {records.length === 1 ? '' : 's'}
+          {records.length === 1
+            ? t('{shown} of {total} record', { shown: visible.length, total: records.length })
+            : t('{shown} of {total} records', { shown: visible.length, total: records.length })}
         </Meta>
       ) : null}
     </YStack>

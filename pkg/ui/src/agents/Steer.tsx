@@ -16,6 +16,8 @@
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { Bot, Pause, Play, Square, User, Zap } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps, ReactNode } from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { slot, tip } from '../backends/gui/slot'
 
@@ -25,9 +27,9 @@ type Row = Omit<ComponentProps<typeof XStack>, 'children'>
 export type Command = 'pause' | 'resume' | 'stop'
 
 const CONTROLS: { command: Command; label: string; icon: typeof Pause }[] = [
-  { command: 'pause', label: 'Pause', icon: Pause },
-  { command: 'resume', label: 'Resume', icon: Play },
-  { command: 'stop', label: 'Stop', icon: Square },
+  { command: 'pause', label: phrase('Pause'), icon: Pause },
+  { command: 'resume', label: phrase('Resume'), icon: Play },
+  { command: 'stop', label: phrase('Stop'), icon: Square },
 ]
 
 export interface SteerProps extends Row {
@@ -45,6 +47,7 @@ export interface SteerProps extends Row {
 }
 
 export function Steer({ onCommand, withhold = [], note, ...rest }: SteerProps) {
+  const { t } = useI18n()
   return (
     <YStack {...slot('steer')} gap="$1">
       <XStack gap="$1" items="center" {...rest}>
@@ -63,14 +66,14 @@ export function Steer({ onCommand, withhold = [], note, ...rest }: SteerProps) {
               role="button"
               tabIndex={off ? -1 : 0}
               aria-disabled={off}
-              aria-label={label}
-              {...tip(label)}
+              aria-label={t(label)}
+              {...tip(t(label))}
               hoverStyle={off ? undefined : { bg: '$hover', opacity: 1 }}
               pressStyle={off ? undefined : { bg: '$raised' }}
               onPress={() => !off && onCommand?.(command)}
             >
               <Icon size={13} />
-              <SizableText size="$1">{label}</SizableText>
+              <SizableText size="$1">{t(label)}</SizableText>
             </XStack>
           )
         })}

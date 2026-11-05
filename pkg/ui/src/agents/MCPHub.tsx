@@ -1,6 +1,5 @@
 import React from 'react'
-
-import { useTranslate } from '../i18n/react'
+import { useI18n } from '@hanzo/i18n/react'
 
 export interface MCPServerInfo {
   id: string
@@ -20,8 +19,15 @@ export interface MCPHubProps {
   style?: React.CSSProperties
 }
 
-export const MCPHub: React.FC<MCPHubProps> = ({ servers, onConnectServer, onDisconnectServer, onOpenSettings, className = '', style }) => {
-  const tr = useTranslate()
+export const MCPHub: React.FC<MCPHubProps> = ({
+  servers,
+  onConnectServer,
+  onDisconnectServer,
+  onOpenSettings,
+  className = '',
+  style,
+}) => {
+  const { t } = useI18n()
   return (
     <div
       style={{
@@ -34,7 +40,7 @@ export const MCPHub: React.FC<MCPHubProps> = ({ servers, onConnectServer, onDisc
         borderRadius: 16,
         ...style,
       }}
-      aria-label={tr('MCP Server Hub')}
+      aria-label={t('MCP Server Hub')}
     >
       <div
         style={{
@@ -45,27 +51,9 @@ export const MCPHub: React.FC<MCPHubProps> = ({ servers, onConnectServer, onDisc
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 18 }}>🔌</span>
-          <h3
-            style={{
-              fontSize: 14,
-              fontWeight: 600,
-              color: '#ffffff',
-              margin: 0,
-            }}
-          >
-            Model Context Protocol (MCP)
-          </h3>
-          <span
-            style={{
-              padding: '2px 6px',
-              borderRadius: 9999,
-              fontSize: 10,
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              color: '#d4d4d4',
-              fontFamily: 'monospace',
-            }}
-          >
-            {servers.length} Active
+          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#ffffff', margin: 0 }}>Model Context Protocol (MCP)</h3>
+          <span style={{ padding: '2px 6px', borderRadius: 9999, fontSize: 10, backgroundColor: 'rgba(255, 255, 255, 0.1)', color: '#d4d4d4', fontFamily: 'monospace' }}>
+            {t('{n} Active', { n: servers.length })}
           </span>
         </div>
 
@@ -83,7 +71,7 @@ export const MCPHub: React.FC<MCPHubProps> = ({ servers, onConnectServer, onDisc
               cursor: 'pointer',
             }}
           >
-            Manage Servers
+            {t('Manage Servers')}
           </button>
         )}
       </div>
@@ -152,32 +140,16 @@ export const MCPHub: React.FC<MCPHubProps> = ({ servers, onConnectServer, onDisc
                     cursor: 'pointer',
                   }}
                 >
-                  {isConnected ? 'Disconnect' : 'Connect'}
+                  {isConnected ? t('Disconnect') : t('Connect')}
                 </button>
               </div>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                <span
-                  style={{
-                    fontSize: 11,
-                    color: '#a3a3a3',
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    padding: '2px 6px',
-                    borderRadius: 4,
-                  }}
-                >
-                  🛠️ {server.toolsCount} tools
+                <span style={{ fontSize: 11, color: '#a3a3a3', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '2px 6px', borderRadius: 4 }}>
+                  🛠️ {t('{n} tools', { n: server.toolsCount })}
                 </span>
-                <span
-                  style={{
-                    fontSize: 11,
-                    color: '#a3a3a3',
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    padding: '2px 6px',
-                    borderRadius: 4,
-                  }}
-                >
-                  📦 {server.resourcesCount} resources
+                <span style={{ fontSize: 11, color: '#a3a3a3', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '2px 6px', borderRadius: 4 }}>
+                  📦 {t('{n} resources', { n: server.resourcesCount })}
                 </span>
               </div>
             </div>

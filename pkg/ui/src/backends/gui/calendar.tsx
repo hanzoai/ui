@@ -20,9 +20,9 @@ import type { KeyboardEvent } from 'react'
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import type { GuiElement } from '@hanzo/gui'
 import { ChevronLeft, ChevronRight } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Cell, Grid } from '../../grid'
-import { useTranslate } from '../../i18n/react'
 import { sx } from '../../sx'
 import { Button } from './button'
 import { along, mirror } from './dir'
@@ -130,7 +130,7 @@ const step = (k: string, d: Date, weekStartsOn: Weekday): Date | undefined => {
 }
 
 function Calendar(props: CalendarProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const { month: monthProp, defaultMonth, onMonthChange, numberOfMonths = 1, weekStartsOn = 0, showOutsideDays = true, disabled, initialFocus, className } = props
 
   const [own, setOwn] = useState(() => first(defaultMonth ?? new Date()))
@@ -139,7 +139,7 @@ function Calendar(props: CalendarProps) {
   const grid = months.map((m) => cells(m, weekStartsOn, showOutsideDays))
   const inside = (d?: Date): d is Date => !!d && at(d) >= at(head) && at(d) < at(first(head, numberOfMonths))
   const shown = (d: Date) => grid.some((g) => g.some((c) => same(c, d)))
-  const labels = [...WEEKDAYS.slice(weekStartsOn), ...WEEKDAYS.slice(0, weekStartsOn)].map((day) => tr(day))
+  const labels = [...WEEKDAYS.slice(weekStartsOn), ...WEEKDAYS.slice(0, weekStartsOn)].map((day) => t(day))
   const today = new Date()
   const range: CalendarRange = props.mode === 'range' ? (props.selected ?? {}) : {}
 
@@ -180,17 +180,29 @@ function Calendar(props: CalendarProps) {
           <XStack {...slot('calendar-caption')} items="center" justify="space-between">
             <YStack width={32}>
               {i === 0 && (
-                <Button {...slot('calendar-nav-previous')} aria-label={tr('Previous month')} variant="outline" size="icon-sm" onClick={() => navigate(-1)}>
+                <Button
+                  {...slot('calendar-nav-previous')}
+                  aria-label={t('Previous month')}
+                  variant="outline"
+                  size="icon-sm"
+                  onClick={() => navigate(-1)}
+                >
                   <ChevronLeft {...mirror} size={16} />
                 </Button>
               )}
             </YStack>
             <SizableText {...slot('calendar-caption-label')} size="$3" fontWeight="500">
-              {tr(MONTHS[m.getMonth()]!)} {m.getFullYear()}
+              {t(MONTHS[m.getMonth()]!)} {m.getFullYear()}
             </SizableText>
             <YStack width={32} items="flex-end">
               {i === months.length - 1 && (
-                <Button {...slot('calendar-nav-next')} aria-label={tr('Next month')} variant="outline" size="icon-sm" onClick={() => navigate(1)}>
+                <Button
+                  {...slot('calendar-nav-next')}
+                  aria-label={t('Next month')}
+                  variant="outline"
+                  size="icon-sm"
+                  onClick={() => navigate(1)}
+                >
                   <ChevronRight {...mirror} size={16} />
                 </Button>
               )}

@@ -96,6 +96,84 @@ describe('Picker', () => {
     expect(el).toMatch(/_lh-16px/)
     expect(el).toMatch(/_bg-panel/)
   })
+
+  it('gives each choosable option the field’s own ink, and leaves a disabled hint the select’s', () => {
+    const out = html(
+      <Picker aria-label="x" value="" color="$placeholderColor" onChange={() => {}}>
+        <option value="" disabled>
+          Choose
+        </option>
+        {['a', 'b'].map((v) => (
+          <option key={v} value={v}>
+            {v.toUpperCase()}
+          </option>
+        ))}
+      </Picker>,
+    )
+    const options = [...out.matchAll(/<option[^>]*>[^<]*<\/option>/g)].map((m) => m[0])
+    expect(options).toHaveLength(3)
+    expect(options[0]).not.toMatch(/_col-/)
+    expect(options[1]).toMatch(/value="a"[^>]*_col-color|_col-color[^>]*value="a"/)
+    expect(options[2]).toMatch(/>B<\/option>/)
+    expect(options[2]).toMatch(/_col-color/)
+  })
+})
+
+describe('Picker placeholder', () => {
+  const options = (markup: string) => markup.match(/<option[^>]*>[^<]*<\/option>/g) ?? []
+
+  it('shows the hint dim while nothing is chosen, and every choice at full ink', () => {
+    const markup = html(
+      <Picker aria-label="Team size" placeholder="Choose" value="" onChange={() => {}}>
+        <option value="1">Just me</option>
+        <option value="10">2-10</option>
+      </Picker>,
+    )
+    expect(tag(markup, 'picker')).toMatch(/_col-placeholder/)
+    const [hint, ...rest] = options(markup)
+    expect(hint).toMatch(/value=""/)
+    expect(hint).toMatch(/disabled/)
+    expect(hint).toMatch(/>Choose</)
+    expect(rest).toHaveLength(2)
+    for (const o of rest) expect(o).toMatch(/_col-color/)
+    expect(rest[0]).toMatch(/value="1"/)
+    expect(rest[0]).toMatch(/>Just me</)
+  })
+
+  it('takes the field ink once a choice is made', () => {
+    const markup = html(
+      <Picker aria-label="Team size" placeholder="Choose" value="10" onChange={() => {}}>
+        <option value="10">2-10</option>
+      </Picker>,
+    )
+    expect(tag(markup, 'picker')).toMatch(/_col-color/)
+    expect(tag(markup, 'picker')).not.toMatch(/_col-placeholder/)
+  })
+
+  it('a `color` is the field\'s ink: the choice and the list, never the hint', () => {
+    const markup = html(
+      <Picker aria-label="Team size" placeholder="Choose" value="" color="$ink" onChange={() => {}}>
+        <option value="1">Just me</option>
+      </Picker>,
+    )
+    expect(tag(markup, 'picker')).toMatch(/_col-placeholder/)
+    expect(options(markup)[1]).toMatch(/_col-ink/)
+    const chosen = html(
+      <Picker aria-label="Team size" placeholder="Choose" value="1" color="$ink" onChange={() => {}}>
+        <option value="1">Just me</option>
+      </Picker>,
+    )
+    expect(tag(chosen, 'picker')).toMatch(/_col-ink/)
+  })
+
+  it('without one, the options are the caller\'s own', () => {
+    const markup = html(
+      <Picker aria-label="x" defaultValue="a">
+        <option value="a">A</option>
+      </Picker>,
+    )
+    expect(options(markup)).toEqual(['<option value="a" selected="">A</option>'])
+  })
 })
 
 describe('the open list', () => {

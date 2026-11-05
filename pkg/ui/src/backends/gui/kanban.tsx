@@ -1,6 +1,5 @@
 'use client'
 
-import * as React from 'react'
 /**
  * Kanban — a board of columns holding draggable cards, with search, column
  * limits, labels, priority, assignee and due date, and a create/edit dialog.
@@ -13,10 +12,11 @@ import * as React from 'react'
  * `@dnd-kit` in this workspace and none is needed for a same-tab reorder.
  */
 import { isWeb, SizableText, styled, XStack, YStack } from '@hanzo/gui'
-import { Calendar, MoreHorizontal, Plus, Search, User, X } from '@hanzogui/lucide-icons-2'
-
-import { useTranslate } from '../../i18n/react'
 import { sx } from '../../sx'
+import { Calendar, MoreHorizontal, Plus, Search, User, X } from '@hanzogui/lucide-icons-2'
+import * as React from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 import { Badge } from './badge'
 import { Button } from './button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './dialog'
@@ -67,6 +67,13 @@ const PRIORITY_COLOR: Record<KanbanPriority, string> = {
   medium: '$yellow9',
   high: '$orange9',
   urgent: '$red9',
+}
+
+const PRIORITY_WORD: Record<KanbanPriority, string> = {
+  low: phrase('low'),
+  medium: phrase('medium'),
+  high: phrase('high'),
+  urgent: phrase('urgent'),
 }
 
 type Drag = { cardId: string; columnId: string }
@@ -142,8 +149,24 @@ const CardFrame = styled(YStack, {
   } as const,
 })
 
-function KanbanCardView({ card, drag, onDragStart, onDragEnd, onDropBefore, onEdit, onDelete }: { card: KanbanCard; drag: Drag | null; onDragStart: (e: React.DragEvent) => void; onDragEnd: () => void; onDropBefore: (e: React.DragEvent) => void; onEdit: () => void; onDelete: () => void }) {
-  const tr = useTranslate()
+function KanbanCardView({
+  card,
+  drag,
+  onDragStart,
+  onDragEnd,
+  onDropBefore,
+  onEdit,
+  onDelete,
+}: {
+  card: KanbanCard
+  drag: Drag | null
+  onDragStart: (e: React.DragEvent) => void
+  onDragEnd: () => void
+  onDropBefore: (e: React.DragEvent) => void
+  onEdit: () => void
+  onDelete: () => void
+}) {
+  const { t } = useI18n()
   return (
     <CardFrame
       {...slot('kanban-card')}
@@ -171,15 +194,13 @@ function KanbanCardView({ card, drag, onDragStart, onDragEnd, onDropBefore, onEd
         })}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button {...slot('kanban-card-menu')} variant="ghost" size="icon-sm" aria-label={tr('Card actions')}>
+            <Button {...slot('kanban-card-menu')} variant="ghost" size="icon-sm" aria-label={t('Card actions')}>
               <MoreHorizontal size={14} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onSelect={onEdit}>Edit</DropdownMenuItem>
-            <DropdownMenuItem variant="destructive" onSelect={onDelete}>
-              Delete
-            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={onEdit}>{t('Edit')}</DropdownMenuItem>
+            <DropdownMenuItem variant="destructive" onSelect={onDelete}>{t('Delete')}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </XStack>
@@ -204,15 +225,8 @@ function KanbanCardView({ card, drag, onDragStart, onDragEnd, onDropBefore, onEd
       <XStack justify="space-between" items="center">
         <XStack gap="$2" items="center">
           {card.priority ? (
-            <Badge
-              {...slot('kanban-card-priority')}
-              variant="outline"
-              style={{
-                borderColor: PRIORITY_COLOR[card.priority],
-                color: PRIORITY_COLOR[card.priority],
-              }}
-            >
-              {card.priority}
+            <Badge {...slot('kanban-card-priority')} variant="outline" style={{ borderColor: PRIORITY_COLOR[card.priority], color: PRIORITY_COLOR[card.priority] }}>
+              {t(PRIORITY_WORD[card.priority])}
             </Badge>
           ) : null}
           {card.assignee ? (
@@ -241,6 +255,7 @@ function KanbanCardView({ card, drag, onDragStart, onDragEnd, onDropBefore, onEd
 
 function KanbanColumnView({ column, drag, onDragStart, onDragEnd, onDropOn, onAddCard, onEditCard, onDeleteCard }: { column: KanbanColumn; drag: Drag | null; onDragStart: (card: KanbanCard) => (e: React.DragEvent) => void; onDragEnd: () => void; onDropOn: (columnId: string, beforeId?: string) => (e: React.DragEvent) => void; onAddCard: () => void; onEditCard: (card: KanbanCard) => void; onDeleteCard: (cardId: string) => void }) {
   const full = column.limit != null && column.cards.length >= column.limit
+  const { t } = useI18n()
 
   return (
     <ColumnFrame
@@ -261,7 +276,14 @@ function KanbanColumnView({ column, drag, onDragStart, onDragEnd, onDropOn, onAd
           })}
           <Badge variant="secondary">{column.limit != null ? `${column.cards.length}/${column.limit}` : column.cards.length}</Badge>
         </XStack>
-        <Button {...slot('kanban-add-card')} variant="ghost" size="icon-sm" aria-label={`Add card to ${column.title}`} disabled={full} onPress={onAddCard}>
+        <Button
+          {...slot('kanban-add-card')}
+          variant="ghost"
+          size="icon-sm"
+          aria-label={t('Add card to {column}', { column: column.title })}
+          disabled={full}
+          onPress={onAddCard}
+        >
           <Plus size={14} />
         </Button>
       </XStack>
@@ -276,7 +298,7 @@ function KanbanColumnView({ column, drag, onDragStart, onDragEnd, onDropOn, onAd
 }
 
 function KanbanCardDialog({ open, onOpenChange, card, labels, onSave }: { open: boolean; onOpenChange: (open: boolean) => void; card?: KanbanCard; labels: KanbanLabel[]; onSave: (data: Partial<KanbanCard>) => void }) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [title, setTitle] = React.useState(card?.title ?? '')
   const [description, setDescription] = React.useState(card?.description ?? '')
   const [priority, setPriority] = React.useState<KanbanPriority>(card?.priority ?? 'low')
@@ -309,51 +331,53 @@ function KanbanCardDialog({ open, onOpenChange, card, labels, onSave }: { open: 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent {...slot('kanban-card-dialog')}>
         <DialogHeader>
-          <DialogTitle>{card ? 'Edit Card' : 'Create Card'}</DialogTitle>
-          <DialogDescription>{card ? 'Update the card details below.' : 'Create a new card for your kanban board.'}</DialogDescription>
+          <DialogTitle>{card ? t('Edit Card') : t('Create Card')}</DialogTitle>
+          <DialogDescription>
+            {card ? t('Update the card details below.') : t('Create a new card for your kanban board.')}
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={submit}>
           <YStack gap="$3">
             <YStack gap="$1">
-              <Label htmlFor="kanban-title">Title</Label>
-              <Input id="kanban-title" value={title} onChangeText={setTitle} placeholder="Card title" />
+              <Label htmlFor="kanban-title">{t('Title')}</Label>
+              <Input id="kanban-title" value={title} onChangeText={setTitle} placeholder={t('Card title')} />
             </YStack>
             <YStack gap="$1">
-              <Label htmlFor="kanban-description">Description</Label>
+              <Label htmlFor="kanban-description">{t('Description')}</Label>
               <Textarea id="kanban-description" value={description} onChangeText={setDescription} rows={3} />
             </YStack>
             <XStack gap="$3">
               <YStack gap="$1" flex={1}>
-                <Label>Priority</Label>
+                <Label>{t('Priority')}</Label>
                 <Select value={priority} onValueChange={(v: string) => setPriority(v as KanbanPriority)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="urgent">Urgent</SelectItem>
+                    <SelectItem value="low">{t('Low')}</SelectItem>
+                    <SelectItem value="medium">{t('Medium')}</SelectItem>
+                    <SelectItem value="high">{t('High')}</SelectItem>
+                    <SelectItem value="urgent">{t('Urgent')}</SelectItem>
                   </SelectContent>
                 </Select>
               </YStack>
               <YStack gap="$1" flex={1}>
-                <Label htmlFor="kanban-assignee">Assignee</Label>
-                <Input id="kanban-assignee" value={assignee} onChangeText={setAssignee} placeholder={tr('Assign to...')} />
+                <Label htmlFor="kanban-assignee">{t('Assignee')}</Label>
+                <Input id="kanban-assignee" value={assignee} onChangeText={setAssignee} placeholder={t('Assign to...')} />
               </YStack>
             </XStack>
             <YStack gap="$1">
-              <Label htmlFor="kanban-due">Due date</Label>
+              <Label htmlFor="kanban-due">{t('Due date')}</Label>
               <Input id="kanban-due" type="date" value={dueDate} onChangeText={setDueDate} />
             </YStack>
           </YStack>
 
           <DialogFooter mt="$4">
             <Button type="button" variant="outline" onPress={() => onOpenChange(false)}>
-              Cancel
+              {t('Cancel')}
             </Button>
-            <Button type="submit">{card ? 'Update' : 'Create'} Card</Button>
+            <Button type="submit">{card ? t('Update Card') : t('Create Card')}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
@@ -368,7 +392,7 @@ export type KanbanBoardProps = {
 }
 
 export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [query, setQuery] = React.useState('')
   const [drag, setDrag] = React.useState<Drag | null>(null)
   const [dialogOpen, setDialogOpen] = React.useState(false)
@@ -461,9 +485,15 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
           <XStack position="absolute" insetInlineStart="$2" pointerEvents="none">
             <Search size={14} color="$quiet" />
           </XStack>
-          <Input {...slot('kanban-search')} placeholder={tr('Search cards...')} value={query} onChangeText={setQuery} paddingInlineStart="$7" />
+          <Input
+            {...slot('kanban-search')}
+            placeholder={t('Search cards...')}
+            value={query}
+            onChangeText={setQuery}
+            paddingInlineStart="$7"
+          />
           {query ? (
-            <XStack position="absolute" insetInlineEnd="$2" cursor="pointer" onPress={() => setQuery('')} aria-label={tr('Clear search')}>
+            <XStack position="absolute" insetInlineEnd="$2" cursor="pointer" onPress={() => setQuery('')} aria-label={t('Clear search')}>
               <X size={14} />
             </XStack>
           ) : null}

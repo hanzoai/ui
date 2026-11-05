@@ -46,11 +46,11 @@
  * used 500ms: behaviour comes from the primitive, so the difference is recorded, not
  * reimplemented.
  */
-import * as React from 'react'
-import { Input as GuiInput, isWeb, Menu, Spinner, Text, XStack, YStack, type GuiElement } from '@hanzo/gui'
-import { Check, ChevronLeft, ChevronRight, Circle, X } from '@hanzogui/lucide-icons-2'
+import * as React from "react"
+import { Input as GuiInput, Menu, Spinner, Text, XStack, YStack, isWeb, type GuiElement } from "@hanzo/gui"
+import { Check, ChevronLeft, ChevronRight, Circle, X } from "@hanzogui/lucide-icons-2"
+import { useI18n } from "@hanzo/i18n/react"
 
-import { useTranslate } from '../../i18n/react'
 import type { MenuItemSpec } from '../../product/menu/items'
 import { PortalTheme, useThemeName } from '../../product/menu/portal-theme'
 import { MenuRowContent } from '../../product/MenuRow'
@@ -652,7 +652,16 @@ export type DropdownMenuSearchProps = {
  * and the three that belong to the list leave it: ArrowDown enters the list,
  * Enter runs the first row (respecting an open IME composition), Escape closes.
  */
-function DropdownMenuSearch({ value, defaultValue, onValueChange, placeholder = 'Search', autoFocus = true, 'aria-label': label }: DropdownMenuSearchProps) {
+function DropdownMenuSearch({
+  value,
+  defaultValue,
+  onValueChange,
+  placeholder: hint,
+  autoFocus = true,
+  "aria-label": label,
+}: DropdownMenuSearchProps) {
+  const { t } = useI18n()
+  const placeholder = hint ?? t("Search")
   const field = React.useRef<HTMLInputElement | null>(null)
   React.useEffect(() => {
     if (!autoFocus || !isWeb) return
@@ -688,8 +697,36 @@ function DropdownMenuSearch({ value, defaultValue, onValueChange, placeholder = 
   }
   // A direct child of the content, so `framed` seats it beside the rows' menu.
   return (
-    <XStack data-slot="dropdown-menu-search" minH={SEARCH_H} items="center" px={ROW_PX} mx={-PAD} mt={-PAD} mb={PAD} borderBottomWidth={1} borderColor="$borderColor">
-      <GuiInput ref={field as never} unstyled flex={1} minW={0} height={20} p={0} borderWidth={0} bg="transparent" color="$ink" placeholderTextColor="$placeholderColor" fontSize="$1" aria-label={label ?? placeholder} placeholder={placeholder} {...(value !== undefined ? { value } : { defaultValue })} onChangeText={(t: string) => onValueChange?.(t)} {...(isWeb ? { onKeyDown: keys as never } : null)} style={{ outlineStyle: 'none' }} />
+    <XStack
+      data-slot="dropdown-menu-search"
+      minH={SEARCH_H}
+      items="center"
+      px={ROW_PX}
+      mx={-PAD}
+      mt={-PAD}
+      mb={PAD}
+      borderBottomWidth={1}
+      borderColor="$borderColor"
+    >
+      <GuiInput
+        ref={field as never}
+        unstyled
+        flex={1}
+        minW={0}
+        height={20}
+        p={0}
+        borderWidth={0}
+        bg="transparent"
+        color="$ink"
+        placeholderTextColor="$placeholderColor"
+        fontSize="$1"
+        aria-label={label ?? placeholder}
+        placeholder={placeholder}
+        {...(value !== undefined ? { value } : { defaultValue })}
+        onChangeText={(text: string) => onValueChange?.(text)}
+        {...(isWeb ? { onKeyDown: keys as never } : null)}
+        style={{ outlineStyle: "none" }}
+      />
     </XStack>
   )
 }
@@ -824,19 +861,20 @@ function Status({ slot, children }: { slot: string; children: React.ReactNode })
 }
 
 /** No row matched, said once and politely. */
-function DropdownMenuEmpty({ children = 'No results' }: { children?: React.ReactNode }) {
-  const tr = useTranslate()
+function DropdownMenuEmpty({ children }: { children?: React.ReactNode }) {
+  const { t } = useI18n()
   return (
     <Status slot="dropdown-menu-empty">
       <Text fontSize="$1" color="$aside">
-        {typeof children === 'string' ? tr(children) : children}
+        {children ?? t("No results")}
       </Text>
     </Status>
   )
 }
 
 /** Rows are on their way. */
-function DropdownMenuLoading({ children = 'Loading' }: { children?: React.ReactNode }) {
+function DropdownMenuLoading({ children }: { children?: React.ReactNode }) {
+  const { t } = useI18n()
   return (
     <Status slot="dropdown-menu-loading">
       {/* The words name the status; the spinner is decoration. */}
@@ -844,7 +882,7 @@ function DropdownMenuLoading({ children = 'Loading' }: { children?: React.ReactN
         <Spinner size="small" maxW={14} maxH={14} />
       </XStack>
       <Text fontSize="$1" color="$quiet">
-        {children}
+        {children ?? t("Loading")}
       </Text>
     </Status>
   )

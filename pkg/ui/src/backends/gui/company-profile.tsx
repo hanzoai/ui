@@ -19,6 +19,7 @@
  * widget on screen.
  */
 import { YStack, isWeb, type YStackProps } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 
 export type CompanyProfileTheme = 'light' | 'dark'
@@ -62,6 +63,7 @@ const CompanyProfile = ({
   ...props
 }: CompanyProfileProps) => {
   const s = settings({ symbol, width, height, locale, colorTheme, isTransparent })
+  const { t } = useI18n()
   const src = `${EMBED}${locale}#${encodeURIComponent(JSON.stringify(s))}`
   return (
     <YStack
@@ -81,7 +83,7 @@ const CompanyProfile = ({
         <iframe
           key={src}
           src={src}
-          title={`${s.symbol} company profile`}
+          title={t('{symbol} company profile', { symbol: s.symbol })}
           loading="lazy"
           scrolling="no"
           style={{ display: 'block', width: '100%', height: '100%', border: 0 }}

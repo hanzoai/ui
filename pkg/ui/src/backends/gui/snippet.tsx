@@ -23,11 +23,10 @@
  * from the text and never shrinking. It follows the page's theme rather than a
  * fixed palette, since it sits in settings and setup pages beside other chrome.
  */
-import { useCallback, useMemo, useState, type ComponentProps, type ReactNode } from 'react'
-import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { Check, Copy, FileText, Maximize2, Minimize2 } from '@hanzogui/lucide-icons-2'
-
-import { useTranslate } from '../../i18n/react'
+import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
+import { useCallback, useMemo, useState, type ComponentProps, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Button } from './button'
 import { css, Language, mono, named, type Palette, type Surface } from './code-surface'
 import { align, ltr } from './dir'
@@ -152,9 +151,19 @@ const Mono = styled(SizableText, {
 const rows = (code: string, start: number) => code.split('\n').map((text, i) => ({ n: i + start, text }))
 
 /** The copy button, shared by every variant that shows one: the copy mark in `muted`, the check in `strong`. */
-function CopyButton({ copied, onPress, paint, floating }: { copied: boolean; onPress: () => void; paint: Pick<Surface, 'muted' | 'strong'>; floating?: boolean }) {
-  const tr = useTranslate()
-  const label = copied ? tr('Copied') : tr('Copy code')
+function CopyButton({
+  copied,
+  onPress,
+  paint,
+  floating,
+}: {
+  copied: boolean
+  onPress: () => void
+  paint: Pick<Surface, 'muted' | 'strong'>
+  floating?: boolean
+}) {
+  const { t } = useI18n()
+  const label = copied ? t('Copied') : t('Copy code')
   return (
     <Button variant="ghost" size="icon-sm" onClick={onPress} aria-label={label} title={label} {...(floating ? { position: 'absolute' as const, t: '$2', r: '$2' } : null)}>
       {copied ? <Check size={14} color={paint.strong as never} /> : <Copy size={14} color={paint.muted as never} />}
@@ -170,7 +179,7 @@ function CopyButton({ copied, onPress, paint, floating }: { copied: boolean; onP
  * maximize control is pressed.
  */
 export function Snippet({ code, language = 'text', filename, variant, theme, size, showLineNumbers = false, highlightLines = [], showCopyButton = true, showLanguageBadge = true, showHeader = true, maxHeight, expandable = false, collapsedHeight = 200, wrapLines = false, startLineNumber = 1, actions, ...props }: SnippetProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const resolvedVariant = variant ?? 'default'
   const paint = surface(theme)
   const fontSize = FONT_SIZE[size ?? 'default']
@@ -240,8 +249,18 @@ export function Snippet({ code, language = 'text', filename, variant, theme, siz
           </XStack>
           <XStack items="center" gap="$1">
             {expandable && (
-              <Button variant="ghost" size="icon-sm" onClick={() => setIsExpanded((v) => !v)} aria-label={isExpanded ? tr('Collapse') : tr('Expand')} title={isExpanded ? tr('Collapse') : tr('Expand')}>
-                {isExpanded ? <Minimize2 size={14} color={paint.muted as never} /> : <Maximize2 size={14} color={paint.muted as never} />}
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => setIsExpanded((v) => !v)}
+                aria-label={isExpanded ? t('Collapse') : t('Expand')}
+                title={isExpanded ? t('Collapse') : t('Expand')}
+              >
+                {isExpanded ? (
+                  <Minimize2 size={14} color={paint.muted as never} />
+                ) : (
+                  <Maximize2 size={14} color={paint.muted as never} />
+                )}
               </Button>
             )}
             {showCopyButton && <CopyButton copied={copied} onPress={copy} paint={paint} />}

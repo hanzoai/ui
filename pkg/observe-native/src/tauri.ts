@@ -6,7 +6,7 @@
 // events at the ONE entry point. Calling it outside a Tauri runtime is safe — the
 // native bridge simply no-ops (the DOM capture still runs in any webview).
 
-import { observe as domEngine, wireProps } from '@hanzo/observe'
+import { deliver, observe as domEngine } from '@hanzo/observe'
 import type { Interaction, Observer, RedactionPolicy } from '@hanzo/observe'
 import type { Analytics } from '@hanzo/event'
 
@@ -42,11 +42,7 @@ export function bindTauri(client: Analytics, options: TauriOptions = {}): TauriB
     observer = domEngine(
       (i: Interaction) => {
         try {
-          if (i.kind === 'nav') {
-            client.pageview(typeof i.props?.path === 'string' ? (i.props.path as string) : undefined)
-          } else {
-            client.capture(i.name, wireProps(i))
-          }
+          deliver(client, i)
         } catch {
           /* fail-soft */
         }

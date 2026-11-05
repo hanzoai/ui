@@ -24,8 +24,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { XStack } from '@hanzo/gui'
 import { Minus, Plus } from '@hanzogui/lucide-icons-2'
-
-import { useLocale, useTranslate } from '../../i18n/react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Button, type ButtonSize } from './button'
 import type { FieldSize } from './control'
 import { fieldSize, useDensity } from './density'
@@ -108,10 +107,30 @@ const BESIDE: Record<FieldSize, ButtonSize> = {
   xs: 'icon-xs',
 }
 
-export function NumberField({ value, defaultValue = null, onValueChange, min, max, step = 1, smallStep = 0.1, largeStep = 10, format, locale, allowOutOfRange = false, readOnly = false, required, disabled, buttons = false, decrementLabel = 'Decrease', incrementLabel = 'Increase', size, onFocus, onBlur, ...props }: NumberFieldProps) {
-  const tr = useTranslate()
-  const { active, locale: treeLocale } = useLocale()
-  const resolved = locale ?? (active ? treeLocale : undefined)
+export function NumberField({
+  value,
+  defaultValue = null,
+  onValueChange,
+  min,
+  max,
+  step = 1,
+  smallStep = 0.1,
+  largeStep = 10,
+  format,
+  locale,
+  allowOutOfRange = false,
+  readOnly = false,
+  required,
+  disabled,
+  buttons = false,
+  decrementLabel,
+  incrementLabel,
+  size,
+  onFocus,
+  onBlur,
+  ...props
+}: NumberFieldProps) {
+  const { t } = useI18n()
   const density = useDensity()
   const box = fieldSize(size, density)
   const controlled = value !== undefined
@@ -121,7 +140,7 @@ export function NumberField({ value, defaultValue = null, onValueChange, min, ma
   const last = useRef<number | null>(current)
   last.current = current
 
-  const formatter = useMemo(() => new Intl.NumberFormat(resolved, { maximumFractionDigits: 20, ...format }), [resolved, format])
+  const formatter = useMemo(() => new Intl.NumberFormat(locale, { maximumFractionDigits: 20, ...format }), [locale, format])
   const shown = draft ?? (current == null || Number.isNaN(current) ? '' : formatter.format(current))
 
   const commit = useCallback(
@@ -182,7 +201,7 @@ export function NumberField({ value, defaultValue = null, onValueChange, min, ma
       onChangeText={(text: string) => {
         setDraft(text)
         if (!text.trim()) return commit(null)
-        const n = parseNumber(text, resolved, format)
+        const n = parseNumber(text, locale, format)
         if (!Number.isNaN(n)) commit(n)
       }}
       onFocus={(e: unknown) => {
@@ -195,7 +214,7 @@ export function NumberField({ value, defaultValue = null, onValueChange, min, ma
         const text = draft
         setDraft(null)
         if (text != null && text.trim()) {
-          const n = parseNumber(text, resolved, format)
+          const n = parseNumber(text, locale, format)
           if (!Number.isNaN(n)) commit(allowOutOfRange ? n : clamp(n, min, max))
         }
         ;(onBlur as ((e: unknown) => void) | undefined)?.(e)
@@ -217,7 +236,7 @@ export function NumberField({ value, defaultValue = null, onValueChange, min, ma
         {...slot('number-field-decrement')}
         variant="outline"
         size={beside}
-        aria-label={tr(decrementLabel)}
+        aria-label={decrementLabel ?? t('Decrease')}
         // The keyboard belongs to the field; the buttons are for a pointer.
         tabIndex={-1}
         disabled={disabled || (!allowOutOfRange && atMin)}
@@ -236,7 +255,7 @@ export function NumberField({ value, defaultValue = null, onValueChange, min, ma
         {...slot('number-field-increment')}
         variant="outline"
         size={beside}
-        aria-label={tr(incrementLabel)}
+        aria-label={incrementLabel ?? t('Increase')}
         tabIndex={-1}
         disabled={disabled || (!allowOutOfRange && atMax)}
         {...(readOnly

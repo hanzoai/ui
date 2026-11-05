@@ -12,24 +12,25 @@
  * interrupt.
  */
 import type { ComponentProps, ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { XStack, YStack } from '@hanzo/gui'
 import { RefreshCw } from '@hanzogui/lucide-icons-2'
 
 import { Button } from '../backends/gui'
 import { ink } from '../backends/gui/ink'
 import { slot } from '../backends/gui/slot'
-import { useTranslate } from '../i18n/react'
 
 export interface FailureProps extends Omit<ComponentProps<typeof YStack>, 'children'> {
   /** What went wrong, in the surface's own words. */
   children?: ReactNode
   /** Offer to run the turn again. Omit and no control renders. */
   onRetry?: () => void
+  /** The retry control's words; absent, "Try again" in the reader's language. */
   retryLabel?: string
 }
 
-export function Failure({ children, onRetry, retryLabel = 'Try again', ...props }: FailureProps) {
-  const tr = useTranslate()
+export function Failure({ children, onRetry, retryLabel, ...props }: FailureProps) {
+  const { t } = useI18n()
   return (
     <YStack
       {...slot('failure')}
@@ -42,8 +43,8 @@ export function Failure({ children, onRetry, retryLabel = 'Try again', ...props 
       rounded="$4"
       borderWidth={1}
       // The `stopped` register from `product/tone.ts`: an outline, not a hue.
-      borderColor="$faint"
-      bg="$edge"
+      borderColor="$borderColor"
+      bg="$panel"
       {...props}
     >
       {ink(children, undefined, { size: '$2', color: '$ink' })}
@@ -53,7 +54,7 @@ export function Failure({ children, onRetry, retryLabel = 'Try again', ...props 
         <XStack self="flex-start">
           <Button {...slot('failure-retry')} variant="outline" size="sm" onPress={onRetry}>
             <RefreshCw size={13} />
-            {tr(retryLabel)}
+            {retryLabel ?? t('Try again')}
           </Button>
         </XStack>
       ) : null}

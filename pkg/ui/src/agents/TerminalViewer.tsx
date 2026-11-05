@@ -1,9 +1,18 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { Check, Copy, Maximize2, Minimize2, Play, RotateCw, Square, Terminal as TerminalIcon, Trash2 } from '@hanzogui/lucide-icons-2'
-
-import { useTranslate } from '../i18n/react'
+import {
+  Terminal as TerminalIcon,
+  Play,
+  Square,
+  Copy,
+  Check,
+  RotateCw,
+  Maximize2,
+  Minimize2,
+  Trash2,
+} from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 import { Text } from '../index'
 
 export interface TerminalTab {
@@ -26,7 +35,7 @@ export interface TerminalViewerProps {
 }
 
 export const TerminalViewer: React.FC<TerminalViewerProps> = ({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, onSendCommand, onKillCommand, onClearOutput }) => {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [commandInput, setCommandInput] = useState('')
   const [copied, setCopied] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -149,15 +158,8 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({ tabs, activeTabI
           {onNewTab && (
             <button
               onClick={onNewTab}
-              style={{
-                padding: '4px 8px',
-                fontSize: 12,
-                color: '#888892',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-              }}
-              title="New Terminal"
+              style={{ padding: '4px 8px', fontSize: 12, color: '#888892', background: 'none', border: 'none', cursor: 'pointer' }}
+              title={t('New Terminal')}
             >
               +
             </button>
@@ -169,44 +171,23 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({ tabs, activeTabI
           {activeTab && onClearOutput && (
             <button
               onClick={() => onClearOutput(activeTab.id)}
-              style={{
-                padding: 4,
-                color: '#888892',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-              }}
-              title="Clear output"
+              style={{ padding: 4, color: '#888892', background: 'none', border: 'none', cursor: 'pointer', display: 'flex' }}
+              title={t('Clear output')}
             >
               <Trash2 size={14} />
             </button>
           )}
           <button
             onClick={handleCopy}
-            style={{
-              padding: 4,
-              color: '#888892',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-            }}
-            title="Copy terminal output"
+            style={{ padding: 4, color: '#888892', background: 'none', border: 'none', cursor: 'pointer', display: 'flex' }}
+            title={t('Copy terminal output')}
           >
             {copied ? <Check size={14} /> : <Copy size={14} />}
           </button>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            style={{
-              padding: 4,
-              color: '#888892',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-            }}
-            title={isExpanded ? 'Minimize' : 'Maximize'}
+            style={{ padding: 4, color: '#888892', background: 'none', border: 'none', cursor: 'pointer', display: 'flex' }}
+            title={isExpanded ? t('Minimize') : t('Maximize')}
           >
             {isExpanded ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
           </button>
@@ -224,20 +205,21 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({ tabs, activeTabI
         }}
       >
         {activeTab?.cwd && (
-          <div
-            style={{
-              color: '#6e6e7c',
-              fontSize: 11,
-              marginBottom: 8,
-              fontFamily: 'sans-serif',
-            }}
-          >
-            Working directory: <code style={{ fontFamily: 'monospace', color: '#a0a0b0' }}>{activeTab.cwd}</code>
+          <div style={{ color: '#6e6e7c', fontSize: 11, marginBottom: 8, fontFamily: 'sans-serif' }}>
+            {t('Working directory: {path}', {
+              path: (
+                <Text render="code" color={'#a0a0b0' as never}>
+                  {activeTab.cwd}
+                </Text>
+              ),
+            })}
           </div>
         )}
 
         {activeTab?.output?.length === 0 ? (
-          <div style={{ color: '#555562', fontStyle: 'italic' }}>Terminal ready. Type a command below.</div>
+          <Text render="div" display="block" color={'#555562' as never} fontStyle="italic">
+            {t('Terminal ready. Type a command below.')}
+          </Text>
         ) : (
           activeTab?.output.map((line, idx) => {
             const isCmd = line.startsWith('>') || line.startsWith('$')
@@ -290,16 +272,8 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({ tabs, activeTabI
             type="text"
             value={commandInput}
             onChange={(e) => setCommandInput(e.target.value)}
-            placeholder={tr('Type shell command...')}
-            style={{
-              flex: 1,
-              background: 'transparent',
-              fontSize: 12,
-              color: '#ffffff',
-              outline: 'none',
-              border: 'none',
-              fontFamily: 'monospace',
-            }}
+            placeholder={t('Type shell command...')}
+            style={{ flex: 1, background: 'transparent', fontSize: 12, color: '#ffffff', outline: 'none', border: 'none', fontFamily: 'monospace' }}
           />
           {activeTab.status === 'running' && onKillCommand && (
             <button
@@ -321,7 +295,7 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({ tabs, activeTabI
               }}
             >
               <Square size={12} />
-              <span>Stop</span>
+              <span>{t('Stop')}</span>
             </button>
           )}
         </form>

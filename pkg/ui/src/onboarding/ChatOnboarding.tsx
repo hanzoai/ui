@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, type ComponentType, type FormEvent, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Binoculars, Calendar, ChartLine, Clock, Code, Dna, EyeOff, FileText, Gavel, GraduationCap, HeartHandshake, LayoutGrid, Library, Lightbulb, MessageSquare, Palette, Pencil, Presentation, User } from '@hanzogui/lucide-icons-2'
 
 import { Button } from '../backends/gui/button'
@@ -9,7 +10,6 @@ import { Input } from '../backends/gui/input'
 import { Anchor, Paragraph, XStack, YStack } from '../backends/gui/layout'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../backends/gui/select'
 import { Switch } from '../backends/gui/switch'
-import { useTranslate } from '../i18n/react'
 import { API } from './api'
 import { Page, Panel } from './frame'
 import { useSession, type Track } from './hooks'
@@ -24,7 +24,9 @@ import { chatStep } from './state'
  * IAM user, so nobody sees a step twice.
  *
  * `onDone` receives what the person chose to open the chat with: a starter's full
- * prompt, or nothing for an empty chat.
+ * prompt, or nothing for an empty chat. Its words are the reader's language
+ * (@hanzo/i18n `t`); a starter's prompt is the one in the words pressed, while
+ * the role it saves and the events it sends stay in English.
  */
 
 export interface ChatOnboardingProps {
@@ -59,7 +61,7 @@ const ICONS: Record<Glyph, ComponentType<{ size?: number }>> = {
 }
 
 export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, privacyPath = '/settings/privacy', safeguards = false }: ChatOnboardingProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const session = useSession(api)
   const [role, setRole] = useState('')
   const [name, setName] = useState('')
@@ -81,20 +83,23 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
 
   if (at === 'notice') {
     return (
-      <Page site={site} title="Before your first chat" lede="A few things to know, plus one setting to review" center width={512}>
-        <Panel label="Before your first chat">
+      <Page site={site} title={t('Before your first chat')} lede={t('A few things to know, plus one setting to review')} center width={512}>
+        <Panel label={t('Before your first chat')}>
           <Row icon={<EyeOff size={20} />}>
-            <b>Ad-free chats:</b> We won’t show you ads or let advertisers influence what {site} says.
+            <b>{t('Ad-free chats:')}</b>
+            {` ${t('We won’t show you ads or let advertisers influence what {site} says.', { site })}`}
           </Row>
           {safeguards ? (
             <Row icon={<HeartHandshake size={20} />}>
-              <b>Built to help, not harm:</b> Automated safeguards protect your chats from violent, abusive, or deceptive content.
+              <b>{t('Built to help, not harm:')}</b>
+              {` ${t('Automated safeguards protect your chats from violent, abusive, or deceptive content.')}`}
             </Row>
           ) : null}
-          <Row icon={<Switch checked={train} onCheckedChange={setTrain} aria-label={tr('Help improve our AI models')} />}>
-            <b>Help improve our AI models:</b> Allow the use of your chats and coding sessions to train and improve Zen models. Change anytime in privacy settings.{' '}
+          <Row icon={<Switch checked={train} onCheckedChange={setTrain} aria-label={t('Help improve our AI models')} />}>
+            <b>{t('Help improve our AI models:')}</b>
+            {` ${t('Allow the use of your chats and coding sessions to train and improve Zen models.')} ${t('Change anytime in privacy settings.')} `}
             <Anchor href={privacyPath} color="$ink" textDecorationLine="underline">
-              Learn more
+              {t('Learn more')}
             </Anchor>
           </Row>
         </Panel>
@@ -108,7 +113,7 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
             setBusy(false)
           }}
         >
-          Continue
+          {t('Continue')}
         </Primary>
       </Page>
     )
@@ -127,13 +132,13 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
       }
     }
     return (
-      <Page site={site} title="What’s your name?" lede={`So ${site} knows what to call you.`} center>
+      <Page site={site} title={t('What’s your name?')} lede={t('So {site} knows what to call you.', { site })} center>
         <YStack render={<form onSubmit={submit} noValidate />} gap="$4" items="stretch">
           <Field gap="$2">
-            <Input name="name" autoComplete="name" aria-label={tr('Your name')} value={name} onChangeText={setName} placeholder={tr('Your name')} height={48} autoFocus />
+            <Input name="name" autoComplete="name" aria-label={t('Your name')} value={name} onChangeText={setName} placeholder={t('Your name')} height={48} autoFocus />
           </Field>
           <Primary type="submit" disabled={!name.trim() || busy}>
-            Continue
+            {t('Continue')}
           </Primary>
         </YStack>
       </Page>
@@ -152,7 +157,7 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
     onDone({ prompt, role: chosen.role })
   }
   return (
-    <Page site={site} title={ROLES_TITLE} lede={ROLES_SUBTITLE} center width={450}>
+    <Page site={site} title={t(ROLES_TITLE)} lede={t(ROLES_SUBTITLE)} center width={450}>
       <Select
         value={role}
         onValueChange={(v: string) => {
@@ -160,13 +165,13 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
           track?.('role_selected', { role: v })
         }}
       >
-        <SelectTrigger aria-label={tr('Your role')} height={48}>
-          <SelectValue placeholder={ROLES_PLACEHOLDER} />
+        <SelectTrigger aria-label={t('Your role')} height={48}>
+          <SelectValue placeholder={t(ROLES_PLACEHOLDER)} />
         </SelectTrigger>
         <SelectContent>
           {ROLES.map((r) => (
             <SelectItem key={r.role} value={r.role}>
-              {r.role}
+              {t(r.role)}
             </SelectItem>
           ))}
         </SelectContent>
@@ -187,15 +192,12 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
                 justify="flex-start"
                 gap="$4"
                 onClick={() => {
-                  track?.('starter_prompt_used', {
-                    role: chosen.role,
-                    prompt: p.label,
-                  })
-                  void pick(p.prompt)
+                  track?.('starter_prompt_used', { role: chosen.role, prompt: p.label })
+                  void pick(t(p.prompt))
                 }}
               >
                 <Icon size={20} />
-                {p.label}
+                {t(p.label)}
               </Button>
             )
           })}
@@ -210,7 +212,7 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
               void pick(undefined)
             }}
           >
-            {OWN_TOPIC}
+            {t(OWN_TOPIC)}
           </Button>
         </YStack>
       ) : null}

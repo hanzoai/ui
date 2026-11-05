@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 
-import { LinkElement } from '../backends/gui/link'
+import { LinkElement } from '../backends/gui/link-element'
 import { Box } from '../box'
 import { cn } from '../core/cn'
 import type { ButtonSize } from '../backends/gui/button'

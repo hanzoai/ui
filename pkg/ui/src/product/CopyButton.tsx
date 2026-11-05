@@ -18,6 +18,7 @@
 import { type ComponentProps, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Text, XStack } from '@hanzo/gui'
 import { Check, Copy } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { tip } from '../backends/gui/slot'
 import { useEmit } from './instrument'
@@ -54,6 +55,7 @@ export function CopyButton({ value, children, label, size = 24, id, props }: Cop
   const [copied, setCopied] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const track = useEmit()
+  const { t } = useI18n()
 
   useEffect(() => () => clearTimeout(timer.current), [])
 
@@ -78,7 +80,7 @@ export function CopyButton({ value, children, label, size = 24, id, props }: Cop
       })
   }
 
-  const name = label ?? (typeof children === 'string' ? children : 'Copy')
+  const name = label ?? (typeof children === 'string' ? children : t('Copy'))
   const glyph = Math.round(size * 0.58)
 
   return (
@@ -98,8 +100,8 @@ export function CopyButton({ value, children, label, size = 24, id, props }: Cop
       onPress={copy}
       role="button"
       tabIndex={0}
-      aria-label={copied ? 'Copied' : name}
-      {...tip(copied ? 'Copied' : name)}
+      aria-label={copied ? t('Copied') : name}
+      {...tip(copied ? t('Copied') : name)}
       hoverStyle={{ bg: '$edge', opacity: 1 }}
       pressStyle={{ bg: '$raised' }}
       {...props}
@@ -110,7 +112,7 @@ export function CopyButton({ value, children, label, size = 24, id, props }: Cop
         // text that did not change is the smallest possible way to say the thing
         // the control exists to say.
         <Text fontSize="$2" color="$ink" numberOfLines={1}>
-          {copied ? 'Copied' : children}
+          {copied ? t('Copied') : children}
         </Text>
       )}
     </XStack>

@@ -7,7 +7,13 @@
 // `near` from 80 to 99 %, and `limited` when the class is used up and nothing
 // else pays.
 //
-// No React, no gui: this loads in Node and in a server component.
+// No React, no gui and no import: this loads in Node and in a server
+// component. The words are English by default; a component passes its `t` to
+// have them in the reader's language. Each word a reader is shown is a literal
+// `t` call, so the extractor finds it without a `phrase` import.
+
+import type { Say } from '@hanzo/i18n/react'
+import { english } from '../core/english'
 
 export type LimitState = 'ok' | 'near' | 'limited'
 export type LimitClass = 'premium' | 'ours' | 'free'
@@ -15,7 +21,8 @@ export type LimitClass = 'premium' | 'ours' | 'free'
 export type LimitPayer = 'plan' | 'credits' | 'free' | 'none'
 export type PaidBy = LimitPayer
 export type LimitReason = 'plan_allowance_used' | 'paid_plan_required' | 'free_plan_cap' | 'insufficient_balance' | 'model_cap'
-export type LimitActionKind = 'upgrade' | 'topup' | 'credits' | 'switch'
+/** A way past a limit. The server sends the first four; `later` is the reader's own, a host's to offer: put the notice away and come back after the reset. */
+export type LimitActionKind = 'upgrade' | 'topup' | 'credits' | 'switch' | 'later'
 
 /** A share of one window: percent used, its state, and when it starts over. */
 export interface LimitWindow {
@@ -95,7 +102,7 @@ export interface Refusal {
   class: LimitClass | null
   resets_at: string | null
   actions: LimitAction[]
-  /** Seconds, from Retry-After on a 429. */
+  /** Seconds, from Retry-After on a 429, when it names none to a day (`WAIT`). */
   retry: number | null
 }
 
@@ -119,6 +126,9 @@ export const CLASS_LABEL: Record<LimitClass, string> = {
   free: 'Free models',
 }
 
+/** A class's name inside a list ("Premium and Hanzo models"). Hanzo is a name. */
+const className = (c: LimitClass, t: Say): string => (c === 'premium' ? t('Premium') : c === 'ours' ? 'Hanzo' : t('Free'))
+
 const STATES: readonly LimitState[] = ['ok', 'near', 'limited']
 const PAYERS: readonly LimitPayer[] = ['plan', 'credits', 'free', 'none']
 const KINDS: readonly LimitActionKind[] = ['upgrade', 'topup', 'credits', 'switch']
@@ -127,7 +137,18 @@ const LABEL: Record<LimitActionKind, string> = {
   topup: 'Add prepaid credit',
   credits: 'Continue with credits',
   switch: 'Switch model',
+  later: 'Try again later',
 }
+
+/** `LABEL` in the reader's language. */
+const labelSays = (kind: LimitActionKind, t: Say): string =>
+  kind === 'upgrade'
+    ? t('Upgrade')
+    : kind === 'topup'
+      ? t('Add prepaid credit')
+      : kind === 'credits'
+        ? t('Continue with credits')
+        : t('Switch model')
 const RANK: Record<LimitState, number> = { ok: 0, near: 1, limited: 2 }
 
 const text = (v: unknown): string | null => (typeof v === 'string' ? v : null)
@@ -249,27 +270,37 @@ export function servedOf(headers: { get(name: string): string | null }): Served 
 }
 
 /**
- * The two limit codes the gateway sends as a 429 `rate_limit_error` rather than a
- * `billing_error` (ai `routers/filter_balance.go` `limitReached`): they lift by
- * themselves at a reset, so the wire calls them rate limits. They are still the
- * plan speaking, and the reader is owed the same notice.
+ * The limit codes sent on a 429 that is not a `billing_error`, each under the
+ * one type its server sends it with: the two caps the gateway sends as a
+ * `rate_limit_error` (ai `routers/filter_balance.go` `limitReached`), and the
+ * Free allowance's spent window, `allowance_spent` (cloud zen `freeSpent`,
+ * `insufficient_quota`). Each lifts by itself at a reset, so the wire calls it a
+ * limit; each is still the plan speaking, and the reader is owed the same notice.
  */
-const CAPS: readonly string[] = ['free_plan_cap', 'usage_cap_exceeded']
+const CAPS: ReadonlyMap<string, string> = new Map([
+  ['free_plan_cap', 'rate_limit_error'],
+  ['usage_cap_exceeded', 'rate_limit_error'],
+  ['allowance_spent', 'insufficient_quota'],
+])
+
+/** The longest Retry-After believed, in seconds: a day. A longer or negative one names no retry. */
+const WAIT = 86_400
 
 /** A billing refusal's envelope, or null for any other error. */
 export function refusalOf(body: unknown, status: number, retryAfter?: string | null): Refusal | null {
   const e = record(record(body)?.error)
   if (!e) return null
-  if (e.type !== 'billing_error' && !(e.type === 'rate_limit_error' && CAPS.includes(text(e.code) ?? ''))) return null
+  const code = text(e.code) ?? ''
+  if (e.type !== 'billing_error' && (!CAPS.has(code) || CAPS.get(code) !== e.type)) return null
   const retry = retryAfter ? Number(retryAfter) : NaN
   return {
     status,
-    code: text(e.code) ?? '',
+    code,
     message: text(e.message) ?? '',
     class: one(CLASSES, e.class),
     resets_at: text(e.resets_at),
     actions: actionsOf(e.actions),
-    retry: Number.isFinite(retry) ? retry : null,
+    retry: retry >= 0 && retry <= WAIT ? retry : null,
   }
 }
 
@@ -307,11 +338,12 @@ const earliest = (all: (string | null)[]): string | null =>
   all.reduce<string | null>((a, b) => (!b ? a : !a || Date.parse(b) < Date.parse(a) ? b : a), null)
 
 /** "Premium models", "Premium and Hanzo models". */
-export function classesLabel(classes: LimitClass[]): string {
-  const names = CLASSES.filter((c) => classes.includes(c)).map((c) => CLASS_LABEL[c].replace(/ models$/, ''))
-  if (!names.length) return 'Models'
-  const last = names.pop()!
-  return `${names.length ? `${names.join(', ')} and ${last}` : last} models`
+export function classesLabel(classes: LimitClass[], t: Say = english): string {
+  const [a, b, c] = CLASSES.filter((k) => classes.includes(k)).map((k) => className(k, t))
+  if (!a) return t('Models')
+  if (!b) return t('{a} models', { a })
+  if (!c) return t('{a} and {b} models', { a, b })
+  return t('{a}, {b} and {c} models', { a, b, c })
 }
 
 /**
@@ -327,15 +359,29 @@ export function when(iso: string | null | undefined, now: number = Date.now()): 
     : d.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })
 }
 
-const PLAIN: Record<string, string> = {
-  paid_plan_required: 'This model needs a paid plan.',
-  free_plan_cap: "You've used the free plan's usage for now.",
-  insufficient_balance: 'Your credits have run out.',
-}
+/** The plain sentence for a reason the server sent no message for. */
+const plainSays = (reason: string, t: Say): string | undefined =>
+  reason === 'paid_plan_required'
+    ? t('This model needs a paid plan.')
+    : reason === 'free_plan_cap'
+      ? t("You've used the free plan's usage for now.")
+      : reason === 'insufficient_balance'
+        ? t('Your credits have run out.')
+        : undefined
 
 /** A paused model as a sentence names it: a glob reads as its family ("claude-opus models"). */
-const modelWords = (model: string, name: (id: string) => string): string =>
-  model.endsWith('*') ? `${model.slice(0, -1).split('/').pop()?.replace(/[-.]$/, '')} models` : name(model)
+const modelWords = (model: string, name: (id: string) => string, t: Say): string =>
+  model.endsWith('*') ? t('{family} models', { family: `${model.slice(0, -1).split('/').pop()?.replace(/[-.]$/, '')}` }) : name(model)
+
+/** One sentence for a pause: what is paused and, when it is known, until when. */
+const pausedSays = (t: Say, what: string, many: boolean, until: string): string =>
+  many
+    ? until
+      ? t('{what} are paused until {until}.', { what, until })
+      : t('{what} are paused.', { what })
+    : until
+      ? t('{what} is paused until {until}.', { what, until })
+      : t('{what} is paused.', { what })
 
 /**
  * What to tell a reader whose usage is paused or refused, or null when nothing
@@ -348,6 +394,7 @@ export function noticeOf(
   heard: Heard,
   name: (id: string) => string = (id) => id,
   now: number = Date.now(),
+  t: Say = english,
 ): LimitNotice | null {
   const { served, refusal } = heard
   const fallback = served?.fallback ?? null
@@ -371,19 +418,23 @@ export function noticeOf(
   const paused = reason === 'plan_allowance_used' || (!reason && list.length > 0)
   const until = when(resets, now)
   const said = capped
-    ? `${modelWords(capped.model, name)} ${capped.model.endsWith('*') ? 'are' : 'is'} paused${until ? ` until ${until}` : ''}.`
+    ? pausedSays(t, modelWords(capped.model, name, t), capped.model.endsWith('*'), until)
     : paused
-      ? `${classesLabel(list)} are paused${until ? ` until ${until}` : ''}.`
+      ? pausedSays(t, classesLabel(list, t), true, until)
       : refusal?.message ||
         limits?.limited?.message ||
-        (reason === 'paid_plan_required' && list.length ? `${classesLabel(list)} need a paid plan.` : PLAIN[reason]) ||
-        'Usage is paused for now.'
+        (reason === 'paid_plan_required' && list.length
+          ? t('{classes} need a paid plan.', { classes: classesLabel(list, t) })
+          : plainSays(reason, t)) ||
+        t('Usage is paused for now.')
+  // A refusal names what is possible for the call it refused; the limits name the general case.
+  const actions = refusal?.actions.length ? refusal.actions : (limits?.actions ?? [])
   return {
     reason,
     classes: list,
-    message: fallback ? `${said} You're chatting on ${name(fallback)}.` : said,
-    // A refusal names what is possible for the call it refused; the limits name the general case.
-    actions: refusal?.actions.length ? refusal.actions : (limits?.actions ?? []),
+    message: fallback ? `${said} ${t("You're chatting on {model}.", { model: name(fallback) })}` : said,
+    // The words this module supplied are said in the reader's language; the server's stand as sent.
+    actions: actions.map((a) => (a.label === LABEL[a.kind] ? { ...a, label: labelSays(a.kind, t) } : a)),
     resets_at: resets,
     fallback,
     refused: refusal !== null,
@@ -391,7 +442,7 @@ export function noticeOf(
 }
 
 /** The one-line note for a class close to its included usage, or null. */
-export function nearOf(limits: Limits | null, now: number = Date.now()): string | null {
+export function nearOf(limits: Limits | null, now: number = Date.now(), t: Say = english): string | null {
   if (!limits || limits.state === 'limited') return null
   const near = CLASSES.filter((c) => {
     const k = limits.classes[c]
@@ -399,6 +450,12 @@ export function nearOf(limits: Limits | null, now: number = Date.now()): string 
   })
   if (!near.length) return null
   const until = when(earliest(near.map((c) => resetOf(limits.classes[c]))), now)
-  const what = classesLabel(near).replace(/ models$/, '').replace('Premium', 'premium')
-  return `You're close to your plan's included ${what} model usage.${until ? ` Resets ${until}.` : ''}`
+  // Only premium and Hanzo models are ever near (the free lane is not counted).
+  const close =
+    near.length > 1
+      ? t("You're close to your plan's included premium and Hanzo model usage.")
+      : near[0] === 'premium'
+        ? t("You're close to your plan's included premium model usage.")
+        : t("You're close to your plan's included Hanzo model usage.")
+  return until ? `${close} ${t('Resets {until}.', { until })}` : close
 }

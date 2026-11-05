@@ -1,6 +1,5 @@
 import React from 'react'
-
-import { useTranslate } from '../i18n/react'
+import { useI18n } from '@hanzo/i18n/react'
 
 export interface ChannelMember {
   id: string
@@ -19,8 +18,14 @@ export interface ChannelMembersProps {
   style?: React.CSSProperties
 }
 
-export const ChannelMembers: React.FC<ChannelMembersProps> = ({ members, onDirectMessage, onInviteMember, className = '', style }) => {
-  const tr = useTranslate()
+export const ChannelMembers: React.FC<ChannelMembersProps> = ({
+  members,
+  onDirectMessage,
+  onInviteMember,
+  className = '',
+  style,
+}) => {
+  const { t } = useI18n()
   return (
     <div
       className="glass"
@@ -33,7 +38,7 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({ members, onDirec
         borderRadius: 16,
         ...style,
       }}
-      aria-label={tr('Channel Member Roster')}
+      aria-label={t('Channel Member Roster')}
     >
       <div
         style={{
@@ -44,17 +49,8 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({ members, onDirec
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 16 }}>👥</span>
-          <h3
-            style={{
-              fontSize: 12,
-              fontWeight: 600,
-              color: '#ffffff',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              margin: 0,
-            }}
-          >
-            Members ({members.length})
+          <h3 style={{ fontSize: 12, fontWeight: 600, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
+            {t('Members ({n})', { n: members.length })}
           </h3>
         </div>
 
@@ -72,7 +68,7 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({ members, onDirec
               cursor: 'pointer',
             }}
           >
-            + Invite
+            {t('+ Invite')}
           </button>
         )}
       </div>
@@ -146,18 +142,8 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({ members, onDirec
                 >
                   {m.name}
                   {m.isAgent && (
-                    <span
-                      style={{
-                        padding: '1px 6px',
-                        borderRadius: 4,
-                        fontSize: 9,
-                        backgroundColor: 'rgba(99, 102, 241, 0.2)',
-                        color: '#a5b4fc',
-                        fontWeight: 700,
-                        border: '1px solid rgba(99, 102, 241, 0.3)',
-                      }}
-                    >
-                      AI
+                    <span style={{ padding: '1px 6px', borderRadius: 4, fontSize: 9, backgroundColor: 'rgba(99, 102, 241, 0.2)', color: '#a5b4fc', fontWeight: 700, border: '1px solid rgba(99, 102, 241, 0.3)' }}>
+                      {t('AI')}
                     </span>
                   )}
                 </span>
@@ -178,7 +164,7 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({ members, onDirec
                   cursor: 'pointer',
                 }}
               >
-                DM
+                {t('DM')}
               </button>
             )}
           </div>

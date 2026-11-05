@@ -19,7 +19,8 @@ import { SizableText, XStack } from '@hanzo/gui'
 import { Gauge } from '@hanzogui/lucide-icons-2'
 
 import { Popover, PopoverAnchor, PopoverContent } from '../backends/gui'
-import { useDirection, useTranslate } from '../i18n/react'
+import { useDirection } from '../i18n/react'
+import { useI18n } from '@hanzo/i18n/react'
 import { RING } from './ring'
 import { Choices, type Modes } from './Tune'
 
@@ -44,7 +45,7 @@ const pip = (id: string, label: string): string => PIP[id] ?? label.slice(0, 1).
  * glyph. The button keeps the row's height and grows as wide as the level needs.
  */
 export function Dial({ effort, size = 36, disabled = false, narrow = false }: { effort: Modes; size?: number; disabled?: boolean; narrow?: boolean }) {
-  const t = useTranslate()
+  const { t } = useI18n()
   const dir = useDirection()
   const [open, setOpen] = useState(false)
   // The level under the finger while it is held, as a place in the list.

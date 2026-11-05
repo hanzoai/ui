@@ -12,11 +12,12 @@
  *   toast.error(err instanceof ApiError ? err.message : 'Failed to create')
  */
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { Button, Card, Text, XStack, YStack } from '@hanzo/gui'
-import { CircleCheck, CircleX, Info, TriangleAlert, X } from '@hanzogui/lucide-icons-2'
 import { createPortal } from 'react-dom'
+import { Button, Text, XStack, YStack } from '@hanzo/gui'
+import { Plate as Card } from '../backends/gui/plate'
+import { CircleCheck, CircleX, Info, TriangleAlert, X } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
-import { useTranslate } from '../i18n/react'
 import { useEmit } from './instrument'
 
 /**
@@ -85,11 +86,24 @@ const DURATION: Record<ToastKind, number> = {
 }
 
 function ToastCard({ t, onClose }: { t: Toast; onClose: () => void }) {
-  const tr = useTranslate()
+  // `t` is the toast here, so the translator is reached through the context.
+  const i18n = useI18n()
   const Icon = ICON[t.kind]
   const accent = ACCENT[t.kind]
   return (
-    <Card width={360} maxWidth="90%" p="$3" gap="$2" bg="$panel" borderWidth={1} borderColor="$borderColor" borderInlineStartWidth={3} borderInlineStartColor={accent} rounded="$4" elevation="$2">
+    <Card
+      width={360}
+      maxW="90%"
+      p="$3"
+      gap="$2"
+      bg="$panel"
+      borderWidth={1}
+      borderColor="$borderColor"
+      borderInlineStartWidth={3}
+      borderInlineStartColor={accent}
+      rounded="$4"
+      elevation="$2"
+    >
       <XStack gap="$2.5" items="flex-start">
         {t.showIcon ? (
           <YStack pt={1}>
@@ -106,7 +120,7 @@ function ToastCard({ t, onClose }: { t: Toast; onClose: () => void }) {
             </Text>
           ) : null}
         </YStack>
-        <Button size="$1" chromeless icon={<X size={14} />} onPress={onClose} aria-label={tr('Dismiss')} />
+        <Button size="$1" chromeless icon={<X size={14} />} onPress={onClose} aria-label={i18n.t('Dismiss')} />
       </XStack>
     </Card>
   )

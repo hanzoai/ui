@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '../backends/gui/card'
-import { LinkElement } from '../backends/gui/link'
+import { LinkElement } from '../backends/gui/link-element'
 import { ApplyTypography, type TypographySize } from '../backends/gui/prose'
 import { Box } from '../box'
 import { cn } from '../core/cn'

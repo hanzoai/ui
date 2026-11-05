@@ -10,7 +10,8 @@
 import * as React from 'react'
 import { SizableText, styled } from '@hanzo/gui'
 
-import { useLocale, useTranslate, type Translate } from '../../i18n/react'
+import { useLocale, type Translate } from '../../i18n/react'
+import { useI18n } from '@hanzo/i18n/react'
 
 const UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
   ['year', 31536000],
@@ -114,7 +115,7 @@ export type RelativeTimeProps = Omit<React.ComponentProps<'time'>, 'dateTime' | 
 
 /** A self-updating `<time>` reading how long ago (or until) `date` is. */
 export function RelativeTime({ date, format = 'auto', updateInterval = 60000, ...props }: RelativeTimeProps) {
-  const tr = useTranslate()
+  const { t: tr } = useI18n()
   const { active, locale } = useLocale()
   const intl = active ? locale : undefined
   const [text, setText] = React.useState(() => relativeTime(date, format, tr, intl))

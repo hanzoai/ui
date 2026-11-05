@@ -22,6 +22,7 @@
  * popover. Styling is gui props and tokens only.
  */
 import { SizableText, XStack, useMedia } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { ChevronsUpDown } from '@hanzogui/lucide-icons-2'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -54,11 +55,12 @@ export interface ModelPickerProps {
   /** The catalog could not be read, in a sentence. */
   error?: string | null
   disabled?: boolean
-  /** The plain look, for a picker in a row of words (a composer): no fill, no hairline. */
+  /** A word, for a picker in a row of words (under a composer): the name in the full ink at the 14px rung, no fill, no hairline, no mark; a phone's thumb height. */
   quiet?: boolean
   size?: 'sm' | 'md'
+  /** Absent, "Choose a model" in the reader's language. */
   placeholder?: string
-  /** What it chooses, for its accessible name. */
+  /** What it chooses, for its accessible name; absent, "Model" in the reader's language. */
   name?: string
   /** The accessible name whole, in the reader's language, where `name: model` is not how they say it. */
   describe?: string
@@ -80,14 +82,16 @@ export function ModelPicker({
   disabled = false,
   quiet = false,
   size = 'md',
-  placeholder = 'Choose a model',
-  name = 'Model',
+  placeholder,
+  name: named,
   describe,
   granted,
   onUpgrade,
   open: openProp,
   onOpenChange,
 }: ModelPickerProps) {
+  const { t } = useI18n()
+  const name = named ?? t('Model')
   const [own, setOwn] = useState(false)
   const open = openProp ?? own
   const setOpen = useCallback(
@@ -105,7 +109,7 @@ export function ModelPicker({
   const trigger = useRef<HTMLElement | null>(null)
 
   const selected = value ? models.find((m) => m.id === value) : undefined
-  const label = selected ? modelName(selected) : value || placeholder
+  const label = selected ? modelName(selected) : value || (placeholder ?? t('Choose a model'))
 
   const close = useCallback(() => {
     setOpen(false)
@@ -137,16 +141,17 @@ export function ModelPicker({
       {...slot('model-picker')}
       role="button"
       tabIndex={disabled ? -1 : 0}
-      aria-label={describe ?? `${name}: ${label}`}
+      aria-label={describe ?? t('{name}: {model}', { name, model: label })}
       aria-haspopup="listbox"
       aria-expanded={open}
       aria-disabled={disabled || undefined}
-      height={small ? 28 : 36}
-      px={small ? '$2' : '$3'}
+      height={quiet ? 28 : small ? 28 : 36}
+      px={quiet ? 5 : small ? '$2' : '$3'}
       gap="$2"
       items="center"
       maxW="100%"
-      rounded="$3"
+      rounded={quiet ? 8 : '$3'}
+      {...(quiet ? { '$max-sm': { height: 36 }, transition: 'quickest' } : null)}
       borderWidth={quiet ? 0 : 1}
       borderColor="$borderColor"
       bg={quiet ? 'transparent' : '$background'}
@@ -178,7 +183,7 @@ export function ModelPicker({
         }
       }}
     >
-      <SizableText size={small ? '$1' : '$2'} color={quiet ? '$quiet' : '$ink'} numberOfLines={1} shrink={1} minW={0}>
+      <SizableText size={quiet ? '$3' : small ? '$1' : '$2'} color="$ink" fontWeight={quiet ? '500' : undefined} numberOfLines={1} shrink={1} minW={0}>
         {label}
       </SizableText>
       {selected && !quiet ? (
@@ -186,7 +191,7 @@ export function ModelPicker({
           {groupLabel(selected)}
         </SizableText>
       ) : null}
-      <ChevronsUpDown size={small ? 12 : 14} color="$soft" shrink={0} aria-hidden />
+      {quiet ? null : <ChevronsUpDown size={small ? 12 : 14} color="$soft" shrink={0} aria-hidden />}
     </XStack>
   )
 

@@ -15,9 +15,9 @@ import type { ComponentProps } from 'react'
  */
 import { SizableText, XStack } from '@hanzo/gui'
 import { FileText, MousePointerClick, Paperclip, X } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { slot } from '../backends/gui/slot'
-import { useTranslate } from '../i18n/react'
 
 type Row = Omit<ComponentProps<typeof XStack>, 'children'>
 
@@ -43,10 +43,20 @@ export interface AttachmentsProps extends Row {
 }
 
 export function Attachments({ items, onRemove, ...rest }: AttachmentsProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   if (items.length === 0) return null
   return (
-    <XStack {...slot('attachments')} render="ul" aria-label={tr('Attached to the next message')} flexWrap="wrap" gap="$1.5" m={0} p={0} style={{ listStyle: 'none' }} {...rest}>
+    <XStack
+      {...slot('attachments')}
+      render="ul"
+      aria-label={t('Attached to the next message')}
+      flexWrap="wrap"
+      gap="$1.5"
+      m={0}
+      p={0}
+      style={{ listStyle: 'none' }}
+      {...rest}
+    >
       {items.map((item) => {
         const Icon = ICON[item.kind]
         return (
@@ -58,11 +68,8 @@ export function Attachments({ items, onRemove, ...rest }: AttachmentsProps) {
             {onRemove ? (
               <XStack
                 render="button"
-                {...({
-                  type: 'button',
-                  title: `Remove ${item.label}`,
-                } as object)}
-                aria-label={`Remove ${item.label}`}
+                {...({ type: 'button', title: t('Remove {name}', { name: item.label }) } as object)}
+                aria-label={t('Remove {name}', { name: item.label })}
                 onPress={() => onRemove(item.id)}
                 width={20}
                 height={20}

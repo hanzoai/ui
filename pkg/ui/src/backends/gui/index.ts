@@ -218,14 +218,8 @@ export {
   type ProseTag,
   type TypographySize,
 } from './prose'
-export {
-  Link,
-  useLink,
-  MDXLink,
-  LinkElement,
-  type LinkComponent,
-  type LinkElementProps,
-} from './link'
+export { Link, useLink, MDXLink, type LinkComponent } from './link'
+export { LinkElement, type LinkElementProps } from './link-element'
 export {
   VideoPlayer,
   YouTubeEmbed,

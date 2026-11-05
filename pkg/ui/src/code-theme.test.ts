@@ -9,11 +9,12 @@
  * the theme is data in shiki's format and ships no highlighter. The suite loads
  * the site's copy, the shiki a Hanzo page is highlighted with.
  */
+import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { pathToFileURL } from 'node:url'
 import { beforeAll, describe, expect, it } from 'vitest'
 
-import { codeTheme, face, ramp, syntax, type CodeToken } from './code-theme'
+import { codeFace, codeInk, codeInks, codeTheme, face, ramp, syntax, type CodeInk, type CodeToken } from './code-theme'
 
 /** The slice of shiki's API these tests call. */
 interface Token {
@@ -138,6 +139,43 @@ describe('the code theme in shiki', () => {
     const html = shiki.codeToHtml('const a = 1', { lang: 'ts', themes: codeTheme })
     expect(html).toContain('color:var(--codeKeyword, var(--neutral-950))')
     expect(html).toContain('--shiki-dark:var(--codeKeyword, var(--neutral-50))')
+  })
+
+  it('hanzo.ai: every token names its ink, and code.css inks each one with its theme key and ladder steps', () => {
+    const sheet = readFileSync(new URL('./styles/code.css', import.meta.url), 'utf8')
+    const rules = Object.fromEntries(
+      [...sheet.matchAll(/\[data-code='(\w+)'\] \{ color: (.+?); \}/g)].map(([, ink, colour]) => [ink, colour]),
+    )
+    expect(Object.keys(rules).sort()).toEqual(Object.keys(codeInks).sort())
+    for (const [ink, { key: name, light, dark }] of Object.entries(codeInks))
+      expect(rules[ink], ink).toBe(`var(--${name}, light-dark(${light}, ${dark}))`)
+
+    const seen = new Set<CodeInk>()
+    for (const [lang, src] of [['ts', TS], ['json', '{"model": "zen", "n": 1, "stream": true}'], ['bash', 'curl -fsSL https://hanzo.sh | sh # install']] as const) {
+      const { tokens } = shiki.codeToTokens(src, { lang, themes: codeTheme, defaultColor: 'light-dark()' })
+      for (const t of tokens.flat()) {
+        const ink = codeInk(t.htmlStyle?.color)
+        expect(ink, `${lang} ${JSON.stringify(t.content)} ${t.htmlStyle?.color}`).toBeDefined()
+        // The ink's rule resolves to what shiki wrote, in both schemes.
+        const [l, d] = halves(t.htmlStyle?.color)!
+        expect(l).toBe(`var(--${codeInks[ink!].key}, ${codeInks[ink!].light})`)
+        expect(d).toBe(`var(--${codeInks[ink!].key}, ${codeInks[ink!].dark})`)
+        seen.add(ink!)
+      }
+    }
+    expect([...seen].sort()).toEqual(expect.arrayContaining(['comment', 'ink', 'keyword', 'string']))
+    expect(codeInk('#ff0000')).toBeUndefined()
+    // A token's face, single-theme: a keyword bold, a comment italic, a name upright.
+    const { tokens: one } = (shiki as unknown as { codeToTokens(c: string, o: { lang: string; theme: unknown }): { tokens: (Token & { fontStyle?: number })[][] } }).codeToTokens(TS, { lang: 'ts', theme: codeTheme.dark })
+    const at = (text: string) => one.flat().find((t) => t.content.trim() === text)
+    expect(codeFace(at('const')?.fontStyle)).toBe('bold')
+    expect(codeFace(at('// one client, every model')?.fontStyle ?? one[0][0].fontStyle)).toBe('italic')
+    expect(codeFace(at('client')?.fontStyle)).toBeUndefined()
+    expect(codeFace(3)).toBe('bold italic')
+    const sheet2 = readFileSync(new URL('./styles/code.css', import.meta.url), 'utf8')
+    expect(sheet2).toContain("[data-face~='bold'] { font-weight: 700; }")
+    expect(sheet2).toContain("[data-face~='italic'] { font-style: italic; }")
+    expect(codeInk('var(--codeGround, var(--neutral-900))')).toBeUndefined()
   })
 
   // Last, after every call above has loaded and read it.

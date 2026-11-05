@@ -11,11 +11,12 @@
  * apart.
  */
 import * as React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Box } from '../../box'
 import { cn, type ClassValue } from '../../core/cn'
 import type { LinkDef } from '../../types'
-import { LinkElement } from './link'
+import { LinkElement } from './link-element'
 
 export type NavItemsProps = {
   items: LinkDef[]
@@ -43,25 +44,28 @@ export const NavItems = ({
   className,
   itemClx,
   onNavigate,
-}: NavItemsProps) => (
-  <Box
-    tag={as}
-    // A landmark with no name is one a screen reader lists as "navigation",
-    // indistinguishable from every other navigation on the page.
-    aria-label={as === 'nav' ? 'Navigation' : undefined}
-    className={cn('grid grid-flow-col auto-cols-max items-center', className)}
-  >
-    {items.map((def, i) => {
-      const current = !!currentAs && def.href === currentAs
-      return (
-        <LinkElement
-          key={def.href || i}
-          def={def}
-          onClick={onNavigate}
-          aria-current={current ? 'page' : false}
-          className={cn(typeof itemClx === 'function' ? itemClx(def) : itemClx)}
-        />
-      )
-    })}
-  </Box>
-)
+}: NavItemsProps) => {
+  const { t } = useI18n()
+  return (
+    <Box
+      tag={as}
+      // A landmark with no name is one a screen reader lists as "navigation",
+      // indistinguishable from every other navigation on the page.
+      aria-label={as === 'nav' ? t('Navigation') : undefined}
+      className={cn('grid grid-flow-col auto-cols-max items-center', className)}
+    >
+      {items.map((def, i) => {
+        const current = !!currentAs && def.href === currentAs
+        return (
+          <LinkElement
+            key={def.href || i}
+            def={def}
+            onClick={onNavigate}
+            aria-current={current ? 'page' : false}
+            className={cn(typeof itemClx === 'function' ? itemClx(def) : itemClx)}
+          />
+        )
+      })}
+    </Box>
+  )
+}

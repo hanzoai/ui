@@ -16,11 +16,10 @@
  * does. `size` picks the type scale. A line is never wrapped, so the body
  * scrolls on both axes once it outgrows `maxHeight` or the panel's width.
  */
-import { useCallback, useState, type ComponentProps } from 'react'
-import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { Check, Copy, FileText } from '@hanzogui/lucide-icons-2'
-
-import { useTranslate } from '../../i18n/react'
+import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
+import { useCallback, useState, type ComponentProps } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Button } from './button'
 import { Language, mono, named, type Palette, type Surface } from './code-surface'
 import { align, ltr } from './dir'
@@ -139,12 +138,12 @@ const rows = (code: string, highlightLines: number[], diff?: CodeBlockDiff) =>
   })
 
 export function CodeBlock({ code, language = 'text', filename, theme, size, showLineNumbers = true, highlightLines = [], showCopyButton = true, maxHeight = 400, diff, ...props }: CodeBlockProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [copied, setCopied] = useState(false)
   const paint = surface(theme)
   const fontSize = FONT_SIZE[size ?? 'default']
   const lineHeight = fontSize * 1.5
-  const label = copied ? tr('Copied') : tr('Copy code')
+  const label = copied ? t('Copied') : t('Copy code')
 
   const copy = useCallback(async () => {
     try {

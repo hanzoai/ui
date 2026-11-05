@@ -21,9 +21,10 @@ import { choose, Voice, type Machine } from '@hanzo/voice'
 import { Check, ChevronDown, Mic as MicIcon } from '@hanzogui/lucide-icons-2'
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '../backends/gui'
-import { useDirection, useTranslate } from '../i18n/react'
+import { useDirection } from '../i18n/react'
 import { LANGUAGES } from './languages'
-import { RING } from './ring'
+import { GHOST, GLYPH, RING, STROKE } from './look'
+import { useI18n } from '@hanzo/i18n/react'
 
 const KEY = 'hanzo.mic'
 
@@ -143,16 +144,14 @@ export interface DictationProps {
   disabled?: boolean
   /** The box of each half, px: the composer's control size (32 on a laptop, 36 on a phone). */
   size?: number
-  /** The space between the mic and its chevron, px: the row's own gap where every control in it is evenly set (a phone). */
-  gap?: number
   /** The language dictation listens in, or null for Auto (the browser's own). */
   language?: string | null
   onLanguage?: (id: string | null) => void
 }
 
-/** The mic and its chevron, one control on the composer's row. */
-export function Dictation({ voice, disabled = false, size = 36, gap = 0, language = null, onLanguage }: DictationProps) {
-  const t = useTranslate()
+/** The mic and its chevron, one control on the composer's row: the mic round, the chevron half its width against it. */
+export function Dictation({ voice, disabled = false, size = 36, language = null, onLanguage }: DictationProps) {
+  const { t } = useI18n()
   const [open, setOpen] = useState(false)
   // The Language list, drawn only while open (see Plus.tsx).
   const [lang, setLang] = useState(false)
@@ -161,23 +160,31 @@ export function Dictation({ voice, disabled = false, size = 36, gap = 0, languag
   const spoken = LANGUAGES.find((l) => l.id === language)
   // Two controls on one row, each its own box and its own focus ring: no frame around the pair.
   return (
-    <XStack data-slot="dictation" items="center" gap={gap} shrink={0}>
-      <Control asChild size={size} {...PLAIN} focusVisibleStyle={RING}>
-        <Voice
-          voice={voice}
-          disabled={disabled}
-          says={{
-            idle: t('Dictate'),
-            listening: t('Dictating — click to stop'),
-          }}
-        >
-          {(state) => <MicIcon size={16} color="var(--foreground)" fill={state === 'idle' ? 'none' : 'var(--foreground)'} />}
+    <XStack data-slot="dictation" items="center" shrink={0}>
+      <Control asChild size={size} {...GHOST} focusVisibleStyle={RING}>
+        <Voice voice={voice} disabled={disabled} says={{ idle: t('Dictate'), listening: t('Dictating — click to stop') }}>
+          {(state) => <MicIcon size={GLYPH} strokeWidth={STROKE} color="currentColor" fill={state === 'idle' ? 'none' : 'currentColor'} />}
         </Voice>
       </Control>
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild disabled={disabled}>
-          <XStack render="button" aria-label={t('Dictation settings')} data-slot="dictation-menu" width={size} height={size} items="center" justify="center" rounded={999} cursor="pointer" bg={open ? '$hover' : 'transparent'} hoverStyle={{ bg: '$hover' }} focusVisibleStyle={RING}>
-            <ChevronDown size={14} color="$soft" />
+          <XStack
+            render="button"
+            aria-label={t('Dictation settings')}
+            data-slot="dictation-menu"
+            // The mic's own chevron: half its width, the pair one control.
+            width={size / 2}
+            height={size}
+            items="center"
+            justify="center"
+            rounded={999}
+            cursor="pointer"
+            {...GHOST}
+            {...(open ? { bg: '$hover', color: '$ink' } : null)}
+            focusVisibleStyle={RING}
+          >
+            {/* The small mark of a menu: 16px drawn at a 2px line, so at 1x it is an 8px chevron and not a smudge. */}
+            <ChevronDown size={16} strokeWidth={2} color="currentColor" />
           </XStack>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" minW={200} data-slot="dictation-panel">

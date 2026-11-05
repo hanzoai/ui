@@ -1,8 +1,9 @@
 /**
  * Corner's decisions, as pure functions over plain values: which list gets a
  * search, what a search matches, and the words the panel says. They import
- * nothing, so they are tested in node and a server can load them.
+ * nothing but `phrase`, so they are tested in node and a server can load them.
  */
+import { phrase } from '@hanzo/i18n'
 
 /** One choice a host offers: its code, its name in its own script, and how it is written. */
 export type Option = {
@@ -23,7 +24,11 @@ export type Setting = {
   onChange: (code: string) => void
 }
 
-/** What the panel says. A host that speaks another language passes its own. */
+/**
+ * What the panel says, in English; Corner draws each word through the host's @hanzo/i18n `t`.
+ *
+ * @deprecated Use the @hanzo/i18n provider instead; kept for backward compatibility.
+ */
 export type Words = {
   /** The trigger's and the panel's name. */
   open: string
@@ -41,40 +46,45 @@ export type Words = {
   system: string
   serif: string
   mono: string
-  /** The face Arabic is set in, and its two answers (`sans` names the other). */
+  /** The face Arabic is set in, and its answers besides `sans`, which the face list names. */
   arabic: string
   kufi: string
+  plex: string
   search: string
   back: string
   close: string
   /** A search that matched nothing. */
   none: string
-  /** Read after a link that opens in a new tab. */
+  /** A help link that opens in a new tab is announced: "opens in a new tab". */
   leaves: string
 }
 
+/**
+ * @deprecated Corner no longer exports this as an API; kept (deprecated but working) for backward compatibility.
+ */
 export const WORDS: Words = {
-  open: 'Help and preferences',
-  help: 'Help',
-  preferences: 'Preferences',
-  theme: 'Theme',
-  auto: 'Auto',
-  light: 'Light',
-  dark: 'Dark',
-  language: 'Language',
-  currency: 'Currency',
-  font: 'Font',
-  sans: 'Sans',
-  system: 'System',
-  serif: 'Serif',
-  mono: 'Mono',
-  arabic: 'Arabic font',
-  kufi: 'Kufi',
-  search: 'Search',
-  back: 'Back',
-  close: 'Close',
-  none: 'No matches',
-  leaves: 'opens in a new tab',
+  open: phrase('Help and preferences'),
+  help: phrase('Help'),
+  preferences: phrase('Preferences'),
+  theme: phrase('Theme'),
+  auto: phrase('Auto'),
+  light: phrase('Light'),
+  dark: phrase('Dark'),
+  language: phrase('Language'),
+  currency: phrase('Currency'),
+  font: phrase('Font'),
+  sans: phrase('Sans'),
+  system: phrase('System'),
+  serif: phrase('Serif'),
+  mono: phrase('Mono'),
+  arabic: phrase('Arabic font'),
+  kufi: phrase('Kufi'),
+  plex: phrase('Plex'),
+  search: phrase('Search'),
+  back: phrase('Back'),
+  close: phrase('Close'),
+  none: phrase('No matches'),
+  leaves: phrase('opens in a new tab'),
 }
 
 /** Past this many options a list gets a search field. */
