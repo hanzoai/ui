@@ -22,7 +22,50 @@
 // contains a newline, every line number is exactly where it was — a stack trace
 // and a source map still point at the right line.
 
-import ts from 'typescript'
+// TypeScript 7 is a native (Go) compiler: the root `typescript` module only
+// re-exports the version string, and the compiler API moved behind the
+// `typescript/unstable/*` subpaths. AST types + `is*` guards + enums come from
+// `typescript/unstable/ast`, parsing goes through the sync API in
+// `typescript/unstable/sync` (which spawns the bundled tsgo binary), and the
+// in-memory filesystem comes from `typescript/unstable/fs`. Neither subpath
+// exposes the old `ts.createSourceFile` / `ts.forEachChild` free functions:
+// a `SourceFile` is minted by the API and children are walked with
+// `node.forEachChild(...)`.
+import {
+  SyntaxKind,
+  isArrowFunction,
+  isAsExpression,
+  isBinaryExpression,
+  isBlock,
+  isCallExpression,
+  isClassDeclaration,
+  isClassExpression,
+  isConditionalExpression,
+  isFunctionDeclaration,
+  isFunctionExpression,
+  isIdentifier,
+  isJsxAttribute,
+  isJsxElement,
+  isJsxExpression,
+  isJsxFragment,
+  isJsxSelfClosingElement,
+  isMethodDeclaration,
+  isParenthesizedExpression,
+  isPropertyAccessExpression,
+  isReturnStatement,
+  isSatisfiesExpression,
+  isVariableDeclaration,
+} from 'typescript/unstable/ast'
+import type {
+  ArrowFunction,
+  Expression,
+  FunctionExpression,
+  JsxOpeningLikeElement,
+  Node,
+  SourceFile,
+} from 'typescript/unstable/ast'
+import { API } from 'typescript/unstable/sync'
+import { createVirtualFileSystem } from 'typescript/unstable/fs'
 
 /** The attribute this writes. It is also the attribute @hanzo/observe reads.
  *
@@ -68,54 +111,47 @@ export interface TransformResult {
  *  capitalisation is not a convention here, it is the language. */
 const isComponentName = (name: string): boolean => /^[A-Z]/.test(name)
 
-function scriptKind(filename: string): ts.ScriptKind {
-  if (filename.endsWith('.tsx')) return ts.ScriptKind.TSX
-  if (filename.endsWith('.jsx')) return ts.ScriptKind.JSX
-  if (filename.endsWith('.ts')) return ts.ScriptKind.TS
-  return ts.ScriptKind.JS
-}
-
 /** Peel the expression wrappers that sit between `return` and the JSX: parens,
  *  `as const`, and the two conditionals every component uses to render one thing
  *  or another. Both arms of a conditional are roots — a component that returns
  *  `<Empty/>` or `<List/>` has two root elements and both should carry its name. */
-function jsxRoots(node: ts.Node | undefined, out: ts.JsxOpeningLikeElement[]): void {
+function jsxRoots(node: Node | undefined, out: JsxOpeningLikeElement[]): void {
   if (!node) return
-  if (ts.isParenthesizedExpression(node) || ts.isAsExpression(node) || ts.isSatisfiesExpression(node)) {
+  if (isParenthesizedExpression(node) || isAsExpression(node) || isSatisfiesExpression(node)) {
     return jsxRoots(node.expression, out)
   }
-  if (ts.isConditionalExpression(node)) {
+  if (isConditionalExpression(node)) {
     jsxRoots(node.whenTrue, out)
     jsxRoots(node.whenFalse, out)
     return
   }
-  if (ts.isBinaryExpression(node)) {
+  if (isBinaryExpression(node)) {
     const op = node.operatorToken.kind
     // `cond && <A/>` — only the right side can be JSX.
-    if (op === ts.SyntaxKind.AmpersandAmpersandToken) return jsxRoots(node.right, out)
+    if (op === SyntaxKind.AmpersandAmpersandToken) return jsxRoots(node.right, out)
     // `a || <B/>` and `a ?? <B/>` — either side can be.
-    if (op === ts.SyntaxKind.BarBarToken || op === ts.SyntaxKind.QuestionQuestionToken) {
+    if (op === SyntaxKind.BarBarToken || op === SyntaxKind.QuestionQuestionToken) {
       jsxRoots(node.left, out)
       jsxRoots(node.right, out)
     }
     return
   }
-  if (ts.isJsxElement(node)) {
+  if (isJsxElement(node)) {
     out.push(node.openingElement)
     return
   }
-  if (ts.isJsxSelfClosingElement(node)) {
+  if (isJsxSelfClosingElement(node)) {
     out.push(node)
     return
   }
   // A fragment carries no attribute itself, but it is not the root — its element
   // children are. `return <><Header/><Main/></>` is a component with TWO roots,
   // and skipping it would leave that whole subtree anonymous.
-  if (ts.isJsxFragment(node)) {
+  if (isJsxFragment(node)) {
     for (const child of node.children) {
-      if (ts.isJsxElement(child) || ts.isJsxSelfClosingElement(child) || ts.isJsxFragment(child)) {
+      if (isJsxElement(child) || isJsxSelfClosingElement(child) || isJsxFragment(child)) {
         jsxRoots(child, out)
-      } else if (ts.isJsxExpression(child)) {
+      } else if (isJsxExpression(child)) {
         jsxRoots(child.expression, out)
       }
     }
@@ -127,82 +163,82 @@ function jsxRoots(node: ts.Node | undefined, out: ts.JsxOpeningLikeElement[]): v
  *  Nested functions are deliberately NOT descended into. A `renderItem` callback
  *  or an inner component declares its own scope, and its returns belong to it —
  *  attributing them to the enclosing component is how a hierarchy starts lying. */
-function rootsOf(body: ts.Node): ts.JsxOpeningLikeElement[] {
-  const out: ts.JsxOpeningLikeElement[] = []
-  if (!ts.isBlock(body)) {
+function rootsOf(body: Node): JsxOpeningLikeElement[] {
+  const out: JsxOpeningLikeElement[] = []
+  if (!isBlock(body)) {
     jsxRoots(body, out) // concise arrow body: `() => <div/>`
     return out
   }
-  const visit = (node: ts.Node): void => {
+  const visit = (node: Node): void => {
     if (
-      ts.isFunctionDeclaration(node) ||
-      ts.isFunctionExpression(node) ||
-      ts.isArrowFunction(node) ||
-      ts.isClassDeclaration(node) ||
-      ts.isClassExpression(node)
+      isFunctionDeclaration(node) ||
+      isFunctionExpression(node) ||
+      isArrowFunction(node) ||
+      isClassDeclaration(node) ||
+      isClassExpression(node)
     ) {
       return
     }
-    if (ts.isReturnStatement(node)) jsxRoots(node.expression, out)
-    ts.forEachChild(node, visit)
+    if (isReturnStatement(node)) jsxRoots(node.expression, out)
+    node.forEachChild(visit)
   }
-  ts.forEachChild(body, visit)
+  body.forEachChild(visit)
   return out
 }
 
 /** Unwrap `memo(...)` / `forwardRef(...)` down to the function underneath. */
-function unwrap(expr: ts.Expression): ts.Expression {
-  if (!ts.isCallExpression(expr) || expr.arguments.length === 0) return expr
-  const callee = ts.isPropertyAccessExpression(expr.expression)
+function unwrap(expr: Expression): Expression {
+  if (!isCallExpression(expr) || expr.arguments.length === 0) return expr
+  const callee = isPropertyAccessExpression(expr.expression)
     ? `${expr.expression.expression.getText()}.${expr.expression.name.text}`
-    : ts.isIdentifier(expr.expression)
+    : isIdentifier(expr.expression)
       ? expr.expression.text
       : ''
   return WRAPPERS.has(callee) ? unwrap(expr.arguments[0]!) : expr
 }
 
-const isFunctionLike = (n: ts.Node): n is ts.ArrowFunction | ts.FunctionExpression =>
-  ts.isArrowFunction(n) || ts.isFunctionExpression(n)
+const isFunctionLike = (n: Node): n is ArrowFunction | FunctionExpression =>
+  isArrowFunction(n) || isFunctionExpression(n)
 
 /** Find every component in the module, paired with the root elements it renders.
  *  A component is a function or class that has a capitalised name — the same test
  *  JSX itself applies at the call site. */
-function components(source: ts.SourceFile): Array<{ name: string; roots: ts.JsxOpeningLikeElement[] }> {
-  const found: Array<{ name: string; roots: ts.JsxOpeningLikeElement[] }> = []
+function components(source: SourceFile): Array<{ name: string; roots: JsxOpeningLikeElement[] }> {
+  const found: Array<{ name: string; roots: JsxOpeningLikeElement[] }> = []
 
-  const visit = (node: ts.Node): void => {
-    if (ts.isFunctionDeclaration(node) && node.name && node.body && isComponentName(node.name.text)) {
+  const visit = (node: Node): void => {
+    if (isFunctionDeclaration(node) && node.name && node.body && isComponentName(node.name.text)) {
       found.push({ name: node.name.text, roots: rootsOf(node.body) })
-    } else if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) {
+    } else if (isVariableDeclaration(node) && isIdentifier(node.name) && node.initializer) {
       if (isComponentName(node.name.text)) {
         const fn = unwrap(node.initializer)
         if (isFunctionLike(fn) && fn.body) found.push({ name: node.name.text, roots: rootsOf(fn.body) })
       }
-    } else if (ts.isClassDeclaration(node) && node.name && isComponentName(node.name.text)) {
+    } else if (isClassDeclaration(node) && node.name && isComponentName(node.name.text)) {
       for (const member of node.members) {
-        if (ts.isMethodDeclaration(member) && ts.isIdentifier(member.name) && member.name.text === 'render' && member.body) {
+        if (isMethodDeclaration(member) && isIdentifier(member.name) && member.name.text === 'render' && member.body) {
           found.push({ name: node.name.text, roots: rootsOf(member.body) })
         }
       }
     }
-    ts.forEachChild(node, visit)
+    node.forEachChild(visit)
   }
 
-  ts.forEachChild(source, visit)
+  source.forEachChild(visit)
   return found
 }
 
-function tagOf(el: ts.JsxOpeningLikeElement, source: ts.SourceFile): string {
+function tagOf(el: JsxOpeningLikeElement, source: SourceFile): string {
   return el.tagName.getText(source)
 }
 
 /** Already annotated by hand? Then the author has said something specific —
  *  including `data-observe="off"` — and this transform does not argue with it. */
-function annotated(el: ts.JsxOpeningLikeElement): boolean {
+function annotated(el: JsxOpeningLikeElement): boolean {
   return el.attributes.properties.some(
     (p) =>
-      ts.isJsxAttribute(p) &&
-      (ts.isIdentifier(p.name) ? p.name.text : p.name.getText()) === ATTRIBUTE,
+      isJsxAttribute(p) &&
+      (isIdentifier(p.name) ? p.name.text : p.name.getText()) === ATTRIBUTE,
   )
 }
 
@@ -214,6 +250,33 @@ function skip(tag: string): boolean {
   return NEVER.has(last)
 }
 
+/** Parse `code` as `filename` through the TypeScript 7 sync API.
+ *
+ *  The API reads files through a filesystem, so the module is handed to it as
+ *  an in-memory file: `createVirtualFileSystem` is seeded with the contents up
+ *  front (mutating the seed afterwards is NOT re-read — the server caches the
+ *  first read, which is why this creates a fresh API per call rather than
+ *  reusing one). The API infers the parser dialect from the file extension, so
+ *  no `ScriptKind` has to be picked by hand. */
+function parseSourceFile(filename: string, code: string): SourceFile {
+  // The API only resolves absolute paths for `openFiles`, so a bare `h.tsx`
+  // (which `ts.createSourceFile` happily took) is anchored under a virtual
+  // root. Real callers hand us absolute resource paths, so this only matters
+  // for tests and direct `transform` calls.
+  const file = filename.startsWith('/') ? filename : `/virtual/${filename}`
+  const api = new API({ fs: createVirtualFileSystem({ [file]: code }) })
+  try {
+    const snapshot = api.updateSnapshot({ openFiles: [file] })
+    const source = snapshot
+      .getDefaultProjectForFile(file)
+      ?.program.getSourceFile(file)
+    if (!source) throw new Error(`typescript: could not parse ${filename}`)
+    return source
+  } finally {
+    api.close()
+  }
+}
+
 /** transform annotates every component root in `code`, or returns null when there
  *  was nothing to do — so a caller can hand back the original string untouched
  *  and skip both the copy and the source-map churn. */
@@ -221,13 +284,7 @@ export function transform(code: string, options: TransformOptions): TransformRes
   // Cheap gate first: no `<` means no JSX, and most files in a repo are not JSX.
   if (!code.includes('<')) return null
 
-  const source = ts.createSourceFile(
-    options.filename,
-    code,
-    ts.ScriptTarget.Latest,
-    /* setParentNodes */ true,
-    scriptKind(options.filename),
-  )
+  const source = parseSourceFile(options.filename, code)
 
   // offset -> the name to write there. A Map dedupes the case where one element
   // is the root of two returns (`return cond ? <A/> : <A/>` shares no node, but a

@@ -158,6 +158,17 @@ const ACCENTS: Array<{ label: string; value?: string }> = [
   { label: 'Amber', value: '#f59e0b' },
 ]
 
+/** Ground presets for the canvas and elevated surfaces (`--background`). */
+export const BACKGROUNDS: Array<{ label: string; value?: string }> = [
+  { label: 'Default' },
+  { label: 'Pure Black', value: '#000000' },
+  { label: 'Obsidian', value: '#0a0a0f' },
+  { label: 'Midnight', value: '#090d16' },
+  { label: 'Forest', value: '#07120e' },
+  { label: 'Espresso', value: '#120d0a' },
+  { label: 'Paper', value: '#faf8f5' },
+]
+
 /**
  * Read the stored preference and keep the document in step with it.
  *
@@ -245,6 +256,7 @@ export function useAppearance({
       // Clearing the accent must REMOVE the key, not store undefined, or a round
       // trip through JSON hands back a key whose value is the string "undefined".
       if ('accent' in patch && patch.accent === undefined) delete next.accent
+      if ('background' in patch && patch.background === undefined) delete next.background
       write(next, { scope, org })
       refresh()
       // The device has it either way; the account is what makes it travel. A
@@ -415,7 +427,7 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
   const touched =
     type !== 1 || ratio !== 1 || pref.modular !== undefined || (pref.density ?? 'default') !== 'default' ||
     (pref.font ?? 'default') !== 'default' || (pref.arabic ?? 'default') !== 'default' ||
-    (pref.width ?? 'default') !== 'default' || !!pref.accent ||
+    (pref.width ?? 'default') !== 'default' || !!pref.accent || !!pref.background ||
     !!pref.theme || (pref.radius ?? 'default') !== 'default'
   const here = orgName || org
 
@@ -537,6 +549,40 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
             <span style={S.swatch(a.value)} />
           </Choice>
         ))}
+        <label
+          title="Custom accent color"
+          style={{ ...choice(Boolean(pref.accent && !ACCENTS.some((a) => a.value === pref.accent))), position: 'relative', overflow: 'hidden' }}
+        >
+          <span style={{ ...S.swatch(pref.accent), border: '1px solid rgb(255 255 255 / .25)' }} />
+          <input
+            type="color"
+            aria-label="Custom accent color"
+            value={pref.accent && /^#[0-9a-fA-F]{6}$/.test(pref.accent) ? pref.accent : '#3b82f6'}
+            onChange={(e) => set({ accent: e.target.value })}
+            style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%' }}
+          />
+        </label>
+      </Row>
+
+      <Row label="Background" by={from.background} scope={scope} org={here}>
+        {BACKGROUNDS.map((b) => (
+          <Choice key={b.label} on={pref.background === b.value} onSelect={() => set({ background: b.value })} title={b.label}>
+            <span style={{ ...S.swatch(b.value), border: b.value ? '1px solid rgb(255 255 255 / .2)' : undefined }} />
+          </Choice>
+        ))}
+        <label
+          title="Custom background color"
+          style={{ ...choice(Boolean(pref.background && !BACKGROUNDS.some((b) => b.value === pref.background))), position: 'relative', overflow: 'hidden' }}
+        >
+          <span style={{ ...S.swatch(pref.background), border: '1px solid rgb(255 255 255 / .25)' }} />
+          <input
+            type="color"
+            aria-label="Custom background color"
+            value={pref.background && /^#[0-9a-fA-F]{6}$/.test(pref.background) ? pref.background : '#0a0a0f'}
+            onChange={(e) => set({ background: e.target.value })}
+            style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%' }}
+          />
+        </label>
       </Row>
 
       <Composer account={account} />

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 import { SNAPSHOT } from "./snapshot"
 import { CATEGORY_ORDER } from "./categories"
 import { isSwatchKey } from "./colors"
-import { brandsForCategory } from "./brands"
+import { ALL_BRANDS } from "./brands"
 import { resolveEntry } from "./catalog"
 
 // Integrity + drift guard over the checked-in snapshot (the fallback + seed).
@@ -80,15 +80,10 @@ describe("snapshot integrity", () => {
     }
   })
 
-  // A row's brands are commerce's per-product answer and may be NARROWER than its
-  // category's scope (gateway is hanzo-only though Network admits lux/zoo/pars;
-  // referrals is the converse, an Apps row carried by the chain brands). Forcing
-  // strict equality with brandsForCategory would rewrite commerce's answer on
-  // every sync. What must hold: brands is non-empty and resolveEntry (the
-  // derivation that fills a row when a source omits brands) preserves it.
-  it("brands on every row derive from (or narrow) the category scope", () => {
+  it("brands on every row are valid catalog brands preserved by resolveEntry", () => {
     for (const e of SNAPSHOT) {
       expect(e.brands.length, e.id).toBeGreaterThan(0)
+      for (const b of e.brands) expect(ALL_BRANDS, e.id).toContain(b)
       expect(resolveEntry(e).brands, e.id).toEqual(e.brands)
     }
   })

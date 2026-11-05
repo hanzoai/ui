@@ -10,10 +10,46 @@
  * No React here on purpose. A server render, a browser extension and an embedded
  * preview all need to apply a preference, and only one of them has hooks.
  */
-import { vars, css, type Arabic, type Preference, type Scheme } from '@hanzo/design'
-import { resolve, type Layers, type Scope } from './scope'
+import { vars, type Arabic, type Scheme } from '@hanzo/design'
+import { resolve, type Layers, type Preference, type Scope } from './scope'
 
 export type { Arabic, Preference, Scheme }
+
+const COLOR_RE = /^(#[0-9a-fA-F]{3,8}|(?:rgb|hsl|oklch|oklab|lab|lch)a?\(\s*[-+0-9.%deg\s,/]+\)|[a-zA-Z]{3,20})$/
+
+function groundInk(c: string): string {
+  const m = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.exec(c)
+  if (!m) return '#fafafa'
+  const h = m[1].length === 3 ? m[1].replace(/./g, '$&$&') : m[1].slice(0, 6)
+  const [r, g, b] = [0, 2, 4].map((i) => {
+    const v = parseInt(h.slice(i, i + 2), 16) / 255
+    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
+  })
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.179 ? '#09090b' : '#fafafa'
+}
+
+function varsFor(p: Preference): Record<string, string> {
+  const out: Record<string, string> = { ...vars(p) }
+  if (p.background !== undefined && !out['--background']) {
+    const bg = p.background.trim()
+    if (COLOR_RE.test(bg)) {
+      const fg = groundInk(bg)
+      const isLight = fg === '#09090b'
+      const mixTarget = isLight ? 'black' : 'white'
+      out['--background'] = bg
+      out['--foreground'] = fg
+      out['--card'] = `color-mix(in oklch, ${bg} 95%, ${mixTarget})`
+      out['--card-foreground'] = fg
+      out['--popover'] = `color-mix(in oklch, ${bg} 92%, ${mixTarget})`
+      out['--popover-foreground'] = fg
+      out['--muted'] = `color-mix(in oklch, ${bg} 92%, ${mixTarget})`
+      out['--secondary'] = `color-mix(in oklch, ${bg} 90%, ${mixTarget})`
+      out['--secondary-hover'] = `color-mix(in oklch, ${bg} 84%, ${mixTarget})`
+      out['--secondary-foreground'] = fg
+    }
+  }
+  return out
+}
 
 /** One key, one shape. Namespaced because a surface's localStorage is shared. */
 export const KEY = 'hanzo.appearance'
@@ -103,6 +139,7 @@ export function read({ scope = 'everywhere', org, store = safeStore() }: At = {}
       ...(p.arabic === 'default' || COMPANIONS.includes(p.arabic as never) ? { arabic: p.arabic } : {}),
       ...(p.width === 'narrow' || p.width === 'default' || p.width === 'wide' ? { width: p.width } : {}),
       ...(typeof p.accent === 'string' ? { accent: p.accent } : {}),
+      ...(typeof p.background === 'string' ? { background: p.background } : {}),
       ...(p.theme === 'system' || p.theme === 'light' || p.theme === 'dark' ? { theme: p.theme } : {}),
       ...(p.radius === 'sharp' || p.radius === 'default' || p.radius === 'round' ? { radius: p.radius } : {}),
     }
@@ -163,7 +200,7 @@ export function apply(
   { store = safeStore() }: { store?: Storage } = {},
 ): void {
   if (!root) return
-  const next = vars(p)
+  const next = varsFor(p)
   for (const name of KNOBS) {
     const v = next[name]
     if (v) root.style.setProperty(name, v)
@@ -242,7 +279,7 @@ function follow(theme: Scheme | undefined): void {
  * reset. A name design emits is a name this removes, by construction.
  */
 export const KNOBS: readonly string[] = Object.keys(
-  vars({ type: 1, ratio: 1, modular: 1.25, density: 'compact', font: 'serif', arabic: 'sans', width: 'wide', accent: '#000', radius: 'round' }),
+  varsFor({ type: 1, ratio: 1, modular: 1.25, density: 'compact', font: 'serif', arabic: 'sans', width: 'wide', accent: '#000', background: '#000', radius: 'round' }),
 )
 
 /**
@@ -270,7 +307,9 @@ export function current({ install, org, orgId, store }: { install?: Preference; 
  * on every single load.
  */
 export function style(p: Preference): string {
-  return css(p, 'html:root')
+  const entries = Object.entries(varsFor(p))
+  if (entries.length === 0) return ''
+  return `html:root{${entries.map(([k, v]) => `${k}:${v}`).join(';')}}`
 }
 
 /**
@@ -288,7 +327,7 @@ export function style(p: Preference): string {
  * `vars()`, because a boot script cannot await anything.
  */
 export function bootScript({ base }: { base?: Preference } = {}): string {
-  const seed = JSON.stringify({ vars: vars(base ?? {}), ...(base?.theme ? { theme: base.theme } : {}) })
+  const seed = JSON.stringify({ vars: varsFor(base ?? {}), ...(base?.theme ? { theme: base.theme } : {}) })
   return (
     `(function(){try{var d=document.documentElement,s=d.style,c=null;` +
     `try{c=JSON.parse(localStorage.getItem(${JSON.stringify(PAINTED)})||'null')}catch(e){}` +

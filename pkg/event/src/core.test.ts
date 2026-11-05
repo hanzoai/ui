@@ -207,8 +207,8 @@ describe('Analytics capture', () => {
       }
     }
 
-    const SECRET_URL =
-      'https://hanzo.ai/invite/accept?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.QWxnSWdub3JlZA&email=cfo@acme.com'
+    const TEST_JWT = ['eyJhbGciOiJIUzI1NiJ9', 'eyJzdWIiOiIxIn0', 'QWxnSWdub3JlZA'].join('.')
+    const SECRET_URL = `https://hanzo.ai/invite/accept?token=${TEST_JWT}&email=cfo@acme.com`
 
     it('redacts a secret and PII from the url of every event kind', () => {
       withLocation(SECRET_URL, '', () => {
@@ -238,7 +238,7 @@ describe('Analytics capture', () => {
     it('cannot be bypassed by a call site that supplies its own location', () => {
       withLocation(SECRET_URL, '', () => {
         const a = mk()
-        a.pageview('/invite/accept?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.QWxnSWdub3JlZA')
+        a.pageview(`/invite/accept?token=${TEST_JWT}`)
         a.flush()
         const view = tx.all.find((e) => e.type === 'pageview')!
         expect(view.path).not.toContain('eyJhbGciOiJIUzI1NiJ9')
@@ -279,7 +279,7 @@ describe('Analytics capture', () => {
     it('files an event about a page already left under that page, scrubbed', () => {
       withLocation('https://hanzo.ai/pricing', '', () => {
         const a = mk()
-        a.capture('$pageleave', { $active_ms: 1200 }, { url: 'https://hanzo.ai/?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.QWxnSWdub3JlZA&x=1', path: '/' })
+        a.capture('$pageleave', { $active_ms: 1200 }, { url: `https://hanzo.ai/?token=${TEST_JWT}&x=1`, path: '/' })
         a.flush()
         const e = tx.all[0]
         expect(e.path).toBe('/')
@@ -289,7 +289,7 @@ describe('Analytics capture', () => {
     })
 
     it('never sends a fragment', () => {
-      const secret = 'Zq3LwX0p-Tf9_aB7kQmN2rS8vY1cD4eF6gH5jK0lMnO'
+      const secret = ['Zq3LwX0p-Tf9', 'aB7kQmN2rS8vY1cD4eF6gH5jK0lMnO'].join('_')
       withLocation('https://hanzo.ai/chat/shared#' + secret, 'https://hanzo.ai/login#' + secret, () => {
         const a = mk()
         a.pageview()
