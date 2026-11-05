@@ -13,8 +13,15 @@
 import { useId, useRef, useState, type KeyboardEvent, type DragEvent as ReactDragEvent } from 'react'
 import { isWeb, SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { File as FileIcon, Upload, X } from '@hanzogui/lucide-icons-2'
+<<<<<<< HEAD
 
 import { useTranslate } from '../../i18n/react'
+=======
+import { useId, useRef, useState, type DragEvent as ReactDragEvent, type KeyboardEvent } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
+import { ink } from './ink'
+import { slot } from './slot'
+>>>>>>> origin/i18n
 import { sx } from '../../sx'
 import { touch } from './gesture'
 import { ink } from './ink'
@@ -115,6 +122,7 @@ export function Dropzone({
   const tr = useTranslate()
   const [files, setFiles] = useState<File[]>([])
   const [active, setActive] = useState(false)
+  const { t } = useI18n()
   const inputRef = useRef<HTMLInputElement>(null)
   const inputId = useId()
 
@@ -180,6 +188,7 @@ export function Dropzone({
         />
         <Upload size={32} color="$quiet" />
         <YStack gap="$1" items="center">
+<<<<<<< HEAD
           {ink(active ? tr('Drop files here') : tr('Drag & drop files here'), SizableText, {
             fontWeight: '500',
           })}
@@ -188,6 +197,13 @@ export function Dropzone({
               maxFiles,
               maxSize: Math.round(maxSize / 1024 / 1024),
             }),
+=======
+          {ink(active ? t('Drop files here') : t('Drag & drop files here'), SizableText, {
+            fontWeight: '500',
+          })}
+          {ink(
+            t('or click to browse (max {n} files, {size}MB each)', { n: maxFiles, size: Math.round(maxSize / 1024 / 1024) }),
+>>>>>>> origin/i18n
             SizableText,
             { fontSize: '$1', color: '$quiet' }
           )}
@@ -207,11 +223,27 @@ export function Dropzone({
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
               })}
+<<<<<<< HEAD
               {ink(formatSize(file.size), SizableText, {
                 fontSize: '$1',
                 color: '$quiet',
               })}
               <XStack {...slot('dropzone-item-remove')} aria-label={tr('Remove {name}', { name: file.name })} items="center" justify="center" rounded="$2" p="$1" cursor="pointer" hoverStyle={{ bg: '$hover' }} {...asButton(() => removeFile(index))} {...touch(REMOVE_SIZE, 44, 'both')}>
+=======
+              {ink(formatSize(file.size), SizableText, { fontSize: '$1', color: '$quiet' })}
+              <XStack
+                {...slot('dropzone-item-remove')}
+                aria-label={t('Remove {name}', { name: file.name })}
+                items="center"
+                justify="center"
+                rounded="$2"
+                p="$1"
+                cursor="pointer"
+                hoverStyle={{ bg: '$hover' }}
+                {...asButton(() => removeFile(index))}
+                {...touch(REMOVE_SIZE, 44, 'both')}
+              >
+>>>>>>> origin/i18n
                 <X size={16} />
               </XStack>
             </XStack>

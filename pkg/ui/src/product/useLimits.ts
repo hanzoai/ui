@@ -12,6 +12,7 @@
 // learns how a surface authenticates.
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import {
   limitsOf,
   nearOf,
@@ -106,6 +107,7 @@ export function useLimits(
   reader.current = read
   const on = read !== null
   const heard = useSyncExternalStore(subscribe, snapshot, server)
+  const { t } = useI18n()
 
   useEffect(() => {
     const go = reader.current
@@ -157,8 +159,8 @@ export function useLimits(
   const shown = useMemo(() => overlay(limits, effective), [limits, effective])
   const nameRef = useRef(name)
   nameRef.current = name
-  const notice = useMemo(() => noticeOf(shown, effective, (id) => nameRef.current?.(id) ?? id), [shown, effective])
-  const near = useMemo(() => (notice ? null : nearOf(shown)), [notice, shown])
+  const notice = useMemo(() => noticeOf(shown, effective, (id) => nameRef.current?.(id) ?? id, Date.now(), t), [shown, effective, t])
+  const near = useMemo(() => (notice ? null : nearOf(shown, Date.now(), t)), [notice, shown, t])
 
   return { limits: shown, answered, notice, near, reload: useCallback(() => setNonce((n) => n + 1), []) }
 }

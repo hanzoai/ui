@@ -14,6 +14,7 @@
 import { useState, type ReactNode } from 'react'
 import { Button, Popover, Text, XStack, YStack } from '@hanzo/gui'
 import { AppWindow, Bot, CreditCard, Grip, LayoutGrid, MessageCircle, Settings2, Sparkles, UserRound, Users } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { useTranslate } from '../i18n/react'
 import { BrandMark } from './BrandMark'
@@ -67,6 +68,7 @@ export type AppHeaderProps = {
 export function AppHeader({ brand, wordmark = 'Hanzo', onBrand, org, children, current, surfaces, open, user, menu, theme, onProfile, onTeam, onBilling, onSignOut }: AppHeaderProps) {
   const tr = useTranslate()
   const [appsOpen, setAppsOpen] = useState(false)
+  const { t } = useI18n()
   const items = surfaces ?? otherSurfaces(current)
   const launch = (s: Surface) => {
     setAppsOpen(false)
@@ -93,7 +95,11 @@ export function AppHeader({ brand, wordmark = 'Hanzo', onBrand, org, children, c
       {items.length > 0 ? (
         <Popover open={appsOpen} onOpenChange={setAppsOpen} placement="bottom-end">
           <Popover.Trigger asChild>
+<<<<<<< HEAD
             <Button size="$2" chromeless icon={<Grip size={16} />} aria-label={tr('Apps')} />
+=======
+            <Button size="$2" chromeless icon={<Grip size={16} />} aria-label={t('Apps')} />
+>>>>>>> origin/i18n
           </Popover.Trigger>
           <Popover.Content bordered elevate p="$2" width={230} bg="$panel" borderColor="$borderColor">
             <YStack gap="$1">
@@ -123,6 +129,7 @@ export function AppHeader({ brand, wordmark = 'Hanzo', onBrand, org, children, c
       <UserMenu
         name={user}
         groups={[
+<<<<<<< HEAD
           (
             [
               onProfile
@@ -151,6 +158,13 @@ export function AppHeader({ brand, wordmark = 'Hanzo', onBrand, org, children, c
                 : null,
             ] satisfies (UserMenuItem | null)[]
           ).filter((r) => r !== null),
+=======
+          ([
+            onProfile ? { id: 'profile', label: t('Profile'), icon: <UserRound size={16} />, onPress: onProfile } : null,
+            onTeam ? { id: 'team', label: t('Team settings'), icon: <Settings2 size={16} />, onPress: onTeam } : null,
+            onBilling ? { id: 'billing', label: t('Billing'), icon: <CreditCard size={16} />, onPress: onBilling } : null,
+          ] satisfies (UserMenuItem | null)[]).filter((r) => r !== null),
+>>>>>>> origin/i18n
         ]}
         theme={theme}
         onSignOut={onSignOut}

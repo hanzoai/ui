@@ -22,6 +22,18 @@ import { useEffect, useRef, useState, type ComponentProps, type KeyboardEvent, t
  */
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { ChevronDown, ChevronUp, Trash2 } from '@hanzogui/lucide-icons-2'
+<<<<<<< HEAD
+=======
+import {
+  type ComponentProps,
+  type KeyboardEvent,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
+import { useI18n } from '@hanzo/i18n/react'
+>>>>>>> origin/i18n
 
 import { Button } from '../backends/gui/button'
 import { drag, type DragEvent } from '../backends/gui/gesture'
@@ -72,8 +84,27 @@ const TONE: Record<Level, string> = {
 
 const viewport = () => (typeof window === 'undefined' ? 1000 : window.innerHeight)
 
+<<<<<<< HEAD
 export function Console({ lines, height, onHeight, tabs = [], tab = 'log', onTab, onClear, onRun, busy = false, status, label = 'Console', ...rest }: ConsoleProps) {
   const tr = useTranslate()
+=======
+export function Console({
+  lines,
+  height,
+  onHeight,
+  tabs = [],
+  tab = 'log',
+  onTab,
+  onClear,
+  onRun,
+  busy = false,
+  status,
+  label: named,
+  ...rest
+}: ConsoleProps) {
+  const { t } = useI18n()
+  const label = named ?? t('Console')
+>>>>>>> origin/i18n
   const open = opened(height)
   const last = useRef(OPEN)
   if (open) last.current = height
@@ -120,7 +151,7 @@ export function Console({ lines, height, onHeight, tabs = [], tab = 'log', onTab
         {...slot('console-grip')}
         role="separator"
         aria-orientation="horizontal"
-        aria-label={`Resize ${label.toLowerCase()}`}
+        aria-label={t('Resize {label}', { label: label.toLowerCase() })}
         aria-valuemin={HEAD}
         aria-valuemax={ceiling(viewport())}
         aria-valuenow={Math.max(height, HEAD)}
@@ -142,12 +173,12 @@ export function Console({ lines, height, onHeight, tabs = [], tab = 'log', onTab
         {...(grip as object)}
       />
       <XStack items="center" gap="$2" px="$2" minH={HEAD - 6} shrink={0}>
-        <XStack role="tablist" aria-label={`${label} tabs`} items="center" gap="$1" minW={0} shrink={1} overflow="scroll">
-          {all.map((t) => {
-            const on = t.id === tab
+        <XStack role="tablist" aria-label={t('{label} tabs', { label })} items="center" gap="$1" minW={0} shrink={1} overflow="scroll">
+          {all.map((item) => {
+            const on = item.id === tab
             return (
               <Button
-                key={t.id}
+                key={item.id}
                 type="button"
                 variant="ghost"
                 size="sm"
@@ -158,14 +189,14 @@ export function Console({ lines, height, onHeight, tabs = [], tab = 'log', onTab
                 px="$2"
                 bg={on ? '$hover' : 'transparent'}
                 onClick={() => {
-                  onTab?.(t.id)
+                  onTab?.(item.id)
                   if (!open) toggle()
                 }}
               >
                 <SizableText size="$1" color={on ? '$ink' : '$soft'}>
-                  {t.label}
+                  {item.label}
                 </SizableText>
-                {t.id === 'log' && counts.error > 0 ? (
+                {item.id === 'log' && counts.error > 0 ? (
                   <SizableText size="$1" color="$bad" {...slot('console-errors')}>
                     {counts.error}
                   </SizableText>
@@ -178,11 +209,39 @@ export function Console({ lines, height, onHeight, tabs = [], tab = 'log', onTab
           {status}
         </XStack>
         {onClear && tab === 'log' ? (
+<<<<<<< HEAD
           <Button type="button" variant="ghost" size="icon-sm" minHeight={24} minWidth={24} aria-label={`Clear ${label.toLowerCase()}`} title={`Clear ${label.toLowerCase()}`} disabled={lines.length === 0} onClick={onClear}>
             <Trash2 size={13} />
           </Button>
         ) : null}
         <Button type="button" variant="ghost" size="icon-sm" minHeight={24} minWidth={24} aria-label={open ? `Collapse ${label.toLowerCase()}` : `Expand ${label.toLowerCase()}`} aria-expanded={open} title={open ? 'Collapse' : 'Expand'} onClick={toggle}>
+=======
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            minHeight={24}
+            minWidth={24}
+            aria-label={t('Clear {label}', { label: label.toLowerCase() })}
+            title={t('Clear {label}', { label: label.toLowerCase() })}
+            disabled={lines.length === 0}
+            onClick={onClear}
+          >
+            <Trash2 size={13} />
+          </Button>
+        ) : null}
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          minHeight={24}
+          minWidth={24}
+          aria-label={open ? t('Collapse {label}', { label: label.toLowerCase() }) : t('Expand {label}', { label: label.toLowerCase() })}
+          aria-expanded={open}
+          title={open ? t('Collapse') : t('Expand')}
+          onClick={toggle}
+        >
+>>>>>>> origin/i18n
           {open ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </Button>
       </XStack>
@@ -197,7 +256,7 @@ export function Console({ lines, height, onHeight, tabs = [], tab = 'log', onTab
                 <YStack px="$3" pb="$2" {...slot('console-lines')} role="log" aria-live="polite">
                   {lines.length === 0 ? (
                     <SizableText size="$1" color="$soft" fontFamily="$mono">
-                      Nothing yet.
+                      {t('Nothing yet.')}
                     </SizableText>
                   ) : (
                     lines.map((l) => (
@@ -225,8 +284,13 @@ export function Console({ lines, height, onHeight, tabs = [], tab = 'log', onTab
                     {...slot('console-prompt')}
                     value={command}
                     disabled={busy}
+<<<<<<< HEAD
                     aria-label={tr('Run a command')}
                     placeholder={busy ? 'Running…' : 'Run a command'}
+=======
+                    aria-label={t('Run a command')}
+                    placeholder={busy ? t('Running…') : t('Run a command')}
+>>>>>>> origin/i18n
                     onChangeText={setCommand}
                     onKeyDown={
                       ((

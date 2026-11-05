@@ -20,6 +20,7 @@
 import { useState } from 'react'
 import { Input, XStack } from '@hanzo/gui'
 import { Eye, EyeOff } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { tip } from '../backends/gui/slot'
 import { CopyButton } from './CopyButton'
@@ -62,6 +63,7 @@ export function SecretInput({
   'aria-describedby': describedBy,
 }: SecretInputProps) {
   const [shown, setShown] = useState(false)
+  const { t } = useI18n()
   const track = useEmit()
 
   const toggle = () => {
@@ -107,7 +109,7 @@ export function SecretInput({
         autoCorrect={false}
         spellCheck={false}
       />
-      {copy && value ? <CopyButton value={value} label="Copy secret" id={id} /> : null}
+      {copy && value ? <CopyButton value={value} label={t('Copy secret')} id={id} /> : null}
       <XStack
         width={24}
         height={24}
@@ -119,8 +121,8 @@ export function SecretInput({
         onPress={disabled ? undefined : toggle}
         role="button"
         tabIndex={0}
-        aria-label={shown ? 'Hide secret' : 'Show secret'}
-        {...tip(shown ? 'Hide' : 'Show')}
+        aria-label={shown ? t('Hide secret') : t('Show secret')}
+        {...tip(shown ? t('Hide') : t('Show'))}
         hoverStyle={disabled ? undefined : { bg: '$edge', opacity: 1 }}
         pressStyle={disabled ? undefined : { bg: '$raised' }}
       >

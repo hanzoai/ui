@@ -19,6 +19,7 @@
 import { SizableText, XStack, YStack, styled, useControllableState } from '@hanzo/gui'
 import { Pin, PinOff } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps, ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { ink } from './ink'
 import { slot, tip } from './slot'
 import { touch } from './gesture'
@@ -91,6 +92,7 @@ export function PinList({
   max,
   ...props
 }: PinListProps) {
+  const { t } = useI18n()
   const [pinned, setPinned] = useControllableState<string[]>({
     prop: value,
     defaultProp: defaultValue ?? [],
@@ -127,12 +129,12 @@ export function PinList({
             </YStack>
             <PinButton
               {...slot('pin-list-toggle')}
-              {...tip(isPinned ? `Unpin ${item.label}` : `Pin ${item.label}`)}
+              {...tip(isPinned ? t('Unpin {name}', { name: item.label }) : t('Pin {name}', { name: item.label }))}
               {...touch(BUTTON, 44)}
               render="button"
               {...({ type: 'button', disabled: pinDisabled } as object)}
               aria-pressed={isPinned}
-              aria-label={isPinned ? `Unpin ${item.label}` : `Pin ${item.label}`}
+              aria-label={isPinned ? t('Unpin {name}', { name: item.label }) : t('Pin {name}', { name: item.label })}
               opacity={pinDisabled ? 0.4 : 1}
               cursor={pinDisabled ? 'not-allowed' : 'pointer'}
               onClick={() => !pinDisabled && toggle(item.id)}

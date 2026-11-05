@@ -21,6 +21,7 @@
 import * as React from 'react'
 import { Image, SizableText, XStack, YStack } from '@hanzo/gui'
 import { ChevronLeft, ChevronRight } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { glass } from '../../glass'
 import { useTranslate } from '../../i18n/react'
@@ -103,6 +104,7 @@ export function AppleCardsCarousel({ cards, autoPlay = false, autoPlayInterval =
   React.useEffect(() => setCalm(still()), [])
 
   const count = cards.length
+  const { t } = useI18n()
 
   const step = React.useCallback((by: number) => setIndex((i) => (count ? (i + by + count) % count : 0)), [count])
   const goNext = React.useCallback(() => step(1), [step])
@@ -168,8 +170,37 @@ export function AppleCardsCarousel({ cards, autoPlay = false, autoPlayInterval =
   const settle = dragging || calm ? 'none' : SPRING
 
   return (
+<<<<<<< HEAD
     <YStack data-slot="apple-carousel" role="region" aria-roledescription="carousel" aria-label={tr('Cards')} position="relative" width="100%" maxW={1152} mx="auto" px="$4" py="$6" tabIndex={0} onKeyDown={onKeyDown} onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)} {...sx(className)}>
       <XStack position="relative" width="100%" height={400} $md={{ height: 500 }} $lg={{ height: 600 }} items="center" justify="center">
+=======
+    <YStack
+      data-slot="apple-carousel"
+      role="region"
+      aria-roledescription={t('carousel')}
+      aria-label={t('Cards')}
+      position="relative"
+      width="100%"
+      maxW={1152}
+      mx="auto"
+      px="$4"
+      py="$6"
+      tabIndex={0}
+      onKeyDown={onKeyDown}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+      {...sx(className)}
+    >
+      <XStack
+        position="relative"
+        width="100%"
+        height={400}
+        $md={{ height: 500 }}
+        $lg={{ height: 600 }}
+        items="center"
+        justify="center"
+      >
+>>>>>>> origin/i18n
         {cards.map((card, i) => {
           const layer = layerAt(i - index, count, stackOffset, stackScale)
           const active = i === index
@@ -182,8 +213,13 @@ export function AppleCardsCarousel({ cards, autoPlay = false, autoPlayInterval =
               data-slot="apple-carousel-card"
               data-active={active || undefined}
               role="group"
+<<<<<<< HEAD
               aria-roledescription="slide"
               aria-label={tr('{n} of {total}', { n: i + 1, total: count })}
+=======
+              aria-roledescription={t('slide')}
+              aria-label={t('{n} of {count}', { n: i + 1, count })}
+>>>>>>> origin/i18n
               aria-hidden={!active || undefined}
               position="absolute"
               inset={0}
@@ -252,8 +288,8 @@ export function AppleCardsCarousel({ cards, autoPlay = false, autoPlayInterval =
       {showArrows
         ? (
             [
-              ['previous', 'Previous card', goPrevious, ChevronLeft, { left: 16 }],
-              ['next', 'Next card', goNext, ChevronRight, { right: 16 }],
+              ['previous', t('Previous card'), goPrevious, ChevronLeft, { left: 16 }],
+              ['next', t('Next card'), goNext, ChevronRight, { right: 16 }],
             ] as const
           ).map(([name, label, go, Chevron, side]) => (
             <XStack
@@ -307,7 +343,11 @@ export function AppleCardsCarousel({ cards, autoPlay = false, autoPlayInterval =
               key={card.id}
               data-slot="apple-carousel-dot"
               render={<button type="button" />}
+<<<<<<< HEAD
               aria-label={tr('Go to card {n}', { n: i + 1 })}
+=======
+              aria-label={t('Go to card {n}', { n: i + 1 })}
+>>>>>>> origin/i18n
               aria-current={i === index || undefined}
               data-active={i === index || undefined}
               height={8}

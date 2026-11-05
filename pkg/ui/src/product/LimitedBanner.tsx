@@ -12,6 +12,7 @@
  */
 import type { ReactNode } from 'react'
 import { Text, View, XStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { X } from '@hanzogui/lucide-icons-2'
 
 import { Button } from '../backends/gui/button'
@@ -61,11 +62,15 @@ export function LimitActions({ actions, onAction, children }: { actions: readonl
 
 <<<<<<< HEAD
 export function LimitedBanner({ message, actions = [], onAction, onUsage, onClose }: LimitedBannerProps) {
+<<<<<<< HEAD
   const tr = useTranslate()
   return (
     <XStack role="status" aria-live="polite" {...slot('limited-banner')} width="100%" items="center" flexWrap="wrap" gap="$2" px="$3" py="$2.5" rounded="$4" borderWidth={1} borderColor="$edge" bg="$panel">
 =======
 export function LimitedBanner({ message, actions = [], onAction, onUsage, onClose, labels }: LimitedBannerProps) {
+=======
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   return (
     <XStack
       {...slot('limited-banner')}
@@ -90,16 +95,24 @@ export function LimitedBanner({ message, actions = [], onAction, onUsage, onClos
       <LimitActions actions={actions} onAction={onAction}>
         {onUsage ? (
           <Button size="sm" variant="link" px="$1.5" data-kind="usage" onPress={onUsage}>
+<<<<<<< HEAD
             {labels?.usage ?? 'See usage'}
+=======
+            {t('See usage')}
+>>>>>>> origin/i18n
           </Button>
         ) : null}
       </LimitActions>
       {onClose ? (
 <<<<<<< HEAD
+<<<<<<< HEAD
         <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={tr('Dismiss')} onPress={onClose}>
 =======
         <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={labels?.dismiss ?? 'Dismiss'} onPress={onClose}>
 >>>>>>> origin/main
+=======
+        <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={t('Dismiss')} onPress={onClose}>
+>>>>>>> origin/i18n
           <X size={14} />
         </Button>
       ) : null}

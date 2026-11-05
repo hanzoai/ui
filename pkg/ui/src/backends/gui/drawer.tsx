@@ -14,6 +14,7 @@
  * because a sheet flicked away should go away.
  */
 import * as React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Box, type BoxProps } from '../../box'
 import { cn } from '../../core/cn'
@@ -170,11 +171,16 @@ export const Drawer = ({ open = false, onOpenChange, modal = true, snapPoints, a
 export const DrawerHandle = ({ className, ...props }: React.ComponentProps<typeof Box>) => {
   const tr = useTranslate()
   const { drag, handleHandleClicked, extendHandleDragRegion } = useDrawer()
+  const { t } = useI18n()
   return (
     <Box
       role="separator"
       aria-orientation="horizontal"
+<<<<<<< HEAD
       aria-label={tr('Resize')}
+=======
+      aria-label={t('Resize')}
+>>>>>>> origin/i18n
       className={cn('grid place-items-center cursor-grab', className)}
       style={{
         paddingBlock: extendHandleDragRegion ? 20 : 8,

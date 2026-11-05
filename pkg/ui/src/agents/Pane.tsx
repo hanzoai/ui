@@ -12,6 +12,12 @@ import { useState, type ComponentProps, type ReactNode } from 'react'
  */
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { Code2, Eye, FileText, Plus, X } from '@hanzogui/lucide-icons-2'
+<<<<<<< HEAD
+=======
+import { useState, type ComponentProps, type ReactNode } from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
+>>>>>>> origin/i18n
 
 import { slot, tip } from '../backends/gui/slot'
 import { useTranslate } from '../i18n/react'
@@ -31,7 +37,18 @@ export interface ChannelHeaderProps extends Row {
   children?: ReactNode
 }
 
+<<<<<<< HEAD
 export function ChannelHeader({ name, artifacts, onArtifacts, children, ...rest }: ChannelHeaderProps) {
+=======
+export function ChannelHeader({
+  name,
+  artifacts,
+  onArtifacts,
+  children,
+  ...rest
+}: ChannelHeaderProps) {
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   return (
     <XStack {...slot('channel-header')} items="center" gap="$2" px="$4" py="$3" borderBottomWidth={1} borderColor="$borderColor" {...rest}>
       <XStack width={26} height={26} rounded="$3" items="center" justify="center" bg="$raised" shrink={0}>
@@ -44,7 +61,7 @@ export function ChannelHeader({ name, artifacts, onArtifacts, children, ...rest 
       {artifacts === undefined ? null : (
         <XStack items="center" gap="$2" px="$2.5" py="$1" rounded="$4" borderWidth={1} borderColor="$borderColor" cursor={onArtifacts ? 'pointer' : 'default'} role={onArtifacts ? 'button' : undefined} tabIndex={onArtifacts ? 0 : undefined} hoverStyle={onArtifacts ? { bg: '$hover' } : undefined} onPress={onArtifacts}>
           <SizableText size="$2" color="$quiet">
-            Artifacts
+            {t('Artifacts')}
           </SizableText>
           <XStack minW={18} height={18} px="$1" rounded={9999} items="center" justify="center" bg="$edge">
             <SizableText size="$1" fontWeight="600">
@@ -64,9 +81,9 @@ export function ChannelHeader({ name, artifacts, onArtifacts, children, ...rest 
 export type ArtifactKind = 'canvas' | 'code' | 'view'
 
 const ART: Record<ArtifactKind, { icon: typeof Code2; says: string }> = {
-  canvas: { icon: FileText, says: 'Canvas' },
-  code: { icon: Code2, says: 'Code' },
-  view: { icon: Eye, says: 'View' },
+  canvas: { icon: FileText, says: phrase('Canvas') },
+  code: { icon: Code2, says: phrase('Code') },
+  view: { icon: Eye, says: phrase('View') },
 }
 
 export interface ArtifactCardProps extends Row {
@@ -78,6 +95,7 @@ export interface ArtifactCardProps extends Row {
 /** A thing the agent made, offered in the thread. Opening it fills the pane. */
 export function ArtifactCard({ title, kind, onOpen, ...rest }: ArtifactCardProps) {
   const { icon: Icon, says } = ART[kind]
+  const { t } = useI18n()
   return (
     <XStack {...slot('artifact-card')} items="center" gap="$3" p="$3" rounded="$4" borderWidth={1} borderColor="$borderColor" bg="$panel" maxW={420} cursor={onOpen ? 'pointer' : 'default'} role={onOpen ? 'button' : undefined} tabIndex={onOpen ? 0 : undefined} hoverStyle={onOpen ? { bg: '$hover' } : undefined} onPress={onOpen} {...rest}>
       <XStack width={34} height={34} rounded="$3" items="center" justify="center" bg="$edge" shrink={0}>
@@ -88,7 +106,7 @@ export function ArtifactCard({ title, kind, onOpen, ...rest }: ArtifactCardProps
           {title}
         </SizableText>
         <SizableText size="$2" color="$soft">
-          {says}
+          {t(says)}
         </SizableText>
       </YStack>
     </XStack>
@@ -142,7 +160,8 @@ export function Pane({ tabs, active, onActive, onClose, ...rest }: PaneProps) {
   const tr = useTranslate()
   const [own, setOwn] = useState(tabs[0]?.id)
   const current = active ?? own
-  const shown = tabs.find((t) => t.id === current) ?? tabs[0]
+  const shown = tabs.find((tab) => tab.id === current) ?? tabs[0]
+  const { t } = useI18n()
 
   return (
     <YStack {...slot('pane')} flex={1} minH={0} bg="$panel" rounded="$4" borderWidth={1} borderColor="$borderColor" overflow="hidden" {...rest}>
@@ -177,7 +196,25 @@ export function Pane({ tabs, active, onActive, onClose, ...rest }: PaneProps) {
         })}
         <XStack flex={1} />
         {onClose ? (
+<<<<<<< HEAD
           <XStack width={26} height={26} items="center" justify="center" rounded="$3" cursor="pointer" opacity={0.7} role="button" tabIndex={0} aria-label={tr('Close panel')} {...tip('Close panel')} hoverStyle={{ bg: '$hover', opacity: 1 }} onPress={onClose}>
+=======
+          <XStack
+            width={26}
+            height={26}
+            items="center"
+            justify="center"
+            rounded="$3"
+            cursor="pointer"
+            opacity={0.7}
+            role="button"
+            tabIndex={0}
+            aria-label={t('Close panel')}
+            {...tip(t('Close panel'))}
+            hoverStyle={{ bg: '$hover', opacity: 1 }}
+            onPress={onClose}
+          >
+>>>>>>> origin/i18n
             <X size={15} />
           </XStack>
         ) : null}
@@ -217,7 +254,11 @@ export interface OrgRailProps extends Col {
  * hidden inside that page.
  */
 export function OrgRail({ orgs, active, onSwitch, onAdd, ...rest }: OrgRailProps) {
+<<<<<<< HEAD
   const tr = useTranslate()
+=======
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   return (
     <YStack {...slot('org-rail')} width={56} shrink={0} height="100%" items="center" gap="$2" py="$3" bg="$background" borderInlineEndWidth={1} borderColor="$borderColor" {...rest}>
       {orgs.map((org) => {
@@ -234,7 +275,27 @@ export function OrgRail({ orgs, active, onSwitch, onAdd, ...rest }: OrgRailProps
       })}
 
       {onAdd ? (
+<<<<<<< HEAD
         <XStack width={36} height={36} rounded="$4" items="center" justify="center" cursor="pointer" role="button" tabIndex={0} aria-label={tr('Add an organization')} {...tip('Add an organization')} borderWidth={1} borderColor="$borderColor" opacity={0.6} hoverStyle={{ bg: '$hover', opacity: 1 }} onPress={onAdd}>
+=======
+        <XStack
+          width={36}
+          height={36}
+          rounded="$4"
+          items="center"
+          justify="center"
+          cursor="pointer"
+          role="button"
+          tabIndex={0}
+          aria-label={t('Add an organization')}
+          {...tip(t('Add an organization'))}
+          borderWidth={1}
+          borderColor="$borderColor"
+          opacity={0.6}
+          hoverStyle={{ bg: '$hover', opacity: 1 }}
+          onPress={onAdd}
+        >
+>>>>>>> origin/i18n
           <Plus size={16} />
         </XStack>
       ) : null}

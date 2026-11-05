@@ -13,8 +13,13 @@
     "react-native-web": "^0.21.2",
     "@hanzo/gui": "8.3.5",
     "@hanzogui/config": "8.3.5",
+    "@hanzogui/animations-css": "8.3.5",
+    "@hanzogui/lucide-icons-2": "8.3.5",
+    "@hanzogui/next-theme": "8.3.5",
     "@hanzo/iam": "0.21.33",
-    "@hanzogui/shell": "8.3.5"
+    "@hanzogui/shell": "8.3.5",
+    "@hanzogui/telemetry": "8.3.5",
+    "@hanzogui/toast": "8.3.5"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.2",

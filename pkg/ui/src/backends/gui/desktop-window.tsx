@@ -14,9 +14,15 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
  * a themed surface — everything else on the frame (background, border, radius,
  * shadow) is a token read through `variant`.
  */
+<<<<<<< HEAD
 import { createStyledContext, SizableText, styled, XStack, YStack, type GuiElement } from '@hanzo/gui'
 
 import { useTranslate } from '../../i18n/react'
+=======
+import { SizableText, XStack, YStack, createStyledContext, styled, type GuiElement } from '@hanzo/gui'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
+>>>>>>> origin/i18n
 import { drag, dragPos, touch, type DragEvent } from './gesture'
 import { slot } from './slot'
 
@@ -98,6 +104,7 @@ export type DesktopWindowControlsProps = {
 }
 
 /** The three traffic-light dots on their own, for a title bar built by hand. */
+<<<<<<< HEAD
 export function DesktopWindowControls({ onClose, onMinimize, onMaximize, isMaximized = false }: DesktopWindowControlsProps) {
   const tr = useTranslate()
   return (
@@ -105,6 +112,41 @@ export function DesktopWindowControls({ onClose, onMinimize, onMaximize, isMaxim
       <Light {...slot('desktop-window-close')} tone="close" onPress={onClose} {...touch(CONTROL, 44, 'both')} aria-label={tr('Close window')} role="button" />
       <Light {...slot('desktop-window-minimize')} tone="minimize" onPress={onMinimize} {...touch(CONTROL, 44, 'both')} aria-label={tr('Minimize window')} role="button" />
       <Light {...slot('desktop-window-maximize')} tone="maximize" onPress={onMaximize} {...touch(CONTROL, 44, 'both')} aria-label={isMaximized ? tr('Restore window') : tr('Maximize window')} role="button" />
+=======
+export function DesktopWindowControls({
+  onClose,
+  onMinimize,
+  onMaximize,
+  isMaximized = false,
+}: DesktopWindowControlsProps) {
+  const { t } = useI18n()
+  return (
+    <XStack {...slot('desktop-window-controls')} items="center" gap="$2">
+      <Light
+        {...slot('desktop-window-close')}
+        tone="close"
+        onPress={onClose}
+        {...touch(CONTROL, 44, 'both')}
+        aria-label={t('Close window')}
+        role="button"
+      />
+      <Light
+        {...slot('desktop-window-minimize')}
+        tone="minimize"
+        onPress={onMinimize}
+        {...touch(CONTROL, 44, 'both')}
+        aria-label={t('Minimize window')}
+        role="button"
+      />
+      <Light
+        {...slot('desktop-window-maximize')}
+        tone="maximize"
+        onPress={onMaximize}
+        {...touch(CONTROL, 44, 'both')}
+        aria-label={isMaximized ? t('Restore window') : t('Maximize window')}
+        role="button"
+      />
+>>>>>>> origin/i18n
     </XStack>
   )
 }

@@ -20,6 +20,7 @@
  * without the key a changed prop would leave the old feed on screen.
  */
 import { YStack, isWeb, type YStackProps } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 
 export type NewsTimelineFeedMode = 'all_symbols' | 'market' | 'symbol'
@@ -75,6 +76,7 @@ const NewsTimeline = ({
   ...props
 }: NewsTimelineProps) => {
   const s = settings({ feedMode, market, symbol, width, height, colorTheme, isTransparent })
+  const { t } = useI18n()
   const src = `${EMBED}${locale}#${encodeURIComponent(JSON.stringify(s))}`
   return (
     <YStack
@@ -94,7 +96,7 @@ const NewsTimeline = ({
         <iframe
           key={src}
           src={src}
-          title="News timeline"
+          title={t('News timeline')}
           loading="lazy"
           scrolling="no"
           style={{ display: 'block', width: '100%', height: '100%', border: 0 }}

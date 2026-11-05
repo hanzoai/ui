@@ -27,6 +27,7 @@
  */
 import { useCallback, useRef, type ReactNode } from 'react'
 import { Button, Separator, Text, XStack, YStack, useControllableState } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { sheet } from '../glass'
 
@@ -76,6 +77,7 @@ export function Dock({
   minSize = 160,
   maxSize = 900,
 }: DockProps) {
+  const { t } = useI18n()
   const [active, setActive] = useControllableState<string | undefined>({
     prop: activeId,
     defaultProp: defaultActiveId ?? tabs[0]?.id,
@@ -136,11 +138,11 @@ export function Dock({
       {...(horizontal ? { width: extent } : { height: extent })}
     >
       <XStack items="center" gap="$1" px="$2" pt="$1.5">
-        {tabs.map((t) => {
-          const on = t.id === current.id
+        {tabs.map((tab) => {
+          const on = tab.id === current.id
           return (
             <XStack
-              key={t.id}
+              key={tab.id}
               items="center"
               gap="$1.5"
               px="$2.5"
@@ -155,21 +157,21 @@ export function Dock({
               {...(on ? sheet(2) : { backgroundColor: 'transparent' })}
               hoverStyle={{ bg: on ? undefined : '$panel' }}
             >
-              <YStack onPress={() => setActive(t.id)}>
+              <YStack onPress={() => setActive(tab.id)}>
                 <XStack items="center" gap="$1.5">
-                  {t.icon}
+                  {tab.icon}
                   <Text fontSize="$2" numberOfLines={1} opacity={on ? 1 : 0.7}>
-                    {t.title}
+                    {tab.title}
                   </Text>
                 </XStack>
               </YStack>
-              {t.closable === false ? null : (
+              {tab.closable === false ? null : (
                 <Button
                   size="$1"
                   chromeless
                   circular
-                  aria-label={`Close ${t.title}`}
-                  onPress={() => onClose?.(t.id)}
+                  aria-label={t('Close {title}', { title: tab.title })}
+                  onPress={() => onClose?.(tab.id)}
                 >
                   ×
                 </Button>

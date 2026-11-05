@@ -18,6 +18,7 @@ import { createContext, useContext, type ComponentProps, type ReactNode } from '
  * the same frame (`frame`, `scrim`, `Sized`).
  */
 import { Dialog as GuiDialog, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { X } from '@hanzogui/lucide-icons-2'
 
 import { useTranslate } from '../../i18n/react'
@@ -101,6 +102,7 @@ export type DialogContentProps = ComponentProps<typeof GuiDialog.Content> & {
 const DialogContent = ({ showCloseButton = true, overlay, size, children, ...props }: DialogContentProps) => {
   const tr = useTranslate()
   const themeName = useThemeName()
+  const { t } = useI18n()
   return (
     <GuiDialog.Portal>
       <PortalTheme name={themeName}>
@@ -122,7 +124,11 @@ const DialogContent = ({ showCloseButton = true, overlay, size, children, ...pro
                 cursor="pointer"
                 opacity={0.7}
                 hoverStyle={{ opacity: 1 }}
+<<<<<<< HEAD
                 aria-label={tr('Close')}
+=======
+                aria-label={t('Close')}
+>>>>>>> origin/i18n
               >
                 <X size={16} />
               </XStack>

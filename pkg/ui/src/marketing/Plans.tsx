@@ -19,6 +19,8 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react'
  * a card's button is pressed.
  */
 import { XStack, YStack } from '@hanzo/gui'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 import { Check } from '@hanzogui/lucide-icons-2'
 
 import { slot } from '../backends/gui/slot'
@@ -33,8 +35,8 @@ import { Line } from './type'
 const TIGHT = { letterSpacing: '-0.012em', textWrap: 'balance' } as const
 
 const TABS: readonly [Audience, string][] = [
-  ['individual', 'Individual'],
-  ['team', 'Team & Enterprise'],
+  ['individual', phrase('Individual')],
+  ['team', phrase('Team & Enterprise')],
 ]
 
 /** The plan families the ladder sells. */
@@ -52,12 +54,13 @@ export type PlansProps = {
   plans: readonly PlanRow[]
   /** The level the title is drawn at: `h1` alone on a page, `h2` inside one. */
   heading?: 'h1' | 'h2'
+  /** The heading; absent, "Plans that grow with you" in the reader's language. */
   title?: string
   /** The address a paid plan's button opens, for the term on the card. */
   checkout: (plan: PlanRow, interval: Interval) => string
   /** Where every card starts: sign-in first, payment second. A paid card opens it with `?next=<checkout>`. */
   signIn?: string
-  /** What every way in says. */
+  /** What every way in says; absent, "Try Hanzo" in the reader's language. */
   cta?: string
   contactHref?: string
   onView?: (tab: Audience, shown: readonly { plan: PlanRow; interval: Interval }[]) => void
@@ -66,8 +69,24 @@ export type PlansProps = {
   footnote?: ReactNode
 }
 
+<<<<<<< HEAD
 const Plans = ({ plans, heading = 'h1', title = 'Plans that grow with you', checkout, signIn = '/login', cta = 'Try Hanzo', contactHref = '/contact-sales', onView, onChoose, footnote }: PlansProps) => {
   const tr = useTranslate()
+=======
+const Plans = ({
+  plans,
+  heading = 'h1',
+  title,
+  checkout,
+  signIn = '/login',
+  cta,
+  contactHref = '/contact-sales',
+  onView,
+  onChoose,
+  footnote,
+}: PlansProps) => {
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   const all = useMemo(() => plans.filter((p) => FAMILIES.has(p.category)), [plans])
   const tabs = TABS.filter(([a]) => all.some((p) => audience(p) === a))
   const [picked, setPicked] = useState<Audience>('individual')
@@ -77,7 +96,7 @@ const Plans = ({ plans, heading = 'h1', title = 'Plans that grow with you', chec
 
   const savings = here.map(saving).filter((n): n is number => n !== null)
   const most = savings.length ? Math.max(...savings) : 0
-  const label = savings.every((n) => n === most) ? `Save ${most}% with annual` : `Save up to ${most}% with annual`
+  const label = savings.every((n) => n === most) ? t('Save {n}% with annual', { n: most }) : t('Save up to {n}% with annual', { n: most })
 
   // One view per tab a reader looks at; a repaint of the same rows is not a new view.
   const shown = here.map((p) => p.id).join()
@@ -98,6 +117,7 @@ const Plans = ({ plans, heading = 'h1', title = 'Plans that grow with you', chec
       every={termOf(p, yearly)}
       from={from.has(p.id)}
       team={tab === 'team'}
+<<<<<<< HEAD
       href={way(p) === 'card' ? `${signIn}?next=${encodeURIComponent(checkout(p, termOf(p, yearly)).replace(/^https:\/\/hanzo\.ai(?=\/)/, ''))}` : way(p) === 'free' ? signIn : contactHref}
       cta={cta}
       onPress={(cta) =>
@@ -109,17 +129,43 @@ const Plans = ({ plans, heading = 'h1', title = 'Plans that grow with you', chec
           way: way(p),
         })
       }
+=======
+      href={
+        way(p) === 'card'
+          ? `${signIn}?next=${encodeURIComponent(checkout(p, termOf(p, yearly)).replace(/^https:\/\/hanzo\.ai(?=\/)/, ''))}`
+          : way(p) === 'free'
+            ? signIn
+            : contactHref
+      }
+      cta={cta ?? t('Try Hanzo')}
+      onPress={(cta) => onChoose?.({ plan: p, interval: termOf(p, yearly), tab, cta, way: way(p) })}
+>>>>>>> origin/i18n
     />
   )
 
   return (
     <YStack {...slot('plans')} render="section" width="100%" maxW={1280} mx="auto" gap="$8" items="center" px="$6">
       <YStack items="center" gap="$3" maxW={768}>
+<<<<<<< HEAD
         <Line render={heading} m={0} align="center" fontFamily="$heading" fontSize="$9" lineHeight="$9" fontWeight={500} $md={{ fontSize: '$11', lineHeight: '$11' }} style={TIGHT}>
           {title}
+=======
+        <Line
+          render={heading}
+          m={0}
+          align="center"
+          fontFamily="$heading"
+          fontSize="$9"
+          lineHeight="$9"
+          fontWeight={500}
+          $md={{ fontSize: '$11', lineHeight: '$11' }}
+          style={TIGHT}
+        >
+          {title ?? t('Plans that grow with you')}
+>>>>>>> origin/i18n
         </Line>
         <Line render="p" m={0} size="lg" tone="muted" align="center">
-          You are charged exactly the price shown. Past a plan’s included usage, agents are metered at the rates below.
+          {`${t('You are charged exactly the price shown.')} ${t('Past a plan’s included usage, agents are metered at the rates below.')}`}
         </Line>
       </YStack>
 
@@ -132,16 +178,21 @@ const Plans = ({ plans, heading = 'h1', title = 'Plans that grow with you', chec
               if (v) setPicked(v as Audience)
             }}
             disableDeactivation
+<<<<<<< HEAD
             aria-label={tr('Who this is for')}
             style={{
               padding: 4,
               borderRadius: 9999,
               background: 'var(--surface-2)',
             }}
+=======
+            aria-label={t('Who this is for')}
+            style={{ padding: 4, borderRadius: 9999, background: 'var(--surface-2)' }}
+>>>>>>> origin/i18n
           >
             {tabs.map(([a, name]) => (
               <ToggleGroupItem key={a} value={a} variant="outline" rounded="$10" borderColor="transparent" px="$4">
-                {name}
+                {t(name)}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
@@ -151,7 +202,11 @@ const Plans = ({ plans, heading = 'h1', title = 'Plans that grow with you', chec
             <Line size="sm" tone="muted">
               {label}
             </Line>
+<<<<<<< HEAD
             <Switch checked={yearly} onCheckedChange={setYearly} aria-label={tr('Bill yearly')} />
+=======
+            <Switch checked={yearly} onCheckedChange={setYearly} aria-label={t('Bill yearly')} />
+>>>>>>> origin/i18n
           </XStack>
         ) : null}
       </XStack>
@@ -178,14 +233,35 @@ const Plans = ({ plans, heading = 'h1', title = 'Plans that grow with you', chec
 }
 
 /** One plan: its name, its price for the term, the way in, and what it includes. */
+<<<<<<< HEAD
 function Card({ plan, every, href, cta: label, from, team, onPress }: { plan: PlanRow; every: Interval; href: string; cta: string; from: boolean; team: boolean; onPress: (cta: string) => void }) {
+=======
+function Card({
+  plan,
+  every,
+  href,
+  cta: label,
+  from,
+  team,
+  onPress,
+}: {
+  plan: PlanRow
+  every: Interval
+  href: string
+  cta: string
+  from: boolean
+  team: boolean
+  onPress: (cta: string) => void
+}) {
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   const how = way(plan)
   const year = charge(plan, 'year')
   // A year is headlined as the month it works out to, with the whole year under it.
   const headline = every === 'year' && year ? Math.round((year / 12) * 100) / 100 : (plan.priceMonthly ?? 0)
   const floor = seats(plan)
   // Team and Enterprise name the plan; everyone else is one button.
-  const cta = team ? `Get ${plan.name} plan` : label
+  const cta = team ? t('Get {plan} plan', { plan: plan.name }) : label
 
   return (
     <YStack {...slot('plan')} render="section" aria-label={plan.name} height="100%" gap="$5" p="$5" $sm={{ p: '$6' }} rounded="var(--radius-xl)" borderWidth={1} borderColor={plan.popular ? '$bound' : '$edge'} bg={plan.popular ? '$hover' : '$panel'}>
@@ -197,7 +273,7 @@ function Card({ plan, every, href, cta: label, from, team, onPress }: { plan: Pl
           {plan.popular ? (
             <XStack {...slot('plan-badge')} display="inline-flex" self="flex-start" items="center" px="$2" py={2} rounded={9999} borderWidth={1} borderColor="$edge" bg="$raised">
               <Line fontSize={10} px={10} tone="soft" weight="700" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Most popular
+                {t('Most popular')}
               </Line>
             </XStack>
           ) : null}
@@ -212,31 +288,43 @@ function Card({ plan, every, href, cta: label, from, team, onPress }: { plan: Pl
       <YStack gap="$1">
         {how === 'card' ? (
           <>
+            {/* One sentence, the price large inside it: "From $20 USD/month". */}
             <YStack display="block">
-              {from ? (
-                <Line size="sm" tone="muted">
-                  From{' '}
-                </Line>
-              ) : null}
-              <Line size="x4" weight="600">
-                {money(headline)}
-              </Line>{' '}
               <Line size="sm" tone="muted">
-                {plan.pricePerUser ? 'USD/seat/month' : 'USD/month'}
+                {t(
+                  from
+                    ? plan.pricePerUser
+                      ? 'From {price} USD/seat/month'
+                      : 'From {price} USD/month'
+                    : plan.pricePerUser
+                      ? '{price} USD/seat/month'
+                      : '{price} USD/month',
+                  {
+                    price: (
+                      <Line size="x4" weight="600">
+                        {money(headline)}
+                      </Line>
+                    ),
+                  },
+                )}
               </Line>
             </YStack>
             <Line render="p" m={0} size="sm" tone="muted">
-              {every === 'year' && year ? `Billed ${money(year)}${plan.pricePerUser ? ' per seat' : ''} yearly` : 'Billed monthly'}
-              {floor > 1 ? ` · from ${floor} seats` : ''}
+              {every === 'year' && year
+                ? plan.pricePerUser
+                  ? t('Billed {price} per seat yearly', { price: money(year) })
+                  : t('Billed {price} yearly', { price: money(year) })
+                : t('Billed monthly')}
+              {floor > 1 ? ` · ${t('from {n} seats', { n: floor })}` : ''}
             </Line>
           </>
         ) : (
           <>
             <Line size="x4" weight="600">
-              {how === 'free' ? 'Free' : 'Custom'}
+              {how === 'free' ? t('Free') : t('Custom')}
             </Line>
             <Line render="p" m={0} size="sm" tone="muted">
-              {how === 'free' ? 'No card needed' : 'Priced with our team'}
+              {how === 'free' ? t('No card needed') : t('Priced with our team')}
             </Line>
           </>
         )}
@@ -249,7 +337,7 @@ function Card({ plan, every, href, cta: label, from, team, onPress }: { plan: Pl
       </Cta>
       {how === 'card' ? (
         <Line render="p" m={0} size="xs" tone="muted" align="center" mt={-12}>
-          No commitment · Cancel anytime
+          {t('No commitment · Cancel anytime')}
         </Line>
       ) : null}
 

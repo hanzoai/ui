@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { Text } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { useTranslate } from '../i18n/react'
 
@@ -13,10 +15,24 @@ export interface LiveVoiceCallProps {
   style?: React.CSSProperties
 }
 
+<<<<<<< HEAD
 export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({ title = 'AI Voice Call', status = 'connected', onEndCall, onToggleMute, isMuted = false, transcripts = [], className = '', style }) => {
   const tr = useTranslate()
+=======
+export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({
+  title,
+  status = 'connected',
+  onEndCall,
+  onToggleMute,
+  isMuted = false,
+  transcripts = [],
+  className = '',
+  style,
+}) => {
+>>>>>>> origin/i18n
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [muted, setMuted] = useState(isMuted)
+  const { t } = useI18n()
 
   // Animated visualizer
   useEffect(() => {
@@ -60,7 +76,18 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({ title = 'AI Voice 
     onToggleMute?.(next)
   }
 
+<<<<<<< HEAD
   const statusText = status === 'speaking' ? 'Agent is speaking...' : status === 'listening' ? 'Listening to you...' : status === 'connecting' ? 'Connecting stream...' : 'Call active'
+=======
+  const statusText =
+    status === 'speaking'
+      ? t('Agent is speaking...')
+      : status === 'listening'
+      ? t('Listening to you...')
+      : status === 'connecting'
+      ? t('Connecting stream...')
+      : t('Call active')
+>>>>>>> origin/i18n
 
   return (
     <div
@@ -74,7 +101,11 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({ title = 'AI Voice 
         borderRadius: 16,
         ...style,
       }}
+<<<<<<< HEAD
       aria-label={tr('Live Voice Call')}
+=======
+      aria-label={t('Live Voice Call')}
+>>>>>>> origin/i18n
     >
       <div
         style={{
@@ -84,6 +115,7 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({ title = 'AI Voice 
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+<<<<<<< HEAD
           <span
             style={{
               width: 10,
@@ -102,6 +134,12 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({ title = 'AI Voice 
           >
             {title}
           </h3>
+=======
+          <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#34d399' }} />
+          <Text render="h3" fontSize={14} fontWeight="600" color={'#ffffff' as never} m={0}>
+            {title ?? t('AI Voice Call')}
+          </Text>
+>>>>>>> origin/i18n
         </div>
         <span style={{ fontSize: 12, color: '#a3a3a3', fontFamily: 'monospace' }}>{statusText}</span>
       </div>
@@ -194,7 +232,7 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({ title = 'AI Voice 
             color: muted ? '#fda4af' : '#d4d4d4',
           }}
         >
-          {muted ? 'Unmute Mic' : 'Mute Mic'}
+          {muted ? t('Unmute Mic') : t('Mute Mic')}
         </button>
 
         {onEndCall && (
@@ -214,7 +252,7 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({ title = 'AI Voice 
               cursor: 'pointer',
             }}
           >
-            End Call
+            {t('End Call')}
           </button>
         )}
       </div>

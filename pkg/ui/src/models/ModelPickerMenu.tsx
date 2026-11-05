@@ -18,6 +18,7 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactEle
  * Group headings are presentation: the option's own label names the group.
  */
 import { Anchor, Input as GuiInput, ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import { Check, Search } from '@hanzogui/lucide-icons-2'
 
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui/popover'
@@ -57,7 +58,11 @@ interface ListProps {
 }
 
 function List({ models, value, onChange, onClose, scope, limits, loading, error, name, sheet, row, granted, onUpgrade }: ListProps) {
+<<<<<<< HEAD
   const tr = useTranslate()
+=======
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   const [q, setQ] = useState('')
   const [at, setAt] = useState(-1)
   const [top, setTop] = useState(0)
@@ -161,9 +166,38 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
     <YStack {...slot('model-picker-body')} flex={sheet ? 1 : undefined} minH={0} gap="$1">
       <XStack {...slot('model-picker-search')} height={sheet ? 40 : 32} px="$2" gap="$2" items="center" rounded="$2" borderWidth={1} borderColor="$rim" bg="$background" focusWithinStyle={{ borderColor: '$outlineColor' }}>
         <Search size={14} color="$soft" aria-hidden />
+<<<<<<< HEAD
         <GuiInput ref={field as never} {...slot('model-picker-input')} unstyled flex={1} minW={0} height={sheet ? 38 : 30} p={0} borderWidth={0} bg="transparent" fontSize={sheet ? '$3' : '$2'} color="$ink" placeholderTextColor="$placeholderColor" placeholder={tr('Search models')} value={q} onChangeText={setQ} role="combobox" aria-label={tr('Search models')} aria-expanded aria-controls={listId} aria-autocomplete="list" aria-activedescendant={at >= 0 && rows[at] ? optionId(at) : undefined} autoComplete="off" spellCheck={false} onKeyDown={onField} />
+=======
+        <GuiInput
+          ref={field as never}
+          {...slot('model-picker-input')}
+          unstyled
+          flex={1}
+          minW={0}
+          height={sheet ? 38 : 30}
+          p={0}
+          borderWidth={0}
+          bg="transparent"
+          fontSize={sheet ? '$3' : '$2'}
+          color="$ink"
+          placeholderTextColor="$placeholderColor"
+          placeholder={t('Search models')}
+          value={q}
+          onChangeText={setQ}
+          role="combobox"
+          aria-label={t('Search models')}
+          aria-expanded
+          aria-controls={listId}
+          aria-autocomplete="list"
+          aria-activedescendant={at >= 0 && rows[at] ? optionId(at) : undefined}
+          autoComplete="off"
+          spellCheck={false}
+          onKeyDown={onField}
+        />
+>>>>>>> origin/i18n
         <SizableText {...slot('model-picker-count')} size="$1" color="$soft" shrink={0} aria-live="polite">
-          {loading && !models.length ? 'Loading' : `${total} ${total === 1 ? 'model' : 'models'}`}
+          {loading && !models.length ? t('Loading') : total === 1 ? t('{n} model', { n: total }) : t('{n} models', { n: total })}
         </SizableText>
       </XStack>
 
@@ -216,9 +250,41 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
             // A model sold against another says by how much, from the two list prices;
             // a router, the ceiling it bills up to.
             const saving = savingOf(m, models)
-            const ceiling = formatCeiling(m)
+            const ceiling = formatCeiling(m, t)
             return (
+<<<<<<< HEAD
               <XStack key={m.id} {...slot('model-picker-option')} id={optionId(i)} role="option" aria-selected={picked} aria-disabled={locked || undefined} aria-setsize={total} aria-posinset={position[i]} aria-label={`${title}, ${groupLabel(m)}${paused ? ', paused' : ''}${locked ? ', research preview' : ''}`} data-model={m.id} data-class={m.class} data-paused={paused || undefined} height={row} px="$2" gap="$2" items="center" rounded="$2" cursor={locked ? 'default' : 'pointer'} bg={i === at ? '$raised' : 'transparent'} onHoverIn={() => setAt(i)} onPress={() => choose(r)}>
+=======
+              <XStack
+                key={m.id}
+                {...slot('model-picker-option')}
+                id={optionId(i)}
+                role="option"
+                aria-selected={picked}
+                aria-disabled={locked || undefined}
+                aria-setsize={total}
+                aria-posinset={position[i]}
+                aria-label={
+                  locked
+                    ? t('{model}, {group}, research preview', { model: title, group: groupLabel(m) })
+                    : paused
+                      ? t('{model}, {group}, paused', { model: title, group: groupLabel(m) })
+                      : t('{model}, {group}', { model: title, group: groupLabel(m) })
+                }
+                data-model={m.id}
+                data-class={m.class}
+                data-paused={paused || undefined}
+                height={row}
+                px="$2"
+                gap="$2"
+                items="center"
+                rounded="$2"
+                cursor={locked ? 'default' : 'pointer'}
+                bg={i === at ? '$raised' : 'transparent'}
+                onHoverIn={() => setAt(i)}
+                onPress={() => choose(r)}
+              >
+>>>>>>> origin/i18n
                 <Check size={14} color="$ink" shrink={0} opacity={picked ? 1 : 0} aria-hidden />
                 <SizableText size={sheet ? '$3' : '$2'} color="$ink" opacity={locked ? 0.5 : 1} numberOfLines={1} flex={1} minW={0}>
                   {title}
@@ -230,7 +296,23 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
                 ) : null}
                 {locked || upgrade || paused || saving || ceiling || kind || ctx ? (
                   <SizableText size="$1" color="$soft" shrink={0} maxW="60%" numberOfLines={1} fontVariant={['tabular-nums']}>
+<<<<<<< HEAD
                     {locked ? 'Research preview' : upgrade ? 'Upgrade' : paused ? 'Paused' : saving ? formatSaving(saving) : ceiling ? ceiling : kind ? CAPABILITY_NAMES[kind] : ctx}
+=======
+                    {locked
+                      ? t('Research preview')
+                      : upgrade
+                        ? t('Upgrade')
+                      : paused
+                        ? t('Paused')
+                        : saving
+                          ? formatSaving(saving, t)
+                          : ceiling
+                            ? ceiling
+                            : kind
+                              ? t(CAPABILITY_NAMES[kind])
+                              : ctx}
+>>>>>>> origin/i18n
                   </SizableText>
                 ) : null}
               </XStack>
@@ -240,7 +322,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
         {rows.length === 0 && !error ? (
           <XStack {...slot('model-picker-empty')} px="$2" py="$2" role="status">
             <SizableText size="$2" color="$soft">
-              {loading ? 'Loading models…' : q ? `No models match “${q}”.` : 'No models to choose from.'}
+              {loading ? t('Loading models…') : q ? t('No models match “{query}”.', { query: q }) : t('No models to choose from.')}
             </SizableText>
           </XStack>
         ) : null}
@@ -249,10 +331,12 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
       {research.length ? (
         <XStack {...slot('model-picker-research')} px="$2" py="$1.5" gap="$1.5" items="center" flexWrap="wrap">
           <SizableText size="$1" color="$soft">
-            {research.map(modelName).join(', ')} {research.length === 1 ? 'is' : 'are'} in research preview.
+            {research.length === 1
+              ? t('{models} is in research preview.', { models: research.map(modelName).join(', ') })
+              : t('{models} are in research preview.', { models: research.map(modelName).join(', ') })}
           </SizableText>
           <Anchor href={research[0]!.request} target="_blank" rel="noopener noreferrer" size="$1" color="$ink" textDecorationLine="underline">
-            Request access
+            {t('Request access')}
           </Anchor>
         </XStack>
       ) : null}

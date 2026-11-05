@@ -10,8 +10,16 @@
 import { forwardRef, useContext, useEffect, useState, type ComponentProps, type ReactNode } from 'react'
 import { Input as GuiInput, XStack } from '@hanzo/gui'
 import { Eye, EyeOff } from '@hanzogui/lucide-icons-2'
+<<<<<<< HEAD
 
 import { useTranslate } from '../../i18n/react'
+=======
+import { forwardRef, useContext, useEffect, useState, type ComponentProps, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
+import { slot } from './slot'
+import { touch } from './gesture'
+import { masked } from './mask'
+>>>>>>> origin/i18n
 import { BOX, FIELD, FILL, type FieldSize } from './control'
 import { fieldSize, useDensity } from './density'
 import { ltr } from './dir'
@@ -64,6 +72,7 @@ const well = (side: 'start' | 'end', gutter: number) => ({
 const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function Input({ startAdornment, endAdornment, reveal = true, type, secureTextEntry, size, fill = false, ...props }, ref) {
   const tr = useTranslate()
   const [revealed, setRevealed] = useState(false)
+  const { t } = useI18n()
   const density = useDensity()
   const group = useContext(GroupContext)
   const isPassword = type === 'password' || secureTextEntry === true
@@ -189,7 +198,11 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
           {...well('end', box.gutter)}
           cursor="pointer"
           onPress={() => setRevealed((v) => !v)}
+<<<<<<< HEAD
           aria-label={revealed ? tr('Hide password') : tr('Show password')}
+=======
+          aria-label={revealed ? t('Hide password') : t('Show password')}
+>>>>>>> origin/i18n
         >
           {revealed ? <EyeOff size={16} /> : <Eye size={16} />}
         </XStack>

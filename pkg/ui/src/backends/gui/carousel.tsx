@@ -21,6 +21,8 @@
  */
 import * as React from 'react'
 import { ChevronLeft, ChevronRight } from '@hanzogui/lucide-icons-2'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Box } from '../../box'
 import { cn } from '../../core/cn'
@@ -145,7 +147,19 @@ export type CarouselProps = Omit<React.ComponentProps<typeof Box>, 'onSelect'> &
   onCarouselSelect?: (api: CarouselApi) => void
 }
 
+<<<<<<< HEAD
 export const Carousel = ({ options, setApi, onCarouselSelect, className, children, ...props }: CarouselProps) => {
+=======
+export const Carousel = ({
+  options,
+  setApi,
+  onCarouselSelect,
+  className,
+  children,
+  ...props
+}: CarouselProps) => {
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   const scroller = React.useRef<HTMLElement | null>(null)
   const api = React.useRef<CarouselApi | null>(null)
   // Subscribers, held across renders so `on` may be called once in an effect
@@ -281,7 +295,7 @@ export const Carousel = ({ options, setApi, onCarouselSelect, className, childre
       <Box
         className={cn('relative', className)}
         role="region"
-        aria-roledescription="carousel"
+        aria-roledescription={t('carousel')}
         {...(every
           ? {
               onMouseEnter: () => setHeld(true),
@@ -331,10 +345,11 @@ export const CarouselItem = ({ className, ...props }: React.ComponentProps<typeo
   // rejecting a loose one would reject markup that works. Centred is the
   // default a carousel would have given it anyway.
   const align = React.useContext(CarouselCtx)?.align ?? 'center'
+  const { t } = useI18n()
   return (
     <Box
       role="group"
-      aria-roledescription="slide"
+      aria-roledescription={t('slide')}
       // `min-w-0` is what lets a long title wrap instead of widening the column.
       className={cn(SNAP[align], 'min-w-0', className)}
       {...props}
@@ -357,6 +372,7 @@ const arrow = (name: string, side: 'start' | 'end', Icon: typeof ChevronLeft, mo
     // slide 0 stays disabled after the user drags away from it.
     const tr = useTranslate()
     const { api, selected } = useCarousel()
+    const { t } = useI18n()
     // Before mount there is no scroller, so neither arrow can know whether it
     // has anywhere to go, and disabled is the honest answer.
     const live = selected === null ? null : api.current
@@ -364,7 +380,11 @@ const arrow = (name: string, side: 'start' | 'end', Icon: typeof ChevronLeft, mo
       <Button
         variant="outline"
         size="icon"
+<<<<<<< HEAD
         aria-label={tr(name)}
+=======
+        aria-label={t(name)}
+>>>>>>> origin/i18n
         disabled={live ? !can(live) : true}
         onClick={() => {
           if (api.current) move(api.current)
@@ -388,7 +408,7 @@ const arrow = (name: string, side: 'start' | 'end', Icon: typeof ChevronLeft, mo
 }
 
 export const CarouselPrevious = arrow(
-  'Previous slide',
+  phrase('Previous slide'),
   'start',
   ChevronLeft,
   (a) => a.scrollPrev(),
@@ -396,7 +416,7 @@ export const CarouselPrevious = arrow(
 )
 
 export const CarouselNext = arrow(
-  'Next slide',
+  phrase('Next slide'),
   'end',
   ChevronRight,
   (a) => a.scrollNext(),

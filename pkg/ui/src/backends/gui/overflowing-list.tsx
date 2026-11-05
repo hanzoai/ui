@@ -19,6 +19,7 @@
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { Children, isValidElement, useCallback, useMemo, useState, type ComponentProps, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
 import { press, RING } from './press'
 import { slot } from './slot'
@@ -66,13 +67,14 @@ export function OverflowingList({
   children,
   maxInlineCount,
   showOverflowCount = 'hover',
-  overflowLabel = 'Show all items',
+  overflowLabel,
   open,
   defaultOpen = false,
   onOpenChange,
   popupProps,
   ...props
 }: OverflowingListProps) {
+  const { t } = useI18n()
   const items = useMemo(() => Children.toArray(children).filter(isValidElement), [children])
   const [widths, setWidths] = useState<number[]>([])
   const [avail, setAvail] = useState<number | null>(null)
@@ -138,7 +140,7 @@ export function OverflowingList({
             <XStack
               {...slot('overflowing-list-count')}
               {...press(() => setOpen(!shown))}
-              aria-label={`${overflowLabel} (${items.length})`}
+              aria-label={t('{label} ({n})', { label: overflowLabel ?? t('Show all items'), n: items.length })}
               aria-expanded={shown}
               shrink={0}
               minW={COUNT_MIN}

@@ -16,8 +16,13 @@ import * as React from 'react'
  */
 import { createStyledContext, SizableText, styled, XStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
+<<<<<<< HEAD
 
 import { useTranslate } from '../../i18n/react'
+=======
+import * as React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
+>>>>>>> origin/i18n
 import { sx } from '../../sx'
 import { Button } from './button'
 import { touch } from './gesture'
@@ -95,11 +100,26 @@ export type PillProps = React.ComponentProps<'span'> & {
 export function Pill({ className, variant = 'default', onRemove, children, ...props }: PillProps) {
   const tr = useTranslate()
   const resolved = variant ?? 'default'
+  const { t } = useI18n()
   return (
     <PillFrame {...slot('pill')} data-variant={resolved} variant={resolved} {...sx([pillVariants({ variant: resolved }), className].filter(Boolean).join(' '))} {...(props as React.ComponentProps<typeof PillFrame>)}>
       {ink(children, PillText)}
       {onRemove ? (
+<<<<<<< HEAD
         <Button {...slot('pill-remove')} variant="ghost" size="icon" minH={REMOVE} minW={REMOVE} rounded={999} {...touch(REMOVE, MIN_TOUCH)} aria-label={tr('Remove')} onPress={onRemove}>
+=======
+        <Button
+          {...slot('pill-remove')}
+          variant="ghost"
+          size="icon"
+          minH={REMOVE}
+          minW={REMOVE}
+          rounded={999}
+          {...touch(REMOVE, MIN_TOUCH)}
+          aria-label={t('Remove')}
+          onPress={onRemove}
+        >
+>>>>>>> origin/i18n
           <X size={12} />
         </Button>
       ) : null}

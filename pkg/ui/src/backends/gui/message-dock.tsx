@@ -17,10 +17,15 @@ import type { ComponentProps } from 'react'
  */
 import { createStyledContext, SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
+<<<<<<< HEAD
 
 import { useTranslate } from '../../i18n/react'
 import { Button } from './button'
 import { touch } from './gesture'
+=======
+import type { ComponentProps } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
+>>>>>>> origin/i18n
 import { ink } from './ink'
 import { slot } from './slot'
 
@@ -144,6 +149,7 @@ export type MessageDockProps = Omit<ComponentProps<typeof DockFrame>, 'anchor' |
 
 function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: MessageDockProps) {
   const resolved = position ?? 'bottom-end'
+  const { t } = useI18n()
   return (
     <DockFrame {...slot('message-dock')} data-position={resolved} anchor={resolved} {...props}>
       {messages.map((message) => {
@@ -163,7 +169,23 @@ function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: M
                 ) : null}
               </YStack>
               {onClose ? (
+<<<<<<< HEAD
                 <Button {...slot('message-dock-card-close')} variant="ghost" size="icon" minH={CLOSE} minW={CLOSE} {...touch(CLOSE)} position="absolute" t="$3" insetInlineEnd="$3" aria-label={tr('Close')} onPress={() => onClose(message.id)}>
+=======
+                <Button
+                  {...slot('message-dock-card-close')}
+                  variant="ghost"
+                  size="icon"
+                  minH={CLOSE}
+                  minW={CLOSE}
+                  {...touch(CLOSE)}
+                  position="absolute"
+                  t="$3"
+                  insetInlineEnd="$3"
+                  aria-label={t('Close')}
+                  onPress={() => onClose(message.id)}
+                >
+>>>>>>> origin/i18n
                   <X size={16} />
                 </Button>
               ) : null}

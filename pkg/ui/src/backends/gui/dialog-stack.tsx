@@ -13,8 +13,13 @@ import type { ComponentProps, ReactNode } from 'react'
  */
 import { XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
+<<<<<<< HEAD
 
 import { useTranslate } from '../../i18n/react'
+=======
+import type { ComponentProps, ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
+>>>>>>> origin/i18n
 import { Button } from './button'
 import { touch } from './gesture'
 import { ink } from './ink'
@@ -35,17 +40,35 @@ export type DialogStackProps = ComponentProps<typeof YStack> & {
 }
 
 export function DialogStack({ dialogs, onClose, children, ...props }: DialogStackProps) {
+<<<<<<< HEAD
   const tr = useTranslate()
+=======
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   return (
     <YStack {...slot('dialog-stack')} position="relative" {...props}>
       {dialogs.map((dialog, index) => (
         <YStack key={dialog.id} {...slot('dialog-stack-item')} data-index={index} position="absolute" t={0} l={0} r={0} b={0} rounded="$5" borderWidth={1} borderColor="$borderColor" bg="$background" p="$6" gap="$4" transform={[{ translateX: index * OFFSET }, { translateY: index * OFFSET }]} style={{ zIndex: index }}>
           <XStack items="center" justify="space-between">
+<<<<<<< HEAD
             {ink(dialog.title, undefined, {
               fontSize: '$5',
               fontWeight: '600',
             })}
             <Button {...slot('dialog-stack-close')} variant="ghost" size="icon" minH={CLOSE} minW={CLOSE} {...touch(CLOSE)} aria-label={tr('Close')} onPress={() => onClose?.(dialog.id)}>
+=======
+            {ink(dialog.title, undefined, { fontSize: '$5', fontWeight: '600' })}
+            <Button
+              {...slot('dialog-stack-close')}
+              variant="ghost"
+              size="icon"
+              minH={CLOSE}
+              minW={CLOSE}
+              {...touch(CLOSE)}
+              aria-label={t('Close')}
+              onPress={() => onClose?.(dialog.id)}
+            >
+>>>>>>> origin/i18n
               <X size={16} />
             </Button>
           </XStack>

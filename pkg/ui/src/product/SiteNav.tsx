@@ -32,6 +32,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Separator, Text, XStack, YStack } from '@hanzo/gui'
 import type { Action, Link, MeetHanzoMenu, Product, SiteHeader } from '@hanzo/products'
+import { useI18n } from '@hanzo/i18n/react'
 
 /** Render a destination. Hosts pass next/link etc.; the default is a plain anchor. */
 export type LinkRender = (props: {
@@ -138,6 +139,7 @@ function Column({ title, links, link, icon, close }: { title: string; links: Lin
  * family growing reflows instead of clipping.
  */
 function Launcher({ menu, link, icon, close }: { menu: MeetHanzoMenu; link: LinkRender; icon?: (id: string) => ReactNode; close: () => void }) {
+  const { t } = useI18n()
   return (
     <YStack
       position="absolute"
@@ -180,8 +182,8 @@ function Launcher({ menu, link, icon, close }: { menu: MeetHanzoMenu; link: Link
       <Separator />
 
       <XStack gap="$4" flexWrap="wrap" items="flex-start">
-        <Column title="Platform" links={menu.utilities} link={link} icon={icon} close={close} />
-        <Column title="Install" links={menu.installs} link={link} icon={icon} close={close} />
+        <Column title={t('Platform')} links={menu.utilities} link={link} icon={icon} close={close} />
+        <Column title={t('Install')} links={menu.installs} link={link} icon={icon} close={close} />
       </XStack>
     </YStack>
   )
@@ -209,6 +211,7 @@ function Cta({ action, link }: { action: Action; link: LinkRender }) {
  * differs, which is what kept the old per-repo MobileMenus drifting.
  */
 function MobilePanel({ header, menu, link, icon, close }: { header: SiteHeader; menu?: MeetHanzoMenu; link: LinkRender; icon?: (id: string) => ReactNode; close: () => void }) {
+  const { t } = useI18n()
   return (
     <YStack
       position="absolute"
@@ -261,15 +264,16 @@ function MobilePanel({ header, menu, link, icon, close }: { header: SiteHeader; 
             ))}
           </YStack>
           <Separator />
-          <Column title="Platform" links={menu.utilities} link={link} icon={icon} close={close} />
-          <Column title="Install" links={menu.installs} link={link} icon={icon} close={close} />
+          <Column title={t('Platform')} links={menu.utilities} link={link} icon={icon} close={close} />
+          <Column title={t('Install')} links={menu.installs} link={link} icon={icon} close={close} />
         </>
       ) : null}
     </YStack>
   )
 }
 
-export function SiteNav({ header, menu, brand, actions, link = defaultLink, icon, active, meetLabel = 'Meet Hanzo' }: SiteNavProps) {
+export function SiteNav({ header, menu, brand, actions, link = defaultLink, icon, active, meetLabel }: SiteNavProps) {
+  const { t } = useI18n()
   const [launcher, setLauncher] = useState(false)
   const [mobile, setMobile] = useState(false)
   const root = useRef<HTMLDivElement | null>(null)
@@ -319,7 +323,7 @@ export function SiteNav({ header, menu, brand, actions, link = defaultLink, icon
             aria-expanded={launcher}
           >
             <Text fontSize="$2" color="$ink">
-              {meetLabel}
+              {meetLabel ?? t('Meet Hanzo')}
             </Text>
           </XStack>
         ) : null}
@@ -363,10 +367,10 @@ export function SiteNav({ header, menu, brand, actions, link = defaultLink, icon
             hoverStyle={{ bg: '$edge' }}
             onPress={() => setMobile(!mobile)}
             accessibilityRole="button"
-            aria-label={mobile ? 'Close menu' : 'Open menu'}
+            aria-label={mobile ? t('Close menu') : t('Open menu')}
           >
             <Text fontSize="$2" color="$ink">
-              {mobile ? 'Close' : 'Menu'}
+              {mobile ? t('Close') : t('Menu')}
             </Text>
           </XStack>
         </XStack>

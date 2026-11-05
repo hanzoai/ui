@@ -33,8 +33,14 @@
 import { Children, createContext, isValidElement, useContext, type ComponentProps, type ReactNode } from 'react'
 import { createStyledContext, SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { Info, X } from '@hanzogui/lucide-icons-2'
+<<<<<<< HEAD
 
 import { useTranslate } from '../../i18n/react'
+=======
+import { useI18n } from '@hanzo/i18n/react'
+import { slot } from './slot'
+import { touch } from './gesture'
+>>>>>>> origin/i18n
 import { Button, type ButtonProps } from './button'
 import { colorOf, STATUS_PAINT, type FeedbackColor, type FeedbackPaint, type FeedbackStatus } from './feedback'
 import { touch } from './gesture'
@@ -161,8 +167,24 @@ export function BannerAction({ children, ...props }: Omit<ButtonProps, 'variant'
   )
 }
 
+<<<<<<< HEAD
 function RecordBanner({ status, color, emphasis, layout = 'strip', embedded = false, action, icon, onClose, children, ...props }: Omit<BannerProps, 'variant'>) {
   const tr = useTranslate()
+=======
+function RecordBanner({
+  status,
+  color,
+  emphasis,
+  layout = 'strip',
+  embedded = false,
+  action,
+  icon,
+  onClose,
+  children,
+  ...props
+}: Omit<BannerProps, 'variant'>) {
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   const solid = (emphasis ?? (layout === 'strip' ? 'solid' : 'soft')) === 'solid'
   const hue = colorOf(status ?? 'info', color)
   const paint = STATUS_PAINT[hue]
@@ -183,7 +205,18 @@ function RecordBanner({ status, color, emphasis, layout = 'strip', embedded = fa
         </SizableText>
         {action}
         {onClose ? (
+<<<<<<< HEAD
           <Button {...slot('banner-close')} variant="ghost" size="icon-xs" color={ink} aria-label={tr('Close')} onPress={onClose}>
+=======
+          <Button
+            {...slot('banner-close')}
+            variant="ghost"
+            size="icon-xs"
+            color={ink}
+            aria-label={t('Close')}
+            onPress={onClose}
+          >
+>>>>>>> origin/i18n
             <X color={ink as never} />
           </Button>
         ) : null}
@@ -192,8 +225,25 @@ function RecordBanner({ status, color, emphasis, layout = 'strip', embedded = fa
   )
 }
 
+<<<<<<< HEAD
 export function Banner({ variant = 'default', onClose, children, status, color, emphasis, layout, embedded, action, icon: lead, ...props }: BannerProps) {
   const tr = useTranslate()
+=======
+export function Banner({
+  variant = 'default',
+  onClose,
+  children,
+  status,
+  color,
+  emphasis,
+  layout,
+  embedded,
+  action,
+  icon: lead,
+  ...props
+}: BannerProps) {
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   const record = [status, color, emphasis, layout, action, lead].some((v) => v !== undefined)
   if (record)
     return (
@@ -226,7 +276,11 @@ export function Banner({ variant = 'default', onClose, children, status, color, 
           position="absolute"
           t="$3"
           insetInlineEnd="$4"
+<<<<<<< HEAD
           aria-label={tr('Close')}
+=======
+          aria-label={t('Close')}
+>>>>>>> origin/i18n
           onPress={onClose}
         >
           <X size={16} />

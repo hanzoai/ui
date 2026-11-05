@@ -13,6 +13,7 @@
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import { TrendingDown, TrendingUp } from '@hanzogui/lucide-icons-2'
 import * as React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Cell, Grid } from '../../grid'
 import { ink } from './ink'
 import { slot } from './slot'
@@ -55,6 +56,7 @@ function PositionRow({
   const plPercent = ((position.currentPrice - position.avgPrice) / position.avgPrice) * 100
   const totalValue = position.currentPrice * position.shares
   const gain = pl >= 0
+  const { t } = useI18n()
 
   return (
     <RowFrame
@@ -78,13 +80,13 @@ function PositionRow({
       <Grid columns={2} gap="$2">
         <Cell>
           <YStack gap="$1">
-            {ink('Shares', SizableText, { size: '$1', color: '$quiet' })}
+            {ink(t('Shares'), SizableText, { size: '$1', color: '$quiet' })}
             {ink(String(position.shares), SizableText, { size: '$1', fontWeight: '500' })}
           </YStack>
         </Cell>
         <Cell>
           <YStack gap="$1">
-            {ink('Avg Price', SizableText, { size: '$1', color: '$quiet' })}
+            {ink(t('Avg Price'), SizableText, { size: '$1', color: '$quiet' })}
             {ink(`$${position.avgPrice.toFixed(2)}`, SizableText, {
               size: '$1',
               fontWeight: '500',
@@ -96,7 +98,7 @@ function PositionRow({
       <Grid columns={2} gap="$2">
         <Cell>
           <YStack gap="$1">
-            {ink('Current Price', SizableText, { size: '$1', color: '$quiet' })}
+            {ink(t('Current Price'), SizableText, { size: '$1', color: '$quiet' })}
             {ink(`$${position.currentPrice.toFixed(2)}`, SizableText, {
               size: '$1',
               fontWeight: '500',
@@ -105,14 +107,14 @@ function PositionRow({
         </Cell>
         <Cell>
           <YStack gap="$1">
-            {ink('Total Value', SizableText, { size: '$1', color: '$quiet' })}
+            {ink(t('Total Value'), SizableText, { size: '$1', color: '$quiet' })}
             {ink(`$${totalValue.toFixed(2)}`, SizableText, { size: '$1', fontWeight: '500' })}
           </YStack>
         </Cell>
       </Grid>
 
       <XStack {...slot('positions-list-pnl')} justify="space-between" items="center">
-        {ink('P&L', SizableText, { size: '$1', color: '$quiet' })}
+        {ink(t('P&L'), SizableText, { size: '$1', color: '$quiet' })}
         {ink(`${gain ? '+' : ''}$${pl.toFixed(2)}`, SizableText, {
           size: '$1',
           fontWeight: '600',
@@ -124,10 +126,11 @@ function PositionRow({
 }
 
 export function PositionsList({ positions = [], onPositionClick }: Partial<PositionsListProps>) {
+  const { t } = useI18n()
   if (positions.length === 0) {
     return (
       <YStack {...slot('positions-list-empty')} items="center" py="$8">
-        {ink('No open positions', SizableText, { size: '$2', color: '$quiet' })}
+        {ink(t('No open positions'), SizableText, { size: '$2', color: '$quiet' })}
       </YStack>
     )
   }

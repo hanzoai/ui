@@ -11,7 +11,11 @@
  * that is never coming, which is the one event in a conversation that has to
  * interrupt.
  */
+<<<<<<< HEAD
 import type { ComponentProps, ReactNode } from 'react'
+=======
+import { useI18n } from '@hanzo/i18n/react'
+>>>>>>> origin/i18n
 import { XStack, YStack } from '@hanzo/gui'
 import { RefreshCw } from '@hanzogui/lucide-icons-2'
 
@@ -25,11 +29,17 @@ export interface FailureProps extends Omit<ComponentProps<typeof YStack>, 'child
   children?: ReactNode
   /** Offer to run the turn again. Omit and no control renders. */
   onRetry?: () => void
+  /** The retry control's words; absent, "Try again" in the reader's language. */
   retryLabel?: string
 }
 
+<<<<<<< HEAD
 export function Failure({ children, onRetry, retryLabel = 'Try again', ...props }: FailureProps) {
   const tr = useTranslate()
+=======
+export function Failure({ children, onRetry, retryLabel, ...props }: FailureProps) {
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   return (
     <YStack
       {...slot('failure')}
@@ -53,7 +63,11 @@ export function Failure({ children, onRetry, retryLabel = 'Try again', ...props 
         <XStack self="flex-start">
           <Button {...slot('failure-retry')} variant="outline" size="sm" onPress={onRetry}>
             <RefreshCw size={13} />
+<<<<<<< HEAD
             {tr(retryLabel)}
+=======
+            {retryLabel ?? t('Try again')}
+>>>>>>> origin/i18n
           </Button>
         </XStack>
       ) : null}

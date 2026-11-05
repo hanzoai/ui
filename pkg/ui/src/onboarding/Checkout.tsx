@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { readConsent, renderConsent } from '@hanzo/event'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 import { PALETTE } from '@hanzo/pay'
 import { load, pin, PRODUCTION, SANDBOX, style } from '@hanzo/pay/web'
 
@@ -30,6 +32,9 @@ import { IntervalChoice, Primary } from './screens'
  * Before it charges, it reads the catalog and refuses if the catalog's price is
  * not the one on screen, so a person is never billed a different amount than the
  * one they agreed to.
+ *
+ * Its words are the reader's language (@hanzo/i18n `t`); amounts and the renewal
+ * date are formatted as before, and the events it sends stay in English.
  */
 
 export interface CheckoutProps {
@@ -63,6 +68,7 @@ interface Catalog {
 }
 
 const COUNTRIES: [string, string][] = [
+<<<<<<< HEAD
   ['US', 'United States'],
   ['CA', 'Canada'],
   ['GB', 'United Kingdom'],
@@ -83,6 +89,9 @@ const COUNTRIES: [string, string][] = [
   ['NZ', 'New Zealand'],
   ['ZA', 'South Africa'],
   ['AE', 'United Arab Emirates'],
+=======
+  ['US', phrase('United States')], ['CA', phrase('Canada')], ['GB', phrase('United Kingdom')], ['AU', phrase('Australia')], ['DE', phrase('Germany')], ['FR', phrase('France')], ['ES', phrase('Spain')], ['IT', phrase('Italy')], ['NL', phrase('Netherlands')], ['SE', phrase('Sweden')], ['IE', phrase('Ireland')], ['CH', phrase('Switzerland')], ['JP', phrase('Japan')], ['SG', phrase('Singapore')], ['IN', phrase('India')], ['BR', phrase('Brazil')], ['MX', phrase('Mexico')], ['NZ', phrase('New Zealand')], ['ZA', phrase('South Africa')], ['AE', phrase('United Arab Emirates')],
+>>>>>>> origin/i18n
 ]
 
 const renews = (interval: Interval): string => {
@@ -97,14 +106,19 @@ const renews = (interval: Interval): string => {
 }
 
 export function Checkout(props: CheckoutProps) {
+  const { t } = useI18n()
   const loaded = useCatalog(props.api ?? API)
   if (loaded === null) return <Page site={props.site ?? 'Hanzo'} title="" busy />
-  if (!loaded) return <Page site={props.site ?? 'Hanzo'} title="Plans could not be loaded just now" lede="That is ours to fix. Reload to try again." center />
+  if (!loaded) return <Page site={props.site ?? 'Hanzo'} title={t('Plans could not be loaded just now')} lede={`${t('That is ours to fix.')} ${t('Reload to try again.')}`} center />
   return <CheckoutForm {...props} />
 }
 
 function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, seats = 1, interval, setInterval, setPlan, track, termsPath = '/terms', back, onPaid }: CheckoutProps) {
+<<<<<<< HEAD
   const tr = useTranslate()
+=======
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   const o = offer(plan)
   const l = useMemo(() => lines(plan, interval, seats), [plan, interval, seats])
   const activeOrg = org || currentOrg() || undefined
@@ -161,7 +175,7 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
     let live = true
     call<Settings>(api, '/v1/billing/settings', { headers: scope }, token)
       .then((s) => live && setSettings(s))
-      .catch((e: unknown) => live && setWrong(e instanceof Error ? e.message : 'Payments are not available right now.'))
+      .catch((e: unknown) => live && setWrong(e instanceof Error ? e.message : t('Payments are not available right now.')))
     return () => {
       live = false
     }
@@ -203,7 +217,7 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
         card.current = c
         setReady(true)
       } catch (e) {
-        if (!cancelled) setWrong(e instanceof Error ? e.message : 'The card form did not load.')
+        if (!cancelled) setWrong(e instanceof Error ? e.message : t('The card form did not load.'))
       }
     })()
     return () => {
@@ -235,11 +249,11 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
     if (e?.preventDefault) e.preventDefault()
     if (busy || !ready || !card.current) return
     if (!agree) {
-      setWrong('Please agree to recurring charges to continue.')
+      setWrong(t('Please agree to recurring charges to continue.'))
       return
     }
     if (!form.name.trim() || !form.address.trim()) {
-      setWrong('Enter your full name and address.')
+      setWrong(t('Enter your full name and address.'))
       return
     }
     setBusy(true)
@@ -256,7 +270,7 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
       const cents = Math.round(period(plan, interval) * 100)
       const listed = interval === 'annual' ? row?.annualTotal : row?.price
       if (!row || listed !== cents) {
-        fail('catalog', 'This plan’s price is being updated, so we have not charged you. Please try again shortly.')
+        fail('catalog', `${t('This plan’s price is being updated, so we have not charged you.')} ${t('Please try again shortly.')}`)
         return
       }
 
@@ -268,7 +282,7 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
 
       if (result.status !== 'OK' || !result.token) {
         settle(sale)
-        fail('card', result.errors?.[0]?.message ?? 'The card could not be read. Check the details and try again.')
+        fail('card', result.errors?.[0]?.message ?? `${t('The card could not be read.')} ${t('Check the details and try again.')}`)
         return
       }
       track?.('payment_info_added', {
@@ -314,22 +328,29 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
       onPaid({ orderId: paid.invoiceId || paid.subscriptionId })
     } catch (err) {
       settle(sale)
-      fail('declined', err instanceof Error ? err.message : 'We could not confirm the payment. Check Billing before you try again.')
+      fail('declined', err instanceof Error ? err.message : `${t('We could not confirm the payment.')} ${t('Check Billing before you try again.')}`)
     }
   }
 
-  const per = interval === 'annual' ? 'year' : 'month'
-  const label = o.category === 'team' ? `${l.seats} ${o.name.toLowerCase()}s` : o.name
-  const every = interval === 'annual' ? 'yearly' : 'monthly'
+  const annual = interval === 'annual'
+  const team = o.category === 'team'
+  const label = team ? (plan === 'team_premium' ? t('{n} premium seats', { n: l.seats }) : t('{n} standard seats', { n: l.seats })) : o.name
+  const charged = usd(l.subtotal)
+  const seat = usd(unit(plan, interval))
+  const terms = (
+    <Anchor href={termsPath} color="$ink" textDecorationLine="underline">
+      {t('terms')}
+    </Anchor>
+  )
   return (
-    <Page site={site} title="Configure your plan" back={back} width={1000} start>
+    <Page site={site} title={t('Configure your plan')} back={back} width={1000} start>
       <XStack render={<form onSubmit={submit} noValidate />} flexWrap="wrap" gap="$7" items="flex-start" width="100%">
         <YStack flex={1} flexBasis={360} minW={0} gap="$4">
           {setPlan && plan.startsWith('max') ? (
             <YStack gap="$3" width="100%">
               <XStack justify="space-between" items="center" width="100%">
                 <Heading render="h2" size="$4" fontWeight="600" color="$ink" m={0}>
-                  Plan
+                  {t('Plan')}
                 </Heading>
                 <IntervalToggle
                   interval={interval}
@@ -346,30 +367,35 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
                   save={saving(plan)}
                 />
               </XStack>
-              <ChoiceGroup label="Plan" flexWrap="wrap">
-                {(['max_5x', 'max_20x'] as const).map((t) => (
+              <ChoiceGroup label={t('Plan')} flexWrap="wrap">
+                {(['max_5x', 'max_20x'] as const).map((tier) => (
                   <ChoiceCard
-                    key={t}
-                    selected={plan === t}
+                    key={tier}
+                    selected={plan === tier}
                     onSelect={() => {
+<<<<<<< HEAD
                       track?.('plan_changed', {
                         from: plan,
                         to: t,
                         field: 'plan',
                       })
                       setPlan(t)
+=======
+                      track?.('plan_changed', { from: plan, to: tier, field: 'plan' })
+                      setPlan(tier)
+>>>>>>> origin/i18n
                     }}
                     flex={1}
                     flexBasis={200}
                   >
                     <XStack justify="space-between" items="center" width="100%">
                       <SizableText size="$3" fontWeight="600" color="$ink">
-                        {offer(t).name}
+                        {offer(tier).name}
                       </SizableText>
-                      <RadioCircle selected={plan === t} />
+                      <RadioCircle selected={plan === tier} />
                     </XStack>
                     <SizableText size="$2" color="$ink">
-                      {`${money(unit(t, interval))}/month${interval === 'annual' ? ' · billed yearly' : ''}`}
+                      {annual ? t('{price}/month · billed yearly', { price: money(unit(tier, interval)) }) : t('{price}/month', { price: money(unit(tier, interval)) })}
                     </SizableText>
                   </ChoiceCard>
                 ))}
@@ -388,78 +414,112 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
                 })
                 setInterval(i)
               }}
-              price={(i) => `${usd(lines(plan, i, seats).subtotal)} / ${i === 'annual' ? 'year' : 'month'}${i === 'annual' ? ' · billed yearly' : ''}`}
+              price={(i) => {
+                const price = usd(lines(plan, i, seats).subtotal)
+                return i === 'annual' ? t('{price} / year · billed yearly', { price }) : t('{price} / month', { price })
+              }}
             />
           )}
 
           <Heading render="h2" size="$4" fontWeight="600" color="$ink" mt="$4" m={0}>
-            Billing information
+            {t('Billing information')}
           </Heading>
           <Field gap="$2">
-            <FieldLabel htmlFor="hanzo-bill-name">Full name</FieldLabel>
+            <FieldLabel htmlFor="hanzo-bill-name">{t('Full name')}</FieldLabel>
             <Input id="hanzo-bill-name" name="name" autoComplete="name" value={form.name} onChangeText={(v: string) => setForm((f) => ({ ...f, name: v }))} />
           </Field>
           <Field gap="$2">
-            <FieldLabel htmlFor="hanzo-bill-country">Country or region</FieldLabel>
+            <FieldLabel htmlFor="hanzo-bill-country">{t('Country or region')}</FieldLabel>
             <Select value={form.country} onValueChange={(v: string) => setForm((f) => ({ ...f, country: v }))}>
+<<<<<<< HEAD
               <SelectTrigger id="hanzo-bill-country" aria-label={tr('Country or region')}>
+=======
+              <SelectTrigger id="hanzo-bill-country" aria-label={t('Country or region')}>
+>>>>>>> origin/i18n
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {COUNTRIES.map(([c, n]) => (
                   <SelectItem key={c} value={c}>
-                    {n}
+                    {t(n)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </Field>
           <Field gap="$2">
-            <FieldLabel htmlFor="hanzo-bill-address">Address</FieldLabel>
+            <FieldLabel htmlFor="hanzo-bill-address">{t('Address')}</FieldLabel>
             <Input id="hanzo-bill-address" name="address" autoComplete="street-address" value={form.address} onChangeText={(v: string) => setForm((f) => ({ ...f, address: v }))} />
           </Field>
           <Field gap="$2">
-            <FieldLabel htmlFor="hanzo-bill-invoice">Use a different name on invoices (optional)</FieldLabel>
+            <FieldLabel htmlFor="hanzo-bill-invoice">{t('Use a different name on invoices (optional)')}</FieldLabel>
             <Input id="hanzo-bill-invoice" name="invoice" value={form.invoice} onChangeText={(v: string) => setForm((f) => ({ ...f, invoice: v }))} />
           </Field>
 
           <Heading render="h2" size="$4" fontWeight="600" color="$ink" mt="$4" m={0}>
-            Payment method
+            {t('Payment method')}
           </Heading>
+<<<<<<< HEAD
           <YStack id="hanzo-square" aria-label={tr('Card details')} minH={90} />
+=======
+          <YStack id="hanzo-square" aria-label={t('Card details')} minH={90} />
+>>>>>>> origin/i18n
           {!ready && !wrong ? (
             <Paragraph size="$1" color="$quiet" m={0}>
-              Loading the card form…
+              {t('Loading the card form…')}
             </Paragraph>
           ) : null}
         </YStack>
 
         <YStack flex={1} flexBasis={360} minW={0}>
-          <Panel label="Order summary">
+          <Panel label={t('Order summary')}>
             <Heading render="h2" size="$5" fontWeight="600" color="$ink" m={0}>
-              {o.category === 'team' ? 'Team plan' : `${o.name} plan`}
+              {team ? t('Team plan') : t('{plan} plan', { plan: o.name })}
             </Heading>
-            <Line muted label={`${label} ${interval === 'annual' ? 'annual' : 'monthly'}`} value={usd(l.subtotal)} />
-            <Line muted label="Subtotal" value={usd(l.subtotal)} />
-            <Line muted label="Tax" value="Calculated at payment" />
-            <Line strong label="Total due today" value={usd(l.subtotal)} />
+            <Line muted label={annual ? t('{item} annual', { item: label }) : t('{item} monthly', { item: label })} value={charged} />
+            <Line muted label={t('Subtotal')} value={charged} />
+            <Line muted label={t('Tax')} value={t('Calculated at payment')} />
+            <Line strong label={t('Total due today')} value={charged} />
             <Paragraph size="$2" color="$ink" m={0} p="$3" borderWidth={1} borderColor="$borderColor" rounded="$3">
-              Your subscription will auto-renew on {renews(interval)}. You will be charged {usd(l.subtotal)}/{per}
-              {o.category === 'team' ? ` (${l.seats} seats × ${usd(unit(plan, interval))}/seat/month${interval === 'annual' ? ', billed yearly' : ''})` : ''}. Cancel any time in Settings → Billing.
+              {[
+                t('Your subscription will auto-renew on {date}.', { date: renews(interval) }),
+                team
+                  ? annual
+                    ? t('You will be charged {price}/year ({n} seats × {seat}/seat/month, billed yearly).', { price: charged, n: l.seats, seat })
+                    : t('You will be charged {price}/month ({n} seats × {seat}/seat/month).', { price: charged, n: l.seats, seat })
+                  : annual
+                    ? t('You will be charged {price}/year.', { price: charged })
+                    : t('You will be charged {price}/month.', { price: charged }),
+                t('Cancel any time in Settings → Billing.'),
+              ].join(' ')}
             </Paragraph>
             <XStack items="flex-start" gap="$3">
+<<<<<<< HEAD
               <Checkbox id="hanzo-consent" checked={agree} onCheckedChange={(v: boolean | 'indeterminate') => setAgree(v === true)} mt="$1" aria-label={tr('Agree to recurring charges')} />
+=======
+              <Checkbox id="hanzo-consent" checked={agree} onCheckedChange={(v: boolean | 'indeterminate') => setAgree(v === true)} mt="$1" aria-label={t('Agree to recurring charges')} />
+>>>>>>> origin/i18n
               <Paragraph render="label" htmlFor="hanzo-consent" size="$2" color="$ink" flex={1} m={0}>
-                You agree that {site} will charge your card in the amount above now and on a recurring {every} basis until you cancel in accordance with our{' '}
-                <Anchor href={termsPath} color="$ink" textDecorationLine="underline">
-                  terms
-                </Anchor>
-                . You can cancel at any time in your account settings.
+                {annual
+                  ? t('You agree that {site} will charge your card in the amount above now and on a recurring yearly basis until you cancel in accordance with our {terms}.', { site, terms })
+                  : t('You agree that {site} will charge your card in the amount above now and on a recurring monthly basis until you cancel in accordance with our {terms}.', { site, terms })}
+                {` ${t('You can cancel at any time in your account settings.')}`}
               </Paragraph>
             </XStack>
+<<<<<<< HEAD
             {wrong ? <FieldError>{wrong}</FieldError> : null}
             <Primary type="button" disabled={!ready || busy} onClick={() => void submit()} onPress={() => void submit()}>
               {busy ? 'One moment…' : 'Subscribe'}
+=======
+            {wrong ? <FieldError>{t(wrong)}</FieldError> : null}
+            <Primary
+              type="button"
+              disabled={!ready || busy}
+              onClick={() => void submit()}
+              onPress={() => void submit()}
+            >
+              {busy ? t('One moment…') : t('Subscribe')}
+>>>>>>> origin/i18n
             </Primary>
           </Panel>
         </YStack>

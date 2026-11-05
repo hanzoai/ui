@@ -8,9 +8,14 @@
  * it renders on web, native (expo) and Tauri. An empty task list renders a
  * placeholder rather than nothing.
  */
+<<<<<<< HEAD
 import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
 
 import { useLocale, useTranslate } from '../../i18n/react'
+=======
+import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
+>>>>>>> origin/i18n
 import { ink } from './ink'
 import { slot } from './slot'
 
@@ -56,14 +61,22 @@ export type GanttProps = Omit<import('react').ComponentProps<typeof GanttFrame>,
 }
 
 export function Gantt({ tasks = [], ...props }: GanttProps) {
+<<<<<<< HEAD
   const tr = useTranslate()
   const { active, locale } = useLocale()
   const when = (d: Date) => d.toLocaleDateString(active ? locale : undefined)
+=======
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   return (
     <GanttFrame {...slot('gantt')} {...props}>
       {tasks.length === 0 ? (
         <XStack {...slot('gantt-empty')} items="center" justify="center" p="$8">
+<<<<<<< HEAD
           {ink(tr('No tasks available. Add tasks to display Gantt chart.'), SizableText, {
+=======
+          {ink(t('No tasks available. Add tasks to display Gantt chart.'), SizableText, {
+>>>>>>> origin/i18n
             size: '$2',
             color: '$quiet',
           })}

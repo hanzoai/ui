@@ -25,6 +25,7 @@
  * and gets `ArtifactCard`, which is where that decision already lived.
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import type { ComponentProps } from 'react'
 
 import { slot } from '../backends/gui/slot'
@@ -39,7 +40,8 @@ export interface PreviewProps extends Omit<ComponentProps<typeof YStack>, 'child
 }
 
 export function Preview({ markup, title, height = 320, ...props }: PreviewProps) {
-  const named = title ?? 'Preview'
+  const { t } = useI18n()
+  const named = title ?? t('Preview')
   return (
     <YStack
       {...slot('preview')}

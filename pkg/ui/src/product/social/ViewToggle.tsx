@@ -7,13 +7,15 @@
  */
 import { Text, XStack } from '@hanzo/gui'
 import { Calendar, List } from '@hanzogui/lucide-icons-2'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 import type { IconLike } from '../color'
 
 export type PostView = 'list' | 'calendar'
 
 const OPTIONS: { id: PostView; label: string; icon: IconLike }[] = [
-  { id: 'list', label: 'List', icon: List },
-  { id: 'calendar', label: 'Calendar', icon: Calendar },
+  { id: 'list', label: phrase('List'), icon: List },
+  { id: 'calendar', label: phrase('Calendar'), icon: Calendar },
 ]
 
 export function ViewToggle({
@@ -23,6 +25,7 @@ export function ViewToggle({
   view: PostView
   onChange: (v: PostView) => void
 }) {
+  const { t } = useI18n()
   return (
     <XStack borderWidth={1} borderColor="$borderColor" rounded="$4" overflow="hidden">
       {OPTIONS.map((o) => {
@@ -42,7 +45,7 @@ export function ViewToggle({
           >
             <Icon size={14} />
             <Text fontSize="$2" fontWeight={active ? '500' : '400'}>
-              {o.label}
+              {t(o.label)}
             </Text>
           </XStack>
         )

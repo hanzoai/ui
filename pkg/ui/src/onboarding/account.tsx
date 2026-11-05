@@ -1,8 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+<<<<<<< HEAD
 
 import { Button } from '../backends/gui/button'
+=======
+import { useI18n } from '@hanzo/i18n/react'
+>>>>>>> origin/i18n
 import { Checkbox } from '../backends/gui/checkbox'
 import { FieldError } from '../backends/gui/field'
 import { Anchor, Paragraph, SizableText, XStack } from '../backends/gui/layout'
@@ -31,42 +35,54 @@ export interface CreateAccountProps {
 }
 
 export function CreateAccount({ site = 'Hanzo', email, busy, wrong, termsPath = '/terms', aupPath = '/aup', onCreate, onOther }: CreateAccountProps) {
+<<<<<<< HEAD
   const tr = useTranslate()
+=======
+  const { t } = useI18n()
+>>>>>>> origin/i18n
   const [agree, setAgree] = useState(false)
   return (
     <Page
       site={site}
-      title="Let’s create your account"
+      title={t('Let’s create your account')}
       width={360}
       foot={
         <>
           <SizableText size="$1" color="$quiet" text="center">
-            {`Email verified as ${email}`}
+            {t('Email verified as {email}', { email })}
           </SizableText>
           <Button type="button" variant="link" size="sm" px={0} minH={0} disabled={busy} onClick={onOther}>
-            Use a different email
+            {t('Use a different email')}
           </Button>
         </>
       }
     >
-      <Panel label="Terms">
+      <Panel label={t('Terms')}>
         <XStack gap="$3" items="flex-start">
+<<<<<<< HEAD
           <Checkbox id="hanzo-terms" checked={agree} onCheckedChange={(v: boolean | 'indeterminate') => setAgree(v === true)} mt="$1" aria-label={tr('I agree to the Terms of Service and Acceptable Use Policy and confirm that I am at least 18 years of age')} />
+=======
+          <Checkbox id="hanzo-terms" checked={agree} onCheckedChange={(v: boolean | 'indeterminate') => setAgree(v === true)} mt="$1" aria-label={t('I agree to the Terms of Service and Acceptable Use Policy and confirm that I am at least 18 years of age')} />
+>>>>>>> origin/i18n
           <Paragraph render="label" htmlFor="hanzo-terms" size="$2" color="$ink" flex={1} m={0}>
-            {`I agree to ${site}’s `}
-            <Anchor href={termsPath} color="$ink" textDecorationLine="underline">
-              Terms of Service
-            </Anchor>
-            {' and '}
-            <Anchor href={aupPath} color="$ink" textDecorationLine="underline">
-              Acceptable Use Policy
-            </Anchor>
-            {' and confirm that I am at least 18 years of age.'}
+            {t('I agree to {site}’s {terms} and {aup} and confirm that I am at least 18 years of age.', {
+              site,
+              terms: (
+                <Anchor href={termsPath} color="$ink" textDecorationLine="underline">
+                  {t('Terms of Service')}
+                </Anchor>
+              ),
+              aup: (
+                <Anchor href={aupPath} color="$ink" textDecorationLine="underline">
+                  {t('Acceptable Use Policy')}
+                </Anchor>
+              ),
+            })}
           </Paragraph>
         </XStack>
-        {wrong ? <FieldError>{wrong}</FieldError> : null}
+        {wrong ? <FieldError>{t(wrong)}</FieldError> : null}
         <Primary disabled={!agree || busy} onClick={onCreate}>
-          {busy ? 'One moment…' : 'Create account'}
+          {busy ? t('One moment…') : t('Create account')}
         </Primary>
       </Panel>
     </Page>

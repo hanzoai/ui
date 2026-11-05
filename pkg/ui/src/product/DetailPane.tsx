@@ -45,6 +45,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Button as GuiButton, ScrollView, Text, useMedia, XStack, YStack } from '@hanzo/gui'
 import { ChevronLeft, Maximize2, X } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Button, type ButtonProps } from '../backends/gui/button'
 import { useDensity } from '../backends/gui/density'
@@ -122,6 +123,7 @@ export type DetailPaneProps = {
 export const PANE = { w: 400, min: 320, max: 600, bar: 48, icon: 16 } as const
 
 export function DetailPane({ children, zIndex, mode = 'overlay', store = 'hanzo.pane' }: DetailPaneProps) {
+  const { t } = useI18n()
   // One state, so every transition is one pure update: whether it is open, and
   // the pages it holds (kept through a close, so the exit animates with them).
   const [state, setState] = useState<{
@@ -149,7 +151,7 @@ export function DetailPane({ children, zIndex, mode = 'overlay', store = 'hanzo.
   const depth = isOpen ? stack.length : 0
   const api = useMemo<DetailPaneApi>(() => ({ open, push, back, close, isOpen, depth }), [open, push, back, close, isOpen, depth])
   const desc = stack[stack.length - 1] ?? null
-  const title = typeof desc?.title === 'string' ? desc.title : 'Details'
+  const title = typeof desc?.title === 'string' ? desc.title : t('Details')
 
   const page = desc ? <PageCtx.Provider value={desc}>{record || desc.bare ? <RecordPage desc={desc} /> : <SheetPage desc={desc} close={close} />}</PageCtx.Provider> : null
 
@@ -197,6 +199,7 @@ const expandKey = (onExpand?: () => void) => (e: { key?: string; metaKey?: boole
  */
 function Dock({ open, title, store, onClose, onExpand, children }: { open: boolean; title: string; store: string; onClose: () => void; onExpand?: () => void; children: ReactNode }) {
   const span = useSpan(store, PANE.w, PANE.min, PANE.max)
+  const { t } = useI18n()
   const node = useRef<HTMLElement | null>(null)
   const opener = useRef<Element | null>(null)
 
@@ -267,7 +270,24 @@ function Dock({ open, title, store, onClose, onExpand, children }: { open: boole
       <YStack width="var(--span)" flex={1} minH={0} bg="$background" borderInlineStartWidth={1} borderColor="$borderColor">
         {children}
       </YStack>
+<<<<<<< HEAD
       {open ? <Grip side="end" span={span.span} floor={PANE.min} ceil={PANE.max} reset={PANE.w} bar="edge" label="Resize side panel" onSpan={span.move} onKeep={span.keep} onShut={onClose} /> : null}
+=======
+      {open ? (
+        <Grip
+          side="end"
+          span={span.span}
+          floor={PANE.min}
+          ceil={PANE.max}
+          reset={PANE.w}
+          bar="edge"
+          label={t('Resize side panel')}
+          onSpan={span.move}
+          onKeep={span.keep}
+          onShut={onClose}
+        />
+      ) : null}
+>>>>>>> origin/i18n
     </YStack>
   )
 }
@@ -300,11 +320,18 @@ function SheetPage({ desc, close }: { desc: DetailDescriptor; close: () => void 
   const tr = useTranslate()
   const Icon = desc.icon
   const pane = useContext(Ctx)
+  const { t } = useI18n()
   return (
     <>
       {/* Bare-mode layout: fixed header · scroll body · optional sticky footer. */}
       <XStack items="center" gap="$2.5" px="$4" height={56} borderBottomWidth={1} borderColor="$borderColor">
+<<<<<<< HEAD
         {pane && pane.depth > 1 ? <GuiButton size="$2" chromeless icon={<ChevronLeft {...mirror} size={18} />} onPress={pane.back} aria-label={tr('Back')} /> : null}
+=======
+        {pane && pane.depth > 1 ? (
+          <GuiButton size="$2" chromeless icon={<ChevronLeft {...mirror} size={18} />} onPress={pane.back} aria-label={t('Back')} />
+        ) : null}
+>>>>>>> origin/i18n
         {Icon ? <Icon size={18} color={desc.iconColor ? asColor(desc.iconColor) : undefined} /> : null}
         <YStack flex={1} minW={0}>
           <Text fontSize="$5" fontWeight="700" color="$color12" numberOfLines={1}>
@@ -316,7 +343,11 @@ function SheetPage({ desc, close }: { desc: DetailDescriptor; close: () => void 
             </Text>
           ) : null}
         </YStack>
+<<<<<<< HEAD
         <GuiButton size="$2" chromeless icon={<X size={18} />} onPress={close} aria-label={tr('Close')} />
+=======
+        <GuiButton size="$2" chromeless icon={<X size={18} />} onPress={close} aria-label={t('Close')} />
+>>>>>>> origin/i18n
       </XStack>
 
       <ScrollView flex={1} minH={0}>
@@ -352,11 +383,12 @@ export function PaneBar({ children, actions }: PaneBarProps) {
   const pane = useContext(Ctx)
   const page = useContext(PageCtx)
   const expand = page?.onExpand
+  const { t } = useI18n()
   return (
     <XStack {...slot('pane-bar')} height={PANE.bar} shrink={0} items="center" justify="space-between" gap="$4" px="$2" bg="$panel" borderBottomWidth={1} borderColor="$borderColor">
       <XStack flex={1} minW={0} items="center" gap="$1">
         {pane && pane.depth > 1 ? (
-          <Tool tip="Back" onPress={pane.back}>
+          <Tool tip={t('Back')} onPress={pane.back}>
             <ChevronLeft {...mirror} />
           </Tool>
         ) : null}
@@ -365,12 +397,12 @@ export function PaneBar({ children, actions }: PaneBarProps) {
       <XStack shrink={0} items="center" gap="$1">
         {actions}
         {expand ? (
-          <Tool tip={page?.expandLabel ?? 'Open'} onPress={expand}>
+          <Tool tip={page?.expandLabel ?? t('Open')} onPress={expand}>
             <Maximize2 />
           </Tool>
         ) : null}
         {pane ? (
-          <Tool tip="Close side panel" onPress={pane.close}>
+          <Tool tip={t('Close side panel')} onPress={pane.close}>
             <X />
           </Tool>
         ) : null}

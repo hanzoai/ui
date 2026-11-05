@@ -15,6 +15,7 @@
  * reads one, so a page made of them is themed by @hanzo/appearance alone.
  */
 import { Anchor, Image, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import type { ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
@@ -100,7 +101,9 @@ const Section = ({ title, lede, children, measure = 1080 }: SectionProps) => (
 
 export type FeatureProps = { title: string; children: ReactNode; icon?: ReactNode; href?: string; linkLabel?: string }
 
-const Feature = ({ title, children, icon, href, linkLabel = 'Learn more' }: FeatureProps) => (
+const Feature = ({ title, children, icon, href, linkLabel }: FeatureProps) => {
+  const { t } = useI18n()
+  return (
   <YStack
     {...slot('feature')}
     render="article"
@@ -125,11 +128,12 @@ const Feature = ({ title, children, icon, href, linkLabel = 'Learn more' }: Feat
     </Line>
     {href ? (
       <Anchor href={href} color="$ink" fontSize="$3" fontWeight="500" textDecorationLine="underline" mt="auto" pt="$2">
-        {linkLabel}
+        {linkLabel ?? t('Learn more')}
       </Anchor>
     ) : null}
   </YStack>
-)
+  )
+}
 
 const FeatureGrid = ({ children, min = 260 }: { children: ReactNode; min?: number }) => (
   <Grid columns={{ min, max: 3 }} gap={20}>

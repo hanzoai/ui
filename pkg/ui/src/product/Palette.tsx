@@ -37,6 +37,7 @@
  */
 import { type ReactNode, useMemo, useState } from "react"
 import { SizableText, XStack, YStack } from "@hanzo/gui"
+import { useI18n } from "@hanzo/i18n/react"
 
 import {
   CommandDialog,
@@ -46,7 +47,7 @@ import {
   CommandItem,
   CommandList,
 } from "../backends/gui"
-import { ASK, SAFE, rows, type Op } from "./match"
+import { ASK, ASK_GROUP, SAFE, rows, type Op } from "./match"
 
 export type PaletteProps = {
   open: boolean
@@ -97,15 +98,19 @@ export function Palette({
   onActive,
   search: controlled,
   onSearch,
-  placeholder = "Search commands…",
-  empty = "No results found.",
+  placeholder: hint,
+  empty: none,
   limit,
   children,
   footer,
   height = 320,
-  title = "Search commands",
+  title: named,
   onAsk,
 }: PaletteProps) {
+  const { t } = useI18n()
+  const placeholder = hint ?? t("Search commands…")
+  const empty = none ?? t("No results found.")
+  const title = named ?? t("Search commands")
   const [own, setOwn] = useState("")
   const search = controlled ?? own
   const setSearch = (s: string) => {
@@ -171,7 +176,7 @@ export function Palette({
             </CommandEmpty>
           )}
           {groups.map(([group, items]) => (
-            <CommandGroup key={group} heading={group}>
+            <CommandGroup key={group} heading={group === ASK_GROUP ? t(group) : group}>
               {items.map((op) => (
                 <CommandItem key={op.id} value={op.id} onSelect={() => run(op)} gap="$2">
                   {op.icon}
@@ -184,7 +189,7 @@ export function Palette({
                       name to the far right. */}
                   <XStack flex={1} items="center" gap="$2" overflow="hidden">
                     <SizableText numberOfLines={1} shrink={0}>
-                      {op.label}
+                      {op.id === ASK ? t("Ask AI: {question}", { question }) : op.label}
                     </SizableText>
                     {op.hint ? (
                       <SizableText numberOfLines={1} flex={1} fontSize="$1" color="$quiet">

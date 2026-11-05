@@ -20,6 +20,12 @@ import type { KeyboardEvent } from 'react'
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import type { GuiElement } from '@hanzo/gui'
 import { ChevronLeft, ChevronRight } from '@hanzogui/lucide-icons-2'
+<<<<<<< HEAD
+=======
+import { useEffect, useRef, useState } from 'react'
+import type { KeyboardEvent } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
+>>>>>>> origin/i18n
 
 import { Cell, Grid } from '../../grid'
 import { useTranslate } from '../../i18n/react'
@@ -133,6 +139,7 @@ function Calendar(props: CalendarProps) {
   const tr = useTranslate()
   const { month: monthProp, defaultMonth, onMonthChange, numberOfMonths = 1, weekStartsOn = 0, showOutsideDays = true, disabled, initialFocus, className } = props
 
+  const { t } = useI18n()
   const [own, setOwn] = useState(() => first(defaultMonth ?? new Date()))
   const head = monthProp ? first(monthProp) : own
   const months = Array.from({ length: numberOfMonths }, (_, i) => first(head, i))
@@ -180,7 +187,17 @@ function Calendar(props: CalendarProps) {
           <XStack {...slot('calendar-caption')} items="center" justify="space-between">
             <YStack width={32}>
               {i === 0 && (
+<<<<<<< HEAD
                 <Button {...slot('calendar-nav-previous')} aria-label={tr('Previous month')} variant="outline" size="icon-sm" onClick={() => navigate(-1)}>
+=======
+                <Button
+                  {...slot('calendar-nav-previous')}
+                  aria-label={t('Previous month')}
+                  variant="outline"
+                  size="icon-sm"
+                  onClick={() => navigate(-1)}
+                >
+>>>>>>> origin/i18n
                   <ChevronLeft {...mirror} size={16} />
                 </Button>
               )}
@@ -190,7 +207,17 @@ function Calendar(props: CalendarProps) {
             </SizableText>
             <YStack width={32} items="flex-end">
               {i === months.length - 1 && (
+<<<<<<< HEAD
                 <Button {...slot('calendar-nav-next')} aria-label={tr('Next month')} variant="outline" size="icon-sm" onClick={() => navigate(1)}>
+=======
+                <Button
+                  {...slot('calendar-nav-next')}
+                  aria-label={t('Next month')}
+                  variant="outline"
+                  size="icon-sm"
+                  onClick={() => navigate(1)}
+                >
+>>>>>>> origin/i18n
                   <ChevronRight {...mirror} size={16} />
                 </Button>
               )}

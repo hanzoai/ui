@@ -19,6 +19,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { Button, Input, Spinner, Text, XStack } from '@hanzo/gui'
 import { ChevronDown, RefreshCw } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Button as KitButton } from '../backends/gui/button'
 import { useDensity } from '../backends/gui/density'
@@ -41,7 +42,7 @@ export function ComboBox({
   onRetry,
   placeholder,
   disabled,
-  emptyText = 'No matches — press to use what you typed.',
+  emptyText,
   minWidth = 240,
   limit,
 }: {
@@ -65,6 +66,7 @@ export function ComboBox({
 }) {
   const tr = useTranslate()
   const [open, setOpen] = useState(false)
+  const { t } = useI18n()
   const rowRef = useRef<HTMLElement | null>(null)
   const anchorRect = useCallback(() => rowRef.current?.getBoundingClientRect() ?? null, [])
   const anchorEl = useCallback(() => rowRef.current, [])
@@ -98,7 +100,11 @@ export function ComboBox({
         <XStack ref={rowRef as never} minW={minWidth} data-slot="combo-box">
           <InputGroup
             end={
+<<<<<<< HEAD
               <KitButton size="icon-2xs" variant="ghost" emphasis="subtle" disabled={disabled} aria-label={tr('Show options')} onPress={toggle}>
+=======
+              <KitButton size="icon-2xs" variant="ghost" emphasis="subtle" disabled={disabled} aria-label={t('Show options')} onPress={toggle}>
+>>>>>>> origin/i18n
                 <ChevronDown />
               </KitButton>
             }
@@ -117,6 +123,7 @@ export function ComboBox({
           </InputGroup>
         </XStack>
       ) : (
+<<<<<<< HEAD
         <XStack ref={rowRef as never} items="center" gap="$2" minW={minWidth}>
           <Input
             flex={1}
@@ -132,6 +139,30 @@ export function ComboBox({
           />
           <Button size="$2" chromeless disabled={disabled} icon={<ChevronDown size={16} opacity={0.7} />} onPress={toggle} aria-label={tr('Show options')} />
         </XStack>
+=======
+      <XStack ref={rowRef as never} items="center" gap="$2" minW={minWidth}>
+        <Input
+          flex={1}
+          value={value}
+          onChangeText={(v: string) => {
+            onChange(v)
+            if (!open) setOpen(true)
+          }}
+          onFocus={() => setOpen(true)}
+          disabled={disabled}
+          placeholder={placeholder}
+          autoCapitalize="none"
+        />
+        <Button
+          size="$2"
+          chromeless
+          disabled={disabled}
+          icon={<ChevronDown size={16} opacity={0.7} />}
+          onPress={toggle}
+          aria-label={t('Show options')}
+        />
+      </XStack>
+>>>>>>> origin/i18n
       )}
 
       <FloatingMenu open={open} onClose={() => setOpen(false)} anchorRect={anchorRect} anchorEl={anchorEl} autoFocus={false} minWidth={minWidth} maxHeight={300}>
@@ -139,7 +170,7 @@ export function ComboBox({
           <XStack items="center" gap="$2" px="$2" py="$2">
             <Spinner size="small" color="$quiet" />
             <Text fontSize="$2" color="$soft">
-              Loading options…
+              {t('Loading options…')}
             </Text>
           </XStack>
         ) : error ? (
@@ -147,11 +178,17 @@ export function ComboBox({
             <Text fontSize="$2" color="$soft" flex={1} numberOfLines={2}>
               {error}
             </Text>
+<<<<<<< HEAD
             {onRetry ? <Button size="$1" chromeless icon={<RefreshCw size={12} />} onPress={onRetry} aria-label={tr('Retry')} /> : null}
+=======
+            {onRetry ? (
+              <Button size="$1" chromeless icon={<RefreshCw size={12} />} onPress={onRetry} aria-label={t('Retry')} />
+            ) : null}
+>>>>>>> origin/i18n
           </XStack>
         ) : filtered.length === 0 ? (
           <Text fontSize="$2" color="$soft" px="$2" py="$2">
-            {emptyText}
+            {emptyText ?? t('No matches — press to use what you typed.')}
           </Text>
         ) : (
           filtered.map((o) => <MenuItemView key={o.value} label={o.label ?? o.value} description={o.hint} selected={o.value === value} onSelect={() => pick(o.value)} />)

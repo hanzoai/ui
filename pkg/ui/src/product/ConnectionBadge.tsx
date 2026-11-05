@@ -14,6 +14,7 @@
 import { Button, Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { LogOut } from '@hanzogui/lucide-icons-2'
 import type { ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from '../backends/gui/slot'
 import { mirror } from '../backends/gui/dir'
 
@@ -36,6 +37,7 @@ export function ConnectionBadge({
   onDisconnect,
   disconnecting,
 }: ConnectionBadgeProps) {
+  const { t } = useI18n()
   return (
     <YStack>
       <XStack
@@ -51,11 +53,11 @@ export function ConnectionBadge({
         <XStack items="center" gap="$2">
           <YStack height={10} width={10} rounded={9999} bg="$green9" />
           <Text fontSize="$3" fontWeight="500" color="$green11">
-            Connected
+            {t('Connected')}
           </Text>
           {method ? (
             <Text fontSize="$1" color="$quiet">
-              via {method}
+              {t('via {method}', { method })}
             </Text>
           ) : null}
           {extra ? (
@@ -68,7 +70,7 @@ export function ConnectionBadge({
           <XStack items="center" gap="$1">
             {disconnecting ? <Spinner size="small" /> : <LogOut {...mirror} size={12} />}
             <Text color="$quiet" fontSize="$1">
-              Disconnect
+              {t('Disconnect')}
             </Text>
           </XStack>
         </Button>

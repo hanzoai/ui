@@ -24,10 +24,14 @@
  * fixed palette, since it sits in settings and setup pages beside other chrome.
  */
 import { useCallback, useMemo, useState, type ComponentProps, type ReactNode } from 'react'
+<<<<<<< HEAD
 import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { Check, Copy, FileText, Maximize2, Minimize2 } from '@hanzogui/lucide-icons-2'
 
 import { useTranslate } from '../../i18n/react'
+=======
+import { useI18n } from '@hanzo/i18n/react'
+>>>>>>> origin/i18n
 import { Button } from './button'
 import { css, Language, mono, named, type Palette, type Surface } from './code-surface'
 import { align, ltr } from './dir'
@@ -152,9 +156,25 @@ const Mono = styled(SizableText, {
 const rows = (code: string, start: number) => code.split('\n').map((text, i) => ({ n: i + start, text }))
 
 /** The copy button, shared by every variant that shows one: the copy mark in `muted`, the check in `strong`. */
+<<<<<<< HEAD
 function CopyButton({ copied, onPress, paint, floating }: { copied: boolean; onPress: () => void; paint: Pick<Surface, 'muted' | 'strong'>; floating?: boolean }) {
   const tr = useTranslate()
   const label = copied ? tr('Copied') : tr('Copy code')
+=======
+function CopyButton({
+  copied,
+  onPress,
+  paint,
+  floating,
+}: {
+  copied: boolean
+  onPress: () => void
+  paint: Pick<Surface, 'muted' | 'strong'>
+  floating?: boolean
+}) {
+  const { t } = useI18n()
+  const label = copied ? t('Copied') : t('Copy code')
+>>>>>>> origin/i18n
   return (
     <Button variant="ghost" size="icon-sm" onClick={onPress} aria-label={label} title={label} {...(floating ? { position: 'absolute' as const, t: '$2', r: '$2' } : null)}>
       {copied ? <Check size={14} color={paint.strong as never} /> : <Copy size={14} color={paint.muted as never} />}
@@ -177,6 +197,7 @@ export function Snippet({ code, language = 'text', filename, variant, theme, siz
   const lineHeight = fontSize * 1.5
   const [copied, setCopied] = useState(false)
   const [isExpanded, setIsExpanded] = useState(!expandable)
+  const { t } = useI18n()
   const lines = useMemo(() => rows(code, startLineNumber), [code, startLineNumber])
 
   const copy = useCallback(async () => {
@@ -240,8 +261,23 @@ export function Snippet({ code, language = 'text', filename, variant, theme, siz
           </XStack>
           <XStack items="center" gap="$1">
             {expandable && (
+<<<<<<< HEAD
               <Button variant="ghost" size="icon-sm" onClick={() => setIsExpanded((v) => !v)} aria-label={isExpanded ? tr('Collapse') : tr('Expand')} title={isExpanded ? tr('Collapse') : tr('Expand')}>
                 {isExpanded ? <Minimize2 size={14} color={paint.muted as never} /> : <Maximize2 size={14} color={paint.muted as never} />}
+=======
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => setIsExpanded((v) => !v)}
+                aria-label={isExpanded ? t('Collapse') : t('Expand')}
+                title={isExpanded ? t('Collapse') : t('Expand')}
+              >
+                {isExpanded ? (
+                  <Minimize2 size={14} color={paint.muted as never} />
+                ) : (
+                  <Maximize2 size={14} color={paint.muted as never} />
+                )}
+>>>>>>> origin/i18n
               </Button>
             )}
             {showCopyButton && <CopyButton copied={copied} onPress={copy} paint={paint} />}

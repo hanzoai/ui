@@ -21,6 +21,7 @@ import { Skeleton } from './Skeleton'
 import type { ReactNode } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { ChevronDown, ChevronsUpDown, ChevronUp } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { useEmit } from './instrument'
 
@@ -63,7 +64,7 @@ export function DataTable<T>({
   columns,
   rows,
   loading,
-  empty = 'Nothing here yet.',
+  empty,
   rowKey,
   onRowPress,
   isRowExpanded,
@@ -88,6 +89,7 @@ export function DataTable<T>({
 }) {
   // Every table in the fleet reports the same two interactions with no app code.
   const track = useEmit()
+  const { t } = useI18n()
   // Natural min-width of the table: the sum of the declared column widths, with a
   // sensible floor for flex columns, plus row padding + inter-column gaps. On a
   // narrow (mobile) viewport where this exceeds the container, the inner wrapper
@@ -120,7 +122,7 @@ export function DataTable<T>({
                   justify={c.align === 'right' ? 'flex-end' : 'flex-start'}
                   role="columnheader"
                   aria-sort={sortable ? (active ? (sort?.dir === 'asc' ? 'ascending' : 'descending') : 'none') : undefined}
-                  aria-label={sortable ? `Sort by ${c.header}` : undefined}
+                  aria-label={sortable ? t('Sort by {column}', { column: c.header }) : undefined}
                   cursor={sortable ? 'pointer' : undefined}
                   hoverStyle={sortable ? { opacity: 0.75 } : undefined}
                   onPress={
@@ -232,7 +234,7 @@ export function DataTable<T>({
       {!loading && rows.length === 0 ? (
         <YStack py="$8" px="$4" items="center" gap="$1" borderTopWidth={1} borderColor="$borderColor">
           <Text color="$soft" fontSize="$3" text="center">
-            {empty}
+            {empty ?? t('Nothing here yet.')}
           </Text>
         </YStack>
       ) : null}

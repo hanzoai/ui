@@ -15,6 +15,11 @@ import { useState } from 'react'
  */
 import { SizableText, YStack } from '@hanzo/gui'
 import { Calendar as CalendarIcon } from '@hanzogui/lucide-icons-2'
+<<<<<<< HEAD
+=======
+import { useState } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
+>>>>>>> origin/i18n
 
 import { useTranslate } from '../../i18n/react'
 import { Button } from './button'
@@ -61,8 +66,13 @@ export interface DatePickerRangeProps extends DatePickerSharedProps {
 export type DatePickerProps = DatePickerSingleProps | DatePickerRangeProps
 
 export function DatePicker(props: DatePickerProps) {
+<<<<<<< HEAD
   const tr = useTranslate()
   const { placeholder = 'Pick a date', disabled, className, width = 280 } = props
+=======
+  const { t } = useI18n()
+  const { placeholder = t('Pick a date'), disabled, className, width = 280 } = props
+>>>>>>> origin/i18n
   const isRange = props.mode === 'range'
 
   const [open, setOpen] = useState(false)
@@ -107,7 +117,11 @@ export function DatePicker(props: DatePickerProps) {
               }}
             >
               <SelectTrigger {...slot('date-picker-preset-trigger')}>
+<<<<<<< HEAD
                 <SelectValue placeholder={tr('Select')} />
+=======
+                <SelectValue placeholder={t('Select')} />
+>>>>>>> origin/i18n
               </SelectTrigger>
               <SelectContent>
                 {presets.map((preset) => (

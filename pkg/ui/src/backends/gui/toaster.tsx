@@ -39,8 +39,22 @@ import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from
  */
 import { SizableText, useMedia, View, XStack, YStack, type GuiElement } from '@hanzo/gui'
 import { Info, SquareCheck, TriangleAlert, X } from '@hanzogui/lucide-icons-2'
+<<<<<<< HEAD
 import { Toast, toast, useToasts, type ExternalToast, type ToasterProps as GuiToasterProps, type ToastT } from '@hanzogui/toast/v2'
 
+=======
+import {
+  Toast,
+  toast,
+  useToasts,
+  type ExternalToast,
+  type ToasterProps as GuiToasterProps,
+  type ToastT,
+} from '@hanzogui/toast/v2'
+import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
+>>>>>>> origin/i18n
 import { glass } from '../../glass'
 import { useTranslate } from '../../i18n/react'
 import { Button } from './button'
@@ -75,6 +89,15 @@ const STATUS: Record<string, FeedbackStatus> = {
   success: 'success',
   warning: 'warning',
   error: 'error',
+}
+
+/** What the status icon says to a screen reader. */
+const SAID: Record<FeedbackStatus, string> = {
+  neutral: phrase('neutral'),
+  info: phrase('info'),
+  success: phrase('success'),
+  warning: phrase('warning'),
+  error: phrase('error'),
 }
 
 const ICON: Record<FeedbackStatus, typeof Info> = {
@@ -129,7 +152,12 @@ export type ToastFaceProps = {
  * gallery draws one alone so its rules ship in the sheet.
  */
 export function ToastFace({ t, duration, paused = false, onClose, onHold }: ToastFaceProps & { onHold?: (held: boolean) => void }) {
+<<<<<<< HEAD
   const tr = useTranslate()
+=======
+  // `t` is the toast here, so the translator is reached through the context.
+  const i18n = useI18n()
+>>>>>>> origin/i18n
   const status = STATUS[t.type ?? 'default'] ?? 'neutral'
   const p = paint(status)
   const Icon = ICON[status]
@@ -152,7 +180,7 @@ export function ToastFace({ t, duration, paused = false, onClose, onHold }: Toas
       {progress !== null ? <View {...slot('toast-progress')} position="absolute" t={0} insetInlineStart={0} b={0} bg={p.tint as never} style={{ width: `${progress}%`, transition: 'width 300ms linear' }} pointerEvents="none" /> : duration !== undefined ? <View {...slot('toast-countdown')} data-motion="drain" data-paused={paused ? '' : undefined} position="absolute" t={0} l={0} r={0} b={0} bg={p.tint as never} pointerEvents="none" style={{ ['--drain' as string]: `${duration}ms` }} /> : null}
       <XStack {...slot('toast-header')} items="center" gap="$2" mb="$1" minH={24}>
         <View shrink={0} width={16} height={16} items="center" justify="center">
-          {t.icon ?? <Icon size={16} color={p.ink as never} aria-label={status} />}
+          {t.icon ?? <Icon size={16} color={p.ink as never} aria-label={i18n.t(SAID[status])} />}
         </View>
         <SizableText {...slot('toast-message')} flex={1} size="$1" fontWeight="500" color="$aside" numberOfLines={2}>
           {title}
@@ -168,11 +196,15 @@ export function ToastFace({ t, duration, paused = false, onClose, onHold }: Toas
               onClose?.()
             }}
           >
-            {t.cancel.label || 'Cancel'}
+            {t.cancel.label || i18n.t('Cancel')}
           </Button>
         ) : null}
         {t.dismissible === false ? null : (
+<<<<<<< HEAD
           <Button {...slot('toast-close')} size="icon-xs" variant="ghost" emphasis="subtle" aria-label={tr('Close')} onPress={onClose}>
+=======
+          <Button {...slot('toast-close')} size="icon-xs" variant="ghost" emphasis="subtle" aria-label={i18n.t('Close')} onPress={onClose}>
+>>>>>>> origin/i18n
             <X />
           </Button>
         )}
@@ -260,13 +292,51 @@ function Limit({ limit }: { limit: number }) {
 }
 
 const Toaster = /* @__PURE__ */ forwardRef<GuiElement, ToasterProps>(function Toaster(props, ref) {
+<<<<<<< HEAD
   const { theme = 'system', toastOptions, richColors: _richColors, className: _className, style: _style, position, offset, gap, limit = 3, duration, containerAriaLabel = 'Notifications', hotkey, ...rest } = props
+=======
+  const {
+    theme = 'system',
+    toastOptions,
+    richColors: _richColors,
+    className: _className,
+    style: _style,
+    position,
+    offset,
+    gap,
+    limit = 3,
+    duration,
+    containerAriaLabel,
+    hotkey,
+    ...rest
+  } = props
+  const i18n = useI18n()
+>>>>>>> origin/i18n
   const media = useMedia()
   const phone = !!(media as Record<string, boolean>)['max-md']
   const fallback = toastOptions?.duration ?? duration ?? TOAST_DURATION
   return (
+<<<<<<< HEAD
     <Toast {...rest} theme={theme} position={position ?? (phone ? 'top-center' : 'bottom-right')} gap={gap ?? GAP} visibleToasts={limit} duration={Number.POSITIVE_INFINITY}>
       <Toast.Viewport ref={ref} {...slot('toaster')} offset={offset ?? (phone ? 0 : INSET)} hotkey={hotkey} label={containerAriaLabel} {...(phone ? { width: '100%' } : null)}>
+=======
+    <Toast
+      {...rest}
+      theme={theme}
+      position={position ?? (phone ? 'top-center' : 'bottom-right')}
+      gap={gap ?? GAP}
+      visibleToasts={limit}
+      duration={Number.POSITIVE_INFINITY}
+    >
+      <Toast.Viewport
+        ref={ref}
+        {...slot('toaster')}
+        offset={offset ?? (phone ? 0 : INSET)}
+        hotkey={hotkey}
+        label={containerAriaLabel ?? i18n.t('Notifications')}
+        {...(phone ? { width: '100%' } : null)}
+      >
+>>>>>>> origin/i18n
         <Limit limit={limit} />
         <Toast.List renderItem={({ toast: t, index }) => <ToastItem key={t.id} t={t} index={index} fallback={fallback} phone={phone} />} />
       </Toast.Viewport>
