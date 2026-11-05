@@ -278,10 +278,27 @@ export type ConsentProps = {
   terms?: string
   /** Who is asking: the brand the visitor is on. */
   brand?: string
+  /**
+   * Whether a page that links to the sheet nowhere gets the small "Your Privacy
+   * Choices" button at the foot of the window. `false` for a host whose every page
+   * reaches the sheet another way, its footer or its Settings: on an app's panes
+   * the button stood on the composer.
+   */
+  floating?: boolean
 }
 
+<<<<<<< HEAD
 const Consent = ({ cookies = 'https://hanzo.ai/cookies', privacy = 'https://hanzo.ai/privacy', terms = 'https://hanzo.ai/terms', brand = 'Hanzo' }: ConsentProps) => {
   const tr = useTranslate()
+=======
+const Consent = ({
+  cookies = 'https://hanzo.ai/cookies',
+  privacy = 'https://hanzo.ai/privacy',
+  terms = 'https://hanzo.ai/terms',
+  brand = 'Hanzo',
+  floating = true,
+}: ConsentProps) => {
+>>>>>>> origin/main
   // The rule in force: undefined until cloud (or this tab) has said, and nothing is drawn meanwhile.
   const [mode, setMode] = useState<Mode | undefined>()
   // The bar (eu) or the notice (global) at the foot of the window.
@@ -629,8 +646,25 @@ const Consent = ({ cookies = 'https://hanzo.ai/cookies', privacy = 'https://hanz
 
   // The way to the sheet on a page that draws none: small, quiet, at the foot of the window.
   const own =
+<<<<<<< HEAD
     !hosted && !shown ? (
       <XStack {...slot('consent-choices')} position="fixed" b={EDGE.bottom} l={EDGE.left} z="var(--z-banner, 50)" px="$2.5" py="$1" bg="$background" borderWidth={1} borderColor="$borderColor" rounded={ROUND.button}>
+=======
+    floating && !hosted && !shown ? (
+      <XStack
+        {...slot('consent-choices')}
+        position="fixed"
+        b={EDGE.bottom}
+        l={EDGE.left}
+        z="var(--z-banner, 50)"
+        px="$2.5"
+        py="$1"
+        bg="$background"
+        borderWidth={1}
+        borderColor="$borderColor"
+        rounded={ROUND.button}
+      >
+>>>>>>> origin/main
         <Button {...CHOICES} onClick={choose}>
           Your Privacy Choices
         </Button>

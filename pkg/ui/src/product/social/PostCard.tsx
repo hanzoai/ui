@@ -5,7 +5,8 @@
  * count, and injected edit/delete affordances. Pure (data + handlers via props);
  * composes ChannelBadge + the shared StatusTag. Extracted from Hanzo Social.
  */
-import { Card, Text, XStack, YStack, Button } from '@hanzo/gui'
+import { Text, XStack, YStack, Button } from '@hanzo/gui'
+import { Plate as Card } from '../../backends/gui/plate'
 import { Pencil, Trash2 } from '@hanzogui/lucide-icons-2'
 import { StatusTag } from '../StatusTag'
 import { ChannelBadge } from './ChannelBadge'

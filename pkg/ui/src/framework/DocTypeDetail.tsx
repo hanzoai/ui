@@ -26,7 +26,8 @@
  * two-step delete confirmation — never optimistic fakery.
  */
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Card, Text, XStack, YStack } from '@hanzo/gui'
+import { Text, XStack, YStack } from '@hanzo/gui'
+import { Plate as Card } from '../backends/gui/plate'
 import { ArrowLeft, Ban, Globe, Pencil, PenOff, Save, Send, Trash2, X } from '@hanzogui/lucide-icons-2'
 import { RecordDetail, RecordForm, type FieldDefinition, type SelectOption } from '@hanzo/data'
 

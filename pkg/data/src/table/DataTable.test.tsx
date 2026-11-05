@@ -145,6 +145,18 @@ describe('behaviour', () => {
     expect(host.querySelector('input')).toBeNull()
   })
 
+  it('the editor fills its cell and takes its field\'s height, so it sits on its own row', () => {
+    mount({ editable: true })
+    const cell = [...host.querySelectorAll<HTMLElement>('[role="cell"] [class*="_cur-"]')].find((c) => c.textContent === 'Acme')!
+    act(() => cell.click())
+    const field = host.querySelector<HTMLInputElement>('input')!
+    // The editor's own box is a column. A flex-basis of 0 there (`flex={1}`) is a
+    // height of 0 with the field overflowing it: the box a person sees is drawn a
+    // row-height low, over the row beneath, and its outline with it.
+    const box = field.closest('div')!
+    expect(box.className).not.toMatch(/_fb-0px/)
+  })
+
   it('an editable row opens through its named action, not a row press', () => {
     const onOpen = vi.fn()
     mount({ editable: true, onOpen })
@@ -157,6 +169,18 @@ describe('behaviour', () => {
     expect(host.textContent).toContain('1–2 of 3')
     act(() => host.querySelector<HTMLElement>('[aria-label="Next page"]')!.click())
     expect(host.textContent).toContain('3–3 of 3')
+  })
+
+  it('a server page is shown as given, and the pager asks the server for the next', () => {
+    const onPage = vi.fn()
+    mount({ pageSize: 3, remote: { page: 2, total: 1250, onPage } })
+    expect(host.querySelectorAll('[role="row"]').length).toBe(1 + RECORDS.length)
+    expect(host.textContent).toContain('4–6 of 1,250')
+    expect(host.textContent).toContain('2 / 417')
+    act(() => host.querySelector<HTMLElement>('[aria-label="Next page"]')!.click())
+    expect(onPage).toHaveBeenCalledWith(3)
+    act(() => host.querySelector<HTMLElement>('[aria-label="Previous page"]')!.click())
+    expect(onPage).toHaveBeenLastCalledWith(1)
   })
 
   it('passes axe', async () => {

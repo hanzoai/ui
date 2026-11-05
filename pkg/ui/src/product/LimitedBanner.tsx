@@ -5,6 +5,10 @@
  * the ways past it (Upgrade, Add prepaid credit) and, where the host has one, a
  * quiet "See usage" to its usage settings. One line where it fits. Neutral
  * chrome; the dot is the one status colour.
+ *
+ * It is drawn, not announced: a live region speaks what changes inside it, not
+ * what it was mounted holding, and the banner mounts with its message. The host
+ * keeps one mounted region and puts the message there.
  */
 import type { ReactNode } from 'react'
 import { Text, View, XStack } from '@hanzo/gui'
@@ -28,6 +32,8 @@ export interface LimitedBannerProps {
   /** Opens the host's usage settings; draws "See usage" when given. */
   onUsage?: () => void
   onClose?: () => void
+  /** The quiet controls' words, in the reader's language: "See usage" and the close mark's "Dismiss". */
+  labels?: { usage?: string; dismiss?: string }
 }
 
 const go = (a: LimitAction) => {
@@ -42,7 +48,7 @@ export function LimitActions({ actions, onAction, children }: { actions: readonl
   const shown = onAction ? actions : actions.filter(navigable)
   if (!shown.length && !children) return null
   return (
-    <XStack gap="$2" shrink={0} flexWrap="wrap" items="center">
+    <XStack gap="$2" shrink={0} maxW="100%" flexWrap="wrap" items="center">
       {shown.map((a, i) => (
         <Button key={`${a.kind}:${a.url ?? a.model ?? i}`} size="sm" variant={i === 0 ? 'primary' : 'default'} data-kind={a.kind} onPress={() => (onAction ?? go)(a)}>
           {a.label}
@@ -53,10 +59,28 @@ export function LimitActions({ actions, onAction, children }: { actions: readonl
   )
 }
 
+<<<<<<< HEAD
 export function LimitedBanner({ message, actions = [], onAction, onUsage, onClose }: LimitedBannerProps) {
   const tr = useTranslate()
   return (
     <XStack role="status" aria-live="polite" {...slot('limited-banner')} width="100%" items="center" flexWrap="wrap" gap="$2" px="$3" py="$2.5" rounded="$4" borderWidth={1} borderColor="$edge" bg="$panel">
+=======
+export function LimitedBanner({ message, actions = [], onAction, onUsage, onClose, labels }: LimitedBannerProps) {
+  return (
+    <XStack
+      {...slot('limited-banner')}
+      width="100%"
+      items="center"
+      flexWrap="wrap"
+      gap="$2"
+      px="$3"
+      py="$2.5"
+      rounded="$4"
+      borderWidth={1}
+      borderColor="$edge"
+      bg="$panel"
+    >
+>>>>>>> origin/main
       <XStack flex={1} minW={200} items="center" gap="$2">
         <View width={8} height={8} rounded={4} bg="$bad" shrink={0} aria-hidden />
         <Text fontSize="$1" color="$ink" {...slot('limited-banner-message')}>
@@ -66,12 +90,16 @@ export function LimitedBanner({ message, actions = [], onAction, onUsage, onClos
       <LimitActions actions={actions} onAction={onAction}>
         {onUsage ? (
           <Button size="sm" variant="link" px="$1.5" data-kind="usage" onPress={onUsage}>
-            See usage
+            {labels?.usage ?? 'See usage'}
           </Button>
         ) : null}
       </LimitActions>
       {onClose ? (
+<<<<<<< HEAD
         <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={tr('Dismiss')} onPress={onClose}>
+=======
+        <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={labels?.dismiss ?? 'Dismiss'} onPress={onClose}>
+>>>>>>> origin/main
           <X size={14} />
         </Button>
       ) : null}

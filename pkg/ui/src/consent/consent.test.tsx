@@ -184,6 +184,15 @@ describe('Consent, under us_privacy', () => {
     await n.done()
   })
 
+  it('draws no button of its own when told the host reaches the sheet another way', async () => {
+    const m = await mount(<Consent floating={false} />)
+    await m.act(frames)
+    expect(m.host.querySelector('[data-slot="consent-choices"]')).toBeNull()
+    await m.act(async () => openConsent())
+    expect(m.host.querySelector('[role="dialog"]'), 'the sheet still opens').not.toBeNull()
+    await m.done()
+  })
+
   it('an opt-out outlives the page', async () => {
     const m = await mount(<Consent />)
     await m.act(frames)

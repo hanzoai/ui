@@ -21,7 +21,7 @@
 //
 // Every control edits the one ViewConfig through view/logic and emits it via
 // onView, exactly as the sheet toolbar does.
-import { useMemo, useState, type ReactNode } from 'react'
+import { Fragment, useState, type ReactNode } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import {
   ArrowDown,
@@ -58,7 +58,7 @@ import {
   TruncatedText,
 } from '@hanzo/ui'
 import type { FieldDefinition } from '../field/types'
-import { FieldInput } from '../field/FieldInput'
+import { Operand, operandText, takesOperand } from './Operand'
 import { OP_LABELS, operatorsForType, type FilterRule, type SortRule } from '../table/logic'
 import { groupFieldCandidates } from '../board/logic'
 import type { RecordsToolbarProps } from './Toolbar'
@@ -66,9 +66,11 @@ import type { ViewConfig } from './types'
 import {
   addFilter,
   defaultRuleFor,
+  otherMatch,
   removeFilter,
   setGroupField,
   setKind,
+  setMatch,
   setSearch,
   setSorts,
   toggleFieldHidden,
@@ -85,12 +87,6 @@ const matching = (fields: FieldDefinition[], q: string) =>
   fields.filter((f) => f.label.toLowerCase().includes(q.trim().toLowerCase()))
 
 /** A rule's value as one short phrase: "Lead", "Lead, Won", "3". */
-const valueText = (rule: FilterRule, field: FieldDefinition | undefined): string => {
-  const options = (field?.metadata as { options?: { value: string; label: string }[] } | undefined)?.options
-  const label = (v: unknown) => options?.find((o) => o.value === v)?.label ?? String(v)
-  if (rule.value == null || rule.value === '') return ''
-  return Array.isArray(rule.value) ? rule.value.map(label).join(', ') : label(rule.value)
-}
 
 /** One of the bar's quiet 24px buttons, drawn lifted while its menu is open. */
 function BarButton({ open, icon, children, ...props }: { open?: boolean; icon: ReactNode; children: ReactNode } & Record<string, unknown>) {
@@ -166,7 +162,21 @@ export function ViewBar(props: RecordsToolbarProps) {
             <YStack {...({ 'data-slot': 'view-bar-rule' } as object)} width={1} height={16} bg="$raised" />
           ) : null}
           {view.filters.map((rule, i) => (
-            <FilterChip key={`filter-${i}`} index={i} rule={rule} {...props} />
+            <Fragment key={`filter-${i}`}>
+              {i > 0 ? (
+                <Button
+                  size="xs"
+                  variant="ghost"
+                  color="$aside"
+                  fontWeight="400"
+                  aria-label={`Rules combine by ${view.match === 'or' ? 'or' : 'and'}; press for ${otherMatch(view.match)}`}
+                  onPress={() => onView(setMatch(view, otherMatch(view.match)))}
+                >
+                  {view.match === 'or' ? 'or' : 'and'}
+                </Button>
+              ) : null}
+              <FilterChip index={i} rule={rule} {...props} />
+            </Fragment>
           ))}
           <Button size="xs" variant="ghost" color="$aside" fontWeight="400" startIcon={<Plus />} onPress={() => setFiltering(true)}>
             Add filter
@@ -479,13 +489,7 @@ function FilterChip({ index, rule, fields, view, onView, fieldOptions }: Records
   const [open, setOpen] = useState(false)
   const field = byName(fields, rule.field) ?? fields[0]
   const ops = operatorsForType(field.type)
-  const needsValue = rule.op !== 'isEmpty' && rule.op !== 'isNotEmpty'
-  const valueField = useMemo<FieldDefinition>(() => {
-    const base: FieldDefinition = rule.op === 'isAnyOf' ? { ...field, type: 'multiSelect' } : field
-    const options = fieldOptions?.(field)
-    return options ? { ...base, metadata: { ...(base.metadata as object), options } as FieldDefinition['metadata'] } : base
-  }, [field, rule.op, fieldOptions])
-  const value = valueText(rule, field)
+  const value = operandText(rule, field)
   return (
     <Chip label={`filter on ${field.label}`} onRemove={() => onView(removeFilter(view, index))}>
       <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -502,7 +506,12 @@ function FilterChip({ index, rule, fields, view, onView, fieldOptions }: Records
           <DropdownMenuSelectionGroup
             value={rule.op}
             closeOnSelect={false}
-            onValueChange={(op) => (typeof op === 'string' ? onView(updateFilter(view, index, { op: op as FilterRule['op'] })) : undefined)}
+            onValueChange={(op) => {
+              if (typeof op !== 'string') return
+              const next = op as FilterRule['op']
+              // A range and a single value are different operands: switching between them starts empty.
+              onView(updateFilter(view, index, next === 'between' || rule.op === 'between' ? { op: next, value: undefined } : { op: next }))
+            }}
           >
             <DropdownMenuLabel variant="band">{field.label}</DropdownMenuLabel>
             {ops.map((op) => (
@@ -511,9 +520,9 @@ function FilterChip({ index, rule, fields, view, onView, fieldOptions }: Records
               </DropdownMenuOptionItem>
             ))}
           </DropdownMenuSelectionGroup>
-          {needsValue ? (
+          {takesOperand(rule) ? (
             <YStack p="$1">
-              <FieldInput field={valueField} value={rule.value} onChange={(v) => onView(updateFilter(view, index, { value: v }))} />
+              <Operand field={field} rule={rule} fieldOptions={fieldOptions} onChange={(v) => onView(updateFilter(view, index, { value: v }))} />
             </YStack>
           ) : null}
         </DropdownMenuContent>

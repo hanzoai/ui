@@ -1,5 +1,11 @@
 # @hanzo/event
 
+## 0.3.64
+
+### Patch Changes
+
+- `capture(event, properties, fields)` takes a location (`url`, `path`) beside the commerce fields, for an event about a page the visitor has already left: @hanzo/observe's `$pageleave` is noticed after the router moved and is filed under the page it measured. The location is scrubbed like every other.
+
 ## 0.3.63
 
 ### Patch Changes

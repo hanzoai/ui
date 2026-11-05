@@ -94,7 +94,9 @@ describe('LimitedBanner', () => {
     expect(text).toContain('Upgrade')
     expect(text).toContain('Add prepaid credit')
     expect(m).toContain('data-slot="limited-banner"')
-    expect(m).toContain('role="status"')
+    // Drawn, not announced: the host's own mounted region speaks the message.
+    expect(m).not.toContain('role="status"')
+    expect(m).not.toContain('aria-live')
   })
 
   it('offers See usage only when the host has a usage page', () => {
@@ -105,6 +107,13 @@ describe('LimitedBanner', () => {
     act(() => button.click())
     expect(seen).toBe(1)
     unmount()
+  })
+
+  it('says its quiet controls in the words the host hands it', () => {
+    const m = html(<LimitedBanner message="m" actions={actions} onUsage={() => {}} onClose={() => {}} labels={{ usage: 'Voir l’utilisation', dismiss: 'Fermer' }} />)
+    expect(words(m)).toContain('Voir l’utilisation')
+    expect(words(m)).not.toContain('See usage')
+    expect(m).toContain('aria-label="Fermer"')
   })
 
   it('hands a pressed action to the host', () => {

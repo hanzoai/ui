@@ -90,7 +90,7 @@ describe('Failure', () => {
   })
 
   it('carries the same failure edge as a failed step', () => {
-    expect(html(<Failure>x</Failure>)).toContain('_btc-faint')
+    expect(html(<Failure>x</Failure>)).toContain('_btc-borderColor')
   })
 
   it('offers retry only when there is something to retry', () => {

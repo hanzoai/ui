@@ -96,6 +96,7 @@ const FACES: Array<{ label: string; value: Face; preview?: string }> = [
 export const ARABICS: Array<{ label: string; value: (typeof COMPANIONS)[number] }> = [
   { label: 'Kufi', value: 'kufi' },
   { label: 'Sans', value: 'sans' },
+  { label: 'Plex', value: 'plex' },
 ]
 
 /** A word of Arabic, so each option shows its face rather than naming it. */

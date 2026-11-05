@@ -2,17 +2,50 @@
 // or the clock ran — plus the page going away, which is the only one that cannot
 // be retried.
 //
-// Events are serialized ON ARRIVAL, once. A full snapshot is the largest thing
-// this package ever holds, and stringifying it again at flush time would double
-// the cost of the most expensive event in the recording. Serializing early also
-// contains damage: one unserializable event is dropped where it is found instead
-// of taking the whole batch with it.
+// Events are serialized ON ARRIVAL, once, and compressed where it pays
+// (compress.ts): a full snapshot always, so a landing page's megabyte of DOM fits
+// one message. Stringifying again at flush time would double the cost of the most
+// expensive event in the recording. Serializing early also contains damage: one
+// unserializable event is dropped where it is found instead of taking the whole
+// batch with it.
 
 import { readConsent, renderConsent } from '@hanzo/event'
+import { encode } from './compress'
 import type { ReplayIds, ReplayTransport, eventWithTime } from './types'
 
-export const REPLAY_PATH = '/v1/replay' // the ONE replay ingest entry point
+/** The ONE replay ingest entry point: cloud serves it beside the event ingest
+ *  (hanzo-inc/cloud apps/event/replay.go `replayPath`). */
+export const REPLAY_PATH = '/v1/event/replay'
 export const DEFAULT_ENDPOINT = 'https://api.hanzo.ai'
+
+/** The largest body the ingest accepts, in bytes: 512 KiB (apps/event/replay.go
+ *  `maxReplayBytes`). Over it the answer is 413, so a batch is cut before it gets
+ *  there and an event that is bigger on its own is never sent. */
+export const MAX_BATCH_BYTES = 512 * 1024
+
+/** What `fetch(keepalive)` and `sendBeacon` may carry: the Fetch standard refuses a
+ *  keepalive body once the page's in-flight keepalive bytes pass 64 KiB. */
+export const KEEPALIVE_BYTES = 64 * 1024
+
+/** The envelope's bytes beyond what encodeBatch measured at construction: the
+ *  consent it reads at flush time renders at most `analytics,marketing,ads`. */
+const CONSENT_BYTES = 'analytics,marketing,ads'.length
+
+/** The UTF-8 length of a string, without encoding it: the body is sent as UTF-8,
+ *  and a JS string's length counts UTF-16 units. */
+export function utf8Length(s: string): number {
+  let n = 0
+  for (let i = 0; i < s.length; i++) {
+    const c = s.charCodeAt(i)
+    if (c < 0x80) n += 1
+    else if (c < 0x800) n += 2
+    else if (c >= 0xd800 && c <= 0xdbff && i + 1 < s.length) {
+      n += 4
+      i++
+    } else n += 3
+  }
+  return n
+}
 
 /** A publishable key — the only kind that may ride a URL. `sendBeacon` cannot set
  *  headers, so an unload flush has to carry the key in the query string; putting
@@ -40,12 +73,16 @@ export function encodeBatch(ids: ReplayIds, parts: string[]): string {
   return head.slice(0, -1) + ',"events":[' + parts.join(',') + ']}'
 }
 
-/** fetch(keepalive) normally; navigator.sendBeacon for the headerless unload
- *  flush, where the publishable key rides `?ingest_key=` instead of a header. */
+/** fetch normally; navigator.sendBeacon for the headerless unload flush, where the
+ *  publishable key rides `?ingest_key=` instead of a header. Only a body inside the
+ *  keepalive quota is beaconed or kept alive: past it the browser refuses the
+ *  request outright, and a full snapshot is several times the quota. */
 export const defaultTransport: ReplayTransport = {
   send(url, payload, opts) {
+    const fits = utf8Length(payload) <= KEEPALIVE_BYTES
     if (
       opts.beacon &&
+      fits &&
       publishable(opts.ingestKey) &&
       typeof navigator !== 'undefined' &&
       typeof navigator.sendBeacon === 'function'
@@ -63,7 +100,7 @@ export const defaultTransport: ReplayTransport = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${opts.ingestKey}` },
       body: payload,
-      keepalive: true,
+      keepalive: opts.beacon && fits,
       credentials: 'include',
     })
       .then((res) => {
@@ -97,20 +134,37 @@ export class Batch {
   private timer: ReturnType<typeof setInterval> | null = null
   private unload: (() => void) | null = null
 
-  constructor(private cfg: BatchConfig) {}
+  /** The bytes the envelope around the events takes: the ids, the consent, the
+   *  brackets. */
+  private head: number
 
-  /** Buffer one event, flushing if it took the batch over either threshold. */
+  constructor(private cfg: BatchConfig) {
+    this.head = utf8Length(encodeBatch(cfg, [])) + CONSENT_BYTES
+  }
+
+  /** Buffer one event. A batch never passes `maxBytes` (counted as the body is sent,
+   *  envelope and commas included): an event that would take it over flushes what
+   *  is buffered first, and one that is over on its own is reported and dropped,
+   *  because the ingest would refuse it whole. */
   add(e: eventWithTime): void {
     let part: string
     try {
-      part = JSON.stringify(e)
+      part = encode(e)
     } catch (err) {
       this.cfg.onError?.(err)
       return // one poisoned event, never the batch
     }
+    const size = utf8Length(part) + 1 // and its comma
+    if (this.head + size > this.cfg.maxBytes) {
+      this.cfg.onError?.(
+        new Error(`replay: a ${size - 1}-byte event, compressed, cannot fit a ${this.cfg.maxBytes}-byte batch; not sent`),
+      )
+      return
+    }
+    if (this.head + this.bytes + size > this.cfg.maxBytes) this.flush()
     this.parts.push(part)
-    this.bytes += part.length
-    if (this.parts.length >= this.cfg.batchSize || this.bytes >= this.cfg.maxBytes) this.flush()
+    this.bytes += size
+    if (this.parts.length >= this.cfg.batchSize) this.flush()
   }
 
   /** Send what is buffered. `beacon` selects the unload path. */

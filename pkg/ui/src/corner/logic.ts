@@ -41,9 +41,10 @@ export type Words = {
   system: string
   serif: string
   mono: string
-  /** The face Arabic is set in, and its two answers (`sans` names the other). */
+  /** The face Arabic is set in, and its answers besides `sans`, which the face list names. */
   arabic: string
   kufi: string
+  plex: string
   search: string
   back: string
   close: string
@@ -70,6 +71,7 @@ export const WORDS: Words = {
   mono: 'Mono',
   arabic: 'Arabic font',
   kufi: 'Kufi',
+  plex: 'Plex',
   search: 'Search',
   back: 'Back',
   close: 'Close',

@@ -132,13 +132,13 @@ describe('the chip', () => {
   })
 
   // gui compiles each value to an atomic class; the boxes are measured in a browser (scripts/composer.mjs).
-  it('stands as tall as the row it is set in, fully round, a hairline and no fill', () => {
+  it('in a row of words, is a word as tall as the row: no edge, no fill, the 14px rung', () => {
     mount(
       <Pills.Provider value={36}>
         <ChipSelect name="Branch" label="main" onChange={() => {}} items={[]} />
       </Pills.Provider>,
     )
-    for (const c of ['_height-36px', '_btlr-999px', '_btw-1px', '_bg-transparent']) expect(chip().className).toContain(c)
+    for (const c of ['_height-36px', '_btlr-8px', '_btw-0px', '_bg-transparent']) expect(chip().className).toContain(c)
     mount(<ChipSelect name="Branch" label="main" onChange={() => {}} items={[]} />)
     expect(chip().className).toContain('_height-24px')
     expect(chip().className).not.toContain('_bg-transparent')

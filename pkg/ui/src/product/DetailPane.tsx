@@ -234,6 +234,7 @@ function Dock({ open, title, store, onClose, onExpand, children }: { open: boole
       self="stretch"
       overflow="hidden"
       outlineWidth={0}
+<<<<<<< HEAD
       onKeyDown={
         ((e: { key?: string; defaultPrevented?: boolean; metaKey?: boolean; ctrlKey?: boolean; preventDefault?: () => void }) => {
           if (e.key === 'Escape' && !e.defaultPrevented) {
@@ -249,6 +250,19 @@ function Dock({ open, title, store, onClose, onExpand, children }: { open: boole
         width: open ? 'var(--span)' : 0,
         transition: 'width var(--duration-base, 300ms) var(--ease-out, ease)',
       }}
+=======
+      onKeyDown={((e: { key?: string; defaultPrevented?: boolean; metaKey?: boolean; ctrlKey?: boolean; preventDefault?: () => void }) => {
+        if (e.key === 'Escape' && !e.defaultPrevented) {
+          e.preventDefault?.()
+          onClose()
+          return
+        }
+        expandKey(onExpand)(e)
+      }) as never}
+      width={open ? 'var(--span)' : 0}
+      // `--span` as useSpan's props carry it, beside the width's own ease.
+      $platform-web={{ '--span': `${span.span}px`, transition: 'width var(--duration-base, 300ms) var(--ease-out, ease)' } as object}
+>>>>>>> origin/main
     >
       <YStack width="var(--span)" flex={1} minH={0} bg="$background" borderInlineStartWidth={1} borderColor="$borderColor">
         {children}

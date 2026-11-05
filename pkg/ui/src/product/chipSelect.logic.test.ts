@@ -47,6 +47,11 @@ describe('pin', () => {
   it('leaves the list alone with nothing chosen', () => {
     expect(pin(rows('a', 'b'), null).map((r) => r.id)).toEqual(['a', 'b'])
   })
+
+  it('reads the chosen row by its label and tail together', () => {
+    const chosen = { id: 'github.com/acme/cloud', label: 'github.com/acme', tail: '/cloud' }
+    expect(pin(rows('acme/site'), chosen, 'acme/cl').map((r) => r.id)).toEqual(['github.com/acme/cloud', 'acme/site'])
+  })
 })
 
 describe('narrow', () => {
@@ -70,6 +75,12 @@ describe('narrow', () => {
 
   it('returns everything for an empty search', () => {
     expect(narrow(list, '  ')).toHaveLength(2)
+  })
+
+  it('matches the tail, and across where the label meets it', () => {
+    const split: ChipItem[] = [{ id: 'g', label: 'github.com/acme', tail: '/thoughtful' }, ...list]
+    expect(narrow(split, 'Thoughtful').map((r) => r.id)).toEqual(['g'])
+    expect(narrow(split, 'acme/th').map((r) => r.id)).toEqual(['g'])
   })
 })
 

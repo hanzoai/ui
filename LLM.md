@@ -450,32 +450,64 @@ another document, and axe's frame messaging throws in jsdom besides.
 
 ### The one composer — `Composer` in `@hanzo/ui/chat`
 
-Chat, Dev, Studio, a room, a reply and a run being steered all draw this one
-component; none carries a copy. It was three (this package's frame, @hanzo/build's
-`prompt`, and Chat's own effort widget beside send) until the three agreed on
-nothing — a key that sent in one wrote a newline in another.
+Chat, Dev, Studio, the browser extension, a room, a reply and a run being
+steered all draw this one component; none carries a copy. It was three (this
+package's frame, @hanzo/build's `prompt`, and Chat's own effort widget beside
+send) until the three agreed on nothing — a key that sent in one wrote a newline
+in another.
 
-    ┌ pills ────────────────────────────────┐  where a run goes: environment, repository, branch
-    │ the field                             │
-    │ +  carried…  children     ✦  🎙  ⬆    │  + menu, what the draft carries, commands, dictation, send/stop
-    └───────────────────────────────────────┘
-      chips…                  model effort mode   under the frame; `head` and `/` `@` lists above it
+    ╭──────────────────────────────────────╮
+    │ the field                            │  16/24, its text 16px in; two lines' room at rest
+    │                                      │
+    │ +  carried…  children    ✦  🎙⌄  ◌  │  + menu, carried, commands, dictation, voice ⇄ send
+    ╰──────────────────────────────────────╯
+      Project ⌄  chips…   usage  Model Effort Mode   words under the frame; `head` and `/` `@` above it
 
+The look is the owner's reference of 2026-10-30 (a Claude-style box): one
+rounded rectangle, nothing else.
+
+- **The frame.** A 16px corner, ONE even 1px edge on whole pixels and nothing
+  inset along its top — the rungs' lit lip (`--edge-highlight`) and the glass
+  prism read on the composer as a doubled, brighter top edge, so glass.css takes
+  both off it. Its ground is `--composer-ground`, declared per theme in glass.css:
+  dark a white 10% wash (a #2a card on the app's #14 pane) under design's
+  `--border`; light design's emphasis card (#fdfdfd) under `--border-control` with
+  a soft, wide drop (`--composer-drop`). The edge brightens toward `--ring` a
+  little under a pointer and two thirds of the way on focus — the edge itself,
+  never a glow. Ground, edge and drop ease (`--duration-fast`, `--ease-out`).
+- **`forgetful`** (a conversation nothing keeps — Chat's private chat): the same
+  frame with no ground and no drop, its edge dashed. That is the one cue; no
+  notice goes above the composer. The host passes its existing state.
+- **The row** inside the frame's foot: 32px controls on a laptop, 36px on a
+  phone, one 4px gap, one centreline, every glyph lucide at 20px / 1.75 drawn in
+  `currentColor` (`look.ts` `GHOST`, `GLYPH`, `STROKE`), so a ghost's ink is the
+  control's: secondary at rest, full under a pointer with a soft `$hover`
+  ground, eased by gui's `quickest`. The mic and its chevron (half its width)
+  are one control. The LAST PLACE is voice mode while the draft is empty and
+  send (a filled circle; stop while a turn runs) once it has words: both stand
+  in one box (`composer-last`) and the one not wanted fades and shrinks to 0.9,
+  so the row never shifts. Send presses down to 0.92.
+- **Under the frame**, one quiet line at the field's text edge (the words' own
+  5px gutter inside it): the surface's `pills` as words (`Pills` in
+  ChipSelect.tsx gives a labelled `ChipSelect` — so `RepoSelect`,
+  `BranchSelect` — the word look: 14px ink, a small chevron, no edge, no fill)
+  and its `chips` (words; the one `on` in full ink) at the start; the host's
+  usage (`status`, or `ComposerStatusProvider`), the model (`ModelPicker quiet`:
+  the name in the full ink, weight 500), the effort (muted) and, a step apart,
+  the mode at the end. Wraps on a phone, a thumb tall.
+- **The field** grows a line at a time, eased (`Textarea` reads its last height
+  before the next, so `height` can transition), with no scrollbar until its
+  ceiling (240px, 160 on a phone; `data-capped`), then scrolls. No grip.
 - **Slots, not variants.** `pills`, `chips`, `commands`, `plus`, `carried`,
   `slash`/`at`, `mind` (the model), `effort` and `mode` (each a `Modes`: the one in
-  force, its list, its setter), `below`, `head`, `note`. A surface that has none of
-  a slot draws none of it. Chat hands the effort, a mode and the model families
-  (`useFamilies`); Dev hands three pills (`ChipSelect`, `RepoSelect` with tabs,
-  `BranchSelect`), chips that go to its repositories, branches, issues and
-  templates, and its commands.
+  force, its list, its setter), `head`, `note`, `status`, `forgetful`. A surface
+  that has none of a slot draws none of it.
 - **One setting.** `@hanzo/appearance` `composing` (`useComposing`, written by
   Settings → Appearance, kept on the device under `hanzo.composer` and in the IAM
   account's preferences under `composer`): which key sends (`send`: Enter, or
-  ⌘/Ctrl+Enter), and whether the chips, the model selector and the mode are drawn.
-  An axis left on Auto takes the surface's `defaults` — Chat opens without chips
-  or a mode, Dev with both — and the model selector is off everywhere until the
-  person turns it on. Paint is `@hanzo/design` tokens through `--density`, so text
-  size, density and accent move it with the rest of the product.
+  ⌘/Ctrl+Enter), and whether the chips, the model and the mode are drawn. An axis
+  left on Auto takes the surface's `defaults` — Chat opens without chips or a
+  mode, Dev with both — and the model is drawn until the person turns it off.
 - **Why it is here.** `@hanzo/ui` already hosted the frame, `ModelPicker` and
   `ChipSelect`; @hanzo/app and @hanzo/build both depend on it and it depends on
   neither; `@hanzo/appearance` (its dependency, itself only on design) holds the
@@ -484,26 +516,20 @@ nothing — a key that sent in one wrote a newline in another.
   cycle can form. They are peers of `@hanzo/ui` — install them beside it.
 - `@hanzo/ui/chat/pure` carries what a spec or a settings page needs without the
   composer: `sends`, `LANGUAGES`, `EFFORTS`.
-- **One bar, phone and laptop.** Controls are 32px on a laptop, 36px on a phone,
-  one 4px gap (`SPACE`) between neighbours, every row on one centreline. The pills
-  stand as tall as the controls: Composer provides `Pills` (ChipSelect.tsx) with
-  its control size, and a labelled `ChipSelect` (so `RepoSelect`, `BranchSelect`)
-  inside it is a pill — fully round, a hairline, no fill — while outside it stays
-  the 24px chip. On a phone what the draft carries is a row of those pills above
-  the field (after `+` it wrapped the row), the mic and its chevron sit one gap
-  apart, and the effort's level stands beside the gauge (`Dial narrow`).
 - **The coarse-pointer floor is 24px inside the composer.** @hanzo/design floors
   every button at `--tap-target` (44px, `!important`) under `pointer: coarse`, so on
-  an iPhone the 36px controls drew at 44 and the pills as 44px slabs while every
-  desktop-pointer test read 36. The frame and the row under it set
-  `--tap-target: 24px` (WCAG 2.5.8); a run without `hasTouch` cannot see this.
-- **`--composer-fill`** is the frame's glass fill, read only by
-  `[data-slot="composer"].glass` inside glass.css's `@supports` block and defaulting
-  to the material's own `color-mix(in oklab, var(--background) 72%, transparent)`.
-  A host darkens the composer (a private chat) by setting it, never `--background`.
+  an iPhone the 36px controls drew at 44 while every desktop-pointer test read 36.
+  The frame and the row under it set `--tap-target: 24px` (WCAG 2.5.8); a run
+  without `hasTouch` cannot see this.
+- **`--composer-fill`** overrides the ground for one host, read only by
+  `[data-slot="composer"].glass`; never `--background`.
+- Under reduced motion nothing in the composer eases.
 - `pnpm test:composer` (`scripts/composer.mjs`, `test/composer.mount.tsx`) measures
-  all of it in Chromium at 390, 440 and 1280, dark and light, as Chat and as Dev,
-  with touch on the phones, and the fill, with screenshots in `test-results/composer`.
+  all of it in Chromium at 390 and 440 (2x) and 1280 (1x and 2x), dark and light,
+  as Chat and as Dev, with touch on the phones: the edge, the ground, the inset
+  lip, whole device pixels, the row, the last place, the words' edges, growth to
+  the ceiling, and forgetful — screenshots at rest, focused, typed and forgetful
+  in `test-results/composer`.
 
 ### The sessions surface — `SessionRail`, `RailBar`, `Home`, `EmptyPrompt`, `Composer`, `ChipSelect`
 
@@ -512,7 +538,7 @@ had. hanzo.build's look is the default: an app that mounts them gets it.
 
 | Piece | Home | What it is |
 |---|---|---|
-| `Composer` | `@hanzo/ui/chat` | THE one composer — see "The one composer" below. A surface hands it slots (`pills`, `chips`, `commands`, `plus`, `carried`, `mind`/`effort`/`mode`, `below`); the field, keys, mic, send and their look are here once. |
+| `Composer` | `@hanzo/ui/chat` | THE one composer — see "The one composer" above. A surface hands it slots (`pills`, `chips`, `commands`, `plus`, `carried`, `mind`/`effort`/`mode`, `status`, `forgetful`); the field, keys, mic, send and their look are here once. |
 | `Home` | `@hanzo/ui/chat` | a fresh pane: mark + question ($8, centred, `role=heading`) and the composer as `children`, grouped in the middle of the pane in one column (default 768). |
 | `EmptyPrompt` | `@hanzo/ui/chat` | the smaller question at the TOP of the column, for a pane whose composer stays at the foot. The mark is a slot; no brand is picked here. |
 | `SessionRail` | `@hanzo/ui/chat` | head (`brand` wordmark — press = `onBrand ?? onNew` — over a bordered Search box when `onSearch`) · New · `links` · a More disclosure · Recents (status dots, sort control) · `notice` · account row (`name` over `sub`) with its menu · collapse. Built on `Sidebar`/`SidebarIconButton`. The sidebar canon: collapse is `collapsed` in / `onCollapse` out (the host persists), collapsed is a 56px icon rail whose top row expands (then a search icon), and below `md` the column is `display:none` and the same contents open as a left `Sheet` (`open`/`onOpenChange`); EVERY press in the drawer that leads somewhere closes it — New, a recent, a link, a More link, the brand, search, an account-menu row. |

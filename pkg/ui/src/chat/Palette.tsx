@@ -9,6 +9,12 @@
  * A command's `keys` is what already does it elsewhere (⌘↵ sends), never a key
  * this list binds: a shortcut shown and not bound is a promise the page breaks.
  */
+<<<<<<< HEAD
+=======
+import { useI18n } from '@hanzo/i18n/react'
+import { Sparkles } from '@hanzogui/lucide-icons-2'
+import { GLYPH, STROKE } from './look'
+>>>>>>> origin/main
 import type { ReactNode } from 'react'
 import { Sparkles } from '@hanzogui/lucide-icons-2'
 
@@ -44,6 +50,7 @@ export function Palette({
   size?: number
   disabled?: boolean
 }) {
+<<<<<<< HEAD
   const t = useTranslate()
   const items: Row[] = commands.map((c) => ({
     id: c.id,
@@ -54,4 +61,26 @@ export function Palette({
     command: c,
   }))
   return <ChipSelect<Row> name={t('Commands')} label="" quiet {...(size ? { box: size } : null)} icon={<Sparkles size={15} color="$soft" />} items={items} onChange={(i) => i.command.run()} placeholder={t('Search commands…')} empty={t('Nothing matches')} placement={placement} width={300} disabled={disabled} open={open} onOpenChange={onOpenChange} />
+=======
+  const { t } = useI18n()
+  const items: Row[] = commands.map((c) => ({ id: c.id, label: c.label, icon: c.icon, hint: c.keys, disabled: c.disabled, command: c }))
+  return (
+    <ChipSelect<Row>
+      name={t('Commands')}
+      label=""
+      quiet
+      {...(size ? { box: size } : null)}
+      icon={<Sparkles size={GLYPH} strokeWidth={STROKE} color="$quiet" />}
+      items={items}
+      onChange={(i) => i.command.run()}
+      placeholder={t('Search commands…')}
+      empty={t('Nothing matches')}
+      placement={placement}
+      width={300}
+      disabled={disabled}
+      open={open}
+      onOpenChange={onOpenChange}
+    />
+  )
+>>>>>>> origin/main
 }
