@@ -10,7 +10,9 @@
  *   />
  *
  * A small `?` sits at the bottom START corner of the window (bottom-left in a
- * left-to-right page, bottom-right in a right-to-left one), clear of the notch
+ * left-to-right page, bottom-right in a right-to-left one), or at the END corner
+ * where the host says `side="end"`, and wears the host's `mark` where it gives
+ * one (a brand's logo) instead of the `?`. Either way it stays clear of the notch
  * and the home indicator. Pressing it opens one card that opens toward the
  * inside: the host's help links first, then Theme, Language, Font (and Arabic
  * font, on a page in Arabic script) and Currency. The settings a visitor is most
@@ -66,6 +68,15 @@ export type CornerProps = {
   language?: Setting
   /** The page's display currency, owned by the host. Absent, the row is not drawn. */
   currency?: Setting
+<<<<<<< HEAD
+=======
+  /** The panel's own words, for a host that speaks another language. */
+  words?: Partial<Words>
+  /** Which bottom corner it stands in, along the line: `start` (the default) or `end`. */
+  side?: 'start' | 'end'
+  /** What the trigger shows in place of the `?`, such as the host's logo, drawn at about 22px. */
+  mark?: ReactNode
+>>>>>>> main
 }
 
 type View = 'main' | 'language' | 'currency' | 'font' | 'arabic'
@@ -74,13 +85,14 @@ type View = 'main' | 'language' | 'currency' | 'font' | 'arabic'
 const LISTS = ['language', 'font', 'arabic', 'currency'] as const
 
 /**
- * The trigger's distance from the window's foot and its start edge: 10px, or the
- * device's inset and 4px where that is wider. A right-to-left page puts the
- * trigger on the right, so the inline edge takes the wider of the two side insets.
+ * The trigger's distance from the window's foot and its side edge: 10px, or the
+ * device's inset and 4px where that is wider. Either side can be the left or the
+ * right, by the page's direction, so the inline edge takes the wider of the two
+ * side insets.
  */
 const EDGE = {
   bottom: 'max(10px, calc(var(--safe-bottom, env(safe-area-inset-bottom, 0px)) + 4px))',
-  start:
+  side:
     'max(10px, calc(max(var(--safe-left, env(safe-area-inset-left, 0px)), var(--safe-right, env(safe-area-inset-right, 0px))) + 4px))',
 } as const
 
@@ -124,9 +136,14 @@ function useAxis<K extends 'theme' | 'font' | 'arabic'>(axis: K): [Preference[K]
   return [look ? look.pref[axis] : own, set]
 }
 
+<<<<<<< HEAD
 export function Corner({ help = [], language, currency }: CornerProps) {
   const { t } = useI18n()
   const w = Object.fromEntries(Object.entries(WORDS).map(([k, said]) => [k, t(said)])) as Words
+=======
+export function Corner({ help = [], language, currency, words, side = 'start', mark }: CornerProps) {
+  const w = { ...WORDS, ...words }
+>>>>>>> main
   const [open, setOpen] = useState(false)
   const [view, setView] = useState<View>('main')
   // Which row opened a list, so going back puts focus where it was.
@@ -221,10 +238,10 @@ export function Corner({ help = [], language, currency }: CornerProps) {
       {...slot('corner')}
       position="fixed"
       bottom={EDGE.bottom as never}
-      insetInlineStart={EDGE.start as never}
+      {...(side === 'end' ? { insetInlineEnd: EDGE.side as never } : { insetInlineStart: EDGE.side as never })}
       z={'var(--z-dock, 40)' as never}
     >
-      <Popover open={open} onOpenChange={toggle} placement="top-start" allowFlip stayInFrame>
+      <Popover open={open} onOpenChange={toggle} placement={side === 'end' ? 'top-end' : 'top-start'} allowFlip stayInFrame>
         <PopoverTrigger asChild>
           <XStack
             ref={trigger as never}
@@ -251,7 +268,7 @@ export function Corner({ help = [], language, currency }: CornerProps) {
               toggle(!open)
             }}
           >
-            <CircleHelp size={22} color="$background" fill="var(--foreground)" aria-hidden />
+            {mark ?? <CircleHelp size={22} color="$background" fill="var(--foreground)" aria-hidden />}
           </XStack>
         </PopoverTrigger>
 

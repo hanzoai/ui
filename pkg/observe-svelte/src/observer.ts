@@ -5,7 +5,7 @@
 // The running engine is held as a module singleton so the `observe` action and the
 // `stream` store can reach it without threading a reference through Svelte context.
 
-import { observe as engine, wireProps } from '@hanzo/observe'
+import { deliver, observe as engine } from '@hanzo/observe'
 import type { Interaction, Observer, RedactionPolicy } from '@hanzo/observe'
 import type { Analytics } from '@hanzo/event'
 
@@ -34,11 +34,7 @@ export function createObserver(client: Analytics, options: SvelteObserveOptions 
   stopObserver()
   const sink = (i: Interaction) => {
     try {
-      if (i.kind === 'nav') {
-        client.pageview(typeof i.props?.path === 'string' ? (i.props.path as string) : undefined)
-        return
-      }
-      client.capture(i.name, wireProps(i))
+      deliver(client, i)
     } catch {
       /* telemetry must never break the app */
     }

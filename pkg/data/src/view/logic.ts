@@ -10,6 +10,7 @@ import {
   sortRecords,
   cycleSort,
   operatorsForType,
+  type FilterMatch,
   type FilterRule,
   type SortRule,
 } from '../table/logic'
@@ -23,14 +24,14 @@ export function emptyView(kind: ViewKind, id = 'default', name = kind === 'board
 }
 
 /**
- * Apply a view to a record set: quick-search, then filter (AND), then sort. Pure
+ * Apply a view to a record set: quick-search, then filter (by its match), then sort. Pure
  * — returns a new array, input untouched. Board grouping is applied by the board
  * view over this same filtered+sorted result, so both views stay consistent.
  */
 export function applyView(records: Record_[], view: ViewConfig, fields: FieldDefinition[]): Record_[] {
   let out = records
   if (view.search && view.search.trim()) out = searchRecords(out, view.search, fields)
-  out = filterRecords(out, view.filters, fields)
+  out = filterRecords(out, view.filters, fields, view.match)
   out = sortRecords(out, view.sorts, fields)
   return out
 }
@@ -53,6 +54,14 @@ export function updateFilter(view: ViewConfig, index: number, patch: Partial<Fil
 export function removeFilter(view: ViewConfig, index: number): ViewConfig {
   return { ...view, filters: view.filters.filter((_, i) => i !== index) }
 }
+
+/** Combine the rules by every (`and`) or any (`or`). */
+export function setMatch(view: ViewConfig, match: FilterMatch): ViewConfig {
+  return { ...view, match }
+}
+
+/** The other way to combine: `and` ⇄ `or`. */
+export const otherMatch = (match: FilterMatch | undefined): FilterMatch => (match === 'or' ? 'and' : 'or')
 
 // ── sort edits ────────────────────────────────────────────────────────────────
 export function setSorts(view: ViewConfig, sorts: SortRule[]): ViewConfig {

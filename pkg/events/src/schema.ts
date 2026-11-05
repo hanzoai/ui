@@ -67,6 +67,15 @@ export const SCHEMA: Readonly<Record<string, EventSpec>> = {
     props: NONE,
   },
   logout_completed: { summary: 'The session ended and the visitor is signed out.', props: NONE },
+  signin_failed: {
+    summary: 'A sign-in or sign-up was refused, counted by the kind of refusal and never by its words.',
+    props: {
+      reason: { type: 'string', doc: "IAM's code for the refusal, else the error's class; never a sentence." },
+      method: { type: 'string', doc: 'The way in: a provider, email, phone or wallet.' },
+      step: { type: 'string', doc: 'The step of the sign-in it was refused at.' },
+      mode: { type: 'string', doc: 'Whether it was a sign-up or a sign-in.', values: ['signup', 'login'] },
+    },
+  },
   first_action: {
     summary:
       'Activation: the first moment of real value. ONE event for every product — ' +
@@ -94,6 +103,14 @@ export const SCHEMA: Readonly<Record<string, EventSpec>> = {
       plan: { type: 'string', doc: 'The plan name as the catalog spells it.' },
       interval: { type: 'string', doc: 'Billing interval.', values: ['monthly', 'annual'] },
       from: { type: 'string', doc: 'Where the plan was pressed.' },
+    },
+  },
+  checkout_viewed: {
+    summary: 'The card step was shown with its plan and price to a visitor not signed in yet.',
+    props: {
+      plan: { type: 'string', doc: 'The plan the card step names, by its catalog slug.' },
+      interval: { type: 'string', doc: 'The term the card step prices: month or year.' },
+      method: { type: 'string', doc: 'The way of paying the step is for, such as card.' },
     },
   },
   checkout_started: {
@@ -152,6 +169,42 @@ export const SCHEMA: Readonly<Record<string, EventSpec>> = {
   },
   sales_contacted: {
     summary: 'The enterprise or buying-specialist form was sent.',
+    props: NONE,
+  },
+
+  // ── Marketing ────────────────────────────────────────────────────
+  product_viewed: {
+    summary: 'A product, model or service page was shown.',
+    props: {
+      content_type: { type: 'string', doc: 'What the page is about.', values: ['product', 'model', 'category', 'service'] },
+      item_id: { type: 'string', doc: 'The product slug or model id the page is for.' },
+      item_name: { type: 'string', doc: 'The name the page gives it.' },
+    },
+  },
+  search_performed: {
+    summary: 'A visitor searched the site or a catalog.',
+    props: {
+      search_string: { type: 'string', doc: 'What was typed, as typed.' },
+      from: { type: 'string', doc: 'Which search: the palette, the model catalog.' },
+    },
+  },
+  cta_clicked: {
+    summary: 'A call to action on a page was pressed.',
+    props: {
+      cta: { type: 'string', doc: 'Which call to action, e.g. try_hanzo.' },
+      page: { type: 'string', doc: 'The page or section it was on.' },
+    },
+  },
+  newsletter_subscribed: {
+    summary: 'An address was signed up for the newsletter.',
+    props: { source: { type: 'string', doc: 'Where the sign-up form was.' } },
+  },
+  beta_submitted: {
+    summary: 'A beta application was filed.',
+    props: { program: { type: 'string', doc: 'The beta programme applied for.' } },
+  },
+  research_access_applied: {
+    summary: 'Research access to an unreleased model was requested.',
     props: NONE,
   },
 

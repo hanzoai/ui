@@ -27,7 +27,9 @@
 import { Input as GuiInput, ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { Check, ChevronDown, Search } from '@hanzogui/lucide-icons-2'
 import {
+  createContext,
   useCallback,
+  useContext,
   useEffect,
   useId,
   useMemo,
@@ -144,6 +146,18 @@ const CHIP_H = 24
 
 /** A chip that is its icon alone: the composer's round controls' box. */
 const BARE = 30
+
+/**
+ * The height of the row a chip stands in, px: the line of words under the
+ * composer's frame. There a labelled chip is a WORD — its label in the full ink
+ * at the 14px rung and a small chevron, no edge and no fill until a pointer
+ * gives it the soft hover ground — so where a run goes and the model, the
+ * effort and the mode read as one quiet line. Outside that row, the 24px chip.
+ */
+export const Pills = createContext<number | null>(null)
+
+/** A word's own gutter, px: its ground under a pointer reaches this far past its letters. */
+const WORD_GUTTER = 5
 
 
 const MOVES = new Set<Move>(['ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 'PageUp'])
@@ -262,9 +276,14 @@ export function ChipSelect<T extends ChipItem>({
   onOpenChange,
 }: ChipSelectProps<T>) {
   const bare = !label
+<<<<<<< HEAD
   const { t } = useI18n()
   const placeholder = hint ?? t('Search…')
   const empty = none ?? t('No matches.')
+=======
+  const row = useContext(Pills)
+  const pill = row !== null && !bare && !quiet
+>>>>>>> main
   const [own, setOwn] = useState(false)
   const open = openProp ?? own
   const setOpen = useCallback(
@@ -539,19 +558,19 @@ export function ChipSelect<T extends ChipItem>({
           aria-expanded={open}
           aria-controls={open ? listId : undefined}
           aria-disabled={disabled || undefined}
-          height={CHIP_H}
-          // A chip of its icon alone stands with the composer's round controls.
-          {...(bare ? { width: box, height: box, justify: 'center', rounded: 999 } : { px: '$2' })}
-          gap="$1.5"
+          height={pill ? row : CHIP_H}
+          rounded={pill ? 8 : '$2'}
+          // A chip of its icon alone stands with the composer's round controls, round as they are.
+          {...(bare ? { width: box, height: box, justify: 'center', rounded: 999 } : { px: pill ? WORD_GUTTER : '$2' })}
+          gap={pill ? 4 : '$1.5'}
           items="center"
           shrink={0}
-          rounded="$2"
-          borderWidth={quiet ? 0 : 1}
+          borderWidth={quiet || pill ? 0 : 1}
           borderColor="$borderColor"
-          bg={quiet ? 'transparent' : '$raised'}
+          bg={quiet || pill ? 'transparent' : '$raised'}
           cursor={disabled ? 'default' : 'pointer'}
           opacity={disabled ? 0.5 : 1}
-          hoverStyle={disabled ? undefined : quiet ? { bg: '$hover' } : { borderColor: '$rim' }}
+          hoverStyle={disabled ? undefined : quiet || pill ? { bg: '$hover' } : { borderColor: '$rim' }}
           pressStyle={disabled ? undefined : { bg: '$hover' }}
           focusVisibleStyle={RING}
           // The chip is a small target by design; the hit area is not.
@@ -564,7 +583,7 @@ export function ChipSelect<T extends ChipItem>({
             </XStack>
           ) : null}
           {bare ? null : (
-            <SizableText size="$2" color={quiet ? '$quiet' : '$ink'} numberOfLines={1} maxW={200}>
+            <SizableText size={pill ? '$3' : '$2'} color={quiet ? '$quiet' : '$ink'} numberOfLines={1} maxW={200}>
               {label}
             </SizableText>
           )}
@@ -646,9 +665,21 @@ export function ChipSelect<T extends ChipItem>({
                       {item.icon}
                     </XStack>
                   ) : null}
-                  <SizableText size="$2" color="$ink" numberOfLines={1} flex={1} minW={0}>
-                    {item.label}
-                  </SizableText>
+                  {item.tail ? (
+                    // The label gives way first: its tail (a repository's `/name`) is the part that tells rows apart.
+                    <XStack flex={1} minW={0} items="center">
+                      <SizableText size="$2" color="$ink" numberOfLines={1} shrink={1} minW={0}>
+                        {item.label}
+                      </SizableText>
+                      <SizableText {...slot('chip-select-tail')} size="$2" color="$ink" numberOfLines={1} shrink={0} maxW="100%">
+                        {item.tail}
+                      </SizableText>
+                    </XStack>
+                  ) : (
+                    <SizableText size="$2" color="$ink" numberOfLines={1} flex={1} minW={0}>
+                      {item.label}
+                    </SizableText>
+                  )}
                   {item.hint ? (
                     <SizableText size="$1" color="$soft" numberOfLines={1} shrink={0}>
                       {item.hint}

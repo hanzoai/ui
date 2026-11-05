@@ -21,6 +21,8 @@ export const EVENTS = {
    *  Keeping it distinct is what stops returning logins from inflating signups. */
   LOGIN_COMPLETED: 'login_completed',
   LOGOUT_COMPLETED: 'logout_completed',
+  /** A sign-in or sign-up refused, by the kind of refusal (`reason`), never its words. */
+  SIGNIN_FAILED: 'signin_failed',
   /** Activation: the first moment of real value. ONE event for every product —
    *  the product-specific moment is the `action` property (api_call, app_live,
    *  chat_reply), never a new event name. */
@@ -39,6 +41,9 @@ export const EVENTS = {
   PLAN_SKIPPED: 'plan_skipped',
   PLAN_CHANGED: 'plan_changed',
   UPGRADE_CLICKED: 'upgrade_clicked',
+  /** The card step shown with its plan and price to a visitor not signed in yet;
+   *  the same visitor signed in there is CHECKOUT_STARTED. */
+  CHECKOUT_VIEWED: 'checkout_viewed',
   CHECKOUT_STARTED: 'checkout_started',
   PAYMENT_INFO_ADDED: 'payment_info_added',
   CHECKOUT_FAILED: 'checkout_failed',
@@ -47,6 +52,17 @@ export const EVENTS = {
   SUBSCRIPTION_CANCELED: 'subscription_canceled',
   ORDER_REFUNDED: 'order_refunded',
   SALES_CONTACTED: 'sales_contacted',
+
+  // Marketing: what the site's audiences are built from. A product, model or
+  // service page seen, a search asked, a call to action pressed, and the three
+  // ways in short of an account — the newsletter, a beta application, a research
+  // access request. The page or product is a property, never part of the name.
+  PRODUCT_VIEWED: 'product_viewed',
+  SEARCH_PERFORMED: 'search_performed',
+  CTA_CLICKED: 'cta_clicked',
+  NEWSLETTER_SUBSCRIBED: 'newsletter_subscribed',
+  BETA_SUBMITTED: 'beta_submitted',
+  RESEARCH_ACCESS_APPLIED: 'research_access_applied',
 
   // Onboarding, after sign-in: how it will be used, the team, the notice, the
   // name, the role, the first prompt.

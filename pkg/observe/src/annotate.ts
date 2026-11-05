@@ -260,3 +260,55 @@ export function annotate(el: Element, opts: { maxDepth?: number } = {}): Semanti
   const label = labelFor(path.length ? path : [target])
   return { '@context': CONTEXT, '@type': 'Interaction', path, target, label }
 }
+
+/** The longest reference attribution carries. Over it the key is dropped, never
+ *  clipped: a clipped path or id names a different place than the one touched. */
+const MAX_REF = 256
+
+/** What an interaction lands IN, which the semantic path cannot say: the link it
+ *  follows, the element's own id, and the section of the page it sits in.
+ *
+ *   - `$href` — the closest `a[href]`, the target or an ancestor. A click usually
+ *     lands on a span INSIDE the link, so the target's own `kind` misses it. A
+ *     same-origin link is its pathname, another origin's is origin + pathname, and
+ *     neither ever carries a query or a fragment: a token can ride either. A link
+ *     that is not http(s) is its scheme alone (`mailto:`, `tel:`), because the
+ *     rest of it is an address.
+ *   - `$id` — the target's own id.
+ *   - `$section` — the closest `section[id]` or `[data-hz-view]`, the target or an
+ *     ancestor: the `data-hz-view` value when it has one, else the id.
+ *
+ *  Each is a short string or absent. Never throws. */
+export function attribution(el: Element): Record<string, string> {
+  const out: Record<string, string> = {}
+  const put = (k: string, v: string | undefined) => {
+    if (v && v.length <= MAX_REF) out[k] = v
+  }
+  try {
+    put('$href', hrefOf(el))
+    put('$id', el.id || undefined)
+    put('$section', sectionOf(el))
+  } catch {
+    /* attribution is enrichment; the interaction stands without it */
+  }
+  return out
+}
+
+function hrefOf(el: Element): string | undefined {
+  const a = el.closest('a[href]')
+  const raw = a?.getAttribute('href')
+  if (!raw || typeof location === 'undefined') return undefined
+  const u = new URL(raw, location.href)
+  if (u.protocol !== 'http:' && u.protocol !== 'https:') return u.protocol
+  return u.origin === location.origin ? u.pathname : u.origin + u.pathname
+}
+
+const SECTION = 'section[id],[data-hz-view]'
+
+function sectionOf(el: Element): string | undefined {
+  for (let n = el.closest(SECTION); n; n = n.parentElement?.closest(SECTION) ?? null) {
+    const v = attr(n, 'data-hz-view') || n.id
+    if (v) return v
+  }
+  return undefined
+}

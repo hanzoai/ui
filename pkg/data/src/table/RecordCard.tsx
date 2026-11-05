@@ -13,7 +13,13 @@
 // it; keyboard focus inside fills it; a drag source fades to 0.3 and the preview
 // lifts by 2%. At regular density it renders as it always has.
 import { useState, type ReactNode } from 'react'
-import { Card, Text, XStack, YStack } from '@hanzo/gui'
+import { Text, XStack, YStack, styled } from '@hanzo/gui'
+
+/**
+ * The record's plate: the frame gui's `Card` was before @hanzo/gui 8.4 retired
+ * it, under the same name so a theme's `Card` sub-theme still reaches it.
+ */
+const Card = styled(YStack, { name: 'Card', backgroundColor: '$background', position: 'relative', borderRadius: '$true' })
 import { Avatar, Checkbox, Chip, useDensity } from '@hanzo/ui'
 import type { FieldDefinition } from '../field/types'
 import { FieldDisplay } from '../field/FieldDisplay'

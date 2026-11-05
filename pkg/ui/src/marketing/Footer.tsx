@@ -10,7 +10,13 @@
  *   ask       a slot above the columns for the site's composer, so it lives
  *             where a page ends and never floats over one.
  *   columns   titled lists of links; a title may itself be a link.
- *   wordmark  a slot; the legal line sits beside it.
+ *   wordmark  a slot at the far end of the last row; the copyright and the
+ *             legal line share that row's start.
+ *   after     a slot under that row, inside the footer, for the site's own
+ *             last line (its social links).
+ *
+ * It stands on the panel's ground ($panel), a step off the page's, so the page
+ * visibly ends where the footer begins.
  *
  * Plain anchors. A link that leaves the site opens a new tab and is marked with
  * ↗ by the host's own data (`out`).
@@ -34,12 +40,21 @@ export type FooterProps = {
   legal?: readonly FooterLink[]
   /** The side gutter, shared with the header. */
   gutter?: string
+  /** A last line inside the footer, under the legal row: the site's social links. */
+  after?: ReactNode
 }
 
 const open = (out?: boolean) => (out ? { target: '_blank', rel: 'noreferrer' } : {})
 
-/** The link to the consent sheet (`#choices`) carries California's privacy options icon before its words. */
-const CHOICES = { display: 'inline-flex', alignItems: 'center', gap: 6 } as const
+/**
+ * A legal link's box. @hanzo/design gives every link a 24px floor, taller than
+ * the line, and a plain block anchor sets its words at the top of it, 3px above
+ * the box's middle; the copyright beside them, and the consent sheet's link
+ * (`#choices`, its words beside California's privacy options icon), sat on the
+ * middle. Every link centres its words in the floor, so the row shares one
+ * centre line.
+ */
+const LEGAL = { display: 'inline-flex', alignItems: 'center', gap: 6 } as const
 
 /** A door. Its words are the host's, drawn through `t`: a label marked where it is written (masthead's `footer()`) says the reader's language, any other its own. */
 const Door = ({ link }: { link: FooterLink }) => {
@@ -61,13 +76,18 @@ const Door = ({ link }: { link: FooterLink }) => {
   )
 }
 
+<<<<<<< HEAD
 const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)' }: FooterProps) => {
   const { t } = useI18n()
   return (
+=======
+const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)', after }: FooterProps) => (
+>>>>>>> main
   <YStack
     {...slot('footer')}
     render="footer"
     width="100%"
+    bg="$panel"
     borderTopWidth={1}
     borderColor="$edge"
     pt={48}
@@ -80,9 +100,16 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
         {ask}
       </YStack>
     ) : null}
+    {/* A phone stacks the columns, each one a heading over its links two
+        across, so no short column stands beside a long one; from 640px they
+        sit side by side, each its own list. */}
     <XStack flexWrap="wrap" gap={28} $sm={{ gap: 40 }}>
       {columns.map((c) => (
+<<<<<<< HEAD
         <YStack key={c.id} render="nav" aria-label={t(c.title)} flexBasis="40%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
+=======
+        <YStack key={c.id} render="nav" aria-label={c.title} flexBasis="100%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
+>>>>>>> main
           {c.href ? (
             <Anchor
               href={c.href}
@@ -102,20 +129,26 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
               {t(c.title)}
             </Line>
           )}
-          {c.links.map((l) => (
-            <Door key={l.label} link={l} />
-          ))}
+          <YStack display="grid" gridTemplateColumns="repeat(2, minmax(0, 1fr))" columnGap={16} $sm={{ display: 'flex', flexDirection: 'column' }}>
+            {c.links.map((l) => (
+              <Door key={l.label} link={l} />
+            ))}
+          </YStack>
         </YStack>
       ))}
     </XStack>
-    <XStack flexWrap="wrap" items="center" gap={20} rowGap={8}>
-      {wordmark}
+    <XStack flexWrap="wrap" items="center" gap={20} rowGap={12}>
       {copyright ? (
         <Line size="sm" tone="dim">
           {copyright}
         </Line>
       ) : null}
+<<<<<<< HEAD
       <XStack render="nav" aria-label={t('Terms & Policies')} flexWrap="wrap" gap={16} rowGap={8} marginInlineStart={0} width="100%" $sm={{ marginInlineStart: 'auto', width: 'auto' }}>
+=======
+      {/* Shrinks to the row, so its links wrap on a phone instead of standing past the window. */}
+      <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8} shrink={1} minW={0}>
+>>>>>>> main
         {legal.map((l) => (
           <Anchor
             key={l.label}
@@ -126,14 +159,20 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
             lineHeight="$2"
             textDecorationLine="none"
             hoverStyle={{ color: '$ink' }}
-            {...(l.href.endsWith('#choices') ? CHOICES : null)}
+            {...LEGAL}
           >
             {l.href.endsWith('#choices') ? <PrivacyChoicesIcon /> : null}
             {t(l.label)}
           </Anchor>
         ))}
       </XStack>
+      {wordmark ? (
+        <XStack marginInlineStart="auto" items="center" shrink={1} minW={0} maxW="100%">
+          {wordmark}
+        </XStack>
+      ) : null}
     </XStack>
+    {after}
   </YStack>
   )
 }

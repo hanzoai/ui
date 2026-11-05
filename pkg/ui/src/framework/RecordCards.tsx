@@ -17,7 +17,8 @@
  * filtering model.
  */
 import { useMemo, useState, type ReactNode } from 'react'
-import { Card, Input, Text, XStack, YStack } from '@hanzo/gui'
+import { Input, Text, XStack, YStack } from '@hanzo/gui'
+import { Plate as Card } from '../backends/gui/plate'
 import { ChevronRight, Search } from '@hanzogui/lucide-icons-2'
 import { FieldDisplay, searchRecords, type FieldDefinition } from '@hanzo/data'
 import { useI18n, type Say } from '@hanzo/i18n/react'

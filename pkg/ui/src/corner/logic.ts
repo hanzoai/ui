@@ -42,9 +42,10 @@ export type Words = {
   system: string
   serif: string
   mono: string
-  /** The face Arabic is set in, and its two answers (`sans` names the other). */
+  /** The face Arabic is set in, and its answers besides `sans`, which the face list names. */
   arabic: string
   kufi: string
+  plex: string
   search: string
   back: string
   close: string
@@ -53,6 +54,7 @@ export type Words = {
 }
 
 export const WORDS: Words = {
+<<<<<<< HEAD
   open: phrase('Help and preferences'),
   help: phrase('Help'),
   preferences: phrase('Preferences'),
@@ -73,6 +75,30 @@ export const WORDS: Words = {
   back: phrase('Back'),
   close: phrase('Close'),
   none: phrase('No matches'),
+=======
+  open: 'Help and preferences',
+  help: 'Help',
+  preferences: 'Preferences',
+  theme: 'Theme',
+  auto: 'Auto',
+  light: 'Light',
+  dark: 'Dark',
+  language: 'Language',
+  currency: 'Currency',
+  font: 'Font',
+  sans: 'Sans',
+  system: 'System',
+  serif: 'Serif',
+  mono: 'Mono',
+  arabic: 'Arabic font',
+  kufi: 'Kufi',
+  plex: 'Plex',
+  search: 'Search',
+  back: 'Back',
+  close: 'Close',
+  none: 'No matches',
+  leaves: 'opens in a new tab',
+>>>>>>> main
 }
 
 /** Past this many options a list gets a search field. */

@@ -5,6 +5,10 @@
  * the ways past it (Upgrade, Add prepaid credit) and, where the host has one, a
  * quiet "See usage" to its usage settings. One line where it fits. Neutral
  * chrome; the dot is the one status colour.
+ *
+ * It is drawn, not announced: a live region speaks what changes inside it, not
+ * what it was mounted holding, and the banner mounts with its message. The host
+ * keeps one mounted region and puts the message there.
  */
 import type { ReactNode } from 'react'
 import { Text, View, XStack } from '@hanzo/gui'
@@ -27,6 +31,8 @@ export interface LimitedBannerProps {
   /** Opens the host's usage settings; draws "See usage" when given. */
   onUsage?: () => void
   onClose?: () => void
+  /** The quiet controls' words, in the reader's language: "See usage" and the close mark's "Dismiss". */
+  labels?: { usage?: string; dismiss?: string }
 }
 
 const go = (a: LimitAction) => {
@@ -49,7 +55,7 @@ export function LimitActions({
   const shown = onAction ? actions : actions.filter(navigable)
   if (!shown.length && !children) return null
   return (
-    <XStack gap="$2" shrink={0} flexWrap="wrap" items="center">
+    <XStack gap="$2" shrink={0} maxW="100%" flexWrap="wrap" items="center">
       {shown.map((a, i) => (
         <Button
           key={`${a.kind}:${a.url ?? a.model ?? i}`}
@@ -66,12 +72,14 @@ export function LimitActions({
   )
 }
 
+<<<<<<< HEAD
 export function LimitedBanner({ message, actions = [], onAction, onUsage, onClose }: LimitedBannerProps) {
   const { t } = useI18n()
+=======
+export function LimitedBanner({ message, actions = [], onAction, onUsage, onClose, labels }: LimitedBannerProps) {
+>>>>>>> main
   return (
     <XStack
-      role="status"
-      aria-live="polite"
       {...slot('limited-banner')}
       width="100%"
       items="center"
@@ -93,12 +101,20 @@ export function LimitedBanner({ message, actions = [], onAction, onUsage, onClos
       <LimitActions actions={actions} onAction={onAction}>
         {onUsage ? (
           <Button size="sm" variant="link" px="$1.5" data-kind="usage" onPress={onUsage}>
+<<<<<<< HEAD
             {t('See usage')}
+=======
+            {labels?.usage ?? 'See usage'}
+>>>>>>> main
           </Button>
         ) : null}
       </LimitActions>
       {onClose ? (
+<<<<<<< HEAD
         <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={t('Dismiss')} onPress={onClose}>
+=======
+        <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={labels?.dismiss ?? 'Dismiss'} onPress={onClose}>
+>>>>>>> main
           <X size={14} />
         </Button>
       ) : null}

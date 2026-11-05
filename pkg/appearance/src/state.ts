@@ -48,7 +48,7 @@ const isBrowser = () => typeof document !== 'undefined'
  * The Arabic companions design names, each as `--font-arabic-<name>` — the
  * values a person can choose besides `default`.
  */
-export const COMPANIONS = ['kufi', 'sans'] as const satisfies readonly Arabic[]
+export const COMPANIONS = ['kufi', 'sans', 'plex'] as const satisfies readonly Arabic[]
 
 /**
  * The companion the document draws Arabic in: `--font-arabic` against each

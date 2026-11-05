@@ -72,6 +72,9 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
 
   const node = React.useRef<HTMLTextAreaElement | null>(null)
   const [grown, setGrown] = React.useState<number | undefined>(undefined)
+  // At its ceiling the field scrolls; below it, the content always fits, so a
+  // host may hide the scrollbar while an eased height catches up.
+  const [capped, setCapped] = React.useState(false)
 
   // Both refs reach the same host: ours to measure it, and the caller's.
   const hold = React.useCallback(
@@ -95,6 +98,12 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
     el.style.height = "auto"
     const measured = el.scrollHeight
     el.style.height = held
+    // Read once more at the height it had, so the change that follows starts
+    // from it: a host that eases `height` then animates from the last line, not
+    // from `auto`, which cannot be eased.
+    void el.offsetHeight
+    const ceiling = parseFloat(getComputedStyle(el).maxHeight)
+    setCapped(Number.isFinite(ceiling) && measured > ceiling)
     setGrown((h) => (h === measured ? h : measured))
   }, [shown])
 
@@ -141,6 +150,7 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
       opacity={props.disabled ? 0.5 : 1}
       // A Field that states it is invalid says so to assistive tech as well.
       {...(invalid ? { "aria-invalid": true } : null)}
+      {...(capped ? { "data-capped": "" } : null)}
       {...(props as Record<string, unknown>)}
       // After the caller's props, so a passed `style` cannot silently disable
       // growth. A fixed height is asked for with `height`.

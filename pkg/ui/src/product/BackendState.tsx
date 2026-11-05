@@ -14,7 +14,8 @@
  * depending on one. Effects come from `useHost()`.
  */
 import type { ReactNode } from 'react'
-import { Button, Card, Text, XStack } from '@hanzo/gui'
+import { Button, Text, XStack } from '@hanzo/gui'
+import { Plate as Card } from '../backends/gui/plate'
 import { TriangleAlert, CreditCard } from '@hanzogui/lucide-icons-2'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
@@ -109,7 +110,7 @@ export function BackendStateCard({
   const { signIn, addCredits } = useHost()
   const { t } = useI18n()
   return (
-    <Card borderWidth={1} borderColor="$borderColor" p="$4" gap="$2" maxWidth={640}>
+    <Card borderWidth={1} borderColor="$borderColor" p="$4" gap="$2" maxW={640}>
       <XStack gap="$2" items="center">
         <TriangleAlert size={16} />
         <Text fontSize="$4" fontWeight="700">

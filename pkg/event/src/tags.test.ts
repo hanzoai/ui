@@ -151,8 +151,11 @@ describe('eu', () => {
     acceptAll()
     await tick()
     expect(consents().at(-1)).toEqual(['consent', 'update', { analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' }])
+    // fbevents had not arrived, so it is handed no revoke to undo: a revoke and a
+    // grant waiting in its queue together leave it revoked and the PageView unsent.
     const q = fbq()
-    expect(q.findIndex((a) => a[0] === 'consent' && a[1] === 'grant')).toBeGreaterThan(q.findIndex((a) => a[0] === 'init'))
+    expect(q.filter((a) => a[0] === 'consent')).toEqual([])
+    expect(q.findIndex((a) => a[0] === 'track' && a[1] === 'PageView')).toBeGreaterThan(q.findIndex((a) => a[0] === 'init'))
     expect(views()).toBe(1)
     expect(hosts(b)).toEqual(EVERY)
     expect(reload).not.toHaveBeenCalled()
@@ -593,6 +596,39 @@ describe('one event, every tag', () => {
     expect(ttq[0][2]).toEqual({ event_id: id })
     expect(twq[0][1]).toBe('tw-o1abc-buy')
     expect(lintrk[0]).toEqual(['track', { conversion_id: 9876 }])
+  })
+
+  it('the audience moments reach each platform by the names the table gives, a search naming what was asked', async () => {
+    browser('America/New_York', accepted())
+    const { startTags, track } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    const w = g.window as unknown as Record<string, unknown>
+    const gtag: unknown[][] = []
+    const fbq: unknown[][] = []
+    const ttq: unknown[][] = []
+    w.gtag = (...a: unknown[]) => gtag.push(a)
+    w.fbq = (...a: unknown[]) => fbq.push(a)
+    w.ttq = { track: (...a: unknown[]) => ttq.push(a) }
+    const stream = { capture: () => undefined } as never
+    track(stream, 'product_viewed', { content_type: 'model', items: [{ item_id: 'enso', item_name: 'Enso' }] })
+    track(stream, 'search_performed', { search_string: 'gpu pricing', from: 'palette' })
+    track(stream, 'cta_clicked', { cta: 'try_hanzo', page: '/' })
+    for (const name of ['newsletter_subscribed', 'beta_submitted', 'research_access_applied']) track(stream, name, {})
+    await tick()
+
+    expect(gtag.filter((a) => a[0] === 'event').map((a) => a[1])).toEqual([
+      'view_item', 'search', 'cta_click', 'generate_lead', 'generate_lead', 'generate_lead',
+    ])
+    expect(gtag.find((a) => a[1] === 'search')?.[2]).toMatchObject({ search_string: 'gpu pricing' })
+    expect(fbq.map((a) => [a[0], a[1]])).toEqual([
+      ['track', 'ViewContent'], ['track', 'Search'], ['trackCustom', 'CTAClicked'],
+      ['track', 'Lead'], ['track', 'Lead'], ['track', 'Lead'],
+    ])
+    expect(fbq[0][2]).toMatchObject({ content_ids: ['enso'], content_name: 'Enso' })
+    expect(fbq[1][2]).toMatchObject({ search_string: 'gpu pricing' })
+    expect(ttq.map((a) => a[0])).toEqual(['ViewContent', 'Search', 'ClickButton', 'SubmitForm', 'SubmitForm', 'SubmitForm'])
+    expect(ttq[1][1]).toMatchObject({ query: 'gpu pricing' })
   })
 
   it('a test order is debug traffic', async () => {
