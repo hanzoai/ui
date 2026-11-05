@@ -21,7 +21,7 @@ import { Gauge } from '@hanzogui/lucide-icons-2'
 import { Popover, PopoverAnchor, PopoverContent } from '../backends/gui'
 import { useDirection } from '../i18n/react'
 import { useI18n } from '@hanzo/i18n/react'
-import { RING } from './ring'
+import { RING } from './look'
 import { Choices, type Modes } from './Tune'
 
 /** How far the finger travels for one level, px. */
