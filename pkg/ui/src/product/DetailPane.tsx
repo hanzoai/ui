@@ -42,6 +42,7 @@
  * Escape closes a docked pane while focus is inside it (the overlay's
  * SlideOver already does); ⌘/Ctrl+Enter runs the page's `onExpand`.
  */
+import { Button as GuiButton, ScrollView, Text, XStack, YStack, useMedia } from '@hanzo/gui'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Button as GuiButton, ScrollView, Text, useMedia, XStack, YStack } from '@hanzo/gui'
 import { ChevronLeft, Maximize2, X } from '@hanzogui/lucide-icons-2'
@@ -54,7 +55,6 @@ import { Grip } from '../backends/gui/grip'
 import { slot } from '../backends/gui/slot'
 import { useSpan } from '../backends/gui/span'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../backends/gui/tooltip'
-import { useTranslate } from '../i18n/react'
 import { asColor, type IconLike } from './color'
 import { SlideOver } from './SlideOver'
 
@@ -237,23 +237,6 @@ function Dock({ open, title, store, onClose, onExpand, children }: { open: boole
       self="stretch"
       overflow="hidden"
       outlineWidth={0}
-<<<<<<< HEAD
-      onKeyDown={
-        ((e: { key?: string; defaultPrevented?: boolean; metaKey?: boolean; ctrlKey?: boolean; preventDefault?: () => void }) => {
-          if (e.key === 'Escape' && !e.defaultPrevented) {
-            e.preventDefault?.()
-            onClose()
-            return
-          }
-          expandKey(onExpand)(e)
-        }) as never
-      }
-      style={{
-        ...span.style,
-        width: open ? 'var(--span)' : 0,
-        transition: 'width var(--duration-base, 300ms) var(--ease-out, ease)',
-      }}
-=======
       onKeyDown={((e: { key?: string; defaultPrevented?: boolean; metaKey?: boolean; ctrlKey?: boolean; preventDefault?: () => void }) => {
         if (e.key === 'Escape' && !e.defaultPrevented) {
           e.preventDefault?.()
@@ -265,14 +248,10 @@ function Dock({ open, title, store, onClose, onExpand, children }: { open: boole
       width={open ? 'var(--span)' : 0}
       // `--span` as useSpan's props carry it, beside the width's own ease.
       $platform-web={{ '--span': `${span.span}px`, transition: 'width var(--duration-base, 300ms) var(--ease-out, ease)' } as object}
->>>>>>> origin/main
     >
       <YStack width="var(--span)" flex={1} minH={0} bg="$background" borderInlineStartWidth={1} borderColor="$borderColor">
         {children}
       </YStack>
-<<<<<<< HEAD
-      {open ? <Grip side="end" span={span.span} floor={PANE.min} ceil={PANE.max} reset={PANE.w} bar="edge" label="Resize side panel" onSpan={span.move} onKeep={span.keep} onShut={onClose} /> : null}
-=======
       {open ? (
         <Grip
           side="end"
@@ -287,7 +266,6 @@ function Dock({ open, title, store, onClose, onExpand, children }: { open: boole
           onShut={onClose}
         />
       ) : null}
->>>>>>> origin/i18n
     </YStack>
   )
 }
@@ -317,7 +295,7 @@ function RecordPage({ desc }: { desc: DetailDescriptor }) {
 
 /** The overlay sheet's own page, as it always was: the 56px header and the body. */
 function SheetPage({ desc, close }: { desc: DetailDescriptor; close: () => void }) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const Icon = desc.icon
   const pane = useContext(Ctx)
   const { t } = useI18n()
@@ -325,13 +303,9 @@ function SheetPage({ desc, close }: { desc: DetailDescriptor; close: () => void 
     <>
       {/* Bare-mode layout: fixed header · scroll body · optional sticky footer. */}
       <XStack items="center" gap="$2.5" px="$4" height={56} borderBottomWidth={1} borderColor="$borderColor">
-<<<<<<< HEAD
-        {pane && pane.depth > 1 ? <GuiButton size="$2" chromeless icon={<ChevronLeft {...mirror} size={18} />} onPress={pane.back} aria-label={tr('Back')} /> : null}
-=======
         {pane && pane.depth > 1 ? (
           <GuiButton size="$2" chromeless icon={<ChevronLeft {...mirror} size={18} />} onPress={pane.back} aria-label={t('Back')} />
         ) : null}
->>>>>>> origin/i18n
         {Icon ? <Icon size={18} color={desc.iconColor ? asColor(desc.iconColor) : undefined} /> : null}
         <YStack flex={1} minW={0}>
           <Text fontSize="$5" fontWeight="700" color="$color12" numberOfLines={1}>
@@ -343,11 +317,7 @@ function SheetPage({ desc, close }: { desc: DetailDescriptor; close: () => void 
             </Text>
           ) : null}
         </YStack>
-<<<<<<< HEAD
-        <GuiButton size="$2" chromeless icon={<X size={18} />} onPress={close} aria-label={tr('Close')} />
-=======
         <GuiButton size="$2" chromeless icon={<X size={18} />} onPress={close} aria-label={t('Close')} />
->>>>>>> origin/i18n
       </XStack>
 
       <ScrollView flex={1} minH={0}>

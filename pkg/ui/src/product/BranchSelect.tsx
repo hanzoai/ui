@@ -9,13 +9,8 @@ import { useCallback, type ReactNode } from 'react'
  * Like `RepoSelect` it knows no git host — the loader is the host's.
  */
 import { GitBranch } from '@hanzogui/lucide-icons-2'
-<<<<<<< HEAD
-=======
-import { useCallback, type ReactNode } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 
-import { useTranslate } from '../i18n/react'
 import { ChipSelect, type ChipPlacement } from './ChipSelect'
 import type { ChipItem, ChipPage } from './chipSelect.logic'
 
@@ -47,10 +42,6 @@ const item = (name: string): ChipItem => ({
   icon: <GitBranch size={12} color="$soft" />,
 })
 
-<<<<<<< HEAD
-export function BranchSelect({ value = null, onChange, load, footer, placement, disabled, open, onOpenChange }: BranchSelectProps) {
-  const tr = useTranslate()
-=======
 export function BranchSelect({
   value = null,
   onChange,
@@ -62,7 +53,6 @@ export function BranchSelect({
   onOpenChange,
 }: BranchSelectProps) {
   const { t } = useI18n()
->>>>>>> origin/i18n
   const pages = useCallback(
     async (q: string, after?: string | null): Promise<ChipPage<ChipItem>> => {
       const page = await load(q, after)
@@ -74,9 +64,6 @@ export function BranchSelect({
     [load]
   )
 
-<<<<<<< HEAD
-  return <ChipSelect<ChipItem> name="Branch" icon={<GitBranch size={12} color="$soft" />} label={value ?? 'Branch'} chosen={value ? item(value) : null} onChange={(i) => onChange(i.id)} load={pages} placeholder={tr('Search branches…')} empty="No branches match." footer={footer} placement={placement} disabled={disabled} open={open} onOpenChange={onOpenChange} />
-=======
   return (
     <ChipSelect<ChipItem>
       name={t('Branch')}
@@ -94,5 +81,4 @@ export function BranchSelect({
       onOpenChange={onOpenChange}
     />
   )
->>>>>>> origin/i18n
 }

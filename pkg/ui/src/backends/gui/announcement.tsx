@@ -13,20 +13,14 @@
  * live on native, and a second one per string would carry its own type scale
  * over the host's.
  */
+import { SizableText, XStack, styled } from '@hanzo/gui'
 import { useState, type ComponentProps, type ReactNode } from 'react'
 import { SizableText, styled, XStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
-<<<<<<< HEAD
-
-import { useTranslate } from '../../i18n/react'
-=======
 import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 import { touch } from './gesture'
->>>>>>> origin/i18n
 import { Button } from './button'
-import { touch } from './gesture'
-import { slot } from './slot'
 
 const CLOSE = 24
 
@@ -58,7 +52,7 @@ export type AnnouncementProps = Omit<ComponentProps<typeof AnnouncementFrame>, '
 }
 
 export function Announcement({ children, dismissible = true, onDismiss, ...props }: AnnouncementProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [visible, setVisible] = useState(true)
   const { t } = useI18n()
   if (!visible) return null
@@ -72,9 +66,6 @@ export function Announcement({ children, dismissible = true, onDismiss, ...props
     <AnnouncementFrame {...slot('announcement')} {...props}>
       <AnnouncementText {...slot('announcement-message')}>{children}</AnnouncementText>
       {dismissible ? (
-<<<<<<< HEAD
-        <Button {...slot('announcement-dismiss')} variant="ghost" size="icon" minH={CLOSE} minW={CLOSE} {...touch(CLOSE)} aria-label={tr('Dismiss')} onPress={dismiss}>
-=======
         <Button
           {...slot('announcement-dismiss')}
           variant="ghost"
@@ -85,7 +76,6 @@ export function Announcement({ children, dismissible = true, onDismiss, ...props
           aria-label={t('Dismiss')}
           onPress={dismiss}
         >
->>>>>>> origin/i18n
           <X size={16} />
         </Button>
       ) : null}

@@ -1,4 +1,3 @@
-import { useTranslate } from '../i18n/react'
 
 import { useI18n } from '@hanzo/i18n/react'
 
@@ -33,11 +32,7 @@ export function Donut({
   valueColor?: string
   labelColor?: string
 }) {
-<<<<<<< HEAD
-  const tr = useTranslate()
-=======
   const { t } = useI18n()
->>>>>>> origin/i18n
   const total = segments.reduce((n, s) => n + Math.max(0, s.value), 0)
   if (total <= 0) return null
 
@@ -58,11 +53,7 @@ export function Donut({
     })
 
   return (
-<<<<<<< HEAD
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={tr('Donut chart')}>
-=======
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={t('Donut chart')}>
->>>>>>> origin/i18n
       {/* track */}
       <circle cx={cx} cy={cy} r={r} fill="none" stroke={trackColor} strokeWidth={thickness} />
       {/* segments, drawn from 12 o'clock */}

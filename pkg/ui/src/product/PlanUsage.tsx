@@ -8,27 +8,15 @@
  */
 import { useState } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
-<<<<<<< HEAD
-
-=======
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 import { Anchor } from '../backends/gui'
 import { slot } from '../backends/gui/slot'
 import { Switch } from '../backends/gui/switch'
-import { useTranslate } from '../i18n/react'
 import { LimitActions, LimitedBanner } from './LimitedBanner'
 import { paidPlan, type LimitAction, type LimitNotice, type Limits } from './limits'
 import { UsageMeter } from './UsageMeter'
 
-<<<<<<< HEAD
-/** What a paid plan includes, and what happens past it. */
-export const PLAN_TERMS = ['Your plan includes usage of premium and Hanzo models each period.', 'Beyond it, prepaid credit pays when you choose to continue with credits.', 'Otherwise you continue in limited mode on free models.'] as const
-
-/** What the free plan includes. */
-export const FREE_TERMS = ['The free plan includes limited usage of free models.', 'Upgrade for premium and Hanzo models, or add credits to pay as you go.'] as const
-=======
 /** What a paid plan includes, and what happens past it. English, drawn through the host's `t`. */
 export const PLAN_TERMS = [
   phrase('Your plan includes usage of premium and Hanzo models each period.'),
@@ -41,7 +29,6 @@ export const FREE_TERMS = [
   phrase('The free plan includes limited usage of free models.'),
   phrase('Upgrade for premium and Hanzo models, or add credits to pay as you go.'),
 ] as const
->>>>>>> origin/i18n
 
 /** The opt-in, in one sentence. */
 export const CREDITS_TERMS = phrase("When your plan's included usage runs out, keep using any model and pay from your credits.")
@@ -80,10 +67,6 @@ export interface PlanUsageProps {
   now?: number
 }
 
-<<<<<<< HEAD
-function Credits({ on, onCredits, creditsHref, addCreditsHref }: { on: boolean; onCredits: (on: boolean) => Promise<void>; creditsHref?: string; addCreditsHref?: string }) {
-  const tr = useTranslate()
-=======
 function Credits({
   on,
   onCredits,
@@ -96,7 +79,6 @@ function Credits({
   addCreditsHref?: string
 }) {
   const { t } = useI18n()
->>>>>>> origin/i18n
   const [busy, setBusy] = useState(false)
   const [wrong, setWrong] = useState('')
   const flip = (next: boolean) => {
@@ -112,11 +94,7 @@ function Credits({
         <Text fontSize="$2" color="$ink" flex={1} minW={0}>
           {t(CREDITS_TERMS)}
         </Text>
-<<<<<<< HEAD
-        <Switch checked={on} disabled={busy} onCheckedChange={flip} aria-label={tr('Continue with credits')} />
-=======
         <Switch checked={on} disabled={busy} onCheckedChange={flip} aria-label={t('Continue with credits')} />
->>>>>>> origin/i18n
       </XStack>
       {creditsHref || addCreditsHref ? (
         <XStack gap="$4" flexWrap="wrap">

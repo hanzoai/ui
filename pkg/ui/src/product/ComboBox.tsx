@@ -25,7 +25,6 @@ import { Button as KitButton } from '../backends/gui/button'
 import { useDensity } from '../backends/gui/density'
 import { Input as KitInput } from '../backends/gui/input'
 import { InputGroup } from '../backends/gui/input-group'
-import { useTranslate } from '../i18n/react'
 import { filterOptions, type ComboOption } from './combobox/filter'
 import { useEmit } from './instrument'
 import { FloatingMenu } from './menu/FloatingMenu'
@@ -64,7 +63,7 @@ export function ComboBox({
   /** At most this many live options in the list; all of them when unset. */
   limit?: number
 }) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const { t } = useI18n()
   const rowRef = useRef<HTMLElement | null>(null)
@@ -100,11 +99,7 @@ export function ComboBox({
         <XStack ref={rowRef as never} minW={minWidth} data-slot="combo-box">
           <InputGroup
             end={
-<<<<<<< HEAD
-              <KitButton size="icon-2xs" variant="ghost" emphasis="subtle" disabled={disabled} aria-label={tr('Show options')} onPress={toggle}>
-=======
               <KitButton size="icon-2xs" variant="ghost" emphasis="subtle" disabled={disabled} aria-label={t('Show options')} onPress={toggle}>
->>>>>>> origin/i18n
                 <ChevronDown />
               </KitButton>
             }
@@ -123,23 +118,6 @@ export function ComboBox({
           </InputGroup>
         </XStack>
       ) : (
-<<<<<<< HEAD
-        <XStack ref={rowRef as never} items="center" gap="$2" minW={minWidth}>
-          <Input
-            flex={1}
-            value={value}
-            onChangeText={(v: string) => {
-              onChange(v)
-              if (!open) setOpen(true)
-            }}
-            onFocus={() => setOpen(true)}
-            disabled={disabled}
-            placeholder={placeholder}
-            autoCapitalize="none"
-          />
-          <Button size="$2" chromeless disabled={disabled} icon={<ChevronDown size={16} opacity={0.7} />} onPress={toggle} aria-label={tr('Show options')} />
-        </XStack>
-=======
       <XStack ref={rowRef as never} items="center" gap="$2" minW={minWidth}>
         <Input
           flex={1}
@@ -162,7 +140,6 @@ export function ComboBox({
           aria-label={t('Show options')}
         />
       </XStack>
->>>>>>> origin/i18n
       )}
 
       <FloatingMenu open={open} onClose={() => setOpen(false)} anchorRect={anchorRect} anchorEl={anchorEl} autoFocus={false} minWidth={minWidth} maxHeight={300}>
@@ -178,13 +155,9 @@ export function ComboBox({
             <Text fontSize="$2" color="$soft" flex={1} numberOfLines={2}>
               {error}
             </Text>
-<<<<<<< HEAD
-            {onRetry ? <Button size="$1" chromeless icon={<RefreshCw size={12} />} onPress={onRetry} aria-label={tr('Retry')} /> : null}
-=======
             {onRetry ? (
               <Button size="$1" chromeless icon={<RefreshCw size={12} />} onPress={onRetry} aria-label={t('Retry')} />
             ) : null}
->>>>>>> origin/i18n
           </XStack>
         ) : filtered.length === 0 ? (
           <Text fontSize="$2" color="$soft" px="$2" py="$2">

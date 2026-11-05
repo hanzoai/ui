@@ -1,5 +1,8 @@
 'use client'
 
+import { SizableText } from '../backends/gui/layout'
+import { ApiError, API, call } from './api'
+import { Anchor, Heading, Paragraph, XStack, YStack } from '../backends/gui/layout'
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { readConsent, renderConsent } from '@hanzo/event'
 import { phrase } from '@hanzo/i18n'
@@ -14,7 +17,6 @@ import { Field, FieldError, FieldLabel } from '../backends/gui/field'
 import { Input } from '../backends/gui/input'
 import { Anchor, Heading, Paragraph, SizableText, XStack, YStack } from '../backends/gui/layout'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../backends/gui/select'
-import { useTranslate } from '../i18n/react'
 import { API, ApiError, call } from './api'
 import { keyFor, purchase, settle, uncharged } from './attempt'
 import { useCatalog } from './catalog'
@@ -68,30 +70,7 @@ interface Catalog {
 }
 
 const COUNTRIES: [string, string][] = [
-<<<<<<< HEAD
-  ['US', 'United States'],
-  ['CA', 'Canada'],
-  ['GB', 'United Kingdom'],
-  ['AU', 'Australia'],
-  ['DE', 'Germany'],
-  ['FR', 'France'],
-  ['ES', 'Spain'],
-  ['IT', 'Italy'],
-  ['NL', 'Netherlands'],
-  ['SE', 'Sweden'],
-  ['IE', 'Ireland'],
-  ['CH', 'Switzerland'],
-  ['JP', 'Japan'],
-  ['SG', 'Singapore'],
-  ['IN', 'India'],
-  ['BR', 'Brazil'],
-  ['MX', 'Mexico'],
-  ['NZ', 'New Zealand'],
-  ['ZA', 'South Africa'],
-  ['AE', 'United Arab Emirates'],
-=======
   ['US', phrase('United States')], ['CA', phrase('Canada')], ['GB', phrase('United Kingdom')], ['AU', phrase('Australia')], ['DE', phrase('Germany')], ['FR', phrase('France')], ['ES', phrase('Spain')], ['IT', phrase('Italy')], ['NL', phrase('Netherlands')], ['SE', phrase('Sweden')], ['IE', phrase('Ireland')], ['CH', phrase('Switzerland')], ['JP', phrase('Japan')], ['SG', phrase('Singapore')], ['IN', phrase('India')], ['BR', phrase('Brazil')], ['MX', phrase('Mexico')], ['NZ', phrase('New Zealand')], ['ZA', phrase('South Africa')], ['AE', phrase('United Arab Emirates')],
->>>>>>> origin/i18n
 ]
 
 const renews = (interval: Interval): string => {
@@ -114,11 +93,7 @@ export function Checkout(props: CheckoutProps) {
 }
 
 function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, seats = 1, interval, setInterval, setPlan, track, termsPath = '/terms', back, onPaid }: CheckoutProps) {
-<<<<<<< HEAD
-  const tr = useTranslate()
-=======
   const { t } = useI18n()
->>>>>>> origin/i18n
   const o = offer(plan)
   const l = useMemo(() => lines(plan, interval, seats), [plan, interval, seats])
   const activeOrg = org || currentOrg() || undefined
@@ -373,17 +348,8 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
                     key={tier}
                     selected={plan === tier}
                     onSelect={() => {
-<<<<<<< HEAD
-                      track?.('plan_changed', {
-                        from: plan,
-                        to: t,
-                        field: 'plan',
-                      })
-                      setPlan(t)
-=======
                       track?.('plan_changed', { from: plan, to: tier, field: 'plan' })
                       setPlan(tier)
->>>>>>> origin/i18n
                     }}
                     flex={1}
                     flexBasis={200}
@@ -431,11 +397,7 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
           <Field gap="$2">
             <FieldLabel htmlFor="hanzo-bill-country">{t('Country or region')}</FieldLabel>
             <Select value={form.country} onValueChange={(v: string) => setForm((f) => ({ ...f, country: v }))}>
-<<<<<<< HEAD
-              <SelectTrigger id="hanzo-bill-country" aria-label={tr('Country or region')}>
-=======
               <SelectTrigger id="hanzo-bill-country" aria-label={t('Country or region')}>
->>>>>>> origin/i18n
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -459,11 +421,7 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
           <Heading render="h2" size="$4" fontWeight="600" color="$ink" mt="$4" m={0}>
             {t('Payment method')}
           </Heading>
-<<<<<<< HEAD
-          <YStack id="hanzo-square" aria-label={tr('Card details')} minH={90} />
-=======
           <YStack id="hanzo-square" aria-label={t('Card details')} minH={90} />
->>>>>>> origin/i18n
           {!ready && !wrong ? (
             <Paragraph size="$1" color="$quiet" m={0}>
               {t('Loading the card form…')}
@@ -494,11 +452,7 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
               ].join(' ')}
             </Paragraph>
             <XStack items="flex-start" gap="$3">
-<<<<<<< HEAD
-              <Checkbox id="hanzo-consent" checked={agree} onCheckedChange={(v: boolean | 'indeterminate') => setAgree(v === true)} mt="$1" aria-label={tr('Agree to recurring charges')} />
-=======
               <Checkbox id="hanzo-consent" checked={agree} onCheckedChange={(v: boolean | 'indeterminate') => setAgree(v === true)} mt="$1" aria-label={t('Agree to recurring charges')} />
->>>>>>> origin/i18n
               <Paragraph render="label" htmlFor="hanzo-consent" size="$2" color="$ink" flex={1} m={0}>
                 {annual
                   ? t('You agree that {site} will charge your card in the amount above now and on a recurring yearly basis until you cancel in accordance with our {terms}.', { site, terms })
@@ -506,11 +460,6 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
                 {` ${t('You can cancel at any time in your account settings.')}`}
               </Paragraph>
             </XStack>
-<<<<<<< HEAD
-            {wrong ? <FieldError>{wrong}</FieldError> : null}
-            <Primary type="button" disabled={!ready || busy} onClick={() => void submit()} onPress={() => void submit()}>
-              {busy ? 'One moment…' : 'Subscribe'}
-=======
             {wrong ? <FieldError>{t(wrong)}</FieldError> : null}
             <Primary
               type="button"
@@ -519,7 +468,6 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, token: propToken, plan, 
               onPress={() => void submit()}
             >
               {busy ? t('One moment…') : t('Subscribe')}
->>>>>>> origin/i18n
             </Primary>
           </Panel>
         </YStack>

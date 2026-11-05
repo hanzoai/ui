@@ -24,13 +24,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { XStack } from '@hanzo/gui'
 import { Minus, Plus } from '@hanzogui/lucide-icons-2'
-<<<<<<< HEAD
-
-import { useLocale, useTranslate } from '../../i18n/react'
-=======
-import { useCallback, useMemo, useRef, useState } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 import { Button, type ButtonSize } from './button'
 import type { FieldSize } from './control'
 import { fieldSize, useDensity } from './density'
@@ -113,12 +107,6 @@ const BESIDE: Record<FieldSize, ButtonSize> = {
   xs: 'icon-xs',
 }
 
-<<<<<<< HEAD
-export function NumberField({ value, defaultValue = null, onValueChange, min, max, step = 1, smallStep = 0.1, largeStep = 10, format, locale, allowOutOfRange = false, readOnly = false, required, disabled, buttons = false, decrementLabel = 'Decrease', incrementLabel = 'Increase', size, onFocus, onBlur, ...props }: NumberFieldProps) {
-  const tr = useTranslate()
-  const { active, locale: treeLocale } = useLocale()
-  const resolved = locale ?? (active ? treeLocale : undefined)
-=======
 export function NumberField({
   value,
   defaultValue = null,
@@ -143,7 +131,6 @@ export function NumberField({
   ...props
 }: NumberFieldProps) {
   const { t } = useI18n()
->>>>>>> origin/i18n
   const density = useDensity()
   const box = fieldSize(size, density)
   const controlled = value !== undefined
@@ -249,11 +236,7 @@ export function NumberField({
         {...slot('number-field-decrement')}
         variant="outline"
         size={beside}
-<<<<<<< HEAD
-        aria-label={tr(decrementLabel)}
-=======
         aria-label={decrementLabel ?? t('Decrease')}
->>>>>>> origin/i18n
         // The keyboard belongs to the field; the buttons are for a pointer.
         tabIndex={-1}
         disabled={disabled || (!allowOutOfRange && atMin)}
@@ -272,11 +255,7 @@ export function NumberField({
         {...slot('number-field-increment')}
         variant="outline"
         size={beside}
-<<<<<<< HEAD
-        aria-label={tr(incrementLabel)}
-=======
         aria-label={incrementLabel ?? t('Increase')}
->>>>>>> origin/i18n
         tabIndex={-1}
         disabled={disabled || (!allowOutOfRange && atMax)}
         {...(readOnly

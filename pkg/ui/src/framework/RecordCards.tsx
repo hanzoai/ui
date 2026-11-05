@@ -16,22 +16,14 @@
  * behaves identically in both, and search is the pure `searchRecords` — no second
  * filtering model.
  */
-import { useMemo, useState, type ReactNode } from 'react'
-<<<<<<< HEAD
 import { FieldDisplay, searchRecords, type FieldDefinition } from '@hanzo/data'
-<<<<<<< HEAD
-import { Card, Input, Text, XStack, YStack } from '@hanzo/gui'
-=======
+import { useMemo, useState, type ReactNode } from 'react'
 import { Input, Text, XStack, YStack } from '@hanzo/gui'
 import { Plate as Card } from '../backends/gui/plate'
->>>>>>> origin/main
 import { ChevronRight, Search } from '@hanzogui/lucide-icons-2'
-=======
 import { useI18n, type Say } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 
 import { mirror } from '../backends/gui/dir'
-import { useTranslate } from '../i18n/react'
 import { Action, Loading, Meta, WRAP_ANYWHERE } from './parts'
 
 export interface RecordCardsProps {
@@ -60,10 +52,6 @@ function headline(record: Record<string, unknown>, t: Say, titleField?: string):
   return typeof name === 'string' && name ? name : t('Untitled')
 }
 
-<<<<<<< HEAD
-export function RecordCards({ titleField, fields, cardFields, records, loading, empty, onOpen, onCreate, createLabel = 'New record', toolbarExtra }: RecordCardsProps) {
-  const tr = useTranslate()
-=======
 export function RecordCards({
   titleField,
   fields,
@@ -77,7 +65,6 @@ export function RecordCards({
   toolbarExtra,
 }: RecordCardsProps) {
   const { t } = useI18n()
->>>>>>> origin/i18n
   const [query, setQuery] = useState('')
   const visible = useMemo(() => searchRecords(records, query, fields), [records, query, fields])
 
@@ -88,9 +75,6 @@ export function RecordCards({
       <YStack gap="$2" width="100%">
         <XStack items="center" gap="$2" px="$3" minH={44} rounded="$3" borderWidth={1} borderColor="$borderColor" width="100%">
           <Search size={15} opacity={0.6} />
-<<<<<<< HEAD
-          <Input unstyled flex={1} minW={0} height={42} fontSize="$3" color="$color12" placeholder={tr('Search')} value={query} onChangeText={setQuery} autoCapitalize="none" />
-=======
           <Input
             unstyled
             flex={1}
@@ -103,7 +87,6 @@ export function RecordCards({
             onChangeText={setQuery}
             autoCapitalize="none"
           />
->>>>>>> origin/i18n
         </XStack>
         <XStack gap="$2" items="center" flexWrap="wrap" width="100%">
           {onCreate ? (
@@ -120,11 +103,7 @@ export function RecordCards({
       {!loading && visible.length === 0 ? (
         <Card borderWidth={1} borderColor="$borderColor" p="$4" width="100%">
           <Text fontSize="$3" color="$color10">
-<<<<<<< HEAD
-            {query ? `No records match “${query}”.` : (empty ?? 'No records yet.')}
-=======
             {query ? t('No records match “{query}”.', { query }) : empty ?? t('No records yet.')}
->>>>>>> origin/i18n
           </Text>
         </Card>
       ) : null}
@@ -162,14 +141,9 @@ export function RecordCards({
 
       {visible.length ? (
         <Meta>
-<<<<<<< HEAD
-          {visible.length} of {records.length} record
-          {records.length === 1 ? '' : 's'}
-=======
           {records.length === 1
             ? t('{shown} of {total} record', { shown: visible.length, total: records.length })
             : t('{shown} of {total} records', { shown: visible.length, total: records.length })}
->>>>>>> origin/i18n
         </Meta>
       ) : null}
     </YStack>

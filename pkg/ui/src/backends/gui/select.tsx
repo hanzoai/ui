@@ -36,6 +36,23 @@ import {
   type TextProps,
 } from "@hanzo/gui"
 import { Check, ChevronDown, ChevronUp } from "@hanzogui/lucide-icons-2"
+  Children,
+  cloneElement,
+  createContext,
+  forwardRef,
+  isValidElement,
+  useContext,
+  useState,
+  type ComponentProps,
+  type ReactNode,
+} from "react"
+  Select as GuiSelect,
+  SelectSeparator as GuiSelectSeparator,
+  Text,
+  XStack,
+  type TextProps,
+} from "@hanzo/gui"
+import { Check, ChevronDown, ChevronUp } from "@hanzogui/lucide-icons-2"
 
 import { BOX, EDGE, FIELD, FILL, type FieldSize } from "./control"
 import { Density, fieldSize, useDensity } from "./density"
@@ -406,20 +423,7 @@ const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(functi
       cursor="pointer"
       {...props}
     >
-<<<<<<< HEAD
-      {placeholder === undefined ? (
-        children
-      ) : (
-        <>
-          <option value="" disabled>
-            {placeholder}
-          </option>
-          {Children.map(children, inked(color))}
-        </>
-      )}
-=======
       {inked(children)}
->>>>>>> origin/i18n
     </Text>
   )
 })

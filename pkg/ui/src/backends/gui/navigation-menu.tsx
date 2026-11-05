@@ -12,17 +12,12 @@
  * backdrop from the same events — so they are chained, never replaced.
  */
 import * as React from 'react'
-<<<<<<< HEAD
-import { styled, Text, XStack } from '@hanzo/gui'
-=======
 
 import { Text, XStack, styled } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 
 import { Box, type BoxProps } from '../../box'
 import { cn } from '../../core/cn'
-import { useTranslate } from '../../i18n/react'
 
 type ItemContext = {
   open: boolean
@@ -43,10 +38,6 @@ const both =
   }
 
 export const NavigationMenu = ({ className, ...props }: React.ComponentProps<typeof Box>) => {
-<<<<<<< HEAD
-  const tr = useTranslate()
-  return <Box tag="nav" aria-label={tr('Main')} className={cn('relative grid justify-center', className)} {...props} />
-=======
   const { t } = useI18n()
   return (
     <Box
@@ -56,7 +47,6 @@ export const NavigationMenu = ({ className, ...props }: React.ComponentProps<typ
       {...props}
     />
   )
->>>>>>> origin/i18n
 }
 
 export const NavigationMenuList = ({ className, ...props }: React.ComponentProps<typeof Box>) => <Box tag="ul" className={cn('grid grid-flow-col auto-cols-max items-center gap-1', className)} {...props} />

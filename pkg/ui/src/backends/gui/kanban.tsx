@@ -1,5 +1,7 @@
 'use client'
 
+import { sx } from '../../sx'
+import { SizableText, XStack, YStack, isWeb, styled } from '@hanzo/gui'
 import * as React from 'react'
 /**
  * Kanban — a board of columns holding draggable cards, with search, column
@@ -14,15 +16,8 @@ import * as React from 'react'
  */
 import { isWeb, SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { Calendar, MoreHorizontal, Plus, Search, User, X } from '@hanzogui/lucide-icons-2'
-<<<<<<< HEAD
-
-import { useTranslate } from '../../i18n/react'
-import { sx } from '../../sx'
-=======
-import * as React from 'react'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 import { Badge } from './badge'
 import { Button } from './button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './dialog'
@@ -155,10 +150,6 @@ const CardFrame = styled(YStack, {
   } as const,
 })
 
-<<<<<<< HEAD
-function KanbanCardView({ card, drag, onDragStart, onDragEnd, onDropBefore, onEdit, onDelete }: { card: KanbanCard; drag: Drag | null; onDragStart: (e: React.DragEvent) => void; onDragEnd: () => void; onDropBefore: (e: React.DragEvent) => void; onEdit: () => void; onDelete: () => void }) {
-  const tr = useTranslate()
-=======
 function KanbanCardView({
   card,
   drag,
@@ -177,7 +168,6 @@ function KanbanCardView({
   onDelete: () => void
 }) {
   const { t } = useI18n()
->>>>>>> origin/i18n
   return (
     <CardFrame
       {...slot('kanban-card')}
@@ -205,24 +195,13 @@ function KanbanCardView({
         })}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-<<<<<<< HEAD
-            <Button {...slot('kanban-card-menu')} variant="ghost" size="icon-sm" aria-label={tr('Card actions')}>
-=======
             <Button {...slot('kanban-card-menu')} variant="ghost" size="icon-sm" aria-label={t('Card actions')}>
->>>>>>> origin/i18n
               <MoreHorizontal size={14} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-<<<<<<< HEAD
-            <DropdownMenuItem onSelect={onEdit}>Edit</DropdownMenuItem>
-            <DropdownMenuItem variant="destructive" onSelect={onDelete}>
-              Delete
-            </DropdownMenuItem>
-=======
             <DropdownMenuItem onSelect={onEdit}>{t('Edit')}</DropdownMenuItem>
             <DropdownMenuItem variant="destructive" onSelect={onDelete}>{t('Delete')}</DropdownMenuItem>
->>>>>>> origin/i18n
           </DropdownMenuContent>
         </DropdownMenu>
       </XStack>
@@ -247,20 +226,8 @@ function KanbanCardView({
       <XStack justify="space-between" items="center">
         <XStack gap="$2" items="center">
           {card.priority ? (
-<<<<<<< HEAD
-            <Badge
-              {...slot('kanban-card-priority')}
-              variant="outline"
-              style={{
-                borderColor: PRIORITY_COLOR[card.priority],
-                color: PRIORITY_COLOR[card.priority],
-              }}
-            >
-              {card.priority}
-=======
             <Badge {...slot('kanban-card-priority')} variant="outline" style={{ borderColor: PRIORITY_COLOR[card.priority], color: PRIORITY_COLOR[card.priority] }}>
               {t(PRIORITY_WORD[card.priority])}
->>>>>>> origin/i18n
             </Badge>
           ) : null}
           {card.assignee ? (
@@ -310,9 +277,6 @@ function KanbanColumnView({ column, drag, onDragStart, onDragEnd, onDropOn, onAd
           })}
           <Badge variant="secondary">{column.limit != null ? `${column.cards.length}/${column.limit}` : column.cards.length}</Badge>
         </XStack>
-<<<<<<< HEAD
-        <Button {...slot('kanban-add-card')} variant="ghost" size="icon-sm" aria-label={`Add card to ${column.title}`} disabled={full} onPress={onAddCard}>
-=======
         <Button
           {...slot('kanban-add-card')}
           variant="ghost"
@@ -321,7 +285,6 @@ function KanbanColumnView({ column, drag, onDragStart, onDragEnd, onDropOn, onAd
           disabled={full}
           onPress={onAddCard}
         >
->>>>>>> origin/i18n
           <Plus size={14} />
         </Button>
       </XStack>
@@ -336,7 +299,7 @@ function KanbanColumnView({ column, drag, onDragStart, onDragEnd, onDropOn, onAd
 }
 
 function KanbanCardDialog({ open, onOpenChange, card, labels, onSave }: { open: boolean; onOpenChange: (open: boolean) => void; card?: KanbanCard; labels: KanbanLabel[]; onSave: (data: Partial<KanbanCard>) => void }) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [title, setTitle] = React.useState(card?.title ?? '')
   const [description, setDescription] = React.useState(card?.description ?? '')
   const [priority, setPriority] = React.useState<KanbanPriority>(card?.priority ?? 'low')
@@ -370,15 +333,10 @@ function KanbanCardDialog({ open, onOpenChange, card, labels, onSave }: { open: 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent {...slot('kanban-card-dialog')}>
         <DialogHeader>
-<<<<<<< HEAD
-          <DialogTitle>{card ? 'Edit Card' : 'Create Card'}</DialogTitle>
-          <DialogDescription>{card ? 'Update the card details below.' : 'Create a new card for your kanban board.'}</DialogDescription>
-=======
           <DialogTitle>{card ? t('Edit Card') : t('Create Card')}</DialogTitle>
           <DialogDescription>
             {card ? t('Update the card details below.') : t('Create a new card for your kanban board.')}
           </DialogDescription>
->>>>>>> origin/i18n
         </DialogHeader>
 
         <form onSubmit={submit}>
@@ -407,13 +365,8 @@ function KanbanCardDialog({ open, onOpenChange, card, labels, onSave }: { open: 
                 </Select>
               </YStack>
               <YStack gap="$1" flex={1}>
-<<<<<<< HEAD
-                <Label htmlFor="kanban-assignee">Assignee</Label>
-                <Input id="kanban-assignee" value={assignee} onChangeText={setAssignee} placeholder={tr('Assign to...')} />
-=======
                 <Label htmlFor="kanban-assignee">{t('Assignee')}</Label>
                 <Input id="kanban-assignee" value={assignee} onChangeText={setAssignee} placeholder={t('Assign to...')} />
->>>>>>> origin/i18n
               </YStack>
             </XStack>
             <YStack gap="$1">
@@ -441,7 +394,7 @@ export type KanbanBoardProps = {
 }
 
 export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [query, setQuery] = React.useState('')
   const [drag, setDrag] = React.useState<Drag | null>(null)
   const { t } = useI18n()
@@ -535,11 +488,6 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
           <XStack position="absolute" insetInlineStart="$2" pointerEvents="none">
             <Search size={14} color="$quiet" />
           </XStack>
-<<<<<<< HEAD
-          <Input {...slot('kanban-search')} placeholder={tr('Search cards...')} value={query} onChangeText={setQuery} paddingInlineStart="$7" />
-          {query ? (
-            <XStack position="absolute" insetInlineEnd="$2" cursor="pointer" onPress={() => setQuery('')} aria-label={tr('Clear search')}>
-=======
           <Input
             {...slot('kanban-search')}
             placeholder={t('Search cards...')}
@@ -549,7 +497,6 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
           />
           {query ? (
             <XStack position="absolute" insetInlineEnd="$2" cursor="pointer" onPress={() => setQuery('')} aria-label={t('Clear search')}>
->>>>>>> origin/i18n
               <X size={14} />
             </XStack>
           ) : null}

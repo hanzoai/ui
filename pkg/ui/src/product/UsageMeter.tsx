@@ -5,6 +5,7 @@
  * in its state's colour, and when it resets. Shares only; no amount or count is
  * ever drawn. A class with a short window carries it as a second, slimmer bar.
  */
+import { CLASSES, CLASS_LABEL, when, type ClassLimit, type LimitClass, type LimitState, type LimitWindow, type Limits } from './limits'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'

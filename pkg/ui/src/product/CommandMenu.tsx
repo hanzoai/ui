@@ -42,7 +42,6 @@ import { mirror } from '../backends/gui/dir'
 import { Kbd } from '../backends/gui/kbd'
 import { Shortcut, type ShortcutKeys } from '../backends/gui/shortcut'
 import { slot } from '../backends/gui/slot'
-import { useTranslate } from '../i18n/react'
 import { usePane } from './DetailPane'
 
 export type CommandMenuItem = {
@@ -108,10 +107,6 @@ type Key = {
   stopPropagation: () => void
 }
 
-<<<<<<< HEAD
-export function CommandMenu({ groups, placeholder = 'Search or jump to…', empty = 'No results found', label = 'Commands', query: controlled, onQueryChange, onBack, onClose, autoFocus = true }: CommandMenuProps) {
-  const tr = useTranslate()
-=======
 export function CommandMenu({
   groups,
   placeholder: hint,
@@ -127,7 +122,6 @@ export function CommandMenu({
   const placeholder = hint ?? t('Search or jump to…')
   const empty = none ?? t('No results found')
   const label = named ?? t('Commands')
->>>>>>> origin/i18n
   const pane = usePane()
   const base = useId()
   const [own, setOwn] = useState('')
@@ -239,11 +233,7 @@ export function CommandMenu({
           onKeyDown={onKey as never}
         />
         {close ? (
-<<<<<<< HEAD
-          <XStack render="button" aria-label={tr('Close')} onPress={close} shrink={0} items="center" justify="center" cursor="pointer" opacity={0.7} hoverStyle={{ opacity: 1 }}>
-=======
           <XStack render="button" aria-label={t('Close')} onPress={close} shrink={0} items="center" justify="center" cursor="pointer" opacity={0.7} hoverStyle={{ opacity: 1 }}>
->>>>>>> origin/i18n
             {/* A phone has no Escape key: it says Cancel. */}
             <XStack $max-md={{ display: 'none' }}>
               <Kbd>esc</Kbd>

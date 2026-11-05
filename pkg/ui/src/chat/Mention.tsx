@@ -8,8 +8,8 @@
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 
-import { useTranslate } from '../i18n/react'
 import type { Shelf } from './Plus'
+import { useI18n } from '@hanzo/i18n/react'
 
 /** The `/` or `@` the caret ends on, and the words typed after it. */
 export function trigger(value: string): { char: '/' | '@'; query: string; at: number } | null {
@@ -25,15 +25,9 @@ export function trigger(value: string): { char: '/' | '@'; query: string; at: nu
 
 /** The list a mark opens, above the frame. */
 export function Mention({ shelf, rows, index, onPick, skills }: { shelf: Shelf; rows: Shelf['rows']; index: number; onPick: (id: string) => void; skills: boolean }) {
-  const t = useTranslate()
+  const { t } = useI18n()
   const tag = t(skills ? 'Skill' : 'Plugin')
   return (
-<<<<<<< HEAD
-    <YStack role={'listbox' as never} aria-label={t(skills ? 'Skills' : 'Plugins')} data-slot="mention" width="100%" maxH={240} overflowY="auto" overflowX="hidden" p={6} rounded={12} borderWidth={1} borderColor="$borderColor" bg="$background" $max-sm={{ rounded: 22 }}>
-      {rows.length ? (
-        rows.map((r, i) => (
-          <XStack key={r.id} role="option" aria-selected={i === index} onPress={() => onPick(r.id)} items="center" gap={10} px={8} height={36} rounded={8} bg={i === index ? '$hover' : 'transparent'} hoverStyle={{ bg: '$hover' }} cursor="pointer" $max-sm={{ height: 46 }}>
-=======
     <YStack
       role={'listbox' as never}
       aria-label={t(skills ? 'Skills' : 'Plugins')}
@@ -74,7 +68,6 @@ export function Mention({ shelf, rows, index, onPick, skills }: { shelf: Shelf; 
             cursor="pointer"
             $max-sm={{ minH: 46 }}
           >
->>>>>>> origin/main
             {r.icon ? (
               <XStack width={16} items="center" justify="center" shrink={0} aria-hidden>
                 {r.icon}

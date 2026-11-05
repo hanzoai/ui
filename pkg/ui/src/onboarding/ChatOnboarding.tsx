@@ -10,7 +10,6 @@ import { Input } from '../backends/gui/input'
 import { Anchor, Paragraph, XStack, YStack } from '../backends/gui/layout'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../backends/gui/select'
 import { Switch } from '../backends/gui/switch'
-import { useTranslate } from '../i18n/react'
 import { API } from './api'
 import { Page, Panel } from './frame'
 import { useSession, type Track } from './hooks'
@@ -62,11 +61,7 @@ const ICONS: Record<Glyph, ComponentType<{ size?: number }>> = {
 }
 
 export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, privacyPath = '/settings/privacy', safeguards = false }: ChatOnboardingProps) {
-<<<<<<< HEAD
-  const tr = useTranslate()
-=======
   const { t } = useI18n()
->>>>>>> origin/i18n
   const session = useSession(api)
   const [role, setRole] = useState('')
   const [name, setName] = useState('')
@@ -100,14 +95,9 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
               {` ${t('Automated safeguards protect your chats from violent, abusive, or deceptive content.')}`}
             </Row>
           ) : null}
-<<<<<<< HEAD
-          <Row icon={<Switch checked={train} onCheckedChange={setTrain} aria-label={tr('Help improve our AI models')} />}>
-            <b>Help improve our AI models:</b> Allow the use of your chats and coding sessions to train and improve Zen models. Change anytime in privacy settings.{' '}
-=======
           <Row icon={<Switch checked={train} onCheckedChange={setTrain} aria-label={t('Help improve our AI models')} />}>
             <b>{t('Help improve our AI models:')}</b>
             {` ${t('Allow the use of your chats and coding sessions to train and improve Zen models.')} ${t('Change anytime in privacy settings.')} `}
->>>>>>> origin/i18n
             <Anchor href={privacyPath} color="$ink" textDecorationLine="underline">
               {t('Learn more')}
             </Anchor>
@@ -145,11 +135,7 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
       <Page site={site} title={t('What’s your name?')} lede={t('So {site} knows what to call you.', { site })} center>
         <YStack render={<form onSubmit={submit} noValidate />} gap="$4" items="stretch">
           <Field gap="$2">
-<<<<<<< HEAD
-            <Input name="name" autoComplete="name" aria-label={tr('Your name')} value={name} onChangeText={setName} placeholder={tr('Your name')} height={48} autoFocus />
-=======
             <Input name="name" autoComplete="name" aria-label={t('Your name')} value={name} onChangeText={setName} placeholder={t('Your name')} height={48} autoFocus />
->>>>>>> origin/i18n
           </Field>
           <Primary type="submit" disabled={!name.trim() || busy}>
             {t('Continue')}
@@ -179,13 +165,8 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
           track?.('role_selected', { role: v })
         }}
       >
-<<<<<<< HEAD
-        <SelectTrigger aria-label={tr('Your role')} height={48}>
-          <SelectValue placeholder={ROLES_PLACEHOLDER} />
-=======
         <SelectTrigger aria-label={t('Your role')} height={48}>
           <SelectValue placeholder={t(ROLES_PLACEHOLDER)} />
->>>>>>> origin/i18n
         </SelectTrigger>
         <SelectContent>
           {ROLES.map((r) => (
@@ -211,16 +192,8 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
                 justify="flex-start"
                 gap="$4"
                 onClick={() => {
-<<<<<<< HEAD
-                  track?.('starter_prompt_used', {
-                    role: chosen.role,
-                    prompt: p.label,
-                  })
-                  void pick(p.prompt)
-=======
                   track?.('starter_prompt_used', { role: chosen.role, prompt: p.label })
                   void pick(t(p.prompt))
->>>>>>> origin/i18n
                 }}
               >
                 <Icon size={20} />

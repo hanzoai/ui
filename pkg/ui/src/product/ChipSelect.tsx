@@ -42,7 +42,6 @@ import { useI18n } from '@hanzo/i18n/react'
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui/popover'
 import { RING } from '../backends/gui/press'
 import { slot, tip } from '../backends/gui/slot'
-import {
   frame,
   merge,
   move,
@@ -276,14 +275,9 @@ export function ChipSelect<T extends ChipItem>({
   onOpenChange,
 }: ChipSelectProps<T>) {
   const bare = !label
-<<<<<<< HEAD
-  const row = useContext(Pills)
-  const pill = row !== null && !bare && !quiet
-=======
   const { t } = useI18n()
   const placeholder = hint ?? t('Search…')
   const empty = none ?? t('No matches.')
->>>>>>> origin/i18n
   const [own, setOwn] = useState(false)
   const open = openProp ?? own
   const setOpen = useCallback(

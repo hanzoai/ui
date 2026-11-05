@@ -11,7 +11,7 @@
  */
 import { useMemo } from 'react'
 
-import { useTranslate } from '../i18n/react'
+import { useI18n } from '@hanzo/i18n/react'
 import { ENSO, FAMILIES, grants, sortModels, type ModelFamily } from '../models/catalog'
 import type { Chip, Mind } from './Tune'
 
@@ -19,7 +19,7 @@ import type { Chip, Mind } from './Tune'
 const NAMED: readonly ModelFamily[] = ['enso', 'kai', 'zen']
 
 export function useFamilies(mind: Mind, onUpgrade?: (model: string) => void): Chip[] {
-  const t = useTranslate()
+  const { t } = useI18n()
   return useMemo(() => {
     const router = mind.models.find((m) => m.id === ENSO)
     const rows: Chip[] = router

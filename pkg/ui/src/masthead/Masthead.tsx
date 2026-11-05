@@ -1,11 +1,11 @@
 'use client'
 
+import { ACCOUNT, COMPANY, DOCS, LOGIN, MENUS, OPEN, TRY, at, leaves, type Link, type Menu } from './nav'
 import { Fragment, useCallback, useEffect, useRef, useState, type CSSProperties, type FocusEvent, type ReactNode } from 'react'
 import { Anchor, Text, View, XStack, YStack, type AnchorProps, type GuiElement } from '@hanzo/gui'
 import { HanzoCommandPalette, HanzoIdentity, HanzoWordmark, MARKS, type GlyphName, type HanzoCommandEntry } from '@hanzogui/shell'
 import { useI18n, type Say } from '@hanzo/i18n/react'
 
-import { useTranslate } from '../i18n/react'
 import { ACCOUNT, at, COMPANY, DOCS, leaves, LOGIN, MENUS, OPEN, TRY, type Link, type Menu } from './nav'
 
 /**
@@ -310,10 +310,6 @@ function Row({ link, place, onClick, ...style }: { link: Link; place: Place; onC
   const out = leaves(link.href, place.here)
   const { t } = useI18n()
   return (
-<<<<<<< HEAD
-    <Anchor href={at(link.href, place.origin, place.here)} target={out ? '_blank' : undefined} rel={out ? 'noreferrer' : undefined} onClick={onClick} textDecorationLine="none" {...style}>
-      {link.label}
-=======
     <Anchor
       href={at(link.href, place.origin, place.here)}
       target={out ? '_blank' : undefined}
@@ -323,7 +319,6 @@ function Row({ link, place, onClick, ...style }: { link: Link; place: Place; onC
       {...style}
     >
       {t(link.label)}
->>>>>>> origin/i18n
       {out ? <Out /> : null}
     </Anchor>
   )
@@ -349,10 +344,6 @@ function Columns({ menu, place, onPick }: { menu: Menu; place: Place; onPick: ()
   return (
     <View display="grid" gridAutoFlow="column" gridAutoColumns="max-content" justify="flex-start" gap="max(24px, min(3vw, 64px))" pt={36} pb={48} px="calc(var(--page-gutter) + 8px)">
       {menu.groups.map((group, i) => (
-<<<<<<< HEAD
-        <YStack key={group.title} gap={2} minW={0} opacity={hot === null || hot === i ? 1 : 0.45} transition="quickest" onPointerEnter={() => setHot(i)} onPointerLeave={() => setHot(null)}>
-          <Title>{group.title}</Title>
-=======
         <YStack
           key={group.title}
           gap={2}
@@ -363,7 +354,6 @@ function Columns({ menu, place, onPick }: { menu: Menu; place: Place; onPick: ()
           onPointerLeave={() => setHot(null)}
         >
           <Title>{t(group.title)}</Title>
->>>>>>> origin/i18n
           {group.links.map((link) => (
             <Row key={link.label} link={link} place={place} onClick={onPick} {...(group.lead ? LEAD : PLAIN)} />
           ))}
@@ -408,7 +398,7 @@ function entries(company: Menu, menus: readonly Menu[], login: readonly Link[], 
 }
 
 export function Masthead({ label = 'Hanzo AI', home = '/', origin = '', here = '', tree = {}, person, onSignOut, commands = [], onAsk, askHref, bare = false }: MastheadProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const company = tree.company ?? COMPANY
   const menus = tree.menus ?? MENUS
   const login = tree.login ?? LOGIN
@@ -536,9 +526,6 @@ export function Masthead({ label = 'Hanzo AI', home = '/', origin = '', here = '
       {trigger}
       {open === item.id ? (
         /* A menu's panel spans the window under the bar. */
-<<<<<<< HEAD
-        <YStack id={`menu-${item.id}`} role="group" aria-label={item.label} position="fixed" t={UNDER} l={0} r={0} z="var(--z-raised)" maxH={`calc(100dvh - ${HEADER}px)`} overflowY="auto" bg={PANEL} boxShadow={DROP} {...ARRIVE}>
-=======
         <YStack
           id={`menu-${item.id}`}
           role="group"
@@ -554,7 +541,6 @@ export function Masthead({ label = 'Hanzo AI', home = '/', origin = '', here = '
           boxShadow={DROP}
           {...ARRIVE}
         >
->>>>>>> origin/i18n
           <Columns menu={item} place={place} onPick={close} />
         </YStack>
       ) : null}
@@ -607,9 +593,6 @@ export function Masthead({ label = 'Hanzo AI', home = '/', origin = '', here = '
               <HanzoWordmark label={label} size={22} />
             </Anchor>
             {/* The name goes home; the chevron beside it is its own stop and opens the company. */}
-<<<<<<< HEAD
-            <Text render="button" aria-label={company.label} aria-expanded={open === company.id} aria-controls={`menu-${company.id}`} onClick={press(company.id)} onKeyDown={step(company.id)} display="none" $lg={{ display: 'grid' }} placeItems="center" width={30} height="100%" p={0} paddingInlineEnd={6} borderWidth={0} borderStartEndRadius={999} borderEndEndRadius={999} bg="transparent" color="var(--foreground)" cursor="pointer">
-=======
             <Text
               render="button"
               aria-label={t(company.label)}
@@ -631,25 +614,16 @@ export function Masthead({ label = 'Hanzo AI', home = '/', origin = '', here = '
               color="var(--foreground)"
               cursor="pointer"
             >
->>>>>>> origin/i18n
               <Chevron turned={open === company.id} />
             </Text>
           </XStack>
         )}
-<<<<<<< HEAD
-        <XStack render="nav" aria-label={tr('Main')} display="none" $lg={{ display: 'flex' }} items="center" gap={2}>
-=======
         <XStack render="nav" aria-label={t('Main')} display="none" $lg={{ display: 'flex' }} items="center" gap={2}>
->>>>>>> origin/i18n
           {menus.map((item) => (
             <Fragment key={item.id}>{menu(item, trigger(item))}</Fragment>
           ))}
         </XStack>
         {/* The page recedes under an open plane, and a press on it closes the plane. */}
-<<<<<<< HEAD
-        {open && open !== 'login' ? <View aria-hidden onPress={close} position="fixed" t={UNDER} l={0} r={0} b={0} z="var(--z-base)" bg="$black/40" backdropFilter="var(--chrome-blur)" /> : null}
-        <Text render="button" aria-label={tr('Search Hanzo or ask AI')} onClick={find} {...PILL} justify="center" width={44} height={44} marginInlineStart="auto" $lg={{ width: 34, height: 34, marginInlineStart: 0 }}>
-=======
         {open && open !== 'login' ? (
           <View
             aria-hidden
@@ -675,37 +649,11 @@ export function Masthead({ label = 'Hanzo AI', home = '/', origin = '', here = '
           marginInlineStart="auto"
           $lg={{ width: 34, height: 34, marginInlineStart: 0 }}
         >
->>>>>>> origin/i18n
           <MARKS.search size={16} />
         </Text>
         <XStack items="center" gap={8} $lg={{ marginInlineStart: 'auto' }}>
           {person ? (
             <HanzoIdentity
-<<<<<<< HEAD
-              auth={{
-                user: person,
-                onSignOut,
-                items: [
-                  {
-                    id: 'account',
-                    label: account.label,
-                    href: at(account.href, origin, here),
-                  },
-                ],
-              }}
-            />
-          ) : (
-            <XStack position="relative" display="none" $lg={{ display: 'flex' }} onPointerEnter={rest('login')} onPointerLeave={leave} onBlur={blur}>
-              <Text render="button" {...TRIGGER} {...lit('login')} aria-expanded={open === 'login'} aria-controls="menu-login" onClick={press('login')} onKeyDown={step('login')}>
-                Log in
-                <Chevron turned={open === 'login'} />
-              </Text>
-              {open === 'login' ? (
-                <YStack id="menu-login" role="group" aria-label={tr('Log in')} position="absolute" t="calc(100% + 8px)" insetInlineEnd={0} display="grid" gap={2} minW={240} p={6} borderWidth={1} borderColor="var(--border)" rounded={12} bg={PANEL} boxShadow={DROP} {...ARRIVE}>
-                  {login.map((link) => (
-                    <Anchor key={link.label} href={at(link.href, origin, here)} target="_blank" rel="noreferrer" onClick={close} display="grid" gap={2} py={8} px={10} rounded={8} color="var(--foreground)" fontSize="$2" lineHeight={20} fontWeight="600" textDecorationLine="none" hoverStyle={{ bg: WASH }} focusVisibleStyle={{ bg: WASH }}>
-                      {link.label}
-=======
               auth={{ user: person, onSignOut, items: [{ id: 'account', label: t(account.label), href: at(account.href, origin, here) }] }}
             />
           ) : (
@@ -762,7 +710,6 @@ export function Masthead({ label = 'Hanzo AI', home = '/', origin = '', here = '
                       focusVisibleStyle={{ bg: WASH }}
                     >
                       {t(link.label)}
->>>>>>> origin/i18n
                       <Text render="small" fontSize="$1" lineHeight={20} fontWeight="400" color="var(--muted-foreground)">
                         {link.hint ? t(link.hint) : null}
                       </Text>
@@ -805,9 +752,6 @@ export function Masthead({ label = 'Hanzo AI', home = '/', origin = '', here = '
       {/* A fixed box of no size is a stacking context at TOP, and the palette's
           scrim and panel, fixed to the window themselves, stack inside it. */}
       <View position="fixed" z={TOP}>
-<<<<<<< HEAD
-        <HanzoCommandPalette commands={[...commands, ...entries(company, menus, login, place).filter((e) => !commands.some((c) => c.href === e.href))]} open={search} onOpenChange={setSearch} onAsk={onAsk} askHref={askHref} />
-=======
         <HanzoCommandPalette
           commands={[...commands, ...entries(company, menus, login, place, t).filter((e) => !commands.some((c) => c.href === e.href))]}
           open={search}
@@ -815,7 +759,6 @@ export function Masthead({ label = 'Hanzo AI', home = '/', origin = '', here = '
           onAsk={onAsk}
           askHref={askHref}
         />
->>>>>>> origin/i18n
       </View>
     </>
   )
@@ -845,7 +788,7 @@ function Sheet({
   place: Place
   onClose: () => void
 }) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const first = useRef<GuiElement>(null)
   const [section, setSection] = useState<string | null>(null)
   const { t } = useI18n()
@@ -855,11 +798,7 @@ function Sheet({
       id="sheet"
       role="dialog"
       aria-modal
-<<<<<<< HEAD
-      aria-label={tr('Menu')}
-=======
       aria-label={t('Menu')}
->>>>>>> origin/i18n
       display="block"
       position="fixed"
       t={UNDER}
@@ -878,11 +817,7 @@ function Sheet({
       bg={PANEL}
       {...ARRIVE}
     >
-<<<<<<< HEAD
-      <View render="nav" aria-label={tr('Main')} display="block">
-=======
       <View render="nav" aria-label={t('Main')} display="block">
->>>>>>> origin/i18n
         {[company, ...menus].map((item, i) => (
           <View
             key={item.id}

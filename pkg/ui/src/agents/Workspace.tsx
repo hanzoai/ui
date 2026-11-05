@@ -48,7 +48,6 @@ import {
   type Ref,
   useRef,
 } from 'react'
-import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 
 import { Button } from '../backends/gui/button'

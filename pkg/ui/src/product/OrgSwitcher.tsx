@@ -20,7 +20,6 @@ import { Check, ChevronsUpDown, LayoutGrid, Plus, Search } from '@hanzogui/lucid
 import { useI18n } from '@hanzo/i18n/react'
 
 import { press, RING } from '../backends/gui/press'
-import { useTranslate } from '../i18n/react'
 import { sx } from '../sx'
 import { useEmit } from './instrument'
 import { menuKeyDown } from './menu/roving'
@@ -122,7 +121,7 @@ export type OrgSwitcherProps = {
 }
 
 export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create, picker = false, direction = 'down', footer, sub, aria, search, heading, lead = false, testId, className, style }: OrgSwitcherProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const currentId = scope.currentOrg()
 
   const [open, setOpen] = useState(false)
@@ -248,9 +247,6 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
         {/* Sized as the PEER of the account control — same height, same mark,
             same type, same hit area — so "which workspace" and "who I am" read
             as the two halves of one identity, not a caption over a control. */}
-<<<<<<< HEAD
-        <Button ref={trigger as never} chromeless height={lead ? 56 : 44} px="$2" justify="flex-start" data-testid={testId} aria-label={aria ?? `${currentLabel} · switch organization`}>
-=======
         <Button
           ref={trigger as never}
           chromeless
@@ -260,7 +256,6 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
           data-testid={testId}
           aria-label={aria ?? t('{org} · switch organization', { org: currentLabel })}
         >
->>>>>>> origin/i18n
           <XStack items="center" gap="$2.5" flex={1} minW={0}>
             <OrgMark org={current} size={lead ? 36 : 30} />
             {/* One line when the control names only an org; two when a caller
@@ -333,9 +328,6 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
             <Text fontSize="$2" color="$ink" fontWeight="700">
               {t('Create organization')}
             </Text>
-<<<<<<< HEAD
-            <Input size="$3" placeholder={tr('Organization name')} value={newName} onChangeText={setNewName} autoCapitalize="words" onSubmitEditing={() => void submitCreate()} />
-=======
             <Input
               size="$3"
               placeholder={t('Organization name')}
@@ -344,7 +336,6 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
               autoCapitalize="words"
               onSubmitEditing={() => void submitCreate()}
             />
->>>>>>> origin/i18n
             {err ? (
               <Text fontSize="$1" color="$red10">
                 {err}
@@ -354,10 +345,6 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
               <Button size="$2" chromeless onPress={() => setCreating(false)} disabled={busy}>
                 {t('Cancel')}
               </Button>
-<<<<<<< HEAD
-              <Button size="$2" onPress={() => void submitCreate()} disabled={busy || !newName.trim()} icon={busy ? <Spinner size="small" /> : <Plus size={14} />}>
-                Create
-=======
               <Button
                 size="$2"
                 onPress={() => void submitCreate()}
@@ -365,7 +352,6 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
                 icon={busy ? <Spinner size="small" /> : <Plus size={14} />}
               >
                 {t('Create')}
->>>>>>> origin/i18n
               </Button>
             </XStack>
           </YStack>
@@ -380,9 +366,6 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
             {(search ?? !!orgs) ? (
               <XStack items="center" gap="$2" px="$2" py="$1" rounded="$3" borderWidth={1} borderColor="$borderColor">
                 <Search size={13} opacity={0.6} />
-<<<<<<< HEAD
-                <Input flex={1} size="$2" borderWidth={0} bg="transparent" placeholder={tr('Find an organization')} aria-label={tr('Find an organization')} value={query} onChangeText={setQuery} autoCapitalize="none" autoCorrect={false} />
-=======
                 <Input
                   flex={1}
                   size="$2"
@@ -395,7 +378,6 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
                   autoCapitalize="none"
                   autoCorrect={false}
                 />
->>>>>>> origin/i18n
               </XStack>
             ) : null}
 
@@ -427,11 +409,7 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
                 // `group` of `menuitemradio`s — not a bag of divs, which is what
                 // assistive tech was being handed, and not a `radiogroup`, which
                 // a `menu` may not own (MenuRow says why).
-<<<<<<< HEAD
-                <YStack role="group" aria-label={tr('Organizations')} gap="$1">
-=======
                 <YStack role="group" aria-label={t('Organizations')} gap="$1">
->>>>>>> origin/i18n
                   {visible.map((org) => (
                     <MenuRow key={org.name} label={org.displayName || org.name} icon={<OrgMark org={org} />} active={org.name === currentId} onPress={() => select(org.name)} />
                   ))}

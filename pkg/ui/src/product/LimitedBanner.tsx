@@ -14,11 +14,9 @@ import type { ReactNode } from 'react'
 import { Text, View, XStack } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
 import { X } from '@hanzogui/lucide-icons-2'
-
 import { Button } from '../backends/gui/button'
-import { touch } from '../backends/gui/gesture'
 import { slot } from '../backends/gui/slot'
-import { useTranslate } from '../i18n/react'
+import { touch } from '../backends/gui/gesture'
 import { navigable, type LimitAction } from './limits'
 
 export interface LimitedBannerProps {
@@ -45,13 +43,27 @@ const go = (a: LimitAction) => {
  * The server's actions in the order it sent them: the first is the one filled
  * control, the rest quiet. Only pages are offered when the host takes no action.
  */
-export function LimitActions({ actions, onAction, children }: { actions: readonly LimitAction[]; onAction?: (action: LimitAction) => void; children?: ReactNode }) {
+export function LimitActions({
+  actions,
+  onAction,
+  children,
+}: {
+  actions: readonly LimitAction[]
+  onAction?: (action: LimitAction) => void
+  children?: ReactNode
+}) {
   const shown = onAction ? actions : actions.filter(navigable)
   if (!shown.length && !children) return null
   return (
     <XStack gap="$2" shrink={0} maxW="100%" flexWrap="wrap" items="center">
       {shown.map((a, i) => (
-        <Button key={`${a.kind}:${a.url ?? a.model ?? i}`} size="sm" variant={i === 0 ? 'primary' : 'default'} data-kind={a.kind} onPress={() => (onAction ?? go)(a)}>
+        <Button
+          key={`${a.kind}:${a.url ?? a.model ?? i}`}
+          size="sm"
+          variant={i === 0 ? 'primary' : 'default'}
+          data-kind={a.kind}
+          onPress={() => (onAction ?? go)(a)}
+        >
           {a.label}
         </Button>
       ))}
@@ -60,17 +72,8 @@ export function LimitActions({ actions, onAction, children }: { actions: readonl
   )
 }
 
-<<<<<<< HEAD
-export function LimitedBanner({ message, actions = [], onAction, onUsage, onClose }: LimitedBannerProps) {
-<<<<<<< HEAD
-  const tr = useTranslate()
-  return (
-    <XStack role="status" aria-live="polite" {...slot('limited-banner')} width="100%" items="center" flexWrap="wrap" gap="$2" px="$3" py="$2.5" rounded="$4" borderWidth={1} borderColor="$edge" bg="$panel">
-=======
 export function LimitedBanner({ message, actions = [], onAction, onUsage, onClose, labels }: LimitedBannerProps) {
-=======
   const { t } = useI18n()
->>>>>>> origin/i18n
   return (
     <XStack
       {...slot('limited-banner')}
@@ -85,7 +88,6 @@ export function LimitedBanner({ message, actions = [], onAction, onUsage, onClos
       borderColor="$edge"
       bg="$panel"
     >
->>>>>>> origin/main
       <XStack flex={1} minW={200} items="center" gap="$2">
         <View width={8} height={8} rounded={4} bg="$bad" shrink={0} aria-hidden />
         <Text fontSize="$1" color="$ink" {...slot('limited-banner-message')}>
@@ -95,24 +97,12 @@ export function LimitedBanner({ message, actions = [], onAction, onUsage, onClos
       <LimitActions actions={actions} onAction={onAction}>
         {onUsage ? (
           <Button size="sm" variant="link" px="$1.5" data-kind="usage" onPress={onUsage}>
-<<<<<<< HEAD
-            {labels?.usage ?? 'See usage'}
-=======
-            {t('See usage')}
->>>>>>> origin/i18n
+            {labels?.usage ?? t('See usage')}
           </Button>
         ) : null}
       </LimitActions>
       {onClose ? (
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={tr('Dismiss')} onPress={onClose}>
-=======
-        <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={labels?.dismiss ?? 'Dismiss'} onPress={onClose}>
->>>>>>> origin/main
-=======
-        <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={t('Dismiss')} onPress={onClose}>
->>>>>>> origin/i18n
+        <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={labels?.dismiss ?? t('Dismiss')} onPress={onClose}>
           <X size={14} />
         </Button>
       ) : null}

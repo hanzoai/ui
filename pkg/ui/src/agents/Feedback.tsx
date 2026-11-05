@@ -14,15 +14,11 @@ import { useEffect, useRef, useState, type ComponentProps } from 'react'
  */
 import { XStack } from '@hanzo/gui'
 import { Check, Copy, ThumbsDown, ThumbsUp } from '@hanzogui/lucide-icons-2'
-<<<<<<< HEAD
-=======
 import { type ComponentProps, useEffect, useRef, useState } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 
 import { Button } from '../backends/gui/button'
 import { slot } from '../backends/gui/slot'
-import { useTranslate } from '../i18n/react'
 
 type Row = Omit<ComponentProps<typeof XStack>, 'children'>
 
@@ -37,7 +33,7 @@ export interface FeedbackProps extends Row {
 }
 
 export function Feedback({ text, verdict, onVerdict, ...rest }: FeedbackProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [held, setHeld] = useState<Verdict>(null)
   const [copied, setCopied] = useState(false)
   const { t } = useI18n()
@@ -81,12 +77,6 @@ export function Feedback({ text, verdict, onVerdict, ...rest }: FeedbackProps) {
           {copied ? <Check size={13} /> : <Copy size={13} />}
         </Button>
       ) : null}
-<<<<<<< HEAD
-      <Button {...icon} aria-label={tr('Good result')} title="Good result" aria-pressed={current === 'up'} bg={current === 'up' ? '$raised' : 'transparent'} onClick={() => judge('up')}>
-        <ThumbsUp size={13} />
-      </Button>
-      <Button {...icon} aria-label={tr('Bad result')} title="Bad result" aria-pressed={current === 'down'} bg={current === 'down' ? '$raised' : 'transparent'} onClick={() => judge('down')}>
-=======
       <Button
         {...icon}
         aria-label={t('Good result')}
@@ -105,7 +95,6 @@ export function Feedback({ text, verdict, onVerdict, ...rest }: FeedbackProps) {
         bg={current === 'down' ? '$raised' : 'transparent'}
         onClick={() => judge('down')}
       >
->>>>>>> origin/i18n
         <ThumbsDown size={13} />
       </Button>
     </XStack>

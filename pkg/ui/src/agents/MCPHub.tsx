@@ -1,7 +1,6 @@
 import React from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 
-import { useTranslate } from '../i18n/react'
 
 export interface MCPServerInfo {
   id: string
@@ -21,10 +20,6 @@ export interface MCPHubProps {
   style?: React.CSSProperties
 }
 
-<<<<<<< HEAD
-export const MCPHub: React.FC<MCPHubProps> = ({ servers, onConnectServer, onDisconnectServer, onOpenSettings, className = '', style }) => {
-  const tr = useTranslate()
-=======
 export const MCPHub: React.FC<MCPHubProps> = ({
   servers,
   onConnectServer,
@@ -34,7 +29,6 @@ export const MCPHub: React.FC<MCPHubProps> = ({
   style,
 }) => {
   const { t } = useI18n()
->>>>>>> origin/i18n
   return (
     <div
       style={{
@@ -47,11 +41,7 @@ export const MCPHub: React.FC<MCPHubProps> = ({
         borderRadius: 16,
         ...style,
       }}
-<<<<<<< HEAD
-      aria-label={tr('MCP Server Hub')}
-=======
       aria-label={t('MCP Server Hub')}
->>>>>>> origin/i18n
     >
       <div
         style={{
@@ -62,33 +52,9 @@ export const MCPHub: React.FC<MCPHubProps> = ({
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 18 }}>🔌</span>
-<<<<<<< HEAD
-          <h3
-            style={{
-              fontSize: 14,
-              fontWeight: 600,
-              color: '#ffffff',
-              margin: 0,
-            }}
-          >
-            Model Context Protocol (MCP)
-          </h3>
-          <span
-            style={{
-              padding: '2px 6px',
-              borderRadius: 9999,
-              fontSize: 10,
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              color: '#d4d4d4',
-              fontFamily: 'monospace',
-            }}
-          >
-            {servers.length} Active
-=======
           <h3 style={{ fontSize: 14, fontWeight: 600, color: '#ffffff', margin: 0 }}>Model Context Protocol (MCP)</h3>
           <span style={{ padding: '2px 6px', borderRadius: 9999, fontSize: 10, backgroundColor: 'rgba(255, 255, 255, 0.1)', color: '#d4d4d4', fontFamily: 'monospace' }}>
             {t('{n} Active', { n: servers.length })}
->>>>>>> origin/i18n
           </span>
         </div>
 
@@ -180,35 +146,11 @@ export const MCPHub: React.FC<MCPHubProps> = ({
               </div>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-<<<<<<< HEAD
-                <span
-                  style={{
-                    fontSize: 11,
-                    color: '#a3a3a3',
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    padding: '2px 6px',
-                    borderRadius: 4,
-                  }}
-                >
-                  🛠️ {server.toolsCount} tools
-                </span>
-                <span
-                  style={{
-                    fontSize: 11,
-                    color: '#a3a3a3',
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    padding: '2px 6px',
-                    borderRadius: 4,
-                  }}
-                >
-                  📦 {server.resourcesCount} resources
-=======
                 <span style={{ fontSize: 11, color: '#a3a3a3', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '2px 6px', borderRadius: 4 }}>
                   🛠️ {t('{n} tools', { n: server.toolsCount })}
                 </span>
                 <span style={{ fontSize: 11, color: '#a3a3a3', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '2px 6px', borderRadius: 4 }}>
                   📦 {t('{n} resources', { n: server.resourcesCount })}
->>>>>>> origin/i18n
                 </span>
               </div>
             </div>

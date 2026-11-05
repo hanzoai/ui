@@ -34,8 +34,6 @@ import { acceptAll, asks, consentPolicy, consentSheet, declined, notice, noticed
  */
 import { Paragraph, Text, XStack, YStack } from '@hanzo/gui'
 import { ChevronDown, X } from '@hanzogui/lucide-icons-2'
-<<<<<<< HEAD
-=======
 import {
   acceptAll,
   asks,
@@ -54,14 +52,11 @@ import {
 } from '@hanzo/event'
 import { phrase } from '@hanzo/i18n'
 import { useI18n, type Say } from '@hanzo/i18n/react'
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
->>>>>>> origin/i18n
 
 import { Button } from '../backends/gui/button'
 import { align } from '../backends/gui/dir'
 import { slot } from '../backends/gui/slot'
 import { Switch } from '../backends/gui/switch'
-import { useTranslate } from '../i18n/react'
 import { PrivacyChoicesIcon } from './icon'
 
 const OPEN = 'hzconsent-open'
@@ -146,30 +141,21 @@ const kinds = (t: Say, brand: string, strict: boolean, locked: boolean): Kind[] 
   {
     id: 'ads',
     key: 'ads',
-<<<<<<< HEAD
-    title: 'Sell, Share, or Use Your Data for Targeted Advertising',
-    body: `Lets Google and Meta use your visits to choose the ads they show you on other sites and apps. Some US state privacy laws call this a “sale” or “sharing” of your personal information, or “targeted advertising”, and give you the right to opt out: ${locked ? 'your browser’s signal keeps it off.' : strict ? 'it stays off unless you turn it on.' : 'turn this off to opt out.'}`,
-=======
     title: t('Sell, Share, or Use Your Data for Targeted Advertising'),
     body: t(
       'Lets Google and Meta use your visits to choose the ads they show you on other sites and apps. Some US state privacy laws call this a “sale” or “sharing” of your personal information, or “targeted advertising”, and give you the right to opt out: {rule}',
       { rule: locked ? t('your browser’s signal keeps it off.') : strict ? t('it stays off unless you turn it on.') : t('turn this off to opt out.') },
     ),
->>>>>>> origin/i18n
   },
 ]
 
 /** The sheet's opening line, by rule: what runs before the visitor does anything, and how to change it. */
-<<<<<<< HEAD
-const intro = (strict: boolean, locked: boolean) => (locked ? 'We use cookies and similar technologies to provide our services. Essential cookies are required for the site to work and cannot be turned off. Learn more in our ' : strict ? 'We use cookies and similar technologies to provide our services, measure performance, and support advertising. Essential cookies are required for the site to work and cannot be turned off. You can allow or reject optional cookies below. Learn more in our ' : 'We use cookies and similar technologies to provide our services, measure performance, and support advertising. Google Analytics and the Meta pixel run on this site by default. Turn either off below, or turn off the last switch to opt out of the sale or sharing of your personal information for targeted advertising; each switch is saved as soon as you change it. Essential cookies are required for the site to work and cannot be turned off. Learn more in our ')
-=======
 const intro = (t: Say, strict: boolean, locked: boolean) =>
   locked
     ? t('We use cookies and similar technologies to provide our services. Essential cookies are required for the site to work and cannot be turned off. Learn more in our ')
     : strict
     ? t('We use cookies and similar technologies to provide our services, measure performance, and support advertising. Essential cookies are required for the site to work and cannot be turned off. You can allow or reject optional cookies below. Learn more in our ')
     : t('We use cookies and similar technologies to provide our services, measure performance, and support advertising. Google Analytics and the Meta pixel run on this site by default. Turn either off below, or turn off the last switch to opt out of the sale or sharing of your personal information for targeted advertising; each switch is saved as soon as you change it. Essential cookies are required for the site to work and cannot be turned off. Learn more in our ')
->>>>>>> origin/i18n
 
 /** What a browser that sends Global Privacy Control or Do Not Track holds off, under every rule; drawn through `t`. */
 const REFUSAL = phrase('Your browser asks sites not to track you, so all of these stay off.')
@@ -329,10 +315,6 @@ export type ConsentProps = {
   floating?: boolean
 }
 
-<<<<<<< HEAD
-const Consent = ({ cookies = 'https://hanzo.ai/cookies', privacy = 'https://hanzo.ai/privacy', terms = 'https://hanzo.ai/terms', brand = 'Hanzo' }: ConsentProps) => {
-  const tr = useTranslate()
-=======
 const Consent = ({
   cookies = 'https://hanzo.ai/cookies',
   privacy = 'https://hanzo.ai/privacy',
@@ -340,11 +322,7 @@ const Consent = ({
   brand = 'Hanzo',
   floating = true,
 }: ConsentProps) => {
-<<<<<<< HEAD
->>>>>>> origin/main
-=======
   const { t } = useI18n()
->>>>>>> origin/i18n
   // The rule in force: undefined until cloud (or this tab) has said, and nothing is drawn meanwhile.
   const [mode, setMode] = useState<Mode | undefined>()
   // The bar (eu) or the notice (global) at the foot of the window.
@@ -597,11 +575,7 @@ const Consent = ({
             <Text render="h2" id={`${id}-title`} m={0} fontSize="$6" lineHeight="$6" fontWeight="600" color="$ink">
               {t('Cookie Preferences')}
             </Text>
-<<<<<<< HEAD
-            <Button type="button" size="icon" {...CLOSE} aria-label={tr('Close')} onClick={close}>
-=======
             <Button type="button" size="icon" {...CLOSE} aria-label={t('Close')} onClick={close}>
->>>>>>> origin/i18n
               <X size={16} />
             </Button>
           </XStack>
@@ -701,10 +675,6 @@ const Consent = ({
 
   // The way to the sheet on a page that draws none: small, quiet, at the foot of the window.
   const own =
-<<<<<<< HEAD
-    !hosted && !shown ? (
-      <XStack {...slot('consent-choices')} position="fixed" b={EDGE.bottom} l={EDGE.left} z="var(--z-banner, 50)" px="$2.5" py="$1" bg="$background" borderWidth={1} borderColor="$borderColor" rounded={ROUND.button}>
-=======
     floating && !hosted && !shown ? (
       <XStack
         {...slot('consent-choices')}
@@ -719,7 +689,6 @@ const Consent = ({
         borderColor="$borderColor"
         rounded={ROUND.button}
       >
->>>>>>> origin/main
         <Button {...CHOICES} onClick={choose}>
           {t('Your Privacy Choices')}
         </Button>
@@ -731,11 +700,7 @@ const Consent = ({
   // The global notice: one line, the way to the choices, and a × that records it as seen.
   if (shown && mode === 'global')
     surface = (
-<<<<<<< HEAD
-      <XStack {...frame} role="region" aria-label={tr('Cookie notice')} style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
-=======
       <XStack {...frame} role="region" aria-label={t('Cookie notice')} style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
->>>>>>> origin/i18n
         <YStack shrink={1} minW={0}>
           <Paragraph size="$2" color="$ink" m={0}>
             {t('We use cookies to improve your experience. By continuing to browse, you agree.')}
@@ -744,9 +709,6 @@ const Consent = ({
         <Button {...CHOICES} onClick={choose}>
           {t('Your Privacy Choices')}
         </Button>
-<<<<<<< HEAD
-        <Button type="button" size="icon" {...CLOSE} aria-label={tr('Close')} position="absolute" t="$3" insetInlineEnd="$3" onClick={done(notice)}>
-=======
         <Button
           type="button"
           size="icon"
@@ -757,7 +719,6 @@ const Consent = ({
           insetInlineEnd="$3"
           onClick={done(notice)}
         >
->>>>>>> origin/i18n
           <X size={16} />
         </Button>
       </XStack>
@@ -768,27 +729,6 @@ const Consent = ({
   // the line over one row of buttons and nothing breaks mid-control.
   else if (shown && mode === 'eu')
     surface = (
-<<<<<<< HEAD
-      <XStack {...frame} role="dialog" aria-label={tr('Cookie preferences')} style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$3">
-        <YStack shrink={1} minW={0}>
-          <Paragraph size="$2" color="$ink" m={0}>
-            {`Essential cookies keep ${brand} running. With your OK, optional cookies help us measure performance and ads.`}
-          </Paragraph>
-        </YStack>
-        <XStack gap="$2" marginInlineStart="auto" items="center" flexWrap="wrap">
-          <Button ref={manage as never} type="button" {...SECONDARY} onClick={choose}>
-            Manage preferences
-          </Button>
-          <Button type="button" {...PRIMARY} onClick={done(acceptAll)}>
-            Accept all
-          </Button>
-        </XStack>
-        {/* Essential cookies only: the refusal, as easy to give as Accept all. */}
-        <Button type="button" size="icon" {...CLOSE} aria-label={tr('Close and use essential cookies only')} position="absolute" t="$3" insetInlineEnd="$3" onClick={done(rejectAll)}>
-          <X size={16} />
-        </Button>
-      </XStack>
-=======
     <XStack {...frame} role="dialog" aria-label={t('Cookie preferences')} style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$3">
       <YStack shrink={1} minW={0}>
         <Paragraph size="$2" color="$ink" m={0}>
@@ -817,7 +757,6 @@ const Consent = ({
         <X size={16} />
       </Button>
     </XStack>
->>>>>>> origin/i18n
     )
 
   return (

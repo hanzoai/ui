@@ -24,14 +24,8 @@ import { useMemo, useState, type ReactNode } from 'react'
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown } from '@hanzogui/lucide-icons-2'
-<<<<<<< HEAD
-
-=======
-import { useMemo, useState, type ReactNode } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 import { Cell, Grid } from '../../grid'
-import { useTranslate } from '../../i18n/react'
 import { Button } from './button'
 import { Checkbox } from './checkbox'
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from './dropdown-menu'
@@ -155,9 +149,6 @@ const justify = (a: DataTableAlign | undefined): 'flex-start' | 'center' | 'flex
 
 type Entry<TData> = { row: TData; id: string }
 
-<<<<<<< HEAD
-function DataTable<TData>({ columns, data, getRowId, filterColumnId, filterPlaceholder = 'Filter…', pageSize = 0, emptyMessage = 'No results.', onRowSelectionChange }: DataTableProps<TData>) {
-=======
 function DataTable<TData>({
   columns,
   data,
@@ -169,13 +160,12 @@ function DataTable<TData>({
   onRowSelectionChange,
 }: DataTableProps<TData>) {
   const { t } = useI18n()
->>>>>>> origin/i18n
   const [sorting, setSorting] = useState<{ id: string; desc: boolean } | null>(null)
   const [filter, setFilter] = useState('')
   const [hidden, setHidden] = useState<Record<string, boolean>>({})
   const [selected, setSelected] = useState<Record<string, boolean>>({})
   const [pageIndex, setPageIndex] = useState(0)
-  const tr = useTranslate()
+  const { t } = useI18n()
 
   const withIds = useMemo<Entry<TData>[]>(
     () =>
@@ -284,9 +274,6 @@ function DataTable<TData>({
   const trackList = visibleColumns.map((c) => track(c.width)).join(' ')
 
   const headerContent = (column: DataTableColumnDef<TData>): ReactNode => {
-<<<<<<< HEAD
-    if (column.id === 'select') return <Checkbox aria-label={tr('Select all')} checked={allPageSelected ? true : somePageSelected ? 'indeterminate' : false} onCheckedChange={(value: boolean) => toggleAllPage(!!value)} />
-=======
     if (column.id === 'select')
       return (
         <Checkbox
@@ -295,7 +282,6 @@ function DataTable<TData>({
           onCheckedChange={(value: boolean) => toggleAllPage(!!value)}
         />
       )
->>>>>>> origin/i18n
     if (typeof column.header === 'function') return column.header({ column: columnApi(column) })
     return ink(column.header ?? column.id, SizableText, {
       size: '$2',
@@ -305,9 +291,6 @@ function DataTable<TData>({
   }
 
   const cellContent = (column: DataTableColumnDef<TData>, entry: Entry<TData>): ReactNode => {
-<<<<<<< HEAD
-    if (column.id === 'select') return <Checkbox aria-label={tr('Select row')} checked={selected[entry.id] === true} onCheckedChange={(value: boolean) => setSelectedFor(entry.id, !!value)} />
-=======
     if (column.id === 'select')
       return (
         <Checkbox
@@ -316,7 +299,6 @@ function DataTable<TData>({
           onCheckedChange={(value: boolean) => setSelectedFor(entry.id, !!value)}
         />
       )
->>>>>>> origin/i18n
     if (column.cell) return column.cell({ row: rowApi(entry) })
     return ink(String(cellValue(column, entry.row) ?? ''), SizableText, {
       size: '$2',
@@ -332,9 +314,6 @@ function DataTable<TData>({
     <YStack {...slot('data-table')} width="100%" gap="$3">
       {(filterColumnId || hideable.length > 0) && (
         <XStack {...slot('data-table-toolbar')} items="center" gap="$2">
-<<<<<<< HEAD
-          {filterColumnId && <Input {...slot('data-table-filter')} placeholder={filterPlaceholder} value={filter} onChangeText={setFilter} maxW={360} width="100%" />}
-=======
           {filterColumnId && (
             <Input
               {...slot('data-table-filter')}
@@ -345,16 +324,11 @@ function DataTable<TData>({
               width="100%"
             />
           )}
->>>>>>> origin/i18n
           {hideable.length > 0 && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button {...slot('data-table-view-options')} variant="outline" size="sm" marginInlineStart="auto">
-<<<<<<< HEAD
-                  {tr('Columns')}
-=======
                   {t('Columns')}
->>>>>>> origin/i18n
                   <ChevronDown size={14} />
                 </Button>
               </DropdownMenuTrigger>
@@ -428,20 +402,6 @@ function DataTable<TData>({
 
       <XStack {...slot('data-table-footer')} items="center" justify="space-between">
         <SizableText size="$2" color="$quiet">
-<<<<<<< HEAD
-          {tr('{selected} of {total} row(s) selected.', {
-            selected: selectedCount,
-            total: filteredCount,
-          })}
-        </SizableText>
-        {pageSize > 0 && (
-          <XStack {...slot('data-table-pagination')} gap="$2">
-            <Button variant="outline" size="sm" disabled={!table.getCanPreviousPage()} aria-disabled={!table.getCanPreviousPage()} onClick={() => table.previousPage()}>
-              Previous
-            </Button>
-            <Button variant="outline" size="sm" disabled={!table.getCanNextPage()} aria-disabled={!table.getCanNextPage()} onClick={() => table.nextPage()}>
-              Next
-=======
           {t('{selected} of {total} row(s) selected.', { selected: selectedCount, total: filteredCount })}
         </SizableText>
         {pageSize > 0 && (
@@ -463,7 +423,6 @@ function DataTable<TData>({
               onClick={() => table.nextPage()}
             >
               {t('Next')}
->>>>>>> origin/i18n
             </Button>
           </XStack>
         )}

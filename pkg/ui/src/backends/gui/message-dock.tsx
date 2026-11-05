@@ -1,5 +1,8 @@
 'use client'
 
+import { Button } from './button'
+import { touch } from './gesture'
+import { XStack, YStack, SizableText, createStyledContext, styled } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
 /**
  * MessageDock — a fixed stack of dismissable status cards, anchored to a
@@ -17,15 +20,7 @@ import type { ComponentProps } from 'react'
  */
 import { createStyledContext, SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
-<<<<<<< HEAD
-
-import { useTranslate } from '../../i18n/react'
-import { Button } from './button'
-import { touch } from './gesture'
-=======
-import type { ComponentProps } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 import { ink } from './ink'
 import { slot } from './slot'
 
@@ -153,7 +148,7 @@ function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: M
   return (
     <DockFrame {...slot('message-dock')} data-position={resolved} anchor={resolved} {...props}>
       {messages.map((message) => {
-        const tr = useTranslate()
+        const { t } = useI18n()
         const type = message.type ?? 'default'
         return (
           <CardFrame key={message.id} {...slot('message-dock-card')} data-message-id={message.id} data-type={type} type={type} role="status">
@@ -169,9 +164,6 @@ function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: M
                 ) : null}
               </YStack>
               {onClose ? (
-<<<<<<< HEAD
-                <Button {...slot('message-dock-card-close')} variant="ghost" size="icon" minH={CLOSE} minW={CLOSE} {...touch(CLOSE)} position="absolute" t="$3" insetInlineEnd="$3" aria-label={tr('Close')} onPress={() => onClose(message.id)}>
-=======
                 <Button
                   {...slot('message-dock-card-close')}
                   variant="ghost"
@@ -185,7 +177,6 @@ function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: M
                   aria-label={t('Close')}
                   onPress={() => onClose(message.id)}
                 >
->>>>>>> origin/i18n
                   <X size={16} />
                 </Button>
               ) : null}

@@ -45,15 +45,10 @@ import { Decoration, drawSelection, EditorView, gutterLineClass, GutterMarker, h
 import { SizableText, XStack, YStack, type YStackProps } from '@hanzo/gui'
 import { AlignLeft, Check, CircleAlert, CircleCheck, Copy, Type } from '@hanzogui/lucide-icons-2'
 import { tags } from '@lezer/highlight'
-<<<<<<< HEAD
-=======
-import * as React from 'react'
 import { phrase } from '@hanzo/i18n'
 import { useI18n, type Say } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 
 import { face, type CodeToken } from '../../code-theme'
-import { useTranslate } from '../../i18n/react'
 import { Button } from './button'
 import { ltr } from './dir'
 import { Grip } from './grip'
@@ -228,16 +223,7 @@ const items = (t: Say, n: number) => (n === 1 ? t('1 item') : t('{n} items', { n
 function measureFold(state: EditorState, range: { from: number; to: number }, t: Say) {
   let node = syntaxTree(state).resolveInner(range.from, 1)
   while (node.parent && node.name !== 'Object' && node.name !== 'Array') node = node.parent
-<<<<<<< HEAD
-  if (node.name === 'Object')
-    return {
-      open: '{',
-      close: '}',
-      count: words(node.getChildren('Property').length, 'key'),
-    }
-=======
   if (node.name === 'Object') return { open: '{', close: '}', count: keys(t, node.getChildren('Property').length) }
->>>>>>> origin/i18n
   let n = 0
   for (let c = node.firstChild; c; c = c.nextSibling) if (!/^[[\],]$/.test(c.name) && !c.type.isError) n += 1
   return { open: '[', close: ']', count: items(t, n) }
@@ -406,10 +392,6 @@ export interface CodeEditorProps extends Omit<YStackProps, 'children' | 'height'
   autoHeight?: boolean
 }
 
-<<<<<<< HEAD
-export function CodeEditor({ value, defaultValue = '', language = 'javascript', height, minHeight = 96, maxHeight = 480, resizable = height === undefined, allowText = false, onChange, onCheck, onMount, readOnly = false, lineNumbers = true, wordWrap = 'on', fontSize = 14, placeholder, showCopyButton = true, showFormatButton, showLanguageSelector = true, availableLanguages = LANGUAGES, label = 'Code', variant, title, actions, autoHeight = false, ...props }: CodeEditorProps) {
-  const tr = useTranslate()
-=======
 export function CodeEditor({
   value,
   defaultValue = '',
@@ -441,7 +423,6 @@ export function CodeEditor({
   const { t } = useI18n()
   const name = label ?? t('Code')
   const fold = React.useMemo(() => folding(t), [t])
->>>>>>> origin/i18n
   const frame = variant ?? (title !== undefined || actions !== undefined ? 'with-header' : 'default')
   const headed = frame === 'with-header'
   const [selected, setSelected] = React.useState(language)
@@ -541,14 +522,7 @@ export function CodeEditor({
           compartments.wrap.of(wrap()),
           compartments.edit.of(edit()),
           placeholder ? hint(placeholder) : [],
-<<<<<<< HEAD
-          EditorView.contentAttributes.of({
-            'aria-label': label,
-            'data-slot': 'code-editor-content',
-          }),
-=======
           EditorView.contentAttributes.of({ 'aria-label': name, 'data-slot': 'code-editor-content' }),
->>>>>>> origin/i18n
           FRAME,
           listen,
         ],
@@ -663,11 +637,7 @@ export function CodeEditor({
             {showCopyButton && (
               <Button {...slot('code-editor-copy-button')} variant="ghost" size="sm" disabled={!text} onClick={copy}>
                 {copied ? <Check size={14} /> : <Copy size={14} />}
-<<<<<<< HEAD
-                {copied ? tr('Copied!') : tr('Copy')}
-=======
                 {copied ? t('Copied!') : t('Copy')}
->>>>>>> origin/i18n
               </Button>
             )}
             {actions}
@@ -705,9 +675,6 @@ export function CodeEditor({
 function Status({ check }: { check: JsonCheck | null }) {
   const { t } = useI18n()
   const bad = check?.kind === 'error'
-<<<<<<< HEAD
-  const words = check === null ? '' : check.kind === 'error' ? `Line ${check.line}, column ${check.column}: ${check.message}` : check.kind === 'text' ? 'Plain text' : check.kind === 'empty' ? 'Empty' : 'Valid JSON'
-=======
   const words =
     check === null
       ? ''
@@ -718,7 +685,6 @@ function Status({ check }: { check: JsonCheck | null }) {
           : check.kind === 'empty'
             ? t('Empty')
             : t('Valid JSON')
->>>>>>> origin/i18n
   return (
     <XStack {...slot('code-editor-status')} aria-live="polite" items="center" gap="$1.5" flex={1} minW={0}>
       {bad ? <CircleAlert size={14} color="$bad" /> : check?.kind === 'text' ? <Type size={14} color="$soft" /> : check?.kind === 'json' ? <CircleCheck size={14} color="$soft" /> : null}

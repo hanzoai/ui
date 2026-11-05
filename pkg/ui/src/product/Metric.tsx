@@ -16,15 +16,12 @@
  * the house pattern (see ui/Loader, ui/HanzoMark); style props use the v5
  * shorthand set.
  */
+import { Plate as Card } from '../backends/gui/plate'
+import { Button, Text, XStack, YStack } from '@hanzo/gui'
 import { FIGURES } from './figures'
 import type { ReactElement, ReactNode } from 'react'
-<<<<<<< HEAD
-import { Button, Text, XStack, YStack } from '@hanzo/gui'
-import { Plate as Card } from '../backends/gui/plate'
-=======
 import { Button, Card, Text, XStack, YStack } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 
 /** Distinct, theme-neutral series colors (mid-saturation reads on dark + light). */
 export const SERIES = ['#6ea8fe', '#7ee787', '#f0a868', '#c792ea', '#56d4c4', '#e879a6', '#d6c15a', '#8b9bb4'] as const

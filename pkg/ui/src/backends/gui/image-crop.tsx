@@ -12,13 +12,7 @@ import { useState } from 'react'
  */
 import { Image, XStack, YStack, type YStackProps } from '@hanzo/gui'
 import { Crop, RotateCw, ZoomIn, ZoomOut } from '@hanzogui/lucide-icons-2'
-<<<<<<< HEAD
-
-import { useTranslate } from '../../i18n/react'
-=======
-import { useState } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 import { AspectRatio } from './aspect-ratio'
 import { Button } from './button'
 import { slot } from './slot'
@@ -38,7 +32,7 @@ export interface ImageCropProps extends Omit<YStackProps, 'children'> {
 }
 
 export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [zoom, setZoom] = useState(1)
   const [rotation, setRotation] = useState(0)
   const { t } = useI18n()
@@ -65,15 +59,6 @@ export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps)
         />
       </AspectRatio>
       <XStack {...slot('image-crop-controls')} items="center" justify="center" gap="$2">
-<<<<<<< HEAD
-        <Button {...slot('image-crop-zoom-out')} variant="outline" size="icon" aria-label={tr('Zoom out')} onPress={zoomOut}>
-          <ZoomOut size={ICON} />
-        </Button>
-        <Button {...slot('image-crop-zoom-in')} variant="outline" size="icon" aria-label={tr('Zoom in')} onPress={zoomIn}>
-          <ZoomIn size={ICON} />
-        </Button>
-        <Button {...slot('image-crop-rotate')} variant="outline" size="icon" aria-label={tr('Rotate')} onPress={rotate}>
-=======
         <Button
           {...slot('image-crop-zoom-out')}
           variant="outline"
@@ -99,7 +84,6 @@ export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps)
           aria-label={t('Rotate')}
           onPress={rotate}
         >
->>>>>>> origin/i18n
           <RotateCw size={ICON} />
         </Button>
         <Button {...slot('image-crop-crop')} onPress={() => onCrop?.(src)}>

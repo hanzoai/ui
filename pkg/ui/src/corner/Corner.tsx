@@ -68,15 +68,12 @@ export type CornerProps = {
   language?: Setting
   /** The page's display currency, owned by the host. Absent, the row is not drawn. */
   currency?: Setting
-<<<<<<< HEAD
   /** The panel's own words, for a host that speaks another language. */
   words?: Partial<Words>
   /** Which bottom corner it stands in, along the line: `start` (the default) or `end`. */
   side?: 'start' | 'end'
   /** What the trigger shows in place of the `?`, such as the host's logo, drawn at about 22px. */
   mark?: ReactNode
-=======
->>>>>>> origin/i18n
 }
 
 type View = 'main' | 'language' | 'currency' | 'font' | 'arabic'
@@ -136,14 +133,9 @@ function useAxis<K extends 'theme' | 'font' | 'arabic'>(axis: K): [Preference[K]
   return [look ? look.pref[axis] : own, set]
 }
 
-<<<<<<< HEAD
-export function Corner({ help = [], language, currency, words, side = 'start', mark }: CornerProps) {
-  const w = { ...WORDS, ...words }
-=======
 export function Corner({ help = [], language, currency }: CornerProps) {
   const { t } = useI18n()
   const w = Object.fromEntries(Object.entries(WORDS).map(([k, said]) => [k, t(said)])) as Words
->>>>>>> origin/i18n
   const [open, setOpen] = useState(false)
   const [view, setView] = useState<View>('main')
   // Which row opened a list, so going back puts focus where it was.

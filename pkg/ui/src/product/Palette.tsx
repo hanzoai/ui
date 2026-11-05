@@ -35,6 +35,7 @@
  * DOM. This component renders into a portal, so a test cannot read its rows at
  * all; a rule kept here instead would be a rule nothing can check.
  */
+import { ASK, SAFE, rows, type Op } from "./match"
 import { type ReactNode, useMemo, useState } from "react"
 import { SizableText, XStack, YStack } from "@hanzo/gui"
 import { useI18n } from "@hanzo/i18n/react"

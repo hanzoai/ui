@@ -15,19 +15,12 @@
  * Its words are the reader's language (@hanzo/i18n `t`): efforts and modes are
  * marked English (`phrase`), drawn through `t`; model names are the catalog's.
  */
-<<<<<<< HEAD
-import { useState, type ReactNode } from 'react'
-import { SizableText, XStack, YStack } from '@hanzo/gui'
-import { Check } from '@hanzogui/lucide-icons-2'
-=======
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
 import { Check } from '@hanzogui/lucide-icons-2'
 import { forwardRef, useState, type ReactNode } from 'react'
->>>>>>> origin/main
 
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui'
-import { useTranslate } from '../i18n/react'
 import { grants, modelName, type ModelCatalogEntry, type PauseSource } from '../models/catalog'
 import { ModelPicker } from '../models/ModelPicker'
 import { RING } from './look'
@@ -63,35 +56,6 @@ export interface Chip {
   onPress: () => void
 }
 
-<<<<<<< HEAD
-/** A text button in the row. */
-function Word({ children, dim = false, label, open }: { children: ReactNode; dim?: boolean; label: string; open: boolean }) {
-  return (
-    <XStack
-      render="button"
-      aria-label={label}
-      aria-expanded={open}
-      items="center"
-      height={24}
-      px={6}
-      rounded={6}
-      cursor="pointer"
-      bg={open ? '$hover' : 'transparent'}
-      hoverStyle={{ bg: '$hover' }}
-      focusVisibleStyle={{
-        outlineColor: '$outlineColor',
-        outlineWidth: 2,
-        outlineStyle: 'solid',
-      }}
-      $max-sm={{ height: 44, px: 8 }}
-    >
-      <SizableText fontSize={14} fontWeight={dim ? '400' : '500'} color={dim ? '$hint' : '$ink'} numberOfLines={1}>
-        {children}
-      </SizableText>
-    </XStack>
-  )
-}
-=======
 /**
  * A word in the row under the frame: 14px, no edge and no fill until a pointer
  * gives it the soft hover ground, eased. `dim` sets it in the muted ink — the
@@ -129,11 +93,10 @@ const Word = forwardRef<HTMLElement, { children: ReactNode; label: string; slotN
     )
   },
 )
->>>>>>> origin/main
 
 /** A titled list of choices, a check on the one in force. */
 export function Choices<T extends string>({ title, items, value, onPick }: { title: string; items: readonly Way<T>[]; value: T; onPick: (id: T) => void }) {
-  const t = useTranslate()
+  const { t } = useI18n()
   return (
     <YStack role={'listbox' as never} aria-label={title} gap={2} data-slot="choices">
       <SizableText fontSize={13} color="$hint" px={10} pt={6} pb={4}>
@@ -163,44 +126,9 @@ function Opens({ label, word, slotName, dim, disabled, children }: { label: stri
   return (
     <Popover open={open} onOpenChange={(o) => setOpen(disabled ? false : o)} allowFlip placement="top-end">
       <PopoverTrigger asChild>
-<<<<<<< HEAD
-        {pill ? (
-          <XStack
-            render="button"
-            data-slot="mode"
-            aria-label={label}
-            aria-expanded={open}
-            items="center"
-            height={24}
-            px={8}
-            marginInlineStart={4}
-            rounded={6}
-            bg="$hover"
-            cursor="pointer"
-            hoverStyle={{ bg: '$raised' }}
-            focusVisibleStyle={{
-              outlineColor: '$outlineColor',
-              outlineWidth: 2,
-              outlineStyle: 'solid',
-            }}
-            $max-sm={{ height: 44, px: 12 }}
-          >
-            <SizableText fontSize={14} color="$ink">
-              {word}
-            </SizableText>
-          </XStack>
-        ) : (
-          <XStack>
-            <Word label={label} dim={dim} open={open}>
-              {word}
-            </Word>
-          </XStack>
-        )}
-=======
         <Word label={label} slotName={slotName} open={open} dim={dim} disabled={disabled}>
           {word}
         </Word>
->>>>>>> origin/main
       </PopoverTrigger>
       <PopoverContent solid p={6} width={288} maxW="calc(100vw - 24px)">
         {children(() => setOpen(false))}
@@ -228,22 +156,6 @@ export function Chips({ chips }: { chips: readonly Chip[] }) {
           bg="transparent"
           cursor="pointer"
           hoverStyle={{ bg: '$hover' }}
-<<<<<<< HEAD
-          focusVisibleStyle={{
-            outlineColor: '$outlineColor',
-            outlineWidth: 2,
-            outlineStyle: 'solid',
-          }}
-          $max-sm={{ height: 36, px: 12 }}
-        >
-          {/* The mark goes on a phone, where the row would not fit one line with it. */}
-          {c.icon ? (
-            <XStack aria-hidden $max-sm={{ display: 'none' }}>
-              {c.icon}
-            </XStack>
-          ) : null}
-          <SizableText fontSize={13} color={c.on ? '$ink' : '$quiet'} numberOfLines={1}>
-=======
           transition="quickest"
           focusVisibleStyle={RING}
           $max-sm={{ height: 36 }}
@@ -251,7 +163,6 @@ export function Chips({ chips }: { chips: readonly Chip[] }) {
           {/* The mark goes on a phone, where the row would not fit one line with it. */}
           {c.icon ? <XStack aria-hidden $max-sm={{ display: 'none' }}>{c.icon}</XStack> : null}
           <SizableText size="$3" color={c.on ? '$ink' : '$soft'} numberOfLines={1}>
->>>>>>> origin/main
             {c.label}
           </SizableText>
         </XStack>
@@ -260,12 +171,6 @@ export function Chips({ chips }: { chips: readonly Chip[] }) {
   )
 }
 
-<<<<<<< HEAD
-/** The row's end: the model where it is shown, and the mode. The effort is the composer's dial. */
-export function Tune({ mind, mode, onUpgrade, limits }: { mind?: Mind | null; mode?: Modes | null; onUpgrade?: (model: string) => void; limits?: PauseSource | null }) {
-  const t = useTranslate()
-  const now = mode ? mode.items.find((m) => m.id === mode.value) : undefined
-=======
 /** One of the surface's short lists, as a word that opens it. */
 function Pick({ title, label, slotName, modes, dim, disabled }: { title: string; label: (now: string) => string; slotName: string; modes: Modes; dim?: boolean; disabled?: boolean }) {
   const { t } = useI18n()
@@ -305,7 +210,6 @@ export function Tune({
   disabled?: boolean
 }) {
   const { t } = useI18n()
->>>>>>> origin/main
   return (
     <XStack data-slot="tune" items="center" gap={0} shrink={0} flexWrap="wrap">
       {mind ? (

@@ -54,30 +54,6 @@ export type Words = {
 }
 
 export const WORDS: Words = {
-<<<<<<< HEAD
-  open: 'Help and preferences',
-  help: 'Help',
-  preferences: 'Preferences',
-  theme: 'Theme',
-  auto: 'Auto',
-  light: 'Light',
-  dark: 'Dark',
-  language: 'Language',
-  currency: 'Currency',
-  font: 'Font',
-  sans: 'Sans',
-  system: 'System',
-  serif: 'Serif',
-  mono: 'Mono',
-  arabic: 'Arabic font',
-  kufi: 'Kufi',
-  plex: 'Plex',
-  search: 'Search',
-  back: 'Back',
-  close: 'Close',
-  none: 'No matches',
-  leaves: 'opens in a new tab',
-=======
   open: phrase('Help and preferences'),
   help: phrase('Help'),
   preferences: phrase('Preferences'),
@@ -98,7 +74,6 @@ export const WORDS: Words = {
   back: phrase('Back'),
   close: phrase('Close'),
   none: phrase('No matches'),
->>>>>>> origin/i18n
 }
 
 /** Past this many options a list gets a search field. */

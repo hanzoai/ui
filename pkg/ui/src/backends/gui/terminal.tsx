@@ -1,5 +1,6 @@
 'use client'
 
+import { Input as GuiInput, SizableText, Text, XStack, YStack, styled, type YStackProps } from '@hanzo/gui'
 import * as React from 'react'
 /**
  * Terminal — an emulated shell: a title bar, a scrolling command history, and
@@ -18,14 +19,8 @@ import * as React from 'react'
  */
 import { Input as GuiInput, SizableText, styled, Text, XStack, YStack, type YStackProps } from '@hanzo/gui'
 import { Check, Copy } from '@hanzogui/lucide-icons-2'
-<<<<<<< HEAD
-
-=======
-import * as React from 'react'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 import { face, type CodeToken } from '../../code-theme'
-import { useTranslate } from '../../i18n/react'
 import { mono } from './code-surface'
 import { ltr } from './dir'
 import { slot } from './slot'
@@ -169,7 +164,7 @@ const highlight = (text: string, palette: Palette): React.ReactNode => {
 const outputColor = (type: TerminalLineType | undefined, palette: Palette) => (type === 'error' ? palette.error : type === 'success' ? palette.success : type === 'info' ? palette.info : palette.output)
 
 export function Terminal({ prompt = '$', initialCommands = [], onCommand, theme, enableHistory = true, enableAutoComplete = true, autoCompleteCommands = DEFAULT_COMMANDS, maxHistorySize = 50, ...props }: TerminalProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [lines, setLines] = React.useState<TerminalCommand[]>(initialCommands)
   const [value, setValue] = React.useState('')
   const [historyIndex, setHistoryIndex] = React.useState(-1)
@@ -261,11 +256,7 @@ export function Terminal({ prompt = '$', initialCommands = [], onCommand, theme,
       setHistoryIndex(-1)
       setSuggestions([])
     },
-<<<<<<< HEAD
-    [onCommand, enableHistory, maxHistorySize, autoCompleteCommands, palette.output]
-=======
     [onCommand, enableHistory, maxHistorySize, autoCompleteCommands, palette.output, t],
->>>>>>> origin/i18n
   )
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -341,10 +332,6 @@ export function Terminal({ prompt = '$', initialCommands = [], onCommand, theme,
               <Mono flex={1} color={palette.input as never}>
                 {highlight(line.input, palette)}
               </Mono>
-<<<<<<< HEAD
-              <XStack {...slot('terminal-copy')} cursor="pointer" opacity={0.7} hoverStyle={{ opacity: 1 }} aria-label={tr('Copy command')} onPress={() => copy(line.input)}>
-                {copied === line.input ? <Check size={12} color={palette.input as never} /> : <Copy size={12} color={palette.prompt as never} />}
-=======
               <XStack
                 {...slot('terminal-copy')}
                 cursor="pointer"
@@ -358,7 +345,6 @@ export function Terminal({ prompt = '$', initialCommands = [], onCommand, theme,
                 ) : (
                   <Copy size={12} color={palette.prompt as never} />
                 )}
->>>>>>> origin/i18n
               </XStack>
             </XStack>
             {line.output !== '' && line.output != null && (
@@ -389,11 +375,7 @@ export function Terminal({ prompt = '$', initialCommands = [], onCommand, theme,
             onKeyDown={onKeyDown}
             spellCheck={false}
             autoComplete="off"
-<<<<<<< HEAD
-            aria-label={tr('Terminal input')}
-=======
             aria-label={t('Terminal input')}
->>>>>>> origin/i18n
             fontFamily="$mono"
             color={palette.input as never}
             style={{

@@ -14,10 +14,6 @@
  * once. Speed and quality are the existing `DropdownMenu` for the same reason.
  */
 import * as React from 'react'
-<<<<<<< HEAD
-import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
-import { Captions, Maximize, Minimize, Pause, PictureInPicture, Play, RotateCcw, Settings, SkipForward, Volume2, VolumeX } from '@hanzogui/lucide-icons-2'
-=======
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import {
   Captions,
@@ -33,9 +29,7 @@ import {
   VolumeX,
 } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 
-import { useTranslate } from '../../i18n/react'
 import { Button } from './button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu'
 import { Slider } from './slider'
@@ -128,7 +122,7 @@ export type MediaPlayerProps = Omit<React.ComponentPropsWithoutRef<typeof Frame>
 }
 
 export function MediaPlayer({ sources, poster, subtitles = [], size = 'md', autoPlay = false, loop = false, muted = false, preload = 'metadata', controls = true, disableKeyboard = false, disablePictureInPicture = false, onPlay, onPause, onEnded, onTimeUpdate, onVolumeChange, onQualityChange, onSpeedChange, ...props }: MediaPlayerProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const videoRef = React.useRef<HTMLVideoElement>(null)
   const containerRef = React.useRef<HTMLDivElement>(null)
   const hideTimer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
@@ -429,9 +423,6 @@ export function MediaPlayer({ sources, poster, subtitles = [], size = 'md', auto
       {controls && (
         <YStack {...slot('media-player-controls')} position="absolute" l={0} r={0} b={0} t={0} justify="flex-end" bg="rgba(0,0,0,0.55)" opacity={showControls ? 1 : 0} pointerEvents={showControls ? 'auto' : 'none'} style={{ transition: 'opacity 200ms ease' }}>
           <XStack px="$4" pb="$2">
-<<<<<<< HEAD
-            <Slider aria-label={tr('Seek')} value={[duration > 0 ? currentTime : 0]} max={duration || 1} step={0.1} onValueChange={([value]) => seekTo(value)} />
-=======
             <Slider
               aria-label={t('Seek')}
               value={[duration > 0 ? currentTime : 0]}
@@ -439,26 +430,10 @@ export function MediaPlayer({ sources, poster, subtitles = [], size = 'md', auto
               step={0.1}
               onValueChange={([value]) => seekTo(value)}
             />
->>>>>>> origin/i18n
           </XStack>
 
           <XStack px="$4" pb="$3" items="center" justify="space-between" gap="$2">
             <XStack items="center" gap="$2">
-<<<<<<< HEAD
-              <Button {...overlayButton} aria-label={tr('Rewind 10 seconds')} onClick={() => skip(-SKIP_SECONDS)}>
-                <RotateCcw size={16} />
-              </Button>
-
-              <Button {...overlayButton} size="icon" aria-label={isPlaying ? tr('Pause') : tr('Play')} onClick={togglePlayPause}>
-                {isPlaying ? <Pause size={18} /> : <Play size={18} />}
-              </Button>
-
-              <Button {...overlayButton} aria-label={tr('Forward 10 seconds')} onClick={() => skip(SKIP_SECONDS)}>
-                <SkipForward size={16} />
-              </Button>
-
-              <Button {...overlayButton} aria-label={isMuted ? tr('Unmute') : tr('Mute')} onClick={toggleMute}>
-=======
               <Button {...overlayButton} aria-label={t('Rewind 10 seconds')} onClick={() => skip(-SKIP_SECONDS)}>
                 <RotateCcw size={16} />
               </Button>
@@ -477,14 +452,10 @@ export function MediaPlayer({ sources, poster, subtitles = [], size = 'md', auto
               </Button>
 
               <Button {...overlayButton} aria-label={isMuted ? t('Unmute') : t('Mute')} onClick={toggleMute}>
->>>>>>> origin/i18n
                 {isMuted || volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
               </Button>
 
               <XStack width={80}>
-<<<<<<< HEAD
-                <Slider aria-label={tr('Volume')} value={[isMuted ? 0 : volume]} max={1} step={0.1} onValueChange={([value]) => changeVolume(value)} />
-=======
                 <Slider
                   aria-label={t('Volume')}
                   value={[isMuted ? 0 : volume]}
@@ -492,7 +463,6 @@ export function MediaPlayer({ sources, poster, subtitles = [], size = 'md', auto
                   step={0.1}
                   onValueChange={([value]) => changeVolume(value)}
                 />
->>>>>>> origin/i18n
               </XStack>
 
               <SizableText color="white" fontSize="$1" ml="$2">
@@ -502,27 +472,19 @@ export function MediaPlayer({ sources, poster, subtitles = [], size = 'md', auto
 
             <XStack items="center" gap="$1">
               {subtitles.length > 0 && (
-<<<<<<< HEAD
-                <Button {...overlayButton} aria-label={tr('Toggle captions')} bg={showSubtitles ? 'rgba(255,255,255,0.2)' : undefined} onClick={() => setShowSubtitles((v) => !v)}>
-=======
                 <Button
                   {...overlayButton}
                   aria-label={t('Toggle captions')}
                   bg={showSubtitles ? 'rgba(255,255,255,0.2)' : undefined}
                   onClick={() => setShowSubtitles((v) => !v)}
                 >
->>>>>>> origin/i18n
                   <Captions size={16} />
                 </Button>
               )}
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-<<<<<<< HEAD
-                  <Button {...overlayButton} size="sm" aria-label={tr('Playback speed')}>
-=======
                   <Button {...overlayButton} size="sm" aria-label={t('Playback speed')}>
->>>>>>> origin/i18n
                     {playbackSpeed}x
                   </Button>
                 </DropdownMenuTrigger>
@@ -538,11 +500,7 @@ export function MediaPlayer({ sources, poster, subtitles = [], size = 'md', auto
               {qualityOptions.length > 1 && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-<<<<<<< HEAD
-                    <Button {...overlayButton} aria-label={tr('Quality')}>
-=======
                     <Button {...overlayButton} aria-label={t('Quality')}>
->>>>>>> origin/i18n
                       <Settings size={16} />
                     </Button>
                   </DropdownMenuTrigger>
@@ -557,29 +515,21 @@ export function MediaPlayer({ sources, poster, subtitles = [], size = 'md', auto
               )}
 
               {!disablePictureInPicture && (
-<<<<<<< HEAD
-                <Button {...overlayButton} aria-label={tr('Picture in picture')} bg={isPictureInPicture ? 'rgba(255,255,255,0.2)' : undefined} onClick={() => void togglePictureInPicture()}>
-=======
                 <Button
                   {...overlayButton}
                   aria-label={t('Picture in picture')}
                   bg={isPictureInPicture ? 'rgba(255,255,255,0.2)' : undefined}
                   onClick={() => void togglePictureInPicture()}
                 >
->>>>>>> origin/i18n
                   <PictureInPicture size={16} />
                 </Button>
               )}
 
-<<<<<<< HEAD
-              <Button {...overlayButton} aria-label={isFullscreen ? tr('Exit fullscreen') : tr('Enter fullscreen')} onClick={() => void toggleFullscreen()}>
-=======
               <Button
                 {...overlayButton}
                 aria-label={isFullscreen ? t('Exit fullscreen') : t('Enter fullscreen')}
                 onClick={() => void toggleFullscreen()}
               >
->>>>>>> origin/i18n
                 {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
               </Button>
             </XStack>

@@ -12,15 +12,10 @@ import { useState, type ComponentProps, type ReactNode } from 'react'
  */
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { Code2, Eye, FileText, Plus, X } from '@hanzogui/lucide-icons-2'
-<<<<<<< HEAD
-=======
-import { useState, type ComponentProps, type ReactNode } from 'react'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 
 import { slot, tip } from '../backends/gui/slot'
-import { useTranslate } from '../i18n/react'
 
 type Col = Omit<ComponentProps<typeof YStack>, 'children'>
 type Row = Omit<ComponentProps<typeof XStack>, 'children'>
@@ -37,9 +32,6 @@ export interface ChannelHeaderProps extends Row {
   children?: ReactNode
 }
 
-<<<<<<< HEAD
-export function ChannelHeader({ name, artifacts, onArtifacts, children, ...rest }: ChannelHeaderProps) {
-=======
 export function ChannelHeader({
   name,
   artifacts,
@@ -48,7 +40,6 @@ export function ChannelHeader({
   ...rest
 }: ChannelHeaderProps) {
   const { t } = useI18n()
->>>>>>> origin/i18n
   return (
     <XStack {...slot('channel-header')} items="center" gap="$2" px="$4" py="$3" borderBottomWidth={1} borderColor="$borderColor" {...rest}>
       <XStack width={26} height={26} rounded="$3" items="center" justify="center" bg="$raised" shrink={0}>
@@ -157,7 +148,7 @@ export interface PaneProps extends Col {
  * while a surface that routes to a tab can drive it.
  */
 export function Pane({ tabs, active, onActive, onClose, ...rest }: PaneProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const [own, setOwn] = useState(tabs[0]?.id)
   const current = active ?? own
   const shown = tabs.find((tab) => tab.id === current) ?? tabs[0]
@@ -196,9 +187,6 @@ export function Pane({ tabs, active, onActive, onClose, ...rest }: PaneProps) {
         })}
         <XStack flex={1} />
         {onClose ? (
-<<<<<<< HEAD
-          <XStack width={26} height={26} items="center" justify="center" rounded="$3" cursor="pointer" opacity={0.7} role="button" tabIndex={0} aria-label={tr('Close panel')} {...tip('Close panel')} hoverStyle={{ bg: '$hover', opacity: 1 }} onPress={onClose}>
-=======
           <XStack
             width={26}
             height={26}
@@ -214,7 +202,6 @@ export function Pane({ tabs, active, onActive, onClose, ...rest }: PaneProps) {
             hoverStyle={{ bg: '$hover', opacity: 1 }}
             onPress={onClose}
           >
->>>>>>> origin/i18n
             <X size={15} />
           </XStack>
         ) : null}
@@ -254,11 +241,7 @@ export interface OrgRailProps extends Col {
  * hidden inside that page.
  */
 export function OrgRail({ orgs, active, onSwitch, onAdd, ...rest }: OrgRailProps) {
-<<<<<<< HEAD
-  const tr = useTranslate()
-=======
   const { t } = useI18n()
->>>>>>> origin/i18n
   return (
     <YStack {...slot('org-rail')} width={56} shrink={0} height="100%" items="center" gap="$2" py="$3" bg="$background" borderInlineEndWidth={1} borderColor="$borderColor" {...rest}>
       {orgs.map((org) => {
@@ -275,9 +258,6 @@ export function OrgRail({ orgs, active, onSwitch, onAdd, ...rest }: OrgRailProps
       })}
 
       {onAdd ? (
-<<<<<<< HEAD
-        <XStack width={36} height={36} rounded="$4" items="center" justify="center" cursor="pointer" role="button" tabIndex={0} aria-label={tr('Add an organization')} {...tip('Add an organization')} borderWidth={1} borderColor="$borderColor" opacity={0.6} hoverStyle={{ bg: '$hover', opacity: 1 }} onPress={onAdd}>
-=======
         <XStack
           width={36}
           height={36}
@@ -295,7 +275,6 @@ export function OrgRail({ orgs, active, onSwitch, onAdd, ...rest }: OrgRailProps
           hoverStyle={{ bg: '$hover', opacity: 1 }}
           onPress={onAdd}
         >
->>>>>>> origin/i18n
           <Plus size={16} />
         </XStack>
       ) : null}

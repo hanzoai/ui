@@ -26,7 +26,6 @@ import { useI18n } from '@hanzo/i18n/react'
 
 import { Box } from '../../box'
 import { cn } from '../../core/cn'
-import { useTranslate } from '../../i18n/react'
 import { sx } from '../../sx'
 import { Button } from './button'
 import { mirror } from './dir'
@@ -147,9 +146,6 @@ export type CarouselProps = Omit<React.ComponentProps<typeof Box>, 'onSelect'> &
   onCarouselSelect?: (api: CarouselApi) => void
 }
 
-<<<<<<< HEAD
-export const Carousel = ({ options, setApi, onCarouselSelect, className, children, ...props }: CarouselProps) => {
-=======
 export const Carousel = ({
   options,
   setApi,
@@ -159,7 +155,6 @@ export const Carousel = ({
   ...props
 }: CarouselProps) => {
   const { t } = useI18n()
->>>>>>> origin/i18n
   const scroller = React.useRef<HTMLElement | null>(null)
   const api = React.useRef<CarouselApi | null>(null)
   // Subscribers, held across renders so `on` may be called once in an effect
@@ -370,7 +365,7 @@ const arrow = (name: string, side: 'start' | 'end', Icon: typeof ChevronLeft, mo
     // `selected` is not read for its value — it subscribes the arrow to slide
     // changes, which is what re-evaluates `can`. Without it an arrow disabled at
     // slide 0 stays disabled after the user drags away from it.
-    const tr = useTranslate()
+    const { t } = useI18n()
     const { api, selected } = useCarousel()
     const { t } = useI18n()
     // Before mount there is no scroller, so neither arrow can know whether it
@@ -380,11 +375,7 @@ const arrow = (name: string, side: 'start' | 'end', Icon: typeof ChevronLeft, mo
       <Button
         variant="outline"
         size="icon"
-<<<<<<< HEAD
-        aria-label={tr(name)}
-=======
         aria-label={t(name)}
->>>>>>> origin/i18n
         disabled={live ? !can(live) : true}
         onClick={() => {
           if (api.current) move(api.current)

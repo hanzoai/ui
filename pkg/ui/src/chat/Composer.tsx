@@ -54,22 +54,17 @@ import { ArrowUp, AudioLines, Square, X } from '@hanzogui/lucide-icons-2'
 import { Textarea } from '../backends/gui'
 import { slot } from '../backends/gui/slot'
 import { glass } from '../glass'
-import { useTranslate } from '../i18n/react'
 import type { PauseSource } from '../models/catalog'
 import { Pills } from '../product/ChipSelect'
 import { Dictation } from './Dictation'
 import { Mention, trigger } from './Mention'
 import { Palette, type Command } from './Palette'
 import { Plus, type PlusProps, type Shelf } from './Plus'
-<<<<<<< HEAD
-import { RING } from './ring'
-import { ready, sends, type Mods } from './send'
-=======
 import { ready, sends, type Mods } from './send'
 import { GHOST, GLYPH, RING, STROKE } from './look'
->>>>>>> origin/main
 import { useComposerStatus } from './Status'
 import { Chips, Tune, type Chip, type Mind, type Modes } from './Tune'
+import { useI18n } from '@hanzo/i18n/react'
 
 /** `onChange` is dropped: here it carries the draft, not a DOM change event. */
 type Stack = Omit<ComponentProps<typeof YStack>, 'children' | 'onChange'>
@@ -127,35 +122,9 @@ const CEILING_PHONE = 160
 /** The ink on a filled round: the accent's own foreground. */
 const ON = 'var(--primary-foreground)'
 
-<<<<<<< HEAD
-/** A round control with no ground of its own until it is pointed at. */
-const QUIET = {
-  bg: 'transparent',
-  color: 'var(--foreground)',
-  hoverStyle: { bg: '$hover' },
-} as const
-
-/** What the draft carries, as a chip: a filled tab after `+` on a laptop; on a phone a pill in a row of its own above the field, the pills' shape (round, a hairline, no fill) as tall as the controls, so the controls' row never wraps. */
-const CARRIED = {
-  height: 28,
-  rounded: 8,
-  bg: '$hover',
-  paddingInlineStart: 8,
-} as const
-const pill = (height: number) =>
-  ({
-    height,
-    rounded: 999,
-    borderWidth: 1,
-    borderColor: '$borderColor',
-    bg: 'transparent',
-    paddingInlineStart: 12,
-  }) as const
-=======
 /** What the draft carries, as a chip: a filled pill after `+` on a laptop; on a phone a pill in a row of its own above the field, round with a hairline and no fill, as tall as the controls, so the controls' row never wraps. */
 const CARRIED = { height: 28, rounded: 999, bg: '$hover', paddingInlineStart: 10 } as const
 const pill = (height: number) => ({ height, rounded: 999, borderWidth: 1, borderColor: '$borderColor', bg: 'transparent', paddingInlineStart: 12 }) as const
->>>>>>> origin/main
 
 /** One of the two layers in the row's last place: shown, it is there; hidden, it fades and shrinks to 0.9 and takes no press. */
 const layer = (shown: boolean) =>
@@ -321,10 +290,6 @@ function useLift(): number {
   return lift
 }
 
-<<<<<<< HEAD
-export function Composer({ value, onChange, onSend, onStop, busy = false, disabled = false, ready: readyProp, placeholder, label, rows = 1, maxHeight = CEILING, field, hint, status, children, head, pills, carried, plus, slash, at, commands, chips, mind, effort, limits, onUpgrade, mode, voice, language = null, onLanguage, talk, starters, note, column = false, framed = false, narrow: narrowProp, defaults, ...props }: ComposerProps) {
-  const t = useTranslate()
-=======
 export function Composer({
   value,
   onChange,
@@ -367,7 +332,6 @@ export function Composer({
   ...props
 }: ComposerProps) {
   const { t } = useI18n()
->>>>>>> origin/main
   const inheritedStatus = useComposerStatus()
   const media = useMedia()
   const narrow = narrowProp ?? !media.sm
@@ -528,9 +492,6 @@ export function Composer({
       <SizableText fontSize={13} color="$ink" numberOfLines={1} shrink={1}>
         {c.label}
       </SizableText>
-<<<<<<< HEAD
-      <XStack render="button" aria-label={t('Remove {name}', { name: c.label })} onPress={c.onRemove} width={20} height={20} rounded={narrow ? 999 : 6} items="center" justify="center" hoverStyle={{ bg: '$raised' }} cursor="pointer">
-=======
       <XStack
         render="button"
         aria-label={t('Remove {name}', { name: c.label })}
@@ -543,7 +504,6 @@ export function Composer({
         hoverStyle={{ bg: '$raised' }}
         cursor="pointer"
       >
->>>>>>> origin/main
         <X size={12} color="$hint" />
       </XStack>
     </XStack>
@@ -590,15 +550,6 @@ export function Composer({
   return (
     <YStack {...slot('composer-shell')} {...(column ? measure : { width: '100%' })} gap={8} {...(lift ? { mb: lift } : null)} {...props}>
       {above}
-<<<<<<< HEAD
-      <YStack {...slot('composer')} width="100%" rounded={CORNER} borderWidth={1} {...glass(2)} p={6} pt={pills || (narrow && things.length) ? 6 : 10} gap={SPACE} $max-sm={{ rounded: CORNER_PHONE }} {...(framed ? { boxShadow: 'var(--shadow-sheet-1)' } : null)} style={FLOOR}>
-        {pills ? (
-          // The pills stand as tall as the controls (`Pills`), at the controls' edge, so the frame's rows share one rhythm.
-          <XStack {...slot('composer-pills')} items="center" gap={SPACE} flexWrap="wrap" rowGap={SPACE}>
-            <Pills.Provider value={hit}>{pills}</Pills.Provider>
-          </XStack>
-        ) : null}
-=======
       <YStack
         {...slot('composer')}
         width="100%"
@@ -615,7 +566,6 @@ export function Composer({
         }}
         style={FLOOR}
       >
->>>>>>> origin/main
         {narrow && things.length ? (
           <XStack {...slot('composer-carry')} items="center" gap={SPACE} flexWrap="wrap" rowGap={SPACE}>
             {things}
@@ -635,31 +585,8 @@ export function Composer({
               </SizableText>
             ) : null}
             {commands?.length ? <Palette commands={commands} open={palette} onOpenChange={setPalette} size={hit} disabled={disabled} /> : null}
-<<<<<<< HEAD
-            {voice ? <Dictation voice={voice} disabled={disabled} size={hit} gap={narrow ? SPACE : 0} language={language} {...(onLanguage ? { onLanguage } : {})} /> : null}
-            {!busy && !lit && talk ? (
-              // Voice mode is a plain mark on a laptop, as the mic is, and the filled round on a phone.
-              <Control asChild size={hit} fill={narrow} rounded={999} {...(narrow ? null : QUIET)} focusVisibleStyle={RING}>
-                <Voice
-                  voice={talk}
-                  disabled={disabled}
-                  data-slot="composer-talk"
-                  says={{
-                    idle: t('Voice mode'),
-                    listening: t('In conversation — click to hang up'),
-                    speaking: t('Hanzo is speaking — talk to interrupt'),
-                  }}
-                >
-                  {() => <AudioLines size={16} color={narrow ? ON : 'var(--foreground)'} />}
-                </Voice>
-              </Control>
-            ) : (
-              round
-            )}
-=======
             {voice ? <Dictation voice={voice} disabled={disabled} size={hit} language={language} {...(onLanguage ? { onLanguage } : {})} /> : null}
             {last}
->>>>>>> origin/main
           </XStack>
         </XStack>
       </YStack>

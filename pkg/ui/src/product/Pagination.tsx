@@ -13,7 +13,6 @@ import { ChevronLeft, ChevronRight } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 
 import { mirror } from '../backends/gui/dir'
-import { useTranslate } from '../i18n/react'
 import { useEmit } from './instrument'
 import { GAP, pages } from './pages'
 
@@ -30,7 +29,7 @@ export type PaginationProps = {
 }
 
 export function Pagination({ page, count, onChange, around = 1 }: PaginationProps) {
-  const tr = useTranslate()
+  const { t } = useI18n()
   const track = useEmit()
   const { t } = useI18n()
   if (count <= 1) return null
@@ -43,9 +42,6 @@ export function Pagination({ page, count, onChange, around = 1 }: PaginationProp
 
   return (
     <XStack items="center" justify="center" gap="$1" flexWrap="wrap">
-<<<<<<< HEAD
-      <Button size="$2" chromeless icon={<ChevronLeft {...mirror} size={16} />} onPress={() => go(page - 1)} disabled={page <= 1} aria-label={tr('Previous page')} />
-=======
       <Button
         size="$2"
         chromeless
@@ -54,16 +50,12 @@ export function Pagination({ page, count, onChange, around = 1 }: PaginationProp
         disabled={page <= 1}
         aria-label={t('Previous page')}
       />
->>>>>>> origin/i18n
       {pages(page, count, around).map((slot, i) =>
         slot === GAP ? (
           <Text key={`gap-${i}`} px="$1.5" fontSize="$2" color="$soft" aria-hidden>
             {GAP}
           </Text>
         ) : (
-<<<<<<< HEAD
-          <Button key={slot} size="$2" chromeless={slot !== page} onPress={() => go(slot)} aria-label={`Page ${slot}`} aria-current={slot === page ? 'page' : undefined} bg={slot === page ? '$edge' : undefined}>
-=======
           <Button
             key={slot}
             size="$2"
@@ -73,14 +65,10 @@ export function Pagination({ page, count, onChange, around = 1 }: PaginationProp
             aria-current={slot === page ? 'page' : undefined}
             bg={slot === page ? '$edge' : undefined}
           >
->>>>>>> origin/i18n
             {String(slot)}
           </Button>
         )
       )}
-<<<<<<< HEAD
-      <Button size="$2" chromeless icon={<ChevronRight {...mirror} size={16} />} onPress={() => go(page + 1)} disabled={page >= count} aria-label={tr('Next page')} />
-=======
       <Button
         size="$2"
         chromeless
@@ -89,7 +77,6 @@ export function Pagination({ page, count, onChange, around = 1 }: PaginationProp
         disabled={page >= count}
         aria-label={t('Next page')}
       />
->>>>>>> origin/i18n
     </XStack>
   )
 }

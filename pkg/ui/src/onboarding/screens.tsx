@@ -1,5 +1,6 @@
 'use client'
 
+import { ENTERPRISE_FROM, MAX_SEATS, MIN_SEATS, has, lines, money, offer, saving, unit, usd, yearly, type Interval, type PlanId } from './plans'
 import { useMemo, useState, type FormEvent } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 import { Check, ChevronDown, User, Users } from '@hanzogui/lucide-icons-2'
@@ -13,7 +14,6 @@ import { Input } from '../backends/gui/input'
 import { Anchor, Heading, Paragraph, SizableText, XStack, YStack } from '../backends/gui/layout'
 import { Stepper } from '../backends/gui/stepper'
 import { Textarea } from '../backends/gui/textarea'
-import { useTranslate } from '../i18n/react'
 import { ApiError, call } from './api'
 import { IntervalToggle, Line, Panel } from './frame'
 import { ENTERPRISE_FROM, has, lines, MAX_SEATS, MIN_SEATS, money, offer, saving, unit, usd, yearly, type Interval, type PlanId } from './plans'
@@ -69,21 +69,6 @@ function UseCard({ icon, name, note, on, dim, onPress, size = 'large' }: { icon?
 }
 
 export function UseCards({ onPick, onAsk }: { onPick: (u: Use) => void; onAsk?: () => void }) {
-<<<<<<< HEAD
-  const tr = useTranslate()
-  const [team, setTeam] = useState(false)
-  return (
-    <YStack items="center" gap="$5" width="100%">
-      <XStack role="group" aria-label={tr('How you will use Hanzo')} flexWrap="wrap" justify="center" gap="$6" width="100%">
-        <UseCard icon={<User size={64} />} name="For personal use" note="For individuals who want to build and experiment with their own projects" dim={team} onPress={() => onPick('personal')} />
-        <UseCard icon={<Users size={64} />} name="With my team" note="For organizations who want to collaborate and build at scale" on={team} onPress={() => setTeam(true)} />
-      </XStack>
-      {team ? (
-        <>
-          <XStack role="group" aria-label={tr('Team size')} flexWrap="wrap" justify="center" gap="$6" width="100%">
-            <UseCard size="small" name="Team" note={`For ${MIN_SEATS}–${MAX_SEATS} people. Predictable per-seat pricing, set up in minutes.`} onPress={() => onPick('team')} />
-            <UseCard size="small" name="Enterprise" note={`For ${ENTERPRISE_FROM} or more people. Pooled usage, advanced admin and security controls.`} onPress={() => onPick('enterprise')} />
-=======
   const { t } = useI18n()
   const [team, setTeam] = useState(false)
   return (
@@ -97,7 +82,6 @@ export function UseCards({ onPick, onAsk }: { onPick: (u: Use) => void; onAsk?: 
           <XStack role="group" aria-label={t('Team size')} flexWrap="wrap" justify="center" gap="$6" width="100%">
             <UseCard size="small" name={t('Team')} note={`${t('For {min}–{max} people.', { min: MIN_SEATS, max: MAX_SEATS })} ${t('Predictable per-seat pricing, set up in minutes.')}`} onPress={() => onPick('team')} />
             <UseCard size="small" name={t('Enterprise')} note={`${t('For {n} or more people.', { n: ENTERPRISE_FROM })} ${t('Pooled usage, advanced admin and security controls.')}`} onPress={() => onPick('enterprise')} />
->>>>>>> origin/i18n
           </XStack>
           <XStack items="center" gap="$1">
             <SizableText size="$2" color="$quiet">
@@ -255,16 +239,8 @@ export function TeamName({ api, onCreated }: { api: string; onCreated: (org: str
     try {
       // The account's own route makes the organization the caller owns, named by
       // IAM; the reserved admin org and the brand orgs are never a team's home.
-<<<<<<< HEAD
-      const made = await call<{ org?: string }>(api, '/v1/account/orgs', {
-        method: 'POST',
-        body: JSON.stringify({ name: name.trim() }),
-      })
-      if (!made?.org) throw new ApiError('The team was made but its name did not come back. Reload to find it.', 200)
-=======
       const made = await call<{ org?: string }>(api, '/v1/account/orgs', { method: 'POST', body: JSON.stringify({ name: name.trim() }) })
       if (!made?.org) throw new ApiError(`${t('The team was made but its name did not come back.')} ${t('Reload to find it.')}`, 200)
->>>>>>> origin/i18n
       await onCreated(made.org)
     } catch (err) {
       setWrong(err instanceof ApiError ? err.message : `${t('Could not create the team.')} ${t('Try again.')}`)
@@ -290,16 +266,6 @@ export function TeamName({ api, onCreated }: { api: string; onCreated: (org: str
 export function IntervalChoice({ interval, setInterval, price, save }: { interval: Interval; setInterval: (i: Interval) => void; price: (i: Interval) => string; save: number }) {
   const { t } = useI18n()
   return (
-<<<<<<< HEAD
-    <ChoiceGroup label="Billing interval" flexWrap="wrap">
-      {(['monthly', 'annual'] as const)
-        .filter((i) => i === 'monthly' || save > 0)
-        .map((i) => (
-          <ChoiceCard key={i} selected={interval === i} onSelect={() => setInterval(i)} flex={1} flexBasis={200}>
-            <XStack justify="space-between" items="center" width="100%">
-              <SizableText size="$3" fontWeight="600" color="$ink">
-                {i === 'annual' ? 'Annually' : 'Monthly'}
-=======
     <ChoiceGroup label={t('Billing interval')} flexWrap="wrap">
       {(['monthly', 'annual'] as const).filter((i) => i === 'monthly' || save > 0).map((i) => (
         <ChoiceCard key={i} selected={interval === i} onSelect={() => setInterval(i)} flex={1} flexBasis={200}>
@@ -316,19 +282,8 @@ export function IntervalChoice({ interval, setInterval, price, save }: { interva
             {i === 'annual' ? (
               <SizableText size="$1" color="$ink" bg="$edge" px="$2" rounded="$1">
                 {t('Save {n}%', { n: save })}
->>>>>>> origin/i18n
               </SizableText>
-              <RadioCircle selected={interval === i} />
-            </XStack>
-            <XStack justify="space-between" items="center" width="100%">
-              <SizableText size="$2" color="$ink">
-                {price(i)}
-              </SizableText>
-              {i === 'annual' ? (
-                <SizableText size="$1" color="$ink" bg="$edge" px="$2" rounded="$1">
-                  {`Save ${save}%`}
-                </SizableText>
-              ) : null}
+            ) : null}
             </XStack>
           </ChoiceCard>
         ))}
@@ -336,9 +291,6 @@ export function IntervalChoice({ interval, setInterval, price, save }: { interva
   )
 }
 
-<<<<<<< HEAD
-export function Seats({ interval, setInterval, value, setValue, onContinue, onEnterprise, onAsk }: { interval: Interval; setInterval: (i: Interval) => void; value: { plan: PlanId; seats: number }; setValue: (v: { plan: PlanId; seats: number }) => void; onContinue: () => void; onEnterprise: () => void; onAsk?: () => void }) {
-=======
 export function Seats({
   interval,
   setInterval,
@@ -357,7 +309,6 @@ export function Seats({
   onAsk?: () => void
 }) {
   const { t } = useI18n()
->>>>>>> origin/i18n
   const [adjust, setAdjust] = useState(false)
   const std = value.plan === 'team_standard'
   const premium = has('team_premium')
@@ -378,9 +329,6 @@ export function Seats({
         <Heading render="h2" size="$5" fontWeight="600" color="$ink" m={0}>
           {t('Order details')}
         </Heading>
-<<<<<<< HEAD
-        <Line label={`${value.seats} ${std ? 'Standard' : 'Premium'} seats`} note={`× ${usd(unit(value.plan, interval))} per seat /month${interval === 'annual' ? ', billed yearly' : ''}`} value={usd(l.subtotal)} strong />
-=======
         <Line
           label={std ? t('{n} Standard seats', { n: value.seats }) : t('{n} Premium seats', { n: value.seats })}
           note={
@@ -391,7 +339,6 @@ export function Seats({
           value={usd(l.subtotal)}
           strong
         />
->>>>>>> origin/i18n
         <Button type="button" variant="secondary" size="lg" aria-expanded={adjust} onClick={() => setAdjust((a) => !a)}>
           {t('Adjust seats')}
           <ChevronDown size={16} />
@@ -428,13 +375,9 @@ export function Seats({
         <Line label={t('Tax (if applicable)')} value={t('Calculated at payment')} muted />
         <Line label={t('Total due today')} value={t('{price} + tax', { price: usd(l.subtotal) })} strong />
       </Panel>
-<<<<<<< HEAD
-      <Primary onClick={onContinue}>Continue to payment</Primary>
-=======
       <Primary onClick={onContinue}>
         {t('Continue to payment')}
       </Primary>
->>>>>>> origin/i18n
     </>
   )
 }
@@ -442,18 +385,8 @@ export function Seats({
 /* ----------------------------------------------------------- enterprise */
 
 export function Enterprise({ api, onSent }: { api: string; onSent: () => void }) {
-<<<<<<< HEAD
-  const [f, setF] = useState({
-    name: '',
-    email: '',
-    company: '',
-    size: '',
-    message: '',
-  })
-=======
   const { t } = useI18n()
   const [f, setF] = useState({ name: '', email: '', company: '', size: '', message: '' })
->>>>>>> origin/i18n
   const [busy, setBusy] = useState(false)
   const [wrong, setWrong] = useState<string | null>(null)
   const set = (k: keyof typeof f) => (v: string) => setF((cur) => ({ ...cur, [k]: v }))

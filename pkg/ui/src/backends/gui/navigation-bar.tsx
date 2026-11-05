@@ -14,16 +14,10 @@ import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
  * options. Every variant is the same frame wearing different content, so a
  * caller changing `variant` keeps the same height, border and props shape.
  */
-<<<<<<< HEAD
-import { Bell, ChevronDown, ChevronRight, MessageSquare, Phone, Search, ShoppingCart, User, Users, Video } from '@hanzogui/lucide-icons-2'
-=======
 import { ChevronRight, ChevronDown, Search, Bell, ShoppingCart, User, Users, Phone, Video, MessageSquare } from '@hanzogui/lucide-icons-2'
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
-import type { ReactNode } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
->>>>>>> origin/i18n
 
-import { useTranslate } from '../../i18n/react'
 import { Avatar, AvatarFallback, AvatarImage } from './avatar'
 import { Badge } from './badge'
 import { Button } from './button'
@@ -141,10 +135,6 @@ export type NavigationBarProps = {
   children?: ReactNode
 }
 
-<<<<<<< HEAD
-export function NavigationBar({ variant = 'simple', logo, items = [], leftItems = [], rightItems = [], title, user, collaborators = [], cartCount = 0, contactName, options = [], value, onValueChange, onSearch, onNotifications, onCall, onVideo, onMessage, children }: NavigationBarProps) {
-  const tr = useTranslate()
-=======
 export function NavigationBar({
   variant = 'simple',
   logo,
@@ -167,7 +157,6 @@ export function NavigationBar({
   children,
 }: NavigationBarProps) {
   const { t } = useI18n()
->>>>>>> origin/i18n
   const height = variant === 'breadcrumb' ? BREADCRUMB_HEIGHT : HEIGHT
 
   return (
@@ -200,17 +189,10 @@ export function NavigationBar({
         <>
           {ink(title, SizableText, { size: '$5', fontWeight: '600' })}
           <XStack items="center" gap="$3">
-<<<<<<< HEAD
-            <IconButton aria-label={tr('Search')} onPress={onSearch}>
-              <Search size={18} />
-            </IconButton>
-            <IconButton aria-label={tr('Notifications')} onPress={onNotifications}>
-=======
             <IconButton aria-label={t('Search')} onPress={onSearch}>
               <Search size={18} />
             </IconButton>
             <IconButton aria-label={t('Notifications')} onPress={onNotifications}>
->>>>>>> origin/i18n
               <Bell size={18} />
             </IconButton>
             {user ? (
@@ -226,16 +208,6 @@ export function NavigationBar({
           {ink(logo, SizableText, { fontWeight: '700' })}
           <Links items={items} />
           <XStack items="center" gap="$1">
-<<<<<<< HEAD
-            <IconButton aria-label={tr('Search')} onPress={onSearch}>
-              <Search size={18} />
-            </IconButton>
-            <IconButton aria-label={tr('Account')}>
-              <User size={18} />
-            </IconButton>
-            <XStack position="relative">
-              <IconButton aria-label={tr('Cart')}>
-=======
             <IconButton aria-label={t('Search')} onPress={onSearch}>
               <Search size={18} />
             </IconButton>
@@ -244,7 +216,6 @@ export function NavigationBar({
             </IconButton>
             <XStack position="relative">
               <IconButton aria-label={t('Cart')}>
->>>>>>> origin/i18n
                 <ShoppingCart size={18} />
               </IconButton>
               {cartCount > 0 ? (
@@ -267,15 +238,6 @@ export function NavigationBar({
         <>
           {ink(contactName, SizableText, { size: '$4', fontWeight: '600' })}
           <XStack items="center" gap="$1">
-<<<<<<< HEAD
-            <IconButton aria-label={tr('Call')} onPress={onCall}>
-              <Phone size={18} />
-            </IconButton>
-            <IconButton aria-label={tr('Video call')} onPress={onVideo}>
-              <Video size={18} />
-            </IconButton>
-            <IconButton aria-label={tr('Message')} onPress={onMessage}>
-=======
             <IconButton aria-label={t('Call')} onPress={onCall}>
               <Phone size={18} />
             </IconButton>
@@ -283,7 +245,6 @@ export function NavigationBar({
               <Video size={18} />
             </IconButton>
             <IconButton aria-label={t('Message')} onPress={onMessage}>
->>>>>>> origin/i18n
               <MessageSquare size={18} />
             </IconButton>
           </XStack>

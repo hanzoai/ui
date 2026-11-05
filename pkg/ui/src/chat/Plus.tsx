@@ -6,16 +6,8 @@
  * Sketch, Thinking), followed by what the conversation works with — agents,
  * skills, connectors, a design system, plugins, a device — and Memory.
  */
-import { useMemo, useState, type ReactNode } from 'react'
 import { SizableText, useMedia, XStack } from '@hanzo/gui'
 import { phrase } from '@hanzo/i18n'
-<<<<<<< HEAD
-import { Blocks, Bot, Brain, Briefcase, Check, Monitor, Palette, Paperclip, Plug, Plus as PlusIcon, ScrollText, Telescope } from '@hanzogui/lucide-icons-2'
-
-import { DropdownMenu, DropdownMenuBack, DropdownMenuContent, DropdownMenuEmpty, DropdownMenuItem, DropdownMenuLoading, DropdownMenuPage, DropdownMenuSearch, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '../backends/gui'
-import { useTranslate } from '../i18n/react'
-import { RING } from './ring'
-=======
 import { useI18n } from '@hanzo/i18n/react'
 import {
   AppWindow,
@@ -53,9 +45,42 @@ import {
   DropdownMenuTrigger,
 } from '../backends/gui'
 import { useMemo, useState, type ReactNode } from 'react'
+import {
+  AppWindow,
+  Blocks,
+  Bot,
+  Briefcase,
+  Brain,
+  Check,
+  Folder,
+  Globe,
+  Image as ImageIcon,
+  Monitor,
+  Palette,
+  Paperclip,
+  PenTool,
+  Plug,
+  Plus as PlusIcon,
+  ScrollText,
+  Telescope,
+} from '@hanzogui/lucide-icons-2'
+  DropdownMenu,
+  DropdownMenuBack,
+  DropdownMenuContent,
+  DropdownMenuEmpty,
+  DropdownMenuItem,
+  DropdownMenuLoading,
+  DropdownMenuPage,
+  DropdownMenuSearch,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '../backends/gui'
 
 import { GHOST, GLYPH, RING, STROKE } from './look'
->>>>>>> origin/main
 
 /** One thing a shelf holds. `on` marks what the conversation already has. */
 export interface Row {
@@ -122,63 +147,12 @@ export interface PlusProps {
 const ICON = 18
 
 const SHELVES = [
-<<<<<<< HEAD
-  {
-    key: 'agents',
-    label: phrase('Agents'),
-    search: phrase('Search agents'),
-    reading: phrase('Reading agents'),
-    none: phrase('No agents yet'),
-    icon: <Bot size={ICON} />,
-  },
-  {
-    key: 'skills',
-    label: phrase('Skills'),
-    search: phrase('Search skills'),
-    reading: phrase('Reading skills'),
-    none: phrase('No skills yet'),
-    icon: <ScrollText size={ICON} />,
-  },
-  {
-    key: 'connectors',
-    label: phrase('Connectors'),
-    search: phrase('Search connectors'),
-    reading: phrase('Reading connectors'),
-    none: phrase('No connectors yet'),
-    icon: <Blocks size={ICON} />,
-  },
-  {
-    key: 'design',
-    label: phrase('Design system'),
-    search: phrase('Search design system'),
-    reading: phrase('Reading design system'),
-    none: phrase('No design system yet'),
-    icon: <Palette size={ICON} />,
-  },
-  {
-    key: 'plugins',
-    label: phrase('Plugins'),
-    search: phrase('Search plugins'),
-    reading: phrase('Reading plugins'),
-    none: phrase('No plugins yet'),
-    icon: <Plug size={ICON} />,
-  },
-  {
-    key: 'devices',
-    label: phrase('Devices'),
-    search: phrase('Search devices'),
-    reading: phrase('Reading devices'),
-    none: phrase('No devices yet'),
-    icon: <Monitor size={ICON} />,
-  },
-=======
   { key: 'agents', label: phrase('Agents'), note: phrase('Bring specialized agents into this chat'), search: phrase('Search agents'), reading: phrase('Reading agents'), none: phrase('No agents yet'), icon: <Bot size={ICON} /> },
   { key: 'skills', label: phrase('Skills'), note: phrase('Use workspace skills and workflows'), search: phrase('Search skills'), reading: phrase('Reading skills'), none: phrase('No skills yet'), icon: <ScrollText size={ICON} /> },
   { key: 'connectors', label: phrase('Connectors'), note: phrase('Sync connected knowledge sources'), search: phrase('Search connectors'), reading: phrase('Reading connectors'), none: phrase('No connectors yet'), icon: <Blocks size={ICON} /> },
   { key: 'design', label: phrase('Design system'), note: phrase('Apply brand tokens and UI components'), search: phrase('Search design system'), reading: phrase('Reading design system'), none: phrase('No design system yet'), icon: <Palette size={ICON} /> },
   { key: 'plugins', label: phrase('Plugins'), note: phrase('Connect external tools and APIs'), search: phrase('Search plugins'), reading: phrase('Reading plugins'), none: phrase('No plugins yet'), icon: <Plug size={ICON} /> },
   { key: 'devices', label: phrase('Devices'), note: phrase('Run on a connected machine'), search: phrase('Search devices'), reading: phrase('Reading devices'), none: phrase('No devices yet'), icon: <Monitor size={ICON} /> },
->>>>>>> origin/main
 ] as const
 
 type Words = (typeof SHELVES)[number]
@@ -212,7 +186,7 @@ function Line({ icon, label, note, on, tail }: { icon?: ReactNode; label: string
 
 /** A shelf's rows, its status, then its ways to more. */
 function Contents({ shelf, words, close }: { shelf: Shelf; words: Words; close: () => void }) {
-  const t = useTranslate()
+  const { t } = useI18n()
   const [q, setQ] = useState('')
   const needle = q.trim().toLowerCase()
   const rows = needle ? shelf.rows.filter((r) => `${r.label} ${r.note ?? ''}`.toLowerCase().includes(needle)) : shelf.rows
@@ -246,14 +220,13 @@ function Contents({ shelf, words, close }: { shelf: Shelf; words: Words; close: 
 
 /** The `+` and its menu. */
 export function Plus(p: PlusProps) {
-  const t = useTranslate()
+  const { t } = useI18n()
   const media = useMedia()
   const wide = media.sm
   const [open, setOpen] = useState(false)
   const [sub, setSub] = useState<string | null>(null)
   const close = () => setOpen(false)
   const shelves = useMemo(() => SHELVES.filter((s) => p[s.key as Key]), [p])
-<<<<<<< HEAD
   const switches = [
     p.research
       ? {
@@ -272,8 +245,6 @@ export function Plus(p: PlusProps) {
         }
       : null,
   ].filter((x): x is NonNullable<typeof x> => x !== null)
-=======
->>>>>>> origin/main
 
   const main = (
     <>
@@ -373,11 +344,7 @@ export function Plus(p: PlusProps) {
               <Line icon={s.icon} label={t(s.label)} note={t(s.note)} />
             </DropdownMenuSubTrigger>
             {sub === s.key ? (
-<<<<<<< HEAD
-              <DropdownMenuSubContent minW={200} maxW={340} maxH={420} pointerEvents="auto" style={{ overflowY: 'auto' }}>
-=======
               <DropdownMenuSubContent minW={240} maxW={360} maxH={420} pointerEvents="auto" style={{ overflowY: 'auto' }}>
->>>>>>> origin/main
                 <Contents shelf={p[s.key as Key]!} words={s} close={close} />
               </DropdownMenuSubContent>
             ) : null}
@@ -406,10 +373,6 @@ export function Plus(p: PlusProps) {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen} {...(wide ? null : { defaultPage: 'main' })}>
       <DropdownMenuTrigger asChild disabled={p.disabled}>
-<<<<<<< HEAD
-        <XStack render="button" data-slot="plus" aria-label={t('Add files, agents, skills and more')} width={p.size ?? 36} height={p.size ?? 36} rounded={999} items="center" justify="center" shrink={0} cursor={p.disabled ? 'default' : 'pointer'} opacity={p.disabled ? 0.4 : 1} bg={open ? '$hover' : 'transparent'} hoverStyle={{ bg: '$hover' }} focusVisibleStyle={RING}>
-          <PlusIcon size={18} color="$ink" />
-=======
         <XStack
           render="button"
           data-slot="plus"
@@ -427,7 +390,6 @@ export function Plus(p: PlusProps) {
           focusVisibleStyle={RING}
         >
           <PlusIcon size={GLYPH} strokeWidth={STROKE} color="currentColor" />
->>>>>>> origin/main
         </XStack>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" minW={360} maxW={440} data-slot="plus-menu">

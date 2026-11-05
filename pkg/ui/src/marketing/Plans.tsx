@@ -27,7 +27,6 @@ import { slot } from '../backends/gui/slot'
 import { Switch } from '../backends/gui/switch'
 import { ToggleGroup, ToggleGroupItem } from '../backends/gui/toggle-group'
 import { Grid } from '../grid'
-import { useTranslate } from '../i18n/react'
 import { Cta } from './Cta'
 import { audience, charge, merged, money, saving, seats, termOf, way, type Audience, type Interval, type PlanRow } from './rows'
 import { Line } from './type'
@@ -69,10 +68,6 @@ export type PlansProps = {
   footnote?: ReactNode
 }
 
-<<<<<<< HEAD
-const Plans = ({ plans, heading = 'h1', title = 'Plans that grow with you', checkout, signIn = '/login', cta = 'Try Hanzo', contactHref = '/contact-sales', onView, onChoose, footnote }: PlansProps) => {
-  const tr = useTranslate()
-=======
 const Plans = ({
   plans,
   heading = 'h1',
@@ -86,7 +81,6 @@ const Plans = ({
   footnote,
 }: PlansProps) => {
   const { t } = useI18n()
->>>>>>> origin/i18n
   const all = useMemo(() => plans.filter((p) => FAMILIES.has(p.category)), [plans])
   const tabs = TABS.filter(([a]) => all.some((p) => audience(p) === a))
   const [picked, setPicked] = useState<Audience>('individual')
@@ -117,19 +111,6 @@ const Plans = ({
       every={termOf(p, yearly)}
       from={from.has(p.id)}
       team={tab === 'team'}
-<<<<<<< HEAD
-      href={way(p) === 'card' ? `${signIn}?next=${encodeURIComponent(checkout(p, termOf(p, yearly)).replace(/^https:\/\/hanzo\.ai(?=\/)/, ''))}` : way(p) === 'free' ? signIn : contactHref}
-      cta={cta}
-      onPress={(cta) =>
-        onChoose?.({
-          plan: p,
-          interval: termOf(p, yearly),
-          tab,
-          cta,
-          way: way(p),
-        })
-      }
-=======
       href={
         way(p) === 'card'
           ? `${signIn}?next=${encodeURIComponent(checkout(p, termOf(p, yearly)).replace(/^https:\/\/hanzo\.ai(?=\/)/, ''))}`
@@ -139,17 +120,12 @@ const Plans = ({
       }
       cta={cta ?? t('Try Hanzo')}
       onPress={(cta) => onChoose?.({ plan: p, interval: termOf(p, yearly), tab, cta, way: way(p) })}
->>>>>>> origin/i18n
     />
   )
 
   return (
     <YStack {...slot('plans')} render="section" width="100%" maxW={1280} mx="auto" gap="$8" items="center" px="$6">
       <YStack items="center" gap="$3" maxW={768}>
-<<<<<<< HEAD
-        <Line render={heading} m={0} align="center" fontFamily="$heading" fontSize="$9" lineHeight="$9" fontWeight={500} $md={{ fontSize: '$11', lineHeight: '$11' }} style={TIGHT}>
-          {title}
-=======
         <Line
           render={heading}
           m={0}
@@ -162,7 +138,6 @@ const Plans = ({
           style={TIGHT}
         >
           {title ?? t('Plans that grow with you')}
->>>>>>> origin/i18n
         </Line>
         <Line render="p" m={0} size="lg" tone="muted" align="center">
           {`${t('You are charged exactly the price shown.')} ${t('Past a plan’s included usage, agents are metered at the rates below.')}`}
@@ -178,17 +153,8 @@ const Plans = ({
               if (v) setPicked(v as Audience)
             }}
             disableDeactivation
-<<<<<<< HEAD
-            aria-label={tr('Who this is for')}
-            style={{
-              padding: 4,
-              borderRadius: 9999,
-              background: 'var(--surface-2)',
-            }}
-=======
             aria-label={t('Who this is for')}
             style={{ padding: 4, borderRadius: 9999, background: 'var(--surface-2)' }}
->>>>>>> origin/i18n
           >
             {tabs.map(([a, name]) => (
               <ToggleGroupItem key={a} value={a} variant="outline" rounded="$10" borderColor="transparent" px="$4">
@@ -202,11 +168,7 @@ const Plans = ({
             <Line size="sm" tone="muted">
               {label}
             </Line>
-<<<<<<< HEAD
-            <Switch checked={yearly} onCheckedChange={setYearly} aria-label={tr('Bill yearly')} />
-=======
             <Switch checked={yearly} onCheckedChange={setYearly} aria-label={t('Bill yearly')} />
->>>>>>> origin/i18n
           </XStack>
         ) : null}
       </XStack>
@@ -233,9 +195,6 @@ const Plans = ({
 }
 
 /** One plan: its name, its price for the term, the way in, and what it includes. */
-<<<<<<< HEAD
-function Card({ plan, every, href, cta: label, from, team, onPress }: { plan: PlanRow; every: Interval; href: string; cta: string; from: boolean; team: boolean; onPress: (cta: string) => void }) {
-=======
 function Card({
   plan,
   every,
@@ -254,7 +213,6 @@ function Card({
   onPress: (cta: string) => void
 }) {
   const { t } = useI18n()
->>>>>>> origin/i18n
   const how = way(plan)
   const year = charge(plan, 'year')
   // A year is headlined as the month it works out to, with the whole year under it.
