@@ -1,6 +1,5 @@
 'use client'
 
-import { ACCOUNT, COMPANY, DOCS, LOGIN, MENUS, OPEN, TRY, at, leaves, type Link, type Menu } from './nav'
 import { Fragment, useCallback, useEffect, useRef, useState, type CSSProperties, type FocusEvent, type ReactNode } from 'react'
 import { Anchor, Text, View, XStack, YStack, type AnchorProps, type GuiElement } from '@hanzo/gui'
 import { HanzoCommandPalette, HanzoIdentity, HanzoWordmark, MARKS, type GlyphName, type HanzoCommandEntry } from '@hanzogui/shell'

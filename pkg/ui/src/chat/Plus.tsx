@@ -45,40 +45,6 @@ import {
   DropdownMenuTrigger,
 } from '../backends/gui'
 import { useMemo, useState, type ReactNode } from 'react'
-import {
-  AppWindow,
-  Blocks,
-  Bot,
-  Briefcase,
-  Brain,
-  Check,
-  Folder,
-  Globe,
-  Image as ImageIcon,
-  Monitor,
-  Palette,
-  Paperclip,
-  PenTool,
-  Plug,
-  Plus as PlusIcon,
-  ScrollText,
-  Telescope,
-} from '@hanzogui/lucide-icons-2'
-  DropdownMenu,
-  DropdownMenuBack,
-  DropdownMenuContent,
-  DropdownMenuEmpty,
-  DropdownMenuItem,
-  DropdownMenuLoading,
-  DropdownMenuPage,
-  DropdownMenuSearch,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from '../backends/gui'
 
 import { GHOST, GLYPH, RING, STROKE } from './look'
 

@@ -36,23 +36,6 @@ import {
   type TextProps,
 } from "@hanzo/gui"
 import { Check, ChevronDown, ChevronUp } from "@hanzogui/lucide-icons-2"
-  Children,
-  cloneElement,
-  createContext,
-  forwardRef,
-  isValidElement,
-  useContext,
-  useState,
-  type ComponentProps,
-  type ReactNode,
-} from "react"
-  Select as GuiSelect,
-  SelectSeparator as GuiSelectSeparator,
-  Text,
-  XStack,
-  type TextProps,
-} from "@hanzo/gui"
-import { Check, ChevronDown, ChevronUp } from "@hanzogui/lucide-icons-2"
 
 import { BOX, EDGE, FIELD, FILL, type FieldSize } from "./control"
 import { Density, fieldSize, useDensity } from "./density"

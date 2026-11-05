@@ -42,7 +42,6 @@
  * Escape closes a docked pane while focus is inside it (the overlay's
  * SlideOver already does); ⌘/Ctrl+Enter runs the page's `onExpand`.
  */
-import { Button as GuiButton, ScrollView, Text, XStack, YStack, useMedia } from '@hanzo/gui'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Button as GuiButton, ScrollView, Text, useMedia, XStack, YStack } from '@hanzo/gui'
 import { ChevronLeft, Maximize2, X } from '@hanzogui/lucide-icons-2'
@@ -295,7 +294,6 @@ function RecordPage({ desc }: { desc: DetailDescriptor }) {
 
 /** The overlay sheet's own page, as it always was: the 56px header and the body. */
 function SheetPage({ desc, close }: { desc: DetailDescriptor; close: () => void }) {
-  const { t } = useI18n()
   const Icon = desc.icon
   const pane = useContext(Ctx)
   const { t } = useI18n()

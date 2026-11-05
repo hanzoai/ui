@@ -76,7 +76,6 @@ export type SlideOverProps = {
 }
 
 export function SlideOver({ open, onClose, side = 'end', size = 420, title, icon: Icon, iconColor, headerRight, ariaLabel, zIndex = 1000, children }: SlideOverProps) {
-  const { t } = useI18n()
   const track = useEmit()
   const { t } = useI18n()
   const panelRef = useRef<HTMLElement | null>(null)

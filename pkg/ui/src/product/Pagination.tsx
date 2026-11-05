@@ -29,7 +29,6 @@ export type PaginationProps = {
 }
 
 export function Pagination({ page, count, onChange, around = 1 }: PaginationProps) {
-  const { t } = useI18n()
   const track = useEmit()
   const { t } = useI18n()
   if (count <= 1) return null

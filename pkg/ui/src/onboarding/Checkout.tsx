@@ -1,8 +1,5 @@
 'use client'
 
-import { SizableText } from '../backends/gui/layout'
-import { ApiError, API, call } from './api'
-import { Anchor, Heading, Paragraph, XStack, YStack } from '../backends/gui/layout'
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { readConsent, renderConsent } from '@hanzo/event'
 import { phrase } from '@hanzo/i18n'

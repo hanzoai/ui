@@ -121,7 +121,6 @@ export type OrgSwitcherProps = {
 }
 
 export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create, picker = false, direction = 'down', footer, sub, aria, search, heading, lead = false, testId, className, style }: OrgSwitcherProps) {
-  const { t } = useI18n()
   const currentId = scope.currentOrg()
 
   const [open, setOpen] = useState(false)

@@ -63,7 +63,6 @@ export function ComboBox({
   /** At most this many live options in the list; all of them when unset. */
   limit?: number
 }) {
-  const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const { t } = useI18n()
   const rowRef = useRef<HTMLElement | null>(null)

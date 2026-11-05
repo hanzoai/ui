@@ -42,6 +42,7 @@ import { useI18n } from '@hanzo/i18n/react'
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui/popover'
 import { RING } from '../backends/gui/press'
 import { slot, tip } from '../backends/gui/slot'
+import {
   frame,
   merge,
   move,
@@ -275,6 +276,8 @@ export function ChipSelect<T extends ChipItem>({
   onOpenChange,
 }: ChipSelectProps<T>) {
   const bare = !label
+  const row = useContext(Pills)
+  const pill = row !== null && !bare && !quiet
   const { t } = useI18n()
   const placeholder = hint ?? t('Search…')
   const empty = none ?? t('No matches.')
@@ -627,7 +630,7 @@ export function ChipSelect<T extends ChipItem>({
           <YStack
             {...slot('chip-select-list')}
             id={listId}
-            role="listbox"
+            {...({ role: 'listbox' } as object)}
             aria-label={name}
             gap="$0"
           >
@@ -651,7 +654,7 @@ export function ChipSelect<T extends ChipItem>({
                   cursor={item.disabled ? 'default' : 'pointer'}
                   opacity={item.disabled ? 0.5 : 1}
                   bg={on ? '$raised' : 'transparent'}
-                  onHoverIn={() => setAt(i)}
+                  {...({ onHoverIn: () => setAt(i) } as object)}
                   onPress={() => choose(item)}
                 >
                   {item.icon ? (

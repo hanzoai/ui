@@ -65,7 +65,6 @@ export type AppHeaderProps = {
 }
 
 export function AppHeader({ brand, wordmark = 'Hanzo', onBrand, org, children, current, surfaces, open, user, menu, theme, onProfile, onTeam, onBilling, onSignOut }: AppHeaderProps) {
-  const { t } = useI18n()
   const [appsOpen, setAppsOpen] = useState(false)
   const { t } = useI18n()
   const items = surfaces ?? otherSurfaces(current)

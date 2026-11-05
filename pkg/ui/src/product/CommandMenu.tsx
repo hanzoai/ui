@@ -255,7 +255,7 @@ export function CommandMenu({
                     {g.label}
                   </Text>
                 </XStack>
-                <YStack role="listbox" aria-labelledby={head}>
+                <YStack {...({ role: 'listbox' } as object)} aria-labelledby={head}>
                   {g.items.map((it, i) => {
                     const on = current?.id === it.id
                     return (
@@ -278,7 +278,7 @@ export function CommandMenu({
                         cursor={it.disabled ? 'default' : 'pointer'}
                         opacity={it.disabled ? 0.5 : 1}
                         bg={on ? '$hover' : 'transparent'}
-                        onHoverIn={it.disabled ? undefined : () => setActive(it.id)}
+                        {...({ onHoverIn: it.disabled ? undefined : () => setActive(it.id) } as object)}
                         onPress={it.disabled ? undefined : it.onSelect}
                         style={i === 0 ? { scrollMarginTop: COMMAND.header + COMMAND.pad } : undefined}
                       >

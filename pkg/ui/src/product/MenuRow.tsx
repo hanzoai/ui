@@ -172,7 +172,7 @@ export function MenuRowContent({
       {submenu ? (
         <XStack
           shrink={0}
-          animation="quick"
+          {...({ animation: 'quick' } as object)}
           rotate={submenu === 'open' ? '90deg' : '0deg'}
           {...({ 'data-open': submenu === 'open' ? '' : undefined } as object)}
         >
@@ -237,7 +237,7 @@ export function MenuRow({
   const shown = actionsVisibility === 'always' || hovered || within
   const lit = variant === 'suggestion' && selected ? '$raised' : focused ? '$hover' : active ? '$edge' : 'transparent'
   const run = disabled ? undefined : onPress
-  const hover = { onHoverIn: () => setHovered(true), onHoverOut: () => setHovered(false) }
+  const hover = { onHoverIn: () => setHovered(true), onHoverOut: () => setHovered(false) } as object
   const body = (
     <XStack
       {...press(run)}
@@ -289,7 +289,7 @@ export function MenuRow({
         opacity={shown ? 1 : 0}
         // A finger cannot hover: on a coarse pointer the actions are always there.
         $touchable={{ opacity: 1 }}
-        animation="75ms"
+        {...({ animation: '75ms' } as object)}
       >
         {actions}
       </XStack>

@@ -1,6 +1,5 @@
 'use client'
 
-import { ENTERPRISE_FROM, MAX_SEATS, MIN_SEATS, has, lines, money, offer, saving, unit, usd, yearly, type Interval, type PlanId } from './plans'
 import { useMemo, useState, type FormEvent } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 import { Check, ChevronDown, User, Users } from '@hanzogui/lucide-icons-2'
