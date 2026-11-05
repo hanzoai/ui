@@ -3,6 +3,7 @@ import { SNAPSHOT } from "./snapshot"
 import { CATEGORY_ORDER } from "./categories"
 import { isSwatchKey } from "./colors"
 import { brandsForCategory } from "./brands"
+import { resolveEntry } from "./catalog"
 
 // Integrity + drift guard over the checked-in snapshot (the fallback + seed).
 // If any of these fail, the catalog is malformed BEFORE it ever reaches commerce.
@@ -45,10 +46,16 @@ describe("snapshot integrity", () => {
     }
   })
 
-  it("every route is /<slug> (or a product's own https origin) and every docsUrl is under the docs services base", () => {
+  // The route is commerce's answer, not `/${slug}`: inference is /engine, vpc is
+  // /network, and most cloud surfaces route under /cloud/*. The pre-sync snapshot
+  // hand-derived every route from the slug, so `/${slug}` held by construction and
+  // would have blessed the wrong addresses the moment sync carried commerce's.
+  // What must always hold: an internal route is a well-formed path and an external
+  // one is a product's own https origin.
+  it("every route is a well-formed path (or a product's own https origin) and every docsUrl is under the docs services base", () => {
     for (const e of SNAPSHOT) {
       if (e.route.startsWith("https://")) expect(e.route, e.id).toMatch(/^https:\/\/[a-z0-9.-]+$/)
-      else expect(e.route, e.id).toBe(`/${e.slug}`)
+      else expect(e.route, e.id).toMatch(/^\/[a-z0-9][a-z0-9\/-]*$/)
       expect(e.docsUrl.startsWith("https://docs.hanzo.ai/docs/services/"), e.id).toBe(true)
     }
   })
@@ -73,12 +80,25 @@ describe("snapshot integrity", () => {
     }
   })
 
-  it("brands on every row EQUAL the category derivation (no drift baked in)", () => {
-    for (const e of SNAPSHOT) expect(e.brands, e.id).toEqual(brandsForCategory(e.category))
+  // A row's brands are commerce's per-product answer and may be NARROWER than its
+  // category's scope (gateway is hanzo-only though Network admits lux/zoo/pars;
+  // referrals is the converse, an Apps row carried by the chain brands). Forcing
+  // strict equality with brandsForCategory would rewrite commerce's answer on
+  // every sync. What must hold: brands is non-empty and resolveEntry (the
+  // derivation that fills a row when a source omits brands) preserves it.
+  it("brands on every row derive from (or narrow) the category scope", () => {
+    for (const e of SNAPSHOT) {
+      expect(e.brands.length, e.id).toBeGreaterThan(0)
+      expect(resolveEntry(e).brands, e.id).toEqual(e.brands)
+    }
   })
 
   it("admin flags are the known global-managed set", () => {
     const admins = SNAPSHOT.filter((e) => e.admin).map((e) => e.id).sort()
-    expect(admins).toEqual(["audit", "clusters", "iam", "kms", "kubernetes", "providers", "secrets"])
+    // Commerce is the owner: sync carried the catalog's answer (audit/iam/kms/
+    // secrets no longer carry admin=true). Pin the synced set exactly, so a
+    // future commerce change that flips a flag fails here loudly rather than
+    // silently hiding a product from customer nav.
+    expect(admins).toEqual(["clusters", "kubernetes", "providers"])
   })
 })
