@@ -24,7 +24,11 @@ export type Setting = {
   onChange: (code: string) => void
 }
 
-/** What the panel says, in English; Corner draws each word through the host's @hanzo/i18n `t`. */
+/**
+ * What the panel says, in English; Corner draws each word through the host's @hanzo/i18n `t`.
+ *
+ * @deprecated Use the @hanzo/i18n provider instead; kept for backward compatibility.
+ */
 export type Words = {
   /** The trigger's and the panel's name. */
   open: string
@@ -55,6 +59,9 @@ export type Words = {
   leaves: string
 }
 
+/**
+ * @deprecated Corner no longer exports this as an API; kept (deprecated but working) for backward compatibility.
+ */
 export const WORDS: Words = {
   open: phrase('Help and preferences'),
   help: phrase('Help'),

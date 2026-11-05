@@ -69,6 +69,9 @@ export type CornerProps = {
   /** The page's display currency, owned by the host. Absent, the row is not drawn. */
   currency?: Setting
   /** The panel's own words, for a host that speaks another language. */
+  /**
+   * @deprecated Use the @hanzo/i18n provider instead; kept (deprecated but working) for backward compatibility.
+   */
   words?: Partial<Words>
   /** Which bottom corner it stands in, along the line: `start` (the default) or `end`. */
   side?: 'start' | 'end'
