@@ -11,6 +11,7 @@
  * markdown pipeline, which stays with the surface.
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import type { ComponentProps, ReactNode } from 'react'
 
 import { slot, tip } from '../backends/gui/slot'
@@ -42,14 +43,15 @@ export interface SourcesProps extends Omit<ComponentProps<typeof YStack>, 'child
   onOpen?: (source: Source) => void
 }
 
-export function Sources({ sources, title = 'Sources', onOpen, ...props }: SourcesProps) {
+export function Sources({ sources, title, onOpen, ...props }: SourcesProps) {
+  const { t } = useI18n()
   if (sources.length === 0) return null
 
   return (
     <YStack {...slot('sources')} gap="$2" {...props}>
       <XStack items="center" gap="$1.5">
         <SizableText size="$1" fontWeight="500" color="$soft">
-          {title}
+          {title ?? t('Sources')}
         </SizableText>
         <SizableText size="$1" color="$faint">
           {sources.length}

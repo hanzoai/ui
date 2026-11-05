@@ -24,6 +24,7 @@ import {
   type KeyboardEvent,
   type WheelEvent as ReactWheelEvent,
 } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { drag, dragPos, touch, type DragEvent } from './gesture'
 import { slot } from './slot'
 
@@ -80,8 +81,10 @@ export function StarsScrollingWheel({
   size = 'default',
   visibleCount = 5,
   disabled = false,
-  'aria-label': ariaLabel = 'Star rating',
+  'aria-label': named,
 }: StarsScrollingWheelProps) {
+  const { t } = useI18n()
+  const ariaLabel = named ?? t('Star rating')
   const [uncontrolled, setUncontrolled] = useState(clamp(defaultValue, 0, max))
   const current = clamp(value ?? uncontrolled, 0, max)
   const horizontal = orientation === 'horizontal'

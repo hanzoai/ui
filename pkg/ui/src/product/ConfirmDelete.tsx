@@ -11,6 +11,7 @@
 import { useState } from 'react'
 import { Button, Text, XStack, YStack } from '@hanzo/gui'
 import { Trash2 } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { classifyBackend } from './BackendState'
 import { useEmit } from './instrument'
@@ -31,6 +32,7 @@ export function ConfirmDelete({
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const track = useEmit()
+  const { t } = useI18n()
 
   const go = async () => {
     setBusy(true)
@@ -40,7 +42,7 @@ export function ConfirmDelete({
       await run()
       onDone()
     } catch (e) {
-      const message = classifyBackend(e).message || 'Failed to delete.'
+      const message = classifyBackend(e).message || t('Failed to delete.')
       track({ component: 'ConfirmDelete', action: 'error', id: confirmLabel, value: message })
       setErr(message)
       setBusy(false)
@@ -64,7 +66,7 @@ export function ConfirmDelete({
           icon={<Trash2 size={16} />}
           style={{ backgroundColor: '#dc2626', borderColor: '#dc2626', color: '#fff' }}
         >
-          {busy ? 'Deleting…' : confirmLabel}
+          {busy ? t('Deleting…') : confirmLabel}
         </Button>
         <Button
           chromeless
@@ -74,7 +76,7 @@ export function ConfirmDelete({
           }}
           disabled={busy}
         >
-          Cancel
+          {t('Cancel')}
         </Button>
       </XStack>
     </YStack>

@@ -23,6 +23,7 @@
 import { Text, XStack, YStack } from '@hanzo/gui'
 import type { GuiElement } from '@hanzo/gui'
 import { useEffect, useRef, useState, type ReactElement } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 /**
  * The viewport the framed site lays itself out against, before scaling. A
@@ -79,6 +80,7 @@ export function ProjectThumb({
 }: ProjectThumbProps) {
   const [failed, setFailed] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const { t } = useI18n()
   /** No capture for this project — never deployed, or cloud has none yet. */
   const [noShot, setNoShot] = useState(false)
   const host = useRef<GuiElement>(null)
@@ -162,7 +164,7 @@ export function ProjectThumb({
         <>
           <iframe
             src={liveUrl as string}
-            title={`${name} preview`}
+            title={t('{name} preview', { name })}
             loading="lazy"
             tabIndex={-1}
             aria-hidden

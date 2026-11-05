@@ -26,6 +26,7 @@
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import { Check, Copy, FileText, Maximize2, Minimize2 } from '@hanzogui/lucide-icons-2'
 import { useCallback, useMemo, useState, type ComponentProps, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Button } from './button'
 import { css, Language, mono, named, type Palette, type Surface } from './code-surface'
 import { align, ltr } from './dir'
@@ -148,7 +149,8 @@ function CopyButton({
   paint: Pick<Surface, 'muted' | 'strong'>
   floating?: boolean
 }) {
-  const label = copied ? 'Copied' : 'Copy code'
+  const { t } = useI18n()
+  const label = copied ? t('Copied') : t('Copy code')
   return (
     <Button
       variant="ghost"
@@ -196,6 +198,7 @@ export function Snippet({
   const lineHeight = fontSize * 1.5
   const [copied, setCopied] = useState(false)
   const [isExpanded, setIsExpanded] = useState(!expandable)
+  const { t } = useI18n()
   const lines = useMemo(() => rows(code, startLineNumber), [code, startLineNumber])
 
   const copy = useCallback(async () => {
@@ -305,8 +308,8 @@ export function Snippet({
                 variant="ghost"
                 size="icon-sm"
                 onClick={() => setIsExpanded((v) => !v)}
-                aria-label={isExpanded ? 'Collapse' : 'Expand'}
-                title={isExpanded ? 'Collapse' : 'Expand'}
+                aria-label={isExpanded ? t('Collapse') : t('Expand')}
+                title={isExpanded ? t('Collapse') : t('Expand')}
               >
                 {isExpanded ? (
                   <Minimize2 size={14} color={paint.muted as never} />

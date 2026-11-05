@@ -25,6 +25,7 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import { Button, ScrollView, Text, XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { asColor, type IconLike } from './color'
 
@@ -89,6 +90,7 @@ export function SlideOver({
   children,
 }: SlideOverProps) {
   const track = useEmit()
+  const { t } = useI18n()
   const panelRef = useRef<HTMLElement | null>(null)
   const openerRef = useRef<Element | null>(null)
 
@@ -215,7 +217,7 @@ export function SlideOver({
                 {title}
               </Text>
               {headerRight}
-              <Button chromeless width={44} height={44} icon={<X size={18} />} onPress={onClose} aria-label="Close" />
+              <Button chromeless width={44} height={44} icon={<X size={18} />} onPress={onClose} aria-label={t('Close')} />
             </XStack>
             <ScrollView flex={1}>
               <YStack flex={1} p="$4" gap="$3">

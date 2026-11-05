@@ -70,6 +70,8 @@ import {
 } from '@codemirror/view'
 import { tags } from '@lezer/highlight'
 import * as React from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n, type Say } from '@hanzo/i18n/react'
 
 import { face, type CodeToken } from '../../code-theme'
 import { Button } from './button'
@@ -134,7 +136,7 @@ const LABEL: Record<string, string> = {
   sql: 'SQL',
   markdown: 'Markdown',
   shell: 'Shell',
-  plaintext: 'Plain Text',
+  plaintext: phrase('Plain Text'),
 }
 
 /** The tallest a drag makes the editor, px: a ceiling that is not one. */
@@ -240,25 +242,27 @@ const JSON_GRAMMAR = /* @__PURE__ */ new LanguageSupport(
   }),
 )
 
-const words = (n: number, one: string) => `${n} ${one}${n === 1 ? '' : 's'}`
+const keys = (t: Say, n: number) => (n === 1 ? t('1 key') : t('{n} keys', { n }))
+const items = (t: Say, n: number) => (n === 1 ? t('1 item') : t('{n} items', { n }))
 
 /** What a folded range holds: its brackets and how many keys or items sit inside. */
-function measureFold(state: EditorState, range: { from: number; to: number }) {
+function measureFold(state: EditorState, range: { from: number; to: number }, t: Say) {
   let node = syntaxTree(state).resolveInner(range.from, 1)
   while (node.parent && node.name !== 'Object' && node.name !== 'Array') node = node.parent
-  if (node.name === 'Object') return { open: '{', close: '}', count: words(node.getChildren('Property').length, 'key') }
+  if (node.name === 'Object') return { open: '{', close: '}', count: keys(t, node.getChildren('Property').length) }
   let n = 0
   for (let c = node.firstChild; c; c = c.nextSibling) if (!/^[[\],]$/.test(c.name) && !c.type.isError) n += 1
-  return { open: '[', close: ']', count: words(n, 'item') }
+  return { open: '[', close: ']', count: items(t, n) }
 }
 
-const FOLDING = /* @__PURE__ */ codeFolding({
-  preparePlaceholder: measureFold,
+/** Folding, its placeholder worded in the reader's language. */
+const folding = (t: Say) => codeFolding({
+  preparePlaceholder: (state, range) => measureFold(state, range, t),
   placeholderDOM: (_view, onclick, fold: ReturnType<typeof measureFold>) => {
     const el = document.createElement('span')
     el.className = 'cm-foldPlaceholder'
-    el.title = 'Unfold'
-    el.setAttribute('aria-label', `Folded, ${fold.count}`)
+    el.title = t('Unfold')
+    el.setAttribute('aria-label', t('Folded, {count}', { count: fold.count }))
     el.textContent = `${fold.open}…${fold.close}`
     const count = document.createElement('span')
     count.className = 'cm-foldCount'
@@ -427,13 +431,16 @@ export function CodeEditor({
   showFormatButton,
   showLanguageSelector = true,
   availableLanguages = LANGUAGES,
-  label = 'Code',
+  label,
   variant,
   title,
   actions,
   autoHeight = false,
   ...props
 }: CodeEditorProps) {
+  const { t } = useI18n()
+  const name = label ?? t('Code')
+  const fold = React.useMemo(() => folding(t), [t])
   const frame = variant ?? (title !== undefined || actions !== undefined ? 'with-header' : 'default')
   const headed = frame === 'with-header'
   const [selected, setSelected] = React.useState(language)
@@ -460,7 +467,7 @@ export function CodeEditor({
   const judged = React.useRef<{ field: typeof field; seen?: Verdict }>({ field })
   judged.current.field = field
 
-  const grammar = () => (isJson ? [JSON_GRAMMAR, field, FOLDING, foldGutter()] : [])
+  const grammar = () => (isJson ? [JSON_GRAMMAR, field, fold, foldGutter()] : [])
   const gutter = () => (lineNumbers ? [numbering(), highlightActiveLineGutter()] : [])
   const wrap = () => (wordWrap === 'off' ? [] : [EditorView.lineWrapping, hang])
   const edit = () => [EditorState.readOnly.of(readOnly), EditorView.editable.of(!readOnly)]
@@ -526,7 +533,7 @@ export function CodeEditor({
           compartments.wrap.of(wrap()),
           compartments.edit.of(edit()),
           placeholder ? hint(placeholder) : [],
-          EditorView.contentAttributes.of({ 'aria-label': label, 'data-slot': 'code-editor-content' }),
+          EditorView.contentAttributes.of({ 'aria-label': name, 'data-slot': 'code-editor-content' }),
           FRAME,
           listen,
         ],
@@ -553,7 +560,7 @@ export function CodeEditor({
         compartments.edit.reconfigure(edit()),
       ],
     })
-  }, [isJson, field, lineNumbers, wordWrap, readOnly])
+  }, [isJson, field, fold, lineNumbers, wordWrap, readOnly])
 
   // A controlled value that moved out from under the editor replaces the text. A
   // value the editor itself reported is an echo, however late it arrives: a parent
@@ -591,11 +598,11 @@ export function CodeEditor({
       setCopied(true)
       clearTimeout(timer.current)
       timer.current = setTimeout(() => setCopied(false), 2000)
-      toast.success('Code copied to clipboard')
+      toast.success(t('Code copied to clipboard'))
     } catch {
-      toast.error('Failed to copy code')
+      toast.error(t('Failed to copy code'))
     }
-  }, [text])
+  }, [text, t])
 
   // A percentage height fills a frame that is itself sized; the body has to flex for it to
   // resolve. Any other height is the editor's own, so the body is just as tall as the editor.
@@ -632,7 +639,7 @@ export function CodeEditor({
         >
           {headed ? (
             <SizableText {...slot('code-editor-title')} size="$2" fontWeight="500" color="$hint" px="$1" numberOfLines={1} flex={1} minW={0}>
-              {title ?? label}
+              {title ?? name}
             </SizableText>
           ) : null}
           {showLanguageSelector ? (
@@ -647,20 +654,20 @@ export function CodeEditor({
                 px="$2"
               >
                 <SizableText size="$1" fontFamily="$mono">
-                  {LABEL[selected] ?? selected}
+                  {LABEL[selected] ? t(LABEL[selected]) : selected}
                 </SizableText>
               </SelectTrigger>
               <SelectContent {...slot('code-editor-language-content')}>
                 {availableLanguages.map((lang) => (
                   <SelectItem key={lang} value={lang}>
-                    {LABEL[lang] ?? lang}
+                    {LABEL[lang] ? t(LABEL[lang]) : lang}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           ) : (
             <SizableText {...slot('code-editor-language')} size="$1" fontFamily="$mono" color="$soft" px="$2">
-              {LABEL[selected] ?? selected}
+              {LABEL[selected] ? t(LABEL[selected]) : selected}
             </SizableText>
           )}
           <XStack items="center" justify="flex-end" flexWrap="wrap" gap={headed ? '$2' : '$1'} shrink={1} minW={0}>
@@ -673,7 +680,7 @@ export function CodeEditor({
                 onClick={format}
               >
                 <AlignLeft size={14} />
-                Format
+                {t('Format')}
               </Button>
             )}
             {showCopyButton && (
@@ -685,7 +692,7 @@ export function CodeEditor({
                 onClick={copy}
               >
                 {copied ? <Check size={14} /> : <Copy size={14} />}
-                {copied ? 'Copied!' : 'Copy'}
+                {copied ? t('Copied!') : t('Copy')}
               </Button>
             )}
             {actions}
@@ -704,7 +711,7 @@ export function CodeEditor({
             ceil={CEILING}
             onSpan={setDragged}
             onReset={() => setDragged(null)}
-            label={`Resize ${label}`}
+            label={t('Resize {label}', { label: name })}
             // Astride the editor's bottom edge, so it takes no line from the text.
             b={-BAND_HALF}
           />
@@ -732,17 +739,18 @@ export function CodeEditor({
 
 /** The footer's JSON verdict, announced politely when it changes. */
 function Status({ check }: { check: JsonCheck | null }) {
+  const { t } = useI18n()
   const bad = check?.kind === 'error'
   const words =
     check === null
       ? ''
       : check.kind === 'error'
-        ? `Line ${check.line}, column ${check.column}: ${check.message}`
+        ? t('Line {line}, column {column}: {message}', { line: check.line, column: check.column, message: check.message })
         : check.kind === 'text'
-          ? 'Plain text'
+          ? t('Plain text')
           : check.kind === 'empty'
-            ? 'Empty'
-            : 'Valid JSON'
+            ? t('Empty')
+            : t('Valid JSON')
   return (
     <XStack {...slot('code-editor-status')} aria-live="polite" items="center" gap="$1.5" flex={1} minW={0}>
       {bad ? (

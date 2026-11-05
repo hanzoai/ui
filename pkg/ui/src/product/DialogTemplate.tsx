@@ -29,6 +29,7 @@
  */
 import type { ComponentProps, ReactNode } from 'react'
 import { Button, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 
 import {
   DialogClose,
@@ -91,12 +92,13 @@ export function DialogTemplate({
   description,
   children,
   confirm,
-  cancelLabel = 'Cancel',
+  cancelLabel,
   showCancel = true,
   leftActions,
   busy = false,
   ...content
 }: DialogTemplateProps) {
+  const { t } = useI18n()
   const footer = showCancel || confirm || leftActions
   return (
     <DialogContent {...content}>
@@ -117,7 +119,7 @@ export function DialogTemplate({
           <XStack gap="$2" items="center">
             {showCancel ? (
               <DialogClose asChild>
-                <Button disabled={busy}>{cancelLabel}</Button>
+                <Button disabled={busy}>{cancelLabel ?? t('Cancel')}</Button>
               </DialogClose>
             ) : null}
             {confirm ? <Confirm {...confirm} busy={busy} /> : null}

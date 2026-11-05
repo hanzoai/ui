@@ -19,6 +19,7 @@
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import { Check, Copy, FileText } from '@hanzogui/lucide-icons-2'
 import { useCallback, useState, type ComponentProps } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Button } from './button'
 import { Language, mono, named, type Palette, type Surface } from './code-surface'
 import { align, ltr } from './dir'
@@ -145,10 +146,11 @@ export function CodeBlock({
   ...props
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false)
+  const { t } = useI18n()
   const paint = surface(theme)
   const fontSize = FONT_SIZE[size ?? 'default']
   const lineHeight = fontSize * 1.5
-  const label = copied ? 'Copied' : 'Copy code'
+  const label = copied ? t('Copied') : t('Copy code')
 
   const copy = useCallback(async () => {
     try {

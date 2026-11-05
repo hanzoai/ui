@@ -17,6 +17,7 @@
 import { SizableText, XStack, type GuiElement } from '@hanzo/gui'
 import { Check } from '@hanzogui/lucide-icons-2'
 import { forwardRef, useContext, useState, type ComponentProps, type ReactElement, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from './command'
 import { BOX } from './control'
 import { Density, fieldSize, useDensity } from './density'
@@ -131,20 +132,22 @@ export function SearchList({
   options,
   value,
   onPick,
-  searchLabel = 'Search',
-  emptyLabel = 'No results',
+  searchLabel,
+  emptyLabel,
   width = 240,
 }: SearchListProps) {
+  const { t } = useI18n()
   const density = useDensity()
+  const search = searchLabel ?? t('Search')
   return (
     <Popover open={open} onOpenChange={onOpenChange} placement="bottom-start">
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
       <PopoverContent data-slot="search-list" p={0} width={width} sideOffset={8} overflow="hidden">
         <Density value={density}>
           <Command value={value ?? undefined}>
-            <CommandInput placeholder={searchLabel} aria-label={searchLabel} autoFocus />
+            <CommandInput placeholder={search} aria-label={search} autoFocus />
             <CommandList p="$1">
-              <CommandEmpty>{emptyLabel}</CommandEmpty>
+              <CommandEmpty>{emptyLabel ?? t('No results')}</CommandEmpty>
               {options.map((o) => (
                 <CommandItem
                   key={o.value}

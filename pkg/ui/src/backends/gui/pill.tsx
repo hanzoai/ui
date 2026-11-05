@@ -16,6 +16,7 @@
 import { SizableText, XStack, createStyledContext, styled } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
 import * as React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { sx } from '../../sx'
 import { Button } from './button'
 import { ink } from './ink'
@@ -91,6 +92,7 @@ export type PillProps = React.ComponentProps<'span'> & {
 
 export function Pill({ className, variant = 'default', onRemove, children, ...props }: PillProps) {
   const resolved = variant ?? 'default'
+  const { t } = useI18n()
   return (
     <PillFrame
       {...slot('pill')}
@@ -109,7 +111,7 @@ export function Pill({ className, variant = 'default', onRemove, children, ...pr
           minW={REMOVE}
           rounded={999}
           {...touch(REMOVE, MIN_TOUCH)}
-          aria-label="Remove"
+          aria-label={t('Remove')}
           onPress={onRemove}
         >
           <X size={12} />

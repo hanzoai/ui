@@ -13,6 +13,7 @@
  */
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import * as React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Avatar, AvatarFallback, AvatarImage } from './avatar'
 import { Card, CardContent } from './card'
 import { touch } from './gesture'
@@ -88,6 +89,7 @@ export function AnimatedTestimonials({
   ...props
 }: AnimatedTestimonialsProps) {
   const [activeIndex, setActiveIndex] = React.useState(0)
+  const { t } = useI18n()
 
   React.useEffect(() => {
     if (!autoPlay || testimonials.length < 2) return
@@ -134,13 +136,13 @@ export function AnimatedTestimonials({
       )}
 
       <XStack {...slot('animated-testimonials-dots')} justify="center" gap="$2">
-        {testimonials.map((t, i) => (
+        {testimonials.map((item, i) => (
           <Dot
-            key={t.id}
+            key={item.id}
             {...slot('animated-testimonials-dot')}
             render={<button type="button" />}
             active={i === index}
-            aria-label={`Go to testimonial ${i + 1}`}
+            aria-label={t('Go to testimonial {n}', { n: i + 1 })}
             aria-current={i === index}
             style={{ transition: 'width .3s ease, background-color .3s ease' }}
             onPress={() => setActiveIndex(i)}

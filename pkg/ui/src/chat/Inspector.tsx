@@ -24,6 +24,7 @@
  * A section with nothing in it does not render, so a caller passes the same
  * list every time and does not write the emptiness checks.
  */
+import { useI18n } from '@hanzo/i18n/react'
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import type { ComponentProps, ReactNode } from 'react'
 
@@ -60,7 +61,7 @@ export interface InspectorProps
 }
 
 export function Inspector({
-  title = 'Run',
+  title,
   summary,
   sections = [],
   placeholder,
@@ -70,6 +71,7 @@ export function Inspector({
   onSource,
   ...props
 }: InspectorProps) {
+  const { t } = useI18n()
   const shown = sections.filter(filled)
   const bare = summary == null && shown.length === 0
 
@@ -77,7 +79,7 @@ export function Inspector({
     <YStack {...slot('inspector')} flex={1} minH={0} width="100%" {...props}>
       <XStack items="center" px="$1" pb="$2" shrink={0}>
         <SizableText size="$1" color="$soft" fontWeight="600">
-          {title}
+          {title ?? t('Run')}
         </SizableText>
       </XStack>
 

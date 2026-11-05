@@ -52,6 +52,8 @@ import {
   Type,
 } from '@hanzogui/lucide-icons-2'
 import * as React from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n, type Say } from '@hanzo/i18n/react'
 
 import { face, type CodeToken } from '../../code-theme'
 import { Button } from './button'
@@ -89,12 +91,13 @@ type Ctx = {
   onValue?: (value: unknown, keyPath: string) => void
   labels: Required<JsonTreeLabels>
   names: Map<string, string>
+  t: Say
 }
 
 const LABELS: Required<JsonTreeLabels> = {
-  emptyString: 'Empty string',
-  emptyArray: 'Empty array',
-  emptyObject: 'Empty object',
+  emptyString: phrase('Empty string'),
+  emptyArray: phrase('Empty array'),
+  emptyObject: phrase('Empty object'),
 }
 
 type Branch = { kind: 'object' | 'array'; entries: [string, unknown][] }
@@ -106,10 +109,12 @@ const branch = (v: unknown): Branch | null =>
       ? { kind: 'object', entries: Object.entries(v as Record<string, unknown>) }
       : null
 
-const count = (b: Branch) =>
-  b.kind === 'array'
-    ? `[${b.entries.length} ${b.entries.length === 1 ? 'item' : 'items'}]`
-    : `{${b.entries.length} ${b.entries.length === 1 ? 'key' : 'keys'}}`
+const count = (t: Say, b: Branch) => {
+  const n = b.entries.length
+  return b.kind === 'array'
+    ? `[${n === 1 ? t('1 item') : t('{n} items', { n })}]`
+    : `{${n === 1 ? t('1 key') : t('{n} keys', { n })}}`
+}
 
 /** A child's path: each key escaped, so a key `a.b` and a nested `a` → `b` stay two paths. */
 const child = (path: string, key: string) => `${path}/${encodeURIComponent(key)}`
@@ -214,15 +219,22 @@ export function JsonTree({
     () => (entries ? Object.fromEntries(entries.map((e) => [e.id, e.value])) : given),
     [entries, given],
   )
+  const { t } = useI18n()
   const ctx = React.useMemo<Ctx>(
     () => ({
       variant,
       highlight: getNodeHighlighting,
       onValue: onNodeValueClick,
-      labels: { ...LABELS, ...labels },
+      labels: {
+        emptyString: t(LABELS.emptyString),
+        emptyArray: t(LABELS.emptyArray),
+        emptyObject: t(LABELS.emptyObject),
+        ...labels,
+      },
       names: new Map((entries ?? []).map((e) => [e.id, e.label])),
+      t,
     }),
-    [variant, getNodeHighlighting, onNodeValueClick, labels, entries],
+    [variant, getNodeHighlighting, onNodeValueClick, labels, entries, t],
   )
   const [open, setOpen] = React.useState(() => paths(data, depth))
   const [query, setQuery] = React.useState('')
@@ -272,9 +284,9 @@ export function JsonTree({
       setCopied(true)
       clearTimeout(timer.current)
       timer.current = setTimeout(() => setCopied(false), 2000)
-      toast.success('JSON copied to clipboard')
+      toast.success(t('JSON copied to clipboard'))
     } catch {
-      toast.error('Failed to copy JSON')
+      toast.error(t('Failed to copy JSON'))
     }
   }
 
@@ -330,8 +342,8 @@ export function JsonTree({
                   type="search"
                   value={query}
                   onChangeText={type}
-                  placeholder="Filter"
-                  aria-label={`Filter ${title ?? 'JSON'} by key, path or value`}
+                  placeholder={t('Filter')}
+                  aria-label={t('Filter {title} by key, path or value', { title: title ?? 'JSON' })}
                   // No adornment: its wrapper holds the field at its intrinsic width, and
                   // on a narrow pane that pushed the actions out of the header.
                   height={32}
@@ -345,8 +357,8 @@ export function JsonTree({
                   {...slot('json-tree-expand')}
                   variant="ghost"
                   size="icon-sm"
-                  aria-label="Expand all"
-                  title="Expand all"
+                  aria-label={t('Expand all')}
+                  title={t('Expand all')}
                   onClick={() => setOpen(paths(data, Number.POSITIVE_INFINITY))}
                 >
                   <ChevronsUpDown size={14} />
@@ -355,8 +367,8 @@ export function JsonTree({
                   {...slot('json-tree-collapse')}
                   variant="ghost"
                   size="icon-sm"
-                  aria-label="Collapse all"
-                  title="Collapse all"
+                  aria-label={t('Collapse all')}
+                  title={t('Collapse all')}
                   onClick={() => setOpen(new Set())}
                 >
                   <ChevronsDownUp size={14} />
@@ -368,8 +380,8 @@ export function JsonTree({
                 {...slot('json-tree-copy')}
                 variant="ghost"
                 size="icon-sm"
-                aria-label={copied ? 'Copied' : `Copy ${title ?? 'JSON'}`}
-                title="Copy"
+                aria-label={copied ? t('Copied') : t('Copy {title}', { title: title ?? 'JSON' })}
+                title={t('Copy')}
                 onClick={copy}
               >
                 {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -390,7 +402,7 @@ export function JsonTree({
         >
           {none ? (
             <SizableText {...slot('json-tree-empty')} size="$2" color="$soft" px="$2" py="$1">
-              Nothing matches “{query.trim()}”.
+              {t('Nothing matches “{query}”.', { query: query.trim() })}
             </SizableText>
           ) : (
             <Node name={null} value={data} path="$" dotted="" level={0} open={open} toggle={toggle} kept={kept} ctx={ctx} />
@@ -405,7 +417,7 @@ export function JsonTree({
             onSpan={setHeight}
             onKeep={size}
             onReset={() => size(null)}
-            label={`Resize ${title ?? 'JSON'}`}
+            label={t('Resize {label}', { label: title ?? 'JSON' })}
             b={0}
           />
         )}
@@ -484,7 +496,7 @@ function Leaf({ value, dotted, mark, ctx }: { value: unknown; dotted: string; ma
       cursor="pointer"
       hoverStyle={{ bg: '$hover' }}
       focusVisibleStyle={{ outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' }}
-      aria-label={`${dotted || 'value'}: ${shown}`}
+      aria-label={ctx.t('{label}: {value}', { label: dotted || ctx.t('value'), value: shown })}
       onPress={() => ctx.onValue?.(value, dotted)}
     >
       {body}
@@ -611,7 +623,7 @@ function Node({
             role: 'button',
             tabIndex: 0,
             'aria-expanded': expanded,
-            'aria-label': `${name === null ? 'root' : (ctx.names.get(name) ?? name)} ${count(b)}`,
+            'aria-label': ctx.t('{name} {count}', { name: name === null ? ctx.t('root') : (ctx.names.get(name) ?? name), count: count(ctx.t, b) }),
           } as object))}
         items="center"
         gap={gap}
@@ -643,7 +655,7 @@ function Node({
               : b.kind === 'array'
                 ? '[]'
                 : '{}'
-            : count(b)}
+            : count(ctx.t, b)}
         </SizableText>
       </XStack>
       {expanded && (

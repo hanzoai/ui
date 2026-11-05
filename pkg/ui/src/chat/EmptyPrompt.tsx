@@ -13,6 +13,8 @@
  * way.
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 import type { ComponentProps, ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
@@ -22,8 +24,8 @@ type Col = Omit<ComponentProps<typeof YStack>, 'children'>
 /** The composer column's width, so the two line up by default. */
 const COLUMN = 768
 
-/** What an empty pane asks when the surface says nothing else. */
-export const NEXT = 'What’s up next?'
+/** What an empty pane asks when the surface says nothing else, in the reader's language. */
+export const NEXT = phrase('What’s up next?')
 
 export interface EmptyPromptProps extends Col {
   /** The question. */
@@ -37,12 +39,13 @@ export interface EmptyPromptProps extends Col {
 }
 
 export function EmptyPrompt({
-  title = NEXT,
+  title,
   mark,
   column = COLUMN,
   level = 1,
   ...rest
 }: EmptyPromptProps) {
+  const { t } = useI18n()
   return (
     <YStack {...slot('empty-prompt')} width="100%" items="center" px="$4" pt="$2.5" {...rest}>
       <XStack width="100%" maxW={column} items="center" gap="$2">
@@ -58,7 +61,7 @@ export function EmptyPrompt({
           size="$7"
           color="$ink"
         >
-          {title}
+          {title ?? t(NEXT)}
         </SizableText>
       </XStack>
     </YStack>

@@ -18,6 +18,7 @@
 import { VisuallyHidden, XStack } from '@hanzo/gui'
 import { Minus, Plus } from '@hanzogui/lucide-icons-2'
 import { useEffect, useState } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Button } from './button'
 import { Input } from './input'
 import { SizableText } from './layout'
@@ -91,6 +92,7 @@ export function Stepper({
   editable,
   readOnly = false,
 }: StepperProps) {
+  const { t } = useI18n()
   const what = label.toLowerCase()
   const compact = useDensity() === 'compact'
   const typing = editable ?? compact
@@ -113,7 +115,7 @@ export function Stepper({
         variant="outline"
         size={size}
         type="button"
-        aria-label={`Fewer ${what}`}
+        aria-label={t('Fewer {what}', { what })}
         disabled={value <= min}
         {...(readOnly ? { 'aria-disabled': true, opacity: 0.5, pointerEvents: 'none' } : null)}
         onClick={() => move(-1)}
@@ -134,7 +136,7 @@ export function Stepper({
             inputMode={decimals > 0 ? 'decimal' : 'numeric'}
             value={draft}
             readOnly={readOnly}
-            onChangeText={(t: string) => setDraft(t)}
+            onChangeText={(text: string) => setDraft(text)}
             onBlur={commit}
             onSubmitEditing={commit}
           />
@@ -154,7 +156,7 @@ export function Stepper({
         variant="outline"
         size={size}
         type="button"
-        aria-label={`More ${what}`}
+        aria-label={t('More {what}', { what })}
         disabled={value >= max}
         {...(readOnly ? { 'aria-disabled': true, opacity: 0.5, pointerEvents: 'none' } : null)}
         onClick={() => move(1)}

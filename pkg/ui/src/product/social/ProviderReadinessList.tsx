@@ -8,13 +8,15 @@
  */
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { AlertTriangle, CheckCircle2 } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 import type { ProviderCapability } from './api'
 
 export function ProviderReadinessList({ providers }: { providers: ProviderCapability[] }) {
+  const { t } = useI18n()
   return (
     <YStack gap="$2">
       <Text fontSize="$2" color="$soft">
-        Network publish-readiness
+        {t('Network publish-readiness')}
       </Text>
       {providers.map((p) => (
         <XStack key={p.provider} items="center" justify="space-between" gap="$3" py="$1">
@@ -27,7 +29,7 @@ export function ProviderReadinessList({ providers }: { providers: ProviderCapabi
             <Text fontSize="$2">{p.provider}</Text>
           </XStack>
           <Text fontSize="$1" color="$soft">
-            {p.credentialsConfigured ? 'Ready' : `needs ${p.missingCredentials.join(', ')}`}
+            {p.credentialsConfigured ? t('Ready') : t('needs {credentials}', { credentials: p.missingCredentials.join(', ') })}
           </Text>
         </XStack>
       ))}

@@ -1,4 +1,5 @@
 import React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 export interface ChannelMember {
   id: string
@@ -24,6 +25,7 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({
   className = '',
   style,
 }) => {
+  const { t } = useI18n()
   return (
     <div
       className="glass"
@@ -36,13 +38,13 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({
         borderRadius: 16,
         ...style,
       }}
-      aria-label="Channel Member Roster"
+      aria-label={t('Channel Member Roster')}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 16 }}>👥</span>
           <h3 style={{ fontSize: 12, fontWeight: 600, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
-            Members ({members.length})
+            {t('Members ({n})', { n: members.length })}
           </h3>
         </div>
 
@@ -51,7 +53,7 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({
             onClick={onInviteMember}
             style={{ padding: '4px 10px', fontSize: 12, fontWeight: 500, color: '#d4d4d4', backgroundColor: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 8, cursor: 'pointer' }}
           >
-            + Invite
+            {t('+ Invite')}
           </button>
         )}
       </div>
@@ -76,7 +78,7 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({
                   {m.name}
                   {m.isAgent && (
                     <span style={{ padding: '1px 6px', borderRadius: 4, fontSize: 9, backgroundColor: 'rgba(99, 102, 241, 0.2)', color: '#a5b4fc', fontWeight: 700, border: '1px solid rgba(99, 102, 241, 0.3)' }}>
-                      AI
+                      {t('AI')}
                     </span>
                   )}
                 </span>
@@ -89,7 +91,7 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({
                 onClick={() => onDirectMessage(m.id)}
                 style={{ padding: '2px 8px', fontSize: 11, color: '#a3a3a3', backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: 6, border: 'none', cursor: 'pointer' }}
               >
-                DM
+                {t('DM')}
               </button>
             )}
           </div>

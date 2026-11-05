@@ -18,6 +18,7 @@
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
 import { type ComponentProps, type KeyboardEvent, type ReactNode, useRef } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { CodeEditor } from '../backends/gui/code-editor'
 import { slot } from '../backends/gui/slot'
@@ -55,13 +56,14 @@ export interface FileTabsProps extends Col {
 
 export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...rest }: FileTabsProps) {
   const tabs = useRef<(HTMLElement | null)[]>([])
+  const { t } = useI18n()
   const shown = files.find((f) => f.path === value) ?? files[0]
 
   if (!shown) {
     return (
       <YStack {...slot('file-tabs')} flex={1} minH={0} items="center" justify="center" p="$4" {...rest}>
         <SizableText size="$2" color="$soft" text="center">
-          {empty ?? 'Open a file to see it here.'}
+          {empty ?? t('Open a file to see it here.')}
         </SizableText>
       </YStack>
     )
@@ -93,7 +95,7 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
     <YStack {...slot('file-tabs')} flex={1} minH={0} minW={0} {...rest}>
       <XStack
         role="tablist"
-        aria-label="Open files"
+        aria-label={t('Open files')}
         items="stretch"
         minH={36}
         shrink={0}
@@ -114,7 +116,7 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
               {...({ type: 'button', title: file.path, 'aria-keyshortcuts': onClose ? 'Delete' : undefined } as object)}
               role="tab"
               aria-selected={on}
-              aria-label={file.dirty ? `${file.path}, unsaved` : file.path}
+              aria-label={file.dirty ? t('{path}, unsaved', { path: file.path }) : file.path}
               tabIndex={on ? 0 : -1}
               onPress={() => onSelect(file.path)}
               onKeyDown={((e: KeyboardEvent) => move(e, index)) as never}
@@ -177,7 +179,7 @@ export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...
         ) : shown.content === undefined ? (
           <YStack flex={1} items="center" justify="center" p="$4">
             <SizableText size="$2" color="$soft">
-              Reading {base(shown.path)}…
+              {t('Reading {name}…', { name: base(shown.path) })}
             </SizableText>
           </YStack>
         ) : (

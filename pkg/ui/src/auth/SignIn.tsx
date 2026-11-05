@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 import * as Iam from '@hanzo/iam'
 import { IAM, SecondFactor, type Methods } from '@hanzo/iam'
 import { useIam } from '@hanzo/iam/react'
@@ -110,7 +112,8 @@ const signupRequired = (err: unknown): boolean => {
 type Creating = { createAccountWithCode: (email: string, code: string, policy: Policy) => Promise<string | void> }
 const creates = (client: unknown): client is Creating => typeof (client as Partial<Creating>).createAccountWithCode === 'function'
 
-const said = (err: unknown): string => (err instanceof Error && err.message ? err.message : 'Something went wrong. Try again.')
+/** IAM's message, drawn as given, or ours, marked (`phrase`) and drawn through `t` by `Wrong`. */
+const said = (err: unknown): string => (err instanceof Error && err.message ? err.message : phrase('Something went wrong. Try again.'))
 
 /** The providers in the order they are offered: Google, Apple, GitHub, then any others as IAM lists them. */
 const RANK = ['google', 'apple', 'github']
@@ -160,6 +163,7 @@ export function SignIn({
   onMethod,
   onShown,
 }: SignInProps) {
+  const { t } = useI18n()
   const { config, sdk } = useIam()
   const [methods, setMethods] = useState<Methods>(providers ? { ...FIRST, providers } : FIRST)
   const [extras, setExtras] = useState<Extras>({ phone: false })
@@ -254,7 +258,7 @@ export function SignIn({
     const address = email.trim()
     // An address gets an emailed code; digits get a texted one, where IAM offers a phone sign-in.
     if (!address.includes('@') && !(extras.phone && PHONE.test(address))) {
-      setWrong(extras.phone ? 'Enter your email address or phone number.' : 'Enter your email address.')
+      setWrong(extras.phone ? t('Enter your email address or phone number.') : t('Enter your email address.'))
       return
     }
     // A sign-up whose SDK cannot make an account from a code keeps the password form.
@@ -321,11 +325,11 @@ export function SignIn({
       </YStack>
     )
   }
-  const title = signup ? `Create your ${site} account` : `Log in to ${site}`
-  const one = busy ? 'One moment…' : null
+  const title = signup ? t('Create your {site} account', { site }) : t('Log in to {site}', { site })
+  const one = busy ? t('One moment…') : null
 
   return (
-    <YStack render="section" aria-label={signup ? 'Sign up' : 'Log in'} items="center" gap="$5" {...(frame ? { minH: 560, pt: 112, pb: 96, px: '$4' } : {})}>
+    <YStack render="section" aria-label={signup ? t('Sign up') : t('Log in')} items="center" gap="$5" {...(frame ? { minH: 560, pt: 112, pb: 96, px: '$4' } : {})}>
       <Card width="100%" maxW={400}>
         <CardContent gap="$5">
           {frame ? (
@@ -349,25 +353,34 @@ export function SignIn({
                   {inOrder(methods.providers).map((p) => (
                     <Button key={p.name} type="button" variant="secondary" size="lg" rounded="$10" width="100%" disabled={busy} onClick={() => social(p.name, p.type)}>
                       <Brand kind={p.type.toLowerCase()} />
-                      {`Continue with ${p.type}`}
+                      {t('Continue with {provider}', { provider: p.type })}
                     </Button>
                   ))}
                 </YStack>
               ) : null}
-              {methods.providers.length ? <FieldSeparator>or</FieldSeparator> : null}
+              {methods.providers.length ? <FieldSeparator>{t('or')}</FieldSeparator> : null}
               <YStack render={<form onSubmit={next} noValidate />} gap="$4">
                 <Field gap="$2">
-                  <FieldLabel htmlFor="hanzo-email">{extras.phone ? 'Email or phone' : 'Email'}</FieldLabel>
-                  <Input id="hanzo-email" type={extras.phone ? 'text' : 'email'} name="email" autoComplete={signup ? 'email' : 'username'} value={email} onChangeText={setEmail} placeholder={extras.phone ? 'you@company.com or +1 555 010 0100' : 'you@company.com'} autoFocus />
+                  <FieldLabel htmlFor="hanzo-email">{extras.phone ? t('Email or phone') : t('Email')}</FieldLabel>
+                  <Input
+                    id="hanzo-email"
+                    type={extras.phone ? 'text' : 'email'}
+                    name="email"
+                    autoComplete={signup ? 'email' : 'username'}
+                    value={email}
+                    onChangeText={setEmail}
+                    placeholder={extras.phone ? t('{email} or {phone}', { email: 'you@company.com', phone: '+1 555 010 0100' }) : 'you@company.com'}
+                    autoFocus
+                  />
                 </Field>
                 <Wrong text={wrong} />
-                <Go busy={busy}>{one ?? 'Continue'}</Go>
+                <Go busy={busy}>{one ?? t('Continue')}</Go>
               </YStack>
             </>
           ) : (
             <YStack render={<form onSubmit={finish} noValidate />} gap="$4">
               <XStack items="center" gap="$2" minW={0}>
-                <Button type="button" variant="ghost" size="icon" aria-label={extras.phone ? 'Use another email or phone' : 'Use another email'} onClick={back}>
+                <Button type="button" variant="ghost" size="icon" aria-label={extras.phone ? t('Use another email or phone') : t('Use another email')} onClick={back}>
                   <ArrowLeft {...mirror} size={16} />
                 </Button>
                 <SizableText size="$2" color="$ink" numberOfLines={1} flex={1} minW={0}>
@@ -376,16 +389,16 @@ export function SignIn({
               </XStack>
               {step === 'password' ? (
                 <Field gap="$2">
-                  <FieldLabel htmlFor="hanzo-password">Password</FieldLabel>
+                  <FieldLabel htmlFor="hanzo-password">{t('Password')}</FieldLabel>
                   <Input id="hanzo-password" type="password" name="password" autoComplete="current-password" value={password} onChangeText={setPassword} autoFocus />
                 </Field>
               ) : (
                 <>
                   <Paragraph size="$2" color="$quiet" m={0}>
-                    We sent a code to {email.trim()}. It is good for a few minutes.
+                    {`${t('We sent a code to {email}.', { email: email.trim() })} ${t('It is good for a few minutes.')}`}
                   </Paragraph>
                   <Field gap="$2">
-                    <FieldLabel htmlFor="hanzo-code">Code</FieldLabel>
+                    <FieldLabel htmlFor="hanzo-code">{t('Code')}</FieldLabel>
                     <Input id="hanzo-code" name="code" inputMode="numeric" autoComplete="one-time-code" value={code} onChangeText={setCode} autoFocus />
                   </Field>
                 </>
@@ -393,30 +406,30 @@ export function SignIn({
               {step === 'create' ? (
                 <>
                   <Field gap="$2">
-                    <FieldLabel htmlFor="hanzo-name">Your name</FieldLabel>
+                    <FieldLabel htmlFor="hanzo-name">{t('Your name')}</FieldLabel>
                     <Input id="hanzo-name" name="name" autoComplete="name" value={name} onChangeText={setName} />
                   </Field>
                   <Field gap="$2">
-                    <FieldLabel htmlFor="hanzo-new-password">Password</FieldLabel>
+                    <FieldLabel htmlFor="hanzo-new-password">{t('Password')}</FieldLabel>
                     <Input id="hanzo-new-password" type="password" name="password" autoComplete="new-password" value={password} onChangeText={setPassword} />
                   </Field>
                 </>
               ) : null}
               <Wrong text={wrong} />
-              <Go busy={busy}>{one ?? (step === 'create' ? 'Create account' : 'Continue')}</Go>
+              <Go busy={busy}>{one ?? (step === 'create' ? t('Create account') : t('Continue'))}</Go>
               {step === 'password' && methods.code ? (
                 <Button type="button" variant="linkMuted" size="lg" disabled={busy} onClick={() => void sendCode()}>
-                  Email me a code instead
+                  {t('Email me a code instead')}
                 </Button>
               ) : null}
               {step !== 'password' ? (
                 <Button type="button" variant="linkMuted" size="lg" disabled={busy} onClick={() => void sendCode()}>
-                  Send a new code
+                  {t('Send a new code')}
                 </Button>
               ) : null}
               {step === 'code' && methods.password && !signup ? (
                 <Button type="button" variant="linkMuted" size="lg" disabled={busy} onClick={() => setStep('password')}>
-                  Use a password instead
+                  {t('Use a password instead')}
                 </Button>
               ) : null}
             </YStack>
@@ -424,16 +437,27 @@ export function SignIn({
 
           {signup ? (
             <Paragraph size="$1" color="$quiet" m={0}>
-              By creating an account you agree to the <Anchor href={termsPath} color="$ink" textDecorationLine="underline">Terms</Anchor> and the <Anchor href={privacyPath} color="$ink" textDecorationLine="underline">Privacy Policy</Anchor>.
+              {t('By creating an account you agree to the {terms} and the {privacy}.', {
+                terms: (
+                  <Anchor href={termsPath} color="$ink" textDecorationLine="underline">
+                    {t('Terms')}
+                  </Anchor>
+                ),
+                privacy: (
+                  <Anchor href={privacyPath} color="$ink" textDecorationLine="underline">
+                    {t('Privacy Policy')}
+                  </Anchor>
+                ),
+              })}
             </Paragraph>
           ) : null}
         </CardContent>
       </Card>
       {frame && (signup || signupPath) ? (
         <Paragraph size="$2" color="$quiet" m={0}>
-          {signup ? 'Have an account? ' : `New to ${site}? `}
+          {`${signup ? t('Have an account?') : t('New to {site}?', { site })} `}
           <Anchor href={`${signup ? loginPath : signupPath}${query}`} color="$ink" textDecorationLine="underline">
-            {signup ? 'Log in' : 'Create an account'}
+            {signup ? t('Log in') : t('Create an account')}
           </Anchor>
         </Paragraph>
       ) : null}
@@ -454,6 +478,8 @@ function Go({ busy, children }: { busy: boolean; children: ReactNode }) {
   )
 }
 
+/** What went wrong: IAM's words as given, ours in the reader's language. */
 function Wrong({ text }: { text: string | null }) {
-  return text ? <FieldError>{text}</FieldError> : null
+  const { t } = useI18n()
+  return text ? <FieldError>{t(text)}</FieldError> : null
 }

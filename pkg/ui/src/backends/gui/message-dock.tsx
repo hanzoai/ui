@@ -17,6 +17,7 @@
 import { XStack, YStack, SizableText, createStyledContext, styled } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { ink } from './ink'
 import { slot } from './slot'
 import { touch } from './gesture'
@@ -140,6 +141,7 @@ export type MessageDockProps = Omit<ComponentProps<typeof DockFrame>, 'anchor' |
 
 function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: MessageDockProps) {
   const resolved = position ?? 'bottom-end'
+  const { t } = useI18n()
   return (
     <DockFrame {...slot('message-dock')} data-position={resolved} anchor={resolved} {...props}>
       {messages.map((message) => {
@@ -175,7 +177,7 @@ function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: M
                   position="absolute"
                   t="$3"
                   insetInlineEnd="$3"
-                  aria-label="Close"
+                  aria-label={t('Close')}
                   onPress={() => onClose(message.id)}
                 >
                   <X size={16} />

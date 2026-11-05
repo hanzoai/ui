@@ -19,6 +19,7 @@
  */
 import { Text, XStack } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { ink } from './ink'
 import { slot } from './slot'
@@ -26,9 +27,10 @@ import { slot } from './slot'
 type Row = ComponentProps<typeof XStack>
 type Words = ComponentProps<typeof Text>
 
-export const Breadcrumb = (props: Row) => (
-  <XStack {...slot('breadcrumb')} render="nav" aria-label="Breadcrumb" minH={32} items="center" overflow="hidden" minW={0} {...props} />
-)
+export const Breadcrumb = (props: Row) => {
+  const { t } = useI18n()
+  return <XStack {...slot('breadcrumb')} render="nav" aria-label={t('Breadcrumb')} minH={32} items="center" overflow="hidden" minW={0} {...props} />
+}
 
 export const BreadcrumbList = ({ children, ...props }: Row) => (
   <XStack {...slot('breadcrumb-list')} render="ol" items="center" gap="$1" m={0} p={0} minW={0} style={{ listStyle: 'none' }} {...props}>

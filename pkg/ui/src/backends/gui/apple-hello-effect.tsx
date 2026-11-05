@@ -13,6 +13,7 @@
  */
 import { SizableText, XStack, styled } from '@hanzo/gui'
 import * as React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 
 const KEYFRAMES = `
@@ -43,16 +44,18 @@ export type AppleHelloEffectProps = React.ComponentProps<'div'> & {
 }
 
 export function AppleHelloEffect({
-  text = 'Hello',
+  text,
   duration = 2,
   ...props
 }: AppleHelloEffectProps) {
+  const { t } = useI18n()
+  const word = text ?? t('Hello')
   return (
     <Frame {...slot('apple-hello-effect')} {...(props as React.ComponentProps<typeof Frame>)}>
       <style href="apple-hello-effect" precedence="default">
         {KEYFRAMES}
       </style>
-      {[...text].map((letter, index) => (
+      {[...word].map((letter, index) => (
         <Letter
           key={index}
           {...slot('apple-hello-effect-letter')}

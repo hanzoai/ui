@@ -29,6 +29,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Button } from '../backends/gui/button'
 import { drag, type DragEvent } from '../backends/gui/gesture'
@@ -89,9 +90,11 @@ export function Console({
   onRun,
   busy = false,
   status,
-  label = 'Console',
+  label: named,
   ...rest
 }: ConsoleProps) {
+  const { t } = useI18n()
+  const label = named ?? t('Console')
   const open = opened(height)
   const last = useRef(OPEN)
   if (open) last.current = height
@@ -146,7 +149,7 @@ export function Console({
         {...slot('console-grip')}
         role="separator"
         aria-orientation="horizontal"
-        aria-label={`Resize ${label.toLowerCase()}`}
+        aria-label={t('Resize {label}', { label: label.toLowerCase() })}
         aria-valuemin={HEAD}
         aria-valuemax={ceiling(viewport())}
         aria-valuenow={Math.max(height, HEAD)}
@@ -166,12 +169,12 @@ export function Console({
         {...(grip as object)}
       />
       <XStack items="center" gap="$2" px="$2" minH={HEAD - 6} shrink={0}>
-        <XStack role="tablist" aria-label={`${label} tabs`} items="center" gap="$1" minW={0} shrink={1} overflow="scroll">
-          {all.map((t) => {
-            const on = t.id === tab
+        <XStack role="tablist" aria-label={t('{label} tabs', { label })} items="center" gap="$1" minW={0} shrink={1} overflow="scroll">
+          {all.map((item) => {
+            const on = item.id === tab
             return (
               <Button
-                key={t.id}
+                key={item.id}
                 type="button"
                 variant="ghost"
                 size="sm"
@@ -182,14 +185,14 @@ export function Console({
                 px="$2"
                 bg={on ? '$hover' : 'transparent'}
                 onClick={() => {
-                  onTab?.(t.id)
+                  onTab?.(item.id)
                   if (!open) toggle()
                 }}
               >
                 <SizableText size="$1" color={on ? '$ink' : '$soft'}>
-                  {t.label}
+                  {item.label}
                 </SizableText>
-                {t.id === 'log' && counts.error > 0 ? (
+                {item.id === 'log' && counts.error > 0 ? (
                   <SizableText size="$1" color="$bad" {...slot('console-errors')}>
                     {counts.error}
                   </SizableText>
@@ -208,8 +211,8 @@ export function Console({
             size="icon-sm"
             minHeight={24}
             minWidth={24}
-            aria-label={`Clear ${label.toLowerCase()}`}
-            title={`Clear ${label.toLowerCase()}`}
+            aria-label={t('Clear {label}', { label: label.toLowerCase() })}
+            title={t('Clear {label}', { label: label.toLowerCase() })}
             disabled={lines.length === 0}
             onClick={onClear}
           >
@@ -222,9 +225,9 @@ export function Console({
           size="icon-sm"
           minHeight={24}
           minWidth={24}
-          aria-label={open ? `Collapse ${label.toLowerCase()}` : `Expand ${label.toLowerCase()}`}
+          aria-label={open ? t('Collapse {label}', { label: label.toLowerCase() }) : t('Expand {label}', { label: label.toLowerCase() })}
           aria-expanded={open}
-          title={open ? 'Collapse' : 'Expand'}
+          title={open ? t('Collapse') : t('Expand')}
           onClick={toggle}
         >
           {open ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
@@ -241,7 +244,7 @@ export function Console({
                 <YStack px="$3" pb="$2" {...slot('console-lines')} role="log" aria-live="polite">
                   {lines.length === 0 ? (
                     <SizableText size="$1" color="$soft" fontFamily="$mono">
-                      Nothing yet.
+                      {t('Nothing yet.')}
                     </SizableText>
                   ) : (
                     lines.map((l) => (
@@ -277,8 +280,8 @@ export function Console({
                     {...slot('console-prompt')}
                     value={command}
                     disabled={busy}
-                    aria-label="Run a command"
-                    placeholder={busy ? 'Running…' : 'Run a command'}
+                    aria-label={t('Run a command')}
+                    placeholder={busy ? t('Running…') : t('Run a command')}
                     onChangeText={setCommand}
                     onKeyDown={((e: KeyboardEvent & { nativeEvent?: { isComposing?: boolean } }) => {
                       if (e.key !== 'Enter' || e.nativeEvent?.isComposing) return

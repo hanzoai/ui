@@ -15,6 +15,7 @@
 import * as React from 'react'
 import { VisuallyHidden, XStack, styled } from '@hanzo/gui'
 import { ChevronLeft, ChevronRight, MoreHorizontal } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { Button, type ButtonSize } from './button'
 import { slot } from './slot'
@@ -31,9 +32,10 @@ const Nav = styled(XStack, {
 
 export type PaginationProps = React.ComponentProps<typeof Nav>
 
-export const Pagination = (props: PaginationProps) => (
-  <Nav {...slot('pagination')} role="navigation" aria-label="pagination" {...props} />
-)
+export const Pagination = (props: PaginationProps) => {
+  const { t } = useI18n()
+  return <Nav {...slot('pagination')} role="navigation" aria-label={t('pagination')} {...props} />
+}
 
 const List = styled(XStack, {
   name: 'PaginationContent',
@@ -89,21 +91,27 @@ export const PaginationLink = ({
 
 export type PaginationPreviousProps = Omit<PaginationLinkProps, 'size' | 'children'>
 
-export const PaginationPrevious = (props: PaginationPreviousProps) => (
-  <PaginationLink aria-label="Go to previous page" size="default" gap="$1" paddingInlineStart="$2.5" {...props}>
-    <ChevronLeft {...mirror} size={ICON} />
-    Previous
-  </PaginationLink>
-)
+export const PaginationPrevious = (props: PaginationPreviousProps) => {
+  const { t } = useI18n()
+  return (
+    <PaginationLink aria-label={t('Go to previous page')} size="default" gap="$1" paddingInlineStart="$2.5" {...props}>
+      <ChevronLeft {...mirror} size={ICON} />
+      {t('Previous')}
+    </PaginationLink>
+  )
+}
 
 export type PaginationNextProps = Omit<PaginationLinkProps, 'size' | 'children'>
 
-export const PaginationNext = (props: PaginationNextProps) => (
-  <PaginationLink aria-label="Go to next page" size="default" gap="$1" paddingInlineEnd="$2.5" {...props}>
-    Next
-    <ChevronRight {...mirror} size={ICON} />
-  </PaginationLink>
-)
+export const PaginationNext = (props: PaginationNextProps) => {
+  const { t } = useI18n()
+  return (
+    <PaginationLink aria-label={t('Go to next page')} size="default" gap="$1" paddingInlineEnd="$2.5" {...props}>
+      {t('Next')}
+      <ChevronRight {...mirror} size={ICON} />
+    </PaginationLink>
+  )
+}
 
 const Ellipsis = styled(XStack, {
   name: 'PaginationEllipsis',
@@ -117,9 +125,12 @@ const Ellipsis = styled(XStack, {
 export type PaginationEllipsisProps = React.ComponentProps<typeof Ellipsis>
 
 /** A gap too long to enumerate. Decorative — the count still comes from the list. */
-export const PaginationEllipsis = (props: PaginationEllipsisProps) => (
-  <Ellipsis {...slot('pagination-ellipsis')} aria-hidden {...props}>
-    <MoreHorizontal size={ICON} />
-    <VisuallyHidden>More pages</VisuallyHidden>
-  </Ellipsis>
-)
+export const PaginationEllipsis = (props: PaginationEllipsisProps) => {
+  const { t } = useI18n()
+  return (
+    <Ellipsis {...slot('pagination-ellipsis')} aria-hidden {...props}>
+      <MoreHorizontal size={ICON} />
+      <VisuallyHidden>{t('More pages')}</VisuallyHidden>
+    </Ellipsis>
+  )
+}

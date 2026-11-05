@@ -12,6 +12,7 @@
 import { Image, XStack, YStack, type YStackProps } from '@hanzo/gui'
 import { Crop, RotateCw, ZoomIn, ZoomOut } from '@hanzogui/lucide-icons-2'
 import { useState } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { AspectRatio } from './aspect-ratio'
 import { Button } from './button'
 import { slot } from './slot'
@@ -33,6 +34,7 @@ export interface ImageCropProps extends Omit<YStackProps, 'children'> {
 export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps) {
   const [zoom, setZoom] = useState(1)
   const [rotation, setRotation] = useState(0)
+  const { t } = useI18n()
 
   const zoomOut = () => setZoom((z) => Math.max(MIN_ZOOM, +(z - STEP).toFixed(2)))
   const zoomIn = () => setZoom((z) => Math.min(MAX_ZOOM, +(z + STEP).toFixed(2)))
@@ -49,7 +51,7 @@ export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps)
       >
         <Image
           src={src}
-          alt="Crop preview"
+          alt={t('Crop preview')}
           width="100%"
           height="100%"
           objectFit="contain"
@@ -66,7 +68,7 @@ export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps)
           {...slot('image-crop-zoom-out')}
           variant="outline"
           size="icon"
-          aria-label="Zoom out"
+          aria-label={t('Zoom out')}
           onPress={zoomOut}
         >
           <ZoomOut size={ICON} />
@@ -75,7 +77,7 @@ export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps)
           {...slot('image-crop-zoom-in')}
           variant="outline"
           size="icon"
-          aria-label="Zoom in"
+          aria-label={t('Zoom in')}
           onPress={zoomIn}
         >
           <ZoomIn size={ICON} />
@@ -84,14 +86,14 @@ export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps)
           {...slot('image-crop-rotate')}
           variant="outline"
           size="icon"
-          aria-label="Rotate"
+          aria-label={t('Rotate')}
           onPress={rotate}
         >
           <RotateCw size={ICON} />
         </Button>
         <Button {...slot('image-crop-crop')} onPress={() => onCrop?.(src)}>
           <Crop size={ICON} />
-          Crop
+          {t('Crop')}
         </Button>
       </XStack>
     </YStack>

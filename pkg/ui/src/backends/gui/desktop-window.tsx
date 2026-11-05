@@ -15,6 +15,7 @@
  */
 import { SizableText, XStack, YStack, createStyledContext, styled, type GuiElement } from '@hanzo/gui'
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { drag, dragPos, touch, type DragEvent } from './gesture'
 import { slot } from './slot'
 
@@ -101,6 +102,7 @@ export function DesktopWindowControls({
   onMaximize,
   isMaximized = false,
 }: DesktopWindowControlsProps) {
+  const { t } = useI18n()
   return (
     <XStack {...slot('desktop-window-controls')} items="center" gap="$2">
       <Light
@@ -108,7 +110,7 @@ export function DesktopWindowControls({
         tone="close"
         onPress={onClose}
         {...touch(CONTROL, 44, 'both')}
-        aria-label="Close window"
+        aria-label={t('Close window')}
         role="button"
       />
       <Light
@@ -116,7 +118,7 @@ export function DesktopWindowControls({
         tone="minimize"
         onPress={onMinimize}
         {...touch(CONTROL, 44, 'both')}
-        aria-label="Minimize window"
+        aria-label={t('Minimize window')}
         role="button"
       />
       <Light
@@ -124,7 +126,7 @@ export function DesktopWindowControls({
         tone="maximize"
         onPress={onMaximize}
         {...touch(CONTROL, 44, 'both')}
-        aria-label={isMaximized ? 'Restore window' : 'Maximize window'}
+        aria-label={isMaximized ? t('Restore window') : t('Maximize window')}
         role="button"
       />
     </XStack>

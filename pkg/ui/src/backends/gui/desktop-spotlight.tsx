@@ -13,6 +13,8 @@
 import { useMemo, type ReactNode } from 'react'
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { Search as SearchIcon } from '@hanzogui/lucide-icons-2'
+import { phrase } from '@hanzo/i18n'
+import { useI18n } from '@hanzo/i18n/react'
 
 import {
   CommandDialog,
@@ -46,7 +48,7 @@ export interface SpotlightProps {
   placeholder?: string
 }
 
-const NO_CATEGORY = 'Results'
+const NO_CATEGORY = phrase('Results')
 
 /** Items in first-seen category order — the grouping `Object.entries` alone won't give. */
 function groupByCategory(items: SpotlightItem[]) {
@@ -68,8 +70,10 @@ export function Spotlight({
   onClose,
   items = [],
   onSelect,
-  placeholder = 'Search...',
+  placeholder: hint,
 }: SpotlightProps) {
+  const { t } = useI18n()
+  const placeholder = hint ?? t('Search...')
   const groups = useMemo(() => groupByCategory(items), [items])
 
   const pick = (item: SpotlightItem) => {
@@ -90,9 +94,9 @@ export function Spotlight({
     >
       <CommandInput placeholder={placeholder} autoFocus />
       <CommandList>
-        <CommandEmpty>No results found</CommandEmpty>
+        <CommandEmpty>{t('No results found')}</CommandEmpty>
         {groups.map(([category, categoryItems]) => (
-          <CommandGroup key={category} heading={category}>
+          <CommandGroup key={category} heading={category === NO_CATEGORY ? t(category) : category}>
             {categoryItems.map((item) => (
               <CommandItem
                 key={item.id}

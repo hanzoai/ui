@@ -33,6 +33,7 @@
 import { Children, createContext, isValidElement, useContext, type ComponentProps, type ReactNode } from 'react'
 import { SizableText, XStack, YStack, createStyledContext, styled } from '@hanzo/gui'
 import { Info, X } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 import { touch } from './gesture'
 import { Button, type ButtonProps } from './button'
@@ -176,6 +177,7 @@ function RecordBanner({
   children,
   ...props
 }: Omit<BannerProps, 'variant'>) {
+  const { t } = useI18n()
   const solid = (emphasis ?? (layout === 'strip' ? 'solid' : 'soft')) === 'solid'
   const hue = colorOf(status ?? 'info', color)
   const paint = STATUS_PAINT[hue]
@@ -227,7 +229,7 @@ function RecordBanner({
             variant="ghost"
             size="icon-xs"
             color={ink}
-            aria-label="Close"
+            aria-label={t('Close')}
             onPress={onClose}
           >
             <X color={ink as never} />
@@ -251,6 +253,7 @@ export function Banner({
   icon: lead,
   ...props
 }: BannerProps) {
+  const { t } = useI18n()
   const record = [status, color, emphasis, layout, action, lead].some((v) => v !== undefined)
   if (record)
     return (
@@ -301,7 +304,7 @@ export function Banner({
           position="absolute"
           t="$3"
           insetInlineEnd="$4"
-          aria-label="Close"
+          aria-label={t('Close')}
           onPress={onClose}
         >
           <X size={16} />

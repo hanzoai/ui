@@ -10,6 +10,7 @@
 import { Input as GuiInput, XStack } from '@hanzo/gui'
 import { Eye, EyeOff } from '@hanzogui/lucide-icons-2'
 import { forwardRef, useContext, useEffect, useState, type ComponentProps, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 import { touch } from './gesture'
 import { masked } from './mask'
@@ -65,6 +66,7 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
   ref,
 ) {
   const [revealed, setRevealed] = useState(false)
+  const { t } = useI18n()
   const density = useDensity()
   const group = useContext(GroupContext)
   const isPassword = type === 'password' || secureTextEntry === true
@@ -184,7 +186,7 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
           {...well('end', box.gutter)}
           cursor="pointer"
           onPress={() => setRevealed((v) => !v)}
-          aria-label={revealed ? 'Hide password' : 'Show password'}
+          aria-label={revealed ? t('Hide password') : t('Show password')}
         >
           {revealed ? <EyeOff size={16} /> : <Eye size={16} />}
         </XStack>

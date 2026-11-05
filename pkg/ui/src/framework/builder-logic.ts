@@ -9,30 +9,34 @@
  * projects the whole thing to a valid `DocType` create body. Names are slugified
  * to field-name rules so a save never 400s on a bad identifier.
  */
+import { phrase } from '@hanzo/i18n'
+import type { Say } from '@hanzo/i18n/react'
 import type { DocType, DocField, Fieldtype } from './types'
+import { english } from '../core/english'
 import { slugify, isValidDoctypeName } from './fields'
 
 /**
  * The builder's field-type vocabulary — every framework fieldtype, with a friendly
- * label + hint. This is the ONE list the "add field" type picker renders, so the
- * builder always offers exactly what the engine accepts (no drift). Order is the
- * author-facing order (common types first).
+ * label + hint, marked with `phrase` and drawn through `t`. This is the ONE list
+ * the "add field" type picker renders, so the builder always offers exactly what
+ * the engine accepts (no drift). Order is the author-facing order (common types
+ * first).
  */
 export const BUILDER_FIELD_TYPES: { type: Fieldtype; label: string; hint: string }[] = [
-  { type: 'Data', label: 'Text', hint: 'Single line of text' },
-  { type: 'RichText', label: 'Rich text', hint: 'Formatted body (WYSIWYG)' },
-  { type: 'LongText', label: 'Long text', hint: 'Multi-line plain text' },
-  { type: 'Int', label: 'Number', hint: 'Whole number' },
-  { type: 'Float', label: 'Decimal', hint: 'Decimal number' },
-  { type: 'Currency', label: 'Currency', hint: 'Money amount' },
-  { type: 'Check', label: 'Checkbox', hint: 'True / false' },
-  { type: 'Date', label: 'Date', hint: 'Calendar date' },
-  { type: 'Datetime', label: 'Date & time', hint: 'Date with time' },
-  { type: 'Select', label: 'Select', hint: 'One of a list of options' },
-  { type: 'Link', label: 'Relation', hint: 'Reference another collection' },
-  { type: 'Attach', label: 'Attachment', hint: 'A file / image URL' },
-  { type: 'Table', label: 'Table', hint: 'Repeatable child rows (JSON)' },
-  { type: 'JSON', label: 'JSON', hint: 'Arbitrary JSON' },
+  { type: 'Data', label: phrase('Text'), hint: phrase('Single line of text') },
+  { type: 'RichText', label: phrase('Rich text'), hint: phrase('Formatted body (WYSIWYG)') },
+  { type: 'LongText', label: phrase('Long text'), hint: phrase('Multi-line plain text') },
+  { type: 'Int', label: phrase('Number'), hint: phrase('Whole number') },
+  { type: 'Float', label: phrase('Decimal'), hint: phrase('Decimal number') },
+  { type: 'Currency', label: phrase('Currency'), hint: phrase('Money amount') },
+  { type: 'Check', label: phrase('Checkbox'), hint: phrase('True / false') },
+  { type: 'Date', label: phrase('Date'), hint: phrase('Calendar date') },
+  { type: 'Datetime', label: phrase('Date & time'), hint: phrase('Date with time') },
+  { type: 'Select', label: phrase('Select'), hint: phrase('One of a list of options') },
+  { type: 'Link', label: phrase('Relation'), hint: phrase('Reference another collection') },
+  { type: 'Attach', label: phrase('Attachment'), hint: phrase('A file / image URL') },
+  { type: 'Table', label: phrase('Table'), hint: phrase('Repeatable child rows (JSON)') },
+  { type: 'JSON', label: 'JSON', hint: phrase('Arbitrary JSON') },
 ]
 
 const LABELS: Record<Fieldtype, string> = Object.fromEntries(
@@ -120,39 +124,40 @@ export interface BuilderValidation {
 
 /**
  * Validate the whole builder: the collection name, at least one field, unique
- * non-empty field labels/names, and options present where required. Pure.
+ * non-empty field labels/names, and options present where required. Pure; the
+ * errors are English unless the caller passes its `t`.
  */
-export function validateBuilder(name: string, fields: BuilderField[]): BuilderValidation {
+export function validateBuilder(name: string, fields: BuilderField[], t: Say = english): BuilderValidation {
   const fieldErrors: Record<string, string> = {}
   let formError: string | null = null
 
   if (!isValidDoctypeName(name.trim())) {
-    formError = 'Enter a collection name with letters, digits, dashes or underscores (no spaces).'
+    formError = t('Enter a collection name with letters, digits, dashes or underscores (no spaces).')
   } else if (fields.length === 0) {
-    formError = 'Add at least one field.'
+    formError = t('Add at least one field.')
   }
 
   const seen = new Set<string>()
   for (const f of fields) {
     const label = f.label.trim()
     if (!label) {
-      fieldErrors[f.key] = 'Name this field.'
+      fieldErrors[f.key] = t('Name this field.')
       continue
     }
     const fname = fieldNameFromLabel(label)
     if (!fname) {
-      fieldErrors[f.key] = 'Use letters or digits in the field name.'
+      fieldErrors[f.key] = t('Use letters or digits in the field name.')
       continue
     }
     if (seen.has(fname)) {
-      fieldErrors[f.key] = `Duplicate field "${fname}".`
+      fieldErrors[f.key] = t('Duplicate field "{name}".', { name: fname })
       continue
     }
     seen.add(fname)
     if ((f.type === 'Link' || f.type === 'Table') && !f.options.trim()) {
-      fieldErrors[f.key] = f.type === 'Link' ? 'Choose the collection to relate to.' : 'Name the child collection.'
+      fieldErrors[f.key] = f.type === 'Link' ? t('Choose the collection to relate to.') : t('Name the child collection.')
     } else if (f.type === 'Select' && !f.options.trim()) {
-      fieldErrors[f.key] = 'Add at least one option.'
+      fieldErrors[f.key] = t('Add at least one option.')
     }
   }
 

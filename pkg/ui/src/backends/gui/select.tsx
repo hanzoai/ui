@@ -309,15 +309,24 @@ export type PickerProps = Omit<TextProps, "render" | "size" | keyof Native> &
  * An `<option>` in the field's ink. The list inherits the select's colour, so a
  * picker showing its placeholder would otherwise hand the dim hint to every
  * choice in the list the platform opens.
+ *
+ * Even without a `placeholder` the choosable options take the field's ink, so
+ * a picker showing its placeholder colour still lists choices readably; a
+ * disabled option (a hint) keeps the inherited ink.
  */
 const inked = (ink: TextProps["color"]) => (child: ReactNode) =>
-  isValidElement<ComponentProps<"option">>(child) && child.type === "option" ? (
+  isValidElement<ComponentProps<"option">>(child) && child.type === "option" && !child.props.disabled ? (
     <Text render={cloneElement(child, { children: undefined })} color={ink}>
       {child.props.children}
     </Text>
   ) : (
     child
   )
+const hasPlaceholderHint = (children: ReactNode): boolean =>
+  Children.toArray(children).some(
+    (c) => isValidElement<ComponentProps<"option">>(c) && c.type === "option" && !!c.props.disabled,
+  )
+const FIELD_INK = "$color" as const
 
 /**
  * Picker — the platform's own select, wearing the field.
@@ -389,7 +398,7 @@ const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(functi
       {...props}
     >
       {placeholder === undefined ? (
-        children
+        hasPlaceholderHint(children) ? Children.map(children, inked(FIELD_INK)) : children
       ) : (
         <>
           <option value="" disabled>

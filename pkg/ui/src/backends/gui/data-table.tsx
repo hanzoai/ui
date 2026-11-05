@@ -24,6 +24,7 @@
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown } from '@hanzogui/lucide-icons-2'
 import { useMemo, useState, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { Cell, Grid } from '../../grid'
 import { Button } from './button'
 import { Checkbox } from './checkbox'
@@ -168,11 +169,12 @@ function DataTable<TData>({
   data,
   getRowId,
   filterColumnId,
-  filterPlaceholder = 'Filter…',
+  filterPlaceholder,
   pageSize = 0,
-  emptyMessage = 'No results.',
+  emptyMessage,
   onRowSelectionChange,
 }: DataTableProps<TData>) {
+  const { t } = useI18n()
   const [sorting, setSorting] = useState<{ id: string; desc: boolean } | null>(null)
   const [filter, setFilter] = useState('')
   const [hidden, setHidden] = useState<Record<string, boolean>>({})
@@ -277,7 +279,7 @@ function DataTable<TData>({
     if (column.id === 'select')
       return (
         <Checkbox
-          aria-label="Select all"
+          aria-label={t('Select all')}
           checked={allPageSelected ? true : somePageSelected ? 'indeterminate' : false}
           onCheckedChange={(value: boolean) => toggleAllPage(!!value)}
         />
@@ -290,7 +292,7 @@ function DataTable<TData>({
     if (column.id === 'select')
       return (
         <Checkbox
-          aria-label="Select row"
+          aria-label={t('Select row')}
           checked={selected[entry.id] === true}
           onCheckedChange={(value: boolean) => setSelectedFor(entry.id, !!value)}
         />
@@ -311,7 +313,7 @@ function DataTable<TData>({
           {filterColumnId && (
             <Input
               {...slot('data-table-filter')}
-              placeholder={filterPlaceholder}
+              placeholder={filterPlaceholder ?? t('Filter…')}
               value={filter}
               onChangeText={setFilter}
               maxW={360}
@@ -322,7 +324,7 @@ function DataTable<TData>({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button {...slot('data-table-view-options')} variant="outline" size="sm" marginInlineStart="auto">
-                  Columns
+                  {t('Columns')}
                   <ChevronDown size={14} />
                 </Button>
               </DropdownMenuTrigger>
@@ -362,7 +364,7 @@ function DataTable<TData>({
         {paged.length === 0 ? (
           <YStack {...slot('data-table-empty')} height={96} items="center" justify="center">
             <SizableText size="$2" color="$quiet">
-              {emptyMessage}
+              {emptyMessage ?? t('No results.')}
             </SizableText>
           </YStack>
         ) : (
@@ -396,7 +398,7 @@ function DataTable<TData>({
 
       <XStack {...slot('data-table-footer')} items="center" justify="space-between">
         <SizableText size="$2" color="$quiet">
-          {selectedCount} of {filteredCount} row(s) selected.
+          {t('{selected} of {total} row(s) selected.', { selected: selectedCount, total: filteredCount })}
         </SizableText>
         {pageSize > 0 && (
           <XStack {...slot('data-table-pagination')} gap="$2">
@@ -407,7 +409,7 @@ function DataTable<TData>({
               aria-disabled={!table.getCanPreviousPage()}
               onClick={() => table.previousPage()}
             >
-              Previous
+              {t('Previous')}
             </Button>
             <Button
               variant="outline"
@@ -416,7 +418,7 @@ function DataTable<TData>({
               aria-disabled={!table.getCanNextPage()}
               onClick={() => table.nextPage()}
             >
-              Next
+              {t('Next')}
             </Button>
           </XStack>
         )}

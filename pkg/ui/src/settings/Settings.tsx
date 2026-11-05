@@ -26,6 +26,7 @@
  */
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { useId, type ComponentProps, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { press, RING } from '../backends/gui/press'
 import { slot } from '../backends/gui/slot'
@@ -65,10 +66,12 @@ export function Settings<E extends Entry>({
   groups,
   active,
   onPick,
-  title = 'Settings',
+  title: named,
   children,
   ...rest
 }: SettingsProps<E>) {
+  const { t } = useI18n()
+  const title = named ?? t('Settings')
   const id = useId()
   const order = groups ?? [...new Set(entries.map((e) => e.group))]
 

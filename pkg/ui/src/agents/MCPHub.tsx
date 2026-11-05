@@ -1,4 +1,5 @@
 import React from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 
 export interface MCPServerInfo {
   id: string
@@ -26,6 +27,7 @@ export const MCPHub: React.FC<MCPHubProps> = ({
   className = '',
   style,
 }) => {
+  const { t } = useI18n()
   return (
     <div
       style={{
@@ -38,14 +40,14 @@ export const MCPHub: React.FC<MCPHubProps> = ({
         borderRadius: 16,
         ...style,
       }}
-      aria-label="MCP Server Hub"
+      aria-label={t('MCP Server Hub')}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 18 }}>🔌</span>
           <h3 style={{ fontSize: 14, fontWeight: 600, color: '#ffffff', margin: 0 }}>Model Context Protocol (MCP)</h3>
           <span style={{ padding: '2px 6px', borderRadius: 9999, fontSize: 10, backgroundColor: 'rgba(255, 255, 255, 0.1)', color: '#d4d4d4', fontFamily: 'monospace' }}>
-            {servers.length} Active
+            {t('{n} Active', { n: servers.length })}
           </span>
         </div>
 
@@ -54,7 +56,7 @@ export const MCPHub: React.FC<MCPHubProps> = ({
             onClick={onOpenSettings}
             style={{ padding: '4px 10px', fontSize: 12, fontWeight: 500, color: '#a5b4fc', backgroundColor: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: 8, cursor: 'pointer' }}
           >
-            Manage Servers
+            {t('Manage Servers')}
           </button>
         )}
       </div>
@@ -87,16 +89,16 @@ export const MCPHub: React.FC<MCPHubProps> = ({
                   onClick={() => (isConnected ? onDisconnectServer?.(server.id) : onConnectServer?.(server.id))}
                   style={{ fontSize: 11, color: '#a3a3a3', background: 'none', border: 'none', cursor: 'pointer' }}
                 >
-                  {isConnected ? 'Disconnect' : 'Connect'}
+                  {isConnected ? t('Disconnect') : t('Connect')}
                 </button>
               </div>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 <span style={{ fontSize: 11, color: '#a3a3a3', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '2px 6px', borderRadius: 4 }}>
-                  🛠️ {server.toolsCount} tools
+                  🛠️ {t('{n} tools', { n: server.toolsCount })}
                 </span>
                 <span style={{ fontSize: 11, color: '#a3a3a3', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '2px 6px', borderRadius: 4 }}>
-                  📦 {server.resourcesCount} resources
+                  📦 {t('{n} resources', { n: server.resourcesCount })}
                 </span>
               </div>
             </div>

@@ -3,6 +3,8 @@
  * catalog so that a page naming one (hanzo.ai's lib/zen) loads this row alone.
  * `./catalog` re-exports both names.
  */
+import { phrase } from '@hanzo/i18n'
+
 import type { ModelCatalogEntry } from './catalog'
 
 /**
@@ -18,7 +20,8 @@ export const RESEARCH: ModelCatalogEntry[] = [
     name: 'Zen 7',
     access: 'research',
     request: 'https://hanzo.ai/research-access',
-    description: 'The next open-weight generation after Zen 6, in research preview.',
+    // Authored here, not read from the catalog: a page draws it through `t`.
+    description: phrase('The next open-weight generation after Zen 6, in research preview.'),
   },
 ]
 

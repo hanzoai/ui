@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, type ReactNode } from 'react'
+import { useI18n } from '@hanzo/i18n/react'
 import { HanzoMark } from '@hanzogui/shell'
 import { ArrowLeft } from '@hanzogui/lucide-icons-2'
 import { Button } from '../backends/gui/button'
@@ -51,11 +52,12 @@ export function Page({
   /** A quiet line under the screen: who the email is, a way out. */
   foot?: ReactNode
 }) {
+  const { t } = useI18n()
   const brand = useContext(Brand)
   return (
     <YStack render={brand ? 'main' : 'div'} aria-busy={busy || undefined} bg="$background" minH="100vh" items="center" justify={center ? 'center' : 'flex-start'} gap="$4" pt={center ? 96 : 28} pb={96} px="$4">
       {back ? (
-        <Button type="button" variant="ghost" size="icon-lg" aria-label="Back" position="absolute" t={20} insetInlineStart={20} rounded="$10" onClick={back}>
+        <Button type="button" variant="ghost" size="icon-lg" aria-label={t('Back')} position="absolute" t={20} insetInlineStart={20} rounded="$10" onClick={back}>
           <ArrowLeft {...mirror} size={18} />
         </Button>
       ) : null}
@@ -107,10 +109,11 @@ export function Panel({ children, label }: { children: ReactNode; label?: string
 
 /** Monthly or Yearly, with what a year saves. `name` says which plan it changes, for screen readers. */
 export function IntervalToggle({ interval, onChange, name, save }: { interval: Interval; onChange: (i: Interval) => void; name: string; save: number }) {
+  const { t } = useI18n()
   return (
-    <ToggleGroup type="single" size="sm" value={interval} disableDeactivation aria-label={`Billing interval for ${name}`} onValueChange={(v) => onChange(v as Interval)}>
-      <ToggleGroupItem value="monthly">Monthly</ToggleGroupItem>
-      <ToggleGroupItem value="annual">{`Yearly · Save ${save}%`}</ToggleGroupItem>
+    <ToggleGroup type="single" size="sm" value={interval} disableDeactivation aria-label={t('Billing interval for {plan}', { plan: name })} onValueChange={(v) => onChange(v as Interval)}>
+      <ToggleGroupItem value="monthly">{t('Monthly')}</ToggleGroupItem>
+      <ToggleGroupItem value="annual">{t('Yearly · Save {n}%', { n: save })}</ToggleGroupItem>
     </ToggleGroup>
   )
 }

@@ -17,6 +17,7 @@
 import type { ReactElement } from 'react'
 import { Button, Text } from '@hanzo/gui'
 import { ChevronDown } from '@hanzogui/lucide-icons-2'
+import { useI18n } from '@hanzo/i18n/react'
 import { DropdownMenu } from '../backends/gui/dropdown-menu'
 import type { MenuItemSpec } from './menu/items'
 
@@ -26,7 +27,7 @@ export function SelectMenu<T extends string>({
   options,
   value,
   onChange,
-  allLabel = 'All',
+  allLabel: all,
   icon,
   minWidth = 130,
   required,
@@ -50,6 +51,8 @@ export function SelectMenu<T extends string>({
   /** Accessible name for an unlabelled trigger. */
   ariaLabel?: string
 }) {
+  const { t } = useI18n()
+  const allLabel = all ?? t('All')
   const active = value === null ? null : options.find((o) => o.key === value) ?? null
   const triggerLabel = active ? active.label : allLabel
 

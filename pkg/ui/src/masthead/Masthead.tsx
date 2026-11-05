@@ -3,6 +3,7 @@
 import { Fragment, useCallback, useEffect, useRef, useState, type CSSProperties, type FocusEvent, type ReactNode } from 'react'
 import { Anchor, Text, View, XStack, YStack, type AnchorProps, type GuiElement } from '@hanzo/gui'
 import { HanzoCommandPalette, HanzoIdentity, HanzoWordmark, MARKS, type GlyphName, type HanzoCommandEntry } from '@hanzogui/shell'
+import { useI18n, type Say } from '@hanzo/i18n/react'
 
 import { ACCOUNT, COMPANY, DOCS, LOGIN, MENUS, OPEN, TRY, at, leaves, type Link, type Menu } from './nav'
 
@@ -256,6 +257,7 @@ function Out() {
 /** A row: the label, and ↗ with a new tab when it leaves. */
 function Row({ link, place, onClick, ...style }: { link: Link; place: Place; onClick?: () => void } & Omit<AnchorProps, 'href' | 'target' | 'rel' | 'onClick'>) {
   const out = leaves(link.href, place.here)
+  const { t } = useI18n()
   return (
     <Anchor
       href={at(link.href, place.origin, place.here)}
@@ -265,7 +267,7 @@ function Row({ link, place, onClick, ...style }: { link: Link; place: Place; onC
       textDecorationLine="none"
       {...style}
     >
-      {link.label}
+      {t(link.label)}
       {out ? <Out /> : null}
     </Anchor>
   )
@@ -287,6 +289,7 @@ function Title({ sheet = false, children }: { sheet?: boolean; children: ReactNo
  */
 function Columns({ menu, place, onPick }: { menu: Menu; place: Place; onPick: () => void }) {
   const [hot, setHot] = useState<number | null>(null)
+  const { t } = useI18n()
   return (
     <View display="grid" gridAutoFlow="column" gridAutoColumns="max-content" justify="flex-start" gap="max(24px, min(3vw, 64px))" pt={36} pb={48} px="calc(var(--page-gutter) + 8px)">
       {menu.groups.map((group, i) => (
@@ -299,7 +302,7 @@ function Columns({ menu, place, onPick }: { menu: Menu; place: Place; onPick: ()
           onPointerEnter={() => setHot(i)}
           onPointerLeave={() => setHot(null)}
         >
-          <Title>{group.title}</Title>
+          <Title>{t(group.title)}</Title>
           {group.links.map((link) => (
             <Row key={link.label} link={link} place={place} onClick={onPick} {...(group.lead ? LEAD : PLAIN)} />
           ))}
@@ -329,16 +332,16 @@ type Hover = { type?: string; pointerType?: string }
 type Key = { key?: string; preventDefault: () => void }
 
 /** The bar's rows as ⌘K entries: what a reader can reach from here, they can find. */
-function entries(company: Menu, menus: readonly Menu[], login: readonly Link[], place: Place): HanzoCommandEntry[] {
+function entries(company: Menu, menus: readonly Menu[], login: readonly Link[], place: Place, t: Say): HanzoCommandEntry[] {
   return [company, ...menus]
     .flatMap((menu) => menu.groups.flatMap((group) => group.links.map((link) => ({ menu, link }))))
     .concat(login.map((link) => ({ menu: company, link })))
     .filter(({ link }) => !link.href.startsWith(`${DOCS}/`))
     .map(({ menu, link }) => ({
       id: `nav/${menu.id}/${link.label}`,
-      title: link.label,
+      title: t(link.label),
       href: at(link.href, place.origin, place.here),
-      group: menu.label,
+      group: t(menu.label),
       external: leaves(link.href, place.here),
     }))
 }
@@ -363,6 +366,7 @@ export function Masthead({
   const act = person ? (tree.open ?? OPEN) : (tree.try ?? TRY)
   const place: Place = { origin, here }
   const homeHref = at(home, origin, here)
+  const { t } = useI18n()
 
   const [open, setOpen] = useState<string | null>(null)
   const [sheet, setSheet] = useState(false)
@@ -485,7 +489,7 @@ export function Masthead({
         <YStack
           id={`menu-${item.id}`}
           role="group"
-          aria-label={item.label}
+          aria-label={t(item.label)}
           position="fixed"
           t={UNDER}
           l={0}
@@ -514,7 +518,7 @@ export function Masthead({
       onKeyDown={step(item.id)}
     >
       <Mark name={item.glyph} bar />
-      {item.label}
+      {t(item.label)}
       <Chevron turned={open === item.id} />
     </Text>
   )
@@ -527,7 +531,7 @@ export function Masthead({
     return (
       <XStack key="bare" ref={masthead} render="header" data-slot="masthead" {...BAR}>
         <XStack render="span" {...BRAND}>
-          <Anchor href={homeHref} aria-label={`${label} home`} {...NAME}>
+          <Anchor href={homeHref} aria-label={t('{name} home', { name: label })} {...NAME}>
             <HanzoWordmark label={label} size={22} />
           </Anchor>
         </XStack>
@@ -553,13 +557,13 @@ export function Masthead({
         {menu(
           company,
           <XStack render="span" {...BRAND} {...(open === company.id ? { bg: WASH, boxShadow: RING } : {})}>
-            <Anchor href={homeHref} aria-label={`${label} home`} {...NAME} $lg={{ paddingInlineEnd: 0 }}>
+            <Anchor href={homeHref} aria-label={t('{name} home', { name: label })} {...NAME} $lg={{ paddingInlineEnd: 0 }}>
               <HanzoWordmark label={label} size={22} />
             </Anchor>
             {/* The name goes home; the chevron beside it is its own stop and opens the company. */}
             <Text
               render="button"
-              aria-label={company.label}
+              aria-label={t(company.label)}
               aria-expanded={open === company.id}
               aria-controls={`menu-${company.id}`}
               onClick={press(company.id)}
@@ -582,7 +586,7 @@ export function Masthead({
             </Text>
           </XStack>,
         )}
-        <XStack render="nav" aria-label="Main" display="none" $lg={{ display: 'flex' }} items="center" gap={2}>
+        <XStack render="nav" aria-label={t('Main')} display="none" $lg={{ display: 'flex' }} items="center" gap={2}>
           {menus.map((item) => (
             <Fragment key={item.id}>{menu(item, trigger(item))}</Fragment>
           ))}
@@ -604,7 +608,7 @@ export function Masthead({
         ) : null}
         <Text
           render="button"
-          aria-label="Search Hanzo or ask AI"
+          aria-label={t('Search Hanzo or ask AI')}
           onClick={find}
           {...PILL}
           justify="center"
@@ -618,7 +622,7 @@ export function Masthead({
         <XStack items="center" gap={8} $lg={{ marginInlineStart: 'auto' }}>
           {person ? (
             <HanzoIdentity
-              auth={{ user: person, onSignOut, items: [{ id: 'account', label: account.label, href: at(account.href, origin, here) }] }}
+              auth={{ user: person, onSignOut, items: [{ id: 'account', label: t(account.label), href: at(account.href, origin, here) }] }}
             />
           ) : (
             <XStack position="relative" display="none" $lg={{ display: 'flex' }} onPointerEnter={rest('login')} onPointerLeave={leave} onBlur={blur}>
@@ -631,14 +635,14 @@ export function Masthead({
                 onClick={press('login')}
                 onKeyDown={step('login')}
               >
-                Log in
+                {t('Log in')}
                 <Chevron turned={open === 'login'} />
               </Text>
               {open === 'login' ? (
                 <YStack
                   id="menu-login"
                   role="group"
-                  aria-label="Log in"
+                  aria-label={t('Log in')}
                   position="absolute"
                   t="calc(100% + 8px)"
                   insetInlineEnd={0}
@@ -673,9 +677,9 @@ export function Masthead({
                       hoverStyle={{ bg: WASH }}
                       focusVisibleStyle={{ bg: WASH }}
                     >
-                      {link.label}
+                      {t(link.label)}
                       <Text render="small" fontSize="$1" lineHeight={20} fontWeight="400" color="var(--muted-foreground)">
-                        {link.hint}
+                        {link.hint ? t(link.hint) : null}
                       </Text>
                     </Anchor>
                   ))}
@@ -687,7 +691,7 @@ export function Masthead({
           <Text
             ref={toggle}
             render="button"
-            aria-label={sheet ? 'Close menu' : 'Open menu'}
+            aria-label={sheet ? t('Close menu') : t('Open menu')}
             aria-expanded={sheet}
             aria-controls="sheet"
             onClick={() => {
@@ -727,7 +731,7 @@ export function Masthead({
           scrim and panel, fixed to the window themselves, stack inside it. */}
       <View position="fixed" z={TOP}>
         <HanzoCommandPalette
-          commands={[...commands, ...entries(company, menus, login, place).filter((e) => !commands.some((c) => c.href === e.href))]}
+          commands={[...commands, ...entries(company, menus, login, place, t).filter((e) => !commands.some((c) => c.href === e.href))]}
           open={search}
           onOpenChange={setSearch}
           onAsk={onAsk}
@@ -764,13 +768,14 @@ function Sheet({
 }) {
   const first = useRef<GuiElement>(null)
   const [section, setSection] = useState<string | null>(null)
+  const { t } = useI18n()
   useEffect(() => node(first.current)?.focus(), [])
   return (
     <View
       id="sheet"
       role="dialog"
       aria-modal
-      aria-label="Menu"
+      aria-label={t('Menu')}
       display="block"
       position="fixed"
       t={UNDER}
@@ -786,7 +791,7 @@ function Sheet({
       bg={PANEL}
       {...ARRIVE}
     >
-      <View render="nav" aria-label="Main" display="block">
+      <View render="nav" aria-label={t('Main')} display="block">
         {[company, ...menus].map((item, i) => (
           <View
             key={item.id}
@@ -817,12 +822,12 @@ function Sheet({
               cursor="pointer"
             >
               <Mark name={item.glyph} />
-              {item.label}
+              {t(item.label)}
               <Chevron turned={section === item.id} end />
             </Text>
             {item.groups.map((group) => (
               <YStack key={group.title} gap={2} minW={0} pb={16}>
-                <Title sheet>{group.title}</Title>
+                <Title sheet>{t(group.title)}</Title>
                 {group.links.map((link) => (
                   <Row key={link.label} link={link} place={place} onClick={onClose} {...LINE} fontSize={group.lead ? '$6' : '$4'} lineHeight={group.lead ? 20.4 : 18} />
                 ))}
@@ -836,7 +841,7 @@ function Sheet({
           <Row link={door} place={place} onClick={onClose} {...DOOR} />
         ) : (
           <>
-            <Title sheet>Log in</Title>
+            <Title sheet>{t('Log in')}</Title>
             {login.map((link) => (
               <Row key={link.label} link={link} place={place} onClick={onClose} {...DOOR} />
             ))}

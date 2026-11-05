@@ -22,6 +22,7 @@
  * ↗ by the host's own data (`out`).
  */
 import { Anchor, XStack, YStack } from '@hanzo/gui'
+import { useI18n } from '@hanzo/i18n/react'
 import type { ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
@@ -55,7 +56,10 @@ const open = (out?: boolean) => (out ? { target: '_blank', rel: 'noreferrer' } :
  */
 const LEGAL = { display: 'inline-flex', alignItems: 'center', gap: 6 } as const
 
-const Door = ({ link }: { link: FooterLink }) => (
+/** A door. Its words are the host's, drawn through `t`: a label marked where it is written (masthead's `footer()`) says the reader's language, any other its own. */
+const Door = ({ link }: { link: FooterLink }) => {
+  const { t } = useI18n()
+  return (
   <Anchor
     href={link.href}
     {...open(link.out)}
@@ -66,12 +70,15 @@ const Door = ({ link }: { link: FooterLink }) => (
     textDecorationLine="none"
     hoverStyle={{ color: '$ink' }}
   >
-    {link.label}
+    {t(link.label)}
     {link.out ? ' ↗' : ''}
   </Anchor>
-)
+  )
+}
 
-const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)', after }: FooterProps) => (
+const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)', after }: FooterProps) => {
+  const { t } = useI18n()
+  return (
   <YStack
     {...slot('footer')}
     render="footer"
@@ -94,7 +101,7 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
         sit side by side, each its own list. */}
     <XStack flexWrap="wrap" gap={28} $sm={{ gap: 40 }}>
       {columns.map((c) => (
-        <YStack key={c.id} render="nav" aria-label={c.title} flexBasis="100%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
+        <YStack key={c.id} render="nav" aria-label={t(c.title)} flexBasis="100%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
           {c.href ? (
             <Anchor
               href={c.href}
@@ -106,12 +113,12 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
               pb={10}
               textDecorationLine="none"
             >
-              {c.title}
+              {t(c.title)}
               {c.out ? ' ↗' : ''}
             </Anchor>
           ) : (
             <Line size="sm" weight="600" pb={10}>
-              {c.title}
+              {t(c.title)}
             </Line>
           )}
           <YStack display="grid" gridTemplateColumns="repeat(2, minmax(0, 1fr))" columnGap={16} $sm={{ display: 'flex', flexDirection: 'column' }}>
@@ -129,7 +136,7 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
         </Line>
       ) : null}
       {/* Shrinks to the row, so its links wrap on a phone instead of standing past the window. */}
-      <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8} shrink={1} minW={0}>
+      <XStack render="nav" aria-label={t('Terms & Policies')} flexWrap="wrap" gap={16} rowGap={8} shrink={1} minW={0}>
         {legal.map((l) => (
           <Anchor
             key={l.label}
@@ -143,7 +150,7 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
             {...LEGAL}
           >
             {l.href.endsWith('#choices') ? <PrivacyChoicesIcon /> : null}
-            {l.label}
+            {t(l.label)}
           </Anchor>
         ))}
       </XStack>
@@ -155,6 +162,7 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
     </XStack>
     {after}
   </YStack>
-)
+  )
+}
 
 export { Footer }

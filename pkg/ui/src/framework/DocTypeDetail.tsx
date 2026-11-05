@@ -30,6 +30,7 @@ import { Text, XStack, YStack } from '@hanzo/gui'
 import { Plate as Card } from '../backends/gui/plate'
 import { ArrowLeft, Ban, Globe, Pencil, PenOff, Save, Send, Trash2, X } from '@hanzogui/lucide-icons-2'
 import { RecordDetail, RecordForm, type FieldDefinition, type SelectOption } from '@hanzo/data'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { BackendStateCard, classifyBackend, type BackendState } from '../product/BackendState'
 import type { FrameworkClient } from './client'
@@ -78,6 +79,7 @@ export function DocTypeDetail({ client, doctype, name, project, onBack, onView }
   const [saveError, setSaveError] = useState<string | null>(null)
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const { phone, onLayout } = useContainerLayout()
+  const { t } = useI18n()
 
   const load = useCallback(
     async (signal: { cancelled: boolean }) => {
@@ -120,7 +122,7 @@ export function DocTypeDetail({ client, doctype, name, project, onBack, onView }
   const record = ready?.record ?? null
   const fields: FieldDefinition[] = useMemo(() => (dt ? docTypeToFields(dt, { editing: !isNew }) : []), [dt, isNew])
   const fieldOptions = useMemo(() => (ready ? makeFieldOptions(ready.linkOptions) : undefined), [ready])
-  const title = dt ? (isNew ? `New ${doctype}` : titleOf(record ?? {}, dt)) : doctype
+  const title = dt ? (isNew ? t('New {doctype}', { doctype }) : titleOf(record ?? {}, dt, t)) : doctype
 
   const onChange = useCallback((field: string, value: unknown) => {
     setDraft((d) => ({ ...d, [field]: value }))
@@ -191,14 +193,14 @@ export function DocTypeDetail({ client, doctype, name, project, onBack, onView }
 
   const backButton = (
     <Action phone={phone} icon={<ArrowLeft {...mirror} size={15} />} onPress={onBack}>
-      Back
+      {t('Back')}
     </Action>
   )
 
   if (state.phase === 'loading') {
     return (
       <YStack onLayout={onLayout} width="100%">
-        <Loading label={`Loading ${doctype}…`} />
+        <Loading label={t('Loading {doctype}…', { doctype })} />
       </YStack>
     )
   }
@@ -231,7 +233,7 @@ export function DocTypeDetail({ client, doctype, name, project, onBack, onView }
   const canCancel = !editing && !isNew && Boolean(dt.isSubmittable) && docstatus === SUBMITTED
 
   const lifecycle =
-    docstatus === SUBMITTED ? ' · submitted' : docstatus === CANCELLED ? ' · cancelled' : ''
+    docstatus === SUBMITTED ? ` · ${t('submitted')}` : docstatus === CANCELLED ? ` · ${t('cancelled')}` : ''
 
   return (
     <YStack onLayout={onLayout} gap="$3" width="100%">
@@ -267,18 +269,18 @@ export function DocTypeDetail({ client, doctype, name, project, onBack, onView }
                     setSaveError(null)
                   }}
                 >
-                  Cancel
+                  {t('Cancel')}
                 </Action>
               ) : null}
               <Action phone={phone} primary icon={<Save size={15} />} disabled={busy} onPress={save}>
-                {busy ? 'Saving…' : isNew ? 'Create' : 'Save'}
+                {busy ? t('Saving…') : isNew ? t('Create') : t('Save')}
               </Action>
             </>
           ) : (
             <>
               {canDelete ? (
                 <Action phone={phone} danger icon={<Trash2 size={15} />} disabled={busy} onPress={() => setConfirmingDelete(true)}>
-                  Delete
+                  {t('Delete')}
                 </Action>
               ) : null}
               {canCancel ? (
@@ -288,7 +290,7 @@ export function DocTypeDetail({ client, doctype, name, project, onBack, onView }
                   disabled={busy}
                   onPress={() => run(() => client.records.cancel(doctype, String(record!.name)))}
                 >
-                  Cancel doc
+                  {t('Cancel doc')}
                 </Action>
               ) : null}
               {canSubmit ? (
@@ -298,7 +300,7 @@ export function DocTypeDetail({ client, doctype, name, project, onBack, onView }
                   disabled={busy}
                   onPress={() => run(() => client.records.submit(doctype, String(record!.name)))}
                 >
-                  Submit
+                  {t('Submit')}
                 </Action>
               ) : null}
               {canPublish ? (
@@ -313,7 +315,7 @@ export function DocTypeDetail({ client, doctype, name, project, onBack, onView }
                       )
                     }
                   >
-                    Unpublish
+                    {t('Unpublish')}
                   </Action>
                 ) : (
                   <Action
@@ -331,13 +333,13 @@ export function DocTypeDetail({ client, doctype, name, project, onBack, onView }
                       )
                     }
                   >
-                    Publish
+                    {t('Publish')}
                   </Action>
                 )
               ) : null}
               {canEdit ? (
                 <Action phone={phone} primary icon={<Pencil size={15} />} onPress={() => setEditing(true)}>
-                  Edit
+                  {t('Edit')}
                 </Action>
               ) : null}
             </>
@@ -350,8 +352,8 @@ export function DocTypeDetail({ client, doctype, name, project, onBack, onView }
         <Card borderWidth={1} borderColor="$borderColor" bg="$color2" p="$3" maxW={620}>
           <Text fontSize="$2" color="$color11">
             {docstatus === SUBMITTED
-              ? 'This document is submitted. Cancel it to make further changes — the engine refuses edits and deletes on a submitted document.'
-              : 'This document is cancelled. It is kept as a record and can no longer be edited or deleted.'}
+              ? t('This document is submitted. Cancel it to make further changes — the engine refuses edits and deletes on a submitted document.')
+              : t('This document is cancelled. It is kept as a record and can no longer be edited or deleted.')}
           </Text>
         </Card>
       ) : null}
@@ -359,14 +361,14 @@ export function DocTypeDetail({ client, doctype, name, project, onBack, onView }
       {confirmingDelete ? (
         <Card borderWidth={1} borderColor="$red7" bg="$red2" p="$3" gap="$3" maxW={620}>
           <Text fontSize="$3" fontWeight="700">
-            Delete “{title}”? This cannot be undone.
+            {t('Delete “{title}”? This cannot be undone.', { title })}
           </Text>
           <Actions phone={phone}>
             <Action phone={phone} danger disabled={busy} onPress={remove}>
-              {busy ? 'Deleting…' : 'Confirm delete'}
+              {busy ? t('Deleting…') : t('Confirm delete')}
             </Action>
             <Action phone={phone} disabled={busy} onPress={() => setConfirmingDelete(false)}>
-              Keep
+              {t('Keep')}
             </Action>
           </Actions>
         </Card>

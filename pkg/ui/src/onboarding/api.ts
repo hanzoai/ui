@@ -1,3 +1,5 @@
+import { phrase } from '@hanzo/i18n'
+
 import { bearer, currentOrg } from '../auth/session'
 import type { Accepted, Policy, Progress, Stored } from './state'
 
@@ -10,12 +12,17 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * A failed call in words: the server's own message where it sent one, drawn as
+ * given; ours, marked (`phrase`), where it did not, so a screen that draws the
+ * message through `t` says ours in the reader's language.
+ */
 export function parseErrorMessage(body: unknown, status: number): string {
   if (status === 502 || status === 503 || status === 504) {
-    return 'Payment processing is temporarily unavailable. Please try again shortly.'
+    return phrase('Payment processing is temporarily unavailable. Please try again shortly.')
   }
   if (status === 401 || status === 403) {
-    return 'Please sign in again to continue.'
+    return phrase('Please sign in again to continue.')
   }
   if (!body) return `Request failed (${status})`
   if (typeof body === 'string') return body

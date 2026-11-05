@@ -30,6 +30,7 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react
 import { Button, YStack } from '@hanzo/gui'
 import { RefreshCw } from '@hanzogui/lucide-icons-2'
 import { RecordsView, type FieldDefinition, type SelectOption, type ViewConfig } from '@hanzo/data'
+import { useI18n } from '@hanzo/i18n/react'
 
 import { BackendStateCard, classifyBackend, type BackendState } from '../product/BackendState'
 import type { FrameworkClient } from './client'
@@ -111,6 +112,7 @@ export function DocTypeRecords({
   const [state, setState] = useState<LoadState>({ phase: 'loading' })
   const [mutationError, setMutationError] = useState<string | null>(null)
   const { phone, onLayout } = useContainerLayout()
+  const { t } = useI18n()
 
   const load = useCallback(
     async (signal: { cancelled: boolean }) => {
@@ -207,11 +209,11 @@ export function DocTypeRecords({
 
   const refresh = phone ? (
     <Action phone icon={<RefreshCw size={15} />} onPress={reload}>
-      Refresh
+      {t('Refresh')}
     </Action>
   ) : (
     <Button size="$2" minH={TAP - 12} icon={<RefreshCw size={15} />} onPress={reload}>
-      Refresh
+      {t('Refresh')}
     </Button>
   )
 
@@ -251,7 +253,7 @@ export function DocTypeRecords({
           cardFields={cards}
           records={ready?.records ?? []}
           loading={state.phase === 'loading'}
-          empty={`No records in ${doctype} yet.`}
+          empty={t('No records in {doctype} yet.', { doctype })}
           onOpen={openByKey}
           onCreate={onCreate}
           toolbarExtra={refresh}
@@ -267,12 +269,12 @@ export function DocTypeRecords({
             onViewChange={setView}
             onOpen={openByKey}
             onCreate={onCreate}
-            createLabel="New record"
+            createLabel={t('New record')}
             onEditCommit={onEditCommit}
             fieldOptions={fieldOptions}
             toolbarExtra={refresh}
             titleField={ready?.dt.titleField}
-            empty={`No records in ${doctype} yet.`}
+            empty={t('No records in {doctype} yet.', { doctype })}
           />
         </YStack>
       )}
