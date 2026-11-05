@@ -30,7 +30,7 @@ family, and every ramp in
 `tokens/*.css` reads them. A preference sets a few numbers and one colour rather
 than restating a scale, so rungs added later are covered for free.
 
-Arabic is its own axis (`arabic`: `kufi` or `sans`) because Zen draws no Arabic.
+Arabic is its own axis (`arabic`: `kufi`, `sans` or `plex`) because Zen draws no Arabic.
 It writes `--font-arabic`, which design's sans, mono and serif stacks all name
 first, so the companion it names sets every Arabic letter under whichever face
 was chosen, and Latin never touches it.

@@ -123,6 +123,16 @@ describe('closed', () => {
     expect(classes.some((c) => /insetInlineStart|_iis-|inset-inline-start/i.test(c)) || frame.style.insetInlineStart !== '', 'inline start').toBe(true)
     expect(classes.some((c) => /^_(l|r|left|right)-/.test(c)), 'no physical left or right').toBe(false)
   })
+
+  it('stands at the end edge with side="end", and wears the host’s mark in place of the ?', () => {
+    mount(<Corner side="end" mark={<span data-mark="">H</span>} />)
+    const frame = host.querySelector<HTMLElement>('[data-slot="corner"]')!
+    const classes = frame.className.split(/\s+/)
+    expect(classes.some((c) => /insetInlineEnd|_iie-|inset-inline-end/i.test(c)) || frame.style.insetInlineEnd !== '', 'inline end').toBe(true)
+    expect(classes.some((c) => /insetInlineStart|_iis-|inset-inline-start/i.test(c)), 'not the start').toBe(false)
+    expect(trigger().querySelector('[data-mark]')?.textContent).toBe('H')
+    expect(trigger().querySelector('svg'), 'no ? drawn beside the mark').toBeNull()
+  })
 })
 
 describe('help', () => {
@@ -347,6 +357,10 @@ describe('faces', () => {
     expect(chosen()).toEqual({ font: 'mono', arabic: 'sans' })
     expect(document.documentElement.style.getPropertyValue('--font-arabic')).toBe('var(--font-arabic-sans)')
     expect(document.documentElement.style.getPropertyValue('--font-sans')).toBe('var(--font-mono)')
+    // A choice goes back to the card, which stays open for the next one.
+    pick('arabic', 'Plex')
+    expect(chosen()).toEqual({ font: 'mono', arabic: 'plex' })
+    expect(document.documentElement.style.getPropertyValue('--font-arabic')).toBe('var(--font-arabic-plex)')
   })
 
   it('under <Hanzo>, writes the face through the root’s appearance', () => {

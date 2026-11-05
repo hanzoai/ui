@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/composer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "The composer's material — the lit ring around anything you can type into, as @hanzo/gui components.",
   "type": "module",
   "main": "./dist/index.js",

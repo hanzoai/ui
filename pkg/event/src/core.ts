@@ -420,13 +420,15 @@ export class Analytics {
   }
 
   /** capture records a named product event with optional properties. Commerce
-   *  fields (productId/quantity/revenue/currency) may be passed for order events. */
+   *  fields (productId/quantity/revenue/currency) may be passed for order events,
+   *  and a location (url/path) for an event about a page the visitor has already
+   *  left: a page leave is reported after the router moved, and is the page left's. */
   capture(
     event: string,
     properties?: Record<string, unknown>,
-    commerce?: Pick<WireEvent, 'productId' | 'quantity' | 'revenue' | 'currency'>,
+    fields?: Pick<WireEvent, 'productId' | 'quantity' | 'revenue' | 'currency' | 'url' | 'path'>,
   ): void {
-    this.enqueue('event', event, { properties, ...commerce })
+    this.enqueue('event', event, { properties, ...fields })
   }
 
   /** captureError reports a caught error, an unhandled rejection, a React render

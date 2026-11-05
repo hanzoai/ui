@@ -11,6 +11,7 @@
  */
 import { useI18n } from '@hanzo/i18n/react'
 import { Sparkles } from '@hanzogui/lucide-icons-2'
+import { GLYPH, STROKE } from './look'
 import type { ReactNode } from 'react'
 
 import { ChipSelect, type ChipPlacement } from '../product/ChipSelect'
@@ -52,7 +53,7 @@ export function Palette({
       label=""
       quiet
       {...(size ? { box: size } : null)}
-      icon={<Sparkles size={15} color="$soft" />}
+      icon={<Sparkles size={GLYPH} strokeWidth={STROKE} color="$quiet" />}
       items={items}
       onChange={(i) => i.command.run()}
       placeholder={t('Search commands…')}

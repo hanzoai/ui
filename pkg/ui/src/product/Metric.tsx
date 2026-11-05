@@ -18,7 +18,8 @@
  */
 import { FIGURES } from './figures'
 import type { ReactElement, ReactNode } from 'react'
-import { Button, Card, Text, XStack, YStack } from '@hanzo/gui'
+import { Button, Text, XStack, YStack } from '@hanzo/gui'
+import { Plate as Card } from '../backends/gui/plate'
 import { useI18n } from '@hanzo/i18n/react'
 
 /** Distinct, theme-neutral series colors (mid-saturation reads on dark + light). */

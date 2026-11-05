@@ -5,7 +5,8 @@
  * bar). Pure: all data via props. Reuses the shared StatusTag for the lifecycle
  * pill (one status vocabulary). Extracted from Hanzo Social.
  */
-import { Card, Text, XStack, YStack } from '@hanzo/gui'
+import { Text, XStack, YStack } from '@hanzo/gui'
+import { Plate as Card } from '../../backends/gui/plate'
 import { useI18n } from '@hanzo/i18n/react'
 import { StatusTag } from '../StatusTag'
 

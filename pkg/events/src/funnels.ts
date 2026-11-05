@@ -106,7 +106,8 @@ export const FUNNELS = {
       s(EVENTS.PRICING_VIEWED, 'Saw plans'),
       s(EVENTS.PLAN_CLICKED, 'Pressed a plan'),
       s(EVENTS.PLAN_SELECTED, 'Opened checkout on a plan'),
-      s(EVENTS.CHECKOUT_STARTED, 'Saw the billing form'),
+      // The card form is pay's: a plan pressed on the site is plan_clicked, never this step.
+      s(EVENTS.CHECKOUT_STARTED, 'Saw the billing form', { product: 'pay' }),
       s(EVENTS.PAYMENT_INFO_ADDED, 'Card tokenized'),
       s(EVENTS.ORDER_COMPLETED, 'Paid'),
       s(EVENTS.FIRST_ACTION, 'First action'),
@@ -130,18 +131,32 @@ export const FUNNELS = {
   },
 
   /** Upgrade intent → revenue, and the whole path is under one registrable
-   *  domain (www, billing and pay are all hanzo.ai), so it joins per PERSON.
-   *  The two checkout steps are two surfaces: billing hands off to pay, and a
-   *  buyer lost in that hop is the drop-off nobody could see. */
+   *  domain (the site and its checkout at hanzo.ai/pay), so it joins per
+   *  PERSON. A plan pressed is the site's plan_clicked; the card form is pay's
+   *  checkout_started, which only pay states. */
   upgrade: {
     label: 'Upgrade',
-    products: ['site', 'app', 'console', 'billing', 'pay'],
+    products: ['site', 'app', 'console', 'pay'],
     join: 'person',
     steps: [
       s(EVENTS.PRICING_VIEWED, 'Viewed pricing'),
       s(EVENTS.PLAN_CLICKED, 'Chose a plan'),
-      s(EVENTS.CHECKOUT_STARTED, 'Left for checkout', { product: 'billing' }),
       s(EVENTS.CHECKOUT_STARTED, 'Reached the card form', { product: 'pay' }),
+      s(EVENTS.ORDER_COMPLETED, 'Paid'),
+    ],
+  },
+
+  /** A buyer who reaches the card step before signing in (a paywall link, a
+   *  plan link, a bot or course page): the plan and its price seen, an account
+   *  made or signed in to there, the card form, paid. One origin, so it joins
+   *  per PERSON across the sign-in. */
+  checkout: {
+    label: 'Checkout, signed out',
+    products: ['pay'],
+    join: 'person',
+    steps: [
+      s(EVENTS.CHECKOUT_VIEWED, 'Saw the plan and its price', { product: 'pay' }),
+      s(EVENTS.CHECKOUT_STARTED, 'Signed in at the card form', { product: 'pay' }),
       s(EVENTS.ORDER_COMPLETED, 'Paid'),
     ],
   },

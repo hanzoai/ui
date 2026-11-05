@@ -11,7 +11,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
-import { LinkElement } from './link'
+import { LinkElement } from './link-element'
 
 const html = (ui: React.ReactNode) =>
   renderToStaticMarkup(<GuiProvider config={config as never} defaultTheme="dark">{ui}</GuiProvider>)

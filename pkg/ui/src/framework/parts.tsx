@@ -12,7 +12,8 @@
  * there is no hex in this layer.
  */
 import type { ReactElement, ReactNode } from 'react'
-import { Button, Card, Spinner, Text, XStack, YStack } from '@hanzo/gui'
+import { Button, Spinner, Text, XStack, YStack } from '@hanzo/gui'
+import { Plate as Card } from '../backends/gui/plate'
 import { TriangleAlert } from '@hanzogui/lucide-icons-2'
 
 import { PrimaryButton } from '../product/PrimaryButton'

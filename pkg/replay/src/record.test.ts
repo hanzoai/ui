@@ -8,6 +8,7 @@
 
 import { afterEach, beforeEach, describe as group, expect, it, vi } from 'vitest'
 import { record } from './index'
+import { readable } from './player.test.util'
 import type { Recorder, ReplayTransport, eventWithTime, recordOptions } from './types'
 
 // happy-dom declares `DOMTokenList` on window without a value, so rrweb's
@@ -33,7 +34,7 @@ function spy(): { sent: Sent[]; transport: ReplayTransport; bodies: () => Array<
       send: (url, payload, opts) =>
         void sent.push({ url, payload, beacon: opts.beacon, ingestKey: opts.ingestKey }),
     },
-    bodies: () => sent.map((s) => JSON.parse(s.payload)),
+    bodies: () => sent.map((s) => JSON.parse(readable(s.payload))),
   }
 }
 
@@ -126,7 +127,9 @@ group('what leaves the browser (real rrweb)', () => {
     const replay = record({ ...config, ingestKey: config.ingestKey || KEY, transport: s.transport })
     replay.stop() // flushes the full snapshot rrweb takes on start
     expect(s.sent.length).toBeGreaterThan(0)
-    return { replay, payload: s.sent.map((x) => x.payload).join(''), bodies: s.bodies() }
+    // Read as the player reads it, so an absence is a fact about what was
+    // recorded and not about the bytes being compressed.
+    return { replay, payload: s.sent.map((x) => readable(x.payload)).join(''), bodies: s.bodies() }
   }
 
   it('masks input values by default, keeping only the length', () => {
@@ -392,7 +395,7 @@ group('the recording handle', () => {
     expect(s.sent).toHaveLength(0)
     f.emit(ev(3))
     expect(s.sent).toHaveLength(1)
-    expect(s.sent[0].url).toBe('https://api.hanzo.ai/v1/replay')
+    expect(s.sent[0].url).toBe('https://api.hanzo.ai/v1/event/replay')
     expect(s.sent[0].ingestKey).toBe(KEY)
     expect(s.sent[0].beacon).toBe(false)
     expect((s.bodies()[0].events as unknown[]).length).toBe(3)
@@ -444,7 +447,17 @@ group('the recording handle', () => {
     })
     f.emit(ev(1))
     replay.flush()
-    expect(s.sent[0].url).toBe('http://localhost:8080/v1/replay')
+    expect(s.sent[0].url).toBe('http://localhost:8080/v1/event/replay')
+  })
+
+  it('never sends a batch over the ingest’s 512 KiB, whatever maxBytes asked for', () => {
+    const f = fakeRecorder()
+    const s = spy()
+    record({ ingestKey: KEY, recorder: f.recorder, transport: s.transport, batchSize: 1000, maxBytes: 8 << 20 })
+    const chunk = { type: 3, data: { blob: 'x'.repeat(100_000) }, timestamp: 1 } as unknown as eventWithTime
+    for (let n = 0; n < 8; n++) f.emit(chunk)
+    expect(s.sent.length).toBeGreaterThan(0)
+    for (const b of s.sent) expect(new TextEncoder().encode(b.payload).length).toBeLessThanOrEqual(512 * 1024)
   })
 
   it('hands rrweb the privacy gate, not the caller’s idea of it', () => {

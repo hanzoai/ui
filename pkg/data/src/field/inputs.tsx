@@ -66,7 +66,7 @@ function Keys({ onSubmit, onCancel, multiline, children }: {
     }
   }
   return (
-    <YStack flex={1} minW={0} {...({ onKeyDown } as object)}>
+    <YStack width="100%" minW={0} {...({ onKeyDown } as object)}>
       {children}
     </YStack>
   )
@@ -576,7 +576,7 @@ export function LinksInput({ field, value, onChange, onSubmit, onCancel, autoFoc
     setDraft('')
   }
   return (
-    <YStack gap="$1" flex={1} minW={0}>
+    <YStack gap="$1" width="100%" minW={0}>
       {links.map((l, i) => (
         <XStack key={`${l.url}-${i}`} items="center" gap="$2" minH={24}>
           <Text flex={1} minW={0} fontSize="$2" color="$ink" numberOfLines={1}>

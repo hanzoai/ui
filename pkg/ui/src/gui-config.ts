@@ -45,6 +45,10 @@ const SANS = "var(--font-sans, 'Zen', system-ui, -apple-system, sans-serif)"
  *  reached for. */
 const MONO = "var(--font-mono, 'Zen Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)"
 
+/** @hanzo/design's serif, for a display line that asks for one (`$serif`). The
+ *  same binding `tw`'s `font-serif` reads. */
+const SERIF = 'var(--font-serif, Georgia, serif)'
+
 /** Type — the same SIX sizes, now DEFERRED to @hanzo/design rather than restated.
  *  $1 label · $2 nav + dense body · $3 base · $4/$5 emphasis · $6 section head ·
  *  $7 page title · $8+ display. `$5` still collapses onto 15 to retire the 16px
@@ -722,6 +726,16 @@ const base = {
     // in hanzo.app were dead on that alone. A missing token has to be a defined
     // token, not a silent no-op, so it is defined.
     mono: { ...defaultConfig.fonts.body, family: MONO, size: asSizes(FONT_SIZE), lineHeight: asSizes(LINE_HEIGHT) },
+    // `$serif` for the same reason: a family gui cannot name can only be said
+    // with a style object, and one written through `$platform-web` resets the
+    // element to the face's 15px rung. Named here, it keeps the body's ladder.
+    serif: {
+      ...defaultConfig.fonts.body,
+      family: SERIF,
+      size: asSizes(FONT_SIZE),
+      lineHeight: asSizes(LINE_HEIGHT),
+      letterSpacing: asSizes(TRACKING),
+    },
   },
 }
 
@@ -859,7 +873,7 @@ type Radius = Base['tokens']['radius']
 type Registered = Omit<Base, 'fonts' | 'themes' | 'animations' | 'tokens'> & {
   tokens: Omit<Base['tokens'], 'radius'> & { radius: Radius & Record<'xs' | '2xs', Radius['1']> }
   animations: typeof animations
-  fonts: Base['fonts'] & { mono: Base['fonts']['body'] }
+  fonts: Base['fonts'] & { mono: Base['fonts']['body']; serif: Base['fonts']['body'] }
   themes: { [K in keyof Base['themes']]: Base['themes'][K] & Ramp }
 }
 

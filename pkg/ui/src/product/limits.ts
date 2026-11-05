@@ -21,7 +21,8 @@ export type LimitClass = 'premium' | 'ours' | 'free'
 export type LimitPayer = 'plan' | 'credits' | 'free' | 'none'
 export type PaidBy = LimitPayer
 export type LimitReason = 'plan_allowance_used' | 'paid_plan_required' | 'free_plan_cap' | 'insufficient_balance' | 'model_cap'
-export type LimitActionKind = 'upgrade' | 'topup' | 'credits' | 'switch'
+/** A way past a limit. The server sends the first four; `later` is the reader's own, a host's to offer: put the notice away and come back after the reset. */
+export type LimitActionKind = 'upgrade' | 'topup' | 'credits' | 'switch' | 'later'
 
 /** A share of one window: percent used, its state, and when it starts over. */
 export interface LimitWindow {
@@ -101,7 +102,7 @@ export interface Refusal {
   class: LimitClass | null
   resets_at: string | null
   actions: LimitAction[]
-  /** Seconds, from Retry-After on a 429. */
+  /** Seconds, from Retry-After on a 429, when it names none to a day (`WAIT`). */
   retry: number | null
 }
 
@@ -136,6 +137,7 @@ const LABEL: Record<LimitActionKind, string> = {
   topup: 'Add prepaid credit',
   credits: 'Continue with credits',
   switch: 'Switch model',
+  later: 'Try again later',
 }
 
 /** `LABEL` in the reader's language. */
@@ -268,27 +270,37 @@ export function servedOf(headers: { get(name: string): string | null }): Served 
 }
 
 /**
- * The two limit codes the gateway sends as a 429 `rate_limit_error` rather than a
- * `billing_error` (ai `routers/filter_balance.go` `limitReached`): they lift by
- * themselves at a reset, so the wire calls them rate limits. They are still the
- * plan speaking, and the reader is owed the same notice.
+ * The limit codes sent on a 429 that is not a `billing_error`, each under the
+ * one type its server sends it with: the two caps the gateway sends as a
+ * `rate_limit_error` (ai `routers/filter_balance.go` `limitReached`), and the
+ * Free allowance's spent window, `allowance_spent` (cloud zen `freeSpent`,
+ * `insufficient_quota`). Each lifts by itself at a reset, so the wire calls it a
+ * limit; each is still the plan speaking, and the reader is owed the same notice.
  */
-const CAPS: readonly string[] = ['free_plan_cap', 'usage_cap_exceeded']
+const CAPS: ReadonlyMap<string, string> = new Map([
+  ['free_plan_cap', 'rate_limit_error'],
+  ['usage_cap_exceeded', 'rate_limit_error'],
+  ['allowance_spent', 'insufficient_quota'],
+])
+
+/** The longest Retry-After believed, in seconds: a day. A longer or negative one names no retry. */
+const WAIT = 86_400
 
 /** A billing refusal's envelope, or null for any other error. */
 export function refusalOf(body: unknown, status: number, retryAfter?: string | null): Refusal | null {
   const e = record(record(body)?.error)
   if (!e) return null
-  if (e.type !== 'billing_error' && !(e.type === 'rate_limit_error' && CAPS.includes(text(e.code) ?? ''))) return null
+  const code = text(e.code) ?? ''
+  if (e.type !== 'billing_error' && (!CAPS.has(code) || CAPS.get(code) !== e.type)) return null
   const retry = retryAfter ? Number(retryAfter) : NaN
   return {
     status,
-    code: text(e.code) ?? '',
+    code,
     message: text(e.message) ?? '',
     class: one(CLASSES, e.class),
     resets_at: text(e.resets_at),
     actions: actionsOf(e.actions),
-    retry: Number.isFinite(retry) ? retry : null,
+    retry: retry >= 0 && retry <= WAIT ? retry : null,
   }
 }
 

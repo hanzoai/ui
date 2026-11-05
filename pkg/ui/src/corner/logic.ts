@@ -24,7 +24,11 @@ export type Setting = {
   onChange: (code: string) => void
 }
 
-/** What the panel says, in English; Corner draws each word through the host's @hanzo/i18n `t`. */
+/**
+ * What the panel says, in English; Corner draws each word through the host's @hanzo/i18n `t`.
+ *
+ * @deprecated Use the @hanzo/i18n provider instead; kept for backward compatibility.
+ */
 export type Words = {
   /** The trigger's and the panel's name. */
   open: string
@@ -42,16 +46,22 @@ export type Words = {
   system: string
   serif: string
   mono: string
-  /** The face Arabic is set in, and its two answers (`sans` names the other). */
+  /** The face Arabic is set in, and its answers besides `sans`, which the face list names. */
   arabic: string
   kufi: string
+  plex: string
   search: string
   back: string
   close: string
   /** A search that matched nothing. */
   none: string
+  /** A help link that opens in a new tab is announced: "opens in a new tab". */
+  leaves: string
 }
 
+/**
+ * @deprecated Corner no longer exports this as an API; kept (deprecated but working) for backward compatibility.
+ */
 export const WORDS: Words = {
   open: phrase('Help and preferences'),
   help: phrase('Help'),
@@ -69,10 +79,12 @@ export const WORDS: Words = {
   mono: phrase('Mono'),
   arabic: phrase('Arabic font'),
   kufi: phrase('Kufi'),
+  plex: phrase('Plex'),
   search: phrase('Search'),
   back: phrase('Back'),
   close: phrase('Close'),
   none: phrase('No matches'),
+  leaves: phrase('opens in a new tab'),
 }
 
 /** Past this many options a list gets a search field. */

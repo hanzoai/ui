@@ -285,16 +285,27 @@ function loadMeta(ids: string[], c: Choice): void {
   if (loaded.has('meta') && c.marketing) live()
 }
 
-/** Meta, allowed: fbevents fetched, consent granted if it was held, the PageView sent once. */
+/**
+ * Meta, allowed: consent lifted if it was held, fbevents fetched, the PageView sent
+ * once.
+ *
+ * fbevents reads the whole stub queue when it arrives, and a revoke and a grant
+ * both waiting there leave it revoked: no PageView and no event after it, ever, for
+ * an eu visitor who accepted (fbevents 2.9.429, measured). Before the library has
+ * been fetched it has seen nothing, so the held revoke is struck from the queue
+ * rather than answered with a grant; once it is on its way the grant is a call
+ * like any other.
+ */
 function live(): void {
   const p = page()
+  if (meta.revoked) {
+    if (meta.fetched) p.fbq!('consent', 'grant')
+    else if (p.fbq?.queue) p.fbq.queue = p.fbq.queue.filter((a) => !((a as ArrayLike<unknown>)[0] === 'consent' && (a as ArrayLike<unknown>)[1] === 'revoke'))
+    meta.revoked = false
+  }
   if (!meta.fetched) {
     meta.fetched = true
     script('https://connect.facebook.net/en_US/fbevents.js')
-  }
-  if (meta.revoked) {
-    p.fbq!('consent', 'grant')
-    meta.revoked = false
   }
   if (!meta.viewed) {
     meta.viewed = true
@@ -541,6 +552,9 @@ function shape(platform: 'meta' | 'tiktok' | 'x', p: Record<string, unknown>): R
   const out: Record<string, unknown> = {}
   if (typeof p.value === 'number') out.value = p.value
   out.currency = typeof p.currency === 'string' ? p.currency : 'USD'
+  // A search names what was asked: Meta's and TikTok's standard parameter, and
+  // what a search audience is built from.
+  if (typeof p.search_string === 'string' && p.search_string && platform !== 'x') out[platform === 'tiktok' ? 'query' : 'search_string'] = p.search_string
   if (!items.length) return out
   if (platform === 'meta') {
     out.content_type = 'product'

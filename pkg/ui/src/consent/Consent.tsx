@@ -285,6 +285,13 @@ export type ConsentProps = {
   terms?: string
   /** Who is asking: the brand the visitor is on. */
   brand?: string
+  /**
+   * Whether a page that links to the sheet nowhere gets the small "Your Privacy
+   * Choices" button at the foot of the window. `false` for a host whose every page
+   * reaches the sheet another way, its footer or its Settings: on an app's panes
+   * the button stood on the composer.
+   */
+  floating?: boolean
 }
 
 const Consent = ({
@@ -292,6 +299,7 @@ const Consent = ({
   privacy = 'https://hanzo.ai/privacy',
   terms = 'https://hanzo.ai/terms',
   brand = 'Hanzo',
+  floating = true,
 }: ConsentProps) => {
   const { t } = useI18n()
   // The rule in force: undefined until cloud (or this tab) has said, and nothing is drawn meanwhile.
@@ -666,7 +674,7 @@ const Consent = ({
 
   // The way to the sheet on a page that draws none: small, quiet, at the foot of the window.
   const own =
-    !hosted && !shown ? (
+    floating && !hosted && !shown ? (
       <XStack
         {...slot('consent-choices')}
         position="fixed"

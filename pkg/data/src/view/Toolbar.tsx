@@ -14,13 +14,13 @@ import { ViewBar } from './ViewBar'
 import { Button, Input, Text, XStack, YStack } from '@hanzo/gui'
 import { ArrowDownUp, ArrowDown, ArrowUp, Columns3, LayoutGrid, ListFilter, Plus, Search, Table2, X } from '@hanzogui/lucide-icons-2'
 import type { FieldDefinition, SelectOption } from '../field/types'
-import { FieldInput } from '../field/FieldInput'
 import { Menu, MenuItem } from '../primitives'
 import { tokens } from '../theme'
-import { OP_LABELS, operatorsForType, type FilterOp, type SortRule } from '../table/logic'
+import { OP_LABELS, isActiveRule, operatorsForType, type FilterOp, type SortRule } from '../table/logic'
 import { groupFieldCandidates } from '../board/logic'
 import type { ViewConfig } from './types'
-import { addFilter, defaultRuleFor, removeFilter, setGroupField, setKind, setSearch, setSorts, updateFilter } from './logic'
+import { addFilter, defaultRuleFor, otherMatch, removeFilter, setGroupField, setKind, setMatch, setSearch, setSorts, updateFilter } from './logic'
+import { Operand, takesOperand } from './Operand'
 
 const byName = (fields: FieldDefinition[], name: string) => fields.find((f) => f.name === name)
 
@@ -49,10 +49,19 @@ export interface RecordsToolbarProps {
   onSaveAsView?: () => void
 }
 
+/**
+ * The props a popover trigger hands its child (`asChild`): the press that opens it,
+ * its ref, its aria state. A trigger that drops them opens nothing, which is how the
+ * Filter, Sort and Group menus of this toolbar stayed shut.
+ */
+type Passed = Record<string, unknown> & { style?: Record<string, unknown> }
+
 /** A compact bordered control used as a Menu trigger. */
-function Control({ icon, label, count, active }: { icon: ReactNode; label: string; count?: number; active?: boolean }) {
+function Control({ icon, label, count, active, style, ...passed }: { icon: ReactNode; label: string; count?: number; active?: boolean } & Passed) {
   return (
     <XStack
+      {...({ role: 'button', tabIndex: 0, 'aria-label': label } as object)}
+      {...passed}
       items="center"
       gap={6}
       px={10}
@@ -61,7 +70,7 @@ function Control({ icon, label, count, active }: { icon: ReactNode; label: strin
       borderWidth={1}
       cursor="pointer"
       hoverStyle={{ borderColor: tokens.textMuted }}
-      style={{ borderColor: active ? tokens.accent : tokens.border, backgroundColor: active ? tokens.hover : 'transparent' }}
+      style={{ ...style, borderColor: active ? tokens.accent : tokens.border, backgroundColor: active ? tokens.hover : 'transparent' }}
     >
       {icon}
       <Text fontSize={13} fontWeight="600" style={{ color: active ? tokens.text : tokens.textMuted }}>{label}</Text>
@@ -129,9 +138,20 @@ function OpPicker({ ops, value, onPick }: { ops: FilterOp[]; value: FilterOp; on
   )
 }
 
-function PillText({ text }: { text: string }) {
+function PillText({ text, style, ...passed }: { text: string } & Passed) {
   return (
-    <XStack items="center" px={8} py={5} rounded={7} borderWidth={1} cursor="pointer" hoverStyle={{ borderColor: tokens.textMuted }} style={{ borderColor: tokens.border, backgroundColor: tokens.surface }}>
+    <XStack
+      {...({ role: 'button', tabIndex: 0 } as object)}
+      {...passed}
+      items="center"
+      px={8}
+      py={5}
+      rounded={7}
+      borderWidth={1}
+      cursor="pointer"
+      hoverStyle={{ borderColor: tokens.textMuted }}
+      style={{ ...style, borderColor: tokens.border, backgroundColor: tokens.surface }}
+    >
       <Text fontSize={12} numberOfLines={1} style={{ color: tokens.text }}>{text}</Text>
     </XStack>
   )
@@ -139,7 +159,7 @@ function PillText({ text }: { text: string }) {
 
 function FilterBuilder({ fields, view, onView, fieldOptions }: RecordsToolbarProps) {
   const [open, setOpen] = useState(false)
-  const active = view.filters.filter((r) => r.op === 'isEmpty' || r.op === 'isNotEmpty' || r.value != null).length
+  const active = view.filters.filter(isActiveRule).length
   return (
     <Menu
       open={open}
@@ -154,24 +174,30 @@ function FilterBuilder({ fields, view, onView, fieldOptions }: RecordsToolbarPro
         {view.filters.map((rule, i) => {
           const field = byName(fields, rule.field) ?? fields[0]
           const ops = operatorsForType(field.type)
-          const needsValue = rule.op !== 'isEmpty' && rule.op !== 'isNotEmpty'
-          const valueField: FieldDefinition = rule.op === 'isAnyOf' ? { ...field, type: 'multiSelect' } : field
-          const withOpts: FieldDefinition = fieldOptions?.(field)
-            ? { ...valueField, metadata: { ...(valueField.metadata as object), options: fieldOptions(field) } as FieldDefinition['metadata'] }
-            : valueField
           return (
             <XStack key={i} items="center" gap={6}>
-              <Text fontSize={12} width={28} style={{ color: tokens.textFaint }}>{i === 0 ? 'Where' : 'and'}</Text>
+              {i === 0 ? (
+                <Text fontSize={12} width={36} style={{ color: tokens.textFaint }}>Where</Text>
+              ) : (
+                <XStack
+                  width={36}
+                  cursor="pointer"
+                  onPress={() => onView(setMatch(view, otherMatch(view.match)))}
+                  {...({ role: 'button', 'aria-label': `Rules combine by ${view.match === 'or' ? 'or' : 'and'}; press for ${otherMatch(view.match)}` } as object)}
+                >
+                  <Text fontSize={12} fontWeight="600" style={{ color: tokens.accent }}>{view.match === 'or' ? 'or' : 'and'}</Text>
+                </XStack>
+              )}
               <FieldPicker
                 fields={fields}
                 value={rule.field}
                 onPick={(name) => { const nf = byName(fields, name)!; onView(updateFilter(view, i, { field: name, op: operatorsForType(nf.type)[0], value: undefined })) }}
                 trigger={<PillText text={field.label} />}
               />
-              <OpPicker ops={ops} value={rule.op} onPick={(op) => onView(updateFilter(view, i, { op }))} />
-              {needsValue ? (
+              <OpPicker ops={ops} value={rule.op} onPick={(op) => onView(updateFilter(view, i, op === 'between' || rule.op === 'between' ? { op, value: undefined } : { op }))} />
+              {takesOperand(rule) ? (
                 <XStack flex={1} minW={120}>
-                  <FieldInput field={withOpts} value={rule.value} onChange={(v) => onView(updateFilter(view, i, { value: v }))} />
+                  <Operand field={field} rule={rule} fieldOptions={fieldOptions} onChange={(v) => onView(updateFilter(view, i, { value: v }))} />
                 </XStack>
               ) : <XStack flex={1} />}
               <YStack cursor="pointer" p={4} rounded={6} hoverStyle={{ bg: tokens.hover }} onPress={() => onView(removeFilter(view, i))}>

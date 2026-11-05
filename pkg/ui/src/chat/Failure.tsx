@@ -43,8 +43,8 @@ export function Failure({ children, onRetry, retryLabel, ...props }: FailureProp
       rounded="$4"
       borderWidth={1}
       // The `stopped` register from `product/tone.ts`: an outline, not a hue.
-      borderColor="$faint"
-      bg="$edge"
+      borderColor="$borderColor"
+      bg="$panel"
       {...props}
     >
       {ink(children, undefined, { size: '$2', color: '$ink' })}

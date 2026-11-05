@@ -16,7 +16,7 @@ import { useI18n } from '@hanzo/i18n/react'
 import { Box } from '../../box'
 import { cn, type ClassValue } from '../../core/cn'
 import type { LinkDef } from '../../types'
-import { LinkElement } from './link'
+import { LinkElement } from './link-element'
 
 export type NavItemsProps = {
   items: LinkDef[]

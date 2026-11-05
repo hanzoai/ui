@@ -87,6 +87,26 @@ describe('the records toolbar', () => {
     expect(markup).toContain('Search…')
   })
 
+  it('at regular density, Filter and Sort open their menus, and a rule takes or between two', () => {
+    // The triggers are popover children (asChild): a trigger that drops the props it
+    // is handed opens nothing, which is how these menus stayed shut.
+    const onView = vi.fn()
+    act(() => {
+      root.render(
+        <GuiProvider config={config} defaultTheme="dark">
+          <RecordsToolbar fields={FIELDS} view={{ ...busy, filters: [...busy.filters, { field: 'name', op: 'contains', value: 'acme' }] }} onView={onView} />
+        </GuiProvider>,
+      )
+    })
+    act(() => byLabel('Filter').click())
+    expect(document.body.textContent).toContain('Add filter')
+    const connector = document.querySelector('[aria-label^="Rules combine by and"]') as HTMLElement
+    act(() => connector.click())
+    expect(onView).toHaveBeenLastCalledWith(expect.objectContaining({ match: 'or' }))
+    act(() => byLabel('Sort').click())
+    expect([...document.querySelectorAll('[role="menuitem"]')].map((m) => m.textContent)).toContain('Name')
+  })
+
   it('compact: a top row 39 high over its hairline, the picker naming the view and its count', () => {
     const markup = html(
       <Density value="compact">
