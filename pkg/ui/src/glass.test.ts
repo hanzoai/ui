@@ -149,13 +149,11 @@ describe('Depth is a ladder, and it has three rungs', () => {
     expect(source.filter((s) => /elevation-4/.test(s))).toEqual([])
   })
 
-  it('every rung pairs the lit edge with a drop', () => {
-    // The lit edge is the half that reads on a near-black canvas — black on
-    // near-black moves no pixels, so a rung with only a shadow does nothing.
+  it('every rung wears a clean drop with no 3D top-edge highlight', () => {
     for (const rung of ['1', '2', '3']) {
       const rule = css.slice(css.indexOf(`.elevation-${rung}`))
       const body = rule.slice(0, rule.indexOf('}'))
-      expect(body).toContain('var(--edge-highlight')
+      expect(body).not.toContain('var(--edge-highlight')
       expect(body).toContain(`var(--glass-shadow-${rung})`)
     }
   })
@@ -258,7 +256,7 @@ describe('Every value is @hanzo/design’s, and the mirror cannot drift', () => 
    * mirrors: present so a host that imports the sheet without design's token
    * layer gets a ladder instead of a silently-dropped declaration.
    */
-  it.each(['edge-highlight', 'surface-scrim', 'popover'])(
+  it.each(['surface-scrim', 'popover'])(
     'the --%s fallback still equals what design publishes',
     (name) => {
       const found = fallbacks(`${css}\n${motion}\n${recipes}`, name)
@@ -267,24 +265,11 @@ describe('Every value is @hanzo/design’s, and the mirror cannot drift', () => 
     }
   )
 
-  /**
-   * Paper and glass are ONE ladder under two names, and this is the seam.
-   *
-   * Design publishes the rungs as `--shadow-sheet-*` — a name it owns outright,
-   * which is what lets anything outside this package (a raw stylesheet, the
-   * extension, a site that never loads gui) stand on the same steps. This
-   * package composes the identical thing from `--edge-highlight` + its own
-   * drop, because it needs a name @hanzo/brand cannot outrank.
-   *
-   * Two homes for one fact, so the fact is checked. If design retunes a rung
-   * and this sheet does not follow, a menu and a transcript on the same screen
-   * quietly stand at different heights — and nothing renders an error.
-   */
   // Layer separators are compared as separators, not as text: the two files
   // disagree about the space after a comma and always will.
   const layers = (v: string) => v.replace(/\s*,\s*/g, ',').replace(/\s+/g, ' ').trim()
 
-  it.each([['1'], ['2']])('rung %s is the step design publishes as --shadow-sheet-N', (rung) => {
+  it.each([['1'], ['2']])('rung %s drop matches design’s --shadow-sheet-N drop layer', (rung) => {
     const ours = declared(rules(css), `glass-shadow-${rung}`)
     for (const [i, mode] of (['dark', 'light'] as const).entries())
       expect(layers(token(`shadow-sheet-${rung}`, mode))).toBe(
