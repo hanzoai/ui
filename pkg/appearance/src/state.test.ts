@@ -131,6 +131,17 @@ describe('apply', () => {
     expect(root.style.getPropertyValue('--radius-scale')).toBe('')
   })
 
+  it('a background sets the ground and derived surfaces, and clears cleanly', () => {
+    apply({ background: '#090d16' }, root)
+    expect(root.style.getPropertyValue('--background')).toBe('#090d16')
+    expect(root.style.getPropertyValue('--foreground')).toBe('#fafafa')
+    expect(root.style.getPropertyValue('--card')).toContain('#090d16')
+    apply({}, root)
+    for (const name of ['--background', '--foreground', '--card', '--popover', '--muted', '--secondary']) {
+      expect([name, root.style.getPropertyValue(name)]).toEqual([name, ''])
+    }
+  })
+
   it('paints a chosen theme in design\'s and gui\'s words at once', () => {
     apply({ theme: 'light' }, root)
     expect(root.classList.contains('light')).toBe(true)

@@ -22,7 +22,7 @@
  * object comes back, so two products writing different keys do not clobber each
  * other and neither has to read-modify-write.
  */
-import type { Preference } from '@hanzo/design'
+import type { Preference } from './scope'
 
 /** The member of the preferences blob this package owns. IAM names it the same. */
 const MEMBER = 'appearance'

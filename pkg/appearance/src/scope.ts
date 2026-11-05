@@ -25,7 +25,16 @@
  * rather than becoming a neutral value — the distinction `state.ts` depends on:
  * a written neutral outranks the stylesheet, an absent one defers to it.
  */
-import type { Preference } from '@hanzo/design'
+import type { Preference as DesignPreference } from '@hanzo/design'
+
+export type Preference = DesignPreference & {
+  /**
+   * The page ground (`--background`). Validated as a CSS `<color>`; emits the
+   * derived surface hierarchy (`--background`, `--card`, `--popover`, `--muted`,
+   * `--secondary`) and contrasting `--foreground` when set.
+   */
+  background?: string
+}
 
 /** Where a preference came from — narrowest last, which is also precedence. */
 export const LAYERS = ['install', 'org', 'user', 'userOrg'] as const
@@ -38,7 +47,7 @@ export type Layer = (typeof LAYERS)[number]
 export type Layers = Partial<Record<Layer, Preference>>
 
 /** Which axes exist. Adding one here is all it takes to make it resolvable. */
-const AXES = ['type', 'ratio', 'modular', 'density', 'font', 'arabic', 'width', 'accent', 'theme', 'radius'] as const
+const AXES = ['type', 'ratio', 'modular', 'density', 'font', 'arabic', 'width', 'accent', 'background', 'theme', 'radius'] as const
 
 /**
  * What a person actually sees — and, for each axis, who decided it.

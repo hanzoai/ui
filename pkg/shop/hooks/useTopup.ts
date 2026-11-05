@@ -103,24 +103,38 @@ export function useTopup(config: TopupConfig): UseTopupReturn {
       const token = resolveToken(config)
       const c = getCommerce()
 
-      // Add payment method with Square source token
-      await c.addPaymentMethod({
-        customerId: config.userId,
-        type: 'card',
-        providerRef: sourceId,
-        providerType: 'square',
-      }, token)
-
-      // Deposit the requested amount
-      const tx = await c.addDeposit({
-        user: config.userId,
-        currency: config.currency ?? 'usd',
-        amount: state.amountCents,
-        tags: ['topup', 'card'],
-      }, token)
+      // Charge the Square source token and credit the balance in one call.
+      // Commerce exposes POST /v1/billing/topup/token for exactly this:
+      // a single-use card token exchanged for prepaid credit.
+      const tx = await c.postBillingTopupToken<{
+        amount?: number
+        balance?: number
+        available?: number
+        transactionId?: string
+        id?: string
+      }>({
+        body: {
+          user: config.userId,
+          currency: config.currency ?? 'usd',
+          amount: state.amountCents,
+          sourceId,
+          providerRef: sourceId,
+          providerType: 'square',
+          tags: ['topup', 'card'],
+        },
+        token,
+      })
 
       if (!mountedRef.current) return
-      const newBalance = tx.amount ?? state.amountCents
+      let newBalance = tx.balance ?? tx.available ?? tx.amount ?? state.amountCents
+      if (tx.balance === undefined && tx.available === undefined) {
+        try {
+          const bal = await c.getBillingBalance<{ available: number }>({ token })
+          if (typeof bal.available === 'number') newBalance = bal.available
+        } catch {
+          // Keep the deposited amount as the reported balance.
+        }
+      }
       set({ status: 'success', newBalance })
       config.onSuccess?.(newBalance)
     } catch (err) {
@@ -136,12 +150,26 @@ export function useTopup(config: TopupConfig): UseTopupReturn {
     try {
       const token = resolveToken(config)
       const c = getCommerce()
-      // GET /v1/billing/wallet?user=&chain= returns { chain, address, memo? }
-      const addr = await (c as Commerce & {
-        getWalletAddress(params: { user: string; chain: string }, token?: string): Promise<WalletAddress>
-      }).getWalletAddress({ user: config.userId, chain: chainId }, token)
+      // POST /v1/billing/crypto/deposit issues a deposit address for the chain.
+      const addr = await c.postBillingCryptoDeposit<{
+        address?: string
+        chain?: string
+        asset?: string
+        memo?: string
+        id?: string
+        depositId?: string
+      }>({
+        body: { chain: chainId, asset: chainId, user: config.userId },
+        token,
+      })
+      if (!addr.address) throw new Error('No deposit address returned')
+      const walletAddress: WalletAddress = {
+        chain: addr.chain ?? chainId,
+        address: addr.address,
+        memo: addr.memo,
+      }
       if (!mountedRef.current) return
-      set({ status: 'idle', walletAddress: addr })
+      set({ status: 'idle', walletAddress })
     } catch (err) {
       if (!mountedRef.current) return
       const msg = err instanceof Error ? err.message : 'Failed to load wallet address'
@@ -157,18 +185,20 @@ export function useTopup(config: TopupConfig): UseTopupReturn {
     const c = getCommerce()
     let attempts = 0
     const MAX_ATTEMPTS = 60 // 5 min at 5s intervals
+    let baseline: number | null = null
 
     pollRef.current = setInterval(async () => {
       attempts++
       try {
-        const balance = await c.getBalance(config.userId, config.currency ?? 'usd', token)
-        // If balance changed, treat as confirmed
-        if (balance.balance > 0) {
+        const balance = await c.getBillingBalance<{ available: number }>({ token })
+        if (baseline === null) baseline = balance.available ?? 0
+        // If balance increased past the baseline, treat as confirmed
+        if ((balance.available ?? 0) > baseline) {
           clearInterval(pollRef.current!)
           pollRef.current = null
           if (!mountedRef.current) return
-          set({ status: 'success', newBalance: balance.balance, pollingForCrypto: false })
-          config.onSuccess?.(balance.balance)
+          set({ status: 'success', newBalance: balance.available, pollingForCrypto: false })
+          config.onSuccess?.(balance.available)
         }
       } catch {
         // ignore transient errors during polling

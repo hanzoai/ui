@@ -35,6 +35,8 @@ export const categoryFromSlug = (slug: string): ProductCategory | null =>
  */
 export const CATEGORY_SUMMARY: Record<ProductCategory, string> = {
   AI: "Models, providers, inference, agents, embeddings, fine-tuning, prompts, and the playground — the hub for everything you build, train, and ship with AI.",
+  Science:
+    "Evals, benchmarks, research, datasets, experiments, and scores — the science of measuring, testing, and improving what you build.",
   Compute:
     "Kubernetes, containers, functions, GPUs, machines, and tasks — the infrastructure your workloads run on.",
   Data: "Vector, SQL, key-value, object, document, and memory stores — managed data primitives for your apps.",

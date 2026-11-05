@@ -8,6 +8,7 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-native": "0.87.1",
+    "react-native-svg": "15.15.5",
     "react-native-web": "^0.21.2",
     "@hanzo/i18n": "0.5.3"
   },
@@ -16,5 +17,8 @@
     "style-loader": "^4.0.0",
     "webpack": "^5.110.1",
     "webpack-cli": "^7.2.3"
+  },
+  "overrides": {
+    "react-native-svg": "15.15.5"
   }
 }

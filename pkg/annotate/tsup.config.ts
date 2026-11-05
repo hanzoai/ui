@@ -6,8 +6,10 @@ export default defineConfig({
   dts: false, // tsc emits these — rollup-plugin-dts cannot load on TS7,
   clean: true,
   // TypeScript is the parser, and every host that runs a build already has it.
-  // Bundling a second copy into a build-time package would be absurd.
-  external: ['typescript'],
+  // Bundling a second copy into a build-time package would be absurd. The
+  // TS7 API lives behind `typescript/unstable/*`, so those subpaths must be
+  // external too — otherwise tsup follows them into a bundled copy.
+  external: ['typescript', 'typescript/unstable/ast', 'typescript/unstable/sync', 'typescript/unstable/fs'],
   minify: false,
   sourcemap: true,
   splitting: false,
