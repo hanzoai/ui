@@ -6,6 +6,7 @@
 /** Every product category, in the catalog's display order. */
 export const CATEGORIES = [
   "AI",
+  "Science",
   "Compute",
   "Data",
   "Network",
@@ -36,6 +37,7 @@ export const BRAND_SCOPE = {
  */
 export const COLORS = {
   "AI": "violet",
+  "Science": "lime",
   "Compute": "blue",
   "Data": "cyan",
   "Network": "sky",
