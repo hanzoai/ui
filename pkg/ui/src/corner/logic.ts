@@ -51,10 +51,11 @@ export type Words = {
   close: string
   /** A search that matched nothing. */
   none: string
+  /** A help link that opens in a new tab is announced: "opens in a new tab". */
+  leaves: string
 }
 
 export const WORDS: Words = {
-<<<<<<< HEAD
   open: phrase('Help and preferences'),
   help: phrase('Help'),
   preferences: phrase('Preferences'),
@@ -71,34 +72,12 @@ export const WORDS: Words = {
   mono: phrase('Mono'),
   arabic: phrase('Arabic font'),
   kufi: phrase('Kufi'),
+  plex: phrase('Plex'),
   search: phrase('Search'),
   back: phrase('Back'),
   close: phrase('Close'),
   none: phrase('No matches'),
-=======
-  open: 'Help and preferences',
-  help: 'Help',
-  preferences: 'Preferences',
-  theme: 'Theme',
-  auto: 'Auto',
-  light: 'Light',
-  dark: 'Dark',
-  language: 'Language',
-  currency: 'Currency',
-  font: 'Font',
-  sans: 'Sans',
-  system: 'System',
-  serif: 'Serif',
-  mono: 'Mono',
-  arabic: 'Arabic font',
-  kufi: 'Kufi',
-  plex: 'Plex',
-  search: 'Search',
-  back: 'Back',
-  close: 'Close',
-  none: 'No matches',
-  leaves: 'opens in a new tab',
->>>>>>> main
+  leaves: phrase('opens in a new tab'),
 }
 
 /** Past this many options a list gets a search field. */

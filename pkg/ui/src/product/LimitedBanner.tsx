@@ -72,12 +72,8 @@ export function LimitActions({
   )
 }
 
-<<<<<<< HEAD
-export function LimitedBanner({ message, actions = [], onAction, onUsage, onClose }: LimitedBannerProps) {
-  const { t } = useI18n()
-=======
 export function LimitedBanner({ message, actions = [], onAction, onUsage, onClose, labels }: LimitedBannerProps) {
->>>>>>> main
+  const { t } = useI18n()
   return (
     <XStack
       {...slot('limited-banner')}
@@ -101,20 +97,12 @@ export function LimitedBanner({ message, actions = [], onAction, onUsage, onClos
       <LimitActions actions={actions} onAction={onAction}>
         {onUsage ? (
           <Button size="sm" variant="link" px="$1.5" data-kind="usage" onPress={onUsage}>
-<<<<<<< HEAD
-            {t('See usage')}
-=======
-            {labels?.usage ?? 'See usage'}
->>>>>>> main
+            {labels?.usage ?? t('See usage')}
           </Button>
         ) : null}
       </LimitActions>
       {onClose ? (
-<<<<<<< HEAD
-        <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={t('Dismiss')} onPress={onClose}>
-=======
-        <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={labels?.dismiss ?? 'Dismiss'} onPress={onClose}>
->>>>>>> main
+        <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label={labels?.dismiss ?? t('Dismiss')} onPress={onClose}>
           <X size={14} />
         </Button>
       ) : null}

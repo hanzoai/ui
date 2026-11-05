@@ -291,16 +291,14 @@ const INSET = 4
  * strength whatever the closed select shows. A disabled one (a "Choose" hint)
  * keeps the inherited ink.
  */
-const inked = (children: ReactNode): ReactNode =>
-  Children.map(children, (c) => {
-    if (!isValidElement<ComponentProps<"option">>(c) || c.type !== "option" || c.props.disabled) return c
-    const { children: words, ...own } = c.props
-    return (
-      <Text render={<option {...own} />} color="$color">
-        {words}
-      </Text>
-    )
-  })
+const inked = (color: TextProps["color"]) => (child: ReactNode): ReactNode => {
+  if (!isValidElement<ComponentProps<"option">>(child) || child.type !== "option" || child.props.disabled) return child
+  return (
+    <Text render={cloneElement(child, { children: undefined })} color={color}>
+      {child.props.children}
+    </Text>
+  )
+}
 
 /** The select's own attributes, which reach the `<select>`; its `<option>`s are its children. */
 type Native = Pick<
@@ -322,20 +320,6 @@ export type PickerProps = Omit<TextProps, "render" | "size" | keyof Native> &
      */
     placeholder?: string
   }
-
-/**
- * An `<option>` in the field's ink. The list inherits the select's colour, so a
- * picker showing its placeholder would otherwise hand the dim hint to every
- * choice in the list the platform opens.
- */
-const inked = (ink: TextProps["color"]) => (child: ReactNode) =>
-  isValidElement<ComponentProps<"option">>(child) && child.type === "option" ? (
-    <Text render={cloneElement(child, { children: undefined })} color={ink}>
-      {child.props.children}
-    </Text>
-  ) : (
-    child
-  )
 
 /**
  * Picker — the platform's own select, wearing the field.
@@ -406,11 +390,8 @@ const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(functi
       cursor="pointer"
       {...props}
     >
-<<<<<<< HEAD
-      {inked(children)}
-=======
       {placeholder === undefined ? (
-        children
+        Children.map(children, inked(color))
       ) : (
         <>
           <option value="" disabled>
@@ -419,7 +400,6 @@ const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(functi
           {Children.map(children, inked(color))}
         </>
       )}
->>>>>>> main
     </Text>
   )
 })

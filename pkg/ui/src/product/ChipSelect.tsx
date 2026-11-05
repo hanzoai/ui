@@ -276,14 +276,11 @@ export function ChipSelect<T extends ChipItem>({
   onOpenChange,
 }: ChipSelectProps<T>) {
   const bare = !label
-<<<<<<< HEAD
   const { t } = useI18n()
-  const placeholder = hint ?? t('Search…')
-  const empty = none ?? t('No matches.')
-=======
   const row = useContext(Pills)
   const pill = row !== null && !bare && !quiet
->>>>>>> main
+  const placeholder = hint ?? t('Search…')
+  const empty = none ?? t('No matches.')
   const [own, setOwn] = useState(false)
   const open = openProp ?? own
   const setOpen = useCallback(

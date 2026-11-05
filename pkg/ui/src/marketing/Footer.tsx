@@ -76,13 +76,9 @@ const Door = ({ link }: { link: FooterLink }) => {
   )
 }
 
-<<<<<<< HEAD
-const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)' }: FooterProps) => {
+const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)', after }: FooterProps) => {
   const { t } = useI18n()
   return (
-=======
-const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)', after }: FooterProps) => (
->>>>>>> main
   <YStack
     {...slot('footer')}
     render="footer"
@@ -105,11 +101,7 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
         sit side by side, each its own list. */}
     <XStack flexWrap="wrap" gap={28} $sm={{ gap: 40 }}>
       {columns.map((c) => (
-<<<<<<< HEAD
-        <YStack key={c.id} render="nav" aria-label={t(c.title)} flexBasis="40%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
-=======
-        <YStack key={c.id} render="nav" aria-label={c.title} flexBasis="100%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
->>>>>>> main
+        <YStack key={c.id} render="nav" aria-label={t(c.title)} flexBasis="100%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
           {c.href ? (
             <Anchor
               href={c.href}
@@ -143,12 +135,8 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
           {copyright}
         </Line>
       ) : null}
-<<<<<<< HEAD
-      <XStack render="nav" aria-label={t('Terms & Policies')} flexWrap="wrap" gap={16} rowGap={8} marginInlineStart={0} width="100%" $sm={{ marginInlineStart: 'auto', width: 'auto' }}>
-=======
       {/* Shrinks to the row, so its links wrap on a phone instead of standing past the window. */}
-      <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8} shrink={1} minW={0}>
->>>>>>> main
+      <XStack render="nav" aria-label={t('Terms & Policies')} flexWrap="wrap" gap={16} rowGap={8} shrink={1} minW={0}>
         {legal.map((l) => (
           <Anchor
             key={l.label}
