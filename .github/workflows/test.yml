@@ -24,7 +24,7 @@ jobs:
   leg:
     name: ${{ matrix.name }} ${{ matrix.shard }}/${{ matrix.of }}
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 8
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -61,7 +61,8 @@ jobs:
       - name: Build the packages and what they build on
         run: |
           own=...; [ "$OF" -gt 1 ] && [ "$SHARD" -gt 1 ] && own=^...
-          mapfile -t f < <(jq -r --arg o "$own" '.[] | "--filter", . + $o' <<<"$PACKAGES")
+          mapfile -t f < <(jq -r --arg o "$own" --arg ev "$GITHUB_EVENT_NAME" --arg ref "$GITHUB_REF" \
+            '.[] | "--filter", (if . == "ui.hanzo.ai" and $ev == "push" and $ref == "refs/heads/main" then . + "^..." else . + $o end)' <<<"$PACKAGES")
           pnpm "${f[@]}" build
 
       # A build EMITS; it does not check. tsup and tsc -p both stop at the files

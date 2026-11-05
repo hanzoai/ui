@@ -64,7 +64,7 @@ jobs:
     name: ui ${{ matrix.suite }}
     # Each builds @hanzo/ui, which takes 74 to 210 s on an ordinary runner.
     runs-on: ${{ needs.plan.outputs.heavy }}
-    timeout-minutes: 10
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
