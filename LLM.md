@@ -1770,3 +1770,25 @@ and grids follow `dir`; a side named left or right does not.
   that is not its own mirror. Against published gui 8.3.5 it reports the tabs,
   slider and progress fill that only gui's own `useDirection` fix moves; against
   gui with that fix, 44 of 44.
+
+## Products catalog sync — Science (85 products)
+
+`pkg/products/scripts/sync.mjs` pulls from `https://api.hanzo.ai/v1/commerce/catalog`.
+Synced commit `6d143e4` carried 84→85 products and added the `Science` category
+(7 products: evals, benchmark, research, datasets, experiments, scores,
+score-configs), plus `CATEGORY_SUMMARY.Science` in `src/categories.ts` and
+`Science: lime` in the generated taxonomy. That part was already correct and
+`sync.mjs --check` passes against the live catalog (11 categories · 85 products).
+
+What the previous run missed: the refreshed snapshot broke three stale
+invariants in `src/snapshot.test.ts` that were artifacts of the pre-sync
+hand-maintained snapshot (all routes `/${slug}`, brands strictly equal to the
+category derivation, admin set of seven including audit/iam/kms/secrets).
+Commerce now serves bespoke routes (`/engine`, `/cloud/*`, `/network`,
+`/ingress`, `/platform`), per-product brands narrower than category scope
+(e.g. gateway is hanzo-only though Network admits lux/zoo/pars), and admin is
+only providers/clusters/kubernetes. The test file was updated to assert the
+synced truth (well-formed path routes, brands non-empty and preserved by
+`resolveEntry`, exact admin set of three) instead of forcing sync to rewrite
+commerce's answers. Full suite: 158 passed, 1 skipped; `sync.mjs --check`
+passes; `tsc --noEmit` clean.
