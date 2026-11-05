@@ -559,7 +559,7 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
             aria-label="Custom accent color"
             value={pref.accent && /^#[0-9a-fA-F]{6}$/.test(pref.accent) ? pref.accent : '#3b82f6'}
             onChange={(e) => set({ accent: e.target.value })}
-            style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%' }}
+            style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%', border: 0, padding: 0 }}
           />
         </label>
       </Row>
@@ -580,7 +580,7 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
             aria-label="Custom background color"
             value={pref.background && /^#[0-9a-fA-F]{6}$/.test(pref.background) ? pref.background : '#0a0a0f'}
             onChange={(e) => set({ background: e.target.value })}
-            style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%' }}
+            style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%', border: 0, padding: 0 }}
           />
         </label>
       </Row>
