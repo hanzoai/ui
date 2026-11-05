@@ -1,7 +1,6 @@
 import React from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 
-
 export interface MCPServerInfo {
   id: string
   name: string

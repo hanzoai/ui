@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Text } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
 
-
 export interface LiveVoiceCallProps {
   title?: string
   status?: 'connecting' | 'connected' | 'speaking' | 'listening' | 'ended'

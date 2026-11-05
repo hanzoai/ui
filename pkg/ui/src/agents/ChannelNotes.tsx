@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Text } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
 
-
 export interface ChannelNotesProps {
   channelName: string
   notes: string

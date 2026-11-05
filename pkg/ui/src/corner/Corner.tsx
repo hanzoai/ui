@@ -69,6 +69,9 @@ export type CornerProps = {
   /** The page's display currency, owned by the host. Absent, the row is not drawn. */
   currency?: Setting
   /** The panel's own words, for a host that speaks another language. */
+  /**
+   * @deprecated Use the @hanzo/i18n provider instead; kept (deprecated but working) for backward compatibility.
+   */
   words?: Partial<Words>
   /** Which bottom corner it stands in, along the line: `start` (the default) or `end`. */
   side?: 'start' | 'end'
@@ -133,9 +136,11 @@ function useAxis<K extends 'theme' | 'font' | 'arabic'>(axis: K): [Preference[K]
   return [look ? look.pref[axis] : own, set]
 }
 
-export function Corner({ help = [], language, currency, words, side = 'start', mark }: CornerProps) {
+export function Corner({ help = [], language, currency, words: wordsProp, side = 'start', mark }: CornerProps) {
   const { t } = useI18n()
-  const w = { ...WORDS, ...words }
+  // Provider translation wins; explicit host words win over that (backward compat with `words` prop).
+  const base = Object.fromEntries(Object.entries(WORDS).map(([k, said]) => [k, t(said)])) as Words
+  const w = { ...base, ...wordsProp }
   const [open, setOpen] = useState(false)
   const [view, setView] = useState<View>('main')
   // Which row opened a list, so going back puts focus where it was.

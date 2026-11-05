@@ -15,6 +15,7 @@
  */
 import { createStyledContext, SizableText, styled, XStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
+import * as React from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 import { sx } from '../../sx'
 import { Button } from './button'

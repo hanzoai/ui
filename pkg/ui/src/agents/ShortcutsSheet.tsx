@@ -3,7 +3,6 @@ import { Text } from '@hanzo/gui'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 
-
 export interface ShortcutItem {
   key: string
   description: string

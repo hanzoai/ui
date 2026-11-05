@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 
-
 export interface DiffViewerProps {
   originalCode: string
   modifiedCode: string

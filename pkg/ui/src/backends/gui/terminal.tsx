@@ -17,6 +17,7 @@
  */
 import { Input as GuiInput, SizableText, styled, Text, XStack, YStack, type YStackProps } from '@hanzo/gui'
 import { Check, Copy } from '@hanzogui/lucide-icons-2'
+import * as React from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 import { face, type CodeToken } from '../../code-theme'
 import { mono } from './code-surface'

@@ -14,6 +14,7 @@
 import { isWeb, SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { sx } from '../../sx'
 import { Calendar, MoreHorizontal, Plus, Search, User, X } from '@hanzogui/lucide-icons-2'
+import * as React from 'react'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 import { Badge } from './badge'

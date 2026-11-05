@@ -415,6 +415,9 @@
     },
     "next-themes": {
       "optional": true
+    },
+    "@hanzo/i18n": {
+      "optional": true
     }
   },
   "devDependencies": {
