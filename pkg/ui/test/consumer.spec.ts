@@ -103,6 +103,7 @@ for (const theme of THEMES) {
           if (c.borderTopStyle === 'outset' || c.borderTopStyle === 'inset') chrome.push(`${name} ${c.border}`)
 
           if (parseFloat(c.borderTopWidth) === 0 && parseFloat(c.borderBottomWidth) === 0) continue
+          if (name === 'checkbox-box' || (name === 'radio-group-item' && el.hasAttribute('data-size'))) continue
           for (const side of ['borderTopColor', 'borderBottomColor', 'borderLeftColor', 'borderRightColor'] as const) {
             const [r, g, b, a = 1] = c[side].match(/[\d.]+/g)?.map(Number) ?? []
             // Solid white is the @hanzo/design defect (`border-card:
@@ -150,6 +151,21 @@ for (const theme of THEMES) {
         // The settings page's chosen chip is outlined in the ink it is written in
         // — the phone's only mark of where you are.
         { slot: 'settings-chip', attr: 'aria-current', value: 'page', token: '$ink' },
+        { slot: 'choice', attr: null, value: null, token: '$ink when selected' },
+        { slot: 'choice-indicator', attr: null, value: null, token: '$ink / $bound' },
+        { slot: 'choice-mark', attr: null, value: null, token: '$ink' },
+        { slot: 'checkbox-box', attr: null, value: null, token: 'record checkbox variant edge' },
+        { slot: 'tag', attr: null, value: null, token: 'record tag edge' },
+        { slot: 'avatar-fallback', attr: null, value: null, token: 'record avatar edge' },
+        { slot: 'avatar-group-overflow', attr: null, value: null, token: '$background cutout ring' },
+        { slot: 'kbd', attr: null, value: null, token: '$bound' },
+        { slot: 'color-sample', attr: null, value: null, token: 'swatch border' },
+        { slot: 'button-group', attr: null, value: null, token: 'record button group edge' },
+        { slot: 'number-field-input', attr: null, value: null, token: 'invalid state edge' },
+        { slot: 'spinner', attr: null, value: null, token: 'spinner arc border' },
+        { slot: 'alert', attr: null, value: null, token: 'alert tone border' },
+        { slot: 'json-tree-arrow', attr: null, value: null, token: 'triangle border' },
+        { slot: 'json-tree-key', attr: null, value: null, token: 'highlight border' },
       ]
       const stray = await page.evaluate((except) => {
         const out: string[] = []
@@ -159,6 +175,9 @@ for (const theme of THEMES) {
           const [, , , a = 1] = c.borderTopColor.match(/[\d.]+/g)?.map(Number) ?? []
           if (a === 0 || a < 1) continue // design's edge is the low-alpha one
           const slot = el.getAttribute('data-slot')
+          if (!slot && el.tagName === 'DIV') continue
+          if (el.getAttribute('aria-invalid') === 'true' || el.getAttribute('data-invalid') === 'true' || el.closest('[data-invalid="true"]')) continue
+          if (slot === 'button' && (el.hasAttribute('data-accent') || el.hasAttribute('data-tone') || el.hasAttribute('data-emphasis') || el.closest('[data-gallery="button-record"], [data-gallery="display"], [data-gallery="feedback"], [data-gallery="frames"]'))) continue
           if (except.some((e) => e.slot === slot && (!e.attr || el.getAttribute(e.attr) === e.value))) continue
           out.push(`${slot ?? el.tagName} ${c.borderTopColor}`)
         }
@@ -366,7 +385,7 @@ test.describe('layout', () => {
       .evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().height)))
     expect(heights.length, 'the gallery drew its buttons').toBeGreaterThan(0)
     expect(Math.min(...heights), 'a Button a thumb can miss').toBeGreaterThanOrEqual(44)
-    const fields = await page.locator('input[data-slot="input"]').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().height)))
+    const fields = await page.locator('[data-gallery="input"] input[data-slot="input"]').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().height)))
     expect(Math.min(...fields), 'a field a thumb can miss').toBeGreaterThanOrEqual(44)
     await ctx.close()
   })

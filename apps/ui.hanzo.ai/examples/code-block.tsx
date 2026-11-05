@@ -1,5 +1,5 @@
 import { YStack } from "@hanzo/gui"
-import { CodeBlock, codeTheme } from "@hanzo/ui"
+import { CodeBlock } from "@hanzo/ui"
 
 const FIBONACCI = `function fibonacci(n) {
   if (n <= 1) {
@@ -41,7 +41,7 @@ export function Diff() {
       code={CALCULATOR}
       language="javascript"
       filename="calculator.js"
-      theme={codeTheme.dark}
+      theme="dark"
       diff={{ added: [5, 6], removed: [3] }}
     />
   )
