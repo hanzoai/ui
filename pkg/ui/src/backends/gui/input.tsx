@@ -63,7 +63,6 @@ const well = (side: 'start' | 'end', gutter: number) => ({
 const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function Input({ startAdornment, endAdornment, reveal = true, type, secureTextEntry, size, fill = false, ...props }, ref) {
   const { t } = useI18n()
   const [revealed, setRevealed] = useState(false)
-  const { t } = useI18n()
   const density = useDensity()
   const group = useContext(GroupContext)
   const isPassword = type === 'password' || secureTextEntry === true

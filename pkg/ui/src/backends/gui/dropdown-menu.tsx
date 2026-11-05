@@ -46,12 +46,6 @@
  * used 500ms: behaviour comes from the primitive, so the difference is recorded, not
  * reimplemented.
  */
-import { PortalTheme, useThemeName } from "../../product/menu/portal-theme"
-import { MenuRowContent } from "../../product/MenuRow"
-import { Density, useDensity } from "./density"
-import { ink } from "./ink"
-import { ltrText, mirror } from "./dir"
-import { touch } from "./gesture"
 import * as React from "react"
 import { Input as GuiInput, Menu, Spinner, Text, XStack, YStack, isWeb, type GuiElement } from "@hanzo/gui"
 import { Check, ChevronLeft, ChevronRight, Circle, X } from "@hanzogui/lucide-icons-2"

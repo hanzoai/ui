@@ -367,7 +367,6 @@ const arrow = (name: string, side: 'start' | 'end', Icon: typeof ChevronLeft, mo
     // slide 0 stays disabled after the user drags away from it.
     const { t } = useI18n()
     const { api, selected } = useCarousel()
-    const { t } = useI18n()
     // Before mount there is no scroller, so neither arrow can know whether it
     // has anywhere to go, and disabled is the honest answer.
     const live = selected === null ? null : api.current

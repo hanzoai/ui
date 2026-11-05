@@ -14,7 +14,6 @@
  */
 import { VisuallyHidden, XStack, styled } from '@hanzo/gui'
 import * as React from 'react'
-import { styled, VisuallyHidden, XStack } from '@hanzo/gui'
 import { ChevronLeft, ChevronRight, MoreHorizontal } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 

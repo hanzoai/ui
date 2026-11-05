@@ -15,7 +15,6 @@
  */
 import { SizableText, XStack, styled } from '@hanzo/gui'
 import { useState, type ComponentProps, type ReactNode } from 'react'
-import { SizableText, styled, XStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
@@ -54,7 +53,6 @@ export type AnnouncementProps = Omit<ComponentProps<typeof AnnouncementFrame>, '
 export function Announcement({ children, dismissible = true, onDismiss, ...props }: AnnouncementProps) {
   const { t } = useI18n()
   const [visible, setVisible] = useState(true)
-  const { t } = useI18n()
   if (!visible) return null
 
   const dismiss = () => {

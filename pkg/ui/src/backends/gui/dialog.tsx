@@ -101,7 +101,6 @@ export type DialogContentProps = ComponentProps<typeof GuiDialog.Content> & {
 const DialogContent = ({ showCloseButton = true, overlay, size, children, ...props }: DialogContentProps) => {
   const { t } = useI18n()
   const themeName = useThemeName()
-  const { t } = useI18n()
   return (
     <GuiDialog.Portal>
       <PortalTheme name={themeName}>

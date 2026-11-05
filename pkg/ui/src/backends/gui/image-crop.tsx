@@ -35,7 +35,6 @@ export function ImageCrop({ src, onCrop, aspect = 1, ...props }: ImageCropProps)
   const { t } = useI18n()
   const [zoom, setZoom] = useState(1)
   const [rotation, setRotation] = useState(0)
-  const { t } = useI18n()
 
   const zoomOut = () => setZoom((z) => Math.max(MIN_ZOOM, +(z - STEP).toFixed(2)))
   const zoomIn = () => setZoom((z) => Math.min(MAX_ZOOM, +(z + STEP).toFixed(2)))

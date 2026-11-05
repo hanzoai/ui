@@ -11,10 +11,8 @@
  * accepted or rejected against `accept`/`maxFiles`/`maxSize`.
  */
 import { SizableText, XStack, YStack, isWeb, styled } from '@hanzo/gui'
-import { useId, useRef, useState, type KeyboardEvent, type DragEvent as ReactDragEvent } from 'react'
-import { isWeb, SizableText, styled, XStack, YStack } from '@hanzo/gui'
-import { File as FileIcon, Upload, X } from '@hanzogui/lucide-icons-2'
 import { useId, useRef, useState, type DragEvent as ReactDragEvent, type KeyboardEvent } from 'react'
+import { File as FileIcon, Upload, X } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 import { ink } from './ink'
 import { slot } from './slot'
@@ -116,7 +114,6 @@ export function Dropzone({
   const { t } = useI18n()
   const [files, setFiles] = useState<File[]>([])
   const [active, setActive] = useState(false)
-  const { t } = useI18n()
   const inputRef = useRef<HTMLInputElement>(null)
   const inputId = useId()
 

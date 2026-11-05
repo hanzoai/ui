@@ -140,7 +140,6 @@ const rows = (code: string, highlightLines: number[], diff?: CodeBlockDiff) =>
 export function CodeBlock({ code, language = 'text', filename, theme, size, showLineNumbers = true, highlightLines = [], showCopyButton = true, maxHeight = 400, diff, ...props }: CodeBlockProps) {
   const { t } = useI18n()
   const [copied, setCopied] = useState(false)
-  const { t } = useI18n()
   const paint = surface(theme)
   const fontSize = FONT_SIZE[size ?? 'default']
   const lineHeight = fontSize * 1.5

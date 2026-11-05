@@ -1,7 +1,5 @@
 'use client'
 
-import { SizableText, View, XStack, YStack, useMedia, type GuiElement } from '@hanzo/gui'
-import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 /**
  * Toaster — the toast viewport, mounted once near the root of an app, and
  * `toast()`, the sonner-shaped call that fills it.
@@ -39,6 +37,7 @@ import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from
  * accepted and inert.
  */
 import { SizableText, useMedia, View, XStack, YStack, type GuiElement } from '@hanzo/gui'
+import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Info, SquareCheck, TriangleAlert, X } from '@hanzogui/lucide-icons-2'
 import {
   Toast,

@@ -1,7 +1,5 @@
 'use client'
 
-import type { ReactNode } from 'react'
-import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
 /**
  * NavigationBar — the top bar of a page, in the shapes real products use.
  *
@@ -17,6 +15,7 @@ import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { ChevronRight, ChevronDown, Search, Bell, ShoppingCart, User, Users, Phone, Video, MessageSquare } from '@hanzogui/lucide-icons-2'
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
+import type { ReactNode } from 'react'
 
 import { Avatar, AvatarFallback, AvatarImage } from './avatar'
 import { Badge } from './badge'

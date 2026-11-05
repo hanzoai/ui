@@ -1,6 +1,5 @@
 'use client'
 
-import { mirror } from '../backends/gui/dir'
 import React, { useRef, useState } from 'react'
 import {
   ChevronRight,

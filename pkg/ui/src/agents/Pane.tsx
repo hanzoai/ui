@@ -152,7 +152,6 @@ export function Pane({ tabs, active, onActive, onClose, ...rest }: PaneProps) {
   const [own, setOwn] = useState(tabs[0]?.id)
   const current = active ?? own
   const shown = tabs.find((tab) => tab.id === current) ?? tabs[0]
-  const { t } = useI18n()
 
   return (
     <YStack {...slot('pane')} flex={1} minH={0} bg="$panel" rounded="$4" borderWidth={1} borderColor="$borderColor" overflow="hidden" {...rest}>

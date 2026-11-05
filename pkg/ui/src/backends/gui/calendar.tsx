@@ -133,7 +133,6 @@ function Calendar(props: CalendarProps) {
   const { t } = useI18n()
   const { month: monthProp, defaultMonth, onMonthChange, numberOfMonths = 1, weekStartsOn = 0, showOutsideDays = true, disabled, initialFocus, className } = props
 
-  const { t } = useI18n()
   const [own, setOwn] = useState(() => first(defaultMonth ?? new Date()))
   const head = monthProp ? first(monthProp) : own
   const months = Array.from({ length: numberOfMonths }, (_, i) => first(head, i))

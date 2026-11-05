@@ -1,8 +1,5 @@
 'use client'
 
-import { sx } from '../../sx'
-import { SizableText, XStack, YStack, isWeb, styled } from '@hanzo/gui'
-import * as React from 'react'
 /**
  * Kanban — a board of columns holding draggable cards, with search, column
  * limits, labels, priority, assignee and due date, and a create/edit dialog.
@@ -15,6 +12,7 @@ import * as React from 'react'
  * `@dnd-kit` in this workspace and none is needed for a same-tab reorder.
  */
 import { isWeb, SizableText, styled, XStack, YStack } from '@hanzo/gui'
+import { sx } from '../../sx'
 import { Calendar, MoreHorizontal, Plus, Search, User, X } from '@hanzogui/lucide-icons-2'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
@@ -305,7 +303,6 @@ function KanbanCardDialog({ open, onOpenChange, card, labels, onSave }: { open: 
   const [priority, setPriority] = React.useState<KanbanPriority>(card?.priority ?? 'low')
   const [assignee, setAssignee] = React.useState(card?.assignee ?? '')
   const [dueDate, setDueDate] = React.useState(card?.dueDate ?? '')
-  const { t } = useI18n()
 
   React.useEffect(() => {
     setTitle(card?.title ?? '')
@@ -397,7 +394,6 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
   const { t } = useI18n()
   const [query, setQuery] = React.useState('')
   const [drag, setDrag] = React.useState<Drag | null>(null)
-  const { t } = useI18n()
   const [dialogOpen, setDialogOpen] = React.useState(false)
   const [editingCard, setEditingCard] = React.useState<KanbanCard | undefined>(undefined)
   const [targetColumnId, setTargetColumnId] = React.useState('')

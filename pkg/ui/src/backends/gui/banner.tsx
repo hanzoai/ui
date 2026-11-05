@@ -32,7 +32,6 @@
  */
 import { SizableText, XStack, YStack, createStyledContext, styled } from '@hanzo/gui'
 import { Children, createContext, isValidElement, useContext, type ComponentProps, type ReactNode } from 'react'
-import { createStyledContext, SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { Info, X } from '@hanzogui/lucide-icons-2'
 import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'

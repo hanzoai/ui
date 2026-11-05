@@ -170,7 +170,6 @@ export const Drawer = ({ open = false, onOpenChange, modal = true, snapPoints, a
 export const DrawerHandle = ({ className, ...props }: React.ComponentProps<typeof Box>) => {
   const { t } = useI18n()
   const { drag, handleHandleClicked, extendHandleDragRegion } = useDrawer()
-  const { t } = useI18n()
   return (
     <Box
       role="separator"

@@ -140,7 +140,7 @@ export function NumberField({
   const last = useRef<number | null>(current)
   last.current = current
 
-  const formatter = useMemo(() => new Intl.NumberFormat(resolved, { maximumFractionDigits: 20, ...format }), [resolved, format])
+  const formatter = useMemo(() => new Intl.NumberFormat(locale, { maximumFractionDigits: 20, ...format }), [locale, format])
   const shown = draft ?? (current == null || Number.isNaN(current) ? '' : formatter.format(current))
 
   const commit = useCallback(
@@ -201,7 +201,7 @@ export function NumberField({
       onChangeText={(text: string) => {
         setDraft(text)
         if (!text.trim()) return commit(null)
-        const n = parseNumber(text, resolved, format)
+        const n = parseNumber(text, locale, format)
         if (!Number.isNaN(n)) commit(n)
       }}
       onFocus={(e: unknown) => {
@@ -214,7 +214,7 @@ export function NumberField({
         const text = draft
         setDraft(null)
         if (text != null && text.trim()) {
-          const n = parseNumber(text, resolved, format)
+          const n = parseNumber(text, locale, format)
           if (!Number.isNaN(n)) commit(allowOutOfRange ? n : clamp(n, min, max))
         }
         ;(onBlur as ((e: unknown) => void) | undefined)?.(e)

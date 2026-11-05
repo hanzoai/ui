@@ -133,9 +133,9 @@ function useAxis<K extends 'theme' | 'font' | 'arabic'>(axis: K): [Preference[K]
   return [look ? look.pref[axis] : own, set]
 }
 
-export function Corner({ help = [], language, currency }: CornerProps) {
+export function Corner({ help = [], language, currency, words, side = 'start', mark }: CornerProps) {
   const { t } = useI18n()
-  const w = Object.fromEntries(Object.entries(WORDS).map(([k, said]) => [k, t(said)])) as Words
+  const w = { ...WORDS, ...words }
   const [open, setOpen] = useState(false)
   const [view, setView] = useState<View>('main')
   // Which row opened a list, so going back puts focus where it was.

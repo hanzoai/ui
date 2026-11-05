@@ -1,7 +1,5 @@
 'use client'
 
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
-import { acceptAll, asks, consentPolicy, consentSheet, declined, notice, noticed, POLICY_EVENT, readConsent, rejectAll, saveConsent, storedConsent, type Choice, type Mode } from '@hanzo/event'
 /**
  * Consent — the one cookie banner every Hanzo, Lux and Zoo site mounts.
  *
@@ -34,6 +32,7 @@ import { acceptAll, asks, consentPolicy, consentSheet, declined, notice, noticed
  */
 import { Paragraph, Text, XStack, YStack } from '@hanzo/gui'
 import { ChevronDown, X } from '@hanzogui/lucide-icons-2'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import {
   acceptAll,
   asks,

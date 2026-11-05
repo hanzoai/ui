@@ -82,7 +82,7 @@ const Door = ({ link }: { link: FooterLink }) => {
   )
 }
 
-const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)' }: FooterProps) => {
+const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)', after }: FooterProps) => {
   const { t } = useI18n()
   return (
   <YStack

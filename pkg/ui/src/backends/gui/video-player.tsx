@@ -129,7 +129,6 @@ export function MediaPlayer({ sources, poster, subtitles = [], size = 'md', auto
   // A player that goes away takes its pending hide with it.
   React.useEffect(() => () => clearTimeout(hideTimer.current), [])
 
-  const { t } = useI18n()
   const [isPlaying, setIsPlaying] = React.useState(false)
   const [currentTime, setCurrentTime] = React.useState(0)
   const [duration, setDuration] = React.useState(0)

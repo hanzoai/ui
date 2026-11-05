@@ -58,7 +58,6 @@ function computeDiff(original: string, modified: string): DiffLine[] {
 export const DiffViewer: React.FC<DiffViewerProps> = ({ originalCode, modifiedCode, filename = 'changes.diff', language = 'typescript', className = '', style }) => {
   const { t } = useI18n()
   const diffLines = useMemo(() => computeDiff(originalCode, modifiedCode), [originalCode, modifiedCode])
-  const { t } = useI18n()
 
   const additions = diffLines.filter((l) => l.type === 'add').length
   const deletions = diffLines.filter((l) => l.type === 'remove').length

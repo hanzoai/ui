@@ -17,7 +17,6 @@ export const ChannelNotes: React.FC<ChannelNotesProps> = ({ channelName, notes, 
   const { t } = useI18n()
   const [content, setContent] = useState(notes)
   const [isEditing, setIsEditing] = useState(false)
-  const { t } = useI18n()
 
   const handleSave = () => {
     onSaveNotes(content)

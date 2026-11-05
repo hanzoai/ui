@@ -165,7 +165,6 @@ function DataTable<TData>({
   const [hidden, setHidden] = useState<Record<string, boolean>>({})
   const [selected, setSelected] = useState<Record<string, boolean>>({})
   const [pageIndex, setPageIndex] = useState(0)
-  const { t } = useI18n()
 
   const withIds = useMemo<Entry<TData>[]>(
     () =>

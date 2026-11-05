@@ -1,7 +1,5 @@
 'use client'
 
-import { Input as GuiInput, SizableText, Text, XStack, YStack, styled, type YStackProps } from '@hanzo/gui'
-import * as React from 'react'
 /**
  * Terminal — an emulated shell: a title bar, a scrolling command history, and
  * one input line. Enter runs a line through `onCommand` (after the built-ins
@@ -172,7 +170,6 @@ export function Terminal({ prompt = '$', initialCommands = [], onCommand, theme,
   const [suggestions, setSuggestions] = React.useState<string[]>([])
   const [suggestionIndex, setSuggestionIndex] = React.useState(0)
   const [copied, setCopied] = React.useState<string | null>(null)
-  const { t } = useI18n()
 
   const scroller = React.useRef<HTMLDivElement | null>(null)
   const field = React.useRef<HTMLInputElement | null>(null)

@@ -405,7 +405,6 @@ export function Masthead({ label = 'Hanzo AI', home = '/', origin = '', here = '
   const act = person ? (tree.open ?? OPEN) : (tree.try ?? TRY)
   const place: Place = { origin, here }
   const homeHref = at(home, origin, here)
-  const { t } = useI18n()
 
   const [open, setOpen] = useState<string | null>(null)
   const [sheet, setSheet] = useState(false)
@@ -790,8 +789,6 @@ function Sheet({
   const { t } = useI18n()
   const first = useRef<GuiElement>(null)
   const [section, setSection] = useState<string | null>(null)
-  const { t } = useI18n()
-  useEffect(() => node(first.current)?.focus(), [])
   return (
     <View
       id="sheet"

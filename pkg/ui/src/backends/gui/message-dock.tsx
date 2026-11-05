@@ -1,9 +1,5 @@
 'use client'
 
-import { Button } from './button'
-import { touch } from './gesture'
-import { XStack, YStack, SizableText, createStyledContext, styled } from '@hanzo/gui'
-import type { ComponentProps } from 'react'
 /**
  * MessageDock — a fixed stack of dismissable status cards, anchored to a
  * corner or edge of the viewport (`top`, `bottom`, `top-end`, `bottom-end`, and
@@ -20,7 +16,10 @@ import type { ComponentProps } from 'react'
  */
 import { createStyledContext, SizableText, styled, XStack, YStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
+import type { ComponentProps } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
+import { Button } from './button'
+import { touch } from './gesture'
 import { ink } from './ink'
 import { slot } from './slot'
 
@@ -148,7 +147,6 @@ function MessageDock({ messages, onClose, position = 'bottom-end', ...props }: M
   return (
     <DockFrame {...slot('message-dock')} data-position={resolved} anchor={resolved} {...props}>
       {messages.map((message) => {
-        const { t } = useI18n()
         const type = message.type ?? 'default'
         return (
           <CardFrame key={message.id} {...slot('message-dock-card')} data-message-id={message.id} data-type={type} type={type} role="status">

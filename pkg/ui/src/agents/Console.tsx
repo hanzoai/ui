@@ -1,7 +1,5 @@
 'use client'
 
-import { ceiling, count, HEAD, type Level, type Line, OPEN, opened, resolve, STEP } from './log'
-import { useEffect, useRef, useState, type ComponentProps, type KeyboardEvent, type ReactNode } from 'react'
 /**
  * Console — the dock under the work: what the run and the page just said.
  *

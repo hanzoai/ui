@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useRef, useState, type ComponentProps } from 'react'
 /**
  * Feedback — copy a reply, and say whether it was good.
  *
@@ -36,7 +35,6 @@ export function Feedback({ text, verdict, onVerdict, ...rest }: FeedbackProps) {
   const { t } = useI18n()
   const [held, setHeld] = useState<Verdict>(null)
   const [copied, setCopied] = useState(false)
-  const { t } = useI18n()
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
   useEffect(
     () => () => {

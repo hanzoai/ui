@@ -55,7 +55,7 @@ export type GanttProps = Omit<import('react').ComponentProps<typeof GanttFrame>,
 }
 
 export function Gantt({ tasks = [], ...props }: GanttProps) {
-  const { t } = useI18n()
+  const { t, format } = useI18n()
   return (
     <GanttFrame {...slot('gantt')} {...props}>
       {tasks.length === 0 ? (
@@ -85,11 +85,11 @@ export function Gantt({ tasks = [], ...props }: GanttProps) {
                   <BarFrame {...slot('gantt-bar')} width={`${progress}%`} />
                 </TrackFrame>
                 <XStack justify="space-between">
-                  {ink(when(task.start), SizableText, {
+                  {ink(format.date(task.start), SizableText, {
                     size: '$1',
                     color: '$quiet',
                   })}
-                  {ink(when(task.end), SizableText, {
+                  {ink(format.date(task.end), SizableText, {
                     size: '$1',
                     color: '$quiet',
                   })}

@@ -1,7 +1,5 @@
 'use client'
 
-import type { ReactNode } from 'react'
-import { SizableText, styled, XStack, YStack } from '@hanzo/gui'
 /**
  * Safari — a browser-window frame for showing a screenshot, a demo or a live
  * preview inside: a traffic-light title bar, back/forward controls, a URL
@@ -26,6 +24,7 @@ import {
   Star,
 } from '@hanzogui/lucide-icons-2'
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
+import type { ReactNode } from 'react'
 import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'

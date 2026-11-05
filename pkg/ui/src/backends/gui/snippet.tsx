@@ -186,7 +186,6 @@ export function Snippet({ code, language = 'text', filename, variant, theme, siz
   const lineHeight = fontSize * 1.5
   const [copied, setCopied] = useState(false)
   const [isExpanded, setIsExpanded] = useState(!expandable)
-  const { t } = useI18n()
   const lines = useMemo(() => rows(code, startLineNumber), [code, startLineNumber])
 
   const copy = useCallback(async () => {

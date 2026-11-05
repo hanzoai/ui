@@ -1,7 +1,5 @@
 'use client'
 
-import { SizableText, XStack, createStyledContext, styled } from '@hanzo/gui'
-import * as React from 'react'
 /**
  * Pill — a small rounded label for a status, a tag or a filter, with an
  * optional remove control. `variant`, `onRemove`, `pillVariants`, and the
@@ -95,7 +93,6 @@ export type PillProps = React.ComponentProps<'span'> & {
 export function Pill({ className, variant = 'default', onRemove, children, ...props }: PillProps) {
   const { t } = useI18n()
   const resolved = variant ?? 'default'
-  const { t } = useI18n()
   return (
     <PillFrame {...slot('pill')} data-variant={resolved} variant={resolved} {...sx([pillVariants({ variant: resolved }), className].filter(Boolean).join(' '))} {...(props as React.ComponentProps<typeof PillFrame>)}>
       {ink(children, PillText)}

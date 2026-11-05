@@ -39,7 +39,6 @@ export const TerminalViewer: React.FC<TerminalViewerProps> = ({ tabs, activeTabI
   const [commandInput, setCommandInput] = useState('')
   const [copied, setCopied] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
-  const { t } = useI18n()
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const activeTab = tabs.find((t) => t.id === activeTabId) || tabs[0]

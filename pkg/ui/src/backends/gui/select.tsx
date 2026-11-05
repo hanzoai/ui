@@ -291,16 +291,6 @@ const INSET = 4
  * strength whatever the closed select shows. A disabled one (a "Choose" hint)
  * keeps the inherited ink.
  */
-const inked = (children: ReactNode): ReactNode =>
-  Children.map(children, (c) => {
-    if (!isValidElement<ComponentProps<"option">>(c) || c.type !== "option" || c.props.disabled) return c
-    const { children: words, ...own } = c.props
-    return (
-      <Text render={<option {...own} />} color="$color">
-        {words}
-      </Text>
-    )
-  })
 
 /** The select's own attributes, which reach the `<select>`; its `<option>`s are its children. */
 type Native = Pick<

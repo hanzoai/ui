@@ -1,6 +1,5 @@
 'use client'
 
-import { useRef, type ComponentProps, type KeyboardEvent, type ReactNode } from 'react'
 /**
  * FileTabs — the open files, one tab each, over the editor.
  *
@@ -58,7 +57,6 @@ export interface FileTabsProps extends Col {
 export function FileTabs({ files, value, onSelect, onClose, onChange, empty, ...rest }: FileTabsProps) {
   const { t } = useI18n()
   const tabs = useRef<(HTMLElement | null)[]>([])
-  const { t } = useI18n()
   const shown = files.find((f) => f.path === value) ?? files[0]
 
   if (!shown) {

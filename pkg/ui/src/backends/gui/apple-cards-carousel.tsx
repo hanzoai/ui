@@ -103,7 +103,6 @@ export function AppleCardsCarousel({ cards, autoPlay = false, autoPlayInterval =
   React.useEffect(() => setCalm(still()), [])
 
   const count = cards.length
-  const { t } = useI18n()
 
   const step = React.useCallback((by: number) => setIndex((i) => (count ? (i + by + count) % count : 0)), [count])
   const goNext = React.useCallback(() => step(1), [step])
