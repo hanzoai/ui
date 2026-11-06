@@ -5,7 +5,7 @@ import { Anchor, Text, View, XStack, YStack, type AnchorProps, type GuiElement }
 import { HanzoCommandPalette, HanzoIdentity, HanzoWordmark, MARKS, type GlyphName, type HanzoCommandEntry } from '@hanzogui/shell'
 import { useI18n, type Say } from '@hanzo/i18n/react'
 
-import { ACCOUNT, at, COMPANY, DOCS, leaves, LOGIN, MENUS, OPEN, TRY, type Link, type Menu } from './nav'
+import { ACCOUNT, at, COMPANY, COMPANY_MENU_EVENT, DOCS, leaves, LOGIN, MENUS, OPEN, TRY, type Link, type Menu } from './nav'
 
 /**
  * hanzo.ai's header, for every site that wears it: one nav tree (`./nav`) for
@@ -425,6 +425,33 @@ export function Masthead({ label = 'Hanzo AI', home = '/', origin = '', here = '
     pinned.current = false
     setOpen(null)
   }, [])
+
+  // The oversized footer signature is another doorway to the SAME Company menu.
+  // The DOM event is cancellable: Footer only intercepts its home link if this
+  // masthead is mounted and handles the request. Mobile opens the regular sheet.
+  useEffect(() => {
+    if (bare) return
+    const fromFooter = (event: Event) => {
+      event.preventDefault()
+      clearTimeout(timer.current)
+      if (window.matchMedia('(min-width: 1024px)').matches) {
+        setSheet(false)
+        if (open === company.id && pinned.current) {
+          close()
+        } else {
+          pinned.current = true
+          setOpen(company.id)
+          // Present the real Company links to keyboard users, not a duplicate menu.
+          requestAnimationFrame(() => document.querySelector<HTMLElement>(`#menu-${company.id} a`)?.focus())
+        }
+      } else {
+        close()
+        setSheet(true)
+      }
+    }
+    window.addEventListener(COMPANY_MENU_EVENT, fromFooter)
+    return () => window.removeEventListener(COMPANY_MENU_EVENT, fromFooter)
+  }, [bare, company.id, open, close])
 
   // The bar is clear over the top of the page and takes the glass once the page
   // moves under it.
