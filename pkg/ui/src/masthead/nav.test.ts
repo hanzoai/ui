@@ -62,9 +62,16 @@ describe('here — a row that names the page\'s own host', () => {
   })
 })
 
-describe('footer — the six doors and the legal line', () => {
-  it('reads the header\'s menus, in order, then Company', () => {
-    expect(FOOT.map((m) => m.label)).toEqual(['Research', 'Products', 'Solutions', 'Developers', 'Learn', 'Company'])
+describe('footer — full Hanzo map and legal line', () => {
+  it('covers the actual Hanzo stack in twelve footer columns', () => {
+    expect(FOOT.map((m) => m.label)).toEqual([
+      'Models', 'Apps', 'Creative AI', 'API Platform', 'Cloud', 'Developers',
+      'Solutions', 'Teams', 'Industries', 'Programs', 'Learn', 'Company',
+    ])
+    const all = FOOT.flatMap((m) => m.groups.flatMap((g) => g.links))
+    for (const name of ['Enso', 'Kai', 'Zen', 'Hanzo App', 'Hanzo Dev', 'Hanzo Design', 'Hanzo Bot', 'Hanzo Team', 'Gateway', 'MCP', 'API keys', 'Hanzo University']) {
+      expect(all.some((l) => l.label === name), name).toBe(true)
+    }
   })
   it('prefixes paths for another host and marks only what leaves', () => {
     const { columns, legal } = footer(HANZO, AGENCY)
