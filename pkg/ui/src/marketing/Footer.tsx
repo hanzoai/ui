@@ -1,13 +1,14 @@
 'use client'
 
-import type { ReactNode } from 'react'
+import { useState, type MouseEvent, type ReactNode } from 'react'
 import { Anchor, XStack, YStack } from '@hanzo/gui'
-import { MARK_PATHS, MARK_VIEWBOX } from '@hanzo/logo'
+import { MARK_BLOCKS, MARK_SHADE, MARK_VIEWBOX } from '@hanzo/logo'
 import { useI18n } from '@hanzo/i18n/react'
 
 import { slot } from '../backends/gui/slot'
 import { PrivacyChoicesIcon } from '../consent/icon'
 import { Line } from './type'
+import { COMPANY_MENU_EVENT } from '../masthead/nav'
 
 /**
  * The enormous closing signature. "hanzo" is real, selectable Zen typography,
@@ -17,29 +18,46 @@ import { Line } from './type'
  * This is opt-in: the marketing Footer is also used by non-Hanzo brands.
  */
 export function HanzoFooterSignature() {
+  const [highlight, setHighlight] = useState(false)
+  const ink = highlight
+    ? 'color-mix(in srgb, var(--foreground) 35%, transparent)'
+    : 'color-mix(in srgb, var(--foreground) 18%, transparent)'
+  const openCompanyMenu = (e: MouseEvent<HTMLAnchorElement>) => {
+    // Modifier-click retains the usual home link behavior.
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+    // Masthead cancels the event when it opens the real Company menu.
+    // On a page with no Masthead, the link still goes to hanzo.ai.
+    if (!window.dispatchEvent(new Event(COMPANY_MENU_EVENT, { cancelable: true }))) {
+      e.preventDefault()
+    }
+  }
   return (
     <a
       href="https://hanzo.ai"
-      aria-label="Hanzo AI home"
+      aria-label="Open Hanzo company menu"
+      onClick={openCompanyMenu}
+      onPointerEnter={() => setHighlight(true)}
+      onPointerLeave={() => setHighlight(false)}
+      onFocus={() => setHighlight(true)}
+      onBlur={() => setHighlight(false)}
       style={{
         display: 'flex',
         alignItems: 'flex-end',
         justifyContent: 'flex-start',
-        gap: 'clamp(4px, 0.6vw, 14px)',
+        gap: 'clamp(6px, 0.8vw, 18px)',
         width: '100%',
         maxWidth: '100%',
         overflow: 'hidden',
         textDecoration: 'none',
         fontFamily: 'var(--font-sans, ui-sans-serif, system-ui, sans-serif)',
-        fontSize: 'clamp(68px, 28vw, 520px)',
+        fontSize: 'clamp(68px, 26vw, 480px)',
         fontWeight: 750,
         letterSpacing: '-0.085em',
-        lineHeight: 0.8,
-        color: 'var(--foreground)',
-        opacity: 0.18,
+        lineHeight: 0.88,
+        paddingBottom: '0.02em',
       }}
     >
-      <span aria-hidden="true" style={{ whiteSpace: 'nowrap' }}>
+      <span aria-hidden="true" style={{ color: ink, transition: 'color 160ms ease', whiteSpace: 'nowrap', paddingRight: '0.085em' }}>
         hanzo
       </span>
       <span
@@ -49,8 +67,10 @@ export function HanzoFooterSignature() {
           flex: '0 0 auto',
           width: '0.225em',
           height: '0.225em',
-          marginBottom: '0.035em',
+          marginBottom: '0.065em',
           lineHeight: 0,
+          color: ink,
+          transition: 'color 160ms ease',
           letterSpacing: 'normal',
         }}
       >
@@ -62,8 +82,11 @@ export function HanzoFooterSignature() {
           focusable="false"
           aria-hidden="true"
           style={{ display: 'block', width: '100%', height: '100%' }}
-          dangerouslySetInnerHTML={{ __html: MARK_PATHS }}
-        />
+        >
+          {/* All seven canonical paths use the exact wordmark grey. */}
+          {MARK_BLOCKS.map((d) => <path key={d} d={d} />)}
+          {MARK_SHADE.map((d) => <path key={d} d={d} />)}
+        </svg>
       </span>
     </a>
   )

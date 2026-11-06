@@ -23,6 +23,8 @@ import { phrase } from '@hanzo/i18n'
 
 /** hanzo.ai itself: the origin a site on another host passes. */
 export const HANZO = 'https://hanzo.ai'
+/** Shared interaction used by the footer signature to open the header's Company menu. */
+export const COMPANY_MENU_EVENT = 'hanzo:toggle-company-menu'
 /** The one API console: keys, usage and billing. */
 export const CONSOLE = 'https://platform.hanzo.ai'
 /** Where a reader gets the one key everything is billed against. */
@@ -576,6 +578,11 @@ export const FOOT_LINE: Link[] = [
   { label: phrase('Your Privacy Choices'), href: '#choices' },
 ]
 
+/** Public social destinations confirmed by Hanzo. Host can add other verified links. */
+export const FOOT_SOCIAL: Link[] = [
+  { label: 'Telegram', href: 'https://t.me/hanzoai' },
+]
+
 /** A footer door, as `@hanzo/ui/marketing`'s `Footer` takes it. */
 export interface Door {
   label: string
@@ -597,7 +604,7 @@ export interface Column {
  * `here`, as `at` reads it): each column a title that opens its subject, then
  * its rows. Whether a row is marked ↗ is read from the tree, as the bar reads it.
  */
-export function footer(origin = '', here = '', foot: readonly Menu[] = FOOT, line: readonly Link[] = FOOT_LINE): { columns: Column[]; legal: Door[] } {
+export function footer(origin = '', here = '', foot: readonly Menu[] = FOOT, line: readonly Link[] = FOOT_LINE): { columns: Column[]; legal: Door[]; social: Door[] } {
   const door = (l: Link): Door => ({ label: l.label, href: at(l.href, origin, here), out: leaves(l.href, here) })
   return {
     columns: foot.map((m) => ({
@@ -608,5 +615,6 @@ export function footer(origin = '', here = '', foot: readonly Menu[] = FOOT, lin
       links: m.groups.flatMap((g) => g.links).map(door),
     })),
     legal: line.map(door),
+    social: FOOT_SOCIAL.map(door),
   }
 }
