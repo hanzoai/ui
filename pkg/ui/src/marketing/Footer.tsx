@@ -35,9 +35,11 @@ export function HanzoFooterSignature() {
         fontWeight: 750,
         letterSpacing: '-0.085em',
         lineHeight: 0.8,
+        color: 'var(--foreground)',
+        opacity: 0.18,
       }}
     >
-      <span aria-hidden="true" style={{ color: 'color-mix(in srgb, var(--foreground) 18%, transparent)', whiteSpace: 'nowrap' }}>
+      <span aria-hidden="true" style={{ whiteSpace: 'nowrap' }}>
         hanzo
       </span>
       <span
@@ -48,7 +50,7 @@ export function HanzoFooterSignature() {
           width: '0.225em',
           height: '0.225em',
           marginBottom: '0.035em',
-          color: 'color-mix(in srgb, var(--foreground) 18%, transparent)',
+          lineHeight: 0,
           letterSpacing: 'normal',
         }}
       >
@@ -59,6 +61,7 @@ export function HanzoFooterSignature() {
           fill="currentColor"
           focusable="false"
           aria-hidden="true"
+          style={{ display: 'block', width: '100%', height: '100%' }}
           dangerouslySetInnerHTML={{ __html: MARK_PATHS }}
         />
       </span>
