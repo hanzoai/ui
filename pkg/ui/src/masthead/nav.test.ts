@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { AGENCY, COMPANY, FOOT, FOOT_LINE, HANZO, LOGIN, MENUS, OPEN, TRY, at, away, footer, leaves } from './nav'
+import { AGENCY, COMPANY, FOOT, FOOT_LINE, FOOT_SOCIAL, HANZO, LOGIN, MENUS, OPEN, TRY, at, away, footer, leaves } from './nav'
 
 /**
  * The tree `Masthead` draws on hanzo.ai and on every site that wears its
@@ -81,5 +81,8 @@ describe('footer — full Hanzo map and legal line', () => {
     expect(solutions.links.find((l) => l.label === 'Agency')).toEqual({ label: 'Agency', href: '/', out: false })
     expect(columns.find((c) => c.title === 'Developers')!.out).toBe(true)
     expect(legal.map((l) => l.label)).toEqual(FOOT_LINE.map((l) => l.label))
+    const { social } = footer(HANZO)
+    expect(social).toEqual([{ label: 'Telegram', href: 'https://t.me/hanzoai', out: true }])
+    expect(FOOT_SOCIAL[0].href).toBe('https://t.me/hanzoai')
   })
 })
