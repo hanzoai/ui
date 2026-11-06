@@ -19,9 +19,6 @@ import { COMPANY_MENU_EVENT } from '../masthead/nav'
  */
 export function HanzoFooterSignature() {
   const [highlight, setHighlight] = useState(false)
-  const ink = highlight
-    ? 'color-mix(in srgb, var(--foreground) 35%, transparent)'
-    : 'color-mix(in srgb, var(--foreground) 18%, transparent)'
   const openCompanyMenu = (e: MouseEvent<HTMLAnchorElement>) => {
     // Modifier-click retains the usual home link behavior.
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
@@ -44,7 +41,7 @@ export function HanzoFooterSignature() {
         display: 'flex',
         alignItems: 'flex-end',
         justifyContent: 'flex-start',
-        gap: 'clamp(6px, 0.8vw, 18px)',
+        gap: 'clamp(4px, 0.5vw, 10px)',
         width: '100%',
         maxWidth: '100%',
         overflow: 'hidden',
@@ -55,9 +52,12 @@ export function HanzoFooterSignature() {
         letterSpacing: '-0.085em',
         lineHeight: 0.88,
         paddingBottom: '0.02em',
+        color: 'var(--foreground)',
+        opacity: highlight ? 0.35 : 0.18,
+        transition: 'opacity 160ms ease',
       }}
     >
-      <span aria-hidden="true" style={{ color: ink, transition: 'color 160ms ease', whiteSpace: 'nowrap', paddingRight: '0.085em' }}>
+      <span aria-hidden="true" style={{ whiteSpace: 'nowrap', paddingRight: '0.04em' }}>
         hanzo
       </span>
       <span
@@ -67,10 +67,8 @@ export function HanzoFooterSignature() {
           flex: '0 0 auto',
           width: '0.225em',
           height: '0.225em',
-          marginBottom: '0.065em',
+          marginBottom: '0.082em',
           lineHeight: 0,
-          color: ink,
-          transition: 'color 160ms ease',
           letterSpacing: 'normal',
         }}
       >
