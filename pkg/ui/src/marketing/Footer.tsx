@@ -42,16 +42,21 @@ export function HanzoFooterSignature() {
         alignItems: 'flex-end',
         justifyContent: 'flex-start',
         gap: 'clamp(4px, 0.5vw, 10px)',
-        width: '100%',
+        width: 'max-content',
         maxWidth: '100%',
-        overflow: 'hidden',
+        // Glyphs must stay visible: the site may position this lockup at the
+        // bottom edge of a long footer and clipped ascenders look like a bar.
+        overflow: 'visible',
         textDecoration: 'none',
         fontFamily: 'var(--font-sans, ui-sans-serif, system-ui, sans-serif)',
-        fontSize: 'clamp(68px, 26vw, 480px)',
+        // Preserve the giant signature without allowing 5 letters + H to
+        // overrun narrow viewports or small split-screen browser windows.
+        fontSize: 'clamp(64px, 23vw, 410px)',
         fontWeight: 750,
         letterSpacing: '-0.085em',
-        lineHeight: 0.88,
-        paddingBottom: '0.02em',
+        lineHeight: 1,
+        paddingTop: '0.025em',
+        paddingBottom: '0.04em',
         color: 'var(--foreground)',
         opacity: highlight ? 0.35 : 0.18,
         transition: 'opacity 160ms ease',
