@@ -1,33 +1,70 @@
 'use client'
 
 import type { ReactNode } from 'react'
-/**
- * Footer — the foot of a marketing page: a place to ask, the doors, the legal line.
- *
- * It shares the header's edges: the same side gutter, so the wordmark and the
- * columns stand under the header's wordmark and nav with nothing between them
- * to shift. `gutter` is that one number; a site passes the value its header uses.
- *
- *   ask       a slot above the columns for the site's composer, so it lives
- *             where a page ends and never floats over one.
- *   columns   titled lists of links; a title may itself be a link.
- *   wordmark  a slot at the far end of the last row; the copyright and the
- *             legal line share that row's start.
- *   after     a slot under that row, inside the footer, for the site's own
- *             last line (its social links).
- *
- * It stands on the panel's ground ($panel), a step off the page's, so the page
- * visibly ends where the footer begins.
- *
- * Plain anchors. A link that leaves the site opens a new tab and is marked with
- * ↗ by the host's own data (`out`).
- */
 import { Anchor, XStack, YStack } from '@hanzo/gui'
+import { MARK_PATHS, MARK_VIEWBOX } from '@hanzo/logo'
 import { useI18n } from '@hanzo/i18n/react'
 
 import { slot } from '../backends/gui/slot'
 import { PrivacyChoicesIcon } from '../consent/icon'
 import { Line } from './type'
+
+/**
+ * The enormous closing signature. "hanzo" is real, selectable Zen typography,
+ * NOT a raster or outlined wordmark. Its punctuation is the canonical seven-path
+ * H from @hanzo/logo, held in the same baseline-relative flex lockup.
+ *
+ * This is opt-in: the marketing Footer is also used by non-Hanzo brands.
+ */
+export function HanzoFooterSignature() {
+  return (
+    <a
+      href="https://hanzo.ai"
+      aria-label="Hanzo AI home"
+      style={{
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'flex-start',
+        gap: 'clamp(4px, 0.6vw, 14px)',
+        width: '100%',
+        maxWidth: '100%',
+        overflow: 'hidden',
+        textDecoration: 'none',
+        fontFamily: 'var(--font-sans, ui-sans-serif, system-ui, sans-serif)',
+        fontSize: 'clamp(68px, 28vw, 520px)',
+        fontWeight: 750,
+        letterSpacing: '-0.085em',
+        lineHeight: 0.8,
+      }}
+    >
+      <span aria-hidden="true" style={{ color: 'color-mix(in srgb, var(--foreground) 18%, transparent)', whiteSpace: 'nowrap' }}>
+        hanzo
+      </span>
+      <span
+        aria-hidden="true"
+        style={{
+          display: 'block',
+          flex: '0 0 auto',
+          width: '0.225em',
+          height: '0.225em',
+          marginBottom: '0.035em',
+          color: 'color-mix(in srgb, var(--foreground) 18%, transparent)',
+          letterSpacing: 'normal',
+        }}
+      >
+        <svg
+          width="100%"
+          height="100%"
+          viewBox={MARK_VIEWBOX}
+          fill="currentColor"
+          focusable="false"
+          aria-hidden="true"
+          dangerouslySetInnerHTML={{ __html: MARK_PATHS }}
+        />
+      </span>
+    </a>
+  )
+}
 
 export type FooterLink = { label: string; href: string; out?: boolean }
 export type FooterColumn = {
@@ -41,133 +78,133 @@ export type FooterColumn = {
 export type FooterProps = {
   columns: readonly FooterColumn[]
   ask?: ReactNode
+  /** Backwards-compatible closing lockup slot; render this AFTER legal/social. */
   wordmark?: ReactNode
+  /** Explicit closing signature; takes precedence over wordmark when supplied. */
+  signature?: ReactNode
   copyright?: ReactNode
   legal?: readonly FooterLink[]
-  /** The side gutter, shared with the header. */
+  /** Social destinations are separate from legal links. Only pass verified URLs. */
+  social?: readonly FooterLink[]
   gutter?: string
-  /** A last line inside the footer, under the legal row: the site's social links. */
+  /** Legacy custom social content. Rendered above legal and signature. */
   after?: ReactNode
 }
 
-const open = (out?: boolean) => (out ? { target: '_blank', rel: 'noreferrer' } : {})
-
-/**
- * A legal link's box. @hanzo/design gives every link a 24px floor, taller than
- * the line, and a plain block anchor sets its words at the top of it, 3px above
- * the box's middle; the copyright beside them, and the consent sheet's link
- * (`#choices`, its words beside California's privacy options icon), sat on the
- * middle. Every link centres its words in the floor, so the row shares one
- * centre line.
- */
+const open = (out?: boolean) => (out ? { target: '_blank', rel: 'noopener noreferrer' } : {})
 const LEGAL = { display: 'inline-flex', alignItems: 'center', gap: 6 } as const
 
-/** A door. Its words are the host's, drawn through `t`: a label marked where it is written (masthead's `footer()`) says the reader's language, any other its own. */
 const Door = ({ link }: { link: FooterLink }) => {
   const { t } = useI18n()
   return (
-  <Anchor
-    href={link.href}
-    {...open(link.out)}
-    color="$soft"
-    fontSize="$2"
-    lineHeight="$2"
-    py={3}
-    textDecorationLine="none"
-    hoverStyle={{ color: '$ink' }}
-  >
-    {t(link.label)}
-    {link.out ? ' ↗' : ''}
-  </Anchor>
+    <Anchor
+      href={link.href}
+      {...open(link.out)}
+      color="$soft"
+      fontSize="$2"
+      lineHeight="$2"
+      py={3}
+      textDecorationLine="none"
+      hoverStyle={{ color: '$ink' }}
+    >
+      {t(link.label)}
+      {link.out ? ' ↗' : ''}
+    </Anchor>
   )
 }
 
-const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp(20px, 4vw, 72px)', after }: FooterProps) => {
+const Footer = ({
+  columns, ask, wordmark, signature, copyright, legal = [], social = [],
+  gutter = 'clamp(20px, 4vw, 72px)', after,
+}: FooterProps) => {
   const { t } = useI18n()
+  const closing = signature ?? wordmark
   return (
-  <YStack
-    {...slot('footer')}
-    render="footer"
-    width="100%"
-    bg="$panel"
-    borderTopWidth={1}
-    borderColor="$edge"
-    pt={48}
-    pb={32}
-    gap={40}
-    style={{ paddingInline: gutter }}
-  >
-    {ask ? (
-      <YStack width="100%" items="center">
-        {ask}
-      </YStack>
-    ) : null}
-    {/* A phone stacks the columns, each one a heading over its links two
-        across, so no short column stands beside a long one; from 640px they
-        sit side by side, each its own list. */}
-    <XStack flexWrap="wrap" gap={28} $sm={{ gap: 40 }}>
-      {columns.map((c) => (
-        <YStack key={c.id} render="nav" aria-label={t(c.title)} flexBasis="100%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
-          {c.href ? (
-            <Anchor
-              href={c.href}
-              {...open(c.out)}
-              color="$ink"
-              fontSize="$2"
-              lineHeight="$2"
-              fontWeight="600"
-              pb={10}
-              textDecorationLine="none"
-            >
-              {t(c.title)}
-              {c.out ? ' ↗' : ''}
-            </Anchor>
-          ) : (
-            <Line size="sm" weight="600" pb={10}>
-              {t(c.title)}
-            </Line>
-          )}
-          <YStack display="grid" gridTemplateColumns="repeat(2, minmax(0, 1fr))" columnGap={16} $sm={{ display: 'flex', flexDirection: 'column' }}>
-            {c.links.map((l) => (
-              <Door key={l.label} link={l} />
-            ))}
+    <YStack
+      {...slot('footer')}
+      render="footer"
+      width="100%"
+      bg="$panel"
+      borderTopWidth={1}
+      borderColor="$edge"
+      pt={48}
+      pb={16}
+      gap={28}
+      style={{ paddingInline: gutter }}
+    >
+      {ask ? <YStack width="100%" items="center">{ask}</YStack> : null}
+
+      {/* Compact, even columns. No phantom Featured pane and no stretched links. */}
+      <XStack
+        display="grid"
+        width="100%"
+        gridTemplateColumns="repeat(2, minmax(0, 1fr))"
+        columnGap={22}
+        rowGap={32}
+        $sm={{ gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}
+        $lg={{ gridTemplateColumns: 'repeat(6, minmax(0, 1fr))' }}
+      >
+        {columns.map((c) => (
+          <YStack key={c.id} render="nav" aria-label={t(c.title)} minW={0} gap={2}>
+            {c.href ? (
+              <Anchor
+                href={c.href}
+                {...open(c.out)}
+                color="$ink"
+                fontSize="$2"
+                lineHeight="$2"
+                fontWeight="600"
+                pb={10}
+                textDecorationLine="none"
+              >
+                {t(c.title)}{c.out ? ' ↗' : ''}
+              </Anchor>
+            ) : (
+              <Line size="sm" weight="600" pb={10}>{t(c.title)}</Line>
+            )}
+            <YStack>
+              {c.links.map((l) => <Door key={l.href + l.label} link={l} />)}
+            </YStack>
           </YStack>
-        </YStack>
-      ))}
-    </XStack>
-    <XStack flexWrap="wrap" items="center" gap={20} rowGap={12}>
-      {copyright ? (
-        <Line size="sm" tone="dim">
-          {copyright}
-        </Line>
-      ) : null}
-      {/* Shrinks to the row, so its links wrap on a phone instead of standing past the window. */}
-      <XStack render="nav" aria-label={t('Terms & Policies')} flexWrap="wrap" gap={16} rowGap={8} shrink={1} minW={0}>
-        {legal.map((l) => (
-          <Anchor
-            key={l.label}
-            href={l.href}
-            {...open(l.out)}
-            color="$faint"
-            fontSize="$2"
-            lineHeight="$2"
-            textDecorationLine="none"
-            hoverStyle={{ color: '$ink' }}
-            {...LEGAL}
-          >
-            {l.href.endsWith('#choices') ? <PrivacyChoicesIcon /> : null}
-            {t(l.label)}
-          </Anchor>
         ))}
       </XStack>
-      {wordmark ? (
-        <XStack marginInlineStart="auto" items="center" shrink={1} minW={0} maxW="100%">
-          {wordmark}
-        </XStack>
+
+      {(social.length > 0 || after) ? (
+        <YStack borderTopWidth={1} borderColor="$edge" pt={18} gap={8}>
+          {social.length > 0 ? (
+            <XStack render="nav" aria-label={t('Social links')} flexWrap="wrap" gap={18} rowGap={6}>
+              {social.map((l) => <Door key={l.href + l.label} link={l} />)}
+            </XStack>
+          ) : null}
+          {after}
+        </YStack>
       ) : null}
-    </XStack>
-    {after}
-  </YStack>
+
+      <XStack borderTopWidth={1} borderColor="$edge" pt={16} flexWrap="wrap" items="center" gap={16} rowGap={8}>
+        {copyright ? <Line size="sm" tone="dim">{copyright}</Line> : null}
+        <XStack render="nav" aria-label={t('Terms & Policies')} flexWrap="wrap" gap={16} rowGap={8} shrink={1} minW={0}>
+          {legal.map((l) => (
+            <Anchor
+              key={l.href + l.label}
+              href={l.href}
+              {...open(l.out)}
+              color="$faint"
+              fontSize="$2"
+              lineHeight="$2"
+              textDecorationLine="none"
+              hoverStyle={{ color: '$ink' }}
+              {...LEGAL}
+            >
+              {l.href.endsWith('#choices') ? <PrivacyChoicesIcon /> : null}
+              {t(l.label)}
+            </Anchor>
+          ))}
+        </XStack>
+      </XStack>
+
+      {/* The LAST line: the Hanzo text + H period, or a host's own brand lockup. */}
+      {closing ? <YStack width="100%" pt={4} minW={0}>{closing}</YStack> : null}
+    </YStack>
   )
 }
 
