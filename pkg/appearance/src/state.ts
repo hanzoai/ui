@@ -11,9 +11,9 @@
  * preview all need to apply a preference, and only one of them has hooks.
  */
 import { vars, type Arabic, type Scheme } from '@hanzo/design'
-import { resolve, type Layers, type Preference, type Scope } from './scope'
+import { resolve, type Contrast, type Layers, type Preference, type Scope } from './scope'
 
-export type { Arabic, Preference, Scheme }
+export type { Arabic, Contrast, Preference, Scheme }
 
 const COLOR_RE = /^(#[0-9a-fA-F]{3,8}|(?:rgb|hsl|oklch|oklab|lab|lch)a?\(\s*[-+0-9.%deg\s,/]+\)|[a-zA-Z]{3,20})$/
 
@@ -28,9 +28,56 @@ function groundInk(c: string): string {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.179 ? '#09090b' : '#fafafa'
 }
 
+const CONTRAST_PRESETS: Record<Contrast, Record<string, string>> = {
+  oled: {
+    '--background': '#000000',
+    '--pane-floor': '#000000',
+    '--pane-fill': '#050505',
+    '--card': '#080808',
+    '--popover': '#080808',
+    '--muted': '#0d0d0d',
+    '--secondary': '#161616',
+    '--secondary-hover': '#1f1f1f',
+    '--composer-fill': '#111111',
+    '--composer-ground': '#111111',
+  },
+  soft: {
+    '--background': '#181818',
+    '--pane-floor': '#131312',
+    '--pane-fill': '#1c1c1b',
+    '--card': '#20201f',
+    '--popover': '#20201f',
+    '--muted': '#252523',
+    '--secondary': '#2e2e2c',
+    '--secondary-hover': '#383835',
+    '--composer-fill': '#272725',
+    '--composer-ground': '#272725',
+  },
+  high: {
+    '--background': '#000000',
+    '--foreground': '#ffffff',
+    '--pane-floor': '#000000',
+    '--pane-fill': '#060606',
+    '--card': '#0a0a0a',
+    '--card-foreground': '#ffffff',
+    '--popover': '#0a0a0a',
+    '--popover-foreground': '#ffffff',
+    '--muted': '#121212',
+    '--secondary': '#1f1f1f',
+    '--secondary-hover': '#292929',
+    '--secondary-foreground': '#ffffff',
+    '--composer-fill': '#141414',
+    '--composer-ground': '#141414',
+    '--border': 'rgb(255 255 255 / .18)',
+  },
+}
+
 function varsFor(p: Preference): Record<string, string> {
   const out: Record<string, string> = { ...vars(p) }
-  if (p.background !== undefined && !out['--background']) {
+  if (p.contrast && p.contrast in CONTRAST_PRESETS) {
+    Object.assign(out, CONTRAST_PRESETS[p.contrast])
+  }
+  if (p.background !== undefined) {
     const bg = p.background.trim()
     if (COLOR_RE.test(bg)) {
       const fg = groundInk(bg)
@@ -38,6 +85,8 @@ function varsFor(p: Preference): Record<string, string> {
       const mixTarget = isLight ? 'black' : 'white'
       out['--background'] = bg
       out['--foreground'] = fg
+      out['--pane-floor'] = `color-mix(in oklch, ${bg} 95%, black)`
+      out['--pane-fill'] = `color-mix(in oklch, ${bg} 97%, ${mixTarget})`
       out['--card'] = `color-mix(in oklch, ${bg} 95%, ${mixTarget})`
       out['--card-foreground'] = fg
       out['--popover'] = `color-mix(in oklch, ${bg} 92%, ${mixTarget})`
@@ -46,6 +95,19 @@ function varsFor(p: Preference): Record<string, string> {
       out['--secondary'] = `color-mix(in oklch, ${bg} 90%, ${mixTarget})`
       out['--secondary-hover'] = `color-mix(in oklch, ${bg} 84%, ${mixTarget})`
       out['--secondary-foreground'] = fg
+      out['--composer-fill'] = `color-mix(in oklch, ${bg} 90%, ${mixTarget})`
+      out['--composer-ground'] = `color-mix(in oklch, ${bg} 90%, ${mixTarget})`
+    }
+  }
+  if (p.highlight !== undefined) {
+    const hl = p.highlight.trim()
+    if (COLOR_RE.test(hl)) {
+      out['--highlight'] = hl
+      out['--selection'] = `color-mix(in oklab, ${hl} 28%, transparent)`
+      out['--ring'] = `color-mix(in oklab, ${hl} 55%, transparent)`
+      out['--ring-halo'] = `color-mix(in oklab, ${hl} 18%, transparent)`
+      out['--border-focus'] = `color-mix(in oklab, ${hl} 50%, transparent)`
+      out['--border-selected'] = `color-mix(in oklab, ${hl} 65%, transparent)`
     }
   }
   return out
@@ -139,7 +201,9 @@ export function read({ scope = 'everywhere', org, store = safeStore() }: At = {}
       ...(p.arabic === 'default' || COMPANIONS.includes(p.arabic as never) ? { arabic: p.arabic } : {}),
       ...(p.width === 'narrow' || p.width === 'default' || p.width === 'wide' ? { width: p.width } : {}),
       ...(typeof p.accent === 'string' ? { accent: p.accent } : {}),
+      ...(typeof p.highlight === 'string' ? { highlight: p.highlight } : {}),
       ...(typeof p.background === 'string' ? { background: p.background } : {}),
+      ...(p.contrast === 'oled' || p.contrast === 'soft' || p.contrast === 'high' ? { contrast: p.contrast } : {}),
       ...(p.theme === 'system' || p.theme === 'light' || p.theme === 'dark' ? { theme: p.theme } : {}),
       ...(p.radius === 'sharp' || p.radius === 'default' || p.radius === 'round' ? { radius: p.radius } : {}),
     }
@@ -279,7 +343,20 @@ function follow(theme: Scheme | undefined): void {
  * reset. A name design emits is a name this removes, by construction.
  */
 export const KNOBS: readonly string[] = Object.keys(
-  varsFor({ type: 1, ratio: 1, modular: 1.25, density: 'compact', font: 'serif', arabic: 'sans', width: 'wide', accent: '#000', background: '#000', radius: 'round' }),
+  varsFor({
+    type: 1,
+    ratio: 1,
+    modular: 1.25,
+    density: 'compact',
+    font: 'serif',
+    arabic: 'sans',
+    width: 'wide',
+    accent: '#000',
+    highlight: '#000',
+    background: '#000',
+    contrast: 'high',
+    radius: 'round',
+  }),
 )
 
 /**

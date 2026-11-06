@@ -32,7 +32,7 @@ import { TYPE_MIN, TYPE_MAX } from '@hanzo/design'
 
 import type { Corner, Face, Measure, Scheme } from '@hanzo/design'
 
-import { COMPANIONS, DEFAULT, apply, companion, current, read, write, type Preference } from './state'
+import { COMPANIONS, DEFAULT, apply, companion, current, read, write, type Contrast, type Preference } from './state'
 import { layerFor, type Layer, type Resolved, type Scope } from './scope'
 
 /** The named type steps. Inside design's clamp, so none can be refused. */
@@ -149,13 +149,33 @@ export function useScheme(): 'light' | 'dark' {
 
 /** A monochrome brand spends exactly one hue, so these are starting points, not
  *  a palette — and "Default" is first because most people want the brand. */
-const ACCENTS: Array<{ label: string; value?: string }> = [
+export const ACCENTS: Array<{ label: string; value?: string }> = [
   { label: 'Default' },
   { label: 'Olive', value: '#808000' },
   { label: 'Blue', value: '#3b82f6' },
   { label: 'Violet', value: '#8b5cf6' },
+  { label: 'Emerald', value: '#10b981' },
   { label: 'Rose', value: '#f43f5e' },
   { label: 'Amber', value: '#f59e0b' },
+]
+
+/** Highlight presets for selection wash, focus rings, and active borders (`--highlight`, `--selection`, `--ring`). */
+export const HIGHLIGHTS: Array<{ label: string; value?: string }> = [
+  { label: 'Default' },
+  { label: 'Violet', value: '#8b5cf6' },
+  { label: 'Blue', value: '#3b82f6' },
+  { label: 'Cyan', value: '#06b6d4' },
+  { label: 'Emerald', value: '#10b981' },
+  { label: 'Amber', value: '#f59e0b' },
+  { label: 'Rose', value: '#f43f5e' },
+]
+
+/** Relative surface darkness / contrast presets (`contrast`). */
+export const CONTRASTS: Array<{ label: string; title: string; value?: Contrast }> = [
+  { label: 'Deep', title: 'Deep black — rich dark ground with warm-neutral contrast (default)' },
+  { label: 'OLED', title: 'Pure black — #000000 floor for OLED displays', value: 'oled' },
+  { label: 'Soft', title: 'Soft charcoal — warmer, lifted dark surfaces', value: 'soft' },
+  { label: 'High', title: 'High contrast — pure black ground, bright ink and stronger hairlines', value: 'high' },
 ]
 
 /** Ground presets for the canvas and elevated surfaces (`--background`). */
@@ -256,7 +276,9 @@ export function useAppearance({
       // Clearing the accent must REMOVE the key, not store undefined, or a round
       // trip through JSON hands back a key whose value is the string "undefined".
       if ('accent' in patch && patch.accent === undefined) delete next.accent
+      if ('highlight' in patch && patch.highlight === undefined) delete next.highlight
       if ('background' in patch && patch.background === undefined) delete next.background
+      if ('contrast' in patch && patch.contrast === undefined) delete next.contrast
       write(next, { scope, org })
       refresh()
       // The device has it either way; the account is what makes it travel. A
@@ -427,8 +449,8 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
   const touched =
     type !== 1 || ratio !== 1 || pref.modular !== undefined || (pref.density ?? 'default') !== 'default' ||
     (pref.font ?? 'default') !== 'default' || (pref.arabic ?? 'default') !== 'default' ||
-    (pref.width ?? 'default') !== 'default' || !!pref.accent || !!pref.background ||
-    !!pref.theme || (pref.radius ?? 'default') !== 'default'
+    (pref.width ?? 'default') !== 'default' || !!pref.accent || !!pref.highlight || !!pref.background ||
+    !!pref.contrast || !!pref.theme || (pref.radius ?? 'default') !== 'default'
   const here = orgName || org
 
   return (
@@ -453,6 +475,14 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
         {SCHEMES.map((t) => (
           <Choice key={t.value} on={(pref.theme ?? ground) === t.value} onSelect={() => set({ theme: t.value })}>
             {t.label}
+          </Choice>
+        ))}
+      </Row>
+
+      <Row label="Contrast" by={from.contrast} scope={scope} org={here}>
+        {CONTRASTS.map((c) => (
+          <Choice key={c.label} on={pref.contrast === c.value} onSelect={() => set({ contrast: c.value })} title={c.title}>
+            {c.label}
           </Choice>
         ))}
       </Row>
@@ -559,6 +589,27 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
             aria-label="Custom accent color"
             value={pref.accent && /^#[0-9a-fA-F]{6}$/.test(pref.accent) ? pref.accent : '#3b82f6'}
             onChange={(e) => set({ accent: e.target.value })}
+            style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%', border: 0, padding: 0 }}
+          />
+        </label>
+      </Row>
+
+      <Row label="Highlight" by={from.highlight} scope={scope} org={here}>
+        {HIGHLIGHTS.map((h) => (
+          <Choice key={h.label} on={pref.highlight === h.value} onSelect={() => set({ highlight: h.value })} title={`Highlight: ${h.label}`}>
+            <span style={S.swatch(h.value)} />
+          </Choice>
+        ))}
+        <label
+          title="Custom highlight color"
+          style={{ ...choice(Boolean(pref.highlight && !HIGHLIGHTS.some((h) => h.value === pref.highlight))), position: 'relative', overflow: 'hidden' }}
+        >
+          <span style={{ ...S.swatch(pref.highlight), border: '1px solid rgb(255 255 255 / .25)' }} />
+          <input
+            type="color"
+            aria-label="Custom highlight color"
+            value={pref.highlight && /^#[0-9a-fA-F]{6}$/.test(pref.highlight) ? pref.highlight : '#8b5cf6'}
+            onChange={(e) => set({ highlight: e.target.value })}
             style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%', border: 0, padding: 0 }}
           />
         </label>

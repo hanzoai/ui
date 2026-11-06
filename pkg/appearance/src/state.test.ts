@@ -136,8 +136,24 @@ describe('apply', () => {
     expect(root.style.getPropertyValue('--background')).toBe('#090d16')
     expect(root.style.getPropertyValue('--foreground')).toBe('#fafafa')
     expect(root.style.getPropertyValue('--card')).toContain('#090d16')
+    expect(root.style.getPropertyValue('--pane-floor')).toContain('#090d16')
+    expect(root.style.getPropertyValue('--composer-fill')).toContain('#090d16')
     apply({}, root)
-    for (const name of ['--background', '--foreground', '--card', '--popover', '--muted', '--secondary']) {
+    for (const name of ['--background', '--foreground', '--card', '--popover', '--muted', '--secondary', '--pane-floor', '--composer-fill']) {
+      expect([name, root.style.getPropertyValue(name)]).toEqual([name, ''])
+    }
+  })
+
+  it('contrast and highlight set relative darkness and selection/ring variables and clear cleanly', () => {
+    apply({ contrast: 'oled', highlight: '#8b5cf6' }, root)
+    expect(root.style.getPropertyValue('--background')).toBe('#000000')
+    expect(root.style.getPropertyValue('--pane-floor')).toBe('#000000')
+    expect(root.style.getPropertyValue('--composer-fill')).toBe('#111111')
+    expect(root.style.getPropertyValue('--highlight')).toBe('#8b5cf6')
+    expect(root.style.getPropertyValue('--selection')).toContain('#8b5cf6')
+    expect(root.style.getPropertyValue('--ring')).toContain('#8b5cf6')
+    apply({}, root)
+    for (const name of ['--background', '--pane-floor', '--composer-fill', '--highlight', '--selection', '--ring']) {
       expect([name, root.style.getPropertyValue(name)]).toEqual([name, ''])
     }
   })

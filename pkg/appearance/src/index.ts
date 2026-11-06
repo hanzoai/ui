@@ -27,8 +27,8 @@
  *   <Appearance org="acme" orgName="Acme" orgPref={fromServer} />
  *   current({ install, org: fromServer, orgId: 'acme' })   // outside React
  */
-export { Appearance, useAppearance, useScheme, TYPE_STEPS, RATIO_STEPS, ARABICS, BACKGROUNDS } from './Appearance'
-export { read, readLayers, write, apply, paint, dark, current, style, bootScript, keyFor, companion, COMPANIONS, DEFAULT, KEY, PAINTED, type Arabic, type Preference, type Scheme, type At } from './state'
+export { Appearance, useAppearance, useScheme, TYPE_STEPS, RATIO_STEPS, ARABICS, ACCENTS, HIGHLIGHTS, CONTRASTS, BACKGROUNDS } from './Appearance'
+export { read, readLayers, write, apply, paint, dark, current, style, bootScript, keyFor, companion, COMPANIONS, DEFAULT, KEY, PAINTED, type Arabic, type Contrast, type Preference, type Scheme, type At } from './state'
 export { get, load, put, save, type Account } from './account'
 export { COMPOSING, composing, loadComposing, readComposing, saveComposing, useComposing, writeComposing, type Composing } from './composing'
 export { resolve, layerFor, isInherited, LAYERS, type Layer, type Layers, type Resolved, type Scope } from './scope'

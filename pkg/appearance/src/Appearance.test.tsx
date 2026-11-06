@@ -116,6 +116,18 @@ describe('the panel', () => {
     expect(prop('--radius-scale')).toBe('1.5')
   })
 
+  it('contrast and highlight controls update relative darkness and selection tokens', () => {
+    render(<Appearance />)
+    press('OLED')
+    expect(stored(KEY)).toEqual({ contrast: 'oled' })
+    expect(prop('--pane-floor')).toBe('#000000')
+    expect(prop('--composer-fill')).toBe('#111111')
+    press('Highlight: Violet')
+    expect(stored(KEY)).toEqual({ contrast: 'oled', highlight: '#8b5cf6' })
+    expect(prop('--highlight')).toBe('#8b5cf6')
+    expect(prop('--selection')).toContain('#8b5cf6')
+  })
+
   it('writes to the everywhere layer by default, and puts it on the document', () => {
     render(<Appearance />)
     press('L')

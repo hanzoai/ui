@@ -27,13 +27,26 @@
  */
 import type { Preference as DesignPreference } from '@hanzo/design'
 
+export type Contrast = 'oled' | 'soft' | 'high'
+
 export type Preference = DesignPreference & {
   /**
    * The page ground (`--background`). Validated as a CSS `<color>`; emits the
    * derived surface hierarchy (`--background`, `--card`, `--popover`, `--muted`,
-   * `--secondary`) and contrasting `--foreground` when set.
+   * `--secondary`, `--pane-floor`, `--pane-fill`, `--composer-fill`) and
+   * contrasting `--foreground` when set.
    */
   background?: string
+  /**
+   * Relative surface darkness / contrast preset (`'oled'`, `'soft'`, `'high'`).
+   * Unset means the default deep-black dark palette.
+   */
+  contrast?: Contrast
+  /**
+   * Highlight colour for text selection, focus rings, and active/selected borders
+   * (`--highlight`, `--selection`, `--ring`, `--border-focus`, `--border-selected`).
+   */
+  highlight?: string
 }
 
 /** Where a preference came from — narrowest last, which is also precedence. */
@@ -47,7 +60,7 @@ export type Layer = (typeof LAYERS)[number]
 export type Layers = Partial<Record<Layer, Preference>>
 
 /** Which axes exist. Adding one here is all it takes to make it resolvable. */
-const AXES = ['type', 'ratio', 'modular', 'density', 'font', 'arabic', 'width', 'accent', 'background', 'theme', 'radius'] as const
+const AXES = ['type', 'ratio', 'modular', 'density', 'font', 'arabic', 'width', 'accent', 'highlight', 'background', 'contrast', 'theme', 'radius'] as const
 
 /**
  * What a person actually sees — and, for each axis, who decided it.
