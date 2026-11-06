@@ -72,7 +72,7 @@ export function HanzoFooterSignature() {
           flex: '0 0 auto',
           width: '0.225em',
           height: '0.225em',
-          marginBottom: '0.082em',
+          marginBottom: '0.14em',
           lineHeight: 0,
           letterSpacing: 'normal',
         }}
