@@ -48,7 +48,7 @@ export function HanzoFooterSignature() {
           width: '0.225em',
           height: '0.225em',
           marginBottom: '0.035em',
-          color: 'var(--foreground)',
+          color: 'color-mix(in srgb, var(--foreground) 18%, transparent)',
           letterSpacing: 'normal',
         }}
       >
