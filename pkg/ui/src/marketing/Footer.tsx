@@ -1,13 +1,14 @@
 'use client'
 
-import type { ReactNode } from 'react'
+import type { MouseEvent, ReactNode } from 'react'
 import { Anchor, XStack, YStack } from '@hanzo/gui'
-import { MARK_PATHS, MARK_VIEWBOX } from '@hanzo/logo'
+import { MARK_BLOCKS, MARK_SHADE, MARK_VIEWBOX } from '@hanzo/logo'
 import { useI18n } from '@hanzo/i18n/react'
 
 import { slot } from '../backends/gui/slot'
 import { PrivacyChoicesIcon } from '../consent/icon'
 import { Line } from './type'
+import { COMPANY_MENU_EVENT } from '../masthead/nav'
 
 /**
  * The enormous closing signature. "hanzo" is real, selectable Zen typography,
@@ -17,10 +18,20 @@ import { Line } from './type'
  * This is opt-in: the marketing Footer is also used by non-Hanzo brands.
  */
 export function HanzoFooterSignature() {
+  const openCompanyMenu = (e: MouseEvent<HTMLAnchorElement>) => {
+    // Modifier-click retains the usual home link behavior.
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+    // Masthead cancels the event when it opens the real Company menu.
+    // On a page with no Masthead, the link still goes to hanzo.ai.
+    if (!window.dispatchEvent(new Event(COMPANY_MENU_EVENT, { cancelable: true }))) {
+      e.preventDefault()
+    }
+  }
   return (
     <a
       href="https://hanzo.ai"
-      aria-label="Hanzo AI home"
+      aria-label="Open Hanzo company menu"
+      onClick={openCompanyMenu}
       style={{
         display: 'flex',
         alignItems: 'flex-end',
@@ -59,8 +70,11 @@ export function HanzoFooterSignature() {
           fill="currentColor"
           focusable="false"
           aria-hidden="true"
-          dangerouslySetInnerHTML={{ __html: MARK_PATHS }}
-        />
+        >
+          {/* All seven canonical paths use the exact wordmark grey. */}
+          {MARK_BLOCKS.map((d) => <path key={d} d={d} />)}
+          {MARK_SHADE.map((d) => <path key={d} d={d} />)}
+        </svg>
       </span>
     </a>
   )
