@@ -37,7 +37,7 @@ afterEach(() => {
 
 const models = parseModels([
   { id: 'enso-auto', owned_by: 'hanzo', family: 'enso', class: 'ours', name: 'Enso' },
-  { id: 'zen6', owned_by: 'zenlm', family: 'zen', class: 'free', name: 'Zen 6' },
+  { id: 'zen6', owned_by: 'zenlm', family: 'zen', class: 'ours', name: 'Zen 6' },
   { id: 'kai', owned_by: 'hanzo', family: 'kai', class: 'ours', name: 'Kai' },
 ])
 
@@ -76,14 +76,16 @@ describe('useFamilies', () => {
     expect(pick).toHaveBeenLastCalledWith('enso-auto')
   })
 
-  it('asks for the plan where a free plan does not grant the family', () => {
+  it('on the Free plan picks Auto alone, and asks for the plan for every family', () => {
     const pick = vi.fn()
     const onUpgrade = vi.fn()
     mount(<Row m={mind({ free: true, pick })} onUpgrade={onUpgrade} />)
     act(() => chips()[1]!.click())
     expect(onUpgrade).toHaveBeenCalledWith('kai')
-    expect(pick).not.toHaveBeenCalled()
     act(() => chips()[2]!.click())
-    expect(pick).toHaveBeenCalledWith('zen6')
+    expect(onUpgrade).toHaveBeenLastCalledWith('zen6')
+    expect(pick).not.toHaveBeenCalled()
+    act(() => chips()[0]!.click())
+    expect(pick).toHaveBeenCalledWith('enso-auto')
   })
 })

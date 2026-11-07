@@ -34,7 +34,7 @@ export interface Mind {
   error: string | null
   /** A list shown from before, because this read failed. */
   note: string
-  /** The plan grants only the free lane: anything else is an upgrade, never a pick. */
+  /** The plan grants only Enso Auto: anything else is an upgrade, never a pick. */
   free: boolean
   pick: (id: string) => void
 }
@@ -231,7 +231,7 @@ export function Tune({
             loading={mind.loading}
             error={mind.error}
             limits={limits}
-            granted={(id) => grants(mind.free, id, mind.models)}
+            granted={(id) => grants(mind.free, id)}
             {...(onUpgrade ? { onUpgrade } : {})}
           />
         </XStack>
