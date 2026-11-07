@@ -14,14 +14,19 @@ export interface Way<T extends string = string> {
   off?: boolean
 }
 
-export type Effort = 'auto' | 'low' | 'medium' | 'high' | 'xhigh' | 'max'
+export type Effort = 'auto' | 'instant' | 'low' | 'medium' | 'high' | 'max'
 
-/** Every effort, in order, in English and marked (`phrase`): `reasoning_effort` on a completion; a surface offers the ones it can send. */
+/**
+ * Every effort, in order, in English and marked (`phrase`): `reasoning_effort`
+ * on a completion; a surface offers the ones it can send. Auto, the default,
+ * leaves the depth to the router; the rest are the ladder. The wire also takes
+ * `xhigh` as Max and `minimal`/`none` as Instant, which no list repeats.
+ */
 export const EFFORTS: readonly Way<Effort>[] = [
   { id: 'auto', label: phrase('Auto'), note: phrase('Adaptive reasoning based on task complexity') },
+  { id: 'instant', label: phrase('Instant'), note: phrase('Answers right away, without thinking') },
   { id: 'low', label: phrase('Low'), note: phrase('A quick pass with minimal thinking') },
   { id: 'medium', label: phrase('Medium'), note: phrase('Thinks before answering') },
   { id: 'high', label: phrase('High'), note: phrase('Deep reasoning for complex problems') },
-  { id: 'xhigh', label: phrase('XHigh'), note: phrase('Extended multi-step reasoning for hard tasks') },
   { id: 'max', label: phrase('Max'), note: phrase('Maximum compute and exhaustive verification') },
 ]
