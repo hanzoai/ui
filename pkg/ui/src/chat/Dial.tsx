@@ -30,10 +30,10 @@ const STEP = 22
 /** The pip: the level in a letter or two, so the icon says where it stands without a word. */
 const PIP: Record<string, string> = {
   auto: 'A',
+  instant: 'I',
   low: 'L',
   medium: 'M',
   high: 'H',
-  xhigh: 'XH',
   max: 'MAX',
 }
 

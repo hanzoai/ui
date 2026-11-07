@@ -41,7 +41,7 @@ function Page() {
     onChange: setDraft,
     onSend: () => setDraft(''),
     plus: { upload: () => {}, memory: { on: true, set: () => {} } },
-    effort: { value: effort, set: setEffort, items: dev ? EFFORTS.filter((e) => ['auto', 'high', 'xhigh', 'max'].includes(e.id)) : EFFORTS },
+    effort: { value: effort, set: setEffort, items: dev ? EFFORTS.filter((e) => ['auto', 'high', 'max'].includes(e.id)) : EFFORTS },
     voice: IDLE,
     talk: IDLE,
     forgetful,
