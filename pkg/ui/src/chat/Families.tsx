@@ -35,13 +35,13 @@ export function useFamilies(mind: Mind, onUpgrade?: (model: string) => void): Ch
     for (const id of NAMED) {
       const own = sortModels(mind.models.filter((m) => m.family === id && m.id !== ENSO && m.access !== 'research'))
       if (!own.length) continue
-      const first = own.find((m) => grants(mind.free, m.id, mind.models)) ?? own[0]!
+      const first = own.find((m) => grants(mind.free, m.id)) ?? own[0]!
       const label = FAMILIES.find((f) => f.id === id)?.label ?? id
       rows.push({
         id,
         label,
         on: own.some((m) => m.id === mind.model),
-        onPress: () => (grants(mind.free, first.id, mind.models) ? mind.pick(first.id) : onUpgrade?.(first.id)),
+        onPress: () => (grants(mind.free, first.id) ? mind.pick(first.id) : onUpgrade?.(first.id)),
       })
     }
     return rows

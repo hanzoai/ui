@@ -415,10 +415,9 @@ export function sortModels(models: readonly ModelCatalogEntry[], by: ModelSort =
 /** The house router: what a conversation is answered by until a model is picked. */
 export const ENSO = 'enso-auto'
 
-/** Whether a plan may send a model: on a free plan, the catalog's free class alone. */
-export function grants(free: boolean, model: string, models: readonly ModelCatalogEntry[]): boolean {
-  if (!free) return true
-  return models.find((m) => m.id === model)?.class === 'free'
+/** Whether a plan may send a model: on the Free plan, Enso Auto alone (commerce's `allowedModels`). */
+export function grants(free: boolean, model: string): boolean {
+  return !free || model === ENSO
 }
 
 /**
