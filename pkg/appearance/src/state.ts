@@ -31,34 +31,48 @@ function groundInk(c: string): string {
 const CONTRAST_PRESETS: Record<Contrast, Record<string, string>> = {
   oled: {
     '--background': '#000000',
+    '--foreground': '#fafafa',
+    '--text-primary': '#fafafa',
     '--pane-floor': '#000000',
     '--pane-fill': '#050505',
     '--card': '#080808',
+    '--surface-card': '#080808',
+    '--card-foreground': '#fafafa',
     '--popover': '#080808',
+    '--popover-foreground': '#fafafa',
     '--muted': '#0d0d0d',
     '--secondary': '#161616',
     '--secondary-hover': '#1f1f1f',
+    '--secondary-foreground': '#fafafa',
     '--composer-fill': '#111111',
     '--composer-ground': '#111111',
   },
   soft: {
     '--background': '#181818',
+    '--foreground': '#fafafa',
+    '--text-primary': '#fafafa',
     '--pane-floor': '#131312',
     '--pane-fill': '#1c1c1b',
     '--card': '#20201f',
+    '--surface-card': '#20201f',
+    '--card-foreground': '#fafafa',
     '--popover': '#20201f',
+    '--popover-foreground': '#fafafa',
     '--muted': '#252523',
     '--secondary': '#2e2e2c',
     '--secondary-hover': '#383835',
+    '--secondary-foreground': '#fafafa',
     '--composer-fill': '#272725',
     '--composer-ground': '#272725',
   },
   high: {
     '--background': '#000000',
     '--foreground': '#ffffff',
+    '--text-primary': '#ffffff',
     '--pane-floor': '#000000',
     '--pane-fill': '#060606',
     '--card': '#0a0a0a',
+    '--surface-card': '#0a0a0a',
     '--card-foreground': '#ffffff',
     '--popover': '#0a0a0a',
     '--popover-foreground': '#ffffff',
@@ -70,6 +84,19 @@ const CONTRAST_PRESETS: Record<Contrast, Record<string, string>> = {
     '--composer-ground': '#141414',
     '--border': 'rgb(255 255 255 / .18)',
   },
+}
+
+function effectiveScheme(p: Preference): Scheme | undefined {
+  if (p.background !== undefined) {
+    const bg = p.background.trim()
+    if (COLOR_RE.test(bg)) {
+      return groundInk(bg) === '#09090b' ? 'light' : 'dark'
+    }
+  }
+  if (p.contrast && p.contrast in CONTRAST_PRESETS) {
+    return 'dark'
+  }
+  return p.theme
 }
 
 function varsFor(p: Preference): Record<string, string> {
@@ -85,9 +112,11 @@ function varsFor(p: Preference): Record<string, string> {
       const mixTarget = isLight ? 'black' : 'white'
       out['--background'] = bg
       out['--foreground'] = fg
+      out['--text-primary'] = fg
       out['--pane-floor'] = `color-mix(in oklch, ${bg} 95%, black)`
       out['--pane-fill'] = `color-mix(in oklch, ${bg} 97%, ${mixTarget})`
       out['--card'] = `color-mix(in oklch, ${bg} 95%, ${mixTarget})`
+      out['--surface-card'] = `color-mix(in oklch, ${bg} 95%, ${mixTarget})`
       out['--card-foreground'] = fg
       out['--popover'] = `color-mix(in oklch, ${bg} 92%, ${mixTarget})`
       out['--popover-foreground'] = fg
@@ -226,11 +255,17 @@ export function readLayers({ org, store = safeStore() }: At = {}): Layers {
   }
 }
 
+/** Dispatched on `window` whenever `write()` updates the browser's appearance store. */
+export const CHANGE = 'hanzo:appearance'
+
 /** Persist, and answer whether it stuck — a caller that promised "saved" needs to
  *  know, the same rule the console's save indicator lives by. */
 export function write(p: Preference, { scope = 'everywhere', org, store = safeStore() }: At = {}): boolean {
   try {
     store?.setItem(keyFor(scope, org), JSON.stringify(p))
+    if (typeof window !== 'undefined' && typeof Event === 'function') {
+      window.dispatchEvent(new Event(CHANGE))
+    }
     return !!store
   } catch {
     return false
@@ -270,11 +305,12 @@ export function apply(
     if (v) root.style.setProperty(name, v)
     else root.style.removeProperty(name)
   }
-  paint(p.theme, root)
+  const scheme = effectiveScheme(p)
+  paint(scheme, root)
   if (isBrowser() && root === document.documentElement) {
-    follow(p.theme)
+    follow(scheme)
     try {
-      store?.setItem(PAINTED, JSON.stringify({ vars: next, ...(p.theme ? { theme: p.theme } : {}) }))
+      store?.setItem(PAINTED, JSON.stringify({ vars: next, ...(scheme ? { theme: scheme } : {}) }))
     } catch {
       // A full or blocked store costs the next load its head start, nothing else.
     }

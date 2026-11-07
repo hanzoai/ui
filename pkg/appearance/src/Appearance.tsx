@@ -32,7 +32,7 @@ import { TYPE_MIN, TYPE_MAX } from '@hanzo/design'
 
 import type { Corner, Face, Measure, Scheme } from '@hanzo/design'
 
-import { COMPANIONS, DEFAULT, apply, companion, current, read, write, type Contrast, type Preference } from './state'
+import { CHANGE, COMPANIONS, DEFAULT, apply, companion, current, read, write, type Contrast, type Preference } from './state'
 import { layerFor, type Layer, type Resolved, type Scope } from './scope'
 
 /** The named type steps. Inside design's clamp, so none can be refused. */
@@ -239,6 +239,17 @@ export function useAppearance({
     refresh()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org, install, orgPref])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const onChange = () => refresh()
+    window.addEventListener(CHANGE, onChange)
+    window.addEventListener('storage', onChange)
+    return () => {
+      window.removeEventListener(CHANGE, onChange)
+      window.removeEventListener('storage', onChange)
+    }
+  }, [refresh])
 
   // What the PERSON chose, which the device may not have seen: they set it on
   // another origin, or on another machine. It lands in the device layer because
@@ -473,7 +484,17 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
           honest answer and never a guess at the install's intent. */}
       <Row label="Theme" by={from.theme} scope={scope} org={here}>
         {SCHEMES.map((t) => (
-          <Choice key={t.value} on={(pref.theme ?? ground) === t.value} onSelect={() => set({ theme: t.value })}>
+          <Choice
+            key={t.value}
+            on={(pref.theme ?? ground) === t.value}
+            onSelect={() =>
+              set({
+                theme: t.value,
+                ...(pref.background !== undefined ? { background: undefined } : {}),
+                ...(pref.contrast !== undefined ? { contrast: undefined } : {}),
+              })
+            }
+          >
             {t.label}
           </Choice>
         ))}
@@ -481,7 +502,17 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
 
       <Row label="Contrast" by={from.contrast} scope={scope} org={here}>
         {CONTRASTS.map((c) => (
-          <Choice key={c.label} on={pref.contrast === c.value} onSelect={() => set({ contrast: c.value })} title={c.title}>
+          <Choice
+            key={c.label}
+            on={pref.contrast === c.value}
+            onSelect={() =>
+              set({
+                contrast: c.value,
+                ...(c.value && pref.background !== undefined ? { background: undefined } : {}),
+              })
+            }
+            title={c.title}
+          >
             {c.label}
           </Choice>
         ))}
