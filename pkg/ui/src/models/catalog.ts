@@ -38,6 +38,8 @@ export type Capability =
   | 'decision'
   | 'tools'
   | 'reasoning'
+  /** Text out, and tools and reasoning not ruled out: what an agent runs on. */
+  | 'agent'
 
 /** List price, USD per 1M tokens, each side absent when the gateway lists none. */
 export interface ModelPricing {
@@ -69,7 +71,9 @@ export interface ModelCatalogEntry {
   /** What it answers with: "text", "image", "audio", "transcript", "embeddings", "rerank", "decision". */
   outputs?: string[]
   supports_vision?: boolean
+  /** Absent: not stated, and read as able. `false`: it cannot. */
   supports_tools?: boolean
+  /** Absent: not stated, and read as able. `false`: it cannot. */
   supports_reasoning?: boolean
   pricing?: ModelPricing
   /** The model whose list price this one is sold against (Kai against Jev). */
@@ -96,6 +100,8 @@ const pos = (v: unknown): number | undefined => {
   return n !== undefined && n > 0 ? n : undefined
 }
 const yes = (v: unknown): true | undefined => (v === true ? true : undefined)
+/** A flag as the wire states it: true, false, or absent. False is a statement, never the same as absent. */
+const flag = (v: unknown): boolean | undefined => (typeof v === 'boolean' ? v : undefined)
 const strs = (v: unknown): string[] | undefined => {
   if (!Array.isArray(v)) return undefined
   const out = v.filter((x): x is string => typeof x === 'string' && x.trim() !== '').map((x) => x.toLowerCase())
@@ -152,8 +158,8 @@ export function modelOf(v: unknown): ModelCatalogEntry | null {
   set('inputs', strs(r.inputs))
   set('outputs', strs(r.outputs))
   set('supports_vision', yes(r.supports_vision))
-  set('supports_tools', yes(r.supports_tools))
-  set('supports_reasoning', yes(r.supports_reasoning))
+  set('supports_tools', flag(r.supports_tools))
+  set('supports_reasoning', flag(r.supports_reasoning))
   set('pricing', pricingOf(r.pricing, r.variable))
   set('compare_at', compareOf(r.compare_at ?? r.compareAt))
   return m
@@ -260,6 +266,19 @@ export function makerName(maker: string): string {
   )
 }
 
+/**
+ * The maker whose models are the comparison behind Hanzo's benchmarks (Jev), not
+ * models to chat or run an agent on. Read from `owned_by`, never from an id's
+ * spelling. Their rows stay in the catalog, where Kai's saving is read against
+ * them; no picker lists them.
+ */
+export const COMPARISON = 'typesafe'
+
+export const isComparison = (m: Pick<ModelCatalogEntry, 'owned_by'>): boolean => makerOf(m) === COMPARISON
+
+/** A model someone else made and sells, paid from the prepaid balance on any plan; Hanzo's own follow the plan. */
+export const thirdParty = (m: Pick<ModelCatalogEntry, 'class'>): boolean => m.class === 'premium'
+
 /** The name a model is shown by: the catalog's name, else its id. */
 export function modelName(m: Pick<ModelCatalogEntry, 'id' | 'name'>): string {
   return m.name ?? m.id
@@ -304,6 +323,45 @@ export function groupModels(models: readonly ModelCatalogEntry[]): ModelGroup[] 
 
 const has = (list: string[] | undefined, ...want: string[]) => !!list && want.some((w) => list.includes(w))
 
+/** Why a model cannot run an agent. */
+export type AgentGap = 'comparison' | 'decision' | 'image' | 'video' | 'voice' | 'embeddings' | 'rerank' | 'text' | 'tools' | 'reasoning'
+
+/** The reasons, in a few words; draw them through `t`. */
+export const AGENT_GAPS: Record<AgentGap, string> = {
+  comparison: phrase('Comparison model'),
+  decision: phrase('Decision model'),
+  image: phrase('Image model'),
+  video: phrase('Video model'),
+  voice: phrase('Voice model'),
+  embeddings: phrase('Embeddings model'),
+  rerank: phrase('Rerank model'),
+  text: phrase('Not a text model'),
+  tools: phrase('No tool use'),
+  reasoning: phrase('No reasoning'),
+}
+
+/**
+ * Why a model cannot run an agent, or null when it can: it answers in text, is not
+ * a decision model or the comparison vendor's, and does not state that it cannot
+ * call tools or reason. A flag the gateway leaves out is not stated, so Hanzo's own
+ * models, which carry neither, qualify.
+ */
+export function agentGap(m: ModelCatalogEntry): AgentGap | null {
+  if (isComparison(m)) return 'comparison'
+  if (has(m.outputs, 'decision')) return 'decision'
+  if (m.outputs && !has(m.outputs, 'text')) {
+    if (has(m.outputs, 'image')) return 'image'
+    if (has(m.outputs, 'video')) return 'video'
+    if (has(m.outputs, 'speech', 'audio', 'transcript')) return 'voice'
+    if (has(m.outputs, 'embeddings', 'embedding')) return 'embeddings'
+    if (has(m.outputs, 'rerank')) return 'rerank'
+    return 'text'
+  }
+  if (m.supports_tools === false) return 'tools'
+  if (m.supports_reasoning === false) return 'reasoning'
+  return null
+}
+
 /**
  * What a model can do, read from what it publishes. A model that names no
  * outputs is read as a text model, the way the gateway serves it.
@@ -315,6 +373,7 @@ export function capabilitiesOf(m: ModelCatalogEntry): Capability[] {
   const decision = has(m.outputs, 'decision')
   const text = !m.outputs || has(m.outputs, 'text')
   if (text && !embeddings && !rerank && !decision) out.push('chat')
+  if (agentGap(m) === null) out.push('agent')
   if (m.supports_vision || has(m.inputs, 'image')) out.push('vision')
   if (embeddings) out.push('embeddings')
   if (rerank) out.push('rerank')
@@ -345,6 +404,7 @@ export const CAPABILITY_NAMES: Record<Capability, string> = {
   decision: phrase('Decision'),
   tools: phrase('Tools'),
   reasoning: phrase('Reasoning'),
+  agent: phrase('Agent'),
 }
 
 /** What `isPaused` reads of the payer's plan usage (`Limits` from `@hanzo/ui/product/limits`). */

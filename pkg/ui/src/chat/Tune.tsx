@@ -37,6 +37,16 @@ export interface Mind {
   /** The plan grants only Enso Auto: anything else is an upgrade, never a pick. */
   free: boolean
   pick: (id: string) => void
+  /**
+   * Another maker's models are paid from the prepaid balance on any plan, so on Free
+   * they are not an upgrade: with this, one the balance cannot pay for says Top up and
+   * choosing it calls `topUp`. Absent, they follow `free` as before.
+   */
+  funded?: (id: string) => boolean
+  /** The balance, as the billing API states it. */
+  balance?: string
+  /** The way to the top-up, given the model chosen if one was. */
+  topUp?: (id?: string) => void
 }
 
 /** A short list the surface owns, one in force: the effort, or the mode as the pill at the row's end. */
@@ -232,6 +242,10 @@ export function Tune({
             error={mind.error}
             limits={limits}
             granted={(id) => grants(mind.free, id)}
+            scope="chat"
+            funded={mind.funded}
+            balance={mind.balance}
+            onTopUp={mind.topUp}
             {...(onUpgrade ? { onUpgrade } : {})}
           />
         </XStack>

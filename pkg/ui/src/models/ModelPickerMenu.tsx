@@ -19,14 +19,15 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactEle
  */
 import { Anchor, Input as GuiInput, ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
-import { Check, Search } from '@hanzogui/lucide-icons-2'
+import { Check, ChevronDown, ChevronRight, Search } from '@hanzogui/lucide-icons-2'
 
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui/popover'
 import { Sheet, SheetContent, SheetTitle } from '../backends/gui/sheet'
+import { RING } from '../backends/gui/press'
 import { slot } from '../backends/gui/slot'
 import { move, type Move } from '../product/chipSelect.logic'
-import { can, capabilitiesOf, CAPABILITY_NAMES, formatCeiling, formatContext, formatSaving, groupLabel, isPaused, modelName, RESEARCH, savingOf, type Capability, type ModelCatalogEntry, type PauseSource } from './catalog'
-import { modelCount, pickable, pickerRows, restable, revealTop, visibleRange, type PickerRow } from './picker.logic'
+import { AGENT_GAPS, can, capabilitiesOf, CAPABILITY_NAMES, formatCeiling, formatContext, formatPrice, formatSaving, groupLabel, isPaused, modelName, RESEARCH, savingOf, thirdParty, type Capability, type ModelCatalogEntry, type PauseSource } from './catalog'
+import { modelCount, pickable, pickerRows, restable, revealTop, standing, visibleRange, type PickerRow } from './picker.logic'
 
 /** The list's ceiling in a popover, px. */
 const LIST_H = 360
@@ -54,13 +55,21 @@ interface ListProps {
   granted?: (id: string) => boolean
   /** A model the plan does not grant was chosen: the way to the plan that does. */
   onUpgrade?: (id: string) => void
+  /** Whether the prepaid balance can pay for another maker's model. Absent, they follow the plan. */
+  funded?: (id: string) => boolean
+  /** The balance, as the billing API states it. */
+  balance?: string
+  /** The way to the top-up, given the model chosen if one was. */
+  onTopUp?: (id?: string) => void
 }
 
-function List({ models, value, onChange, onClose, scope, limits, loading, error, name, sheet, row, granted, onUpgrade }: ListProps) {
+function List({ models, value, onChange, onClose, scope, limits, loading, error, name, sheet, row, granted, onUpgrade, funded, balance, onTopUp }: ListProps) {
   const { t } = useI18n()
   const [q, setQ] = useState('')
   const [at, setAt] = useState(-1)
   const [top, setTop] = useState(0)
+  // What cannot run an agent is listed shut, and opens when asked.
+  const [opened, setOpened] = useState(false)
   const [viewH, setViewH] = useState(LIST_H)
   const list = useRef<{
     scrollTo?: (o: { y: number; animated?: boolean }) => void
@@ -70,7 +79,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
   const listId = `${id}-list`
   const optionId = (i: number) => `${id}-opt-${i}`
 
-  const rows = useMemo(() => pickerRows(models, q, scope), [models, q, scope])
+  const rows = useMemo(() => pickerRows(models, q, scope, opened), [models, q, scope, opened])
   const total = useMemo(() => modelCount(rows), [rows])
   const research = useMemo(() => RESEARCH.filter((r) => rows.some((x) => x.kind === 'model' && x.model.id === r.id)), [rows])
   // Position among the models alone, for aria-posinset.
@@ -125,12 +134,18 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
 
   const choose = useCallback(
     (r: PickerRow | undefined) => {
-      if (r?.kind !== 'model' || !pickable(r.model)) return
-      if (granted && !granted(r.model.id)) onUpgrade?.(r.model.id)
+      if (r?.kind === 'group') {
+        if (r.fold) setOpened((o) => !o)
+        return
+      }
+      if (r?.kind !== 'model' || !pickable(r.model) || r.gap) return
+      const s = standing(r.model, granted, funded)
+      if (s === 'top-up') onTopUp?.(r.model.id)
+      else if (s === 'upgrade') onUpgrade?.(r.model.id)
       else onChange(r.model.id)
       onClose()
     },
-    [onChange, onClose, granted, onUpgrade]
+    [onChange, onClose, granted, onUpgrade, funded, onTopUp]
   )
 
   const onField = (e: { key?: string; preventDefault?: () => void }) => {
@@ -216,6 +231,36 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
           <YStack height={range.start * row} />
           {shown.map((r, k) => {
             const i = range.start + k
+            if (r.kind === 'group' && r.fold) {
+              return (
+                <XStack
+                  key={r.key}
+                  {...slot('model-picker-fold')}
+                  id={optionId(i)}
+                  role="button"
+                  aria-expanded={r.fold === 'open'}
+                  aria-label={t('Not available for agents')}
+                  height={row}
+                  px="$2"
+                  gap="$2"
+                  items="center"
+                  rounded="$2"
+                  cursor="pointer"
+                  bg={i === at ? '$raised' : 'transparent'}
+                  focusVisibleStyle={RING}
+                  onHoverIn={() => setAt(i)}
+                  onPress={() => choose(r)}
+                >
+                  {r.fold === 'open' ? <ChevronDown size={14} color="$soft" aria-hidden /> : <ChevronRight size={14} color="$soft" aria-hidden />}
+                  <SizableText size="$1" color="$soft" fontWeight="600" numberOfLines={1} flex={1}>
+                    {t('Not available for agents')}
+                  </SizableText>
+                  <SizableText size="$1" color="$soft" fontVariant={['tabular-nums']}>
+                    {r.count}
+                  </SizableText>
+                </XStack>
+              )
+            }
             if (r.kind === 'group') {
               return (
                 <XStack key={r.key} {...slot('model-picker-group')} role="presentation" height={row} px="$2" gap="$2" items="flex-end" pb="$1.5">
@@ -230,10 +275,15 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
             }
             const m = r.model
             const locked = !pickable(m)
-            const paused = !locked && isPaused(m, limits)
-            const upgrade = !locked && granted ? !granted(m.id) : false
+            const gap = r.gap
+            const paused = !locked && !gap && isPaused(m, limits)
+            const s = locked || gap ? 'pick' : standing(m, granted, funded)
+            const upgrade = s === 'upgrade'
+            const topup = s === 'top-up'
             const picked = m.id === value
-            const ctx = formatContext(m.context_window)
+            // Another maker's model shows what it costs by the million tokens, beside its window.
+            const price = thirdParty(m) ? formatPrice(m.pricing?.input_per_million, t) : ''
+            const ctx = [formatContext(m.context_window), price && m.pricing?.input_per_million ? t('{price} / 1M', { price }) : ''].filter(Boolean).join(' · ')
             const title = modelName(m)
             // A model that answers in something other than a conversation says
             // what it does, so an unscoped list is honest about each row.
@@ -249,13 +299,17 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
                 id={optionId(i)}
                 role="option"
                 aria-selected={picked}
-                aria-disabled={locked || undefined}
+                aria-disabled={locked || gap !== undefined || undefined}
                 aria-setsize={total}
                 aria-posinset={position[i]}
                 aria-label={
                   locked
                     ? t('{model}, {group}, research preview', { model: title, group: groupLabel(m) })
-                    : paused
+                    : gap
+                      ? t('{model}, {group}, not available for agents: {why}', { model: title, group: groupLabel(m), why: t(AGENT_GAPS[gap]) })
+                      : topup
+                        ? t('{model}, {group}, top up to use', { model: title, group: groupLabel(m) })
+                        : paused
                       ? t('{model}, {group}, paused', { model: title, group: groupLabel(m) })
                       : t('{model}, {group}', { model: title, group: groupLabel(m) })
                 }
@@ -267,13 +321,13 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
                 gap="$2"
                 items="center"
                 rounded="$2"
-                cursor={locked ? 'default' : 'pointer'}
+                cursor={locked || gap ? 'default' : 'pointer'}
                 bg={i === at ? '$raised' : 'transparent'}
                 onHoverIn={() => setAt(i)}
                 onPress={() => choose(r)}
               >
                 <Check size={14} color="$ink" shrink={0} opacity={picked ? 1 : 0} aria-hidden />
-                <SizableText size={sheet ? '$3' : '$2'} color="$ink" opacity={locked ? 0.5 : 1} numberOfLines={1} flex={1} minW={0}>
+                <SizableText size={sheet ? '$3' : '$2'} color="$ink" opacity={locked || gap ? 0.5 : 1} numberOfLines={1} flex={1} minW={0}>
                   {title}
                 </SizableText>
                 {m.class === 'premium' ? (
@@ -281,12 +335,18 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
                     ✦
                   </SizableText>
                 ) : null}
-                {locked || upgrade || paused || saving || ceiling || kind || ctx ? (
+                {locked || gap || upgrade || topup || paused || saving || ceiling || kind || ctx ? (
                   <SizableText size="$1" color="$soft" shrink={0} maxW="60%" numberOfLines={1} fontVariant={['tabular-nums']}>
                     {locked
                       ? t('Research preview')
-                      : upgrade
-                        ? t('Upgrade')
+                      : gap
+                        ? t(AGENT_GAPS[gap])
+                        : topup
+                          ? ctx
+                            ? `${t('Top up')} · ${ctx}`
+                            : t('Top up')
+                          : upgrade
+                            ? t('Upgrade')
                       : paused
                         ? t('Paused')
                         : saving
@@ -310,6 +370,33 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
           </XStack>
         ) : null}
       </ScrollView>
+
+      {balance !== undefined || onTopUp ? (
+        <XStack {...slot('model-picker-balance')} px="$2" py="$1.5" gap="$2" items="center" justify="space-between">
+          <SizableText size="$1" color="$soft" numberOfLines={1} flex={1} minW={0}>
+            {balance !== undefined ? t('Balance {amount}', { amount: balance }) : ''}
+          </SizableText>
+          {onTopUp ? (
+            <XStack
+              render="button"
+              role="button"
+              aria-label={t('Top up')}
+              cursor="pointer"
+              rounded="$2"
+              px="$1.5"
+              focusVisibleStyle={RING}
+              onPress={() => {
+                onTopUp()
+                onClose()
+              }}
+            >
+              <SizableText size="$1" color="$ink" textDecorationLine="underline">
+                {t('Top up')}
+              </SizableText>
+            </XStack>
+          ) : null}
+        </XStack>
+      ) : null}
 
       {research.length ? (
         <XStack {...slot('model-picker-research')} px="$2" py="$1.5" gap="$1.5" items="center" flexWrap="wrap">

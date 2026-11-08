@@ -9,7 +9,10 @@
  * search over id, name, maker and description. `scope` narrows it to what a
  * surface can run (an embeddings tab offers embedding models).
  *
- * Every listed model can be picked. One the payer's plan has paused, by class
+ * Every listed model can be picked, except those that cannot do the job: an
+ * agent's list (`scope` 'agent') puts what cannot run one, with its few words
+ * of why, in a shut group at the end. The comparison vendor's models (Jev) are
+ * in no list. One the payer's plan has paused, by class
  * or by itself (`limits`), says "Paused" and still picks: the gateway answers
  * it with the policy's refusal or from Enso, and the host shows that. Only a
  * research preview, which nothing can call yet, is listed and never picked.
@@ -67,6 +70,17 @@ export interface ModelPickerProps {
   /** Whether the payer's plan may send a model: one it may not says Upgrade, and choosing it calls `onUpgrade`. */
   granted?: (id: string) => boolean
   onUpgrade?: (id: string) => void
+  /**
+   * Whether the payer's prepaid balance can pay for another maker's model, from the
+   * billing API. Another maker's models are paid from the balance on any plan, so with
+   * this a plan never makes one an upgrade: one not funded says Top up, and choosing it
+   * calls `onTopUp`. Absent, they follow `granted` as before.
+   */
+  funded?: (id: string) => boolean
+  /** The balance as the billing API states it, shown with a Top up link under the list. */
+  balance?: string
+  /** The way to top the balance up; given the model that was chosen, if one was. */
+  onTopUp?: (id?: string) => void
   open?: boolean
   onOpenChange?: (open: boolean) => void
 }
@@ -87,6 +101,9 @@ export function ModelPicker({
   describe,
   granted,
   onUpgrade,
+  funded,
+  balance,
+  onTopUp,
   open: openProp,
   onOpenChange,
 }: ModelPickerProps) {
@@ -217,6 +234,9 @@ export function ModelPicker({
       row={row}
       granted={granted}
       onUpgrade={onUpgrade}
+      funded={funded}
+      balance={balance}
+      onTopUp={onTopUp}
     />
   )
 }

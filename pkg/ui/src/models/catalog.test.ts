@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  agentGap,
   capabilitiesOf,
   formatCeiling,
   formatContext,
   formatPrice,
   formatSaving,
   groupModels,
+  isComparison,
   isPaused,
   makerName,
   makerOf,
@@ -15,6 +17,7 @@ import {
   parseModels,
   savingOf,
   sortModels,
+  thirdParty,
   withResearch,
   type ModelCatalogEntry,
 } from './catalog'
@@ -105,15 +108,15 @@ describe('groups', () => {
 
 describe('what a model can do', () => {
   it('reads it from outputs, inputs and supports_*', () => {
-    expect(capabilitiesOf(byId('anthropic/claude-sonnet-4.5'))).toEqual(['chat', 'vision', 'tools', 'reasoning'])
-    expect(capabilitiesOf(byId('zen5'))).toEqual(['chat'])
+    expect(capabilitiesOf(byId('anthropic/claude-sonnet-4.5'))).toEqual(['chat', 'agent', 'vision', 'tools', 'reasoning'])
+    expect(capabilitiesOf(byId('zen5'))).toEqual(['chat', 'agent'])
     expect(capabilitiesOf(byId('zen-embedding'))).toEqual(['embeddings'])
     expect(capabilitiesOf(byId('kai'))).toEqual(['decision'])
-    expect(capabilitiesOf(byId('google/gemini-3-pro-image'))).toEqual(['chat', 'image'])
+    expect(capabilitiesOf(byId('google/gemini-3-pro-image'))).toEqual(['chat', 'agent', 'image'])
     expect(capabilitiesOf(byId('zen-voice-mini'))).toEqual(['audio'])
     expect(capabilitiesOf(parseModels([{ id: 'zen-scribe', outputs: ['transcript'] }])[0]!)).toEqual(['transcription'])
     // A chat model that takes audio in speaks no audio out.
-    expect(capabilitiesOf(parseModels([{ id: 'g', inputs: ['text', 'audio'], outputs: ['text'] }])[0]!)).toEqual(['chat'])
+    expect(capabilitiesOf(parseModels([{ id: 'g', inputs: ['text', 'audio'], outputs: ['text'] }])[0]!)).toEqual(['chat', 'agent'])
   })
 })
 
@@ -234,5 +237,65 @@ describe('figures', () => {
     expect(formatContext(1_048_576)).toBe('1M')
     expect(formatContext(131_072)).toBe('131K')
     expect(formatContext(undefined)).toBe('')
+  })
+})
+
+/** Entries as api.hanzo.ai/v1/models lists them: first-party ones carry neither capability flag. */
+const REAL = parseModels([
+  { id: 'enso', owned_by: 'hanzo', family: 'enso', class: 'ours', outputs: ['text'] },
+  { id: 'zen5', owned_by: 'zenlm', family: 'zen', class: 'ours', outputs: ['text'] },
+  { id: 'openai/gpt-6-sol', owned_by: 'openai', class: 'premium', outputs: ['text'], supports_tools: true, supports_reasoning: true },
+  { id: 'typesafe/jev-1.13', owned_by: 'typesafe', class: 'premium', outputs: ['decision'] },
+  { id: 'typesafe/jev-router', owned_by: 'typesafe', class: 'premium', outputs: ['text'], supports_tools: true, supports_reasoning: true },
+  { id: '~typesafe/jev-latest', owned_by: 'typesafe', class: 'premium', outputs: ['decision'] },
+  { id: 'google/gemini-3-pro-image', owned_by: 'google', class: 'premium', outputs: ['image'] },
+  { id: 'elevenlabs/voice', owned_by: 'elevenlabs', class: 'premium', outputs: ['speech'] },
+  { id: 'acme/no-tools', owned_by: 'acme', class: 'premium', outputs: ['text'], supports_tools: false, supports_reasoning: true },
+  { id: 'acme/no-thinking', owned_by: 'acme', class: 'premium', outputs: ['text'], supports_tools: true, supports_reasoning: false },
+  { id: 'acme/jevel', owned_by: 'acme', class: 'premium', outputs: ['text'] },
+])
+const real = (id: string) => REAL.find((m) => m.id === id)!
+
+describe('a flag the gateway states', () => {
+  it('keeps false as false, and absent as absent', () => {
+    expect(real('acme/no-tools').supports_tools).toBe(false)
+    expect(real('acme/no-thinking').supports_reasoning).toBe(false)
+    expect(real('enso').supports_tools).toBeUndefined()
+    expect(real('enso').supports_reasoning).toBeUndefined()
+  })
+})
+
+describe('the comparison vendor', () => {
+  it('is the maker, never a spelling in an id', () => {
+    for (const id of ['typesafe/jev-1.13', 'typesafe/jev-router', '~typesafe/jev-latest']) expect(isComparison(real(id)), id).toBe(true)
+    expect(isComparison(real('acme/jevel'))).toBe(false)
+    expect(isComparison(real('openai/gpt-6-sol'))).toBe(false)
+  })
+})
+
+describe('what runs an agent', () => {
+  it('is text out, not a decision model, tools and reasoning not ruled out, and not the comparison vendor', () => {
+    const gaps = Object.fromEntries(REAL.map((m) => [m.id, agentGap(m)]))
+    expect(gaps).toEqual({
+      enso: null,
+      zen5: null,
+      'openai/gpt-6-sol': null,
+      'typesafe/jev-1.13': 'comparison',
+      'typesafe/jev-router': 'comparison',
+      '~typesafe/jev-latest': 'comparison',
+      'google/gemini-3-pro-image': 'image',
+      'elevenlabs/voice': 'voice',
+      'acme/no-tools': 'tools',
+      'acme/no-thinking': 'reasoning',
+      'acme/jevel': null,
+    })
+    expect(capabilitiesOf(real('enso'))).toContain('agent')
+    expect(capabilitiesOf(real('typesafe/jev-router'))).not.toContain('agent')
+  })
+
+  it('sees another maker’s model as third party and Hanzo’s own as not', () => {
+    expect(thirdParty(real('openai/gpt-6-sol'))).toBe(true)
+    expect(thirdParty(real('enso'))).toBe(false)
+    expect(thirdParty(real('zen5'))).toBe(false)
   })
 })
