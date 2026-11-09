@@ -101,13 +101,25 @@ jobs:
         run: pnpm exec playwright install --only-shell chromium
 
       # Keyed by what decides what the stranger's app installs: @hanzo/ui's
-      # dependency ranges and the suite's own app.
+      # dependency ranges, the versions its `workspace:` siblings pack as, and
+      # the suite's own app.
+      #
+      # The siblings are in it because `workspace:^` is not a version: pnpm pack
+      # writes the sibling's version AT PACK TIME, so bumping @hanzo/appearance to
+      # 0.2.14 left the key as it was. Every webpack run since restored an exact
+      # hit whose registry documents predate 0.2.14, prefer_offline took them as
+      # they were, and `npm i` could not find ^0.2.14. An exact hit saves nothing,
+      # so the cache could never correct itself.
       - name: Locate npm's cache
         id: npm
         if: matrix.suite != 'browser'
         run: |
+          siblings=$(jq -rs --slurpfile ui pkg/ui/package.json '
+            ($ui[0] | [.dependencies, .peerDependencies, .optionalDependencies] | map(. // {}) | add
+              | with_entries(select(.value | startswith("workspace:"))) | keys) as $names
+            | .[] | select(.name as $n | $names | index($n)) | "\(.name)@\(.version)"' pkg/*/package.json)
           {
-            echo "key=$(jq -c '[.dependencies, .peerDependencies, .optionalDependencies]' pkg/ui/package.json | cat - pkg/ui/test/consumer*/package.json | sha256sum | cut -c1-32)"
+            echo "key=$( { jq -c '[.dependencies, .peerDependencies, .optionalDependencies]' pkg/ui/package.json; cat pkg/ui/test/consumer*/package.json; echo "$siblings"; } | sha256sum | cut -c1-32)"
             echo "dir=$(npm config get cache)/_cacache"
           } >> "$GITHUB_OUTPUT"
 

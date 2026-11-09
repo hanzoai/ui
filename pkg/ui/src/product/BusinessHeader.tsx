@@ -680,7 +680,7 @@ export function BusinessHeader({
                         onAllOrgs()
                       }}
                     >
-                      <Building2 size={15} color="$color10" />
+                      <Building2 size={14} color="$color10" />
                       <Text fontSize="$2" color="$color12">
                         All organizations…
                       </Text>
@@ -703,7 +703,7 @@ export function BusinessHeader({
                         onCreateOrg()
                       }}
                     >
-                      <Plus size={15} color="$color10" />
+                      <Plus size={14} color="$color10" />
                       <Text fontSize="$2" color="$color12">
                         Create organization
                       </Text>
@@ -936,7 +936,7 @@ export function BusinessHeader({
                     }}
                     data-testid="switch-org-all"
                   >
-                    <Building2 size={15} color="$color10" />
+                    <Building2 size={14} color="$color10" />
                     <Text fontSize="$2" color="$color12">
                       Switch organization…
                     </Text>
@@ -965,7 +965,7 @@ export function BusinessHeader({
                     }}
                     data-testid="account-menu-settings"
                   >
-                    <Settings size={15} color="$color10" />
+                    <Settings size={14} color="$color10" />
                     <Text fontSize="$2" color="$color12">
                       Settings
                     </Text>
@@ -988,7 +988,7 @@ export function BusinessHeader({
                       onOrgSettings()
                     }}
                   >
-                    <Building2 size={15} color="$color10" />
+                    <Building2 size={14} color="$color10" />
                     <Text fontSize="$2" color="$color12">
                       Organization settings
                     </Text>
@@ -1011,7 +1011,7 @@ export function BusinessHeader({
                       onBilling()
                     }}
                   >
-                    <CreditCard size={15} color="$color10" />
+                    <CreditCard size={14} color="$color10" />
                     <Text fontSize="$2" color="$color12">
                       Billing
                     </Text>
@@ -1048,7 +1048,7 @@ export function BusinessHeader({
                     }}
                     data-testid="account-menu-signout"
                   >
-                    <LogOut size={15} color="#ef4444" />
+                    <LogOut size={14} color="#ef4444" />
                     <Text fontSize="$2" fontWeight="500" color="#ef4444">
                       Sign out
                     </Text>
