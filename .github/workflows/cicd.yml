@@ -77,7 +77,8 @@ jobs:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/pkg/ui/.cache/ms-playwright
       # The bundler suites `npm i` the tarball into a stranger's app: about 170 s
       # from the registry. Their npm cache travels (below), and this has npm
-      # take a cached document as it is rather than ask again.
+      # take a cached document as it is rather than ask again — on an exact hit
+      # only; the Test step says why.
       npm_config_prefer_offline: 'true'
     steps:
       - uses: actions/checkout@v4
@@ -137,6 +138,13 @@ jobs:
 
       - name: Test
         working-directory: pkg/ui
+        env:
+          # Only an exact hit is trusted as it stands: it was saved by an install
+          # that passed with these same versions. A partial hit is an older key's
+          # archive, whose registry documents can predate a version this tarball
+          # asks for (^0.2.14 against a cache from 0.2.13 was ETARGET on every
+          # run), so npm revalidates them, and keeps the tarballs it already has.
+          npm_config_prefer_offline: ${{ steps.npmcache.outputs.hit == 'exact' && 'true' || 'false' }}
         run: |
           case "$SUITE" in
             browser) pnpm run test:corner && pnpm run test:code && pnpm run test:composer ;;
