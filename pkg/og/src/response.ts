@@ -1,4 +1,4 @@
-import { ImageResponse } from 'next/og'
+import { ImageResponse } from './image.js'
 import type { OgConfig } from './types.js'
 import { renderOgImage } from './render.js'
 

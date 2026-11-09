@@ -6,6 +6,7 @@ import { noticed, serveConsent } from '@hanzo/event'
 import { I18nProvider } from '@hanzo/i18n/react'
 
 import config from '../gui-config'
+import { Switch } from '../backends/gui/switch'
 import { Consent, ConsentLink, openConsent } from './Consent'
 
 const html = (node: React.ReactNode) =>
@@ -18,7 +19,7 @@ const html = (node: React.ReactNode) =>
 /** Every mounted root, unmounted after each test even when it failed, so none leaves listeners behind. */
 const live = new Set<() => Promise<void>>()
 
-const mount = async (node: React.ReactNode) => {
+const mount = async (node: React.ReactNode, theme: 'dark' | 'light' = 'dark') => {
   const { createRoot } = await import('react-dom/client')
   const { act } = await import('react')
   ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
@@ -27,7 +28,7 @@ const mount = async (node: React.ReactNode) => {
   const root = createRoot(host)
   await act(async () => {
     root.render(
-      <GuiProvider config={config} defaultTheme="dark">
+      <GuiProvider config={config} defaultTheme={theme}>
         {node}
       </GuiProvider>,
     )
@@ -252,6 +253,55 @@ describe('Consent, under us_privacy', () => {
     expect(sheet.textContent).toContain('so all of these stay off')
     expect(sheet.textContent, 'and claims nothing runs by default').not.toContain('run on this site by default')
     await m.done()
+  })
+
+  // hanzoai/ui#300: an audit read a blue on-state for this sheet. Its switches
+  // are the package Switch with nothing restyled, so what switch.test.tsx holds
+  // about that Switch's colour in light and dark holds here too. And nothing
+  // between them and the page names a hue, which is the one way gui's
+  // `*_blue_Switch` themes could reach them.
+  it.each(['light', 'dark'] as const)('%s: its switches are the package Switch, unrestyled, under no chromatic theme', async (theme) => {
+    const bare = await mount(
+      <>
+        <Switch checked aria-label="on" />
+        <Switch checked={false} aria-label="off" />
+      </>,
+      theme,
+    )
+    const ref = (label: string) => bare.host.querySelector<HTMLElement>(`[role="switch"][aria-label="${label}"]`)!
+    /**
+     * What colours a part: its background, edge and opacity classes. Position is
+     * left out on purpose: gui fixes the thumb's side when it mounts, so a switch
+     * turned off differs from one drawn off in where its thumb starts, not in colour.
+     */
+    const look = (el: Element | null) => [...(el?.classList ?? [])].filter((c) => /^_(bg|btc|brc|o)-/.test(c)).sort()
+    const same = (sw: HTMLElement, like: HTMLElement) => {
+      const name = sw.getAttribute('aria-label')!
+      const thumb = sw.querySelector('[data-slot="switch-thumb"]')
+      expect(sw.dataset.slot, name).toBe('switch')
+      expect(look(sw), `${name}: the track`).toEqual(look(like))
+      expect(look(thumb), `${name}: the thumb`).toEqual(look(like.querySelector('[data-slot="switch-thumb"]')))
+      for (const el of [sw, thumb]) expect(el?.getAttribute('style') ?? '', `${name}: no colour of its own`).not.toMatch(/colou?r|background|outline|fill/i)
+    }
+
+    const m = await mount(<Consent />, theme)
+    await m.act(frames)
+    await m.act(async () => openConsent())
+    const marketing = () => m.sheet()!.querySelector<HTMLElement>('[role="switch"][aria-label="Marketing Cookies"]')!
+    const switches = [...m.sheet()!.querySelectorAll<HTMLElement>('[role="switch"]')]
+    expect(switches.map((x) => x.getAttribute('aria-checked')), 'on, as the opt-out rule opens them').toEqual(['true', 'true', 'true'])
+    for (const sw of switches) same(sw, ref('on'))
+    await m.act(async () => marketing().click())
+    expect(marketing().getAttribute('aria-checked')).toBe('false')
+    same(marketing(), ref('off'))
+
+    const hue = /(^|_)(blue|green|orange|pink|purple|red|teal|yellow)(_|$)/
+    const around: Element[] = []
+    for (let el: Element | null = marketing(); el; el = el.parentElement) around.push(el)
+    const named = [...around, ...m.sheet()!.querySelectorAll('*')].flatMap((el) => [...el.classList].filter((c) => c.startsWith('t_')))
+    expect(named.filter((c) => hue.test(c.slice(2))), 'a chromatic theme over the sheet').toEqual([])
+    await m.done()
+    await bare.done()
   })
 })
 

@@ -198,7 +198,7 @@ describe('Footer', () => {
     expect(out).toMatch(/<nav[^>]*aria-label="Terms &amp; Policies"/)
   })
 
-  it('puts the copyright and the legal line first on the last row, the wordmark at its end, and the site’s own line under it', () => {
+  it('stands the site’s own line above the last row, which puts the copyright and the legal line first and the wordmark at its end', () => {
     const out = html(
       <Footer
         columns={[]}
@@ -209,10 +209,10 @@ describe('Footer', () => {
       />,
     )
     const at = (s: string) => out.indexOf(s)
+    expect(at('aria-label="Socials"')).toBeLessThan(at('© Hanzo'))
     expect(at('© Hanzo')).toBeLessThan(at('Terms'))
     expect(at('Terms')).toBeLessThan(at('data-mark'))
-    expect(at('data-mark')).toBeLessThan(at('aria-label="Socials"'))
-    expect(at('aria-label="Socials"')).toBeLessThan(at('</footer>'))
+    expect(at('data-mark')).toBeLessThan(at('</footer>'))
   })
 })
 

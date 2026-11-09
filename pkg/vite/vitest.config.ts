@@ -6,5 +6,5 @@ import { defineConfig } from "vitest/config"
 // it, and fails at startup before a single test runs — which reads as a broken
 // suite rather than a missing file. Pure config folding: node, no DOM.
 export default defineConfig({
-  test: { environment: "node", include: ["src/**/*.test.ts"] },
+  test: { environment: "node", include: ["src/**/*.test.ts", "src/**/*.test.tsx"] },
 })

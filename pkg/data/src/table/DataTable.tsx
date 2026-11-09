@@ -84,6 +84,8 @@ export interface DataTableProps {
   remote?: RemotePage
   /** Row height; unset, the density's (44, or 32 under `<Density value="compact">`). */
   rowHeight?: number
+  /** Record look: a 14–16px icon per field name shown in the column header. */
+  fieldIcons?: Record<string, ReactNode>
 }
 
 /** One page of a server's answer: where it sits, how many there are, how to move. */
@@ -104,8 +106,11 @@ export function DataTable(props: DataTableProps) {
     columnOrder, onColumnOrderChange, hiddenFields,
     pageSize = 25,
     remote,
+    fieldIcons,
   } = props
-  const geo = GEOMETRY[useDensity()]
+  const density = useDensity()
+  const isCompact = density === 'compact'
+  const geo = GEOMETRY[density]
   const rowHeight = props.rowHeight ?? geo.row
   const SELECT_COL_W = geo.select
 
@@ -257,7 +262,15 @@ export function DataTable(props: DataTableProps) {
         {/* header */}
         <XStack bg="$panel" minH={rowHeight} {...hairline} {...({ role: 'row' } as object)}>
           {selectable ? (
-            <XStack width={SELECT_COL_W} items="center" justify="center" shrink={0} {...({ role: 'columnheader' } as object)}>
+            <XStack
+              width={SELECT_COL_W}
+              items="center"
+              justify="center"
+              shrink={0}
+              borderRightWidth={isCompact ? 1 : 0}
+              borderColor="$borderColor"
+              {...({ role: 'columnheader' } as object)}
+            >
               <CheckBox checked={allOnPage} indeterminate={!allOnPage && someOnPage} onChange={toggleAll} label="Select all rows" />
             </XStack>
           ) : null}
@@ -272,13 +285,20 @@ export function DataTable(props: DataTableProps) {
                 items="center"
                 gap="$1"
                 px={geo.pad}
+                borderRightWidth={isCompact && i < columns.length - 1 ? 1 : 0}
+                borderColor="$borderColor"
                 borderLeftWidth={isDropTarget ? 2 : 0}
                 borderLeftColor={'var(--primary)' as never}
                 opacity={dragCol?.from === i ? 0.5 : 1}
                 ref={(node: unknown) => { headerRefs.current[i] = (node as HTMLElement | null) }}
                 style={{ position: 'relative' }}
               >
-                <XStack items="center" gap="$1" flex={1} minW={0} cursor="pointer" onPress={() => onHeaderSort(c.name)} onPointerDown={beginReorder(i)}>
+                <XStack items="center" gap="$1.5" flex={1} minW={0} cursor="pointer" onPress={() => onHeaderSort(c.name)} onPointerDown={beginReorder(i)}>
+                  {fieldIcons?.[c.name] ? (
+                    <XStack width={14} height={14} items="center" justify="center" shrink={0} opacity={0.75}>
+                      {fieldIcons[c.name]}
+                    </XStack>
+                  ) : null}
                   <Text fontSize="$2" fontWeight="500" numberOfLines={1} color="$aside">
                     {c.label}
                   </Text>
@@ -329,7 +349,15 @@ export function DataTable(props: DataTableProps) {
                 {...hairline}
               >
                 {selectable ? (
-                  <XStack width={SELECT_COL_W} items="center" justify="center" shrink={0} {...({ role: 'cell' } as object)}>
+                  <XStack
+                    width={SELECT_COL_W}
+                    items="center"
+                    justify="center"
+                    shrink={0}
+                    borderRightWidth={isCompact ? 1 : 0}
+                    borderColor="$borderColor"
+                    {...({ role: 'cell' } as object)}
+                  >
                     <CheckBox checked={isSel} onChange={() => toggleOne(rowKey)} label={`Select row ${pageData.from + i}`} />
                   </XStack>
                 ) : null}
@@ -341,7 +369,17 @@ export function DataTable(props: DataTableProps) {
                     ? { ...c, metadata: { ...(c.metadata as object), options: fieldOptions(c) } as FieldDefinition['metadata'] }
                     : c
                   return (
-                    <XStack key={c.name} {...cellWidthProps(c)} {...({ role: 'cell' } as object)} items="center" px={geo.pad} minW={0} style={{ position: 'relative' }}>
+                    <XStack
+                      key={c.name}
+                      {...cellWidthProps(c)}
+                      {...({ role: 'cell' } as object)}
+                      items="center"
+                      px={geo.pad}
+                      minW={0}
+                      borderRightWidth={isCompact && ci < columns.length - 1 ? 1 : 0}
+                      borderColor="$borderColor"
+                      style={{ position: 'relative' }}
+                    >
                       {isEditingCell ? (
                         <YStack flex={1} minW={0} py="$1" onPress={(e: { stopPropagation?: () => void }) => e.stopPropagation?.()}>
                           <FieldInput

@@ -62,7 +62,7 @@ export function HanzoFooterSignature() {
         transition: 'opacity 160ms ease',
       }}
     >
-      <span aria-hidden="true" style={{ whiteSpace: 'nowrap', paddingRight: '0.04em' }}>
+      <span aria-hidden="true" style={{ whiteSpace: 'nowrap', paddingInlineEnd: '0.04em' }}>
         hanzo
       </span>
       <span

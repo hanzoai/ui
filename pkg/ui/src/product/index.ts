@@ -84,6 +84,7 @@ export { BranchSelect, branchName, type Branch, type BranchLoad, type BranchSele
 // surfaces wrote their own; `AppHeader` now renders this one.
 export * from './surfaces.data'
 export * from './AppHeader'
+export * from './BusinessHeader'
 export * from './BrandMark'
 export * from './OrgMark'
 export * from './MenuRow'

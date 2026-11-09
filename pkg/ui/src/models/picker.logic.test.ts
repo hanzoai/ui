@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { defaultModel, ENSO, parseModels, type ModelCatalogEntry } from './catalog'
-import { modelCount, pickerRows, restable, revealTop, visibleRange } from './picker.logic'
+import { modelCount, NOT_FOR_AGENTS, pickerRows, restable, revealTop, standing, visibleRange, type PickerRow } from './picker.logic'
 
 const models = parseModels([
   { id: 'enso', owned_by: 'hanzo', family: 'enso', class: 'ours' },
@@ -76,5 +76,108 @@ describe('the model a new conversation starts on', () => {
       { id: 'anthropic/claude-sonnet-4.5', owned_by: 'anthropic', class: 'premium' },
     ])
     expect(defaultModel(free)).toBe('meta-llama/llama-3.3-70b-instruct:free')
+  })
+})
+
+/** The ids of the models a set of rows draws. */
+const ids = (rows: readonly PickerRow[]) => rows.flatMap((r) => (r.kind === 'model' ? [r.model.id] : []))
+
+const MIXED = parseModels([
+  { id: 'enso', owned_by: 'hanzo', family: 'enso', class: 'ours', outputs: ['text'] },
+  { id: 'zen5', owned_by: 'zenlm', family: 'zen', class: 'ours', outputs: ['text'] },
+  { id: 'kai', owned_by: 'hanzo', family: 'kai', class: 'ours', outputs: ['decision'] },
+  { id: 'openai/gpt-6-sol', owned_by: 'openai', class: 'premium', outputs: ['text'], supports_tools: true, supports_reasoning: true },
+  { id: 'anthropic/claude-x', owned_by: 'anthropic', class: 'premium', outputs: ['text'], supports_tools: true, supports_reasoning: true },
+  { id: 'typesafe/jev-1.13', owned_by: 'typesafe', class: 'premium', outputs: ['decision'] },
+  { id: 'typesafe/jev-router', owned_by: 'typesafe', class: 'premium', outputs: ['text'], supports_tools: true, supports_reasoning: true },
+  { id: '~typesafe/jev-latest', owned_by: 'typesafe', class: 'premium', outputs: ['decision'] },
+  { id: 'google/gemini-image', owned_by: 'google', class: 'premium', outputs: ['image'] },
+  { id: 'elevenlabs/voice', owned_by: 'elevenlabs', class: 'premium', outputs: ['speech'] },
+  { id: 'acme/no-tools', owned_by: 'acme', class: 'premium', outputs: ['text'], supports_tools: false },
+])
+const JEV = ['typesafe/jev-1.13', 'typesafe/jev-router', '~typesafe/jev-latest']
+
+describe('the comparison models', () => {
+  it('are in no list, whatever the scope or the search', () => {
+    for (const scope of [undefined, 'chat', 'agent', 'decision', 'tools', 'reasoning'] as const) {
+      for (const q of ['', 'jev', 'typesafe']) {
+        const listed = ids(pickerRows(MIXED, q, scope, true))
+        for (const id of JEV) expect(listed, `${scope} ${q}`).not.toContain(id)
+      }
+    }
+  })
+
+  it('stay in the catalogue a saving is read against', () => {
+    expect(MIXED.filter((m) => JEV.includes(m.id))).toHaveLength(3)
+  })
+
+  it('are no chat model, and a decision model is not offered to chat', () => {
+    expect(ids(pickerRows(MIXED, '', 'chat'))).toEqual(['enso', 'zen5', 'zen7', 'acme/no-tools', 'anthropic/claude-x', 'openai/gpt-6-sol'])
+  })
+})
+
+describe('an agent’s list', () => {
+  it('offers Hanzo’s first, then every maker that can run an agent, and ends in a shut group of what cannot', () => {
+    const rows = pickerRows(MIXED, '', 'agent')
+    // zen7 is the research preview: listed, and never picked.
+    expect(ids(rows)).toEqual(['enso', 'zen5', 'zen7', 'anthropic/claude-x', 'openai/gpt-6-sol'])
+    const heads = rows.filter((r) => r.kind === 'group').map((r) => (r.kind === 'group' ? r.label || r.key : ''))
+    expect(heads).toEqual(['Enso', 'Zen', 'Anthropic', 'OpenAI', NOT_FOR_AGENTS])
+    expect(rows.at(-1)).toMatchObject({ kind: 'group', key: NOT_FOR_AGENTS, count: 3, fold: 'shut' })
+  })
+
+  it('opens the group to show each with its few words of why, none of them restable', () => {
+    const rows = pickerRows(MIXED, '', 'agent', true)
+    expect(rows.at(-4)).toMatchObject({ kind: 'group', fold: 'open', count: 3 })
+    const gaps = rows.flatMap((r) => (r.kind === 'model' && r.gap ? [[r.model.id, r.gap]] : []))
+    expect(gaps).toEqual([
+      ['acme/no-tools', 'tools'],
+      ['elevenlabs/voice', 'voice'],
+      ['google/gemini-image', 'image'],
+    ])
+    const at = rows.findIndex((r) => r.kind === 'model' && r.gap)
+    expect(restable(rows, at)).toBe(false)
+    // The heading that opens the group is a place the cursor rests.
+    expect(restable(rows, rows.length - 4)).toBe(true)
+  })
+
+  it('lists no decision model and no comparison model, even among what cannot', () => {
+    const rows = pickerRows(MIXED, '', 'agent', true)
+    expect(ids(rows)).not.toContain('kai')
+    for (const id of JEV) expect(ids(rows)).not.toContain(id)
+  })
+})
+
+describe('what choosing a model does for the payer', () => {
+  const sol = MIXED.find((m) => m.id === 'openai/gpt-6-sol')!
+  const zen = MIXED.find((m) => m.id === 'zen5')!
+  const free = (id: string) => id === 'enso'
+
+  it('lets another maker’s model be paid for from the balance on any plan', () => {
+    expect(standing(sol, free, () => true)).toBe('pick')
+  })
+
+  it('sends a balance that cannot pay to the top-up, never to an upgrade', () => {
+    expect(standing(sol, free, () => false)).toBe('top-up')
+  })
+
+  it('leaves Hanzo’s own models to the plan', () => {
+    expect(standing(zen, free, () => true)).toBe('upgrade')
+    expect(standing(zen, () => true, () => false)).toBe('pick')
+  })
+
+  it('follows the plan for a host that has no balance to offer', () => {
+    expect(standing(sol, free)).toBe('upgrade')
+    expect(standing(sol)).toBe('pick')
+  })
+})
+
+describe('two ids that read as one name', () => {
+  it('are one row in their group', () => {
+    const twin = parseModels([
+      { id: 'acme/model-a', owned_by: 'acme', class: 'premium', name: 'Model A', outputs: ['text'] },
+      { id: 'acme/model-a-latest', owned_by: 'acme', class: 'premium', name: 'Model A', outputs: ['text'] },
+    ])
+    expect(ids(pickerRows(twin, '', 'chat')).filter((id) => id.startsWith('acme/'))).toEqual(['acme/model-a'])
   })
 })

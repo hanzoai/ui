@@ -41,8 +41,9 @@ try {
   // anything — the same failure guard-publish.mjs exists to keep off the
   // registry.
   cpSync(join(UI, 'test/consumer'), app, { recursive: true })
-  run('npm', ['i', '--no-audit', '--no-fund', '--silent'], app)
-  run('npm', ['i', '--no-audit', '--no-fund', '--silent', `./${tgz}`], app)
+  // Errors only, not --silent, which also swallows the reason a failed install gives.
+  run('npm', ['i', '--no-audit', '--no-fund', '--loglevel=error'], app)
+  run('npm', ['i', '--no-audit', '--no-fund', '--loglevel=error', `./${tgz}`], app)
 
   // ONE COPY of the gui runtime, or nothing below means anything.
   //
