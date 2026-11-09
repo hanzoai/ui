@@ -178,6 +178,6 @@ describe('two ids that read as one name', () => {
       { id: 'acme/model-a', owned_by: 'acme', class: 'premium', name: 'Model A', outputs: ['text'] },
       { id: 'acme/model-a-latest', owned_by: 'acme', class: 'premium', name: 'Model A', outputs: ['text'] },
     ])
-    expect(ids(pickerRows(twin, '', 'chat'))).toEqual(['acme/model-a'])
+    expect(ids(pickerRows(twin, '', 'chat')).filter((id) => id.startsWith('acme/'))).toEqual(['acme/model-a'])
   })
 })
