@@ -152,3 +152,12 @@ const source = (root: string) => {
     },
   }
 }
+
+/**
+ * A static site from app/: `site()` renders every page as React Server
+ * Components at build and writes HTML to out/ (./site.ts); `mdx()` reads posts
+ * and docs with their front matter and headings (./mdx.ts). Pages import
+ * `@hanzo/vite/link`, `/navigation`, `/dynamic` and `/metadata`.
+ */
+export { site, type SiteOptions } from './site.js'
+export { mdx, remarkHeadings, flatten, type Heading, type MdxOptions } from './mdx.js'

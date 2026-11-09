@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/vite",
-  "version": "0.1.4",
-  "description": "The Vite config every Hanzo app shares — one runtime, one compiler, one way.",
+  "version": "0.1.5",
+  "description": "The Vite config every Hanzo app shares, and the static site renderer: app/ to HTML, one runtime, one compiler, one way.",
   "license": "MIT OR Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -10,6 +10,22 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./link": {
+      "types": "./dist/link.d.ts",
+      "default": "./dist/link.js"
+    },
+    "./navigation": {
+      "types": "./dist/navigation.d.ts",
+      "default": "./dist/navigation.js"
+    },
+    "./dynamic": {
+      "types": "./dist/dynamic.d.ts",
+      "default": "./dist/dynamic.js"
+    },
+    "./metadata": {
+      "types": "./dist/metadata.d.ts",
+      "default": "./dist/metadata.js"
     }
   },
   "files": [
@@ -21,10 +37,20 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "vite": ">=8"
+    "vite": ">=8",
+    "react": ">=19.2",
+    "react-dom": ">=19.2",
+    "react-server-dom-webpack": ">=19.2"
   },
   "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-server-dom-webpack": "19.2.8",
     "typescript": "catalog:",
+    "vite": "catalog:",
     "vitest": "catalog:"
   },
   "publishConfig": {
@@ -36,6 +62,16 @@
     "directory": "pkg/vite"
   },
   "dependencies": {
-    "@hanzo/source": "workspace:*"
+    "@hanzo/source": "workspace:*",
+    "@mdx-js/rollup": "^3.1.1",
+    "@vitejs/plugin-react": "catalog:",
+    "@vitejs/plugin-rsc": "0.5.39",
+    "estree-util-value-to-estree": "^3.5.0",
+    "github-slugger": "^2.0.0",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-mdx-frontmatter": "^6.0.0",
+    "rsc-html-stream": "0.0.8",
+    "unist-util-visit": "^5.2.0"
   }
 }
