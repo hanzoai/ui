@@ -1066,12 +1066,22 @@ importers:
       '@resvg/resvg-js':
         specifier: ^2.6.2
         version: 2.6.2
-      react:
-        specifier: 19.2.8
-        version: 19.2.8
       satori:
         specifier: 0.12.2
         version: 0.12.2
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.4.0
+      '@types/react':
+        specifier: 19.2.18
+        version: 19.2.18
+      react:
+        specifier: 19.2.8
+        version: 19.2.8
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
 
   pkg/products:
     devDependencies:
@@ -2982,14 +2992,6 @@ packages:
       react:
         optional: true
 
-  '@hanzo/event@0.3.64':
-    resolution: {integrity: sha512-3nYog66hCkg0g5M9XBR1MYYRfhwllhJbxjL1+6ecZoi241VD47HBbWeQXayHrrDoIIfdiT6C1lox3HlwPES9Xg==}
-    peerDependencies:
-      react: 19.2.8
-    peerDependenciesMeta:
-      react:
-        optional: true
-
   '@hanzo/event@0.3.66':
     resolution: {integrity: sha512-trBYhxs103HDBgR3lV4Jp9cwWizcsd7s4GX7hdKmiR9cIXtTsKipu/E93+rZrAYJ7BHSpRqXnHL7KomNwvrrEA==}
     peerDependencies:
@@ -3000,9 +3002,6 @@ packages:
 
   '@hanzo/events@0.2.2':
     resolution: {integrity: sha512-jF800OFibLfnuEqMJUpTyLIs4fmezzXFKGGUPAHjK40FrTWsiAb4j3j1N5sbqBLAv5Ty7FA56dOo67Y+kUSqyA==}
-
-  '@hanzo/events@0.3.1':
-    resolution: {integrity: sha512-eGK1MTi5tW/luXhddLwrcyK8fq+GE41u/80oIjEKzxHGCfUs8LATiDAGCZ3dYM4D5sxiUS7x8BG2hGuD2gnIUA==}
 
   '@hanzo/events@0.3.2':
     resolution: {integrity: sha512-2MIY5Yw6tCrJyz2DR6wlsTq9H7ibL/671yXvnmYWIXFNLWKxrBwhZyQRJ/S6NiR8gIdYGQ3zO01tv1jYiQ+95g==}
@@ -12444,7 +12443,7 @@ snapshots:
       '@expo/spawn-async': 1.8.0
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/remapping': 2.3.5
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
       browserslist: 4.28.8
       chalk: 4.1.2
       debug: 4.4.3(supports-color@10.2.2)
@@ -12786,12 +12785,6 @@ snapshots:
     optionalDependencies:
       react: 19.2.8
 
-  '@hanzo/event@0.3.64(react@19.2.8)':
-    dependencies:
-      '@hanzo/events': 0.3.1
-    optionalDependencies:
-      react: 19.2.8
-
   '@hanzo/event@0.3.66(react@19.2.8)':
     dependencies:
       '@hanzo/events': 0.3.2
@@ -12799,8 +12792,6 @@ snapshots:
       react: 19.2.8
 
   '@hanzo/events@0.2.2': {}
-
-  '@hanzo/events@0.3.1': {}
 
   '@hanzo/events@0.3.2': {}
 
@@ -14534,7 +14525,7 @@ snapshots:
 
   '@hanzogui/telemetry@8.3.5(react@19.2.8)':
     dependencies:
-      '@hanzo/event': 0.3.64(react@19.2.8)
+      '@hanzo/event': 0.3.66(react@19.2.8)
       '@hanzo/observe': 0.1.11(react@19.2.8)
       react: 19.2.8
 
@@ -15069,7 +15060,7 @@ snapshots:
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
       '@jridgewell/trace-mapping': 0.3.31
 
   '@jridgewell/remapping@2.3.5':
@@ -15091,12 +15082,12 @@ snapshots:
   '@jridgewell/trace-mapping@0.3.31':
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
 
   '@jridgewell/trace-mapping@0.3.9':
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
 
   '@lezer/common@1.5.3': {}
 
