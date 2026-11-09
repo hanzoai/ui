@@ -13,6 +13,7 @@ import {
   makerName,
   makerOf,
   matchesModel,
+  modelName,
   matchesPaused,
   parseModels,
   savingOf,
@@ -297,5 +298,14 @@ describe('what runs an agent', () => {
     expect(thirdParty(real('openai/gpt-6-sol'))).toBe(true)
     expect(thirdParty(real('enso'))).toBe(false)
     expect(thirdParty(real('zen5'))).toBe(false)
+  })
+})
+
+describe('a model’s name', () => {
+  it('is the catalog’s name, or its id read as words', () => {
+    expect(modelName({ id: 'zen5-vl' })).toBe('Zen 5 VL')
+    expect(modelName({ id: 'hanzo/enso-auto' })).toBe('Enso Auto')
+    expect(modelName({ id: 'x', name: 'Claude Sonnet 4.5' })).toBe('Claude Sonnet 4.5')
+    expect(modelName({ id: 'qwen3-coder-30b' })).toBe('Qwen3 Coder 30b')
   })
 })

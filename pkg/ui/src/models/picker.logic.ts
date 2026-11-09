@@ -6,9 +6,11 @@ import {
   agentGap,
   can,
   ENSO,
+  groupKey,
   groupModels,
   isComparison,
   matchesModel,
+  modelName,
   sortModels,
   thirdParty,
   withResearch,
@@ -52,7 +54,15 @@ export function pickerRows(
   const offered = listed.filter((m) => !scope || can(m, scope))
   const rows: PickerRow[] = []
   const sorted = sortModels(offered).sort((a, b) => Number(b.id === ENSO) - Number(a.id === ENSO))
-  for (const g of groupModels(sorted)) {
+  // Two ids that read as one name in one group are one row.
+  const seen = new Set<string>()
+  const unique = sorted.filter((m) => {
+    const k = `${groupKey(m)}:${modelName(m).toLowerCase()}`
+    if (seen.has(k)) return false
+    seen.add(k)
+    return true
+  })
+  for (const g of groupModels(unique)) {
     rows.push({ kind: 'group', key: g.key, label: g.label, count: g.models.length })
     for (const model of g.models) rows.push({ kind: 'model', model })
   }

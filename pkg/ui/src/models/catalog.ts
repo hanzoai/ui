@@ -279,9 +279,29 @@ export const isComparison = (m: Pick<ModelCatalogEntry, 'owned_by'>): boolean =>
 /** A model someone else made and sells, paid from the prepaid balance on any plan; Hanzo's own follow the plan. */
 export const thirdParty = (m: Pick<ModelCatalogEntry, 'class'>): boolean => m.class === 'premium'
 
-/** The name a model is shown by: the catalog's name, else its id. */
+const ACRONYMS = new Set(['vl', 'rp', 'xl', 'llm', 'ai', 'it', 'tts', 'stt', '3d'])
+
+/** A model's name read as words: a Hanzo prefix dropped, ids split at their dashes and capitalised (`zen5-vl` is Zen 5 VL); a name already in mixed case is left as written. */
+function normalizeModelLabel(raw: string): string {
+  const clean = raw.trim().replace(/^(?:hanzo|zenlm|zoo)\//i, '')
+  if (!clean) return raw
+  if (clean !== clean.toLowerCase() && !clean.includes('-') && !clean.includes('_')) return clean
+  return clean
+    .replace(/\b(zen|kai|enso|zoo)(\d+)/gi, '$1 $2')
+    .split(/[-_\s/]+/)
+    .filter(Boolean)
+    .map((w) => {
+      const lower = w.toLowerCase()
+      if (ACRONYMS.has(lower)) return lower.toUpperCase()
+      if (/^\d/.test(w)) return w
+      return w[0]!.toUpperCase() + w.slice(1)
+    })
+    .join(' ')
+}
+
+/** The name a model is shown by: the catalog's name, else its id, read as words. */
 export function modelName(m: Pick<ModelCatalogEntry, 'id' | 'name'>): string {
-  return m.name ?? m.id
+  return normalizeModelLabel(m.name ?? m.id)
 }
 
 /** The group a model is listed in: its Hanzo family, else its maker. */

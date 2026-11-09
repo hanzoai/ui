@@ -112,7 +112,7 @@ describe('the comparison models', () => {
   })
 
   it('are no chat model, and a decision model is not offered to chat', () => {
-    expect(ids(pickerRows(MIXED, '', 'chat'))).toEqual(['enso', 'zen7', 'zen5', 'acme/no-tools', 'anthropic/claude-x', 'openai/gpt-6-sol'])
+    expect(ids(pickerRows(MIXED, '', 'chat'))).toEqual(['enso', 'zen5', 'zen7', 'acme/no-tools', 'anthropic/claude-x', 'openai/gpt-6-sol'])
   })
 })
 
@@ -120,7 +120,7 @@ describe('an agent’s list', () => {
   it('offers Hanzo’s first, then every maker that can run an agent, and ends in a shut group of what cannot', () => {
     const rows = pickerRows(MIXED, '', 'agent')
     // zen7 is the research preview: listed, and never picked.
-    expect(ids(rows)).toEqual(['enso', 'zen7', 'zen5', 'anthropic/claude-x', 'openai/gpt-6-sol'])
+    expect(ids(rows)).toEqual(['enso', 'zen5', 'zen7', 'anthropic/claude-x', 'openai/gpt-6-sol'])
     const heads = rows.filter((r) => r.kind === 'group').map((r) => (r.kind === 'group' ? r.label || r.key : ''))
     expect(heads).toEqual(['Enso', 'Zen', 'Anthropic', 'OpenAI', NOT_FOR_AGENTS])
     expect(rows.at(-1)).toMatchObject({ kind: 'group', key: NOT_FOR_AGENTS, count: 3, fold: 'shut' })
@@ -169,5 +169,15 @@ describe('what choosing a model does for the payer', () => {
   it('follows the plan for a host that has no balance to offer', () => {
     expect(standing(sol, free)).toBe('upgrade')
     expect(standing(sol)).toBe('pick')
+  })
+})
+
+describe('two ids that read as one name', () => {
+  it('are one row in their group', () => {
+    const twin = parseModels([
+      { id: 'acme/model-a', owned_by: 'acme', class: 'premium', name: 'Model A', outputs: ['text'] },
+      { id: 'acme/model-a-latest', owned_by: 'acme', class: 'premium', name: 'Model A', outputs: ['text'] },
+    ])
+    expect(ids(pickerRows(twin, '', 'chat'))).toEqual(['acme/model-a'])
   })
 })
