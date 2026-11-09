@@ -78,6 +78,10 @@ export interface RecordsViewProps {
   titleField?: string
   /** Fields shown on board cards (defaults to all but the group field). */
   cardFields?: FieldDefinition[]
+  /** Record look: a 16px icon per field name on board cards and column headers. */
+  fieldIcons?: Record<string, ReactNode>
+  /** Record look: the id of the record open in the side panel. */
+  activeId?: string
 }
 
 export function RecordsView(props: RecordsViewProps) {
@@ -87,6 +91,7 @@ export function RecordsView(props: RecordsViewProps) {
     savedViews, title, onOpen, onCreate, createLabel,
     onEditCommit, onRecordChange, fieldOptions,
     selectable = true, editable = true, bulkActions, toolbarExtra, boardDisabled, titleField, cardFields, remote,
+    fieldIcons, activeId,
   } = props
 
   const [internalView, setInternalView] = useState<ViewConfig>(() => {
@@ -156,6 +161,8 @@ export function RecordsView(props: RecordsViewProps) {
           onOpen={onOpen}
           onRecordChange={boardChange}
           onCreate={onCreate ? () => onCreate() : undefined}
+          fieldIcons={fieldIcons}
+          activeId={activeId}
         />
       ) : (
         <DataTable
@@ -176,6 +183,7 @@ export function RecordsView(props: RecordsViewProps) {
           onColumnOrderChange={(columnOrder) => setView({ ...view, columnOrder })}
           pageSize={view.pageSize ?? 25}
           remote={remote}
+          fieldIcons={fieldIcons}
         />
       )}
     </YStack>

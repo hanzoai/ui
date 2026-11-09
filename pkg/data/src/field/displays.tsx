@@ -54,9 +54,14 @@ const optionFor = (options: SelectOption[] | undefined, value: string): SelectOp
   options?.find((o) => o.value === value) ?? { value, label: value }
 
 // ── text family ──────────────────────────────────────────────────────────────
-export function TextDisplay({ value }: FieldDisplayProps) {
+export function TextDisplay({ field, value }: FieldDisplayProps) {
   const s = asStr(value).trim()
-  return s ? <Line text={s} /> : <Empty />
+  if (!s) return <Empty />
+  const meta = (field.metadata ?? {}) as { avatar?: 'square' | 'circle'; avatarUrl?: string }
+  if (meta.avatar) {
+    return <RecordChip label={s} seed={s} src={meta.avatarUrl} shape={meta.avatar} />
+  }
+  return <Line text={s} />
 }
 
 export function LongTextDisplay({ value }: FieldDisplayProps) {
