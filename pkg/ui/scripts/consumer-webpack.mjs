@@ -31,8 +31,11 @@ try {
 
   console.log(`· installing ${tgz} into ${app}`)
   cpSync(join(UI, 'test/consumer-webpack'), app, { recursive: true })
-  run('npm', ['i', '--no-audit', '--no-fund', '--silent'], app)
-  run('npm', ['i', '--no-audit', '--no-fund', '--silent', `./${tgz}`], app)
+  // Errors only, not --silent: --silent also swallows npm's own reason, and a
+  // failed install then reads as a bare exit code, which is all the stale npm
+  // cache of November 2026 ever showed here.
+  run('npm', ['i', '--no-audit', '--no-fund', '--loglevel=error'], app)
+  run('npm', ['i', '--no-audit', '--no-fund', '--loglevel=error', `./${tgz}`], app)
 
   console.log(`· building with webpack + css-loader`)
   run('npx', ['webpack', '--mode', 'production'], app)

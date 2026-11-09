@@ -77,7 +77,8 @@ jobs:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/pkg/ui/.cache/ms-playwright
       # The bundler suites `npm i` the tarball into a stranger's app: about 170 s
       # from the registry. Their npm cache travels (below), and this has npm
-      # take a cached document as it is rather than ask again.
+      # take a cached document as it is rather than ask again — on an exact hit
+      # only; the Test step says why.
       npm_config_prefer_offline: 'true'
     steps:
       - uses: actions/checkout@v4
@@ -101,13 +102,25 @@ jobs:
         run: pnpm exec playwright install --only-shell chromium
 
       # Keyed by what decides what the stranger's app installs: @hanzo/ui's
-      # dependency ranges and the suite's own app.
+      # dependency ranges, the versions its `workspace:` siblings pack as, and
+      # the suite's own app.
+      #
+      # The siblings are in it because `workspace:^` is not a version: pnpm pack
+      # writes the sibling's version AT PACK TIME, so bumping @hanzo/appearance to
+      # 0.2.14 left the key as it was. Every webpack run since restored an exact
+      # hit whose registry documents predate 0.2.14, prefer_offline took them as
+      # they were, and `npm i` could not find ^0.2.14. An exact hit saves nothing,
+      # so the cache could never correct itself.
       - name: Locate npm's cache
         id: npm
         if: matrix.suite != 'browser'
         run: |
+          siblings=$(jq -rs --slurpfile ui pkg/ui/package.json '
+            ($ui[0] | [.dependencies, .peerDependencies, .optionalDependencies] | map(. // {}) | add
+              | with_entries(select(.value | startswith("workspace:"))) | keys) as $names
+            | .[] | select(.name as $n | $names | index($n)) | "\(.name)@\(.version)"' pkg/*/package.json)
           {
-            echo "key=$(jq -c '[.dependencies, .peerDependencies, .optionalDependencies]' pkg/ui/package.json | cat - pkg/ui/test/consumer*/package.json | sha256sum | cut -c1-32)"
+            echo "key=$( { jq -c '[.dependencies, .peerDependencies, .optionalDependencies]' pkg/ui/package.json; cat pkg/ui/test/consumer*/package.json; echo "$siblings"; } | sha256sum | cut -c1-32)"
             echo "dir=$(npm config get cache)/_cacache"
           } >> "$GITHUB_OUTPUT"
 
@@ -125,6 +138,13 @@ jobs:
 
       - name: Test
         working-directory: pkg/ui
+        env:
+          # Only an exact hit is trusted as it stands: it was saved by an install
+          # that passed with these same versions. A partial hit is an older key's
+          # archive, whose registry documents can predate a version this tarball
+          # asks for (^0.2.14 against a cache from 0.2.13 was ETARGET on every
+          # run), so npm revalidates them, and keeps the tarballs it already has.
+          npm_config_prefer_offline: ${{ steps.npmcache.outputs.hit == 'exact' && 'true' || 'false' }}
         run: |
           case "$SUITE" in
             browser) pnpm run test:corner && pnpm run test:code && pnpm run test:composer ;;
