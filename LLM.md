@@ -1444,6 +1444,36 @@ ink on a dark fill; 13px type on a 36px floor, a `--radius-lg` corner in a
 | `pkgs/capture` (`@hanzo/analytics@0.1.0` dup) | **deleted** | stale in-repo duplicate, removed |
 | `hanzoai/analytics` `packages/event` (`@hanzo/event@0.2.0`) | **deleted** | An unpublished FORK of this package in another repo. It was the only copy that could actually reach Sentry, while the published one here could not — the fleet's error telemetry died in that gap. Its envelope + scrub implementation was merged here in 0.3.2. Never fork this package again; it publishes from `pkg/event` only. |
 
+## A static site is `@hanzo/vite`'s `site()`, not Next (`pkg/vite`)
+
+Every Hanzo frontend is a static export, so the framework is a renderer and a
+dev server, nothing more. `site()` reads `app/` by the App Router's file
+conventions (layouts, groups, `[x]`, `[...x]`, `[[...x]]`, `generateStaticParams`,
+`metadata`/`generateMetadata`, `viewport`, `not-found`, `route.ts` GET,
+`opengraph-image`, `robots.ts`, `sitemap.ts`), renders each page as React Server
+Components through `@vitejs/plugin-rsc` at build, and writes the HTML with its
+payload inlined to `out/`. Pages import `@hanzo/vite/link`, `/navigation`
+(`usePathname`, `useSearchParams`, `useRouter`, `notFound`), `/dynamic` and
+`/metadata` (the `Metadata` types) in place of `next/*`. `mdx()` reads posts and
+docs: front matter, gfm, heading ids with `[#id]`, a `toc` export.
+
+- **Following a link loads the page.** No route payload files, no client
+  router: a move that changes only the query or hash stays in place through
+  history; any other is a load. Next's `index.txt` twins are gone with it.
+- **The head is Next's, tag for tag.** `metadata.tsx` resolves levels with the
+  App Router's rules (a title template never applies at its own level; a
+  level's opengraph-image fills openGraph.images unless that level states
+  images; twitter fills from openGraph) and writes tags in its order. A key it
+  does not render THROWS. Measured on the blog: 712 pages, identical text, head
+  tags and `<html lang dir>` against its Next export.
+- **`@vitejs/plugin-rsc` is this package's dependency**, so `site()` rewrites its
+  pre-bundle entries through `@hanzo/vite >`. A site installs
+  `react-server-dom-webpack` at its own React version: the plugin's vendored
+  copy is a newer React's.
+- **`@hanzo/og` draws the images**, satori pinned at 0.12.2 (later releases size a
+  padded root past its canvas and cut the last row) and resvg loaded at run time
+  from `@hanzo/og`'s own install, since no bundler carries a native addon.
+
 ## Package Exports
 
 ```typescript

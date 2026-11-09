@@ -1,3 +1,4 @@
+export { ImageResponse, type Font, type ImageOptions } from './image.js'
 export { createOgImageResponse } from './response.js'
 export { renderOgImage } from './render.js'
 export type { OgConfig } from './types.js'
