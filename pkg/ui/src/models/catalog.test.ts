@@ -309,3 +309,10 @@ describe('a model’s name', () => {
     expect(modelName({ id: 'qwen3-coder-30b' })).toBe('Qwen3 Coder 30b')
   })
 })
+
+describe('a Hanzo model the gateway lists without a family', () => {
+  it('is filed under the family its id names, and another maker’s is not', () => {
+    const rows = parseModels([{ id: 'zen5-vl' }, { id: 'hanzo/enso-auto' }, { id: 'kai' }, { id: 'zoo-mini' }, { id: 'openai/zen-garden' }, { id: 'zendesk/bot' }])
+    expect(rows.map((m) => m.family)).toEqual(['zen', 'enso', 'kai', 'zoo', undefined, undefined])
+  })
+})

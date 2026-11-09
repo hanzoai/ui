@@ -136,6 +136,16 @@ function compareOf(v: unknown): string | undefined {
   return v && typeof v === 'object' ? str((v as { model?: unknown }).model) : undefined
 }
 
+/** A Hanzo family from an id, for a row the gateway lists without one (`zen5-vl`, `hanzo/enso-auto`). */
+function inferFamily(id: string): ModelFamily | undefined {
+  const slug = id.toLowerCase().replace(/^(?:hanzo|zenlm|zoo)\//, '')
+  if (slug === 'enso' || slug.startsWith('enso-')) return 'enso'
+  if (slug === 'zen' || /^zen(?:\d|-)/.test(slug)) return 'zen'
+  if (slug === 'kai' || slug.startsWith('kai-')) return 'kai'
+  if (slug === 'zoo' || slug.startsWith('zoo-')) return 'zoo'
+  return undefined
+}
+
 /** One row, checked field by field: it is a network response. Null without an id. */
 export function modelOf(v: unknown): ModelCatalogEntry | null {
   if (!v || typeof v !== 'object') return null
@@ -150,7 +160,7 @@ export function modelOf(v: unknown): ModelCatalogEntry | null {
   set('name', str(r.name))
   set('description', str(r.description))
   set('class', oneOf(CLASSES, r.class))
-  set('family', oneOf(FAMILY_IDS, r.family))
+  set('family', oneOf(FAMILY_IDS, r.family) ?? inferFamily(id))
   set('premium', typeof r.premium === 'boolean' ? r.premium : undefined)
   set('created', pos(r.created))
   set('context_window', pos(r.context_window))
