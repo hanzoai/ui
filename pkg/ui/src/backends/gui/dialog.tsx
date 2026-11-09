@@ -53,7 +53,7 @@ export const frame = (size: DialogSize) =>
       size === 'fullscreen'
         ? undefined
         : {
-            boxShadow: 'var(--shadow-floating, 0 24px 60px -16px rgb(0 0 0 / .75))',
+            boxShadow: 'none',
           },
   }) as const
 
