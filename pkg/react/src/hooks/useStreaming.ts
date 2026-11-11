@@ -61,6 +61,7 @@ export function useStreaming(options: UseStreamingOptions = {}): UseStreamingRet
       const stream = streamFromAPI(content, targetThread)
       let totalChunks = 0
       let estimatedTotal = 100 // Start with estimate, will adjust
+      let completedContent = ''
       
       for await (const message of stream) {
         if (abortControllerRef.current?.signal.aborted) {
@@ -71,6 +72,7 @@ export function useStreaming(options: UseStreamingOptions = {}): UseStreamingRet
         
         // Extract string content from message
         const chunk = typeof message.content === 'string' ? message.content : ''
+        completedContent += chunk
         
         // Buffer management
         bufferRef.current.push(chunk)
@@ -114,7 +116,7 @@ export function useStreaming(options: UseStreamingOptions = {}): UseStreamingRet
       const completeMessage: Message = {
         id: `stream-${Date.now()}`,
         role: 'assistant',
-        content: currentMessage,
+        content: completedContent,
         timestamp: new Date(),
         threadId: targetThread
       }
@@ -128,7 +130,7 @@ export function useStreaming(options: UseStreamingOptions = {}): UseStreamingRet
       setIsStreaming(false)
       abortControllerRef.current = null
     }
-  }, [streamFromAPI, threadId, activeThreadId, onChunk, onComplete, onError, bufferSize, throttleMs, currentMessage])
+  }, [streamFromAPI, threadId, activeThreadId, onChunk, onComplete, onError, bufferSize, throttleMs])
   
   const stopStreaming = useCallback(() => {
     if (abortControllerRef.current) {
