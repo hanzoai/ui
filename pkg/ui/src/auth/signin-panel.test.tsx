@@ -76,14 +76,20 @@ describe('SignInPanel', () => {
     </GuiProvider>
   )
 
-  it('draws the headline, both providers, the email way in and no password field', () => {
+  it('draws the headline, both providers and the email way in, closed, as hanzo.app does', () => {
     const html = renderToStaticMarkup(wrap(<SignInPanel title="Sign in to Hanzo Team" line="Channels, agents and issues." />))
     expect(html).toContain('Sign in to Hanzo Team')
-    expect(html).toContain('Continue with Google')
-    expect(html).toContain('Continue with GitHub')
+    expect(html).toMatch(/data-signin-pair="">(?:(?!<\/div>).)*Continue with Google(?:(?!<\/div>).)*Continue with GitHub/)
     expect(html).toContain('Continue with email')
-    expect(html).toContain('Create account')
+    // The address field opens on a press, as on hanzo.app; nothing asks for a password.
+    expect(html).not.toContain('type="email"')
     expect(html).not.toContain('type="password"')
+    // No sign-up line unless the site asks for one.
+    expect(html).not.toContain('Create account')
+    expect(renderToStaticMarkup(wrap(<SignInPanel signup />))).toContain('Create account')
+    // Its rules ride along raw: an escaped quote would match nothing.
+    expect(html).toContain('[data-slot="signin-panel"] [data-signin-btn]{')
+    expect(html).not.toContain('[data-slot=&quot;')
   })
 
   it('stands on a solid card in the theme’s ground and hairline, which a site recolours or drops', () => {
@@ -133,7 +139,12 @@ describe('SignInPanel', () => {
     document.body.append(host)
     const root = createRoot(host)
     await act(async () => root.render(wrap(<SignInPanel title="Sign in to Hanzo Team" request={own} />)))
+    expect(host.querySelector('input[type="email"]')).toBeNull()
+    const open = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes('Continue with email'))!
+    await act(async () => open.click())
+    expect(own).not.toHaveBeenCalled()
     const input = host.querySelector('input[type="email"]') as HTMLInputElement
+    expect(document.activeElement).toBe(input)
     await act(async () => {
       const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!
       set.call(input, 'ada@example.com')
