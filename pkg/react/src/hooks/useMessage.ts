@@ -32,27 +32,30 @@ export function useMessage(options: UseMessageOptions = {}): UseMessageReturn {
     maxRetries = 3,
     retryDelay = 1000
   } = options
-  
+
   const { sendMessage: sendToAPI, activeThreadId } = useHanzo()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
   const [lastMessage, setLastMessage] = useState<Message | null>(null)
   const lastContentRef = useRef<string>('')
   const retryCountRef = useRef(0)
-  
-  const sendMessage = useCallback(async (content: string): Promise<Message> => {
+
+  const executeSend = useCallback(async (content: string, isRetryAttempt: boolean): Promise<Message> => {
     setIsLoading(true)
     setError(null)
     lastContentRef.current = content
-    retryCountRef.current = 0
-    
+    if (!isRetryAttempt) {
+      retryCountRef.current = 0
+    }
+
     try {
       const targetThread = threadId || activeThreadId
       if (!targetThread) {
         throw new Error('No thread available')
       }
-      
+
       const message = await sendToAPI(content, targetThread)
+      retryCountRef.current = 0
       setLastMessage(message)
       onSuccess?.(message)
       return message
@@ -60,39 +63,44 @@ export function useMessage(options: UseMessageOptions = {}): UseMessageReturn {
       const error = err instanceof Error ? err : new Error('Failed to send message')
       setError(error)
       onError?.(error)
-      
+
       if (autoRetry && retryCountRef.current < maxRetries) {
         retryCountRef.current++
-        setTimeout(() => retry(), retryDelay * retryCountRef.current)
+        const delay = retryDelay * retryCountRef.current
+        setTimeout(() => {
+          executeSend(lastContentRef.current, true).catch(() => {})
+        }, delay)
       }
-      
+
       throw error
     } finally {
       setIsLoading(false)
     }
   }, [sendToAPI, threadId, activeThreadId, onSuccess, onError, autoRetry, maxRetries, retryDelay])
-  
+
+  const sendMessage = useCallback(async (content: string): Promise<Message> => {
+    return executeSend(content, false)
+  }, [executeSend])
+
   const sendMessageWithAttachments = useCallback(async (
-    content: string, 
+    content: string,
     attachments: File[]
   ): Promise<Message> => {
-    // TODO: Implement file upload and attachment handling
-    // For now, we'll just append file names to the content
     const attachmentInfo = attachments.map(f => `[Attached: ${f.name}]`).join(' ')
     const enrichedContent = `${content}\n${attachmentInfo}`
     return sendMessage(enrichedContent)
   }, [sendMessage])
-  
+
   const clearError = useCallback(() => {
     setError(null)
   }, [])
-  
+
   const retry = useCallback(async () => {
     if (lastContentRef.current) {
-      await sendMessage(lastContentRef.current)
+      await executeSend(lastContentRef.current, true)
     }
-  }, [sendMessage])
-  
+  }, [executeSend])
+
   return {
     sendMessage,
     sendMessageWithAttachments,
