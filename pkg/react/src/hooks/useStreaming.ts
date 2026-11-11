@@ -48,6 +48,7 @@ export function useStreaming(options: UseStreamingOptions = {}): UseStreamingRet
     setCurrentMessage('')
     setProgress(0)
     bufferRef.current = []
+    lastUpdateRef.current = Date.now()
     
     // Create abort controller
     abortControllerRef.current = new AbortController()
@@ -67,12 +68,26 @@ export function useStreaming(options: UseStreamingOptions = {}): UseStreamingRet
         if (abortControllerRef.current?.signal.aborted) {
           break
         }
+
+        if (
+          message.role !== 'assistant' ||
+          message.threadId !== targetThread ||
+          typeof message.content !== 'string'
+        ) {
+          continue
+        }
+
+        const assistantContent = message.content
+        const chunk = assistantContent.startsWith(completedContent)
+          ? assistantContent.slice(completedContent.length)
+          : assistantContent
+        completedContent = assistantContent
+
+        if (!chunk) {
+          continue
+        }
         
         totalChunks++
-        
-        // Extract string content from message
-        const chunk = typeof message.content === 'string' ? message.content : ''
-        completedContent += chunk
         
         // Buffer management
         bufferRef.current.push(chunk)
