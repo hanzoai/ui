@@ -57,6 +57,18 @@ describe('handoff', () => {
   })
 })
 
+describe('the panel entry (@hanzo/ui/auth/panel)', () => {
+  it('loads the panel and its hand-off, and never the in-place form or @hanzogui/shell', async () => {
+    const { readFileSync } = await import('node:fs')
+    const imports = (file: string) => [...readFileSync(new URL(file, import.meta.url), 'utf8').matchAll(/from\s+['"]([^'"]+)['"]/g)].map((m) => m[1])
+    // A bundler binds every name a module imports: a site with an older @hanzo/iam
+    // (no SecondFactor) or without @hanzogui/shell must still build from this entry.
+    expect(imports('./panel.ts').sort()).toEqual(['./SignInPanel', './handoff'])
+    expect(imports('./SignInPanel.tsx').some((d) => /SignIn$|onboarding|@hanzogui\/shell/.test(d))).toBe(false)
+    expect(imports('./handoff.ts')).toEqual([])
+  })
+})
+
 describe('SignInPanel', () => {
   const wrap = (node: React.ReactNode) => (
     <GuiProvider config={config} defaultTheme="light">
