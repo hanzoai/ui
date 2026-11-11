@@ -136,4 +136,30 @@ describe('signOut', () => {
     expect(new URLSearchParams(ended.body).get('everywhere')).toBe('true')
     expect(new URLSearchParams(ended.body).get('client_id')).toBe('hanzo-app')
   })
+
+  it('leaves through the issuer\'s end-session page when signing out everywhere with an issuer', async () => {
+    localStorage.setItem('hanzo_iam_id_token', 'id-token-must-not-travel')
+    vi.stubGlobal('fetch', async () => new Response('{}'))
+    const assign = vi.fn()
+    Object.defineProperty(window, 'location', { value: { origin: 'https://hanzo.ai', assign }, writable: true })
+    const iam = { clearTokens: () => localStorage.clear() } as unknown as IAM
+    await signOut(iam, { clientId: 'hanzo-app', everywhere: true, issuer: 'https://hanzo.id/' })
+    expect(assign).toHaveBeenCalledTimes(1)
+    const left = new URL(assign.mock.calls[0]![0] as string)
+    expect(left.origin + left.pathname).toBe('https://hanzo.id/v1/iam/oauth/logout')
+    expect(left.searchParams.get('client_id')).toBe('hanzo-app')
+    expect(left.searchParams.get('everywhere')).toBe('true')
+    expect(left.searchParams.get('post_logout_redirect_uri')).toBe('https://hanzo.ai/login?from=logout')
+    expect(left.search).not.toContain('id_token')
+  })
+
+  it('lands on `to` as before when signing out everywhere without an issuer, or with one but not everywhere', async () => {
+    vi.stubGlobal('fetch', async () => new Response('{}'))
+    const assign = vi.fn()
+    Object.defineProperty(window, 'location', { value: { origin: 'https://hanzo.ai', assign }, writable: true })
+    const iam = { clearTokens: () => localStorage.clear() } as unknown as IAM
+    await signOut(iam, { clientId: 'hanzo-app', everywhere: true })
+    await signOut(iam, { clientId: 'hanzo-app', issuer: 'https://hanzo.id' })
+    expect(assign.mock.calls).toEqual([['/login?from=logout'], ['/login?from=logout']])
+  })
 })
