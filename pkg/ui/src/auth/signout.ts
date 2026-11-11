@@ -21,6 +21,17 @@ export interface SignOutOptions {
    * too. An application of another organization keeps its grant.
    */
   everywhere?: boolean
+  /**
+   * The issuer (the IAM config's `serverUrl`, https://hanzo.id). With
+   * `everywhere`, the sign-out ENDS on the issuer's end-session page as a
+   * top-level navigation, because a session lives on each of the issuer's
+   * sign-in origins (hanzo.id, hanzo.ai, hanzo.market) behind a host-only cookie
+   * this page cannot reach: IAM ends the one on each origin in turn (hanzoai/iam
+   * logout `nextSignout`) and the browser lands on the issuer's sign-in, which is
+   * hanzo.ai/login, or on `to` when the client registered it. Without an issuer
+   * the sign-out ends here, as before.
+   */
+  issuer?: string
 }
 
 /** RFC 7009: hand one token back to IAM's /v1/iam route; a refusal is not the person's problem. */
@@ -62,12 +73,30 @@ async function end(origin: string, idToken: string | null, clientId?: string, ev
 }
 
 /**
+ * The issuer's end-session page a sign-out everywhere leaves through: the client,
+ * `everywhere`, and `to` as the post-logout address, which IAM follows only when
+ * the client registered it exactly and otherwise replaces with its own sign-in.
+ * No id_token_hint: a token does not belong in an address bar or a log line, and
+ * IAM names the application from client_id.
+ */
+export function endSessionUrl(issuer: string, to: string, clientId?: string): string {
+  const q = new URLSearchParams({
+    ...(clientId ? { client_id: clientId } : {}),
+    everywhere: 'true',
+    post_logout_redirect_uri: new URL(to, window.location.origin).href,
+  })
+  return `${issuer.replace(/\/+$/, '')}/v1/iam/oauth/logout?${q}`
+}
+
+/**
  * Sign out: hand both tokens back to IAM through its /v1/iam revocation route
  * (a same-site call, refresh token first, since it is the one that mints more),
  * end IAM's session cookie, clear the local session, and land on the site's own
- * `/login?from=logout`. IAM's own logout page is never visited.
+ * `/login?from=logout`. A sign-out `everywhere` with an `issuer` lands through the
+ * issuer's end-session page instead (`endSessionUrl`), so the sessions on the
+ * issuer's other sign-in origins end too.
  */
-export async function signOut(iam: IAM, { via, to = '/login?from=logout', clientId, track, everywhere }: SignOutOptions = {}): Promise<void> {
+export async function signOut(iam: IAM, { via, to = '/login?from=logout', clientId, track, everywhere, issuer }: SignOutOptions = {}): Promise<void> {
   const origin = via ?? window.location.origin
   const access = bearer()
   const refresh = refresher()
@@ -79,13 +108,13 @@ export async function signOut(iam: IAM, { via, to = '/login?from=logout', client
     await end(origin, idToken, clientId, everywhere)
   } finally {
     track?.('logout_completed', {})
-    window.location.assign(to)
+    window.location.assign(everywhere && issuer ? endSessionUrl(issuer, to, clientId) : to)
   }
 }
 
 /** `signOut` bound to the page's IAM client. */
 export function useSignOut(options: SignOutOptions = {}): () => Promise<void> {
   const { sdk, config } = useIam()
-  const { via, to, track, clientId = config.clientId, everywhere } = options
-  return useCallback(() => signOut(sdk, { via, to, track, clientId, everywhere }), [sdk, via, to, track, clientId, everywhere])
+  const { via, to, track, clientId = config.clientId, everywhere, issuer = config.serverUrl } = options
+  return useCallback(() => signOut(sdk, { via, to, track, clientId, everywhere, issuer }), [sdk, via, to, track, clientId, everywhere, issuer])
 }
