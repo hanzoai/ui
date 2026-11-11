@@ -86,6 +86,23 @@ describe('SignInPanel', () => {
     expect(html).not.toContain('type="password"')
   })
 
+  it('stands on a solid card in the theme’s ground and hairline, which a site recolours or drops', () => {
+    const frame = (props: Record<string, unknown> = {}) =>
+      renderToStaticMarkup(wrap(<SignInPanel title="Sign in to Hanzo Team" {...props} />)).match(/<[a-z0-9]+[^>]*data-slot="signin-panel"[^>]*>/)?.[0] ?? ''
+    const plain = frame()
+    expect(plain).toContain('data-surface="card"')
+    expect(plain).toMatch(/_bg-background/)
+    expect(plain).toMatch(/_btw-1px/)
+    expect(plain).toMatch(/borderColor/)
+    const coloured = frame({ background: '$panel', borderColor: '$ink' })
+    expect(coloured).toMatch(/_bg-panel/)
+    expect(coloured).toMatch(/ink/)
+    expect(coloured).not.toMatch(/_bg-background/)
+    const bare = frame({ bare: true })
+    expect(bare).toContain('data-surface="bare"')
+    expect(bare).not.toMatch(/_bg-|_btw-1px/)
+  })
+
   it('leaves for Google in one press, with the site’s own request', async () => {
     const assign = vi.fn()
     Object.defineProperty(window, 'location', {

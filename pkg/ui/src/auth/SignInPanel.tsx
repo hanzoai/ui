@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type FormEvent, type ReactNode } from 'react'
+import { useState, type ComponentProps, type FormEvent, type ReactNode } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 import { useIam } from '@hanzo/iam/react'
 import { SiGithub, SiGoogle } from '@icons-pack/react-simple-icons'
@@ -25,6 +25,12 @@ import { address, handoff, SIGNIN, type ProviderKind, type Way } from './handoff
  * Drawn from @hanzo/ui components in the theme's tokens; the host mounts its
  * GuiProvider and imports no stylesheet. Framework-free: a Next export and a Vite
  * app draw it alike.
+ *
+ * It stands on its own card, a solid ground inside a hairline, since a front page
+ * draws it over a busy backdrop (hanzo.team's dot field showed through the
+ * providers' tinted buttons and the field). The card is the site's to colour
+ * (`background`, `borderColor`: a theme token or any CSS colour), and `bare` drops
+ * it for a host that sets the panel in a card of its own.
  */
 export interface SignInPanelProps {
   /** The headline: `Sign in to Hanzo Team`. Omit to draw the panel alone under the host's own. */
@@ -50,9 +56,18 @@ export interface SignInPanelProps {
    * and the provider's client mints it.
    */
   request?: Mint
+  /** The card's ground: a theme token (`$panel`) or any CSS colour. Default `$background`, solid. */
+  background?: Paint
+  /** The card's hairline: a theme token or any CSS colour. Default `$borderColor`. */
+  borderColor?: Paint
+  /** No card: the panel alone, for a host that sets it in a card of its own. */
+  bare?: boolean
 }
 
 type Mint = (params?: { additionalParams?: Record<string, string> }) => Promise<string>
+
+/** A colour the card takes, as the stack it is drawn on takes one. */
+type Paint = ComponentProps<typeof YStack>['bg']
 
 const NAME: Record<ProviderKind, string> = { google: 'Google', github: 'GitHub' }
 
@@ -77,6 +92,9 @@ function Panel({
   authorize = (u) => u,
   track,
   mint,
+  background = '$background',
+  borderColor = '$borderColor',
+  bare = false,
 }: SignInPanelProps & { mint: Mint }) {
   const { t } = useI18n()
   const [email, setEmail] = useState('')
@@ -107,8 +125,9 @@ function Panel({
     void leave('email', { kind: 'email', email: typed }, typed)
   }
 
+  const card = bare ? {} : ({ bg: background, borderWidth: 1, borderColor, rounded: '$6', p: '$6' } as const)
   return (
-    <YStack width="100%" maxW={400} items="center" gap="$4">
+    <YStack data-slot="signin-panel" data-surface={bare ? 'bare' : 'card'} width="100%" maxW={bare ? 400 : 448} items="center" gap="$4" {...card}>
       {title ? (
         <Heading render="h1" size="$8" fontWeight="500" color="$ink" m={0} text="center">
           {title}
