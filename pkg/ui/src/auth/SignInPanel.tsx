@@ -43,11 +43,30 @@ export interface SignInPanelProps {
   authorize?: (url: string) => string
   /** A press the stream should hear: `signin_started{method}`. */
   track?: (name: string, props?: Record<string, unknown>) => void
+  /**
+   * Mints this site's own authorize request (the IAM SDK's `getSigninUrl`, which
+   * keeps the PKCE verifier and state on this site). For a site that holds its
+   * own IAM client rather than mounting `<IamProvider>`; omit it under a provider
+   * and the provider's client mints it.
+   */
+  request?: Mint
 }
+
+type Mint = (params?: { additionalParams?: Record<string, string> }) => Promise<string>
 
 const NAME: Record<ProviderKind, string> = { google: 'Google', github: 'GitHub' }
 
-export function SignInPanel({
+export function SignInPanel(props: SignInPanelProps) {
+  return props.request ? <Panel {...props} mint={props.request} /> : <UnderProvider {...props} />
+}
+
+/** The panel under `<IamProvider>`: its client mints the request. */
+function UnderProvider(props: SignInPanelProps) {
+  const { sdk } = useIam()
+  return <Panel {...props} mint={(params) => sdk.getSigninUrl(params)} />
+}
+
+function Panel({
   title,
   line,
   providers = ['google', 'github'],
@@ -57,9 +76,9 @@ export function SignInPanel({
   privacyHref = 'https://hanzo.ai/privacy',
   authorize = (u) => u,
   track,
-}: SignInPanelProps) {
+  mint,
+}: SignInPanelProps & { mint: Mint }) {
   const { t } = useI18n()
-  const { sdk } = useIam()
   const [email, setEmail] = useState('')
   const [busy, setBusy] = useState<string | null>(null)
   const [wrong, setWrong] = useState<string | null>(null)
@@ -70,7 +89,7 @@ export function SignInPanel({
     setBusy(method)
     track?.('signin_started', { method })
     try {
-      const request = await sdk.getSigninUrl(hint ? { additionalParams: { login_hint: hint } } : undefined)
+      const request = await mint(hint ? { additionalParams: { login_hint: hint } } : undefined)
       window.location.assign(authorize(handoff(request, way, signin)))
     } catch (err) {
       setWrong(err instanceof Error && err.message ? err.message : 'Signing in could not start. Try again.')

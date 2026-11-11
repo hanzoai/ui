@@ -92,4 +92,31 @@ describe('SignInPanel', () => {
     expect(left.searchParams.get('provider')).toBe('google')
     await act(async () => root.unmount())
   })
+
+  it('takes the site’s own client when it mounts no provider, and leaves with the email it was given', async () => {
+    const assign = vi.fn()
+    Object.defineProperty(window, 'location', {
+      value: { origin: 'https://hanzo.team', href: 'https://hanzo.team/', protocol: 'https:', host: 'hanzo.team', hostname: 'hanzo.team', pathname: '/', search: '', hash: '', assign },
+      writable: true,
+    })
+    const own = vi.fn(async () => REQUEST)
+    const host = document.createElement('div')
+    document.body.append(host)
+    const root = createRoot(host)
+    await act(async () => root.render(wrap(<SignInPanel title="Sign in to Hanzo Team" request={own} />)))
+    const input = host.querySelector('input[type="email"]') as HTMLInputElement
+    await act(async () => {
+      const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!
+      set.call(input, 'ada@example.com')
+      input.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    const email = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes('Continue with email'))!
+    await act(async () => email.click())
+    expect(own).toHaveBeenCalledWith({ additionalParams: { login_hint: 'ada@example.com' } })
+    expect(getSigninUrl).not.toHaveBeenCalled()
+    const left = new URL(assign.mock.calls[0]![0] as string)
+    expect(left.origin + left.pathname).toBe('https://hanzo.ai/login')
+    expect(left.searchParams.get('login_hint')).toBe('ada@example.com')
+    await act(async () => root.unmount())
+  })
 })
