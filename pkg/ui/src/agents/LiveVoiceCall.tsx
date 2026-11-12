@@ -48,7 +48,7 @@ export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({
         const x = i * (barWidth + spacing)
         const height = status === 'speaking' || status === 'listening' ? Math.sin(phase + i * 0.25) * 20 + 24 : 6
 
-        ctx.fillStyle = status === 'speaking' ? '#34d399' : status === 'listening' ? '#818cf8' : '#737373'
+        ctx.fillStyle = status === 'speaking' ? '#34d399' : status === 'listening' ? '#e4e4e7' : '#737373'
 
         ctx.beginPath()
         ctx.roundRect(x, centerY - height / 2, barWidth, height, 2)

@@ -142,7 +142,7 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({
                 >
                   {m.name}
                   {m.isAgent && (
-                    <span style={{ padding: '1px 6px', borderRadius: 4, fontSize: 9, backgroundColor: 'rgba(99, 102, 241, 0.2)', color: '#a5b4fc', fontWeight: 700, border: '1px solid rgba(99, 102, 241, 0.3)' }}>
+                    <span style={{ padding: '1px 6px', borderRadius: 4, fontSize: 9, backgroundColor: 'rgba(255, 255, 255, 0.1)', color: '#e4e4e7', fontWeight: 700, border: '1px solid rgba(255, 255, 255, 0.2)' }}>
                       {t('AI')}
                     </span>
                   )}

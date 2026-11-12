@@ -5,7 +5,7 @@
  */
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import { DEFAULT, KEY, KNOBS, PAINTED, apply, bootScript, paint, read, style, write } from './state'
+import { DEFAULT, KEY, KNOBS, PAINTED, apply, bootScript, paint, purple, read, style, write } from './state'
 
 /** A localStorage that behaves, and one that refuses — private mode and embedded
  *  frames both throw rather than returning null, which is the case that takes a
@@ -144,14 +144,34 @@ describe('apply', () => {
     }
   })
 
+  it('a purple accent or highlight is dropped, in storage and in what is painted', () => {
+    for (const c of ['#8b5cf6', '#a855f7', 'rgb(139 92 246)', 'hsl(266 79% 50%)', 'oklch(62.7% 0.265 303.9)']) {
+      expect(purple(c)).toBe(true)
+      apply({ accent: c, highlight: c }, root)
+      for (const name of ['--primary', '--accent', '--highlight', '--ring']) expect([name, root.style.getPropertyValue(name)]).toEqual([name, ''])
+    }
+    for (const c of ['#3b82f6', '#06b6d4', '#10b981', '#f43f5e', '#808000', '#ffffff', 'oklch(62.3% 0.188 259.8)', 'oklch(0.715 0.143 215)']) expect(purple(c)).toBe(false)
+    const store = { getItem: () => JSON.stringify({ accent: '#8b5cf6', highlight: '#a855f7', radius: 'round' }), setItem() {}, removeItem() {} } as unknown as Storage
+    expect(read({ store })).toEqual({ radius: 'round' })
+    apply({}, root)
+  })
+
+  it('write() leaves a purple accent out of what it stores, and a purple painted cache cannot be replayed', () => {
+    const mem: Record<string, string> = {}
+    const store = { getItem: (k: string) => mem[k] ?? null, setItem: (k: string, v: string) => void (mem[k] = v), removeItem: (k: string) => void delete mem[k] } as unknown as Storage
+    write({ accent: '#8b5cf6', highlight: '#a855f7', radius: 'round' }, { store })
+    expect(JSON.parse(mem[KEY])).toEqual({ radius: 'round' })
+    expect(PAINTED).not.toBe(`${KEY}.painted`)
+  })
+
   it('contrast and highlight set relative darkness and selection/ring variables and clear cleanly', () => {
-    apply({ contrast: 'oled', highlight: '#8b5cf6' }, root)
+    apply({ contrast: 'oled', highlight: '#06b6d4' }, root)
     expect(root.style.getPropertyValue('--background')).toBe('#000000')
     expect(root.style.getPropertyValue('--pane-floor')).toBe('#000000')
     expect(root.style.getPropertyValue('--composer-fill')).toBe('#111111')
-    expect(root.style.getPropertyValue('--highlight')).toBe('#8b5cf6')
-    expect(root.style.getPropertyValue('--selection')).toContain('#8b5cf6')
-    expect(root.style.getPropertyValue('--ring')).toContain('#8b5cf6')
+    expect(root.style.getPropertyValue('--highlight')).toBe('#06b6d4')
+    expect(root.style.getPropertyValue('--selection')).toContain('#06b6d4')
+    expect(root.style.getPropertyValue('--ring')).toContain('#06b6d4')
     apply({}, root)
     for (const name of ['--background', '--pane-floor', '--composer-fill', '--highlight', '--selection', '--ring']) {
       expect([name, root.style.getPropertyValue(name)]).toEqual([name, ''])

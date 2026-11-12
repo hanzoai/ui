@@ -16,7 +16,7 @@ import { useReducedMotion } from '../motion/hooks'
 import type { PipelineStage, StageState } from './stages'
 import { Text, XStack, YStack } from '@hanzo/gui'
 
-const ACCENT = '#7c5cff'
+const ACCENT = '#e4e4e7'
 const GREEN = '#23c562'
 const RED = '#ff5d8f'
 const MUTED = 'rgba(148,163,184,0.28)'
@@ -26,7 +26,7 @@ export interface PipelineProps {
   stages: PipelineStage[]
   /** A short status label shown above the track (e.g. `pipelineModel(...).label`). */
   label?: string
-  /** Accent tone for the filled track + active stage. Defaults by state (green live / red error / purple). */
+  /** Accent tone for the filled track + active stage. Defaults by state (green live / red error / ink). */
   tone?: string
   /** Animate the active leg + pulse. Default true; reduced motion still forces static. */
   animate?: boolean

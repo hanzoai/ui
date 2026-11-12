@@ -75,15 +75,15 @@ describe('<Hanzo> honours the person, with no wiring', () => {
   it('puts a stored accent on BOTH names the ramp spends', async () => {
     // design's ramp uses --primary for action surfaces and --accent for
     // selection. One hue, stated once, landing on both.
-    localStorage.setItem(KEY, JSON.stringify({ accent: '#8b5cf6' }))
+    localStorage.setItem(KEY, JSON.stringify({ accent: '#10b981' }))
     await mount()
     const s = document.documentElement.style
-    expect(s.getPropertyValue('--primary')).toBe('#8b5cf6')
-    expect(s.getPropertyValue('--accent')).toBe('#8b5cf6')
+    expect(s.getPropertyValue('--primary')).toBe('#10b981')
+    expect(s.getPropertyValue('--accent')).toBe('#10b981')
     // …with the ink that reads on it and the hover that deepens it, so the loud
     // control keeps a legible label and stays the accent under the cursor.
     expect(s.getPropertyValue('--accent-foreground')).toBe('#0a0a0a')
-    expect(s.getPropertyValue('--accent-hover')).toContain('#8b5cf6')
+    expect(s.getPropertyValue('--accent-hover')).toContain('#10b981')
   })
 
   it('puts a stored theme on the document, in design\'s words and gui\'s', async () => {

@@ -108,11 +108,11 @@ describe('GridPattern', () => {
   it('paints a second, tinted rect only when a gradient is given', () => {
     expect(html(<GridPattern />)).not.toContain('grid-pattern-tint')
 
-    const markup = html(<GridPattern gradient={{ from: '#ff0080', via: '#7928ca', to: '#0070f3', opacity: 0.3 }} />)
+    const markup = html(<GridPattern gradient={{ from: '#ff0080', via: '#0e7490', to: '#0070f3', opacity: 0.3 }} />)
     const tint = tag(markup, 'grid-pattern-tint')
     expect(tint).toContain('opacity="0.3"')
     expect(markup).toMatch(/<stop[^>]*offset="0%"[^>]*stop-color="#ff0080"/)
-    expect(markup).toMatch(/<stop[^>]*offset="50%"[^>]*stop-color="#7928ca"/)
+    expect(markup).toMatch(/<stop[^>]*offset="50%"[^>]*stop-color="#0e7490"/)
     expect(markup).toMatch(/<stop[^>]*offset="100%"[^>]*stop-color="#0070f3"/)
   })
 

@@ -99,7 +99,48 @@ function effectiveScheme(p: Preference): Scheme | undefined {
   return p.theme
 }
 
-function varsFor(p: Preference): Record<string, string> {
+/**
+ * Is this colour purple — hue 245 to 335 (oklch: 272 to 340) with real chroma? The system spends no
+ * purple, so a stored accent or highlight in that band is dropped and Default
+ * stands. Reads hex, rgb(), hsl() and oklch(); other notations have no hue here.
+ */
+export function purple(v: string | undefined): boolean {
+  const s = (v ?? '').trim().toLowerCase()
+  const band = (h: number, lo = 245, hi = 335) => ((h % 360) + 360) % 360 >= lo && ((h % 360) + 360) % 360 <= hi
+  const spin = (r: number, g: number, b: number) => {
+    const hi = Math.max(r, g, b)
+    const d = hi - Math.min(r, g, b)
+    if (d <= 0.15) return false
+    const h = hi === r ? ((g - b) / d) % 6 : hi === g ? (b - r) / d + 2 : (r - g) / d + 4
+    return band(h * 60)
+  }
+  const hex = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/.exec(s)
+  if (hex) {
+    const h = hex[1]
+    const full = h.length <= 4 ? [...h.slice(0, 3)].map((c) => c + c).join('') : h.slice(0, 6)
+    const [r, g, b] = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16) / 255)
+    return spin(r, g, b)
+  }
+  const fn = /^(rgba?|hsla?|oklch)\(([^)]*)\)$/.exec(s)
+  if (!fn) return false
+  const parts = fn[2].split(/[\s,/]+/).filter(Boolean)
+  const n = (i: number, scale: number) => (parts[i]?.endsWith('%') ? (parseFloat(parts[i]) / 100) * scale : parseFloat(parts[i]))
+  if (parts.length < 3 || [0, 1, 2].some((i) => !Number.isFinite(n(i, 1)))) return false
+  if (fn[1].startsWith('rgb')) return spin(n(0, 255) / 255, n(1, 255) / 255, n(2, 255) / 255)
+  if (fn[1].startsWith('hsl')) return band(n(0, 360)) && n(1, 1) / (parts[1].endsWith('%') ? 1 : 100) > 0.2
+  return band(n(2, 360), 272, 340) && n(1, 1) > 0.04
+}
+
+/** The preference with any purple accent or highlight left out. */
+function tame(p: Preference): Preference {
+  const out: Preference = { ...p }
+  if (purple(out.accent)) delete out.accent
+  if (purple(out.highlight)) delete out.highlight
+  return out
+}
+
+function varsFor(raw: Preference): Record<string, string> {
+  const p = tame(raw)
   const out: Record<string, string> = { ...vars(p) }
   if (p.contrast && p.contrast in CONTRAST_PRESETS) {
     Object.assign(out, CONTRAST_PRESETS[p.contrast])
@@ -229,8 +270,8 @@ export function read({ scope = 'everywhere', org, store = safeStore() }: At = {}
       ...(p.font === 'default' || p.font === 'system' || p.font === 'serif' || p.font === 'mono' ? { font: p.font } : {}),
       ...(p.arabic === 'default' || COMPANIONS.includes(p.arabic as never) ? { arabic: p.arabic } : {}),
       ...(p.width === 'narrow' || p.width === 'default' || p.width === 'wide' ? { width: p.width } : {}),
-      ...(typeof p.accent === 'string' ? { accent: p.accent } : {}),
-      ...(typeof p.highlight === 'string' ? { highlight: p.highlight } : {}),
+      ...(typeof p.accent === 'string' && !purple(p.accent) ? { accent: p.accent } : {}),
+      ...(typeof p.highlight === 'string' && !purple(p.highlight) ? { highlight: p.highlight } : {}),
       ...(typeof p.background === 'string' ? { background: p.background } : {}),
       ...(p.contrast === 'oled' || p.contrast === 'soft' || p.contrast === 'high' ? { contrast: p.contrast } : {}),
       ...(p.theme === 'system' || p.theme === 'light' || p.theme === 'dark' ? { theme: p.theme } : {}),
@@ -262,7 +303,7 @@ export const CHANGE = 'hanzo:appearance'
  *  know, the same rule the console's save indicator lives by. */
 export function write(p: Preference, { scope = 'everywhere', org, store = safeStore() }: At = {}): boolean {
   try {
-    store?.setItem(keyFor(scope, org), JSON.stringify(p))
+    store?.setItem(keyFor(scope, org), JSON.stringify(tame(p)))
     if (typeof window !== 'undefined' && typeof Event === 'function') {
       window.dispatchEvent(new Event(CHANGE))
     }
@@ -318,7 +359,7 @@ export function apply(
 }
 
 /** What the last `apply()` put on this device's document — the boot script's input. */
-export const PAINTED = `${KEY}.painted`
+export const PAINTED = `${KEY}.painted.v2`
 
 /** Whether a scheme comes out dark on this device right now. */
 export const dark = (theme: Scheme): boolean =>

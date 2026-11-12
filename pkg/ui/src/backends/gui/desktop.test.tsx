@@ -36,9 +36,9 @@ describe('Desktop', () => {
     expect(bare).toContain('data-slot="desktop-surface"')
     expect(bare).not.toContain('data-slot="desktop-background"')
 
-    const painted = html(<Desktop background="linear-gradient(135deg, #1d4ed8, #7c3aed)">content</Desktop>)
+    const painted = html(<Desktop background="linear-gradient(135deg, #1d4ed8, #0e7490)">content</Desktop>)
     expect(painted).toContain('data-slot="desktop-background"')
-    expect(painted).toContain('linear-gradient(135deg, #1d4ed8, #7c3aed)')
+    expect(painted).toContain('linear-gradient(135deg, #1d4ed8, #0e7490)')
   })
 
   it('places children inside the surface', () => {

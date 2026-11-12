@@ -23,7 +23,7 @@ import { Plate as Card } from '../backends/gui/plate'
 import { useI18n } from '@hanzo/i18n/react'
 
 /** Distinct, theme-neutral series colors (mid-saturation reads on dark + light). */
-export const SERIES = ['#6ea8fe', '#7ee787', '#f0a868', '#c792ea', '#56d4c4', '#e879a6', '#d6c15a', '#8b9bb4'] as const
+export const SERIES = ['#6ea8fe', '#7ee787', '#f0a868', '#b4b4bb', '#56d4c4', '#e879a6', '#d6c15a', '#8b9bb4'] as const
 export const colorForIndex = (i: number): string => SERIES[i % SERIES.length]
 const TRACK = 'rgba(128,128,128,0.18)'
 

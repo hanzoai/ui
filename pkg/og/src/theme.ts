@@ -31,7 +31,7 @@ export const HANZO_INDUSTRIES_THEME: Partial<OgConfig> = {
 
 export const MODALITY_COLORS: Record<string, string> = {
   text: '#3b82f6',
-  vision: '#a855f7',
+  vision: '#94a3b8',
   code: '#22c55e',
   audio: '#eab308',
   image: '#ec4899',

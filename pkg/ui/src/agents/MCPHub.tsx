@@ -64,9 +64,9 @@ export const MCPHub: React.FC<MCPHubProps> = ({
               padding: '4px 10px',
               fontSize: 12,
               fontWeight: 500,
-              color: '#a5b4fc',
-              backgroundColor: 'rgba(99, 102, 241, 0.1)',
-              border: '1px solid rgba(99, 102, 241, 0.3)',
+              color: '#e4e4e7',
+              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
               borderRadius: 8,
               cursor: 'pointer',
             }}

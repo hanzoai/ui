@@ -26,13 +26,13 @@ import { align } from '../backends/gui/dir'
 
 /** Distinct hues for categorical series (e.g. spend-by-model donut), dark-tuned. */
 export const CHART_PALETTE = [
-  '#7c5cff',
+  '#e4e4e7',
   '#23c562',
   '#ff9f45',
   '#3aa0ff',
   '#ff5d8f',
   '#16c0c8',
-  '#c084fc',
+  '#a1a1aa',
   '#f4c245',
 ]
 export const CHART_OTHER = 'var(--muted-foreground)'

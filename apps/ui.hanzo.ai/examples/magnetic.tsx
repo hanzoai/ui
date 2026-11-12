@@ -32,7 +32,7 @@ export function Strength() {
         </YStack>
       </Magnetic>
       <Magnetic strength={0.6}>
-        <YStack width={96} height={96} rounded="$4" bg="$purple9" items="center" justify="center">
+        <YStack width={96} height={96} rounded="$4" bg="$gray9" items="center" justify="center">
           Strong
         </YStack>
       </Magnetic>

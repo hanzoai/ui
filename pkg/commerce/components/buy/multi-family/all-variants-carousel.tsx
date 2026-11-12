@@ -32,7 +32,7 @@ const debugBorder = (c: 'r' | 'g' | 'b', disable: boolean = true): string => {
   switch (c) {
     case 'r': return ' border border-[#ffaaaa] '
     case 'g': return ' border border-[#aaffaa] '
-    case 'b': return ' border border-[#aaaaff] '
+    case 'b': return ' border border-zinc-400 '
   }
 }
 

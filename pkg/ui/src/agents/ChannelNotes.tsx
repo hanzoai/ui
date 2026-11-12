@@ -60,7 +60,7 @@ export const ChannelNotes: React.FC<ChannelNotesProps> = ({ channelName, notes, 
           {onExtractActionItems && (
             <button
               onClick={() => onExtractActionItems(content)}
-              style={{ padding: '4px 10px', fontSize: 12, fontWeight: 500, color: '#d8b4fe', backgroundColor: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.3)', borderRadius: 8, cursor: 'pointer' }}
+              style={{ padding: '4px 10px', fontSize: 12, fontWeight: 500, color: '#e4e4e7', backgroundColor: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: 8, cursor: 'pointer' }}
               title={t('Extract tasks and action items from notes')}
             >
               ✨ {t('Extract Tasks')}
@@ -74,8 +74,8 @@ export const ChannelNotes: React.FC<ChannelNotesProps> = ({ channelName, notes, 
                 padding: '4px 10px',
                 fontSize: 12,
                 fontWeight: 600,
-                color: '#ffffff',
-                backgroundColor: '#4f46e5',
+                color: '#09090b',
+                backgroundColor: '#e4e4e7',
                 border: 'none',
                 borderRadius: 8,
                 cursor: 'pointer',

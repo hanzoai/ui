@@ -67,7 +67,7 @@ function Parts() {
         <Tag color="red" disabled>
           disabled
         </Tag>
-        <Tag color="purple" maxW={96}>
+        <Tag color="blue" maxW={96}>
           A tag whose label is far too long for it
         </Tag>
         <Tags tags={[{ id: 'a', label: 'Lead', color: 'sky' }, { id: 'b', label: 'Plain' }]} onRemove={NOOP} />

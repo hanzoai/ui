@@ -62,7 +62,7 @@ const INK: Record<Marquee3DVariant, React.CSSProperties> = {
     filter: 'drop-shadow(0 0 10px currentColor)',
     animation: 'marquee-3d-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
   },
-  rainbow: clip('linear-gradient(90deg, #ef4444, #eab308, #22c55e, #3b82f6, #a855f7)'),
+  rainbow: clip('linear-gradient(90deg, #ef4444, #eab308, #22c55e, #3b82f6, #06b6d4)'),
   metallic: clip('linear-gradient(180deg, #e5e7eb, #9ca3af, #4b5563)'),
   fire: {
     ...clip('linear-gradient(0deg, #dc2626, #f97316, #facc15)'),

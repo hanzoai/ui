@@ -96,7 +96,7 @@ function HeroGraphic({ size = 170, accent = CHART_PALETTE[0] }: { size?: number;
           <stop offset="100%" stopColor={accent} stopOpacity="0" />
         </radialGradient>
         <linearGradient id="hz-hero-cube" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#a78bfa" />
+          <stop offset="0%" stopColor="#e4e4e7" />
           <stop offset="100%" stopColor={accent} />
         </linearGradient>
       </defs>
@@ -106,9 +106,9 @@ function HeroGraphic({ size = 170, accent = CHART_PALETTE[0] }: { size?: number;
       ))}
       <g transform="translate(100 96)">
         <polygon points="0,-34 30,-17 30,17 0,34 -30,17 -30,-17" fill="url(#hz-hero-cube)" fillOpacity="0.9" />
-        <polygon points="0,-34 30,-17 0,0 -30,-17" fill="#c4b5fd" fillOpacity="0.85" />
+        <polygon points="0,-34 30,-17 0,0 -30,-17" fill="#f4f4f5" fillOpacity="0.85" />
         <polygon points="0,0 30,-17 30,17 0,34" fill={accent} fillOpacity="0.7" />
-        <polygon points="0,0 -30,-17 -30,17 0,34" fill="#6d28d9" fillOpacity="0.7" />
+        <polygon points="0,0 -30,-17 -30,17 0,34" fill="#52525b" fillOpacity="0.7" />
       </g>
     </svg>
   )

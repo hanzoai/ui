@@ -35,5 +35,5 @@ export function ErrorCorrection() {
 
 /** Colors and margin — custom foreground/background with a quiet-zone margin. */
 export function Styled() {
-  return <QRCode value="https://ui.hanzo.ai" fgColor="#7000FF" bgColor="#F4EEFF" includeMargin size={200} />
+  return <QRCode value="https://ui.hanzo.ai" fgColor="#09090b" bgColor="#f4f4f5" includeMargin size={200} />
 }

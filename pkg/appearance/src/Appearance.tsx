@@ -32,7 +32,7 @@ import { TYPE_MIN, TYPE_MAX } from '@hanzo/design'
 
 import type { Corner, Face, Measure, Scheme } from '@hanzo/design'
 
-import { CHANGE, COMPANIONS, DEFAULT, apply, companion, current, read, write, type Contrast, type Preference } from './state'
+import { CHANGE, COMPANIONS, DEFAULT, apply, companion, current, purple, read, write, type Contrast, type Preference } from './state'
 import { layerFor, type Layer, type Resolved, type Scope } from './scope'
 
 /** The named type steps. Inside design's clamp, so none can be refused. */
@@ -153,7 +153,6 @@ export const ACCENTS: Array<{ label: string; value?: string }> = [
   { label: 'Default' },
   { label: 'Olive', value: '#808000' },
   { label: 'Blue', value: '#3b82f6' },
-  { label: 'Violet', value: '#8b5cf6' },
   { label: 'Emerald', value: '#10b981' },
   { label: 'Rose', value: '#f43f5e' },
   { label: 'Amber', value: '#f59e0b' },
@@ -162,7 +161,6 @@ export const ACCENTS: Array<{ label: string; value?: string }> = [
 /** Highlight presets for selection wash, focus rings, and active borders (`--highlight`, `--selection`, `--ring`). */
 export const HIGHLIGHTS: Array<{ label: string; value?: string }> = [
   { label: 'Default' },
-  { label: 'Violet', value: '#8b5cf6' },
   { label: 'Blue', value: '#3b82f6' },
   { label: 'Cyan', value: '#06b6d4' },
   { label: 'Emerald', value: '#10b981' },
@@ -277,7 +275,12 @@ export function useAppearance({
   }, [account?.base, account?.token])
 
   const set = useCallback(
-    (patch: Partial<Preference>) => {
+    (asked: Partial<Preference>) => {
+      // A purple accent or highlight is refused here, so the panel never shows a
+      // selection that paints nothing and the account never receives one.
+      const patch = { ...asked }
+      if (purple(patch.accent)) delete patch.accent
+      if (purple(patch.highlight)) delete patch.highlight
       // Patch the LAYER being edited, not the resolved value — writing the
       // resolved one back would copy an org's accent into the person's own
       // preference, and it would stop tracking the org the moment they changed
@@ -639,7 +642,7 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
           <input
             type="color"
             aria-label="Custom highlight color"
-            value={pref.highlight && /^#[0-9a-fA-F]{6}$/.test(pref.highlight) ? pref.highlight : '#8b5cf6'}
+            value={pref.highlight && /^#[0-9a-fA-F]{6}$/.test(pref.highlight) ? pref.highlight : '#ffffff'}
             onChange={(e) => set({ highlight: e.target.value })}
             style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%', border: 0, padding: 0 }}
           />

@@ -4,7 +4,7 @@ import { Desktop } from "@hanzo/ui"
 /** Default — a full-viewport surface with an app window laid over it. */
 export function Default() {
   return (
-    <Desktop height={320} background="linear-gradient(135deg, #1d4ed8, #7c3aed)">
+    <Desktop height={320} background="linear-gradient(135deg, #1d4ed8, #0e7490)">
       <YStack
         position="absolute"
         t={24}

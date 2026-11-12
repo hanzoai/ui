@@ -43,7 +43,7 @@ describe('menu hover surface', () => {
     const pct = Number(src.match(/var\(--accent[^)]*\)\s+(\d+)%/)?.[1] ?? 100) / 100
     const LABEL = '#fafafa'
     const GROUND = '#0a0a0a'
-    for (const accent of ['#ff5c00', '#8b5cf6', '#22c55e', '#ef4444']) {
+    for (const accent of ['#ff5c00', '#06b6d4', '#22c55e', '#ef4444']) {
       const surface = mix(accent, GROUND, pct)
       expect(ratio(LABEL, surface), `${accent} -> ${surface}`).toBeGreaterThanOrEqual(4.5)
     }

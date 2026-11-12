@@ -68,10 +68,10 @@ export const hsl = {
   bg2:        "hsl(0 0% 18%)",
   bg3:        "hsl(0 0% 25%)",
   bgOverlay:  "hsla(0 0% 0% / 60%)",
-  secondary0: "hsl(266 79% 40%)",
-  secondary1: "hsl(266 79% 50%)",
-  secondary2: "hsl(266 79% 60%)",
-  secondary3: "hsl(266 79% 70%)",
+  secondary0: "hsl(0 0% 40%)",
+  secondary1: "hsl(0 0% 50%)",
+  secondary2: "hsl(0 0% 60%)",
+  secondary3: "hsl(0 0% 70%)",
   destructive: "hsl(0 62.8% 45%)",
 } as const
 

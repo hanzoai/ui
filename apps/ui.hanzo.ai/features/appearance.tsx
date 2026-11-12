@@ -38,7 +38,6 @@ const ACCENT: { label: string; value?: string }[] = [
   { label: 'Default' },
   { label: 'Olive', value: '#808000' },
   { label: 'Blue', value: '#3b82f6' },
-  { label: 'Violet', value: '#8b5cf6' },
   { label: 'Rose', value: '#f43f5e' },
   { label: 'Amber', value: '#f59e0b' },
 ]

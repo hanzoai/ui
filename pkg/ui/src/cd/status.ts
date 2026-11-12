@@ -4,14 +4,14 @@
  * identical in a pill, a tree node's accent, a mini-bar, and the minimap.
  *
  * The hues keep the GitOps meaning (green = healthy/synced, amber = out-of-sync /
- * missing, red = degraded, blue = progressing, purple = suspended, grey =
+ * missing, red = degraded, blue = progressing, grey = suspended or
  * unknown) but are re-tuned for a dark-first surface so they stay legible on
  * near-black without the washed-out look of the light-theme originals.
  */
 import type { HealthStatus, OperationPhase, PodPhase, SyncStatus } from './types'
 
 /** A coarse tone bucket, shared with the rest of @hanzo/ui's tag vocabulary. */
-export type StatusTone = 'green' | 'yellow' | 'red' | 'blue' | 'purple' | 'neutral'
+export type StatusTone = 'green' | 'yellow' | 'red' | 'blue' | 'neutral'
 
 /** The concrete swatch a status renders in: dot/text hue + a soft chip fill. */
 export interface StatusColor {
@@ -27,7 +27,6 @@ const HUES: Record<StatusTone, string> = {
   yellow: '#f5b544',
   red: '#f4636e',
   blue: '#38a0f5',
-  purple: '#a684f5',
   neutral: '#8b96a5',
 }
 
@@ -35,7 +34,7 @@ const HEALTH_TONE: Record<HealthStatus, StatusTone> = {
   Healthy: 'green',
   Progressing: 'blue',
   Degraded: 'red',
-  Suspended: 'purple',
+  Suspended: 'neutral',
   Missing: 'yellow',
   Unknown: 'neutral',
 }

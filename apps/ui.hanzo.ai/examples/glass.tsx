@@ -6,7 +6,7 @@ import { Check, Play } from "@hanzogui/lucide-icons-2"
 const COVER =
   "data:image/svg+xml;utf8," +
   encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="360"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e3a8a"/><stop offset="1" stop-color="#7e22ce"/></linearGradient></defs><rect width="800" height="360" fill="url(#g)"/><circle cx="170" cy="110" r="120" fill="#f59e0b"/><circle cx="560" cy="250" r="150" fill="#22d3ee" opacity=".85"/><circle cx="420" cy="80" r="70" fill="#f43f5e" opacity=".9"/></svg>'
+    '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="360"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e3a8a"/><stop offset="1" stop-color="#0e7490"/></linearGradient></defs><rect width="800" height="360" fill="url(#g)"/><circle cx="170" cy="110" r="120" fill="#f59e0b"/><circle cx="560" cy="250" r="150" fill="#22d3ee" opacity=".85"/><circle cx="420" cy="80" r="70" fill="#f43f5e" opacity=".9"/></svg>'
   )
 
 /** Default — a frosted bar over cover art; whatever sits under the panel blurs through it, and a hairline seals the edge. */

@@ -42,8 +42,8 @@ await set({ '--type-scale': '1.3' })
 rows['person: type 1.3'] = await read()
 await set({ '--type-scale': null, '--density': '1.15' })
 rows['person: density 1.15'] = await read()
-await set({ '--density': null, '--primary': '#8b5cf6', '--accent': '#8b5cf6' })
-rows['person: accent violet'] = await read()
+await set({ '--density': null, '--primary': '#10b981', '--accent': '#10b981' })
+rows['person: accent emerald'] = await read()
 // The CTO's acceptance test: one component set, N brands, differing only in
 // token VALUES. Each palette below is DATA — no component, config or package
 // changes between these three rows.

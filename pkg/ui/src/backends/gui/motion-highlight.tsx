@@ -42,7 +42,7 @@ const Glow = ({ x, y, size, color }: { x: number; y: number; size: number; color
 )
 
 export const MotionHighlight = React.forwardRef<GuiElement, MotionHighlightProps>(
-  ({ children, size = 128, color = 'rgba(120,120,255,0.15)', style, onMouseMove, onMouseEnter, onMouseLeave, ...props }, ref) => {
+  ({ children, size = 128, color = 'rgba(255,255,255,0.15)', style, onMouseMove, onMouseEnter, onMouseLeave, ...props }, ref) => {
     const [pos, setPos] = React.useState({ x: 0, y: 0 })
     const [hovered, setHovered] = React.useState(false)
 

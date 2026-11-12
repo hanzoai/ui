@@ -70,7 +70,7 @@ export const AnimatedBeam = React.forwardRef<SVGSVGElement, AnimatedBeamProps>(
       pathColor = 'gray',
       pathWidth = 2,
       gradientStartColor = '#18CCFC',
-      gradientStopColor = '#6344F5',
+      gradientStopColor = '#a1a1aa',
       containerRef,
       fromRef,
       toRef,

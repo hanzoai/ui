@@ -64,9 +64,9 @@ export const SwarmBar: React.FC<SwarmBarProps> = ({
                 borderRadius: 10,
                 fontSize: 12,
                 fontWeight: 500,
-                border: isSelected ? '1px solid #6366f1' : '1px solid rgba(255, 255, 255, 0.1)',
-                backgroundColor: isSelected ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                color: isSelected ? '#c7d2fe' : '#d4d4d4',
+                border: isSelected ? '1px solid #e4e4e7' : '1px solid rgba(255, 255, 255, 0.1)',
+                backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.05)',
+                color: isSelected ? '#fafafa' : '#d4d4d4',
                 cursor: 'pointer',
               }}
               title={agent.role}

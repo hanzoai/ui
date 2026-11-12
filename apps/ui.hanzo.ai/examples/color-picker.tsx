@@ -12,7 +12,7 @@ export function Presets() {
   return (
     <ColorPicker
       value="#f97316"
-      presets={["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#8b5cf6"]}
+      presets={["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#06b6d4"]}
     />
   )
 }
@@ -24,7 +24,7 @@ export function Disabled() {
 
 /** Controlled — `onChange` fires on every hue drag, saturation drag, hex edit and preset click, so the picked value can drive anything else on the page. */
 export function Controlled() {
-  const [color, setColor] = useState("#8b5cf6")
+  const [color, setColor] = useState("#06b6d4")
   return (
     <YStack gap="$3" items="flex-start">
       <ColorPicker value={color} onChange={setColor} />

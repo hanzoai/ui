@@ -151,6 +151,6 @@ export function pipelineModel(status?: string | null, furthestReached = -1): Pip
 }
 
 /** The accent tone for a model: red on failure, green on live, else the accent. */
-export function pipelineTone(model: Pick<PipelineModel, 'live' | 'errored'>, accent = '#7c5cff'): string {
+export function pipelineTone(model: Pick<PipelineModel, 'live' | 'errored'>, accent = '#e4e4e7'): string {
   return model.errored ? '#ff5d8f' : model.live ? '#23c562' : accent
 }
