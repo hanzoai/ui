@@ -16,6 +16,10 @@ vi.mock('@hanzo/iam/react', () => ({ useIam: () => ({ sdk: { getSigninUrl }, con
 
 import { address, handoff } from './handoff'
 import { SignInPanel } from './SignInPanel'
+import { SIGNIN_STYLE, SignInCard } from './look'
+import { Input } from '../backends/gui/input'
+import { InputGroup } from '../backends/gui/input-group'
+import { Action } from '../marketing/controls'
 
 afterEach(() => {
   getSigninUrl.mockClear()
@@ -63,8 +67,8 @@ describe('the panel entry (@hanzo/ui/auth/panel)', () => {
     const imports = (file: string) => [...readFileSync(new URL(file, import.meta.url), 'utf8').matchAll(/from\s+['"]([^'"]+)['"]/g)].map((m) => m[1])
     // A bundler binds every name a module imports: a site with an older @hanzo/iam
     // (no SecondFactor) or without @hanzogui/shell must still build from this entry.
-    expect(imports('./panel.ts').sort()).toEqual(['./SignInPanel', './handoff'])
-    expect(imports('./SignInPanel.tsx').some((d) => /SignIn$|onboarding|@hanzogui\/shell/.test(d))).toBe(false)
+    expect(imports('./panel.ts').sort()).toEqual(['./SignInPanel', './handoff', './look'])
+    for (const file of ['./SignInPanel.tsx', './look.tsx']) expect(imports(file).some((d) => /SignIn$|onboarding|@hanzogui\/shell/.test(d))).toBe(false)
     expect(imports('./handoff.ts')).toEqual([])
   })
 })
@@ -88,7 +92,7 @@ describe('SignInPanel', () => {
     expect(html).not.toContain('Create account')
     expect(renderToStaticMarkup(wrap(<SignInPanel signup />))).toContain('Create account')
     // Its rules ride along raw: an escaped quote would match nothing.
-    expect(html).toContain('[data-slot="signin-panel"] [data-signin-btn]{')
+    expect(html).toContain('[data-signin] [data-signin-btn]{')
     expect(html).not.toContain('[data-slot=&quot;')
   })
 
@@ -157,6 +161,79 @@ describe('SignInPanel', () => {
     const left = new URL(assign.mock.calls[0]![0] as string)
     expect(left.origin + left.pathname).toBe('https://hanzo.ai/login')
     expect(left.searchParams.get('login_hint')).toBe('ada@example.com')
+    await act(async () => root.unmount())
+  })
+})
+
+describe('SignInCard', () => {
+  const wrap = (node: React.ReactNode) => (
+    <GuiProvider config={config} defaultTheme="light">
+      {node}
+    </GuiProvider>
+  )
+
+  /** Every selector the rules name, past the card's own scope. */
+  const selectors = () =>
+    [...SIGNIN_STYLE.replace(/@container[^{]*\{/g, '').matchAll(/([^{}]+)\{/g)].flatMap((m) => m[1]!.split(/,(?![^(]*\))/)).map((s) => s.trim())
+
+  it('is a host’s own region, found by its own slot, with the rules every sign-in shares', () => {
+    const html = renderToStaticMarkup(
+      wrap(
+        <SignInCard slot="signin" render="section" aria-label="Log in">
+          <p>steps</p>
+        </SignInCard>,
+      ),
+    )
+    const frame = html.match(/<section[^>]*>/)?.[0] ?? ''
+    expect(frame).toContain('data-signin=""')
+    expect(frame).toContain('data-slot="signin"')
+    expect(frame).toContain('aria-label="Log in"')
+    expect(frame).toContain('data-surface="card"')
+    expect(html).toContain('<p>steps</p>')
+    // One scope for every rule, so nothing it says reaches past the card.
+    expect(selectors().every((s) => s.startsWith('[data-signin] '))).toBe(true)
+    expect(html).not.toContain('[data-signin]&quot;')
+  })
+
+  it('draws this library’s Input, InputGroup and filled Action as the field and the solid control, untouched by a mark', async () => {
+    const host = document.createElement('div')
+    document.body.append(host)
+    const root = createRoot(host)
+    await act(async () =>
+      root.render(
+        wrap(
+          <SignInCard slot="signin">
+            <Input size="lg" fill type="email" aria-label="Email" />
+            <Input size="lg" type="password" aria-label="Password" />
+            <InputGroup size="lg" fill>
+              <Input aria-label="Phone number" />
+            </InputGroup>
+            <Action render="button" type="submit" fill>
+              Continue
+            </Action>
+          </SignInCard>,
+        ),
+      ),
+    )
+    const card = host.querySelector('[data-signin]')!
+    const hits = (el: Element) => selectors().filter((s) => !/:(hover|active|disabled|focus-visible)|::/.test(s) && el.matches(s))
+    const email = card.querySelector('input[aria-label="Email"]')!
+    const password = card.querySelector('input[aria-label="Password"]')!
+    const phone = card.querySelector('input[aria-label="Phone number"]')!
+    const group = card.querySelector('[data-slot="input-group"]')!
+    const submit = [...card.querySelectorAll('button')].find((b) => b.textContent === 'Continue')!
+    // The field's box, on a lone Input; a password keeps its own padding for the eye.
+    for (const field of [email, password]) expect(hits(field).some((s) => s.includes('input[data-slot="input"]'))).toBe(true)
+    expect(SIGNIN_STYLE).toMatch(/input\[data-slot="input"\]:not\(\[data-slot="input-group"\] \*\):not\(#_\)\{height:46px;border-radius:14px;font-size:14px;background-color:[^;}]+\}/)
+    // Inside a group the group is the box, and the field is only its text.
+    expect(hits(phone)).toEqual([])
+    expect(hits(group).length).toBeGreaterThan(0)
+    // The filled Action is the solid control, 46px with 14px corners.
+    expect(submit.hasAttribute('data-fill')).toBe(true)
+    const solid = hits(submit)
+    expect(solid.some((s) => s.endsWith('[data-fill]'))).toBe(true)
+    // Its corners outrank a host that holds every Action round with !important of its own.
+    expect(SIGNIN_STYLE).toMatch(/\[data-slot="action"\]:not\(#_\)\{box-sizing:border-box;height:46px;min-height:46px;padding:0 14px;gap:9px;border-radius:14px!important;/)
     await act(async () => root.unmount())
   })
 })

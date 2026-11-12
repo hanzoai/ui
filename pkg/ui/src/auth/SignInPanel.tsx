@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, type ComponentProps, type FormEvent, type ReactNode } from 'react'
+import { useState, type FormEvent, type ReactNode } from 'react'
 import { useI18n } from '@hanzo/i18n/react'
 import { useIam } from '@hanzo/iam/react'
 import { SiGithub, SiGoogle } from '@icons-pack/react-simple-icons'
-import { Heading, Paragraph, YStack } from '../backends/gui/layout'
+import { Heading, Paragraph } from '../backends/gui/layout'
 import { address, handoff, SIGNIN, type ProviderKind, type Way } from './handoff'
+import { SignInCard, type SignInCardProps } from './look'
 
 /**
  * The sign-in a Hanzo site draws on its own front page (hanzo.app, hanzo.bot,
@@ -23,10 +24,9 @@ import { address, handoff, SIGNIN, type ProviderKind, type Way } from './handoff
  * components/auth/steps.tsx `HERO_STYLE`), rule for rule, so the sites read as one
  * product's: the providers side by side, then one solid Continue with email that
  * opens the address field when pressed, and no sign-up line (hanzo.ai/login offers
- * one). The rules are carried here as one scoped stylesheet: the host mounts its
- * GuiProvider and imports none. They read design's custom properties (`--popover`,
- * `--border`, `--border-strong`, `--foreground`, `--muted-foreground`) with gui's
- * theme keys behind them, so a host without design's sheet still draws it.
+ * one). The card and its rules are ./look.tsx's `SignInCard`, which hanzo.ai's
+ * own sign-in (/login, /signup) is drawn on too, so the door and the page it
+ * opens onto read alike: the host mounts its GuiProvider and imports no sheet.
  * Framework-free: a Next export and a Vite app draw it alike.
  *
  * It stands on its own card, a solid ground inside a hairline, since a front page
@@ -72,41 +72,9 @@ export interface SignInPanelProps {
 type Mint = (params?: { additionalParams?: Record<string, string> }) => Promise<string>
 
 /** A colour the card takes, as the stack it is drawn on takes one. */
-type Paint = ComponentProps<typeof YStack>['bg']
+type Paint = SignInCardProps['background']
 
 const NAME: Record<ProviderKind, string> = { google: 'Google', github: 'GitHub' }
-
-/** hanzo.app's front-page sign-in rules (steps.tsx `HERO_STYLE`), scoped to this panel. */
-const AT = '[data-slot="signin-panel"]'
-const FILL = 'var(--popover,var(--panel))'
-const EDGE = 'var(--border,var(--edge))'
-const STRONG = 'var(--border-strong,var(--bound))'
-const INK = 'var(--foreground,var(--ink))'
-const MUTE = 'var(--muted-foreground,var(--quiet))'
-const STYLE =
-  `${AT} [data-signin-body]{container-type:inline-size;display:flex;flex-direction:column;gap:10px;width:100%}` +
-  `${AT} [data-signin-pair]{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}` +
-  `@container (max-width:379.98px){${AT} [data-signin-pair]{grid-template-columns:1fr}}` +
-  `${AT} [data-signin-btn]{box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:46px;margin:0;padding:0 14px;border-radius:14px;border:1px solid ${EDGE};background:${FILL};color:${INK};font-family:var(--font-sans,Zen,system-ui,sans-serif);font-size:14px;font-weight:500;line-height:1;white-space:nowrap;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:transform .2s cubic-bezier(.16,1,.3,1),border-color .2s,background-color .2s,opacity .2s}` +
-  `${AT} [data-signin-btn]:hover:not(:disabled){border-color:${STRONG};transform:translateY(-2px)}` +
-  `${AT} [data-signin-btn]:active:not(:disabled){transform:scale(.98)}` +
-  `${AT} [data-signin-btn]:disabled{opacity:.55;cursor:not-allowed}` +
-  `${AT} [data-signin-btn][data-solid]{background:${INK};color:var(--background);border-color:${INK}}` +
-  `${AT} [data-signin-btn][data-solid]:hover:not(:disabled){opacity:.92;transform:none}` +
-  `${AT} [data-signin-btn] svg{flex-shrink:0}` +
-  `${AT} [data-signin-or]{display:flex;align-items:center;gap:12px;font-size:12.5px;color:${MUTE}}` +
-  `${AT} [data-signin-or]::before,${AT} [data-signin-or]::after{content:'';flex:1;height:1px;background:${EDGE}}` +
-  `${AT} [data-signin-form]{display:flex;flex-direction:column;gap:10px;margin:0}` +
-  `${AT} [data-signin-field]{box-sizing:border-box;width:100%;height:46px;margin:0;padding:0 16px;border-radius:14px;border:1px solid ${EDGE};background-color:${FILL};color:${INK};font-family:var(--font-sans,Zen,system-ui,sans-serif);font-size:14px;outline:none}` +
-  `${AT} [data-signin-field]::placeholder{color:${MUTE}}` +
-  `${AT} [data-signin-field]:focus-visible{border-color:${STRONG};box-shadow:0 0 0 2px var(--ring,${STRONG})}` +
-  `${AT} [data-signin-wrong]{margin:0;font-size:13px;color:var(--destructive,#e5484d)}` +
-  `${AT} [data-signin-quiet]{margin:0;font-size:13px;color:${MUTE}}` +
-  `${AT} [data-signin-quiet] button{padding:0;border:0;background:none;color:${INK};font:inherit;cursor:pointer}` +
-  `${AT} [data-signin-quiet] button:hover:not(:disabled){text-decoration:underline}` +
-  `${AT} [data-signin-terms]{margin:0;max-width:400px;text-align:center;font-size:12px;line-height:18px;color:${MUTE}}` +
-  `${AT} [data-signin-terms] a{color:${INK};text-decoration:none}` +
-  `${AT} [data-signin-terms] a:hover{text-decoration:underline;text-underline-offset:2px}`
 
 export function SignInPanel(props: SignInPanelProps) {
   return props.request ? <Panel {...props} mint={props.request} /> : <UnderProvider {...props} />
@@ -163,12 +131,9 @@ function Panel({
     void leave('email', { kind: 'email', email: typed }, typed)
   }
 
-  const card = bare ? {} : ({ bg: background, borderWidth: 1, borderColor, rounded: '$6', p: '$6' } as const)
   const emailLabel = t(busy === 'email' ? 'One moment…' : 'Continue with email')
   return (
-    <YStack data-slot="signin-panel" data-surface={bare ? 'bare' : 'card'} width="100%" maxW={bare ? 400 : 464} items="center" gap="$3" {...card}>
-      {/* Raw, as hanzo.app sets its own: a server render would escape the rules' quotes as text. */}
-      <style dangerouslySetInnerHTML={{ __html: STYLE }} />
+    <SignInCard background={background} borderColor={borderColor} bare={bare}>
       {title ? (
         <Heading render="h1" size="$8" fontWeight="500" color="$ink" m={0} text="center">
           {title}
@@ -253,6 +218,6 @@ function Panel({
           privacy: <a href={privacyHref}>{t('Privacy Policy')}</a>,
         })}
       </p>
-    </YStack>
+    </SignInCard>
   )
 }

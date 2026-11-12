@@ -1,6 +1,7 @@
 /**
  * The shared sign-in panel and its hand-off, alone: what a Hanzo site draws on
- * its front page (./SignInPanel.tsx) and where each press goes (./handoff.ts).
+ * its front page (./SignInPanel.tsx), where each press goes (./handoff.ts), and
+ * the card and rules both it and hanzo.ai's own sign-in are drawn by (./look.tsx).
  *
  * Its own entry so importing the panel does not load the in-place sign-in form
  * (./SignIn.tsx), which needs a newer @hanzo/iam (`SecondFactor`) and
@@ -10,3 +11,4 @@
  */
 export { SignInPanel, type SignInPanelProps } from './SignInPanel'
 export { address, handoff, SIGNIN, type ProviderKind, type Way } from './handoff'
+export { SIGNIN_STYLE, SignInCard, type SignInCardProps } from './look'
