@@ -236,4 +236,12 @@ describe('SignInCard', () => {
     expect(SIGNIN_STYLE).toMatch(/\[data-slot="action"\]:not\(#_\)\{box-sizing:border-box;height:46px;min-height:46px;padding:0 14px;gap:9px;border-radius:14px!important;/)
     await act(async () => root.unmount())
   })
+
+  it('splits the providers’ row in equal halves that no label can widen', () => {
+    // A bare `1fr` keeps its label's width as its floor: "Continue with Google"
+    // needs 197px of a 195px half, so the pair stood 402px against the field's
+    // 398 and GitHub ran 3px past the column's edge (hanzo.ai/login at 1440).
+    const columns = [...SIGNIN_STYLE.matchAll(/\[data-signin-pair\]\{[^}]*grid-template-columns:([^;}]+)/g)].map((m) => m[1])
+    expect(columns).toEqual(['repeat(2,minmax(0,1fr))', 'minmax(0,1fr)'])
+  })
 })

@@ -85,9 +85,11 @@ const GROUP = `[data-slot="input-group"]${OVER}`
 /** Every rule the sign-in's controls are drawn by, scoped to the card. */
 export const SIGNIN_STYLE =
   `${AT} [data-signin-body]{container-type:inline-size;display:flex;flex-direction:column;gap:10px;width:100%}` +
-  `${AT} [data-signin-pair]{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}` +
+  // Equal halves no label can widen: a bare `1fr` keeps its label's width as
+  // its floor, and "Continue with Google" would push the pair past the field.
+  `${AT} [data-signin-pair]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%}` +
   `${AT} [data-signin-pair]>:last-child:nth-child(odd){grid-column:1/-1}` +
-  `@container (max-width:379.98px){${AT} [data-signin-pair]{grid-template-columns:1fr}}` +
+  `@container (max-width:379.98px){${AT} [data-signin-pair]{grid-template-columns:minmax(0,1fr)}}` +
   `${AT} [data-signin-btn]{box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:46px;margin:0;padding:0 14px;border-radius:14px;border:1px solid ${EDGE};background:${FILL};color:${INK};font-family:${FONT};font-size:14px;font-weight:500;line-height:1;white-space:nowrap;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:${LIFT}}` +
   `${AT} ${ACTION}{box-sizing:border-box;height:46px;min-height:46px;padding:0 14px;gap:9px;border-radius:14px!important;border:1px solid ${EDGE};background:${FILL};color:${INK};font-family:${FONT};font-size:14px;font-weight:500;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.04);backdrop-filter:none;-webkit-backdrop-filter:none;transition:${LIFT}}` +
   `${AT} [data-signin-btn]:hover:not(:disabled),${AT} ${ACTION}:hover:not(:disabled){border-color:${STRONG};transform:translateY(-2px)}` +
