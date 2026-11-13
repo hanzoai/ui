@@ -38,38 +38,43 @@ export function useMessage(options: UseMessageOptions = {}): UseMessageReturn {
   const [error, setError] = useState<Error | null>(null)
   const [lastMessage, setLastMessage] = useState<Message | null>(null)
   const lastContentRef = useRef<string>('')
-  const retryCountRef = useRef(0)
   
   const sendMessage = useCallback(async (content: string): Promise<Message> => {
-    setIsLoading(true)
-    setError(null)
     lastContentRef.current = content
-    retryCountRef.current = 0
-    
-    try {
-      const targetThread = threadId || activeThreadId
-      if (!targetThread) {
-        throw new Error('No thread available')
+
+    const sendAttempt = async (attempt: number): Promise<Message> => {
+      setIsLoading(true)
+      setError(null)
+
+      try {
+        const targetThread = threadId || activeThreadId
+        if (!targetThread) {
+          throw new Error('No thread available')
+        }
+
+        const message = await sendToAPI(content, targetThread)
+        setLastMessage(message)
+        onSuccess?.(message)
+        return message
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error('Failed to send message')
+        setError(error)
+        onError?.(error)
+
+        if (autoRetry && attempt < maxRetries) {
+          const nextAttempt = attempt + 1
+          setTimeout(() => {
+            void sendAttempt(nextAttempt).catch(() => {})
+          }, retryDelay * nextAttempt)
+        }
+
+        throw error
+      } finally {
+        setIsLoading(false)
       }
-      
-      const message = await sendToAPI(content, targetThread)
-      setLastMessage(message)
-      onSuccess?.(message)
-      return message
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Failed to send message')
-      setError(error)
-      onError?.(error)
-      
-      if (autoRetry && retryCountRef.current < maxRetries) {
-        retryCountRef.current++
-        setTimeout(() => retry(), retryDelay * retryCountRef.current)
-      }
-      
-      throw error
-    } finally {
-      setIsLoading(false)
     }
+
+    return sendAttempt(0)
   }, [sendToAPI, threadId, activeThreadId, onSuccess, onError, autoRetry, maxRetries, retryDelay])
   
   const sendMessageWithAttachments = useCallback(async (
