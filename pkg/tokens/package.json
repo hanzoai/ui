@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/tokens",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Design tokens for Hanzo UI: colors, spacing, radii, typography, themes",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
