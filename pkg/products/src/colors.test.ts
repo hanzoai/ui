@@ -31,9 +31,21 @@ describe("color palette", () => {
   })
 })
 
+describe("the purple-named swatches", () => {
+  it("indigo, violet and purple carry greys, whatever the catalog sends", () => {
+    for (const { key, hex } of COLOR_SWATCHES.filter((s) => ["indigo", "violet", "purple"].includes(s.key))) {
+      const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+      const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min
+      const l = (max + min) / 2
+      const s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1))
+      expect(s, key).toBe(0)
+    }
+  })
+})
+
 describe("swatchHex (colorToken -> css)", () => {
   it("resolves a known key and falls back for unknown/empty", () => {
-    expect(swatchHex("indigo")).toBe("#5E6AD2")
+    expect(swatchHex("blue")).toBe("#4C8DFF")
     const fallback = swatchHex("slate")
     expect(swatchHex("nope")).toBe(fallback)
     expect(swatchHex(undefined)).toBe(fallback)

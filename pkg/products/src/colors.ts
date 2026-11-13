@@ -1,7 +1,7 @@
 /**
  * The colorToken → css code map (one of the two maps that can't live in a DB).
  *
- * A catalog row carries a `brandColor` KEY (e.g. `"indigo"`); this module resolves
+ * A catalog row carries a `brandColor` KEY (e.g. `"violet"`); this module resolves
  * it to a hex string from ONE curated palette so the whole surface stays cohesive.
  * Lifted verbatim from console2 `colors.ts` (the per-product system) and extended
  * with `categoryColor` (the per-category accent). Pure + dependency-free.
@@ -17,10 +17,11 @@ import { CATEGORY_COLORS } from "./categories"
 /** One selectable color. `hex` is tuned to read well on BOTH dark and light. */
 export type Swatch = { key: string; label: string; hex: string }
 
-/** The curated palette — a cohesive, Linear-like set. Keys are stable (persisted
+/** The curated palette — a cohesive, Linear-like set. `indigo`, `purple` and `violet` stay as
+ *  names the catalog may send, but carry greys: the system renders no purple. Keys are stable (persisted
  *  in prefs), so a key is NEVER renamed once shipped (add new ones at the end). */
 export const COLOR_SWATCHES: Swatch[] = [
-  { key: "indigo", label: "Indigo", hex: "#5E6AD2" },
+  { key: "indigo", label: "Indigo", hex: "#6E6E6E" },
   { key: "blue", label: "Blue", hex: "#4C8DFF" },
   { key: "sky", label: "Sky", hex: "#38BDF8" },
   { key: "cyan", label: "Cyan", hex: "#22C3C3" },
@@ -32,6 +33,8 @@ export const COLOR_SWATCHES: Swatch[] = [
   { key: "red", label: "Red", hex: "#F2564B" },
   { key: "rose", label: "Rose", hex: "#F16D8A" },
   { key: "pink", label: "Pink", hex: "#EC6FAF" },
+  { key: "purple", label: "Purple", hex: "#A0A0A0" },
+  { key: "violet", label: "Violet", hex: "#868686" },
   { key: "slate", label: "Slate", hex: "#8B93A7" },
 ]
 
@@ -56,14 +59,14 @@ export const swatchHex = (key: string | undefined | null): string =>
  */
 export const CURATED_COLORS: Record<string, string> = {
   overview: "indigo",
-  models: "slate",
+  models: "violet",
   providers: "blue",
   chat: "green",
-  playground: "slate",
+  playground: "purple",
   bot: "orange",
   marketplace: "pink",
-  inference: "slate",
-  agents: "slate",
+  inference: "violet",
+  agents: "purple",
   embeddings: "cyan",
   vector: "cyan",
   sql: "teal",
@@ -90,8 +93,8 @@ export const CURATED_COLORS: Record<string, string> = {
   authz: "red",
   hsm: "rose",
   audit: "rose",
-  traces: "slate",
-  observations: "slate",
+  traces: "purple",
+  observations: "purple",
   cost: "green",
   plans: "green",
   billing: "green",
