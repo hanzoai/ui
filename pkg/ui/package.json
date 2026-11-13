@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.33.3",
+  "version": "8.33.4",
   "type": "module",
   "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -336,6 +336,7 @@
     "test:responsive": "node scripts/responsive.mjs",
     "test:contain": "node scripts/contain.mjs",
     "test:corner": "node scripts/corner.mjs",
+    "test:consent": "node scripts/consent.mjs",
     "test:code": "node scripts/code.mjs",
     "test:composer": "node scripts/composer.mjs",
     "test:rtl": "node scripts/compose-theme.mjs && node scripts/rtl.mjs",

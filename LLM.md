@@ -1433,7 +1433,14 @@ CSRF and cart state survive `rejectAll()`. Its buttons read design's button toke
 for every state (`--primary`/`--secondary`, their `-hover` under the pointer and
 pressed, `--ring` for the keyboard), never the Button's own hover, which put dark
 ink on a dark fill; 13px type on a 36px floor, a `--radius-lg` corner in a
-`--radius-xl` card.
+`--radius-xl` card. The bar's × stands in the inline-end corner at the bar's top
+padding, and the words' line is floored at the ×'s own box (`LINE`: 36px, 44px
+under a finger), so the × is centred on the first line: until 8.33.4 the global
+notice's line was its 18px words and 24px link, and the × hung 6px below them
+with its foot on the bar's edge. Words taller than the × (three lines on a phone)
+start level with its top. `scripts/consent.mjs` (`test:consent`, the browser
+suite) measures it under both rules, mouse and finger, LTR and RTL, and that a
+pressed × survives a reload; jsdom lays nothing out, so no unit test can.
 
 ### One way — supersessions (no divergent telemetry client)
 
