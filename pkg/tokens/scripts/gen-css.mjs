@@ -65,7 +65,7 @@ const dataCss = sheet(
   data.dark,
   data.light,
 )
-// Thirty hues, twelve steps, two themes — every one or the file is wrong.
+// Twenty-six hues, twelve steps, two themes — every one or the file is wrong.
 if (count(data.dark) !== 312 || count(data.light) !== 312)
   throw new Error(`gen-css: the data palette has ${count(data.dark)} dark and ${count(data.light)} light steps, not 312`)
 writeFileSync(join(dist, 'data.css'), dataCss)

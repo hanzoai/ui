@@ -11,11 +11,11 @@ import { isHexColor, resolveAccent, contrastText, accentFor } from './accent'
 
 describe('accentFor — the Accent value a theme block should apply', () => {
   it('resolves an enabled valid color to {accent, contrast}', () => {
-    expect(accentFor({ colorPrimary: '#5E6AD2', isEnabled: true })).toEqual({ accent: '#5E6AD2', contrast: '#ffffff' })
+    expect(accentFor({ colorPrimary: '#5E5E5E', isEnabled: true })).toEqual({ accent: '#5E5E5E', contrast: '#ffffff' })
     expect(accentFor({ colorPrimary: '#f5d90a', isEnabled: true })).toEqual({ accent: '#f5d90a', contrast: '#000000' })
   })
   it('is the honest default (no accent) when disabled / invalid / missing', () => {
-    expect(accentFor({ colorPrimary: '#5E6AD2', isEnabled: false })).toEqual({ accent: null, contrast: '#ffffff' })
+    expect(accentFor({ colorPrimary: '#5E5E5E', isEnabled: false })).toEqual({ accent: null, contrast: '#ffffff' })
     expect(accentFor({ colorPrimary: 'nope', isEnabled: true })).toEqual({ accent: null, contrast: '#ffffff' })
     expect(accentFor(null)).toEqual({ accent: null, contrast: '#ffffff' })
   })
@@ -24,11 +24,11 @@ describe('accentFor — the Accent value a theme block should apply', () => {
 describe('isHexColor', () => {
   it('accepts 3- and 6-digit hex (case-insensitive, trims)', () => {
     expect(isHexColor('#abc')).toBe(true)
-    expect(isHexColor('#5E6AD2')).toBe(true)
+    expect(isHexColor('#5E5E5E')).toBe(true)
     expect(isHexColor('  #00ff88  ')).toBe(true)
   })
   it('rejects non-hex / empty / undefined', () => {
-    expect(isHexColor('5E6AD2')).toBe(false) // no #
+    expect(isHexColor('5E5E5E')).toBe(false) // no #
     expect(isHexColor('#12')).toBe(false)
     expect(isHexColor('rgb(1,2,3)')).toBe(false)
     expect(isHexColor('')).toBe(false)
@@ -39,11 +39,11 @@ describe('isHexColor', () => {
 
 describe('resolveAccent — the color to apply, or null (honest)', () => {
   it('returns the hex only when the theme is enabled AND valid', () => {
-    expect(resolveAccent({ colorPrimary: '#5E6AD2', isEnabled: true })).toBe('#5E6AD2')
+    expect(resolveAccent({ colorPrimary: '#5E5E5E', isEnabled: true })).toBe('#5E5E5E')
     expect(resolveAccent({ colorPrimary: '  #0f0 ', isEnabled: true })).toBe('#0f0')
   })
   it('returns null when disabled, missing, or invalid — no accent forced', () => {
-    expect(resolveAccent({ colorPrimary: '#5E6AD2', isEnabled: false })).toBeNull()
+    expect(resolveAccent({ colorPrimary: '#5E5E5E', isEnabled: false })).toBeNull()
     expect(resolveAccent({ colorPrimary: 'not-a-color', isEnabled: true })).toBeNull()
     expect(resolveAccent({ isEnabled: true })).toBeNull()
     expect(resolveAccent(null)).toBeNull()
@@ -56,7 +56,7 @@ describe('contrastText — readable text on the accent', () => {
     expect(contrastText('#ffffff')).toBe('#000000')
     expect(contrastText('#f5d90a')).toBe('#000000') // bright yellow → black text
     expect(contrastText('#000000')).toBe('#ffffff')
-    expect(contrastText('#5E6AD2')).toBe('#ffffff') // indigo → white text
+    expect(contrastText('#5E5E5E')).toBe('#ffffff') // dark grey → white text
   })
   it('handles 3-digit hex and never throws on bad input', () => {
     expect(contrastText('#fff')).toBe('#000000')

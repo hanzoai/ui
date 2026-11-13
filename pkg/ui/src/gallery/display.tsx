@@ -203,7 +203,7 @@ function Parts() {
           <ColorSample key={hue} colorName={hue} />
         ))}
         <ColorSample colorName="blue" variant="circle" />
-        <ColorSample color="#3e63dd" variant="circle" />
+        <ColorSample color="#6e6e6e" variant="circle" />
       </Section>
 
       <Section name="heading-label">

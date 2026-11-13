@@ -28,7 +28,7 @@ export function ProductIcon({
   size = 24,
 }: {
   icon: IconLike
-  /** The product's resolved accent hex (e.g. `#5E6AD2`). Omit for the neutral chip. */
+  /** The product's resolved accent hex (e.g. `#5E5E5E`). Omit for the neutral chip. */
   color?: string
   size?: number
 }) {
