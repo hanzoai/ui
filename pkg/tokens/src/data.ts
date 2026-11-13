@@ -9,8 +9,8 @@
  * and stay one of a fixed set so it can be stored by name. This module is that
  * set, scoped to data the way `--art-*` is scoped to artwork.
  *
- * Thirty 12-step scales, light and dark, as sRGB hex. Twenty-four of the
- * twenty-five pickable hues and all five neutrals are Radix Colors 3.0.0 scales
+ * Twenty-six 12-step scales, light and dark, as sRGB hex. Twenty of the
+ * twenty-one pickable hues and all five neutrals are Radix Colors 3.0.0 scales
  * (their display-p3 sources are identical, measured; MIT, see NOTICE): `blue` is
  * Radix indigo and `teal` is Radix teal. `gray` is a neutral of the
  * source kit's own (MIT, see NOTICE). The sRGB values are the nearest in-gamut
@@ -27,8 +27,8 @@
  * (`@hanzo/tokens/css/data`) and the full bundle.
  */
 
-/** The twenty-five hues a person can pick, in the order a new option takes the next one. */
-export const hues = ['red', 'ruby', 'crimson', 'tomato', 'orange', 'amber', 'yellow', 'lime', 'grass', 'green', 'jade', 'mint', 'teal', 'cyan', 'sky', 'blue', 'iris', 'violet', 'purple', 'plum', 'pink', 'bronze', 'gold', 'brown', 'gray'] as const
+/** The twenty-one hues a person can pick, in the order a new option takes the next one. */
+export const hues = ['red', 'ruby', 'crimson', 'tomato', 'orange', 'amber', 'yellow', 'lime', 'grass', 'green', 'jade', 'mint', 'teal', 'cyan', 'sky', 'blue', 'pink', 'bronze', 'gold', 'brown', 'gray'] as const
 
 /** Five tinted neutrals, for data that wants a grey with a cast. Not offered by a picker. */
 export const neutrals = ['mauve', 'olive', 'sage', 'sand', 'slate'] as const
@@ -105,22 +105,6 @@ export const scales: Record<DataHue, { light: Scale; dark: Scale }> = {
     light: ['#fdfdfe', '#f7f9ff', '#edf2fe', '#e0e9ff', '#d2deff', '#c1d0ff', '#abbdf9', '#8da4ef', '#3e63dd', '#3358d4', '#3a5bc7', '#1f2d5c'],
     dark: ['#11131f', '#141726', '#182449', '#1d2e61', '#253974', '#304384', '#3a4f97', '#435db2', '#3e63dd', '#5472e4', '#9db1ff', '#d6e1ff'],
   },
-  iris: {
-    light: ['#fdfdff', '#f8f8ff', '#f0f1fe', '#e6e7ff', '#dadcff', '#cbcdff', '#b8b9f8', '#9b9ef0', '#5b5bd6', '#5151cd', '#5753c6', '#272962'],
-    dark: ['#13131e', '#171625', '#202248', '#262a65', '#303374', '#3d3d82', '#4a4a95', '#5a58b1', '#5b5bd6', '#6e6ade', '#b0a9ff', '#e0dffe'],
-  },
-  violet: {
-    light: ['#fdfcfe', '#faf8ff', '#f4f0fe', '#ebe5ff', '#e1d9ff', '#d4cafe', '#c2b5f5', '#aa99ec', '#6e56cf', '#654dc4', '#6550b9', '#2f265f'],
-    dark: ['#14121f', '#1b1525', '#291f44', '#33255b', '#3c2e69', '#473876', '#56468b', '#6858ad', '#6e56cf', '#7d66d9', '#bba5ff', '#e2ddfe'],
-  },
-  purple: {
-    light: ['#fefcfe', '#fbf7fe', '#f7edfd', '#f2e2fc', '#ead5f9', '#e0c4f4', '#d1afec', '#be93e4', '#8e4ec6', '#8347b9', '#8145b5', '#402060'],
-    dark: ['#18111b', '#1e1523', '#2f1c3b', '#3d224e', '#48295c', '#54346b', '#664282', '#8357aa', '#8e4ec6', '#9a5cd0', '#d59cff', '#ecd9fa'],
-  },
-  plum: {
-    light: ['#fefcff', '#fdf7fd', '#fbebfb', '#f7def8', '#f1d1f3', '#e9c2ec', '#deade3', '#cf91d8', '#ab4aba', '#a144af', '#953ea3', '#53195d'],
-    dark: ['#181118', '#201320', '#351935', '#451d47', '#502454', '#5e3062', '#734079', '#92549c', '#ab4aba', '#b658c4', '#e796f3', '#f4d4f4'],
-  },
   pink: {
     light: ['#fffcfe', '#fef7fb', '#fee9f6', '#fbdcef', '#f6cee7', '#efbfdd', '#e7acd1', '#dd93c2', '#d6409f', '#cf3897', '#c2298a', '#651249'],
     dark: ['#191117', '#21121d', '#37172f', '#4b143d', '#591c47', '#692955', '#833869', '#a84885', '#d6409f', '#de51a8', '#ff80ca', '#fdd1ea'],
@@ -174,7 +158,7 @@ export const next = (hue?: PickHue | null): PickHue => {
 
 /**
  * The hue a string is drawn in: a rolling hash of `seed` (each step
- * `code + (hash << 5) - hash`), absolute value modulo the twenty-five pickable
+ * `code + (hash << 5) - hash`), absolute value modulo the twenty-one pickable
  * hues. The same formula as the source kit's stringToThemeColor (MIT, see
  * NOTICE), so an imported record keeps its colour. Seed with a record id rather than a name
  * and a rename keeps it too.

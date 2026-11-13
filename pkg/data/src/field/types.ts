@@ -41,15 +41,15 @@ export type FieldType =
   | 'actor'       // audit: who/what created the record
 
 /**
- * A tag's hue: one of @hanzo/ui's thirty data hues (the twenty-five a person
+ * A tag's hue: one of @hanzo/ui's twenty-six data hues (the twenty-one a person
  * picks, then the five tinted neutrals). The nine names this type had before
  * the data palette — gray, blue, green, amber, red, purple, pink, teal, orange —
- * are all among them, so a stored option keeps its colour.
+ * are all among them but purple, which is gone: a stored purple option reads as gray.
  */
 export type TagColor =
   | 'red' | 'ruby' | 'crimson' | 'tomato' | 'orange' | 'amber' | 'yellow' | 'lime'
-  | 'grass' | 'green' | 'jade' | 'mint' | 'teal' | 'cyan' | 'sky' | 'blue' | 'iris'
-  | 'violet' | 'purple' | 'plum' | 'pink' | 'bronze' | 'gold' | 'brown' | 'gray'
+  | 'grass' | 'green' | 'jade' | 'mint' | 'teal' | 'cyan' | 'sky' | 'blue'
+  | 'pink' | 'bronze' | 'gold' | 'brown' | 'gray'
   | 'mauve' | 'olive' | 'sage' | 'sand' | 'slate'
 
 /** One option of a select/multiSelect field — or a candidate record of a relation. */

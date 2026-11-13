@@ -76,7 +76,7 @@ export const dark: TokenSection[] = [
     ],
     vars: [
       { name: 'art-tide', value: '#2F6BFF' },
-      { name: 'art-iris', value: '#A1A1AA' },
+      { name: 'art-ash', value: '#A1A1AA' },
       { name: 'art-ember', value: '#FF7A3D' },
       { name: 'art-glow', value: '#F4F4F5' },
     ],

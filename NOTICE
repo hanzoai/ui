@@ -44,8 +44,8 @@ This product includes the colour scales of Radix Colors
 
     Copyright (c) 2021 Radix
 
-They are the data palette in pkg/tokens/src/data.ts: twenty-four of its
-twenty-five pickable hues and all five tinted neutrals are Radix Colors 3.0.0
+They are the data palette in pkg/tokens/src/data.ts: twenty of its
+twenty-one pickable hues and all five tinted neutrals are Radix Colors 3.0.0
 scales (its `blue` is Radix indigo, its `teal` Radix teal), as twenty-ui ships
 them, converted from display-p3 to sRGB. Its `gray` is twenty-ui's own.
 

@@ -9,10 +9,10 @@ Hanzo's chrome is monochrome: one hue through an opacity ladder, dark by default
 The only hues in chrome are the states (`--state-error`, `--state-warning`,
 `--state-online`, `--state-success`). Type is Zen + Zen Mono, from @hanzo/font.
 
-Data is the one exception, and it is scoped: `src/data.ts` is a palette of thirty
+Data is the one exception, and it is scoped: `src/data.ts` is a palette of twenty-six
 12-step hues (`--data-<hue>-<step>`) for what a PERSON colours — a select option's
 tag, a kanban column, an object's icon tile, an avatar's initial, a chart series.
-Never a button, a border or a focus ring. Twenty-four of the twenty-five pickable
+Never a button, a border or a focus ring. Twenty of the twenty-one pickable
 hues and all five neutrals are Radix Colors scales (NOTICE); `hueOf(seed)` picks
 a record's hue from a stable string hash, so a record keeps its colour wherever
 it is drawn or imported.

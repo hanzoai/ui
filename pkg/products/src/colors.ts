@@ -1,7 +1,7 @@
 /**
  * The colorToken → css code map (one of the two maps that can't live in a DB).
  *
- * A catalog row carries a `brandColor` KEY (e.g. `"violet"`); this module resolves
+ * A catalog row carries a `brandColor` KEY (e.g. `"indigo"`); this module resolves
  * it to a hex string from ONE curated palette so the whole surface stays cohesive.
  * Lifted verbatim from console2 `colors.ts` (the per-product system) and extended
  * with `categoryColor` (the per-category accent). Pure + dependency-free.
@@ -32,8 +32,6 @@ export const COLOR_SWATCHES: Swatch[] = [
   { key: "red", label: "Red", hex: "#F2564B" },
   { key: "rose", label: "Rose", hex: "#F16D8A" },
   { key: "pink", label: "Pink", hex: "#EC6FAF" },
-  { key: "purple", label: "Purple", hex: "#A972F0" },
-  { key: "violet", label: "Violet", hex: "#8257E6" },
   { key: "slate", label: "Slate", hex: "#8B93A7" },
 ]
 
@@ -58,14 +56,14 @@ export const swatchHex = (key: string | undefined | null): string =>
  */
 export const CURATED_COLORS: Record<string, string> = {
   overview: "indigo",
-  models: "violet",
+  models: "slate",
   providers: "blue",
   chat: "green",
-  playground: "purple",
+  playground: "slate",
   bot: "orange",
   marketplace: "pink",
-  inference: "violet",
-  agents: "purple",
+  inference: "slate",
+  agents: "slate",
   embeddings: "cyan",
   vector: "cyan",
   sql: "teal",
@@ -92,8 +90,8 @@ export const CURATED_COLORS: Record<string, string> = {
   authz: "red",
   hsm: "rose",
   audit: "rose",
-  traces: "purple",
-  observations: "purple",
+  traces: "slate",
+  observations: "slate",
   cost: "green",
   plans: "green",
   billing: "green",

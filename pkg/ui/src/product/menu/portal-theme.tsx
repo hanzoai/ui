@@ -27,7 +27,7 @@ import { Theme, useThemeName } from '@hanzo/gui'
 export { useThemeName }
 
 export function PortalTheme({ name, children }: { name: string; children: ReactNode }) {
-  // `name` is the resolved theme name (e.g. "dark", or a compound "dark_purple").
+  // `name` is the resolved theme name (e.g. "dark", or a compound "dark_blue").
   // Tamagui's `Theme` accepts the resolved name and reconstructs the context.
   return <Theme name={name as never}>{children}</Theme>
 }

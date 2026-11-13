@@ -36,7 +36,7 @@ export const BRAND_SCOPE = {
  * owned by neither.
  */
 export const COLORS = {
-  "AI": "violet",
+  "AI": "slate",
   "Science": "lime",
   "Compute": "blue",
   "Data": "cyan",

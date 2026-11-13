@@ -11,7 +11,7 @@
 //   dist/tokens.css  — the full bundle: the same colours PLUS radius, type and
 //                      spacing, and the data palette. This is the `@hanzo/tokens/css`
 //                      export and what @hanzo/brand re-emits for Go surfaces.
-//   dist/data.css    — the data palette alone (`@hanzo/tokens/css/data`): thirty
+//   dist/data.css    — the data palette alone (`@hanzo/tokens/css/data`): twenty-six
 //                      12-step hues for what a person colours. Not in colors.css,
 //                      which design republishes as chrome.
 //
@@ -66,8 +66,8 @@ const dataCss = sheet(
   data.light,
 )
 // Thirty hues, twelve steps, two themes — every one or the file is wrong.
-if (count(data.dark) !== 360 || count(data.light) !== 360)
-  throw new Error(`gen-css: the data palette has ${count(data.dark)} dark and ${count(data.light)} light steps, not 360`)
+if (count(data.dark) !== 312 || count(data.light) !== 312)
+  throw new Error(`gen-css: the data palette has ${count(data.dark)} dark and ${count(data.light)} light steps, not 312`)
 writeFileSync(join(dist, 'data.css'), dataCss)
 
 console.log(

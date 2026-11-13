@@ -32,8 +32,8 @@ describe('hueOf', () => {
   )
 
   it('lands on known hues', () => {
-    expect(hueOf('Acme')).toBe('green')
-    expect(hueOf('Ada Lovelace')).toBe('brown')
+    expect(hueOf('Acme')).toBe('grass')
+    expect(hueOf('Ada Lovelace')).toBe('crimson')
   })
 })
 

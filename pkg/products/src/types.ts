@@ -46,7 +46,7 @@ export type BrandId = "hanzo" | "lux" | "zoo" | "pars"
  */
 export type IconKey = string
 
-/** A color-swatch key (e.g. `"blue"`, `"violet"`) from `./colors` `COLOR_SWATCHES`.
+/** A color-swatch key (e.g. `"blue"`, `"indigo"`) from `./colors` `COLOR_SWATCHES`.
  *  Resolved to a hex/css value by the code map (`swatchHex`) — never a raw hex in
  *  the data, so a re-theme is one place. */
 export type ColorToken = string

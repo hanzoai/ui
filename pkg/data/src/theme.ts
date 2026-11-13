@@ -18,7 +18,7 @@ export interface TagTone {
 
 const HUES: TagColor[] = [
   'red', 'ruby', 'crimson', 'tomato', 'orange', 'amber', 'yellow', 'lime', 'grass', 'green', 'jade', 'mint', 'teal',
-  'cyan', 'sky', 'blue', 'iris', 'violet', 'purple', 'plum', 'pink', 'bronze', 'gold', 'brown', 'gray',
+  'cyan', 'sky', 'blue', 'pink', 'bronze', 'gold', 'brown', 'gray',
   'mauve', 'olive', 'sage', 'sand', 'slate',
 ]
 

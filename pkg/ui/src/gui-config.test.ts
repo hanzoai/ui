@@ -422,7 +422,7 @@ describe('an empty field reads as empty', () => {
 
 describe('monochrome is config minus the hues', () => {
   const names = (c: typeof config) => Object.keys(c.themes)
-  const CHROMA = ['blue', 'green', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow']
+  const CHROMA = ['blue', 'green', 'orange', 'pink', 'red', 'teal', 'yellow']
 
   it('keeps both root themes — a surface still has a ground to stand on', () => {
     expect(names(monochrome)).toEqual(expect.arrayContaining(['dark', 'light']))
@@ -690,8 +690,8 @@ describe('one emitter, either table', () => {
     const full = css()
     const mono = css(monochrome)
     expect(mono.length).toBeLessThan(full.length)
-    expect(mono).not.toMatch(/\.t_(light_|dark_)?(blue|green|orange|pink|purple|red|teal|yellow)(_|\b)/)
-    expect(full).toMatch(/\.t_(light_|dark_)?(blue|green|orange|pink|purple|red|teal|yellow)(_|\b)/)
+    expect(mono).not.toMatch(/\.t_(light_|dark_)?(blue|green|orange|pink|red|teal|yellow)(_|\b)/)
+    expect(full).toMatch(/\.t_(light_|dark_)?(blue|green|orange|pink|red|teal|yellow)(_|\b)/)
   })
 
   it('the prune still runs on it — a reduced table shadows design the same way', () => {

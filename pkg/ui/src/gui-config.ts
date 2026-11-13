@@ -819,7 +819,7 @@ export function css(conf: { getCSS(): string } = config): string {
  * chromatic because one of its segments IS `teal`, while a future
  * `dark_tealish` or a component called `Red` is not caught by accident.
  */
-const CHROMA = new Set(['blue', 'green', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow'])
+const CHROMA = new Set(['blue', 'green', 'orange', 'pink', 'red', 'teal', 'yellow'])
 
 const chromatic = (name: string) => name.split('_').slice(1).some((s) => CHROMA.has(s))
 

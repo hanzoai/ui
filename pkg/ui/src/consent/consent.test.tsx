@@ -295,7 +295,7 @@ describe('Consent, under us_privacy', () => {
     expect(marketing().getAttribute('aria-checked')).toBe('false')
     same(marketing(), ref('off'))
 
-    const hue = /(^|_)(blue|green|orange|pink|purple|red|teal|yellow)(_|$)/
+    const hue = /(^|_)(blue|green|orange|pink|red|teal|yellow)(_|$)/
     const around: Element[] = []
     for (let el: Element | null = marketing(); el; el = el.parentElement) around.push(el)
     const named = [...around, ...m.sheet()!.querySelectorAll('*')].flatMap((el) => [...el.classList].filter((c) => c.startsWith('t_')))
