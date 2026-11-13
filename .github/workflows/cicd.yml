@@ -147,7 +147,7 @@ jobs:
           npm_config_prefer_offline: ${{ steps.npmcache.outputs.hit == 'exact' && 'true' || 'false' }}
         run: |
           case "$SUITE" in
-            browser) pnpm run test:corner && pnpm run test:code && pnpm run test:composer ;;
+            browser) pnpm run test:corner && pnpm run test:consent && pnpm run test:code && pnpm run test:composer ;;
             vite) pnpm run test:consumer ;;
             webpack) pnpm run test:consumer:webpack ;;
           esac

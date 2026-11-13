@@ -189,6 +189,12 @@ const PANEL = {
 } as const
 
 /**
+ * The ×'s box: Button's `icon` size, 36px under a mouse and 44px under a finger
+ * (Button's touch floor).
+ */
+const CONTROL = { mouse: 36, touch: 44 } as const
+
+/**
  * Where the bar sits: fixed to the foot of the window, clear of the home
  * indicator and the notch, centred. It stands on design's banner rung
  * (`--z-banner`): over the page and its dock, under every overlay — a dialog, a
@@ -205,8 +211,31 @@ const frame = {
   z: 'var(--z-banner, 50)',
   py: '$3',
   paddingInlineStart: '$4',
-  // Clear of the × in the corner: its 36px, 12px outside it and 8px before it.
-  paddingInlineEnd: 56,
+  // Clear of the × in the corner: its box, 12px outside it and 8px before it.
+  paddingInlineEnd: CONTROL.mouse + 20,
+  $touchable: { paddingInlineEnd: CONTROL.touch + 20 },
+} as const
+
+/**
+ * The bar's words: a line at least as tall as the ×. The × stands in the corner
+ * at the bar's top padding, so it is centred on the bar's first line only when
+ * that line is its height. The global notice's line is its words (18px) and the
+ * link beside them (24px); without this floor the bar was 50px tall and the ×
+ * hung 6px below the words' middle, its foot on the bar's edge.
+ */
+const LINE = {
+  shrink: 1,
+  minW: 0,
+  minH: CONTROL.mouse,
+  justify: 'center',
+  $touchable: { minH: CONTROL.touch },
+} as const
+
+/** The × in the bar's corner, at its top padding: centred on the first line, which is the ×'s height (LINE). */
+const CORNER = {
+  position: 'absolute',
+  t: '$3',
+  insetInlineEnd: '$3',
 } as const
 
 /** The bar is as wide as its line and buttons, up to the window less its inset. */
@@ -700,7 +729,7 @@ const Consent = ({
   if (shown && mode === 'global')
     surface = (
       <XStack {...frame} role="region" aria-label={t('Cookie notice')} style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
-        <YStack shrink={1} minW={0}>
+        <YStack {...LINE}>
           <Paragraph size="$2" color="$ink" m={0}>
             {t('We use cookies to improve your experience. By continuing to browse, you agree.')}
           </Paragraph>
@@ -708,16 +737,7 @@ const Consent = ({
         <Button {...CHOICES} onClick={choose}>
           {t('Your Privacy Choices')}
         </Button>
-        <Button
-          type="button"
-          size="icon"
-          {...CLOSE}
-          aria-label={t('Close')}
-          position="absolute"
-          t="$3"
-          insetInlineEnd="$3"
-          onClick={done(notice)}
-        >
+        <Button type="button" size="icon" {...CLOSE} {...CORNER} aria-label={t('Close')} onClick={done(notice)}>
           <X size={16} />
         </Button>
       </XStack>
@@ -729,7 +749,7 @@ const Consent = ({
   else if (shown && mode === 'eu')
     surface = (
     <XStack {...frame} role="dialog" aria-label={t('Cookie preferences')} style={FIT} maxW={1200} flexWrap="wrap" items="center" columnGap="$4" rowGap="$3">
-      <YStack shrink={1} minW={0}>
+      <YStack {...LINE}>
         <Paragraph size="$2" color="$ink" m={0}>
           {t('Essential cookies keep {brand} running. With your OK, optional cookies help us measure performance and ads.', { brand })}
         </Paragraph>
@@ -743,16 +763,7 @@ const Consent = ({
         </Button>
       </XStack>
       {/* Essential cookies only: the refusal, as easy to give as Accept all. */}
-      <Button
-        type="button"
-        size="icon"
-        {...CLOSE}
-        aria-label={t('Close and use essential cookies only')}
-        position="absolute"
-        t="$3"
-        insetInlineEnd="$3"
-        onClick={done(rejectAll)}
-      >
+      <Button type="button" size="icon" {...CLOSE} {...CORNER} aria-label={t('Close and use essential cookies only')} onClick={done(rejectAll)}>
         <X size={16} />
       </Button>
     </XStack>
