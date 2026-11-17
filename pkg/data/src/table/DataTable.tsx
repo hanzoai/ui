@@ -19,7 +19,7 @@
 // — the cell geometry the source kit's tables are built from (MIT, see NOTICE); a host
 // that sets no density keeps its 44px rows.
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { Spinner, Text, XStack, YStack } from '@hanzo/gui'
+import { ScrollView, Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { ArrowDown, ArrowUp, ChevronLeft, ChevronRight, ChevronsUpDown, Maximize2 } from '@hanzogui/lucide-icons-2'
 import { Button, ButtonGroup, useDensity } from '@hanzo/ui'
 import type { FieldDefinition, SelectOption } from '../field/types'
@@ -244,6 +244,14 @@ export function DataTable(props: DataTableProps) {
   }
   const hairline = { borderBottomWidth: 1, borderColor: '$borderColor' } as const
 
+  // The grid keeps every column at its width, so it is wider than the frame on any
+  // screen narrower than its columns. The frame clips (its corners are round), and
+  // the grid scrolls sideways inside it; the selection bar and the pager stay put.
+  // A state with no rows (loading, empty) is one cell as wide as the frame shows, so
+  // its words sit where they are seen, not in the middle of every column.
+  const [viewW, setViewW] = useState(0)
+  const stateCell = viewW ? { width: viewW } : { flex: 1 }
+
   return (
     <YStack {...({ 'data-slot': 'data-table' } as object)} rounded="$3" overflow="hidden" borderWidth={1} borderColor="$borderColor" bg="$background">
       {selectable && selected.size > 0 ? (
@@ -258,176 +266,185 @@ export function DataTable(props: DataTableProps) {
         </XStack>
       ) : null}
 
-      <YStack {...({ role: 'table', 'aria-rowcount': pageData.total + 1 } as object)} style={{ minWidth: gridMinWidth }}>
-        {/* header */}
-        <XStack bg="$panel" minH={rowHeight} {...hairline} {...({ role: 'row' } as object)}>
-          {selectable ? (
-            <XStack
-              width={SELECT_COL_W}
-              items="center"
-              justify="center"
-              shrink={0}
-              borderRightWidth={isCompact ? 1 : 0}
-              borderColor="$borderColor"
-              {...({ role: 'columnheader' } as object)}
-            >
-              <CheckBox checked={allOnPage} indeterminate={!allOnPage && someOnPage} onChange={toggleAll} label="Select all rows" />
-            </XStack>
-          ) : null}
-          {columns.map((c, i) => {
-            const dir = sortDirOf(sorts, c.name)
-            const isDropTarget = dragCol && dragCol.target === i && dragCol.from !== i
-            return (
+      <ScrollView
+        horizontal
+        {...({ 'data-slot': 'data-table-scroll' } as object)}
+        contentContainerStyle={{ grow: 1 }}
+        onLayout={(e: { nativeEvent: { layout: { width: number } } }) => setViewW(e.nativeEvent.layout.width)}
+      >
+        <YStack {...({ role: 'table', 'aria-rowcount': pageData.total + 1 } as object)} flex={1} style={{ minWidth: gridMinWidth }}>
+          {/* header */}
+          <XStack bg="$panel" minH={rowHeight} {...hairline} {...({ role: 'row' } as object)}>
+            {selectable ? (
               <XStack
-                key={c.name}
-                {...cellWidthProps(c)}
-                {...({ role: 'columnheader', 'aria-sort': dir === 'asc' ? 'ascending' : dir === 'desc' ? 'descending' : undefined } as object)}
+                width={SELECT_COL_W}
                 items="center"
-                gap="$1"
-                px={geo.pad}
-                borderRightWidth={isCompact && i < columns.length - 1 ? 1 : 0}
+                justify="center"
+                shrink={0}
+                borderRightWidth={isCompact ? 1 : 0}
                 borderColor="$borderColor"
-                borderLeftWidth={isDropTarget ? 2 : 0}
-                borderLeftColor={'var(--primary)' as never}
-                opacity={dragCol?.from === i ? 0.5 : 1}
-                ref={(node: unknown) => { headerRefs.current[i] = (node as HTMLElement | null) }}
-                style={{ position: 'relative' }}
+                {...({ role: 'columnheader' } as object)}
               >
-                <XStack items="center" gap="$1.5" flex={1} minW={0} cursor="pointer" onPress={() => onHeaderSort(c.name)} onPointerDown={beginReorder(i)}>
-                  {fieldIcons?.[c.name] ? (
-                    <XStack width={14} height={14} items="center" justify="center" shrink={0} opacity={0.75}>
-                      {fieldIcons[c.name]}
+                <CheckBox checked={allOnPage} indeterminate={!allOnPage && someOnPage} onChange={toggleAll} label="Select all rows" />
+              </XStack>
+            ) : null}
+            {columns.map((c, i) => {
+              const dir = sortDirOf(sorts, c.name)
+              const isDropTarget = dragCol && dragCol.target === i && dragCol.from !== i
+              return (
+                <XStack
+                  key={c.name}
+                  {...cellWidthProps(c)}
+                  {...({ role: 'columnheader', 'aria-sort': dir === 'asc' ? 'ascending' : dir === 'desc' ? 'descending' : undefined } as object)}
+                  items="center"
+                  gap="$1"
+                  px={geo.pad}
+                  borderRightWidth={isCompact && i < columns.length - 1 ? 1 : 0}
+                  borderColor="$borderColor"
+                  borderLeftWidth={isDropTarget ? 2 : 0}
+                  borderLeftColor={'var(--primary)' as never}
+                  opacity={dragCol?.from === i ? 0.5 : 1}
+                  ref={(node: unknown) => { headerRefs.current[i] = (node as HTMLElement | null) }}
+                  style={{ position: 'relative' }}
+                >
+                  <XStack items="center" gap="$1.5" flex={1} minW={0} cursor="pointer" onPress={() => onHeaderSort(c.name)} onPointerDown={beginReorder(i)}>
+                    {fieldIcons?.[c.name] ? (
+                      <XStack width={14} height={14} items="center" justify="center" shrink={0} opacity={0.75}>
+                        {fieldIcons[c.name]}
+                      </XStack>
+                    ) : null}
+                    <Text fontSize="$2" fontWeight="500" numberOfLines={1} color="$aside">
+                      {c.label}
+                    </Text>
+                    {dir === 'asc' ? <ArrowUp size={12} color="$hint" /> : dir === 'desc' ? <ArrowDown size={12} color="$hint" /> : onSortChange ? <ChevronsUpDown size={12} color="$hush" /> : null}
+                  </XStack>
+                  {/* resize handle: astride the edge between two columns, and inside the
+                      last one's, so nothing reaches past the grid to give it a sideways
+                      scroll it does not need */}
+                  <YStack
+                    width={8}
+                    height="100%"
+                    cursor="col-resize"
+                    onPointerDown={beginResize(c.name, headerRefs.current[i])}
+                    style={{ position: 'absolute', right: i === columns.length - 1 ? 0 : -4, top: 0, zIndex: 2 }}
+                  />
+                </XStack>
+              )
+            })}
+          </XStack>
+
+          {/* body */}
+          {loading ? (
+            <XStack {...({ role: 'row' } as object)}>
+              <XStack {...stateCell} px="$4" py="$6" items="center" justify="center" gap="$2" {...({ role: 'cell', 'aria-live': 'polite' } as object)}>
+                <Spinner size="small" aria-hidden />
+                <Text fontSize="$2" color="$hint">Loading…</Text>
+              </XStack>
+            </XStack>
+          ) : pageData.items.length === 0 ? (
+            <XStack {...({ role: 'row' } as object)}>
+              <YStack {...stateCell} px="$4" py="$7" items="center" gap="$1" {...({ role: 'cell' } as object)}>
+                {typeof empty === 'string' ? <Text fontSize="$2" color="$hint">{empty}</Text> : empty}
+              </YStack>
+            </XStack>
+          ) : (
+            pageData.items.map((record, i) => {
+              const rowKey = keyOf(record, i)
+              const isSel = selected.has(rowKey)
+              return (
+                <XStack
+                  key={rowKey}
+                  group
+                  {...({ role: 'row', 'aria-selected': selectable ? isSel : undefined } as object)}
+                  items="stretch"
+                  cursor={rowPressable ? 'pointer' : undefined}
+                  onPress={rowPressable ? () => onOpen?.(record) : undefined}
+                  bg={isSel ? '$hover' : 'transparent'}
+                  hoverStyle={{ bg: '$hover' }}
+                  minH={rowHeight}
+                  {...hairline}
+                >
+                  {selectable ? (
+                    <XStack
+                      width={SELECT_COL_W}
+                      items="center"
+                      justify="center"
+                      shrink={0}
+                      borderRightWidth={isCompact ? 1 : 0}
+                      borderColor="$borderColor"
+                      {...({ role: 'cell' } as object)}
+                    >
+                      <CheckBox checked={isSel} onChange={() => toggleOne(rowKey)} label={`Select row ${pageData.from + i}`} />
                     </XStack>
                   ) : null}
-                  <Text fontSize="$2" fontWeight="500" numberOfLines={1} color="$aside">
-                    {c.label}
-                  </Text>
-                  {dir === 'asc' ? <ArrowUp size={12} color="$hint" /> : dir === 'desc' ? <ArrowDown size={12} color="$hint" /> : onSortChange ? <ChevronsUpDown size={12} color="$hush" /> : null}
+                  {columns.map((c, ci) => {
+                    const isEditingCell = editable && editing?.key === rowKey && editing.field === c.name
+                    const canEdit = editable && !c.readOnly && isEditable(c.type)
+                    const cellId = `${rowKey}:${c.name}`
+                    const withOpts: FieldDefinition = fieldOptions?.(c)
+                      ? { ...c, metadata: { ...(c.metadata as object), options: fieldOptions(c) } as FieldDefinition['metadata'] }
+                      : c
+                    return (
+                      <XStack
+                        key={c.name}
+                        {...cellWidthProps(c)}
+                        {...({ role: 'cell' } as object)}
+                        items="center"
+                        px={geo.pad}
+                        minW={0}
+                        borderRightWidth={isCompact && ci < columns.length - 1 ? 1 : 0}
+                        borderColor="$borderColor"
+                        style={{ position: 'relative' }}
+                      >
+                        {isEditingCell ? (
+                          <YStack flex={1} minW={0} py="$1" onPress={(e: { stopPropagation?: () => void }) => e.stopPropagation?.()}>
+                            <FieldInput
+                              field={withOpts}
+                              value={draft}
+                              autoFocus
+                              onChange={(v) => (INSTANT.has(c.type) ? void commitEdit(record, c, v) : setDraft(v))}
+                              onSubmit={() => void commitEdit(record, c, draft)}
+                              onCancel={cancelEdit}
+                            />
+                          </YStack>
+                        ) : (
+                          <XStack
+                            flex={1}
+                            minW={0}
+                            items="center"
+                            gap="$1"
+                            minH={rowHeight - 8}
+                            cursor={canEdit ? 'text' : undefined}
+                            onPress={canEdit ? () => startEdit(rowKey, c, record[c.name]) : undefined}
+                            hoverStyle={canEdit ? { bg: '$raised' } : undefined}
+                            rounded="$xs"
+                            px={canEdit ? '$1' : 0}
+                            mx={canEdit ? -4 : 0}
+                            overflow="hidden"
+                          >
+                            <FieldDisplay field={c} value={record[c.name]} />
+                            {savingCell === cellId ? <Spinner size="small" aria-hidden /> : null}
+                          </XStack>
+                        )}
+                        {/* open action on the first column, revealed on row hover — editable rows only; read-only rows open on a full-row press */}
+                        {ci === 0 && onOpen && editable && !isEditingCell ? (
+                          <XStack position="absolute" r={geo.pad / 2} opacity={0} $group-hover={{ opacity: 1 }} focusWithinStyle={{ opacity: 1 }}>
+                            <ButtonGroup framed size="icon-2xs" variant="ghost">
+                              <Button size="icon-2xs" variant="ghost" emphasis="subtle" aria-label="Open record" onPress={() => onOpen(record)}>
+                                <Maximize2 />
+                              </Button>
+                            </ButtonGroup>
+                          </XStack>
+                        ) : null}
+                      </XStack>
+                    )
+                  })}
                 </XStack>
-                {/* resize handle */}
-                <YStack
-                  width={8}
-                  height="100%"
-                  cursor="col-resize"
-                  onPointerDown={beginResize(c.name, headerRefs.current[i])}
-                  style={{ position: 'absolute', right: -4, top: 0, zIndex: 2 }}
-                />
-              </XStack>
-            )
-          })}
-        </XStack>
-
-        {/* body */}
-        {loading ? (
-          <XStack {...({ role: 'row' } as object)}>
-            <XStack flex={1} px="$4" py="$6" items="center" justify="center" gap="$2" {...({ role: 'cell', 'aria-live': 'polite' } as object)}>
-              <Spinner size="small" aria-hidden />
-              <Text fontSize="$2" color="$hint">Loading…</Text>
-            </XStack>
-          </XStack>
-        ) : pageData.items.length === 0 ? (
-          <XStack {...({ role: 'row' } as object)}>
-            <YStack flex={1} px="$4" py="$7" items="center" gap="$1" {...({ role: 'cell' } as object)}>
-              {typeof empty === 'string' ? <Text fontSize="$2" color="$hint">{empty}</Text> : empty}
-            </YStack>
-          </XStack>
-        ) : (
-          pageData.items.map((record, i) => {
-            const rowKey = keyOf(record, i)
-            const isSel = selected.has(rowKey)
-            return (
-              <XStack
-                key={rowKey}
-                group
-                {...({ role: 'row', 'aria-selected': selectable ? isSel : undefined } as object)}
-                items="stretch"
-                cursor={rowPressable ? 'pointer' : undefined}
-                onPress={rowPressable ? () => onOpen?.(record) : undefined}
-                bg={isSel ? '$hover' : 'transparent'}
-                hoverStyle={{ bg: '$hover' }}
-                minH={rowHeight}
-                {...hairline}
-              >
-                {selectable ? (
-                  <XStack
-                    width={SELECT_COL_W}
-                    items="center"
-                    justify="center"
-                    shrink={0}
-                    borderRightWidth={isCompact ? 1 : 0}
-                    borderColor="$borderColor"
-                    {...({ role: 'cell' } as object)}
-                  >
-                    <CheckBox checked={isSel} onChange={() => toggleOne(rowKey)} label={`Select row ${pageData.from + i}`} />
-                  </XStack>
-                ) : null}
-                {columns.map((c, ci) => {
-                  const isEditingCell = editable && editing?.key === rowKey && editing.field === c.name
-                  const canEdit = editable && !c.readOnly && isEditable(c.type)
-                  const cellId = `${rowKey}:${c.name}`
-                  const withOpts: FieldDefinition = fieldOptions?.(c)
-                    ? { ...c, metadata: { ...(c.metadata as object), options: fieldOptions(c) } as FieldDefinition['metadata'] }
-                    : c
-                  return (
-                    <XStack
-                      key={c.name}
-                      {...cellWidthProps(c)}
-                      {...({ role: 'cell' } as object)}
-                      items="center"
-                      px={geo.pad}
-                      minW={0}
-                      borderRightWidth={isCompact && ci < columns.length - 1 ? 1 : 0}
-                      borderColor="$borderColor"
-                      style={{ position: 'relative' }}
-                    >
-                      {isEditingCell ? (
-                        <YStack flex={1} minW={0} py="$1" onPress={(e: { stopPropagation?: () => void }) => e.stopPropagation?.()}>
-                          <FieldInput
-                            field={withOpts}
-                            value={draft}
-                            autoFocus
-                            onChange={(v) => (INSTANT.has(c.type) ? void commitEdit(record, c, v) : setDraft(v))}
-                            onSubmit={() => void commitEdit(record, c, draft)}
-                            onCancel={cancelEdit}
-                          />
-                        </YStack>
-                      ) : (
-                        <XStack
-                          flex={1}
-                          minW={0}
-                          items="center"
-                          gap="$1"
-                          minH={rowHeight - 8}
-                          cursor={canEdit ? 'text' : undefined}
-                          onPress={canEdit ? () => startEdit(rowKey, c, record[c.name]) : undefined}
-                          hoverStyle={canEdit ? { bg: '$raised' } : undefined}
-                          rounded="$xs"
-                          px={canEdit ? '$1' : 0}
-                          mx={canEdit ? -4 : 0}
-                          overflow="hidden"
-                        >
-                          <FieldDisplay field={c} value={record[c.name]} />
-                          {savingCell === cellId ? <Spinner size="small" aria-hidden /> : null}
-                        </XStack>
-                      )}
-                      {/* open action on the first column, revealed on row hover — editable rows only; read-only rows open on a full-row press */}
-                      {ci === 0 && onOpen && editable && !isEditingCell ? (
-                        <XStack position="absolute" r={geo.pad / 2} opacity={0} $group-hover={{ opacity: 1 }} focusWithinStyle={{ opacity: 1 }}>
-                          <ButtonGroup framed size="icon-2xs" variant="ghost">
-                            <Button size="icon-2xs" variant="ghost" emphasis="subtle" aria-label="Open record" onPress={() => onOpen(record)}>
-                              <Maximize2 />
-                            </Button>
-                          </ButtonGroup>
-                        </XStack>
-                      ) : null}
-                    </XStack>
-                  )
-                })}
-              </XStack>
-            )
-          })
-        )}
-      </YStack>
+              )
+            })
+          )}
+        </YStack>
+      </ScrollView>
 
       {/* footer / pagination */}
       {!loading && pageSize > 0 && pageData.total > 0 ? (

@@ -190,6 +190,47 @@ describe('behaviour', () => {
   })
 })
 
+describe('narrower than its columns', () => {
+  // Wide enough that no screen this test stands for holds every column.
+  const WIDE: FieldDefinition[] = FIELDS.map((f) => ({ ...f, width: 400 }))
+  const scroller = () => host.querySelector<HTMLElement>('[data-slot="data-table-scroll"]')!
+
+  it('the grid scrolls sideways inside the frame, and the frame still clips its corners', () => {
+    mount({ fields: WIDE, selectable: true })
+    const frame = host.querySelector<HTMLElement>('[data-slot="data-table"]')!
+    expect(scroller()).not.toBeNull()
+    expect(frame.contains(scroller())).toBe(true)
+    expect(scroller().querySelector('[role="table"]')).not.toBeNull()
+    expect(['auto', 'scroll']).toContain(getComputedStyle(scroller()).overflowX)
+    // Every column keeps its width: the grid is as wide as all of them together.
+    expect(scroller().querySelector<HTMLElement>('[role="table"]')!.style.minWidth).toBe(`${28 + 3 * 400}px`)
+  })
+
+  it('no resize handle reaches past the last column, so a grid that fits does not scroll', () => {
+    mount({})
+    const handles = [...host.querySelectorAll<HTMLElement>('[role="columnheader"] [class*="_cur-col-resize"]')]
+    expect(handles).toHaveLength(FIELDS.length)
+    expect(handles.slice(0, -1).map((h) => h.style.right)).toEqual(FIELDS.slice(1).map(() => '-4px'))
+    expect(handles.at(-1)!.style.right).toBe('0px')
+  })
+
+  it('the pager stays outside what scrolls', () => {
+    mount({ fields: WIDE, pageSize: 2 })
+    const next = host.querySelector('[aria-label="Next page"]')!
+    expect(scroller().contains(next)).toBe(false)
+  })
+
+  it.each([
+    ['empty', { records: [] }, 'No records yet.'],
+    ['loading', { loading: true }, 'Loading…'],
+  ] as const)('%s: the words are one cell, still in the table', (_, props, words) => {
+    mount({ fields: WIDE, ...(props as object) })
+    const cell = [...host.querySelectorAll<HTMLElement>('[role="cell"]')].find((c) => c.textContent?.includes(words))!
+    expect(cell).toBeDefined()
+    expect(scroller().contains(cell)).toBe(true)
+  })
+})
+
 describe('the empty and loading states keep the table semantics', () => {
   it.each([
     ['empty', { records: [] }],
