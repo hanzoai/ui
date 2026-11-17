@@ -249,8 +249,26 @@ export function DataTable(props: DataTableProps) {
   // the grid scrolls sideways inside it; the selection bar and the pager stay put.
   // A state with no rows (loading, empty) is one cell as wide as the frame shows, so
   // its words sit where they are seen, not in the middle of every column.
+  //
+  // The width is measured twice, because one way does not hold everywhere. On the
+  // web the table watches its own scroll element: react-native-web's `onLayout` is
+  // one ResizeObserver shared by every view, set to observe a view once, when it
+  // mounts, and a table that remounts (a list going from loading to empty) came back
+  // never measured, its empty line at the middle of every column again. `onLayout`
+  // stays for native, where there is no DOM element to watch.
   const [viewW, setViewW] = useState(0)
   const stateCell = viewW ? { width: viewW } : { flex: 1 }
+  const [scrollNode, setScrollNode] = useState<HTMLElement | null>(null)
+  useEffect(() => {
+    if (!scrollNode || typeof ResizeObserver === 'undefined') return
+    setViewW(scrollNode.clientWidth)
+    const watch = new ResizeObserver(() => setViewW(scrollNode.clientWidth))
+    watch.observe(scrollNode)
+    return () => watch.disconnect()
+  }, [scrollNode])
+  const scrollRef = useCallback((node: unknown) => {
+    setScrollNode(typeof HTMLElement !== 'undefined' && node instanceof HTMLElement ? node : null)
+  }, [])
 
   return (
     <YStack {...({ 'data-slot': 'data-table' } as object)} rounded="$3" overflow="hidden" borderWidth={1} borderColor="$borderColor" bg="$background">
@@ -270,6 +288,7 @@ export function DataTable(props: DataTableProps) {
         horizontal
         {...({ 'data-slot': 'data-table-scroll' } as object)}
         contentContainerStyle={{ grow: 1 }}
+        ref={scrollRef as never}
         onLayout={(e: { nativeEvent: { layout: { width: number } } }) => setViewW(e.nativeEvent.layout.width)}
       >
         <YStack {...({ role: 'table', 'aria-rowcount': pageData.total + 1 } as object)} flex={1} style={{ minWidth: gridMinWidth }}>

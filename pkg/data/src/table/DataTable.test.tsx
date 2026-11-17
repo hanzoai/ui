@@ -220,6 +220,36 @@ describe('narrower than its columns', () => {
     expect(scroller().contains(next)).toBe(false)
   })
 
+  it('a state with no rows is as wide as the frame shows, measured from the scroll element itself, and follows it', () => {
+    // A browser's ResizeObserver, reduced to what the table asks of it.
+    const watched: { node: Element; fire: (entries: unknown[]) => void }[] = []
+    class Watch {
+      constructor(private fire: (entries: unknown[]) => void) {}
+      observe(node: Element) { watched.push({ node, fire: this.fire }) }
+      // react-native-web keeps the first observer it makes for every view's onLayout,
+      // so this one has to answer everything it asks of one.
+      unobserve() {}
+      disconnect() {}
+    }
+    let shown = 320
+    vi.stubGlobal('ResizeObserver', Watch)
+    const width = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.getAttribute('data-slot') === 'data-table-scroll' ? shown : 0
+    })
+    try {
+      mount({ fields: WIDE, records: [] })
+      const cell = () => [...host.querySelectorAll<HTMLElement>('[role="cell"]')].find((c) => c.textContent?.includes('No records yet.'))!
+      expect(watched.map((w) => w.node)).toContain(scroller())
+      expect(cell().className).toMatch(/_width-320px/)
+      shown = 280
+      act(() => watched.forEach((w) => w.fire([])))
+      expect(cell().className).toMatch(/_width-280px/)
+    } finally {
+      width.mockRestore()
+      vi.unstubAllGlobals()
+    }
+  })
+
   it.each([
     ['empty', { records: [] }, 'No records yet.'],
     ['loading', { loading: true }, 'Loading…'],
