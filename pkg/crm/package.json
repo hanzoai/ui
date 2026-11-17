@@ -1,0 +1,63 @@
+{
+  "name": "@hanzo/crm",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Hanzo CRM \u2014 the org's people, companies, pipeline, fundraising, tasks, lists, candidates and sequences, kept in the org's own Base. One CRM for every app that has one (Hanzo Cloud's console and crm.<brand>, Hanzo Team): each app supplies its request signing, org, session, router and brand through configureCrm and draws <CrmModule />.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./base": {
+      "types": "./dist/lib/base-data/client.d.ts",
+      "import": "./dist/lib/base-data/client.js",
+      "default": "./dist/lib/base-data/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "NOTICE",
+    "LICENSE-MIT"
+  ],
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && node ../ui/scripts/postbuild.mjs .",
+    "clean": "rm -rf dist",
+    "prepack": "pnpm run build",
+    "tc": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "@hanzo/data": ">=1.4.5",
+    "@hanzo/gui": ">=8.3.5",
+    "@hanzo/ui": ">=8.29.0",
+    "@hanzogui/lucide-icons-2": "^8.3.5",
+    "react": ">=19.2.8"
+  },
+  "devDependencies": {
+    "@hanzo/data": "workspace:^",
+    "@hanzo/gui": "catalog:",
+    "@hanzo/ui": "workspace:^",
+    "@hanzogui/lucide-icons-2": "catalog:",
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "author": "Hanzo AI <dev@hanzo.ai>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkg/crm"
+  }
+}
