@@ -227,7 +227,7 @@ describe('the send gate, one address at a time', () => {
 
 describe('who may change the list, and what a refusal says', () => {
   it('admits an admin of the org and a SuperAdmin, and no one else', () => {
-    const who = (a: Partial<Account>): Account => ({ owner: 'acme', name: 'ada', ...a })
+    const who = (a: Partial<Account>): Account => ({ name: 'ada', ...a })
     expect(managesSuppressions(who({ adminOrgs: ['acme'] }), 'acme')).toBe(true)
     expect(managesSuppressions(who({ superAdmin: true, adminOrgs: [] }), 'acme')).toBe(true)
     expect(managesSuppressions(who({ adminOrgs: ['other'] }), 'acme')).toBe(false)
