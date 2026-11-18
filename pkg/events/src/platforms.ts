@@ -55,8 +55,21 @@ export interface Platforms {
 
 export const PLATFORMS: Readonly<Record<string, Platforms>> = {
   // ── Sign-up ────────────────────────────────────────────────────
-  signup_viewed: { standard: 'view_content', ga4: 'view_item', meta: 'ViewContent', tiktok: 'ViewContent' },
-  signup_submitted: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead' },
+  signup_viewed: {
+    standard: 'view_content',
+    ga4: 'view_item',
+    meta: 'ViewContent',
+    linkedin: 'view_content',
+    tiktok: 'ViewContent',
+  },
+  signup_submitted: {
+    standard: 'lead',
+    ga4: 'generate_lead',
+    meta: 'Lead',
+    linkedin: 'lead',
+    x: 'lead',
+    tiktok: 'SubmitForm',
+  },
   signup_completed: {
     standard: 'signup',
     ga4: 'sign_up',
@@ -70,12 +83,38 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
   first_action: { ga4: 'first_message' },
 
   // ── Plans and checkout: the commerce funnel ────────────────────
-  pricing_viewed: { standard: 'view_item_list', ga4: 'view_item_list', meta: 'ViewContent', tiktok: 'ViewContent' },
-  plan_clicked: { standard: 'select_item', ga4: 'select_item', meta: 'PlanClicked', tiktok: 'ClickButton' },
-  plan_selected: { standard: 'add_to_cart', ga4: 'add_to_cart', meta: 'AddToCart', x: 'add_to_cart', tiktok: 'AddToCart' },
+  pricing_viewed: {
+    standard: 'view_item_list',
+    ga4: 'view_item_list',
+    meta: 'ViewContent',
+    linkedin: 'view_content',
+    tiktok: 'ViewContent',
+  },
+  plan_clicked: {
+    standard: 'select_item',
+    ga4: 'select_item',
+    meta: 'PlanClicked',
+    linkedin: 'add_to_cart',
+    tiktok: 'ClickButton',
+  },
+  plan_selected: {
+    standard: 'add_to_cart',
+    ga4: 'add_to_cart',
+    meta: 'AddToCart',
+    linkedin: 'add_to_cart',
+    x: 'add_to_cart',
+    tiktok: 'AddToCart',
+  },
   plan_changed: { ga4: ['remove_from_cart', 'add_to_cart'], meta: 'CustomizeProduct' },
   plan_skipped: { ga4: 'plan_skipped', meta: 'PlanSkipped' },
-  upgrade_clicked: { ga4: 'select_promotion', meta: 'UpgradeClicked' },
+  upgrade_clicked: { ga4: 'select_promotion', meta: 'UpgradeClicked', linkedin: 'add_to_cart' },
+  checkout_viewed: {
+    standard: 'view_content',
+    ga4: 'view_item',
+    meta: 'ViewContent',
+    linkedin: 'view_content',
+    tiktok: 'ViewContent',
+  },
   checkout_started: {
     standard: 'start_checkout',
     ga4: 'begin_checkout',
@@ -85,7 +124,18 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
     tiktok: 'InitiateCheckout',
     ads: true,
   },
-  payment_info_added: { ga4: 'add_payment_info', meta: 'AddPaymentInfo', tiktok: 'AddPaymentInfo' },
+  payment_info_added: {
+    ga4: 'add_payment_info',
+    meta: 'AddPaymentInfo',
+    linkedin: 'begin_checkout',
+    tiktok: 'AddPaymentInfo',
+  },
+  checkout_abandoned: {
+    ga4: 'checkout_abandoned',
+    meta: 'CheckoutAbandoned',
+    linkedin: 'checkout_abandoned',
+    tiktok: 'CheckoutAbandoned',
+  },
   checkout_failed: { ga4: 'checkout_failed', meta: 'CheckoutFailed' },
   order_completed: {
     standard: 'purchase',
@@ -97,7 +147,7 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
     ads: true,
     money: true,
   },
-  subscription_changed: { ga4: 'purchase', meta: 'Subscribe', money: true },
+  subscription_changed: { ga4: 'purchase', meta: 'Subscribe', linkedin: 'purchase', money: true },
   subscription_canceled: { ga4: 'subscription_canceled', meta: 'SubscriptionCanceled' },
   order_refunded: { ga4: 'refund', meta: 'OrderRefunded', money: true },
 
@@ -118,7 +168,13 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
   research_access_applied: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm' },
 
   // ── Audiences: what retargeting is built from ──────────────────
-  product_viewed: { standard: 'view_content', ga4: 'view_item', meta: 'ViewContent', tiktok: 'ViewContent' },
+  product_viewed: {
+    standard: 'view_content',
+    ga4: 'view_item',
+    meta: 'ViewContent',
+    linkedin: 'view_content',
+    tiktok: 'ViewContent',
+  },
   search_performed: { standard: 'search', ga4: 'search', meta: 'Search', tiktok: 'Search' },
   // A custom event on each: no platform has a standard name for a pressed button.
   cta_clicked: { ga4: 'cta_click', meta: 'CTAClicked', tiktok: 'ClickButton' },

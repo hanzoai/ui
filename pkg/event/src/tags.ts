@@ -86,6 +86,7 @@ type Page = {
   fbq?: Call & { queue?: unknown[]; callMethod?: Call; push?: unknown; loaded?: boolean; version?: string }
   _fbq?: unknown
   lintrk?: Call & { q?: unknown[] }
+  _linkedin_partner_id?: string
   _linkedin_data_partner_ids?: string[]
   twq?: Call & { queue?: unknown[]; exe?: Call; version?: string }
   ttq?: Record<string, Call> & { _i?: Record<string, unknown>; _t?: Record<string, number>; _o?: Record<string, unknown>; methods?: string[]; load?: Call; page?: Call; track?: Call }
@@ -315,15 +316,19 @@ function live(): void {
 
 function loadLinkedIn(id: string): void {
   const p = page()
+  p._linkedin_partner_id = id
   p._linkedin_data_partner_ids = p._linkedin_data_partner_ids || []
-  p._linkedin_data_partner_ids.push(id)
+  if (!p._linkedin_data_partner_ids.includes(id)) p._linkedin_data_partner_ids.push(id)
   if (!p.lintrk) {
     const l = (p.lintrk = function (...a: unknown[]) {
       l.q!.push(a)
     } as NonNullable<Page['lintrk']>)
     l.q = []
   }
-  script('https://snap.licdn.com/li.lms-analytics/insight.min.js')
+  script('https://snap.licdn.com/li.lms-analytics/insight.min.js', undefined, () => {
+    const img = document.createElement('img') as HTMLImageElement
+    if (img) img.src = `https://px.ads.linkedin.com/collect/?pid=${encodeURIComponent(id)}&fmt=gif`
+  })
 }
 
 function loadX(id: string): void {
@@ -615,7 +620,7 @@ export function mirror(name: string, params: Record<string, unknown>, id: string
     } else if (t.type === 'tiktok') {
       for (const n of namesOn(name, 'tiktok')) p.ttq?.track?.(n, shape('tiktok', params), { event_id: id })
     } else if (t.type === 'linkedin' && rule && namesOn(name, 'linkedin').length) {
-      p.lintrk?.('track', { conversion_id: Number(rule) })
+      p.lintrk?.('track', { conversion_id: Number(rule), event_id: id })
     } else if (t.type === 'x' && rule && namesOn(name, 'x').length) {
       p.twq?.('event', rule, { ...shape('x', params), conversion_id: id })
     }

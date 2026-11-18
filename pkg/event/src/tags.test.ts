@@ -595,7 +595,58 @@ describe('one event, every tag', () => {
     expect(ttq[0][0]).toBe('CompletePayment')
     expect(ttq[0][2]).toEqual({ event_id: id })
     expect(twq[0][1]).toBe('tw-o1abc-buy')
-    expect(lintrk[0]).toEqual(['track', { conversion_id: 9876 }])
+    expect(lintrk[0]).toEqual(['track', { conversion_id: 9876, event_id: id }])
+    expect(w._linkedin_partner_id).toBe('555')
+    expect(w._linkedin_data_partner_ids).toEqual(['555'])
+  })
+
+  it('tracks full funnel moments into LinkedIn with shared event_id for CAPI deduplication', async () => {
+    const b = browser('America/New_York', accepted())
+    put('fetch', async (url: string) => {
+      b.requests.push(url)
+      return {
+        ok: true,
+        json: async () => ({
+          tags: [
+            {
+              platform: 'linkedin',
+              type: 'linkedin',
+              id: '10420116',
+              events: {
+                pricing_viewed: '30631284',
+                checkout_viewed: '30631284',
+                plan_selected: '30631276',
+                checkout_started: '30631268',
+                checkout_abandoned: '30631292',
+                signup_submitted: '30631260',
+                signup_completed: '30631244',
+                order_completed: '30631252',
+              },
+            },
+          ],
+        }),
+      }
+    })
+    const { startTags, track } = await import('./index')
+    const captured: Array<{ name: string; props: Record<string, unknown> }> = []
+    startTags({ key: 'pk-x' })
+    await tick()
+    const w = g.window as unknown as Record<string, unknown>
+    expect(w._linkedin_partner_id).toBe('10420116')
+    expect(w._linkedin_data_partner_ids).toEqual(['10420116'])
+    const lintrk: unknown[][] = []
+    w.lintrk = (...a: unknown[]) => lintrk.push(a)
+    const stream = { capture: (name: string, props: Record<string, unknown>) => captured.push({ name, props }) } as never
+    for (const ev of ['pricing_viewed', 'checkout_viewed', 'plan_selected', 'checkout_started', 'checkout_abandoned', 'signup_submitted', 'signup_completed']) {
+      track(stream, ev, { plan: 'dev', value: 20 })
+    }
+    await tick()
+    expect(lintrk.map((a) => (a[1] as { conversion_id: number }).conversion_id)).toEqual([
+      30631284, 30631284, 30631276, 30631268, 30631292, 30631260, 30631244,
+    ])
+    for (let i = 0; i < captured.length; i++) {
+      expect((lintrk[i][1] as { event_id: string }).event_id).toBe(captured[i].props.event_id)
+    }
   })
 
   it('the audience moments reach each platform by the names the table gives, a search naming what was asked', async () => {

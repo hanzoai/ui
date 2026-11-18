@@ -39,6 +39,7 @@ export function capture(c: Choice): void {
       click.clicked = now()
       set('hz_touch', JSON.stringify(click), DAYS)
       if (click.fbclid) set('_fbc', `fb.1.${Date.now()}.${click.fbclid}`, DAYS)
+      if (click.li_fat_id) set('li_fat_id', String(click.li_fat_id), DAYS)
     }
     if (!get('_fbp')) set('_fbp', `fb.1.${Date.now()}.${rand()}`, DAYS)
   }
@@ -56,8 +57,10 @@ export function touch(c: Choice): Record<string, string | number> {
     }
     const fbc = get('_fbc')
     const fbp = get('_fbp')
+    const lifat = get('li_fat_id')
     if (fbc) out.fbc = fbc
     if (fbp) out.fbp = fbp
+    if (!out.li_fat_id && lifat) out.li_fat_id = lifat
   }
   if (c.analytics) {
     const ga = get('_ga')?.split('.')

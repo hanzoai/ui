@@ -63,10 +63,29 @@ test('every platform row names an event in the vocabulary', () => {
 })
 
 test('every commerce step reaches Google and Meta', () => {
-  for (const n of ['pricing_viewed', 'plan_clicked', 'plan_selected', 'plan_changed', 'checkout_started',
-    'payment_info_added', 'order_completed', 'order_refunded', 'signup_completed', 'sales_contacted']) {
+  for (const n of ['pricing_viewed', 'plan_clicked', 'plan_selected', 'plan_changed', 'checkout_viewed', 'checkout_started',
+    'payment_info_added', 'checkout_abandoned', 'order_completed', 'order_refunded', 'signup_completed', 'sales_contacted']) {
     assert.ok(namesOn(n, 'ga4').length, `${n} has no GA4 name`)
     assert.ok(namesOn(n, 'meta').length, `${n} has no Meta name`)
+  }
+})
+
+test('full commerce and lead funnel reaches LinkedIn', () => {
+  for (const [n, kind] of [
+    ['pricing_viewed', 'view_content'],
+    ['checkout_viewed', 'view_content'],
+    ['product_viewed', 'view_content'],
+    ['plan_clicked', 'add_to_cart'],
+    ['plan_selected', 'add_to_cart'],
+    ['checkout_started', 'begin_checkout'],
+    ['payment_info_added', 'begin_checkout'],
+    ['checkout_abandoned', 'checkout_abandoned'],
+    ['signup_submitted', 'lead'],
+    ['sales_contacted', 'lead'],
+    ['signup_completed', 'sign_up'],
+    ['order_completed', 'purchase'],
+  ]) {
+    assert.deepEqual(namesOn(n, 'linkedin'), [kind], `${n} on linkedin`)
   }
 })
 

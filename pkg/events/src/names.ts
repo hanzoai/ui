@@ -46,6 +46,7 @@ export const EVENTS = {
   CHECKOUT_VIEWED: 'checkout_viewed',
   CHECKOUT_STARTED: 'checkout_started',
   PAYMENT_INFO_ADDED: 'payment_info_added',
+  CHECKOUT_ABANDONED: 'checkout_abandoned',
   CHECKOUT_FAILED: 'checkout_failed',
   ORDER_COMPLETED: 'order_completed',
   SUBSCRIPTION_CHANGED: 'subscription_changed',

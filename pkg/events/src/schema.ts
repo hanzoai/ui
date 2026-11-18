@@ -148,6 +148,15 @@ export const SCHEMA: Readonly<Record<string, EventSpec>> = {
     summary: 'The card was tokenized by the payment form. No card data leaves the form.',
     props: PLAN,
   },
+  checkout_abandoned: {
+    summary: 'A visitor opened checkout with a plan or amount and left the page without completing payment.',
+    props: {
+      ...PLAN,
+      value: { type: 'number', doc: 'Total value of the abandoned checkout in major units.' },
+      currency: { type: 'string', doc: 'ISO 4217 currency code.' },
+      step: { type: 'string', doc: 'The last checkout step reached before leaving.', values: ['viewed', 'started', 'payment_info'] },
+    },
+  },
   checkout_failed: {
     summary: 'Checkout ended in a decline or an error.',
     props: { reason: { type: 'string', doc: 'A short reason code, never card data.' } },
