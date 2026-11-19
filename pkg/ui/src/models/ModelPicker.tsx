@@ -27,7 +27,7 @@
 import { SizableText, Text, XStack, YStack, useMedia } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
 import { ChevronsUpDown } from '@hanzogui/lucide-icons-2'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 
 import { RING } from '../backends/gui/press'
 import { slot } from '../backends/gui/slot'
@@ -186,6 +186,9 @@ export function ModelPicker({
       aria-disabled={disabled || undefined}
       height={stacked || sheet ? undefined : quiet ? 28 : small ? 28 : 36}
       minH={stacked ? (sheet ? 44 : 34) : sheet ? 44 : undefined}
+      // inline-style: a custom property, which no gui prop carries. A coarse pointer's `min-height: var(--tap-target) !important`
+      // outranks minH, and the composer lowers that variable to 24px: a phone takes it back to 44.
+      style={sheet ? ({ '--tap-target': '44px' } as CSSProperties) : undefined}
       px={stacked ? '$2' : quiet ? 5 : small ? '$2' : '$3'}
       py={stacked ? 3 : undefined}
       gap={stacked ? '$1' : '$2'}

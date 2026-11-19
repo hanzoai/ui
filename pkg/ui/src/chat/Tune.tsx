@@ -18,7 +18,7 @@
 import { SizableText, Text, View, XStack, YStack, useMedia } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
 import { Check } from '@hanzogui/lucide-icons-2'
-import { forwardRef, useCallback, useRef, useState, type ReactNode } from 'react'
+import { forwardRef, useCallback, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger, Sheet, SheetContent, SheetTitle, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../backends/gui'
 import { slot } from '../backends/gui/slot'
@@ -28,6 +28,10 @@ import { RING } from './look'
 import type { Way } from './ways'
 
 const STRONG = 'var(--border-strong)' as const
+
+// The composer lowers `--tap-target` to 24px (Composer.tsx `FLOOR`); the words under the frame are thumbs' targets, so on a phone they take it back to 44.
+// inline-style: a custom property, which no gui prop carries.
+const PHONE_FLOOR = { '--tap-target': '44px' } as CSSProperties
 const SAFE_BOTTOM = 'calc(24px + env(safe-area-inset-bottom, 0px))' as `var(--${string})`
 
 /** Which model answers: the host's store (Chat and Dev share one), as the composer reads it. */
@@ -106,8 +110,9 @@ const Word = forwardRef<
       minW={0}
       shrink={1}
       maxW="calc(100vw - 24px)"
-      // Inline: the base layer's `button { min-height: 24px }` outranks a class.
-      style={{ minHeight: compact ? 44 : 34 }}
+      // Inline: the base layer's `button { min-height: 24px }` outranks a class. On a phone the coarse-pointer
+      // `min-height: var(--tap-target) !important` outranks the inline one, so the floor itself is raised to 44.
+      style={{ minHeight: compact ? 44 : 34, ...(compact ? PHONE_FLOOR : null) }}
       px="$2"
       py={3}
       rounded="$3"
@@ -373,7 +378,7 @@ export function Chips({ chips }: { chips: readonly Chip[] }) {
           hoverStyle={{ bg: '$hover', borderColor: STRONG }}
           transition="quickest"
           focusVisibleStyle={RING}
-          style={phone ? { height: 'auto', minHeight: 44 } : undefined}
+          style={phone ? { height: 'auto', minHeight: 44, ...PHONE_FLOOR } : undefined}
         >
           {/* The mark goes on a phone, where the row would not fit one line with it. */}
           {c.icon ? <XStack aria-hidden $max-sm={{ display: 'none' }}>{c.icon}</XStack> : null}
