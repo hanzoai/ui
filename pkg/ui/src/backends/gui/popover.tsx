@@ -68,7 +68,7 @@ const PopoverTrigger: typeof GuiPopover.Trigger = GuiPopover.Trigger
 const PopoverAnchor: typeof GuiPopover.Anchor = GuiPopover.Anchor
 const PopoverClose: typeof GuiPopover.Close = GuiPopover.Close
 
-export type PopoverContentProps = ComponentProps<typeof GuiPopover.Content> & {
+export type PopoverContentProps = Omit<ComponentProps<typeof GuiPopover.Content>, 'size'> & {
   sideOffset?: number
   align?: Align
   /**

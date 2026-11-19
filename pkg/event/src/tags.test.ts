@@ -611,7 +611,7 @@ describe('one event, every tag', () => {
             {
               platform: 'linkedin',
               type: 'linkedin',
-              id: '10420116',
+              id: '10406532',
               events: {
                 pricing_viewed: '30631284',
                 checkout_viewed: '30631284',
@@ -632,8 +632,8 @@ describe('one event, every tag', () => {
     startTags({ key: 'pk-x' })
     await tick()
     const w = g.window as unknown as Record<string, unknown>
-    expect(w._linkedin_partner_id).toBe('10420116')
-    expect(w._linkedin_data_partner_ids).toEqual(['10420116'])
+    expect(w._linkedin_partner_id).toBe('10406532')
+    expect(w._linkedin_data_partner_ids).toEqual(['10406532'])
     const lintrk: unknown[][] = []
     w.lintrk = (...a: unknown[]) => lintrk.push(a)
     const stream = { capture: (name: string, props: Record<string, unknown>) => captured.push({ name, props }) } as never

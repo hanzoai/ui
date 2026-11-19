@@ -47,7 +47,7 @@ export const overflows = (node: unknown): boolean => {
   return el.scrollWidth > (el.clientWidth ?? 0) || (el.scrollHeight ?? 0) > (el.clientHeight ?? 0)
 }
 
-export type TruncatedTextProps = Omit<ComponentProps<typeof SizableText>, 'children'> & {
+export type TruncatedTextProps = Omit<ComponentProps<typeof SizableText>, 'children' | 'text'> & {
   /** What is shown. A node needs `tooltipContent`, since the hint cannot be read off it. */
   text: ReactNode
   /** Clamp to N lines (wrapping, breaking long words) instead of one line with an ellipsis. */

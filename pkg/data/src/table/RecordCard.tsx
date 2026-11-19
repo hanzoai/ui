@@ -19,7 +19,7 @@ import { Text, XStack, YStack, styled } from '@hanzo/gui'
  * The record's plate: the frame gui's `Card` was before @hanzo/gui 8.4 retired
  * it, under the same name so a theme's `Card` sub-theme still reaches it.
  */
-const Card = styled(YStack, { name: 'Card', backgroundColor: '$background', position: 'relative', borderRadius: '$true' })
+const Card = styled(YStack, { name: 'Card', bg: '$background', position: 'relative', rounded: '$true' })
 import { Avatar, Checkbox, Chip, useDensity } from '@hanzo/ui'
 import type { FieldDefinition } from '../field/types'
 import { FieldDisplay } from '../field/FieldDisplay'
@@ -101,8 +101,7 @@ function KanbanCard({
       cursor={open ? 'pointer' : undefined}
       opacity={drag === 'source' ? 0.3 : 1}
       scale={drag === 'preview' ? 1.02 : 1}
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
+      {...({ onHoverIn: () => setHovered(true), onHoverOut: () => setHovered(false) } as object)}
       onFocus={() => setWithin(true)}
       onBlur={() => setWithin(false)}
       // A press anywhere opens the record — except on the controls inside it,

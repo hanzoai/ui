@@ -202,7 +202,7 @@ export function Controls() {
                   <FormControl>
                     <Checkbox
                       checked={field.value}
-                      onCheckedChange={(next) => field.onChange(next === true)}
+                      onCheckedChange={(next: boolean | "indeterminate") => field.onChange(next === true)}
                     />
                   </FormControl>
                   <FormLabel>Bill $15 a month to this workspace</FormLabel>

@@ -35,7 +35,7 @@ export const GroupContext = /* @__PURE__ */ createContext<{
   report: (r: Report) => void
 } | null>(null)
 
-export type InputGroupProps = Omit<ComponentProps<typeof XStack>, 'children'> & {
+export type InputGroupProps = Omit<ComponentProps<typeof XStack>, 'children' | 'start' | 'end' | 'size'> & {
   /** Before the field: an icon, a unit, a picker trigger. */
   start?: ReactNode
   /** After the field: a clear button, actions, a unit. */

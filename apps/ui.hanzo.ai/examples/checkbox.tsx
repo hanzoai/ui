@@ -49,7 +49,7 @@ export function Controlled() {
         <Checkbox
           id="billing"
           checked={same}
-          onCheckedChange={(next) => setSame(next === true)}
+          onCheckedChange={(next: boolean | "indeterminate") => setSame(next === true)}
         />
         <Label htmlFor="billing">Billing address is the same as shipping</Label>
       </XStack>
@@ -74,7 +74,7 @@ export function SelectAll() {
         <Checkbox
           id="all-files"
           checked={all}
-          onCheckedChange={(next) => setPicked(next === true ? files : [])}
+          onCheckedChange={(next: boolean | "indeterminate") => setPicked(next === true ? files : [])}
         />
         <Label htmlFor="all-files">All files</Label>
       </XStack>
@@ -86,7 +86,7 @@ export function SelectAll() {
               name="files"
               value={file}
               checked={picked.includes(file)}
-              onCheckedChange={(next) =>
+              onCheckedChange={(next: boolean | "indeterminate") =>
                 setPicked(
                   next === true
                     ? [...picked, file]

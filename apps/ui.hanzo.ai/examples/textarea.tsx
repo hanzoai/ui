@@ -85,7 +85,7 @@ export function Composer() {
       <Textarea
         value={draft}
         onChangeText={setDraft}
-        onKeyDown={(e) => {
+        onKeyDown={(e: { key: string; metaKey: boolean; ctrlKey: boolean; preventDefault: () => void }) => {
           if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
             e.preventDefault()
             send()

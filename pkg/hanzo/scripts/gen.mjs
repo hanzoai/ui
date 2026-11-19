@@ -158,6 +158,10 @@ if (import.meta.main) {
     map[subpath] = entry
   }
   manifest.exports = map
-  writeFileSync(join(ROOT, 'package.json'), JSON.stringify(manifest, null, 2) + '\n')
+  const manifestPath = join(ROOT, 'package.json')
+  const next = JSON.stringify(manifest, null, 2) + '\n'
+  if (readFileSync(manifestPath, 'utf8') !== next) {
+    writeFileSync(manifestPath, next)
+  }
   console.log(`${forwarders.length} subpaths`)
 }

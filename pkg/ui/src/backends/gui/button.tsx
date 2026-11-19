@@ -557,6 +557,7 @@ function Pressable({
       data-variant={variant}
       data-size={resolved}
       {...(tone !== 'neutral' ? { 'data-tone': tone } : null)}
+      {...(elevated ? { 'data-elevated': '' } : null)}
       variant={variant}
       size={resolved}
       {...(compact ? { compact: true } : null)}

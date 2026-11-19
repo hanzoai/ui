@@ -282,7 +282,7 @@ export function RatingInput({ field, value, onChange }: FieldInputProps) {
       height={20}
       rounded="$xs"
       focusVisibleStyle={{ outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' }}
-      onHoverOut={() => setHover(null)}
+      {...({ onHoverOut: () => setHover(null) } as object)}
     >
       <XStack position="relative">
         <Stars value={current} max={max} hover={hover} />
@@ -292,9 +292,8 @@ export function RatingInput({ field, value, onChange }: FieldInputProps) {
               key={n}
               flex={1}
               cursor="pointer"
-              onHoverIn={() => setHover(n)}
               onPress={() => set(n === current ? 0 : n)}
-              {...({ 'data-star': n } as object)}
+              {...({ 'data-star': n, onHoverIn: () => setHover(n) } as object)}
             />
           ))}
         </XStack>

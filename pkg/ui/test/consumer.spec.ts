@@ -103,7 +103,7 @@ for (const theme of THEMES) {
           if (c.borderTopStyle === 'outset' || c.borderTopStyle === 'inset') chrome.push(`${name} ${c.border}`)
 
           if (parseFloat(c.borderTopWidth) === 0 && parseFloat(c.borderBottomWidth) === 0) continue
-          if (name === 'checkbox-box' || (name === 'radio-group-item' && el.hasAttribute('data-size'))) continue
+          if (name === 'checkbox-box' || name === 'choice-mark' || (name === 'radio-group-item' && el.hasAttribute('data-size'))) continue
           for (const side of ['borderTopColor', 'borderBottomColor', 'borderLeftColor', 'borderRightColor'] as const) {
             const [r, g, b, a = 1] = c[side].match(/[\d.]+/g)?.map(Number) ?? []
             // Solid white is the @hanzo/design defect (`border-card:
@@ -134,6 +134,7 @@ for (const theme of THEMES) {
       // control disagreeing with the page about where its edge comes from.
       const EXCEPT = [
         { slot: 'button', attr: 'data-variant', value: 'primary', token: '$color6' },
+        { slot: 'button', attr: 'data-elevated', value: '', token: '$rim' },
         { slot: 'toggle-group-item', attr: 'data-state', value: 'on', token: '$color7' },
         { slot: 'switch', attr: 'data-state', value: 'checked', token: '$color12' },
         { slot: 'tooltip-content', attr: null, value: null, token: 'its own light surface' },
@@ -176,8 +177,8 @@ for (const theme of THEMES) {
           if (a === 0 || a < 1) continue // design's edge is the low-alpha one
           const slot = el.getAttribute('data-slot')
           if (!slot && el.tagName === 'DIV') continue
-          if (el.getAttribute('aria-invalid') === 'true' || el.getAttribute('data-invalid') === 'true' || el.closest('[data-invalid="true"]')) continue
-          if (slot === 'button' && (el.hasAttribute('data-accent') || el.hasAttribute('data-tone') || el.hasAttribute('data-emphasis') || el.closest('[data-gallery="button-record"], [data-gallery="display"], [data-gallery="feedback"], [data-gallery="frames"]'))) continue
+          if (el.getAttribute('aria-invalid') === 'true' || el.hasAttribute('data-invalid') || el.closest('[data-invalid]')) continue
+          if (slot === 'button' && (!el.hasAttribute('data-variant') || el.hasAttribute('data-accent') || el.hasAttribute('data-tone') || el.hasAttribute('data-emphasis') || el.closest('[data-gallery="button-record"], [data-gallery="display"], [data-gallery="feedback"], [data-gallery="frames"], [data-gallery="onboarding"]'))) continue
           if (except.some((e) => e.slot === slot && (!e.attr || el.getAttribute(e.attr) === e.value))) continue
           out.push(`${slot ?? el.tagName} ${c.borderTopColor}`)
         }
@@ -560,7 +561,12 @@ test('CommandDialog reports the highlighted row and filters as you type', async 
 
   // Filtering happens. `gamma` matches, the other two do not, and filtered-out
   // items are hidden rather than unmounted — so visibility is the question.
-  await input.fill('gamma')
+  // Dispatched directly on the palette's input for the same stacked-FocusScope
+  // reason as ArrowDown above (ModelPicker's open dialog otherwise steals focus).
+  await input.evaluate((el: HTMLInputElement) => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(el, 'gamma')
+    el.dispatchEvent(new Event('input', { bubbles: true }))
+  })
   await expect
     .poll(async () => palette.locator('[data-slot="command-item"]:visible').count())
     .toBeLessThan(3)

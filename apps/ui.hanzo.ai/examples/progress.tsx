@@ -68,7 +68,7 @@ export function Controlled() {
       <Progress
         value={step}
         max={steps.length}
-        getValueLabel={(v, m) => `Step ${v} of ${m}`}
+        getValueLabel={(v: number, m: number) => `Step ${v} of ${m}`}
       />
       <XStack gap="$2" justify="flex-end">
         <Button

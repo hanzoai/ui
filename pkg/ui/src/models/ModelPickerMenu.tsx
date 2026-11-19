@@ -174,7 +174,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
 
   return (
     <YStack {...slot('model-picker-body')} flex={sheet ? 1 : undefined} minH={0} gap="$1">
-      <XStack {...slot('model-picker-search')} height={sheet ? 40 : 32} px="$2" gap="$2" items="center" rounded="$2" borderWidth={1} borderColor="$rim" bg="$background" focusWithinStyle={{ borderColor: '$outlineColor' }}>
+      <XStack {...slot('model-picker-search')} height={sheet ? 40 : 32} px="$2" gap="$2" items="center" rounded="$2" borderWidth={1} borderColor="$rim" bg="$background" focusWithinStyle={{ borderColor: 'color-mix(in srgb, var(--foreground) 32%, transparent)' as never }}>
         <Search size={14} color="$soft" aria-hidden />
         <GuiInput
           ref={field as never}
