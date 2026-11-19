@@ -211,3 +211,23 @@ describe('Chat routes a list of parts here', () => {
     expect(markup).not.toContain('ignored')
   })
 })
+
+describe('a run of tool steps', () => {
+  const call = (name: string): MessagePart => ({ type: 'toolCall', name })
+  const result = (name: string, status?: 'error'): MessagePart => ({ type: 'toolResult', name, ...(status ? { status } : {}) })
+
+  it('stays as it is for one or two steps', () => {
+    expect(draw([call('a'), result('a')])).not.toContain('data-step-group')
+  })
+
+  it('folds three or more into one row that counts them', () => {
+    const markup = draw([call('a'), result('a'), result('b', 'error')])
+    expect(markup).toContain('data-step-group="3"')
+    expect(markup).toContain('1 error')
+    expect(markup).toContain('1 running')
+  })
+
+  it('does not fold steps that prose parts separate', () => {
+    expect(draw([call('a'), call('b'), { type: 'text', text: 'between' }, call('c'), call('d')])).not.toContain('data-step-group')
+  })
+})

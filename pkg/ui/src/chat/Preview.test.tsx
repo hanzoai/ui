@@ -16,10 +16,11 @@
 import { act } from 'react'
 import type { ReactNode } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../gui-config'
+import { ChatHandoffProvider } from './Code'
 import { Parts } from './Parts'
 import { Preview } from './Preview'
 
@@ -118,5 +119,47 @@ describe('an artifact', () => {
     expect(slots()).toContain('artifact-card')
     expect(slots()).not.toContain('preview')
     expect(frame()).toBeNull()
+  })
+})
+
+describe('Preview, the toolbar', () => {
+  const press = (slot: string) => act(() => host.querySelector<HTMLElement>(`[data-slot="${slot}"]`)!.click())
+
+  it('switches to the source and back, naming which is shown', () => {
+    mount(<Preview markup={PAGE} />)
+    const [shown, source] = [...host.querySelectorAll<HTMLElement>('[data-slot="preview-mode"] button')]
+    expect(shown!.getAttribute('aria-pressed')).toBe('true')
+    act(() => source!.click())
+    expect(frame()).toBeNull()
+    expect(slots()).toContain('code')
+    expect(source!.getAttribute('aria-pressed')).toBe('true')
+    act(() => shown!.click())
+    expect(frame()).not.toBeNull()
+  })
+
+  it('downloads the page under its title', () => {
+    const created = vi.fn(() => 'blob:x')
+    Object.assign(URL, { createObjectURL: created, revokeObjectURL: () => {} })
+    const names: string[] = []
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) {
+      names.push(this.download)
+    })
+    mount(<Preview markup={PAGE} title="Pricing Page" />)
+    press('preview-download')
+    expect(names).toEqual(['pricing-page.html'])
+    click.mockRestore()
+  })
+
+  it('offers Open in Dev only where the surface can take it there', () => {
+    mount(<Preview markup={PAGE} />)
+    expect(host.querySelector('[data-slot="preview-open-in-dev"]')).toBeNull()
+    const openInDev = vi.fn()
+    mount(
+      <ChatHandoffProvider value={{ openInDev }}>
+        <Preview markup={PAGE} title="Pricing" />
+      </ChatHandoffProvider>,
+    )
+    press('preview-open-in-dev')
+    expect(openInDev).toHaveBeenCalledWith({ code: PAGE, language: 'html', title: 'Pricing' })
   })
 })

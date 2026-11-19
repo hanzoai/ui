@@ -100,6 +100,8 @@ export interface ChatProps extends Omit<ThreadProps, 'children' | 'ref'> {
    * `body={(t) => <Parts parts={t.content as MessagePart[]} prose={md} />}`.
    */
   body?: (turn: Turn) => ReactNode
+  /** Optional actions rendered underneath each turn, outside its bubble (copy, edit). */
+  turnActions?: (turn: Turn) => ReactNode
   /** Shown instead of the thread while nothing has been said. */
   empty?: ReactNode
   /**
@@ -159,6 +161,7 @@ export function Chat({
   send: onSend,
   stop: onStop,
   body,
+  turnActions,
   empty,
   center = false,
   composer,
@@ -218,6 +221,7 @@ export function Chat({
               key={turn.id}
               role={turn.role}
               busy={streaming && i === last && turn.role === 'assistant'}
+              actions={turnActions ? turnActions(turn) : undefined}
             >
               {body ? body(turn) : draw(turn.content)}
             </Message>

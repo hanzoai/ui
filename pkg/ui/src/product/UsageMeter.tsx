@@ -12,8 +12,8 @@ import { Progress } from '../backends/gui/progress'
 import { slot } from '../backends/gui/slot'
 import { CLASSES, classesLabel, when, type ClassLimit, type LimitClass, type LimitState, type LimitWindow, type Limits } from './limits'
 
-/** The status rung each state paints its bar in. */
-export const STATE_COLOR = { ok: '$good', near: '$yellow10', limited: '$bad' } as const satisfies Record<LimitState, string>
+/** The status rung each state paints its bar in (monochrome foreground when healthy). */
+export const STATE_COLOR = { ok: 'var(--foreground)', near: '$yellow10', limited: '$bad' } as const satisfies Record<LimitState, string>
 
 /** What a class row says under its bar about who pays now. */
 function caption(c: ClassLimit): string {

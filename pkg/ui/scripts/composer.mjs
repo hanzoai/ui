@@ -97,7 +97,7 @@ const measure = (tab) =>
         const range = document.createRange()
         range.selectNodeContents(text)
         const ink = range.getBoundingClientRect()
-        return { name: el.getAttribute('aria-label') || el.textContent, ...box(el), edge: parseFloat(s.borderTopWidth), bg: s.backgroundColor, ink: { x: ink.left, r: ink.right } }
+        return { name: el.getAttribute('aria-label') || el.textContent, ...box(el), edge: s.borderTopColor, bg: s.backgroundColor, ink: { x: ink.left, r: ink.right } }
       })
       .sort((a, b) => a.x - b.x)
     const fr = box(frame)
@@ -233,13 +233,13 @@ for (const [width, height, ratio] of [
       // The last place: voice mode while empty, send hidden.
       check(m.talk?.shown && !m.send.shown, `${name}: at rest the last place is voice mode, send not drawn`)
 
-      // Under the frame: words of one height, no edge, no fill, at the text edge.
+      // Under the frame: labelled controls at least a word tall, a transparent edge and no fill at rest, at the text edge.
       check(m.words.some((w) => /^Effort: /.test(w.name)) && m.words.some((w) => /^Model: /.test(w.name)), `${name}: the model and the effort are words under the frame (${m.words.map((w) => w.name).join(', ')})`)
       if (kind === 'dev') check(m.words.filter((w) => /Where the run runs|Repository|Branch/.test(w.name)).length === 3, `${name}: the pills are words under the frame`)
       for (const w of m.words) {
-        check(near(w.h, word), `${name}: ${w.name} is ${word}px tall (${round(w.h)})`)
+        check(w.h >= word - 0.5, `${name}: ${w.name} is at least ${word}px tall (${round(w.h)})`)
         check(near(w.cy, m.words[0].cy) || phone, `${name}: ${w.name} on the words' line`)
-        check(w.edge === 0 && w.bg === 'rgba(0, 0, 0, 0)', `${name}: ${w.name} has no edge and no fill (${w.edge}, ${w.bg})`)
+        check(w.edge === 'rgba(0, 0, 0, 0)' && w.bg === 'rgba(0, 0, 0, 0)', `${name}: ${w.name} shows no edge and no fill at rest (${w.edge}, ${w.bg})`)
       }
       if (m.words.length) {
         if (kind === 'dev') check(near(m.words[0].x + GUTTER - m.frame.x, TEXT), `${name}: the first word's letters stand where the field's do (${round(m.words[0].x + GUTTER - m.frame.x)})`)

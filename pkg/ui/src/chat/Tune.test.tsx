@@ -120,6 +120,51 @@ describe('Tune', () => {
   })
 })
 
+describe('Tune, effort and mode lists', () => {
+  const items = [
+    { id: 'fast', label: 'Fast', note: 'Quick' },
+    { id: 'high', label: 'High', note: 'Thinks longer' },
+    { id: 'auto', label: 'Auto', note: 'Adaptive' },
+  ]
+  const options = () => [...document.querySelectorAll<HTMLElement>('[role="option"]')].map((o) => o.textContent?.split(/(?=[A-Z][a-z]+ )/)[0] ?? '')
+
+  it('lists Auto first in the effort choices', () => {
+    mount(<Tune effort={{ value: 'high', set: () => {}, items }} />)
+    act(() => host.querySelector<HTMLElement>('[data-slot="effort"]')!.click())
+    expect(document.querySelectorAll('[role="option"]')[0]!.textContent).toMatch(/^Auto/)
+  })
+
+  it('leaves the mode list in the order it was given', () => {
+    mount(<Tune mode={{ value: 'fast', set: () => {}, items }} />)
+    act(() => host.querySelector<HTMLElement>('[data-slot="mode"]')!.click())
+    expect(options()[0]).toMatch(/^Fast/)
+  })
+
+  it('says whether a list is open', () => {
+    mount(<Tune mode={{ value: 'fast', set: () => {}, items }} />)
+    const word = host.querySelector<HTMLElement>('[data-slot="mode"]')!
+    expect(word.getAttribute('aria-expanded')).toBe('false')
+    act(() => word.click())
+    expect(host.querySelector('[data-slot="mode"]')!.getAttribute('aria-expanded')).toBe('true')
+  })
+
+  it('does not open the mode while the surface disables it', () => {
+    mount(<Tune disabled mode={{ value: 'fast', set: () => {}, items }} />)
+    const word = host.querySelector<HTMLElement>('[data-slot="mode"]')!
+    expect(word.getAttribute('aria-disabled')).toBe('true')
+    act(() => word.click())
+    expect(document.querySelector('[role="option"]')).toBeNull()
+    expect(word.getAttribute('aria-expanded')).toBe('false')
+  })
+
+  it('stands the model, effort and mode as separate controls', () => {
+    mount(<Tune mind={mind()} effort={{ value: 'high', set: () => {}, items }} mode={{ value: 'fast', set: () => {}, items }} />)
+    expect(label('Model')).not.toBeNull()
+    expect(host.querySelector('[data-slot="effort"]')).not.toBeNull()
+    expect(host.querySelector('[data-slot="mode"]')).not.toBeNull()
+  })
+})
+
 describe('Chips', () => {
   it('marks the one in force and runs the one pressed', () => {
     const run = vi.fn()
