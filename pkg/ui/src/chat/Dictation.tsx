@@ -166,7 +166,7 @@ export function Dictation({ voice, disabled = false, size = 36, language = null,
   const blockedReason = voice.blocked ? voice.reason || t('Microphone permission denied. Allow access in your browser settings.') : null
   // Two controls on one row, each its own box and its own focus ring: no frame around the pair.
   return (
-    <XStack data-slot="dictation" items="center" gap={2} shrink={0}>
+    <XStack data-slot="dictation" items="center" shrink={0}>
       {listening ? (
         <XStack
           data-slot="dictation-live"
@@ -176,6 +176,7 @@ export function Dictation({ voice, disabled = false, size = 36, language = null,
           gap={6}
           height={24}
           px={8}
+          marginInlineEnd={2}
           rounded={999}
           bg="$panel"
           borderWidth={1}

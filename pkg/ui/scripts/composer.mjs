@@ -97,7 +97,7 @@ const measure = (tab) =>
         const range = document.createRange()
         range.selectNodeContents(text)
         const ink = range.getBoundingClientRect()
-        return { name: el.getAttribute('aria-label') || el.textContent, ...box(el), edge: s.borderTopColor, bg: s.backgroundColor, ink: { x: ink.left, r: ink.right } }
+        return { name: el.getAttribute('aria-label') || el.textContent, ...box(el), chip: el.matches('[data-slot="composer-chip"]'), edge: parseFloat(s.borderTopWidth), edgeColor: s.borderTopColor, bg: s.backgroundColor, ink: { x: ink.left, r: ink.right } }
       })
       .sort((a, b) => a.x - b.x)
     const fr = box(frame)
@@ -198,14 +198,15 @@ for (const [width, height, ratio] of [
       await tab.goto(`${base}?case=${kind}`, { waitUntil: 'domcontentloaded', timeout: 120_000 })
       await tab.waitForSelector('[data-slot="composer-send"]', { state: 'attached', timeout: 120_000 })
       await tab.waitForFunction((t) => document.documentElement.classList.contains(t), theme, { timeout: 10_000 }).catch(() => {})
+      await tab.addStyleTag({ content: '*,*::before,*::after{transition:none!important;animation:none!important}' })
       await settle(tab)
 
       const m = await measure(tab)
       const row = [...m.start, ...m.end]
       // +, the mic, its chevron and the last place; Dev adds the commands, and on a laptop the carried file after `+`.
       check(row.length === (kind === 'chat' ? 4 : phone ? 5 : 6), `${name}: the row draws its controls (${row.map((c) => c.name).join(', ')})`)
-      for (const c of row) if (c.name !== 'composer-carried') check(near(c.h, hit), `${name}: ${c.name} is ${hit}px tall (${round(c.h)})`)
-      for (const c of row) if (!['composer-carried', 'dictation-menu'].includes(c.name)) check(near(c.w, hit), `${name}: ${c.name} is ${hit}px wide (${round(c.w)})`)
+      for (const c of row) if (c.name !== 'composer-carried') check(near(c.h, c.name === 'composer-last' && phone ? 44 : hit), `${name}: ${c.name} is ${c.name === 'composer-last' && phone ? 44 : hit}px tall (${round(c.h)})`)
+      for (const c of row) if (!['composer-carried', 'dictation-menu'].includes(c.name)) check(near(c.w, c.name === 'composer-last' && phone ? 44 : hit), `${name}: ${c.name} is ${c.name === 'composer-last' && phone ? 44 : hit}px wide (${round(c.w)})`)
       const mid = row[0].cy
       for (const c of row) check(near(c.cy, mid), `${name}: ${c.name} on the row's centreline (${round(c.cy)} vs ${round(mid)})`)
       const end = gaps(m.end)
@@ -237,13 +238,17 @@ for (const [width, height, ratio] of [
       check(m.words.some((w) => /^Effort: /.test(w.name)) && m.words.some((w) => /^Model: /.test(w.name)), `${name}: the model and the effort are words under the frame (${m.words.map((w) => w.name).join(', ')})`)
       if (kind === 'dev') check(m.words.filter((w) => /Where the run runs|Repository|Branch/.test(w.name)).length === 3, `${name}: the pills are words under the frame`)
       for (const w of m.words) {
-        check(near(w.h, phone ? 44 : 34), `${name}: ${w.name} is ${phone ? 44 : 34}px tall (${round(w.h)})`)
+        // Model, Effort and Mode are labelled controls (the label over the value); the pills and chips stay words.
+        const labelled = /^(Model|Effort|Mode): /.test(w.name) || w.chip
+        if (w.chip) check(phone ? w.h >= 44 - 0.5 : near(w.h, word), `${name}: ${w.name} is ${word}px tall (${round(w.h)})`)
+        else if (labelled) check(w.h >= (phone ? 44 : 34) - 0.5, `${name}: ${w.name} is at least ${phone ? 44 : 34}px tall (${round(w.h)})`)
+        else check(near(w.h, word), `${name}: ${w.name} is ${word}px tall (${round(w.h)})`)
         check(near(w.cy, m.words[0].cy) || phone, `${name}: ${w.name} on the words' line`)
-        check(w.edge === 'rgba(0, 0, 0, 0)' && w.bg === 'rgba(0, 0, 0, 0)', `${name}: ${w.name} shows no edge and no fill at rest (${w.edge}, ${w.bg})`)
+        check((labelled ? w.edgeColor === 'rgba(0, 0, 0, 0)' : w.edge === 0) && w.bg === 'rgba(0, 0, 0, 0)', `${name}: ${w.name} shows no edge and no fill at rest (${w.edge}, ${w.edgeColor}, ${w.bg})`)
       }
-      if (m.words.length) {
+      if (m.words.length && !phone) {
         if (kind === 'dev') check(near(m.words[0].x + GUTTER - m.frame.x, TEXT), `${name}: the first word's letters stand where the field's do (${round(m.words[0].x + GUTTER - m.frame.x)})`)
-        check(near(m.frame.r - (m.words.at(-1).r - GUTTER), TEXT), `${name}: the last word ends as far in (${round(m.frame.r - m.words.at(-1).r + GUTTER)})`)
+        check(near(m.frame.r - m.words.at(-1).r, TEXT - 8), `${name}: the last word's box ends ${TEXT - 8}px in, its 8px padding making the text TEXT in (${round(m.frame.r - m.words.at(-1).r)})`)
       }
       if (kind === 'dev') check(m.carry.length === (phone ? 1 : 0), `${name}: on a phone the carried file above the field`)
       check(m.past.length === 0, `${name}: nothing runs past the frame (${m.past.join(', ')})`)

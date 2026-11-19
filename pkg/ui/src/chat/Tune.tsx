@@ -106,7 +106,8 @@ const Word = forwardRef<
       minW={0}
       shrink={1}
       maxW="calc(100vw - 24px)"
-      minH={compact ? 44 : 34}
+      // Inline: the base layer's `button { min-height: 24px }` outranks a class.
+      style={{ minHeight: compact ? 44 : 34 }}
       px="$2"
       py={3}
       rounded="$3"
@@ -350,6 +351,7 @@ function Opens({
 
 /** The surface's chips, as words: one tap each, the one in force in the full ink. */
 export function Chips({ chips }: { chips: readonly Chip[] }) {
+  const phone = !useMedia().sm
   return (
     <XStack data-slot="composer-chips" items="center" gap={2} flexWrap="wrap" rowGap={2} minW={0} shrink={1} maxW="100%">
       {chips.map((c) => (
@@ -371,7 +373,7 @@ export function Chips({ chips }: { chips: readonly Chip[] }) {
           hoverStyle={{ bg: '$hover', borderColor: STRONG }}
           transition="quickest"
           focusVisibleStyle={RING}
-          $max-sm={{ height: 'auto', minH: 44 }}
+          style={phone ? { height: 'auto', minHeight: 44 } : undefined}
         >
           {/* The mark goes on a phone, where the row would not fit one line with it. */}
           {c.icon ? <XStack aria-hidden $max-sm={{ display: 'none' }}>{c.icon}</XStack> : null}
