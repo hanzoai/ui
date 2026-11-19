@@ -9,7 +9,7 @@ export async function generateStaticParams() {
   return LOCALES.flatMap((locale) =>
     slugs()
       .filter((slug) => slug !== 'index')
-      .map((slug) => ({ locale, slug: slug.split('/') })),
+      .map((slug) => ({ locale, slug })),
   )
 }
 
