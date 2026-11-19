@@ -73,6 +73,8 @@ export interface StepProps
   /** One line beside the name: the command, the path, the query. Clamped, or it
    *  wraps the header and moves the chevron. */
   detail?: string
+  /** `detail` is the start of the body (a thought's first line): shown while shut, hidden once the body repeats it open. */
+  preview?: boolean
   /** Revealed when open. Omit it and the step has nothing to open, so it does
    *  not offer to: no chevron, no trigger, no keyboard stop. */
   children?: ReactNode
@@ -87,6 +89,7 @@ export function Step({
   name,
   status = 'done',
   detail,
+  preview = false,
   children,
   defaultOpen,
   open,
@@ -125,13 +128,13 @@ export function Step({
     setElapsedMs(0)
     const tick = setInterval(() => {
       setElapsedMs(Date.now() - start)
-    }, reducedMotion ? 1000 : 100)
+    }, 100)
 
     return () => clearInterval(tick)
-  }, [status, reducedMotion])
+  }, [status])
 
   const elapsed = elapsedMs !== null && elapsedMs >= 100 ? formatElapsed(elapsedMs, reducedMotion) : null
-  const showDetail = Boolean(detail) && !(isOpen && opens && /thought|reason/i.test(name))
+  const showDetail = Boolean(detail) && !(preview && isOpen && opens)
 
   const header = (
     <XStack items="center" gap="$2" px="$3" py="$2" width="100%">

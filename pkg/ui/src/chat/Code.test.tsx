@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-/** The code block's own controls: line numbers, word wrap, download, fold and hand-off. */
+/** The code block's own controls: word wrap, download and hand-off. */
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -38,18 +38,8 @@ const mount = (ui: React.ReactNode) =>
     ),
   )
 const press = (slot: string) => act(() => host.querySelector<HTMLElement>(`[data-slot="${slot}"]`)!.click())
-const lines = (n: number) => Array.from({ length: n }, (_, i) => `line ${i + 1}`).join('\n')
 
 describe('Code', () => {
-  it('turns line numbers on and off', () => {
-    mount(<Code language="ts" value={'a\nb'}>{'a\nb'}</Code>)
-    const toggle = host.querySelector('[data-slot="code-lines-toggle"]')!
-    expect(toggle.getAttribute('aria-pressed')).toBe('false')
-    press('code-lines-toggle')
-    expect(host.querySelector('[data-slot="code-lines-toggle"]')!.getAttribute('aria-pressed')).toBe('true')
-    expect(host.textContent).toContain('2')
-  })
-
   it('says whether it wraps', () => {
     mount(<Code value="x">x</Code>)
     expect(host.querySelector('[data-slot="code-wrap-toggle"]')!.getAttribute('aria-pressed')).toBe('false')
@@ -67,13 +57,6 @@ describe('Code', () => {
     press('code-download')
     expect(names).toEqual(['snippet.py'])
     click.mockRestore()
-  })
-
-  it('folds a long block and opens it on demand', () => {
-    mount(<Code value={lines(40)}>{lines(40)}</Code>)
-    expect(host.textContent).not.toContain('line 40')
-    press('code-fold')
-    expect(host.textContent).toContain('line 40')
   })
 
   it('hands its code to Dev only where the surface provides the hand-off', () => {

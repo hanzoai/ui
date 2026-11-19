@@ -215,6 +215,7 @@ export function Dictation({ voice, disabled = false, size = 36, language = null,
             {...GHOST}
             {...(open ? { bg: '$hover', color: '$ink' } : null)}
             focusVisibleStyle={RING}
+            $max-sm={{ minW: 44, minH: 44 }}
           >
             {/* The small mark of a menu: 16px drawn at a 2px line, so at 1x it is an 8px chevron and not a smudge. */}
             <ChevronDown size={16} strokeWidth={2} color="currentColor" />

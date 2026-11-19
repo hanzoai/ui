@@ -17,20 +17,18 @@
  */
 import { SizableText, Text, View, XStack, YStack, useMedia } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
-import { Check, ChevronDown, ChevronUp } from '@hanzogui/lucide-icons-2'
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { Check } from '@hanzogui/lucide-icons-2'
+import { forwardRef, useCallback, useRef, useState, type ReactNode } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger, Sheet, SheetContent, SheetTitle, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../backends/gui'
 import { slot } from '../backends/gui/slot'
-import { ENSO, grants, modelName, type ModelCatalogEntry, type PauseSource } from '../models/catalog'
+import { grants, modelName, type ModelCatalogEntry, type PauseSource } from '../models/catalog'
 import { ModelPicker } from '../models/ModelPicker'
 import { RING } from './look'
 import type { Way } from './ways'
 
 const STRONG = 'var(--border-strong)' as const
 const SAFE_BOTTOM = 'calc(24px + env(safe-area-inset-bottom, 0px))' as `var(--${string})`
-/** Keep at most 5 options visible at rest; fold secondary choices progressively. */
-const VISIBLE_AT_REST = 5
 
 /** Which model answers: the host's store (Chat and Dev share one), as the composer reads it. */
 export interface Mind {
@@ -53,12 +51,6 @@ export interface Mind {
   balance?: string
   /** The way to the top-up, given the model chosen if one was. */
   topUp?: (id?: string) => void
-  /** Whether third-party provider models (Anthropic, OpenAI, Google, etc.) are included. */
-  allowThirdParty?: boolean
-  /** Count of third-party models hidden when `allowThirdParty` is false. */
-  hiddenThirdPartyCount?: number
-  /** Inline toggle to show or hide third-party provider models. */
-  setAllowThirdParty?: (allow: boolean) => void
 }
 
 /** A short list the surface owns, one in force: the effort, or the mode as the pill at the row's end. */
@@ -130,7 +122,7 @@ const Word = forwardRef<
     >
       {compact ? (
         <XStack items="center" gap="$1" minW={0} shrink={1}>
-          <Text fontSize="$1" lineHeight={14} color="$hint" numberOfLines={1} shrink={0}>
+          <Text fontSize="$1" lineHeight={14} color="$soft" numberOfLines={1} shrink={0}>
             {category}
           </Text>
           <Text fontSize="$2" lineHeight={16} fontWeight="500" color="$ink" numberOfLines={1} shrink={1}>
@@ -139,7 +131,7 @@ const Word = forwardRef<
         </XStack>
       ) : (
         <YStack items="flex-start" gap={1} minW={0} shrink={1}>
-          <Text fontSize="$1" lineHeight={13} color="$hint" numberOfLines={1}>
+          <Text fontSize="$1" lineHeight={13} color="$soft" numberOfLines={1}>
             {category}
           </Text>
           <XStack items="center" gap="$1" minW={0}>
@@ -153,13 +145,12 @@ const Word = forwardRef<
   )
 })
 
-/** A titled list of choices, a check on the one in force. Folds >5 options progressively. */
+/** A titled list of choices, a check on the one in force. */
 export function Choices<T extends string>({
   title,
   items,
   value,
   onPick,
-  onClose,
   compact = false,
   hideTitle = false,
 }: {
@@ -167,32 +158,18 @@ export function Choices<T extends string>({
   items: readonly Way<T>[]
   value: T
   onPick: (id: T) => void
-  onClose?: () => void
   compact?: boolean
   hideTitle?: boolean
 }) {
   const { t } = useI18n()
-  const [expanded, setExpanded] = useState(false)
-  const hasOverflow = items.length > VISIBLE_AT_REST
-  const visible =
-    !hasOverflow || expanded
-      ? items
-      : (() => {
-          const head = items.slice(0, VISIBLE_AT_REST)
-          if (head.some((c) => c.id === value)) return head
-          const active = items.find((c) => c.id === value)
-          return active ? [...items.slice(0, VISIBLE_AT_REST - 1), active] : head
-        })()
-  const hiddenCount = items.length - visible.length
-
   return (
     <YStack role={'listbox' as never} aria-label={title} gap={2} data-slot="choices">
       {hideTitle ? null : (
-        <SizableText size="$1" color="$hint" px={10} pt={6} pb={4}>
+        <SizableText size="$1" color="$soft" px={10} pt={6} pb={4}>
           {title}
         </SizableText>
       )}
-      {visible.map((c) => {
+      {items.map((c) => {
         const selected = c.id === value
         return (
           <XStack
@@ -202,12 +179,6 @@ export function Choices<T extends string>({
             aria-selected={selected}
             aria-disabled={c.off || undefined}
             onClick={() => !c.off && onPick(c.id)}
-            onKeyDown={(e: { key?: string; preventDefault?: () => void }) => {
-              if (e.key === 'Escape') {
-                e.preventDefault?.()
-                onClose?.()
-              }
-            }}
             items="flex-start"
             gap={12}
             minH={compact ? 44 : 38}
@@ -236,37 +207,6 @@ export function Choices<T extends string>({
           </XStack>
         )
       })}
-      {hasOverflow ? (
-        <XStack
-          render={<button type="button" />}
-          data-slot="choices-more"
-          aria-expanded={expanded}
-          onClick={() => setExpanded((v) => !v)}
-          items="center"
-          justify="space-between"
-          gap={8}
-          minH={compact ? 44 : 34}
-          $max-sm={{ minH: 44 }}
-          px={10}
-          py={6}
-          rounded={8}
-          width="100%"
-          borderWidth={0}
-          bg="transparent"
-          cursor="pointer"
-          hoverStyle={{ bg: '$hover' }}
-          focusVisibleStyle={RING}
-        >
-          <SizableText size="$1" fontWeight="500" color="$aside">
-            {expanded ? t('Show fewer options') : t('More options ({n})', { n: hiddenCount })}
-          </SizableText>
-          {expanded ? (
-            <ChevronUp size={14} color="$aside" aria-hidden />
-          ) : (
-            <ChevronDown size={14} color="$aside" aria-hidden />
-          )}
-        </XStack>
-      ) : null}
     </YStack>
   )
 }
@@ -300,18 +240,6 @@ function Opens({
       queueMicrotask(() => triggerRef.current?.focus?.())
     }
   }, [])
-
-  useEffect(() => {
-    if (!open || typeof document === 'undefined') return
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !e.defaultPrevented) {
-        e.preventDefault()
-        close(true)
-      }
-    }
-    document.addEventListener('keydown', onKeyDown)
-    return () => document.removeEventListener('keydown', onKeyDown)
-  }, [open, close])
 
   if (sheet) {
     return (
@@ -413,12 +341,6 @@ function Opens({
           e.preventDefault()
           triggerRef.current?.focus?.()
         }}
-        onKeyDown={(e: { key?: string; preventDefault?: () => void }) => {
-          if (e.key === 'Escape') {
-            e.preventDefault?.()
-            close(true)
-          }
-        }}
       >
         {children(() => close(true), false)}
       </PopoverContent>
@@ -490,7 +412,6 @@ function Pick({
           value={modes.value}
           compact={compact}
           hideTitle={compact}
-          onClose={close}
           onPick={(m) => {
             modes.set(m)
             close()
@@ -504,19 +425,6 @@ function Pick({
 /** Subtle vertical hairline separating Model, Effort, and Mode. */
 function Hairline() {
   return <View width={1} height={22} bg="$edge" shrink={0} $max-sm={{ display: 'none' }} aria-hidden />
-}
-
-/** Keep Auto first whenever both auto and fast/low exist so Chat and Dev share one order. */
-function orderEffortItems<T extends string>(items: readonly Way<T>[]): readonly Way<T>[] {
-  const autoIndex = items.findIndex((item) => item.id.toLowerCase() === 'auto')
-  if (autoIndex <= 0) return items
-  const hasFastOrLow = items.some((item) => {
-    const id = item.id.toLowerCase()
-    const label = item.label.trim().toLowerCase()
-    return id === 'fast' || id === 'low' || label === 'fast' || label === 'low'
-  })
-  if (!hasFastOrLow) return items
-  return [items[autoIndex]!, ...items.slice(0, autoIndex), ...items.slice(autoIndex + 1)]
 }
 
 /** The row's end: the model where it is shown, the effort, and the mode. */
@@ -537,19 +445,8 @@ export function Tune({
 }) {
   const { t } = useI18n()
   const [modelOpen, setModelOpen] = useState(false)
-  const orderedEffort = useMemo(() => {
-    if (!effort) return null
-    const items = orderEffortItems(effort.items)
-    return items === effort.items ? effort : { value: effort.value, set: (m: string) => effort.set(m), items }
-  }, [effort])
-  const normalizedModel = mind?.model?.trim().replace(/^hanzo\//i, '') ?? ''
-  const isEnsoAuto = normalizedModel === ENSO
-  const resolvedModel = mind?.models.find((m) => m.id === mind.model)
-  const resolvedModelName = mind
-    ? isEnsoAuto
-      ? 'Enso'
-      : modelName(resolvedModel ?? { id: mind.model })
-    : ''
+  const resolved = mind?.models.find((m) => m.id === mind.model)
+  const resolvedName = mind ? modelName(resolved ?? { id: mind.model }) : ''
 
   return (
     <TooltipProvider delay={250}>
@@ -563,7 +460,7 @@ export function Tune({
                   stacked
                   size="sm"
                   name={t('Model')}
-                  describe={t('Model: {name}', { name: resolvedModelName })}
+                  describe={t('Model: {name}', { name: resolvedName })}
                   models={mind.models}
                   value={mind.model}
                   onChange={mind.pick}
@@ -575,9 +472,6 @@ export function Tune({
                   funded={mind.funded}
                   balance={mind.balance}
                   onTopUp={mind.topUp}
-                  showThirdParty={mind.allowThirdParty}
-                  hiddenThirdPartyCount={mind.hiddenThirdPartyCount}
-                  onToggleThirdParty={mind.setAllowThirdParty}
                   open={modelOpen}
                   onOpenChange={setModelOpen}
                   {...(onUpgrade ? { onUpgrade } : {})}
@@ -589,27 +483,27 @@ export function Tune({
                 <Text fontFamily="$body" fontSize="$1" lineHeight={16} color="$ink">
                   {t('Which AI model answers')}
                 </Text>
-                {isEnsoAuto ? (
+                {resolved?.description ? (
                   <Text fontFamily="$body" fontSize="$1" lineHeight={15} color="$aside">
-                    {t('Automatically picks the best model for each prompt')}
+                    {resolved.description}
                   </Text>
                 ) : null}
               </YStack>
             </TooltipContent>
           </Tooltip>
         ) : null}
-        {mind && orderedEffort ? <Hairline /> : null}
-        {orderedEffort ? (
+        {mind && effort ? <Hairline /> : null}
+        {effort ? (
           <Pick
             title={t('Effort')}
             hint={t('How deeply Hanzo thinks before answering')}
             label={(level) => t('Effort: {level}', { level })}
             slotName="effort"
-            modes={orderedEffort}
+            modes={effort}
             disabled={disabled}
           />
         ) : null}
-        {(mind || orderedEffort) && mode ? <Hairline /> : null}
+        {(mind || effort) && mode ? <Hairline /> : null}
         {mode ? (
           <Pick
             title={t('Mode')}

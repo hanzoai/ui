@@ -31,7 +31,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { RING } from '../backends/gui/press'
 import { slot } from '../backends/gui/slot'
-import { ENSO, groupLabel, modelName, type Capability, type ModelCatalogEntry, type PauseSource } from './catalog'
+import { groupLabel, modelName, type Capability, type ModelCatalogEntry, type PauseSource } from './catalog'
 import type { ModelPickerMenu as Menu } from './ModelPickerMenu'
 
 /** The open half, once loaded: every picker on the page shares it. */
@@ -83,12 +83,6 @@ export interface ModelPickerProps {
   balance?: string
   /** The way to top the balance up; given the model that was chosen, if one was. */
   onTopUp?: (id?: string) => void
-  /** Whether third-party provider models (Anthropic, OpenAI, Google, etc.) are shown. */
-  showThirdParty?: boolean
-  /** Number of third-party provider models currently hidden when `showThirdParty` is false. */
-  hiddenThirdPartyCount?: number
-  /** Inline toggle to show or hide third-party provider models without closing the picker. */
-  onToggleThirdParty?: (next: boolean) => void
   open?: boolean
   onOpenChange?: (open: boolean) => void
 }
@@ -113,9 +107,6 @@ export function ModelPicker({
   funded,
   balance,
   onTopUp,
-  showThirdParty,
-  hiddenThirdPartyCount,
-  onToggleThirdParty,
   open: openProp,
   onOpenChange,
 }: ModelPickerProps) {
@@ -137,13 +128,8 @@ export function ModelPicker({
   const [triggerW, setTriggerW] = useState(0)
   const trigger = useRef<HTMLElement | null>(null)
 
-  const normalizedValue = value?.trim().replace(/^hanzo\//i, '')
-  const isEnsoAuto = normalizedValue === ENSO
-  const selected = value
-    ? models.find((m) => m.id === value)
-    : undefined
-  const rawLabel = selected ? modelName(selected) : value ? modelName({ id: value }) : (placeholder ?? t('Choose a model'))
-  const label = isEnsoAuto ? 'Enso' : rawLabel
+  const selected = value ? models.find((m) => m.id === value) : undefined
+  const label = selected ? modelName(selected) : value ? modelName({ id: value }) : (placeholder ?? t('Choose a model'))
 
   const close = useCallback(() => {
     setOpen(false)
@@ -198,7 +184,6 @@ export function ModelPicker({
       aria-haspopup="listbox"
       aria-expanded={open}
       aria-disabled={disabled || undefined}
-      {...(isEnsoAuto && !stacked ? { title: t('Automatically picks the best model for each prompt') } : null)}
       height={stacked || sheet ? undefined : quiet ? 28 : small ? 28 : 36}
       minH={stacked ? (sheet ? 44 : 34) : sheet ? 44 : undefined}
       px={stacked ? '$2' : quiet ? 5 : small ? '$2' : '$3'}
@@ -242,47 +227,20 @@ export function ModelPicker({
       }}
     >
       {stacked ? (
-        sheet ? (
-          <XStack items="center" gap="$1" minW={0} shrink={1}>
-            <Text fontSize="$1" lineHeight={14} color="$hint" numberOfLines={1} shrink={0}>
-              {name}
-            </Text>
-            <Text fontSize="$2" lineHeight={16} fontWeight="500" color="$ink" numberOfLines={1} shrink={1}>
-              {label}
-            </Text>
-            {isEnsoAuto ? (
-              <Text fontSize="$1" lineHeight={14} color="$aside" numberOfLines={1} shrink={0}>
-                {t('Auto')}
-              </Text>
-            ) : null}
-          </XStack>
-        ) : (
-          <YStack items="flex-start" gap={1} minW={0} shrink={1}>
-            <Text fontSize="$1" lineHeight={13} color="$hint" numberOfLines={1}>
-              {name}
-            </Text>
-            <XStack items="center" gap="$1" minW={0}>
-              <Text fontSize="$2" lineHeight={16} fontWeight="500" color="$ink" numberOfLines={1} shrink={1}>
-                {label}
-              </Text>
-              {isEnsoAuto ? (
-                <Text fontSize="$1" lineHeight={13} color="$aside" numberOfLines={1} shrink={0}>
-                  {t('Auto')}
-                </Text>
-              ) : null}
-            </XStack>
-          </YStack>
-        )
+        <YStack flexDirection={sheet ? 'row' : 'column'} items={sheet ? 'center' : 'flex-start'} gap={sheet ? '$1' : 1} minW={0} shrink={1}>
+          <Text fontSize="$1" lineHeight={14} color="$soft" numberOfLines={1} shrink={0}>
+            {name}
+          </Text>
+          <Text fontSize="$2" lineHeight={16} fontWeight="500" color="$ink" numberOfLines={1} shrink={1}>
+            {label}
+          </Text>
+        </YStack>
       ) : (
         <>
           <SizableText size={quiet ? '$3' : small ? '$1' : '$2'} color="$ink" fontWeight={quiet ? '500' : undefined} numberOfLines={1} shrink={1} minW={0}>
             {label}
           </SizableText>
-          {isEnsoAuto ? (
-            <SizableText size="$1" color="$aside" numberOfLines={1} shrink={0}>
-              {t('Auto')}
-            </SizableText>
-          ) : selected && !quiet ? (
+          {selected && !quiet ? (
             <SizableText size={small ? '$1' : '$2'} color="$soft" numberOfLines={1} shrink={2} minW={0}>
               {groupLabel(selected)}
             </SizableText>
@@ -318,9 +276,6 @@ export function ModelPicker({
       funded={funded}
       balance={balance}
       onTopUp={onTopUp}
-      showThirdParty={showThirdParty}
-      hiddenThirdPartyCount={hiddenThirdPartyCount}
-      onToggleThirdParty={onToggleThirdParty}
     />
   )
 }

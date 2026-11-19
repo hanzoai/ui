@@ -125,18 +125,6 @@ describe('an artifact', () => {
 describe('Preview, the toolbar', () => {
   const press = (slot: string) => act(() => host.querySelector<HTMLElement>(`[data-slot="${slot}"]`)!.click())
 
-  it('switches to the source and back, naming which is shown', () => {
-    mount(<Preview markup={PAGE} />)
-    const [shown, source] = [...host.querySelectorAll<HTMLElement>('[data-slot="preview-mode"] button')]
-    expect(shown!.getAttribute('aria-pressed')).toBe('true')
-    act(() => source!.click())
-    expect(frame()).toBeNull()
-    expect(slots()).toContain('code')
-    expect(source!.getAttribute('aria-pressed')).toBe('true')
-    act(() => shown!.click())
-    expect(frame()).not.toBeNull()
-  })
-
   it('downloads the page under its title', () => {
     const created = vi.fn(() => 'blob:x')
     Object.assign(URL, { createObjectURL: created, revokeObjectURL: () => {} })

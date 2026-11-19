@@ -29,7 +29,6 @@
  * a parser — so this package ships no parser and takes the rendered nodes.
  */
 import { Image, SizableText, XStack, YStack } from '@hanzo/gui'
-import { useI18n } from '@hanzo/i18n/react'
 import { Paperclip } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps, ReactNode } from 'react'
 
@@ -300,112 +299,6 @@ export function Piece({ part, prose, onRetry, onOpen, onSource }: PieceProps) {
   }
 }
 
-type ToolStepPart = Extract<MessagePart, { type: 'toolCall' | 'toolResult' }>
-
-const isToolStep = (part: MessagePart): part is ToolStepPart =>
-  part.type === 'toolCall' || part.type === 'toolResult'
-
-const statusOf = (part: ToolStepPart): Ran =>
-  part.type === 'toolCall' ? 'running' : (part.status ?? 'done')
-
-type RenderItem =
-  | { kind: 'single'; part: MessagePart; index: number }
-  | { kind: 'group'; parts: ToolStepPart[]; index: number }
-
-const GROUP_MIN = 3
-
-/**
- * Collapse runs of 3+ consecutive tool calls/results into one summary row so a
- * multi-step turn stays calm and scannable; 1-2 consecutive steps stay inline.
- */
-function groupRuns(parts: readonly MessagePart[]): RenderItem[] {
-  const items: RenderItem[] = []
-  let i = 0
-  while (i < parts.length) {
-    const current = parts[i]!
-    if (!isToolStep(current)) {
-      items.push({ kind: 'single', part: current, index: i })
-      i += 1
-      continue
-    }
-    const start = i
-    const run: ToolStepPart[] = []
-    while (i < parts.length) {
-      const candidate = parts[i]!
-      if (!isToolStep(candidate)) break
-      run.push(candidate)
-      i += 1
-    }
-    if (run.length >= GROUP_MIN) {
-      items.push({ kind: 'group', parts: run, index: start })
-    } else {
-      for (let j = 0; j < run.length; j++) {
-        items.push({ kind: 'single', part: run[j]!, index: start + j })
-      }
-    }
-  }
-  return items
-}
-
-function StepGroup({
-  parts,
-  baseIndex,
-  prose,
-  onRetry,
-  onOpen,
-  onSource,
-}: PartActions & { parts: readonly ToolStepPart[]; baseIndex: number }) {
-  const { t } = useI18n()
-
-  let running = 0
-  let done = 0
-  let error = 0
-  let cancelled = 0
-  for (const part of parts) {
-    const s = statusOf(part)
-    if (s === 'running') running += 1
-    else if (s === 'error') error += 1
-    else if (s === 'cancelled') cancelled += 1
-    else done += 1
-  }
-
-  const groupStatus: Ran =
-    running > 0 ? 'running' : error > 0 ? 'error' : cancelled === parts.length ? 'cancelled' : 'done'
-
-  const label =
-    running > 0
-      ? t('Working through {n} steps…', { n: parts.length })
-      : t('Used {n} tools', { n: parts.length })
-
-  const counts: string[] = []
-  if (running > 0) counts.push(t('{n} running', { n: running }))
-  if (done > 0) counts.push(t('{n} done', { n: done }))
-  if (error > 0) counts.push(error === 1 ? t('1 error') : t('{n} errors', { n: error }))
-  if (cancelled > 0) counts.push(t('{n} cancelled', { n: cancelled }))
-
-  return (
-    <Step
-      data-step-group={String(parts.length)}
-      name={label}
-      status={groupStatus}
-      detail={counts.join(' · ') || undefined}
-    >
-      <YStack gap="$1.5" width="100%">
-        {parts.map((part, j) => (
-          <Piece
-            key={`${part.type}-${baseIndex + j}`}
-            part={part}
-            prose={prose}
-            onRetry={onRetry}
-            onOpen={onOpen}
-            onSource={onSource}
-          />
-        ))}
-      </YStack>
-    </Step>
-  )
-}
-
 export interface PartsProps
   extends PartActions,
     Omit<ComponentProps<typeof YStack>, 'children'> {
@@ -415,31 +308,18 @@ export interface PartsProps
 /** A turn's parts, in order, spaced. Goes in a `Message`'s children — `Chat`
  *  puts it there for a turn whose content is a list. */
 export function Parts({ parts, prose, onRetry, onOpen, onSource, ...props }: PartsProps) {
-  const items = groupRuns(join(parts))
   return (
     <YStack {...slot('parts')} width="100%" gap="$2" {...props}>
-      {items.map((item) =>
-        item.kind === 'group' ? (
-          <StepGroup
-            key={`step-group-${item.index}`}
-            parts={item.parts}
-            baseIndex={item.index}
-            prose={prose}
-            onRetry={onRetry}
-            onOpen={onOpen}
-            onSource={onSource}
-          />
-        ) : (
-          <Piece
-            key={`${item.part.type}-${item.index}`}
-            part={item.part}
-            prose={prose}
-            onRetry={onRetry}
-            onOpen={onOpen}
-            onSource={onSource}
-          />
-        ),
-      )}
+      {join(parts).map((part, i) => (
+        <Piece
+          key={`${part.type}-${i}`}
+          part={part}
+          prose={prose}
+          onRetry={onRetry}
+          onOpen={onOpen}
+          onSource={onSource}
+        />
+      ))}
     </YStack>
   )
 }

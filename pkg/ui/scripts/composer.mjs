@@ -237,7 +237,7 @@ for (const [width, height, ratio] of [
       check(m.words.some((w) => /^Effort: /.test(w.name)) && m.words.some((w) => /^Model: /.test(w.name)), `${name}: the model and the effort are words under the frame (${m.words.map((w) => w.name).join(', ')})`)
       if (kind === 'dev') check(m.words.filter((w) => /Where the run runs|Repository|Branch/.test(w.name)).length === 3, `${name}: the pills are words under the frame`)
       for (const w of m.words) {
-        check(w.h >= word - 0.5, `${name}: ${w.name} is at least ${word}px tall (${round(w.h)})`)
+        check(near(w.h, phone ? 44 : 34), `${name}: ${w.name} is ${phone ? 44 : 34}px tall (${round(w.h)})`)
         check(near(w.cy, m.words[0].cy) || phone, `${name}: ${w.name} on the words' line`)
         check(w.edge === 'rgba(0, 0, 0, 0)' && w.bg === 'rgba(0, 0, 0, 0)', `${name}: ${w.name} shows no edge and no fill at rest (${w.edge}, ${w.bg})`)
       }

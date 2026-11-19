@@ -26,17 +26,15 @@
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
-import { Code2, Download, Eye } from '@hanzogui/lucide-icons-2'
-import { useState, type ComponentProps } from 'react'
+import { Code2, Download } from '@hanzogui/lucide-icons-2'
+import type { ComponentProps } from 'react'
 
 import { RING } from '../backends/gui/press'
 import { slot, tip } from '../backends/gui/slot'
 import { CopyButton } from '../product/CopyButton'
-import { Code, useChatHandoff } from './Code'
+import { useChatHandoff } from './Code'
 import { save } from './save'
 import { useReducedMotion } from './useReducedMotion'
-
-type Mode = 'preview' | 'code'
 
 /** The file a download is named after: the title, as a slug. */
 const slugify = (title: string): string =>
@@ -58,7 +56,6 @@ export function Preview({ markup, title, height = 320, ...props }: PreviewProps)
   const { t } = useI18n()
   const handoff = useChatHandoff()
   const named = title ?? t('Preview')
-  const [mode, setMode] = useState<Mode>('preview')
   const ease = useReducedMotion() ? undefined : ('quickest' as const)
 
   const button = {
@@ -80,36 +77,6 @@ export function Preview({ markup, title, height = 320, ...props }: PreviewProps)
     '$max-sm': { minW: 44, minH: 44, opacity: 0.9 },
   } as const
 
-  const segment = (id: Mode, icon: typeof Eye, label: string) => {
-    const Icon = icon
-    const on = mode === id
-    return (
-      <XStack
-        render={<button type="button" />}
-        minH={22}
-        px="$2"
-        gap="$1"
-        rounded="$1"
-        items="center"
-        justify="center"
-        borderWidth={0}
-        bg={on ? '$panel' : 'transparent'}
-        cursor="pointer"
-        transition={ease}
-        hoverStyle={{ bg: on ? '$panel' : '$raised' }}
-        focusVisibleStyle={RING}
-        $max-sm={{ minH: 44, px: '$2.5' }}
-        aria-pressed={on}
-        onClick={() => setMode(id)}
-      >
-        <Icon size={12} color={on ? '$ink' : '$quiet'} aria-hidden />
-        <SizableText size="$1" color={on ? '$ink' : '$quiet'} fontWeight={on ? '500' : '400'}>
-          {label}
-        </SizableText>
-      </XStack>
-    )
-  }
-
   return (
     <YStack
       {...slot('preview')}
@@ -127,10 +94,6 @@ export function Preview({ markup, title, height = 320, ...props }: PreviewProps)
           {named}
         </SizableText>
         <XStack grow={1} />
-        <XStack {...slot('preview-mode')} items="center" p={2} gap={2} rounded="$2" bg="$hover" borderWidth={1} borderColor="$borderColor" shrink={0}>
-          {segment('preview', Eye, t('Preview'))}
-          {segment('code', Code2, t('Code'))}
-        </XStack>
         <XStack items="center" gap="$0.5" shrink={0}>
           {handoff?.openInDev ? (
             <XStack
@@ -161,33 +124,25 @@ export function Preview({ markup, title, height = 320, ...props }: PreviewProps)
         </XStack>
       </XStack>
 
-      {mode === 'code' ? (
-        <YStack width="100%" maxH={Math.max(height, 320)} overflowY="auto">
-          <Code language="html" value={markup} rounded={0} borderWidth={0}>
-            {markup}
-          </Code>
-        </YStack>
-      ) : (
-        /*
-          `sandbox=""` is the whole security posture and must stay empty — one
-          `allow-scripts` turns this from a picture into an execution surface.
-          `srcDoc` rather than a `src`: there is no URL, and nothing is fetched.
-        */
-        <iframe
-          title={named}
-          srcDoc={markup}
-          sandbox=""
-          referrerPolicy="no-referrer"
-          style={{
-            display: 'block',
-            width: '100%',
-            height,
-            border: 0,
-            background: '#fff',
-            colorScheme: 'light',
-          }}
-        />
-      )}
+      {/*
+        `sandbox=""` is the whole security posture and must stay empty — one
+        `allow-scripts` turns this from a picture into an execution surface.
+        `srcDoc` rather than a `src`: there is no URL, and nothing is fetched.
+      */}
+      <iframe
+        title={named}
+        srcDoc={markup}
+        sandbox=""
+        referrerPolicy="no-referrer"
+        style={{
+          display: 'block',
+          width: '100%',
+          height,
+          border: 0,
+          background: '#fff',
+          colorScheme: 'light',
+        }}
+      />
     </YStack>
   )
 }

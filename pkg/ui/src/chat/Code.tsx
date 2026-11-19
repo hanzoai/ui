@@ -14,7 +14,7 @@
  */
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
-import { ChevronDown, ChevronUp, Code2, Download, Hash, WrapText } from '@hanzogui/lucide-icons-2'
+import { Code2, Download, WrapText } from '@hanzogui/lucide-icons-2'
 import { createContext, useContext, useState, type ComponentProps, type CSSProperties, type ReactNode } from 'react'
 
 import { RING } from '../backends/gui/press'
@@ -23,7 +23,7 @@ import { CopyButton } from '../product/CopyButton'
 import { save } from './save'
 import { useReducedMotion } from './useReducedMotion'
 
-/** Cross-surface handoff context provided by Chat so any code block or HTML artifact can open cleanly in Hanzo Dev. */
+/** Hand-off context a surface provides so any code block or HTML artifact can open cleanly in Hanzo Dev. */
 export interface ChatHandoffHandlers {
   openInDev?: (payload: { code: string; language?: string; title?: string }) => void
 }
@@ -56,12 +56,6 @@ const MONO_WRAP: CSSProperties = {
   overflowWrap: 'anywhere',
   wordBreak: 'break-word',
 }
-
-const DIFF_ADD_BG = 'color-mix(in srgb, var(--state-success) 12%, transparent)'
-const DIFF_DEL_BG = 'color-mix(in srgb, var(--state-error) 12%, transparent)'
-
-const FOLD_THRESHOLD = 32
-const FOLD_LINES = 22
 
 const EXTENSIONS: Record<string, string> = {
   ts: 'ts',
@@ -117,25 +111,9 @@ export function Code({ children, language = 'text', value, actions, ...props }: 
   const { t } = useI18n()
   const handoff = useChatHandoff()
   const text = value ?? (typeof children === 'string' ? children : '')
-  const lines = text ? text.split('\n') : []
-  const lineCount = lines.length
-  const hasCustomNodes = children != null && typeof children !== 'string'
-  const canLineRender = !hasCustomNodes && lineCount > 0
-  const isDiff = canLineRender && language.trim().toLowerCase() === 'diff'
-  const foldable = canLineRender && lineCount > FOLD_THRESHOLD
-
-  const [showLines, setShowLines] = useState(false)
   const [wrap, setWrap] = useState(false)
-  const [expanded, setExpanded] = useState(false)
   const reducedMotion = useReducedMotion()
   const ease = reducedMotion ? undefined : ('quickest' as const)
-
-  const visibleLines = foldable && !expanded ? lines.slice(0, FOLD_LINES) : lines
-  const renderRows = canLineRender && (showLines || isDiff || foldable)
-  const gutterWidth = Math.max(24, String(lineCount).length * 9 + 8)
-
-  const headerLabel =
-    lineCount > 1 ? `${language} · ${t('{n} lines', { n: lineCount })}` : language
 
   const controlProps = (active: boolean) =>
     ({
@@ -157,63 +135,9 @@ export function Code({ children, language = 'text', value, actions, ...props }: 
       '$max-sm': { minW: 44, minH: 44, opacity: 0.85 },
     }) as const
 
-  const body = renderRows ? (
-    <YStack py="$2.5" width="100%">
-      {visibleLines.map((line, idx) => {
-        const added = isDiff && line.startsWith('+') && !line.startsWith('+++')
-        const removed = isDiff && line.startsWith('-') && !line.startsWith('---')
-        const hunk = isDiff && line.startsWith('@@')
-        const rowBg = added ? DIFF_ADD_BG : removed ? DIFF_DEL_BG : undefined
-        return (
-          <XStack
-            key={idx}
-            px="$3"
-            width="100%"
-            items="flex-start"
-            bg={rowBg as never}
-          >
-            {showLines ? (
-              <SizableText
-                size="$1"
-                color="$quiet"
-                opacity={0.55}
-                select="none"
-                text="end"
-                shrink={0}
-                minW={gutterWidth}
-                paddingInlineEnd="$3"
-                lineHeight={20}
-                fontVariant={['tabular-nums']}
-                style={MONO}
-                aria-hidden
-              >
-                {idx + 1}
-              </SizableText>
-            ) : null}
-            <SizableText
-              size="$1"
-              color="$ink"
-              fontWeight={hunk ? '500' : undefined}
-              lineHeight={20}
-              whiteSpace={wrap ? 'pre-wrap' : 'pre'}
-              style={wrap ? MONO_WRAP : MONO}
-              grow={1}
-              minW={0}
-            >
-              {line.length > 0 ? line : ' '}
-            </SizableText>
-          </XStack>
-        )
-      })}
-    </YStack>
-  ) : (
+  const body = (
     <YStack px="$3" py="$2.5" width="100%">
-      <SizableText
-        size="$1"
-        lineHeight={20}
-        whiteSpace={wrap ? 'pre-wrap' : 'pre'}
-        style={wrap ? MONO_WRAP : MONO}
-      >
+      <SizableText size="$1" lineHeight={20} whiteSpace={wrap ? 'pre-wrap' : 'pre'} style={wrap ? MONO_WRAP : MONO}>
         {children ?? text}
       </SizableText>
     </YStack>
@@ -244,22 +168,10 @@ export function Code({ children, language = 'text', value, actions, ...props }: 
             `$quiet` is the ramp's readable secondary and clears it. The bar is
             chrome, so it stays quieter than the code; quiet is a rung, not an
             excuse to be unreadable. */}
-        <SizableText size="$1" style={MONO} color="$quiet" fontVariant={['tabular-nums']}>
-          {headerLabel}
+        <SizableText size="$1" style={MONO} color="$quiet">
+          {language}
         </SizableText>
         <XStack grow={1} />
-        {canLineRender && lineCount > 1 ? (
-          <XStack
-            {...slot('code-lines-toggle')}
-            {...controlProps(showLines)}
-            aria-pressed={showLines}
-            aria-label={showLines ? t('Hide line numbers') : t('Show line numbers')}
-            {...tip(showLines ? t('Hide line numbers') : t('Show line numbers'))}
-            onClick={() => setShowLines((v) => !v)}
-          >
-            <Hash size={13} color={showLines ? '$ink' : '$quiet'} />
-          </XStack>
-        ) : null}
         <XStack
           {...slot('code-wrap-toggle')}
           {...controlProps(wrap)}
@@ -331,40 +243,6 @@ export function Code({ children, language = 'text', value, actions, ...props }: 
         </ScrollView>
       )}
 
-      {foldable ? (
-        <XStack
-          {...slot('code-fold')}
-          render={<button type="button" />}
-          width="100%"
-          items="center"
-          justify="center"
-          gap="$1.5"
-          px="$3"
-          py="$1.5"
-          minH={32}
-          $max-sm={{ minH: 44 }}
-          borderWidth={0}
-          borderTopWidth={1}
-          borderColor="$borderColor"
-          bg="$panel"
-          hoverStyle={{ bg: '$hover' }}
-          pressStyle={{ bg: '$raised' }}
-          focusVisibleStyle={RING}
-          transition={ease}
-          cursor="pointer"
-          aria-expanded={expanded}
-          onClick={() => setExpanded((v) => !v)}
-        >
-          {expanded ? (
-            <ChevronUp size={13} color="$quiet" aria-hidden />
-          ) : (
-            <ChevronDown size={13} color="$quiet" aria-hidden />
-          )}
-          <SizableText size="$1" color="$quiet" fontWeight="500">
-            {expanded ? t('Collapse') : t('Show all {n} lines', { n: lineCount })}
-          </SizableText>
-        </XStack>
-      ) : null}
     </YStack>
   )
 }

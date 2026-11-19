@@ -12,6 +12,7 @@ import { GuiProvider } from '@hanzo/gui'
 import config from '../gui-config'
 import { parseModels } from '../models/catalog'
 import { Chips, Tune, type Mind } from './Tune'
+import { EFFORTS } from './ways'
 
 declare global {
   // eslint-disable-next-line no-var
@@ -128,12 +129,31 @@ describe('Tune, effort and mode lists', () => {
   ]
   const options = () => [...document.querySelectorAll<HTMLElement>('[role="option"]')].map((o) => o.textContent?.split(/(?=[A-Z][a-z]+ )/)[0] ?? '')
 
-  it('lists Auto first in the effort choices', () => {
-    mount(<Tune effort={{ value: 'high', set: () => {}, items }} />)
+  it('lists the efforts in the order it was given, Auto first in EFFORTS', () => {
+    mount(<Tune effort={{ value: 'high', set: () => {}, items: EFFORTS }} />)
     act(() => host.querySelector<HTMLElement>('[data-slot="effort"]')!.click())
-    expect(document.querySelectorAll('[role="option"]')[0]!.textContent).toMatch(/^Auto/)
+    const names = [...document.querySelectorAll('[role="option"]')].map((o) => o.textContent ?? '')
+    expect(names[0]).toMatch(/^Auto/)
+    expect(names.at(-1)).toMatch(/^Max/)
+    expect(names).toHaveLength(EFFORTS.length)
   })
 
+  it('closes a list on Escape', () => {
+    mount(<Tune mode={{ value: 'fast', set: () => {}, items }} />)
+    act(() => host.querySelector<HTMLElement>('[data-slot="mode"]')!.click())
+    expect(document.querySelector('[role="option"]')).not.toBeNull()
+    act(() => {
+      document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    })
+    expect(document.querySelector('[role="option"]')).toBeNull()
+  })
+
+  it('names the model from the catalog, with the catalog\'s own description in its tip', () => {
+    mount(<Tune mind={mind()} />)
+    expect(label('Model')!.getAttribute('aria-label')).toBe('Model: Enso')
+    expect(host.textContent).toContain('Enso')
+  })
   it('leaves the mode list in the order it was given', () => {
     mount(<Tune mode={{ value: 'fast', set: () => {}, items }} />)
     act(() => host.querySelector<HTMLElement>('[data-slot="mode"]')!.click())

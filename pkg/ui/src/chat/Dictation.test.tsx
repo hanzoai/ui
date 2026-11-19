@@ -67,4 +67,21 @@ describe('Dictation', () => {
     act(() => root.unmount())
     host.remove()
   })
+
+  it('gives the settings chevron a 44px target on a phone', () => {
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    const root = createRoot(host)
+    const voice = { state: 'idle', open: false, level: 0, blocked: null, reason: null, refusal: null, toggle: () => {} } as const
+    act(() =>
+      root.render(
+        <GuiProvider config={config} defaultTheme="dark">
+          <Dictation voice={voice} />
+        </GuiProvider>,
+      ),
+    )
+    expect(host.querySelector('[data-slot="dictation-menu"]')!.className).toMatch(/_minH-_maxsm_44px/)
+    act(() => root.unmount())
+    host.remove()
+  })
 })

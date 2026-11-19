@@ -30,8 +30,8 @@ import { AGENT_GAPS, can, capabilitiesOf, CAPABILITY_NAMES, formatCeiling, forma
 import { modelCount, pickable, pickerRows, restable, revealTop, standing, visibleRange, type PickerRow } from './picker.logic'
 
 /** The list's ceiling in a popover, px. */
-const LIST_H = 280
-const PANEL_W = 344
+const LIST_H = 360
+const PANEL_W = 360
 
 const MOVES = new Set<Move>(['ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 'PageUp'])
 
@@ -61,15 +61,9 @@ interface ListProps {
   balance?: string
   /** The way to the top-up, given the model chosen if one was. */
   onTopUp?: (id?: string) => void
-  /** Whether third-party provider models (Anthropic, OpenAI, Google, etc.) are shown. */
-  showThirdParty?: boolean
-  /** Number of third-party provider models currently hidden when `showThirdParty` is false. */
-  hiddenThirdPartyCount?: number
-  /** Inline toggle to show or hide third-party provider models without closing the picker. */
-  onToggleThirdParty?: (next: boolean) => void
 }
 
-function List({ models, value, onChange, onClose, scope, limits, loading, error, name, sheet, row, granted, onUpgrade, funded, balance, onTopUp, showThirdParty, hiddenThirdPartyCount = 0, onToggleThirdParty }: ListProps) {
+function List({ models, value, onChange, onClose, scope, limits, loading, error, name, sheet, row, granted, onUpgrade, funded, balance, onTopUp }: ListProps) {
   const { t } = useI18n()
   const [q, setQ] = useState('')
   const [at, setAt] = useState(-1)
@@ -223,7 +217,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
 
       <ScrollView
         ref={list as never}
-        height={sheet ? undefined : LIST_H}
+        height={sheet ? undefined : Math.min(LIST_H, Math.max(row * 3, rows.length * row))}
         flex={sheet ? 1 : undefined}
         showsVerticalScrollIndicator
         scrollEventThrottle={16}
@@ -369,75 +363,13 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
           })}
         </YStack>
         {rows.length === 0 && !error ? (
-          <YStack {...slot('model-picker-empty')} px="$2" py="$2" gap="$1.5" role="status">
+          <XStack {...slot('model-picker-empty')} px="$2" py="$2" role="status">
             <SizableText size="$2" color="$soft">
               {loading ? t('Loading models…') : q ? t('No models match “{query}”.', { query: q }) : t('No models to choose from.')}
             </SizableText>
-            {!loading && q && onToggleThirdParty && !showThirdParty && hiddenThirdPartyCount > 0 ? (
-              <XStack
-                render={<button type="button" />}
-                {...slot('model-picker-reveal-providers')}
-                cursor="pointer"
-                self="flex-start"
-                minH={sheet ? 44 : 28}
-                px="$2"
-                items="center"
-                rounded="$2"
-                borderWidth={1}
-                borderColor="var(--border-strong)"
-                bg="$panel"
-                hoverStyle={{ bg: '$hover' }}
-                focusVisibleStyle={RING}
-                onClick={() => onToggleThirdParty(true)}
-              >
-                <SizableText size="$1" color="$ink" fontWeight="500">
-                  {t('Show {n} models from other providers', { n: hiddenThirdPartyCount })}
-                </SizableText>
-              </XStack>
-            ) : null}
-          </YStack>
+          </XStack>
         ) : null}
       </ScrollView>
-
-      {onToggleThirdParty && (showThirdParty || hiddenThirdPartyCount > 0) ? (
-        <XStack
-          {...slot('model-picker-providers')}
-          px="$2"
-          py="$1.5"
-          gap="$2"
-          items="center"
-          justify="space-between"
-          borderTopWidth={1}
-          borderTopColor="$edge"
-        >
-          <SizableText size="$1" color="$soft" numberOfLines={1} flex={1} minW={0}>
-            {showThirdParty
-              ? t('All providers enabled')
-              : t('{n} more from Anthropic, OpenAI, Google…', { n: hiddenThirdPartyCount })}
-          </SizableText>
-          <XStack
-            render={<button type="button" />}
-            {...slot('model-picker-third-party-toggle')}
-            aria-pressed={Boolean(showThirdParty)}
-            cursor="pointer"
-            shrink={0}
-            minH={sheet ? 44 : 26}
-            px="$2"
-            items="center"
-            rounded="$2"
-            borderWidth={1}
-            borderColor="var(--border-strong)"
-            bg={showThirdParty ? '$panel' : 'transparent'}
-            hoverStyle={{ bg: '$hover' }}
-            focusVisibleStyle={RING}
-            onClick={() => onToggleThirdParty(!showThirdParty)}
-          >
-            <SizableText size="$1" color="$ink" fontWeight="500">
-              {showThirdParty ? t('Hanzo only') : t('Show all')}
-            </SizableText>
-          </XStack>
-        </XStack>
-      ) : null}
 
       {balance !== undefined || onTopUp ? (
         <XStack {...slot('model-picker-balance')} px="$2" py="$1.5" gap="$2" items="center" justify="space-between">
@@ -452,7 +384,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
               cursor="pointer"
               rounded="$2"
               px="$1.5"
-              minH={sheet ? 44 : 24}
+              minH={sheet ? 44 : undefined}
               items="center"
               focusVisibleStyle={RING}
               onClick={() => {
@@ -502,8 +434,8 @@ export function ModelPickerMenu({ trigger, open, onOpen, disabled, width, focusT
   const body = open ? <List {...list} /> : null
   return (
     <>
-      <Popover open={open && !list.sheet} onOpenChange={(v) => (v ? onOpen() : list.onClose())} placement="top-end" allowFlip stayInFrame>
-        <PopoverTrigger asChild disablePressTrigger disabled={disabled}>
+      <Popover open={open && !list.sheet} onOpenChange={(v) => (v ? onOpen() : list.onClose())} placement="bottom-start" allowFlip stayInFrame>
+        <PopoverTrigger asChild disabled={disabled}>
           {trigger}
         </PopoverTrigger>
         {list.sheet ? null : (
@@ -527,7 +459,7 @@ export function ModelPickerMenu({ trigger, open, onOpen, disabled, width, focusT
       </Popover>
       {list.sheet ? (
         <Sheet open={open} onOpenChange={(v: boolean) => (v ? onOpen() : list.onClose())}>
-          <SheetContent {...slot('model-picker-sheet')} side="bottom" height="75dvh" maxH="75dvh" p="$3" pb="calc(12px + env(safe-area-inset-bottom, 0px))" gap="$2" onOpenAutoFocus={(e: Event) => e.preventDefault()}>
+          <SheetContent {...slot('model-picker-sheet')} side="bottom" height="85%" maxH="85%" p="$3" gap="$2" onOpenAutoFocus={(e: Event) => e.preventDefault()}>
             <SheetTitle size="$4">{list.name}</SheetTitle>
             {body}
           </SheetContent>

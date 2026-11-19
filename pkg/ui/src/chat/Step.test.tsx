@@ -140,17 +140,17 @@ describe('the module is open', () => {
 describe('Step, a thought', () => {
   it('shows what it thought once: in the header while shut, in the body once open', () => {
     // An open Thought repeats its own preview in the header above the body.
-    const shut = html(<Step name="Thought" detail="weighing the options">weighing the options in full</Step>)
+    const shut = html(<Step name="Thought" detail="weighing the options" preview>weighing the options in full</Step>)
     expect(shut.match(/weighing the options(?! in full)/g)).toHaveLength(1)
     const open = html(
-      <Step name="Thought" detail="weighing the options" defaultOpen>
+      <Step name="Thought" detail="weighing the options" preview defaultOpen>
         weighing the options in full
       </Step>,
     )
     expect(open.match(/weighing the options/g)).toHaveLength(1)
   })
 
-  it('keeps the detail of any other open step', () => {
+  it('keeps the detail of an open step that is not a preview', () => {
     const open = html(
       <Step name="shell" detail="git status" defaultOpen>
         output
