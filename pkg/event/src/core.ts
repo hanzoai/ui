@@ -94,6 +94,17 @@ function readEnv(name: string): string | undefined {
   return undefined
 }
 
+/** releaseEnv reads the build's release by its LITERAL name. A bundler inlines
+ *  `process.env.NAME` only when the name is written out (Next's `env`, Vite's `define`),
+ *  so the dynamic lookup in readEnv() above never saw it in a browser bundle. */
+function releaseEnv(): string | undefined {
+  try {
+    return process.env.NEXT_PUBLIC_HANZO_RELEASE || undefined
+  } catch {
+    return undefined
+  }
+}
+
 /** appendQuery adds a single query param to a URL string — used to carry a
  *  publishable key on either send (?ingest_key=…). */
 function appendQuery(url: string, key: string, value: string): string {
@@ -469,7 +480,7 @@ export class Analytics {
       this.enqueue('error', undefined, {
         error: ex,
         level: context?.level ?? (handled ? 'error' : 'fatal'),
-        release: this.cfg.release ?? readEnv('NEXT_PUBLIC_HANZO_RELEASE'),
+        release: this.cfg.release ?? releaseEnv(),
         environment: this.cfg.environment ?? readEnv('NODE_ENV'),
         site: isBrowser() ? window.location.hostname : undefined,
         properties: context?.properties,
@@ -620,7 +631,7 @@ export class Analytics {
             device_class: deviceClassOf(window.innerWidth || window.screen?.width || 0),
           }
         : { route: wire.path ? routeOf(wire.path) : undefined }),
-      release: this.cfg.release ?? readEnv('NEXT_PUBLIC_HANZO_RELEASE'),
+      release: this.cfg.release ?? releaseEnv(),
       outcome: kind === 'error' ? 'error' : 'ok',
       ...wire.properties,
     }

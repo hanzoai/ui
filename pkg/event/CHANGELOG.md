@@ -1,5 +1,11 @@
 # @hanzo/event
 
+## 0.3.69
+
+### Patch Changes
+
+- `release` reads `process.env.NEXT_PUBLIC_HANZO_RELEASE` by its literal name, so a bundler inlines it (the dynamic lookup never did in a browser bundle).
+
 ## 0.3.68
 
 ### Patch Changes
