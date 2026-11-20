@@ -97,7 +97,7 @@ const measure = (tab) =>
         const range = document.createRange()
         range.selectNodeContents(text)
         const ink = range.getBoundingClientRect()
-        return { name: el.getAttribute('aria-label') || el.textContent, ...box(el), chip: el.matches('[data-slot="composer-chip"]'), edge: parseFloat(s.borderTopWidth), edgeColor: s.borderTopColor, bg: s.backgroundColor, ink: { x: ink.left, r: ink.right } }
+        return { name: el.getAttribute('aria-label') || el.textContent, text: el.innerText.replace(/\s+/g, ' ').trim(), ...box(el), chip: el.matches('[data-slot="composer-chip"]'), edge: parseFloat(s.borderTopWidth), edgeColor: s.borderTopColor, bg: s.backgroundColor, ink: { x: ink.left, r: ink.right } }
       })
       .sort((a, b) => a.x - b.x)
     const fr = box(frame)
@@ -237,6 +237,11 @@ for (const [width, height, ratio] of [
       // Under the frame: labelled controls at least a word tall, a transparent edge and no fill at rest, at the text edge.
       check(m.words.some((w) => /^Effort: /.test(w.name)) && m.words.some((w) => /^Model: /.test(w.name)), `${name}: the model and the effort are words under the frame (${m.words.map((w) => w.name).join(', ')})`)
       if (kind === 'dev') check(m.words.filter((w) => /Where the run runs|Repository|Branch/.test(w.name)).length === 3, `${name}: the pills are words under the frame`)
+      // Closed, each one reads as what it chooses, its title before its value: never two bare "Auto"s side by side (hanzo-inc/app#313).
+      for (const w of m.words.filter((w) => /^(Model|Effort|Mode): /.test(w.name))) {
+        const [title, value] = w.name.split(': ')
+        check(w.text.startsWith(title) && w.text.endsWith(value) && w.text !== value, `${name}: ${title} is titled on the row, not only its value ("${w.text}")`)
+      }
       for (const w of m.words) {
         // Model, Effort and Mode are labelled controls (the label over the value); the pills and chips stay words.
         const labelled = /^(Model|Effort|Mode): /.test(w.name) || w.chip
@@ -284,15 +289,16 @@ for (const [width, height, ratio] of [
       await tab.screenshot({ path: join(OUT, `${name}.png`) })
       await tab.locator('[data-slot="composer-shell"]').screenshot({ path: join(OUT, `${name}-rest.png`) })
 
-      // Effort and Mode open their list where it can be seen: drawn, on screen, beside the word that opened it.
-      for (const slotName of kind === 'dev' ? ['effort', 'mode'] : ['effort']) {
+      // Model, Effort and Mode open their list where it can be seen: drawn, on screen, beside the word that opened it.
+      const lists = { 'model-picker': '[data-slot="model-picker-panel"], [data-slot="model-picker-sheet"]', effort: '[data-slot="choices"]', mode: '[data-slot="choices"]' }
+      for (const slotName of kind === 'dev' ? ['model-picker', 'effort', 'mode'] : ['model-picker', 'effort']) {
         const trigger = tab.locator(`[data-slot="composer-foot"] [data-slot="${slotName}"]`)
         check((await trigger.count()) === 1, `${name}: ${slotName} is drawn under the frame`)
         if (!(await trigger.count())) continue
         await trigger.click()
-        await tab.locator('[data-slot="choices"]').last().waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {})
-        const panel = await tab.evaluate((s) => {
-          const list = [...document.querySelectorAll('[data-slot="choices"]')].at(-1)
+        await tab.locator(lists[slotName]).last().waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {})
+        const panel = await tab.evaluate(([s, sel]) => {
+          const list = [...document.querySelectorAll(sel)].at(-1)
           if (!list) return null
           const b = list.getBoundingClientRect()
           const t = document.querySelector(`[data-slot="composer-foot"] [data-slot="${s}"]`).getBoundingClientRect()
@@ -302,14 +308,14 @@ for (const [width, height, ratio] of [
             if (st.opacity === '0' || st.visibility === 'hidden' || st.display === 'none') seen = false
           }
           return { seen, x: b.x, y: b.y, r: b.right, bottom: b.bottom, w: b.width, vw: innerWidth, vh: innerHeight, gap: Math.min(Math.abs(t.top - b.bottom), Math.abs(b.top - t.bottom)) }
-        }, slotName)
+        }, [slotName, lists[slotName]])
         check(
           panel && panel.seen && panel.w > 0 && panel.x >= 0 && panel.y >= 0 && panel.r <= panel.vw + 1 && panel.bottom <= panel.vh + 1,
           `${name}: ${slotName} opens a list that is seen on screen (${JSON.stringify(panel)})`,
         )
         if (!phone) check(panel && panel.gap <= 24, `${name}: ${slotName}'s list opens beside its word (${panel?.gap})`)
         await tab.keyboard.press('Escape')
-        const shut = await tab.locator('[data-slot="choices"]').last().waitFor({ state: 'hidden', timeout: 5_000 }).then(() => true, () => false)
+        const shut = await tab.locator(lists[slotName]).last().waitFor({ state: 'hidden', timeout: 5_000 }).then(() => true, () => false)
         check(shut, `${name}: Escape puts ${slotName}'s list away`)
         await settle(tab)
       }
