@@ -41,6 +41,7 @@ import {
 } from './attribution'
 import { keyForPage } from './org'
 import { PAGEVIEW } from './events'
+import { deviceClassOf, isAuthCallback, routeOf } from './route'
 import { scrubText, withoutFragment } from './scrub'
 import { framesFromStack, normalizeError as normalizeThrowable } from './throwable'
 import {
@@ -123,6 +124,9 @@ const viewport = (): Record<string, string> =>
   isBrowser()
     ? { screen: `${window.screen?.width ?? 0}x${window.screen?.height ?? 0}`, language: navigator.language || '' }
     : {}
+
+/** The ops event that stands in for a pageview on the sign-in callback. */
+const AUTH_CALLBACK = 'auth_callback'
 
 const isBrowser = () => typeof window !== 'undefined' && typeof document !== 'undefined'
 
@@ -409,6 +413,10 @@ export class Analytics {
     // passed, because a route change fires before window.location has caught up
     // and the caller's value has to win.
     const p = path ?? (isBrowser() ? window.location.pathname : undefined)
+    if (isBrowser() && p !== undefined && isAuthCallback(routeOf(p))) {
+      this.authCallback()
+      return
+    }
     // Counting a page once is the client's rule, not each caller's. A page holds
     // several emitters that each correctly believe they count the first view —
     // the provider's autoPageview, a router hook, a nav autocapture — and per
@@ -417,6 +425,19 @@ export class Analytics {
     if (view === this.counted) return
     this.counted = view
     this.enqueue('pageview', PAGEVIEW, { path: p, properties: { ...viewport(), ...properties } })
+  }
+
+  /** authCallback reports the sign-in round trip as an ops event: how long the page
+   *  took to land and whether it succeeded, with no query string. The address carries
+   *  an authorization code and a state, so the page is never counted as a view. */
+  private authCallback(): void {
+    if (this.counted === AUTH_CALLBACK) return
+    this.counted = AUTH_CALLBACK
+    const failed = /[?&]error=/.test(window.location.search)
+    const latency = typeof performance !== 'undefined' ? Math.round(performance.now()) : undefined
+    this.enqueue('event', AUTH_CALLBACK, {
+      properties: { latency_ms: latency, outcome: failed ? 'error' : 'success' },
+    })
   }
 
   /** capture records a named product event with optional properties. Commerce
@@ -511,6 +532,8 @@ export class Analytics {
 
   private enqueue(kind: EventKind, event: string | undefined, extra: Partial<WireEvent>): void {
     if (!this.cfg.enabled) return
+    // Nothing is counted on the sign-in callback but the ops event and errors.
+    if (isBrowser() && kind !== 'error' && event !== AUTH_CALLBACK && isAuthCallback(routeOf(window.location.pathname))) return
     if (!this.started) this.init()
     this.queue.push(this.build(kind, event, extra))
     if (this.queue.length >= this.cfg.batchSize) this.flush()
@@ -581,6 +604,26 @@ export class Analytics {
     if (wire.url) wire.url = scrubText(withoutFragment(wire.url), capturePII)
     if (wire.path) wire.path = scrubText(withoutFragment(wire.path), capturePII)
     if (wire.referrer) wire.referrer = scrubText(withoutFragment(wire.referrer), capturePII)
+    if (isBrowser() && isAuthCallback(routeOf(window.location.pathname))) {
+      // No query string leaves this page: the code and state are not ours to keep.
+      wire.url = window.location.origin + window.location.pathname
+      wire.path = window.location.pathname
+    }
+    // The five fields every funnel reads, on every event: where (hostname, route),
+    // which build (release), on what (device_class) and how it ended (outcome). A
+    // caller's own `outcome` wins; an error event is an error.
+    wire.properties = {
+      ...(isBrowser()
+        ? {
+            hostname: window.location.hostname,
+            route: routeOf(wire.path ?? window.location.pathname),
+            device_class: deviceClassOf(window.innerWidth || window.screen?.width || 0),
+          }
+        : { route: wire.path ? routeOf(wire.path) : undefined }),
+      release: this.cfg.release ?? readEnv('NEXT_PUBLIC_HANZO_RELEASE'),
+      outcome: kind === 'error' ? 'error' : 'ok',
+      ...wire.properties,
+    }
     if (internal()) wire.properties = { ...wire.properties, internal: true }
     // The grants the event was sent under, as the cookie spells it: what cloud may
     // forward it to Google and Meta under.

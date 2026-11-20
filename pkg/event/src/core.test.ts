@@ -100,7 +100,7 @@ describe('Analytics capture', () => {
     expect(e.type).toBe('event')
     expect(e.event).toBe('signup_completed')
     expect(e.product).toBe('test-app')
-    expect(e.properties).toEqual({ plan: 'pro' })
+    expect(e.properties).toEqual({ plan: 'pro', outcome: 'ok' })
     // The client must NEVER send a tenant/org — the server stamps it.
     expect((e as Record<string, unknown>).tenant).toBeUndefined()
     expect((e as Record<string, unknown>).org).toBeUndefined()
@@ -592,9 +592,86 @@ describe('a driven browser', () => {
       const a = mk()
       a.capture(EVENTS.SIGNUP_COMPLETED, { plan: 'pro' })
       a.flush()
-      expect(tx.all[0].properties).toEqual({ plan: 'pro' })
+      expect(tx.all[0].properties).toEqual({ plan: 'pro', outcome: 'ok' })
     } finally {
       if (nav) Object.defineProperty(globalThis, 'navigator', nav)
     }
+  })
+})
+
+describe('the five funnel fields', () => {
+  const withPage = (href: string, fn: () => void, width = 1440) => {
+    const g = globalThis as Record<string, unknown>
+    const hadWindow = 'window' in g
+    const hadDocument = 'document' in g
+    const u = new URL(href)
+    g.window = {
+      location: { href, protocol: u.protocol, hostname: u.hostname, origin: u.origin, pathname: u.pathname, search: u.search },
+      innerWidth: width,
+      addEventListener: () => {},
+    }
+    g.document = accepted({ referrer: '', visibilityState: 'visible' })
+    try {
+      fn()
+    } finally {
+      if (!hadWindow) delete g.window
+      if (!hadDocument) delete g.document
+    }
+  }
+
+  it('stamps hostname, a templated route, release, device_class and outcome on every event', () => {
+    withPage('https://hanzo.team/chat/21bc1d59bd3920767a6dd5b7a4e1c0ff?x=1', () => {
+      const a = mk({ release: 'abc1234' })
+      a.pageview()
+      a.capture('$click')
+      a.captureError(new Error('boom'))
+      a.flush()
+      for (const e of tx.all) {
+        expect(e.properties).toMatchObject({
+          hostname: 'hanzo.team',
+          route: '/chat/[id]',
+          release: 'abc1234',
+          device_class: 'desktop',
+        })
+      }
+      expect(tx.all.find((e) => e.type === 'pageview')!.properties?.outcome).toBe('ok')
+      expect(tx.all.find((e) => e.type === 'error')!.properties?.outcome).toBe('error')
+    })
+  })
+
+  it('classes a narrow viewport as mobile', () => {
+    withPage('https://hanzo.app/', () => {
+      const a = mk()
+      a.pageview()
+      a.flush()
+      expect(tx.all[0].properties?.device_class).toBe('mobile')
+    }, 390)
+  })
+
+  it('counts no pageview on /auth/callback: one ops event, no query string', () => {
+    withPage('https://hanzo.bot/auth/callback?code=SECRET&state=STATE', () => {
+      const a = mk()
+      a.pageview()
+      a.pageview()
+      a.capture('$click')
+      a.flush()
+      expect(tx.all.filter((e) => e.type === 'pageview')).toHaveLength(0)
+      expect(tx.all).toHaveLength(1)
+      const e = tx.all[0]
+      expect(e.event).toBe('auth_callback')
+      expect(e.properties).toMatchObject({ route: '/auth/callback', outcome: 'success' })
+      expect(typeof e.properties?.latency_ms).toBe('number')
+      expect(e.url).toBe('https://hanzo.bot/auth/callback')
+      expect(JSON.stringify(e)).not.toMatch(/SECRET|STATE|\?/)
+    })
+  })
+
+  it('reports a failed callback as an error outcome', () => {
+    withPage('https://hanzo.bot/auth/callback?error=login_required', () => {
+      const a = mk()
+      a.pageview()
+      a.flush()
+      expect(tx.all[0].properties?.outcome).toBe('error')
+    })
   })
 })

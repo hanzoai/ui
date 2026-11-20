@@ -1,5 +1,12 @@
 # @hanzo/event
 
+## 0.3.68
+
+### Patch Changes
+
+- Every event carries `hostname`, a templated `route` (ids, UUIDs and numeric segments become `[id]`; the query is never part of it), `release`, `device_class` and `outcome`. `release` is `config.release` or `NEXT_PUBLIC_HANZO_RELEASE`.
+- `/auth/callback` is no longer counted as a view. It reports one `auth_callback` ops event with `latency_ms` and `outcome` (`success` | `error`), and no query string; no other event is sent from that page but errors.
+
 ## 0.3.64
 
 ### Patch Changes
