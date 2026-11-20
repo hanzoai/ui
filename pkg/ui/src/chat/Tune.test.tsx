@@ -115,6 +115,15 @@ describe('Tune', () => {
     expect(set).toHaveBeenCalledWith('auto')
   })
 
+  it('titles each closed word with what it chooses, so two Autos never stand alone (hanzo-inc/app#313)', () => {
+    const auto = [{ id: 'auto', label: 'Auto', note: 'Adaptive' }]
+    mount(<Tune mind={mind()} effort={{ value: 'auto', set: () => {}, items: auto }} mode={{ value: 'auto', set: () => {}, items: auto }} />)
+    const text = (slot: string) => host.querySelector<HTMLElement>(`[data-slot="${slot}"]`)!.textContent
+    expect(text('model-picker')).toBe('ModelEnso')
+    expect(text('effort')).toBe('EffortAuto')
+    expect(text('mode')).toBe('ModeAuto')
+  })
+
   it('draws nothing where the surface has no model, no effort and no mode', () => {
     mount(<Tune mind={null} effort={null} mode={null} />)
     expect(host.querySelector('[data-slot="tune"]')?.children.length).toBe(0)
