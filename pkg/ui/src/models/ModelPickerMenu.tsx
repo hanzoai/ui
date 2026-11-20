@@ -378,14 +378,16 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
           </SizableText>
           {onTopUp ? (
             <XStack
-              render="button"
+              render={<button type="button" />}
               role="button"
               aria-label={t('Top up')}
               cursor="pointer"
               rounded="$2"
               px="$1.5"
+              minH={sheet ? 44 : undefined}
+              items="center"
               focusVisibleStyle={RING}
-              onPress={() => {
+              onClick={() => {
                 onTopUp()
                 onClose()
               }}

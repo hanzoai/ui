@@ -12,6 +12,7 @@ import { GuiProvider } from '@hanzo/gui'
 import config from '../gui-config'
 import { parseModels } from '../models/catalog'
 import { Chips, Tune, type Mind } from './Tune'
+import { EFFORTS } from './ways'
 
 declare global {
   // eslint-disable-next-line no-var
@@ -117,6 +118,70 @@ describe('Tune', () => {
   it('draws nothing where the surface has no model, no effort and no mode', () => {
     mount(<Tune mind={null} effort={null} mode={null} />)
     expect(host.querySelector('[data-slot="tune"]')?.children.length).toBe(0)
+  })
+})
+
+describe('Tune, effort and mode lists', () => {
+  const items = [
+    { id: 'fast', label: 'Fast', note: 'Quick' },
+    { id: 'high', label: 'High', note: 'Thinks longer' },
+    { id: 'auto', label: 'Auto', note: 'Adaptive' },
+  ]
+  const options = () => [...document.querySelectorAll<HTMLElement>('[role="option"]')].map((o) => o.textContent?.split(/(?=[A-Z][a-z]+ )/)[0] ?? '')
+
+  it('lists the efforts in the order it was given, Auto first in EFFORTS', () => {
+    mount(<Tune effort={{ value: 'high', set: () => {}, items: EFFORTS }} />)
+    act(() => host.querySelector<HTMLElement>('[data-slot="effort"]')!.click())
+    const names = [...document.querySelectorAll('[role="option"]')].map((o) => o.textContent ?? '')
+    expect(names[0]).toMatch(/^Auto/)
+    expect(names.at(-1)).toMatch(/^Max/)
+    expect(names).toHaveLength(EFFORTS.length)
+  })
+
+  it('closes a list on Escape', () => {
+    mount(<Tune mode={{ value: 'fast', set: () => {}, items }} />)
+    act(() => host.querySelector<HTMLElement>('[data-slot="mode"]')!.click())
+    expect(document.querySelector('[role="option"]')).not.toBeNull()
+    act(() => {
+      document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    })
+    expect(document.querySelector('[role="option"]')).toBeNull()
+  })
+
+  it('names the model from the catalog, with the catalog\'s own description in its tip', () => {
+    mount(<Tune mind={mind()} />)
+    expect(label('Model')!.getAttribute('aria-label')).toBe('Model: Enso')
+    expect(host.textContent).toContain('Enso')
+  })
+  it('leaves the mode list in the order it was given', () => {
+    mount(<Tune mode={{ value: 'fast', set: () => {}, items }} />)
+    act(() => host.querySelector<HTMLElement>('[data-slot="mode"]')!.click())
+    expect(options()[0]).toMatch(/^Fast/)
+  })
+
+  it('says whether a list is open', () => {
+    mount(<Tune mode={{ value: 'fast', set: () => {}, items }} />)
+    const word = host.querySelector<HTMLElement>('[data-slot="mode"]')!
+    expect(word.getAttribute('aria-expanded')).toBe('false')
+    act(() => word.click())
+    expect(host.querySelector('[data-slot="mode"]')!.getAttribute('aria-expanded')).toBe('true')
+  })
+
+  it('does not open the mode while the surface disables it', () => {
+    mount(<Tune disabled mode={{ value: 'fast', set: () => {}, items }} />)
+    const word = host.querySelector<HTMLElement>('[data-slot="mode"]')!
+    expect(word.getAttribute('aria-disabled')).toBe('true')
+    act(() => word.click())
+    expect(document.querySelector('[role="option"]')).toBeNull()
+    expect(word.getAttribute('aria-expanded')).toBe('false')
+  })
+
+  it('stands the model, effort and mode as separate controls', () => {
+    mount(<Tune mind={mind()} effort={{ value: 'high', set: () => {}, items }} mode={{ value: 'fast', set: () => {}, items }} />)
+    expect(label('Model')).not.toBeNull()
+    expect(host.querySelector('[data-slot="effort"]')).not.toBeNull()
+    expect(host.querySelector('[data-slot="mode"]')).not.toBeNull()
   })
 })
 

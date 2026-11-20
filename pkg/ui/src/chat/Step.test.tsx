@@ -136,3 +136,26 @@ describe('the module is open', () => {
     expect(html(<Message role="assistant" actions={<Code>c</Code>} />)).toContain('t_group')
   })
 })
+
+describe('Step, a thought', () => {
+  it('shows what it thought once: in the header while shut, in the body once open', () => {
+    // An open Thought repeats its own preview in the header above the body.
+    const shut = html(<Step name="Thought" detail="weighing the options" preview>weighing the options in full</Step>)
+    expect(shut.match(/weighing the options(?! in full)/g)).toHaveLength(1)
+    const open = html(
+      <Step name="Thought" detail="weighing the options" preview defaultOpen>
+        weighing the options in full
+      </Step>,
+    )
+    expect(open.match(/weighing the options/g)).toHaveLength(1)
+  })
+
+  it('keeps the detail of an open step that is not a preview', () => {
+    const open = html(
+      <Step name="shell" detail="git status" defaultOpen>
+        output
+      </Step>,
+    )
+    expect(open).toContain('git status')
+  })
+})

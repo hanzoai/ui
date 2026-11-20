@@ -24,10 +24,10 @@
  * On a phone it is a bottom sheet with rows sized for a thumb; elsewhere a
  * popover. Styling is gui props and tokens only.
  */
-import { SizableText, XStack, useMedia } from '@hanzo/gui'
+import { SizableText, Text, XStack, YStack, useMedia } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
 import { ChevronsUpDown } from '@hanzogui/lucide-icons-2'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 
 import { RING } from '../backends/gui/press'
 import { slot } from '../backends/gui/slot'
@@ -43,7 +43,7 @@ const load = (): Promise<typeof Menu> =>
 /** Row height, px: a line of 13px type on a pointer, a thumb's reach on a phone. */
 const ROW = 32
 const ROW_TOUCH = 44
-
+const STRONG = 'var(--border-strong)' as const
 export interface ModelPickerProps {
   /** The catalog, as `parseModels` reads `GET /v1/models`. */
   models: readonly ModelCatalogEntry[]
@@ -60,6 +60,8 @@ export interface ModelPickerProps {
   disabled?: boolean
   /** A word, for a picker in a row of words (under a composer): the name in the full ink at the 14px rung, no fill, no hairline, no mark; a phone's thumb height. */
   quiet?: boolean
+  /** Stack the micro-label (`name`) cleanly above (or beside on narrow screens) the active model value. */
+  stacked?: boolean
   size?: 'sm' | 'md'
   /** Absent, "Choose a model" in the reader's language. */
   placeholder?: string
@@ -95,6 +97,7 @@ export function ModelPicker({
   error = null,
   disabled = false,
   quiet = false,
+  stacked = false,
   size = 'md',
   placeholder,
   name: named,
@@ -126,7 +129,7 @@ export function ModelPicker({
   const trigger = useRef<HTMLElement | null>(null)
 
   const selected = value ? models.find((m) => m.id === value) : undefined
-  const label = selected ? modelName(selected) : value || (placeholder ?? t('Choose a model'))
+  const label = selected ? modelName(selected) : value ? modelName({ id: value }) : (placeholder ?? t('Choose a model'))
 
   const close = useCallback(() => {
     setOpen(false)
@@ -152,6 +155,25 @@ export function ModelPicker({
   }, [Live])
 
   const small = size === 'sm'
+  useEffect(() => {
+    const el = trigger.current
+    if (!el) return
+    const measure = () => {
+      const next = Math.round(el.getBoundingClientRect().width)
+      setTriggerW((prev) => (prev === next ? prev : next))
+    }
+    measure()
+    if (typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [Live, stacked, quiet, small])
+
+  const popoverWidth =
+    typeof window !== 'undefined' && window.innerWidth > 24
+      ? Math.min(triggerW, window.innerWidth - 24)
+      : triggerW
+
   const button = (
     <XStack
       ref={trigger as never}
@@ -162,24 +184,31 @@ export function ModelPicker({
       aria-haspopup="listbox"
       aria-expanded={open}
       aria-disabled={disabled || undefined}
-      height={quiet ? 28 : small ? 28 : 36}
-      px={quiet ? 5 : small ? '$2' : '$3'}
-      gap="$2"
+      height={stacked || sheet ? undefined : quiet ? 28 : small ? 28 : 36}
+      minH={stacked ? (sheet ? 44 : 34) : sheet ? 44 : undefined}
+      // inline-style: a custom property, which no gui prop carries. A coarse pointer's `min-height: var(--tap-target) !important`
+      // outranks minH, and the composer lowers that variable to 24px: a phone takes it back to 44.
+      style={sheet ? ({ '--tap-target': '44px' } as CSSProperties) : undefined}
+      px={stacked ? '$2' : quiet ? 5 : small ? '$2' : '$3'}
+      py={stacked ? 3 : undefined}
+      gap={stacked ? '$1' : '$2'}
       items="center"
-      maxW="100%"
-      rounded={quiet ? 8 : '$3'}
-      {...(quiet ? { '$max-sm': { height: 36 }, transition: 'quickest' } : null)}
-      borderWidth={quiet ? 0 : 1}
-      borderColor="$borderColor"
-      bg={quiet ? 'transparent' : '$background'}
+      minW={0}
+      shrink={1}
+      maxW="calc(100vw - 24px)"
+      rounded={stacked ? '$3' : quiet ? 8 : '$3'}
+      $max-sm={{ minH: 44 }}
+      transition="quickest"
+      borderWidth={1}
+      borderColor={quiet || stacked ? (open ? STRONG : 'transparent') : STRONG}
+      bg={open && (quiet || stacked) ? '$hover' : quiet || stacked ? 'transparent' : '$panel'}
       cursor={disabled ? 'default' : 'pointer'}
       opacity={disabled ? 0.5 : 1}
-      hoverStyle={disabled ? undefined : quiet ? { bg: '$hover' } : { borderColor: '$rim' }}
-      pressStyle={disabled ? undefined : { bg: '$hover' }}
+      hoverStyle={disabled ? undefined : { bg: '$hover', borderColor: STRONG }}
+      pressStyle={disabled ? undefined : { bg: '$raised' }}
       focusVisibleStyle={RING}
-      onLayout={(e: { nativeEvent?: { layout?: { width?: number } } }) => setTriggerW(e.nativeEvent?.layout?.width ?? 0)}
-      // The popover opens on press once it is here; before that, and on a phone, the press opens it.
-      onPress={disabled || (Live && !sheet) ? undefined : () => setOpen(true)}
+      // Explicit click toggle works consistently both before and after lazy menu hydration (`disablePressTrigger`).
+      onClick={disabled ? undefined : () => setOpen(!open)}
       onMouseEnter={disabled ? undefined : want}
       onFocus={
         disabled
@@ -200,15 +229,28 @@ export function ModelPicker({
         }
       }}
     >
-      <SizableText size={quiet ? '$3' : small ? '$1' : '$2'} color="$ink" fontWeight={quiet ? '500' : undefined} numberOfLines={1} shrink={1} minW={0}>
-        {label}
-      </SizableText>
-      {selected && !quiet ? (
-        <SizableText size={small ? '$1' : '$2'} color="$soft" numberOfLines={1} shrink={2} minW={0}>
-          {groupLabel(selected)}
-        </SizableText>
-      ) : null}
-      {quiet ? null : <ChevronsUpDown size={small ? 12 : 14} color="$soft" shrink={0} aria-hidden />}
+      {stacked ? (
+        <YStack flexDirection={sheet ? 'row' : 'column'} items={sheet ? 'center' : 'flex-start'} gap={sheet ? '$1' : 1} minW={0} shrink={1}>
+          <Text fontSize="$1" lineHeight={14} color="$soft" numberOfLines={1} shrink={0}>
+            {name}
+          </Text>
+          <Text fontSize="$2" lineHeight={16} fontWeight="500" color="$ink" numberOfLines={1} shrink={1}>
+            {label}
+          </Text>
+        </YStack>
+      ) : (
+        <>
+          <SizableText size={quiet ? '$3' : small ? '$1' : '$2'} color="$ink" fontWeight={quiet ? '500' : undefined} numberOfLines={1} shrink={1} minW={0}>
+            {label}
+          </SizableText>
+          {selected && !quiet ? (
+            <SizableText size={small ? '$1' : '$2'} color="$soft" numberOfLines={1} shrink={2} minW={0}>
+              {groupLabel(selected)}
+            </SizableText>
+          ) : null}
+          {quiet ? null : <ChevronsUpDown size={small ? 12 : 14} color="$aside" shrink={0} aria-hidden />}
+        </>
+      )}
     </XStack>
   )
 
@@ -220,7 +262,7 @@ export function ModelPicker({
       onOpen={() => setOpen(true)}
       onClose={close}
       disabled={disabled}
-      width={triggerW}
+      width={popoverWidth}
       focusTrigger={() => trigger.current?.focus?.()}
       models={models}
       value={value}

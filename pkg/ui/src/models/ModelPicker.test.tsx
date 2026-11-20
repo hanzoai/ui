@@ -321,3 +321,16 @@ describe('an agent’s picker', () => {
     expect(onChange).not.toHaveBeenCalled()
   })
 })
+
+describe('ModelPicker, stacked', () => {
+  it('draws what it chooses above the model it holds, the model by its catalog name', async () => {
+    await mount(<ModelPicker stacked quiet name="Model" models={MODELS} value="enso-auto" onChange={() => {}} />)
+    const trigger = host.querySelector('[data-slot="model-picker"]')!
+    expect(trigger.textContent).toBe('ModelEnso')
+  })
+
+  it('holds a model the catalog lacks by its id, read as words', async () => {
+    await mount(<ModelPicker stacked name="Model" models={MODELS} value="vendor/odd-one" onChange={() => {}} />)
+    expect(host.querySelector('[data-slot="model-picker"]')!.textContent).toContain('Vendor Odd One')
+  })
+})

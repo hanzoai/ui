@@ -17,12 +17,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { Control } from '@hanzo/composer'
 import { SizableText, XStack, YStack } from '@hanzo/gui'
-import { choose, Voice, type Machine } from '@hanzo/voice'
+import { choose, type Machine } from '@hanzo/voice'
 import { Check, ChevronDown, Mic as MicIcon } from '@hanzogui/lucide-icons-2'
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '../backends/gui'
 import { useDirection } from '../i18n/react'
 import { LANGUAGES } from './languages'
+import { VoiceSlot } from './VoiceSlot'
 import { GHOST, GLYPH, RING, STROKE } from './look'
 import { useI18n } from '@hanzo/i18n/react'
 
@@ -68,14 +69,17 @@ function useInputs(open: boolean): {
   useEffect(() => {
     if (!open || typeof navigator === 'undefined' || !navigator.mediaDevices?.enumerateDevices) return
     let live = true
-    void navigator.mediaDevices.enumerateDevices().then((all) => {
-      if (!live) return
-      const mics = all.filter((d) => d.kind === 'audioinput' && d.deviceId !== 'default' && d.deviceId !== 'communications')
-      setInputs(mics)
-      // The system's own input: the group the browser's "default" entry belongs to, else the first.
-      setUsing(all.find((d) => d.kind === 'audioinput' && d.deviceId === 'default')?.groupId || mics[0]?.groupId || '')
-      setAllowed(mics.some((d) => d.label))
-    })
+    void navigator.mediaDevices
+      .enumerateDevices()
+      .then((all) => {
+        if (!live) return
+        const mics = all.filter((d) => d.kind === 'audioinput' && d.deviceId !== 'default' && d.deviceId !== 'communications')
+        setInputs(mics)
+        // The system's own input: the group the browser's "default" entry belongs to, else the first.
+        setUsing(all.find((d) => d.kind === 'audioinput' && d.deviceId === 'default')?.groupId || mics[0]?.groupId || '')
+        setAllowed(mics.some((d) => d.label))
+      })
+      .catch(() => {})
     return () => {
       live = false
     }
@@ -158,18 +162,48 @@ export function Dictation({ voice, disabled = false, size = 36, language = null,
   const { inputs, allowed, using } = useInputs(open)
   const [device, setDevice] = useState<string | null>(() => (typeof window === 'undefined' ? null : kept()))
   const spoken = LANGUAGES.find((l) => l.id === language)
+  const listening = voice.state === 'listening'
+  const blockedReason = voice.blocked ? voice.reason || t('Microphone permission denied. Allow access in your browser settings.') : null
   // Two controls on one row, each its own box and its own focus ring: no frame around the pair.
   return (
     <XStack data-slot="dictation" items="center" shrink={0}>
-      <Control asChild size={size} {...GHOST} focusVisibleStyle={RING}>
-        <Voice voice={voice} disabled={disabled} says={{ idle: t('Dictate'), listening: t('Dictating — click to stop') }}>
+      {listening ? (
+        <XStack
+          data-slot="dictation-live"
+          role="status"
+          aria-live="polite"
+          items="center"
+          gap={6}
+          height={24}
+          px={8}
+          marginInlineEnd={2}
+          rounded={999}
+          bg="$panel"
+          borderWidth={1}
+          borderColor="var(--border-strong)"
+          shrink={0}
+        >
+          <YStack width={6} height={6} rounded={999} bg="var(--state-online)" aria-hidden />
+          <SizableText size="$1" color="$ink" fontWeight="500">
+            {t('Listening')}
+          </SizableText>
+        </XStack>
+      ) : null}
+      <Control
+        asChild
+        size={size}
+        {...GHOST}
+        {...(listening ? { bg: '$panel', borderWidth: 1, borderColor: 'var(--border-strong)', color: '$ink' } : null)}
+        focusVisibleStyle={RING}
+      >
+        <VoiceSlot voice={voice} disabled={disabled} says={{ idle: t('Dictate'), listening: t('Dictating — click to stop') }}>
           {(state) => <MicIcon size={GLYPH} strokeWidth={STROKE} color="currentColor" fill={state === 'idle' ? 'none' : 'currentColor'} />}
-        </Voice>
+        </VoiceSlot>
       </Control>
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild disabled={disabled}>
           <XStack
-            render="button"
+            render={<button type="button" />}
             aria-label={t('Dictation settings')}
             data-slot="dictation-menu"
             // The mic's own chevron: half its width, the pair one control.
@@ -182,13 +216,24 @@ export function Dictation({ voice, disabled = false, size = 36, language = null,
             {...GHOST}
             {...(open ? { bg: '$hover', color: '$ink' } : null)}
             focusVisibleStyle={RING}
+            $max-sm={{ minW: 44, minH: 44 }}
           >
             {/* The small mark of a menu: 16px drawn at a 2px line, so at 1x it is an 8px chevron and not a smudge. */}
             <ChevronDown size={16} strokeWidth={2} color="currentColor" />
           </XStack>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" minW={200} data-slot="dictation-panel">
-          <Meter device={device} on={open && allowed} />
+        <DropdownMenuContent align="end" minW={220} data-slot="dictation-panel">
+          {blockedReason ? (
+            <YStack px={10} py={8} gap={2} role="alert" data-slot="dictation-error">
+              <SizableText size="$1" fontWeight="600" color="var(--state-error)">
+                {t('Microphone unavailable')}
+              </SizableText>
+              <SizableText size="$1" color="$soft">
+                {blockedReason}
+              </SizableText>
+            </YStack>
+          ) : null}
+          <Meter device={device} on={open && allowed && !blockedReason} />
           {inputs.length === 0 ? (
             <DropdownMenuLabel>
               <SizableText fontSize={14} color="$hint">

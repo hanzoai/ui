@@ -33,6 +33,7 @@ import {
 import { useI18n } from '@hanzo/i18n/react'
 import { useState, type ComponentProps, type ReactNode } from 'react'
 
+import { RING } from '../backends/gui/press'
 import { slot, tip } from '../backends/gui/slot'
 import { mirror } from '../backends/gui/dir'
 
@@ -40,6 +41,7 @@ import { mirror } from '../backends/gui/dir'
 type Row = Omit<ComponentProps<typeof XStack>, 'children'>
 type Col = Omit<ComponentProps<typeof YStack>, 'children'>
 type Scroll = Omit<ComponentProps<typeof ScrollView>, 'children'>
+type ClickEvent = Parameters<NonNullable<Row['onClick']>>[0]
 
 const WIDTH = 264
 const ROW = { px: '$2', py: '$1.5', rounded: '$3' } as const
@@ -93,21 +95,34 @@ export function SidebarHeader({
   const { t } = useI18n()
   return (
     <XStack {...slot('sidebar-header')} items="center" gap="$1" px="$1" py="$1.5" {...rest}>
-      <XStack
-        {...ROW}
-        items="center"
-        gap="$1"
-        shrink={1}
-        cursor={onOpenSwitcher ? 'pointer' : undefined}
-        onPress={onOpenSwitcher}
-        hoverStyle={onOpenSwitcher ? { bg: '$edge' } : undefined}
-        pressStyle={onOpenSwitcher ? { bg: '$raised' } : undefined}
-      >
-        <SizableText size="$3" fontWeight="600" numberOfLines={1}>
-          {title}
-        </SizableText>
-        {onOpenSwitcher ? <ChevronDown size={14} opacity={0.6} /> : null}
-      </XStack>
+      {onOpenSwitcher ? (
+        <XStack
+          render={<button type="button" />}
+          {...ROW}
+          items="center"
+          gap="$1"
+          minW={0}
+          shrink={1}
+          borderWidth={0}
+          bg="transparent"
+          cursor="pointer"
+          onClick={onOpenSwitcher}
+          hoverStyle={{ bg: '$edge' }}
+          pressStyle={{ bg: '$raised' }}
+          focusVisibleStyle={RING}
+        >
+          <SizableText size="$3" fontWeight="600" numberOfLines={1} text="start">
+            {title}
+          </SizableText>
+          <ChevronDown size={14} opacity={0.6} aria-hidden />
+        </XStack>
+      ) : (
+        <XStack {...ROW} items="center" gap="$1" minW={0} shrink={1}>
+          <SizableText size="$3" fontWeight="600" numberOfLines={1}>
+            {title}
+          </SizableText>
+        </XStack>
+      )}
 
       <XStack flex={1} />
       {onSearch ? (
@@ -134,23 +149,32 @@ export interface SidebarIconButtonProps extends Row {
   children?: ReactNode
 }
 
-export function SidebarIconButton({ label, onPress, children, ...rest }: SidebarIconButtonProps) {
+export function SidebarIconButton({ label, onPress, onClick, children, ...rest }: SidebarIconButtonProps) {
   return (
     <XStack
+      render={<button type="button" />}
       width={28}
       height={28}
       items="center"
       justify="center"
       rounded="$3"
+      borderWidth={0}
+      bg="transparent"
       cursor="pointer"
       opacity={0.7}
-      onPress={onPress}
-      role="button"
-      tabIndex={0}
+      onClick={
+        onPress || onClick
+          ? (e: ClickEvent) => {
+              onClick?.(e)
+              onPress?.()
+            }
+          : undefined
+      }
       aria-label={label}
       {...tip(label)}
       hoverStyle={{ bg: '$edge', opacity: 1 }}
       pressStyle={{ bg: '$raised' }}
+      focusVisibleStyle={RING}
       {...rest}
     >
       {children}
@@ -164,24 +188,34 @@ export interface SidebarNewChatProps extends Row {
   onPress?: () => void
 }
 
-export function SidebarNewChat({ label, onPress, ...rest }: SidebarNewChatProps) {
+export function SidebarNewChat({ label, onPress, onClick, ...rest }: SidebarNewChatProps) {
   const { t } = useI18n()
   return (
     <XStack
+      render={<button type="button" />}
       {...slot('sidebar-new-chat')}
       {...ROW}
+      width="100%"
       items="center"
       gap="$2"
+      borderWidth={0}
+      bg="transparent"
       cursor="pointer"
-      onPress={onPress}
-      role="button"
-      tabIndex={0}
+      onClick={
+        onPress || onClick
+          ? (e: ClickEvent) => {
+              onClick?.(e)
+              onPress?.()
+            }
+          : undefined
+      }
       hoverStyle={{ bg: '$edge' }}
       pressStyle={{ bg: '$raised' }}
+      focusVisibleStyle={RING}
       {...rest}
     >
-      <SquarePen size={16} />
-      <SizableText size="$2" fontWeight="500">
+      <SquarePen size={16} aria-hidden />
+      <SizableText size="$2" fontWeight="500" text="start">
         {label ?? t('New chat')}
       </SizableText>
     </XStack>
@@ -238,25 +272,44 @@ export interface SidebarItemProps extends Row {
  * run long, and a wrapping row makes the list's scan height irregular while the
  * first few words are what identify a conversation anyway.
  */
-export function SidebarItem({ children, active = false, onPress, icon, ...rest }: SidebarItemProps) {
+export function SidebarItem({ children, active = false, onPress, onClick, icon, ...rest }: SidebarItemProps) {
   return (
     <XStack
+      render={<button type="button" />}
       {...slot('sidebar-item')}
       {...ROW}
+      width="100%"
       items="center"
       gap="$2"
+      borderWidth={0}
       cursor="pointer"
-      onPress={onPress}
-      role="button"
-      tabIndex={0}
+      onClick={
+        onPress || onClick
+          ? (e: ClickEvent) => {
+              onClick?.(e)
+              onPress?.()
+            }
+          : undefined
+      }
       aria-current={active ? 'page' : undefined}
-      bg={active ? '$edge' : undefined}
+      bg={active ? '$edge' : 'transparent'}
       hoverStyle={{ bg: active ? '$edge' : '$hover' }}
       pressStyle={{ bg: '$raised' }}
+      focusVisibleStyle={RING}
       {...rest}
     >
       {icon ? <YStack opacity={0.7}>{icon}</YStack> : null}
-      <SizableText size="$2" numberOfLines={1} flex={1} color={active ? '$color' : '$quiet'}>
+      <SizableText
+        size="$2"
+        numberOfLines={1}
+        flex={1}
+        minW={0}
+        maxW="100%"
+        overflow="hidden"
+        text="start"
+        color={active ? '$color' : '$quiet'}
+        $platform-web={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}
+      >
         {children}
       </SizableText>
     </XStack>
@@ -299,24 +352,27 @@ export function SidebarFolder({
   return (
     <YStack {...slot('sidebar-folder')} {...rest}>
       <XStack
+        render={<button type="button" />}
         {...ROW}
+        width="100%"
         items="center"
         gap="$1.5"
+        borderWidth={0}
+        bg="transparent"
         cursor="pointer"
-        onPress={toggle}
-        role="button"
-        tabIndex={0}
+        onClick={toggle}
         aria-expanded={open}
         hoverStyle={{ bg: '$hover' }}
         pressStyle={{ bg: '$raised' }}
+        focusVisibleStyle={RING}
       >
         {open ? (
-          <ChevronDown size={14} opacity={0.6} />
+          <ChevronDown size={14} opacity={0.6} aria-hidden />
         ) : (
-          <ChevronRight {...mirror} size={14} opacity={0.6} />
+          <ChevronRight {...mirror} size={14} opacity={0.6} aria-hidden />
         )}
-        <Folder size={16} opacity={0.7} />
-        <SizableText size="$2" numberOfLines={1} flex={1} color="$quiet">
+        <Folder size={16} opacity={0.7} aria-hidden />
+        <SizableText size="$2" numberOfLines={1} flex={1} minW={0} text="start" color="$quiet">
           {name}
         </SizableText>
       </XStack>
@@ -352,16 +408,19 @@ export function SidebarUser({ name, secondary, avatar, onPress, onHelp, ...rest 
       {...rest}
     >
       <XStack
+        render={<button type="button" />}
         {...ROW}
         items="center"
         gap="$2"
         flex={1}
+        minW={0}
+        borderWidth={0}
+        bg="transparent"
         cursor="pointer"
-        onPress={onPress}
-        role="button"
-        tabIndex={0}
+        onClick={onPress}
         hoverStyle={{ bg: '$hover' }}
         pressStyle={{ bg: '$raised' }}
+        focusVisibleStyle={RING}
       >
         <XStack
           width={24}
@@ -371,6 +430,7 @@ export function SidebarUser({ name, secondary, avatar, onPress, onHelp, ...rest 
           justify="center"
           bg="$raised"
           overflow="hidden"
+          shrink={0}
         >
           {avatar ?? (
             <SizableText size="$1" fontWeight="600">
@@ -378,12 +438,12 @@ export function SidebarUser({ name, secondary, avatar, onPress, onHelp, ...rest 
             </SizableText>
           )}
         </XStack>
-        <YStack flex={1}>
-          <SizableText size="$2" numberOfLines={1}>
+        <YStack flex={1} minW={0} items="flex-start">
+          <SizableText size="$2" numberOfLines={1} text="start">
             {name}
           </SizableText>
           {secondary ? (
-            <SizableText size="$1" color="$soft" numberOfLines={1}>
+            <SizableText size="$1" color="$soft" numberOfLines={1} text="start">
               {secondary}
             </SizableText>
           ) : null}

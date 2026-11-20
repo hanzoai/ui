@@ -48,10 +48,11 @@ import { useComposing, type Composing } from '@hanzo/appearance'
 import { Control } from '@hanzo/composer'
 import { SizableText, useMedia, XStack, YStack } from '@hanzo/gui'
 import { phrase } from '@hanzo/i18n'
-import { Voice, type Machine } from '@hanzo/voice'
+import { type Machine } from '@hanzo/voice'
 import { ArrowUp, AudioLines, Square, X } from '@hanzogui/lucide-icons-2'
 
 import { Textarea } from '../backends/gui'
+import { touch } from '../backends/gui/gesture'
 import { slot } from '../backends/gui/slot'
 import { glass } from '../glass'
 import type { PauseSource } from '../models/catalog'
@@ -65,6 +66,9 @@ import { GHOST, GLYPH, RING, STROKE } from './look'
 import { useComposerStatus } from './Status'
 import { Chips, Tune, type Chip, type Mind, type Modes } from './Tune'
 import { useI18n } from '@hanzo/i18n/react'
+import { VoiceSlot } from './VoiceSlot'
+
+const STRONG = 'var(--border-strong)' as const
 
 /** `onChange` is dropped: here it carries the draft, not a DOM change event. */
 type Stack = Omit<ComponentProps<typeof YStack>, 'children' | 'onChange'>
@@ -441,6 +445,7 @@ export function Composer({
       tabIndex={sending ? 0 : -1}
       pressStyle={{ scale: 0.92 }}
       focusVisibleStyle={RING}
+      $max-sm={{ minW: 44, minH: 44 }}
       onClick={() => {
         if (!live) return
         if (busy) onStop?.()
@@ -451,18 +456,18 @@ export function Composer({
     </Control>
   )
   const last = (
-    <XStack {...slot('composer-last')} position="relative" width={hit} height={hit} shrink={0}>
+    <XStack {...slot('composer-last')} position="relative" width={hit} height={hit} $max-sm={{ minW: 44, minH: 44 }} shrink={0}>
       {talk ? (
         <XStack {...layer(!sending)}>
-          <Control asChild size={hit} rounded={999} {...GHOST} focusVisibleStyle={RING}>
-            <Voice
+          <Control asChild size={hit} rounded={999} {...GHOST} focusVisibleStyle={RING} $max-sm={{ minW: 44, minH: 44 }}>
+            <VoiceSlot
               voice={talk}
               disabled={disabled || sending}
               data-slot="composer-talk"
               says={{ idle: t('Voice mode'), listening: t('In conversation — click to hang up'), speaking: t('Hanzo is speaking — talk to interrupt') }}
             >
               {() => <AudioLines size={GLYPH} strokeWidth={STROKE} color="currentColor" />}
-            </Voice>
+            </VoiceSlot>
           </Control>
         </XStack>
       ) : null}
@@ -493,16 +498,20 @@ export function Composer({
         {c.label}
       </SizableText>
       <XStack
-        render="button"
+        render={<button type="button" />}
         aria-label={t('Remove {name}', { name: c.label })}
-        onPress={c.onRemove}
+        onClick={c.onRemove}
         width={20}
         height={20}
         rounded={999}
+        borderWidth={0}
+        bg="transparent"
         items="center"
         justify="center"
         hoverStyle={{ bg: '$raised' }}
+        focusVisibleStyle={RING}
         cursor="pointer"
+        {...touch(20)}
       >
         <X size={12} color="$hint" />
       </XStack>
@@ -518,22 +527,23 @@ export function Composer({
       <XStack
         {...slot('composer-foot')}
         items="center"
-        gap={2}
+        gap="$1.5"
         flexWrap="wrap"
-        rowGap={2}
+        rowGap="$1"
         width="100%"
-        // A word's letters stand where the field's do: TEXT in, less the word's own gutter.
-        px={TEXT - GUTTER}
+        // Aligns left pills/chips and right tune controls optically with the textarea's TEXT inset.
+        paddingInlineStart={TEXT - GUTTER}
+        paddingInlineEnd={TEXT - 8}
         style={FLOOR}
       >
         {pills ? (
-          <XStack {...slot('composer-pills')} items="center" gap={2} flexWrap="wrap" rowGap={2}>
+          <XStack {...slot('composer-pills')} items="center" gap="$1" flexWrap="wrap" rowGap="$1">
             <Pills.Provider value={word}>{pills}</Pills.Provider>
           </XStack>
         ) : null}
         {shown ? <Chips chips={shown} /> : null}
         {usage || tuned ? (
-          <XStack items="center" gap={2} marginInlineStart="auto" shrink={0} flexWrap="wrap">
+          <XStack items="center" gap="$1" marginInlineStart="auto" shrink={0} flexWrap="wrap">
             {usage ? (
               <XStack {...slot('composer-status')} items="center">
                 {usage}
@@ -548,7 +558,7 @@ export function Composer({
     ) : null
 
   return (
-    <YStack {...slot('composer-shell')} {...(column ? measure : { width: '100%' })} gap={8} {...(lift ? { mb: lift } : null)} {...props}>
+    <YStack {...slot('composer-shell')} {...(column ? measure : { width: '100%' })} gap="$2" {...(lift ? { mb: lift } : null)} {...props}>
       {above}
       <YStack
         {...slot('composer')}
@@ -556,6 +566,8 @@ export function Composer({
         rounded={CORNER}
         borderWidth={EDGE}
         {...glass(2)}
+        hoverStyle={{ borderColor: STRONG }}
+        focusWithinStyle={{ borderColor: STRONG }}
         p={INSET}
         gap={SPACE}
         cursor="text"

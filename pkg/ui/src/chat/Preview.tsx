@@ -26,9 +26,22 @@
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { useI18n } from '@hanzo/i18n/react'
+import { Code2, Download } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps } from 'react'
 
-import { slot } from '../backends/gui/slot'
+import { RING } from '../backends/gui/press'
+import { slot, tip } from '../backends/gui/slot'
+import { CopyButton } from '../product/CopyButton'
+import { useChatHandoff } from './Code'
+import { save } from './save'
+import { useReducedMotion } from './useReducedMotion'
+
+/** The file a download is named after: the title, as a slug. */
+const slugify = (title: string): string =>
+  title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'preview'
 
 export interface PreviewProps extends Omit<ComponentProps<typeof YStack>, 'children'> {
   /** A self-contained HTML document. Script in it will not run. */
@@ -41,7 +54,29 @@ export interface PreviewProps extends Omit<ComponentProps<typeof YStack>, 'child
 
 export function Preview({ markup, title, height = 320, ...props }: PreviewProps) {
   const { t } = useI18n()
+  const handoff = useChatHandoff()
   const named = title ?? t('Preview')
+  const ease = useReducedMotion() ? undefined : ('quickest' as const)
+
+  const button = {
+    render: <button type="button" />,
+    minW: 26,
+    minH: 26,
+    px: '$1',
+    rounded: '$2',
+    items: 'center',
+    justify: 'center',
+    borderWidth: 0,
+    bg: 'transparent',
+    opacity: 0.72,
+    cursor: 'pointer',
+    transition: ease,
+    hoverStyle: { bg: '$hover', opacity: 1 },
+    pressStyle: { bg: '$raised' },
+    focusVisibleStyle: RING,
+    '$max-sm': { minW: 44, minH: 44, opacity: 0.9 },
+  } as const
+
   return (
     <YStack
       {...slot('preview')}
@@ -54,20 +89,41 @@ export function Preview({ markup, title, height = 320, ...props }: PreviewProps)
       bg="$panel"
       {...props}
     >
-      {title ? (
-        <XStack
-          items="center"
-          gap="$2"
-          px="$3"
-          py="$2"
-          borderBottomWidth={1}
-          borderColor="$borderColor"
-        >
-          <SizableText size="$1" color="$soft" numberOfLines={1}>
-            {title}
-          </SizableText>
+      <XStack {...slot('preview-toolbar')} items="center" gap="$2" px="$3" py="$1.5" borderBottomWidth={1} borderColor="$borderColor" flexWrap="wrap">
+        <SizableText size="$1" color="$ink" fontWeight="500" numberOfLines={1} shrink={1} minW={0}>
+          {named}
+        </SizableText>
+        <XStack grow={1} />
+        <XStack items="center" gap="$0.5" shrink={0}>
+          {handoff?.openInDev ? (
+            <XStack
+              {...slot('preview-open-in-dev')}
+              {...button}
+              gap="$1"
+              px="$2"
+              aria-label={t('Open in Dev')}
+              {...tip(t('Open in Dev'))}
+              onClick={() => handoff.openInDev?.({ code: markup, language: 'html', title: named })}
+            >
+              <Code2 size={12} color="$ink" aria-hidden />
+              <SizableText size="$1" color="$ink" fontWeight="500">
+                {t('Open in Dev')}
+              </SizableText>
+            </XStack>
+          ) : null}
+          <CopyButton value={markup} size={26} props={{ focusVisibleStyle: RING, '$max-sm': { minW: 44, minH: 44 } }} />
+          <XStack
+            {...slot('preview-download')}
+            {...button}
+            aria-label={t('Download HTML')}
+            {...tip(t('Download'))}
+            onClick={() => save(markup, `${slugify(named)}.html`, 'text/html;charset=utf-8')}
+          >
+            <Download size={13} color="$quiet" />
+          </XStack>
         </XStack>
-      ) : null}
+      </XStack>
+
       {/*
         `sandbox=""` is the whole security posture and must stay empty — one
         `allow-scripts` turns this from a picture into an execution surface.

@@ -153,3 +153,14 @@ describe('toast', () => {
     expect(await audit(t)).toEqual([])
   })
 })
+
+describe('toaster placement', () => {
+  it('stands 296 wide, no wider than the screen less its inset, clear of the bottom safe area', () => {
+    act(() => void toast('Hello'))
+    run(50)
+    const viewport = document.querySelector<HTMLElement>('.is_ToastViewport')!
+    expect(viewport.className).toMatch(/_width-296px/)
+    expect(viewport.className).toMatch(/_maxW-calc100vw-/)
+    expect(viewport.className).toMatch(/_mb-envsafe-are/)
+  })
+})

@@ -117,7 +117,7 @@ export {
   type AsideProps,
 } from './Header'
 
-export { Code, type CodeProps } from './Code'
+export { Code, ChatHandoffProvider, useChatHandoff, type ChatHandoffHandlers, type CodeProps } from './Code'
 export { Step, type StepProps, type Ran } from './Step'
 export { Failure, type FailureProps } from './Failure'
 

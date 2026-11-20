@@ -17,6 +17,7 @@ import type { ComponentProps, ReactNode } from 'react'
 
 import { ink } from '../backends/gui/ink'
 import { slot } from '../backends/gui/slot'
+import { useReducedMotion } from './useReducedMotion'
 
 /**
  * Who is speaking — and it is the WIRE's set, not a presentation set of our own.
@@ -73,6 +74,8 @@ export function Message({
   body,
   ...props
 }: MessageProps) {
+  const reducedMotion = useReducedMotion()
+
   // `tool` takes the aside too — see the Role note above. Machine chatter about
   // a turn, not speech in it.
   if (role === 'system' || role === 'tool')
@@ -95,37 +98,90 @@ export function Message({
     )
 
   const mine = role === 'user'
+  // A user turn is a tight bubble: no dead row inside it. Its actions sit
+  // outside, below it, so a hidden row never leaves a gap at the bottom.
+  if (mine)
+    return (
+      <XStack
+        {...slot('message')}
+        data-role={role}
+        width="100%"
+        justify="flex-end"
+        gap="$2"
+        // Makes `actions` revealable with `$group-hover`. Unnamed: gui types
+        // `group` as a boolean, so a name does not compile.
+        group
+        {...props}
+      >
+        <YStack items="flex-end" maxW="85%" gap="$1">
+          <YStack {...slot('message-body')} data-bubble="true" gap="$2" bg="$hover" rounded="$5" px="$3" py="$2" {...body}>
+            {ink(children)}
+            {busy ? <Caret /> : null}
+          </YStack>
+          {actions ? (
+            <XStack
+              {...slot('message-actions')}
+              data-motion="fade"
+              gap="$1"
+              items="center"
+              justify="flex-end"
+              minH={28}
+              opacity={0}
+              transition={reducedMotion ? undefined : 'quickest'}
+              $group-hover={{ opacity: 1 }}
+              hoverStyle={{ opacity: 1 }}
+              focusWithinStyle={{ opacity: 1 }}
+              $max-sm={{ opacity: 0.72 }}
+              $touchable={{ opacity: 0.72 }}
+            >
+              {actions}
+            </XStack>
+          ) : null}
+        </YStack>
+      </XStack>
+    )
+
   return (
     <XStack
       {...slot('message')}
       data-role={role}
       width="100%"
-      justify={mine ? 'flex-end' : 'flex-start'}
+      justify="flex-start"
       gap="$2"
       // Makes `actions` revealable with `$group-hover`. Unnamed: gui types
       // `group` as a boolean, so a name does not compile.
       group
       {...props}
     >
-      {icon && !mine ? <YStack pt="$1">{icon}</YStack> : null}
+      {icon ? <YStack pt="$1">{icon}</YStack> : null}
       <YStack
         {...slot('message-body')}
-        data-bubble={mine ? 'true' : undefined}
         gap="$2"
-        // 85% is what the surfaces converged on for a user turn.
-        maxW={mine ? '85%' : '100%'}
-        flex={mine ? undefined : 1}
-        {...(mine && {
-          bg: '$hover',
-          rounded: '$5',
-          px: '$3',
-          py: '$2',
-        })}
+        maxW="100%"
+        flex={1}
         {...body}
       >
         {ink(children)}
         {busy ? <Caret /> : null}
-        {actions ? <XStack gap="$1" items="center">{actions}</XStack> : null}
+        {actions ? (
+          <XStack
+            {...slot('message-actions')}
+            data-motion="fade"
+            gap="$1"
+            items="center"
+            justify="flex-start"
+            minH={28}
+            opacity={0}
+            transition={reducedMotion ? undefined : 'quickest'}
+            $group-hover={{ opacity: 1 }}
+            hoverStyle={{ opacity: 1 }}
+            focusWithinStyle={{ opacity: 1 }}
+            $max-sm={{ opacity: 0.72 }}
+            $touchable={{ opacity: 0.72 }}
+          >
+            {actions}
+          </XStack>
+        ) : null}
       </YStack>
     </XStack>
   )

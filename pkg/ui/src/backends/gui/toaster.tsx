@@ -10,7 +10,7 @@
  * record kit's shape — its Toast and Toaster (MIT, NOTICE):
  *
  *   · 296 wide on the floating material (`glass(2)`), 8px corners, padding
- *     8 8 4, 8px between toasts, at the bottom-right 12px in; on a phone (≤768)
+ *     8 8 4, 8px between toasts, at the bottom-right 24px in; on a phone (≤768)
  *     the full width at the top with square corners.
  *   · A header row: the status icon (16), the message (12px, quiet, medium),
  *     then a "Cancel" text button and a 24px close button pushed right.
@@ -73,7 +73,8 @@ export interface ToasterProps extends Omit<GuiToasterProps, 'toastOptions'> {
 export const TOAST_DURATION = 6000
 const WIDTH = 296
 const GAP = 8
-const INSET = 12
+const INSET = 24
+const SAFE_BOTTOM = 'env(safe-area-inset-bottom, 0px)' as `var(--${string})`
 
 const STATUS: Record<string, FeedbackStatus> = {
   default: 'neutral',
@@ -296,11 +297,13 @@ const Toaster = /* @__PURE__ */ forwardRef<GuiElement, ToasterProps>(function To
   const media = useMedia()
   const phone = !!(media as Record<string, boolean>)['max-md']
   const fallback = toastOptions?.duration ?? duration ?? TOAST_DURATION
+  const resolvedPosition = position ?? (phone ? 'top-center' : 'bottom-right')
+  const isBottom = resolvedPosition.startsWith('bottom')
   return (
     <Toast
       {...rest}
       theme={theme}
-      position={position ?? (phone ? 'top-center' : 'bottom-right')}
+      position={resolvedPosition}
       gap={gap ?? GAP}
       visibleToasts={limit}
       duration={Number.POSITIVE_INFINITY}
@@ -311,7 +314,9 @@ const Toaster = /* @__PURE__ */ forwardRef<GuiElement, ToasterProps>(function To
         offset={offset ?? (phone ? 0 : INSET)}
         hotkey={hotkey}
         label={containerAriaLabel ?? i18n.t('Notifications')}
-        {...(phone ? { width: '100%' } : null)}
+        width={phone ? '100%' : WIDTH}
+        maxW={phone ? '100%' : 'calc(100vw - 48px)'}
+        mb={!phone && isBottom ? SAFE_BOTTOM : undefined}
       >
         <Limit limit={limit} />
         <Toast.List renderItem={({ toast: t, index }) => <ToastItem key={t.id} t={t} index={index} fallback={fallback} phone={phone} />} />
