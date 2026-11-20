@@ -305,11 +305,13 @@ function Opens({
     )
   }
 
+  // The Popover sits inside the TooltipTrigger, as the Model picker's does. A Tooltip between a Popover and its
+  // trigger takes the trigger as its own anchor, and the panel then opens unplaced and unseen.
   return (
-    <Popover open={open} onOpenChange={(o) => (o ? !disabled && setOpen(true) : close(false))} allowFlip stayInFrame placement="top-end">
-      <Tooltip placement="top" offset={6} open={open ? false : undefined}>
-        <TooltipTrigger asChild>
-          <XStack items="center" minW={0} shrink={1} maxW="100%">
+    <Tooltip placement="top" offset={6} open={open ? false : undefined}>
+      <TooltipTrigger asChild>
+        <XStack items="center" minW={0} shrink={1} maxW="100%">
+          <Popover open={open} onOpenChange={(o) => (o ? !disabled && setOpen(true) : close(false))} allowFlip stayInFrame placement="top-end">
             <PopoverTrigger asChild disablePressTrigger>
               <Word
                 ref={triggerRef}
@@ -325,34 +327,34 @@ function Opens({
                 {word}
               </Word>
             </PopoverTrigger>
-          </XStack>
-        </TooltipTrigger>
-        <TooltipContent bg="var(--popover)" borderWidth={1} borderColor={STRONG}>
-          <Text fontFamily="$body" fontSize="$1" lineHeight={16} color="$ink">
-            {hint}
-          </Text>
-        </TooltipContent>
-      </Tooltip>
-      <PopoverContent
-        solid
-        bg="var(--popover)"
-        borderWidth={1}
-        borderColor={STRONG}
-        boxShadow="var(--shadow-floating)"
-        rounded="$4"
-        p={6}
-        width={288}
-        maxW="calc(100vw - 24px)"
-        maxH="75dvh"
-        overflowY="auto"
-        onCloseAutoFocus={(e: Event) => {
-          e.preventDefault()
-          triggerRef.current?.focus?.()
-        }}
-      >
-        {children(() => close(true), false)}
-      </PopoverContent>
-    </Popover>
+            <PopoverContent
+              solid
+              bg="var(--popover)"
+              borderWidth={1}
+              borderColor={STRONG}
+              boxShadow="var(--shadow-floating)"
+              rounded="$4"
+              p={6}
+              width={288}
+              maxW="calc(100vw - 24px)"
+              maxH="75dvh"
+              overflowY="auto"
+              onCloseAutoFocus={(e: Event) => {
+                e.preventDefault()
+                triggerRef.current?.focus?.()
+              }}
+            >
+              {children(() => close(true), false)}
+            </PopoverContent>
+          </Popover>
+        </XStack>
+      </TooltipTrigger>
+      <TooltipContent bg="var(--popover)" borderWidth={1} borderColor={STRONG}>
+        <Text fontFamily="$body" fontSize="$1" lineHeight={16} color="$ink">
+          {hint}
+        </Text>
+      </TooltipContent>
+    </Tooltip>
   )
 }
 
