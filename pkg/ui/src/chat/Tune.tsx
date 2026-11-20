@@ -88,7 +88,9 @@ const Word = forwardRef<
     open: boolean
     disabled?: boolean
     onActivate?: () => void
-  } & Record<string, any>
+    onPress?: unknown
+    onClick?: (e: unknown) => void
+  } & Omit<import('react').ComponentProps<typeof XStack>, 'children' | 'onClick' | 'onPress'>
 >(function Word({ category, children, label, slotName, open, disabled = false, onActivate, ...trigger }, ref) {
   const media = useMedia()
   const compact = !media.sm

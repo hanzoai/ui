@@ -41,6 +41,7 @@ import { mirror } from '../backends/gui/dir'
 type Row = Omit<ComponentProps<typeof XStack>, 'children'>
 type Col = Omit<ComponentProps<typeof YStack>, 'children'>
 type Scroll = Omit<ComponentProps<typeof ScrollView>, 'children'>
+type ClickEvent = Parameters<NonNullable<Row['onClick']>>[0]
 
 const WIDTH = 264
 const ROW = { px: '$2', py: '$1.5', rounded: '$3' } as const
@@ -163,7 +164,7 @@ export function SidebarIconButton({ label, onPress, onClick, children, ...rest }
       opacity={0.7}
       onClick={
         onPress || onClick
-          ? (e) => {
+          ? (e: ClickEvent) => {
               onClick?.(e)
               onPress?.()
             }
@@ -202,7 +203,7 @@ export function SidebarNewChat({ label, onPress, onClick, ...rest }: SidebarNewC
       cursor="pointer"
       onClick={
         onPress || onClick
-          ? (e) => {
+          ? (e: ClickEvent) => {
               onClick?.(e)
               onPress?.()
             }
@@ -284,7 +285,7 @@ export function SidebarItem({ children, active = false, onPress, onClick, icon, 
       cursor="pointer"
       onClick={
         onPress || onClick
-          ? (e) => {
+          ? (e: ClickEvent) => {
               onClick?.(e)
               onPress?.()
             }
