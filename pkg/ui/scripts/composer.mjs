@@ -284,6 +284,36 @@ for (const [width, height, ratio] of [
       await tab.screenshot({ path: join(OUT, `${name}.png`) })
       await tab.locator('[data-slot="composer-shell"]').screenshot({ path: join(OUT, `${name}-rest.png`) })
 
+      // Effort and Mode open their list where it can be seen: drawn, on screen, beside the word that opened it.
+      for (const slotName of kind === 'dev' ? ['effort', 'mode'] : ['effort']) {
+        const trigger = tab.locator(`[data-slot="composer-foot"] [data-slot="${slotName}"]`)
+        check((await trigger.count()) === 1, `${name}: ${slotName} is drawn under the frame`)
+        if (!(await trigger.count())) continue
+        await trigger.click()
+        await tab.locator('[data-slot="choices"]').last().waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {})
+        const panel = await tab.evaluate((s) => {
+          const list = [...document.querySelectorAll('[data-slot="choices"]')].at(-1)
+          if (!list) return null
+          const b = list.getBoundingClientRect()
+          const t = document.querySelector(`[data-slot="composer-foot"] [data-slot="${s}"]`).getBoundingClientRect()
+          let seen = true
+          for (let n = list; n; n = n.parentElement) {
+            const st = getComputedStyle(n)
+            if (st.opacity === '0' || st.visibility === 'hidden' || st.display === 'none') seen = false
+          }
+          return { seen, x: b.x, y: b.y, r: b.right, bottom: b.bottom, w: b.width, vw: innerWidth, vh: innerHeight, gap: Math.min(Math.abs(t.top - b.bottom), Math.abs(b.top - t.bottom)) }
+        }, slotName)
+        check(
+          panel && panel.seen && panel.w > 0 && panel.x >= 0 && panel.y >= 0 && panel.r <= panel.vw + 1 && panel.bottom <= panel.vh + 1,
+          `${name}: ${slotName} opens a list that is seen on screen (${JSON.stringify(panel)})`,
+        )
+        if (!phone) check(panel && panel.gap <= 24, `${name}: ${slotName}'s list opens beside its word (${panel?.gap})`)
+        await tab.keyboard.press('Escape')
+        const shut = await tab.locator('[data-slot="choices"]').last().waitFor({ state: 'hidden', timeout: 5_000 }).then(() => true, () => false)
+        check(shut, `${name}: Escape puts ${slotName}'s list away`)
+        await settle(tab)
+      }
+
       // Focused, with three lines: the edge brightens, send has the last place, the field three lines tall.
       const field = tab.locator('[data-slot="composer-field"]')
       await field.focus()
