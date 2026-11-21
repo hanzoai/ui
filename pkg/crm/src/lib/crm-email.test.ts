@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 import type { Account } from './host'
 import { managesSuppressions, unmailable } from '../crm/suppression'
-import { CrmApi, judge, normalizeTimelineEvent, reached, refusalsOf, type VerifyWire } from './crm'
+import { CrmApi, judge, normalizeTimelineEvent, reached, refusalsOf, replyTo, type VerifyWire } from './crm'
 import { ApiError, configureCrm } from './host'
 
 /**
@@ -240,5 +240,41 @@ describe('who may change the list, and what a refusal says', () => {
     expect(unmailable({ state: 'suppressed' })).toBe('Not mailable: this address is on the suppression list.')
     expect(unmailable({ state: 'clear' })).toBeNull()
     expect(unmailable({ state: 'unknown', why: 'x' })).toBeNull()
+  })
+})
+
+describe('a reply the org received', () => {
+  const received = normalizeTimelineEvent({
+    id: 'a9',
+    kind: 'email',
+    direction: 'in',
+    subject: 'Your code',
+    at: '2026-10-20 12:00:00.000Z',
+    data: { status: 'received', from: 'ada@example.com', to: 'growth@hanzo.ai', message_id: '<r1@mail.example.com>', references: '<ses-1@email.amazonses.com>' },
+  })
+
+  it('is read as received, from the address that wrote it, with the ids that thread it', () => {
+    expect(received).toMatchObject({ direction: 'in', status: 'received', from: 'ada@example.com', messageId: '<r1@mail.example.com>', references: '<ses-1@email.amazonses.com>' })
+  })
+
+  it('is answered as Re: its subject, in its thread', () => {
+    expect(replyTo(received)).toEqual({ subject: 'Re: Your code', in_reply_to: '<r1@mail.example.com>', references: '<ses-1@email.amazonses.com>' })
+    expect(replyTo({ ...received, subject: 'RE: Your code' })?.subject).toBe('RE: Your code')
+  })
+
+  it('is the only entry a reply answers: not a send, not a form, not a mail with no id', () => {
+    expect(replyTo({ ...received, direction: 'out' })).toBeNull()
+    expect(replyTo({ ...received, kind: 'form' })).toBeNull()
+    expect(replyTo({ ...received, messageId: '' })).toBeNull()
+  })
+
+  it('leaves with its thread: the send names the mail it answers', async () => {
+    const posts: unknown[] = []
+    configureCrm({
+      v1Url: (path: string) => `https://api.test/v1/${path}`,
+      post: async (_url: string, body?: unknown) => (posts.push(body), { sent: true, at: '2026-10-20T13:00:00Z' }),
+    } as never)
+    await CrmApi.email.sendCrmMail({ to: 'ada@example.com', person: 'p1', body: 'Welcome.', ...replyTo(received)! })
+    expect(posts).toEqual([{ to: 'ada@example.com', person: 'p1', body: 'Welcome.', subject: 'Re: Your code', in_reply_to: '<r1@mail.example.com>', references: '<ses-1@email.amazonses.com>' }])
   })
 })

@@ -16,7 +16,7 @@ import { Button, Input, Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { Card, Textarea } from '@hanzo/ui'
 import { RecordDetail, type FieldDefinition, type SelectOption } from '@hanzo/data'
 import { BackendStateCard, classifyBackend } from '@hanzo/ui/product'
-import { CrmApi, paragraphs, plain, stamp, time, type TimelineEvent } from '../lib/crm'
+import { CrmApi, paragraphs, plain, replyTo, stamp, time, type TimelineEvent } from '../lib/crm'
 import { ApiError, useRouter, useSession } from '../lib/host'
 import { useChanges } from '../lib/live'
 import type { BaseRecord } from '../lib/base-data/api'
@@ -53,6 +53,8 @@ interface Entry {
   body: string
   trail: string
   answers: { question: string; answer: string }[]
+  /** A received email's reply: the subject and the thread ids it is sent with. */
+  reply?: NonNullable<ReturnType<typeof replyTo>>
 }
 
 const fromEvent = (e: TimelineEvent): Entry => ({
@@ -60,10 +62,11 @@ const fromEvent = (e: TimelineEvent): Entry => ({
   kind: e.kind,
   at: e.at,
   title: `${kindWord(e)}${e.kind === 'email' ? ` · ${statusWord(e)}` : ''}`,
-  detail: [e.subject, e.to ? `to ${e.to}` : '', e.by ? `by ${e.by}` : ''].filter(Boolean).join(' · '),
+  detail: [e.subject, e.from ? `from ${e.from}` : '', e.to ? `to ${e.to}` : '', e.by ? `by ${e.by}` : ''].filter(Boolean).join(' · '),
   body: e.body || e.snippet,
   trail: e.events.map((x) => `${x.status} ${new Date(x.at * 1000).toLocaleString()}`).join(' → '),
   answers: e.answers,
+  reply: replyTo(e) ?? undefined,
 })
 
 export function RecordPage({ obj, id }: { obj: CrmObject; id: string }) {
@@ -296,6 +299,7 @@ function Activity({ obj, id, email, hasContacted, onLogged }: { obj: CrmObject; 
   const [error, setError] = useState<string | null>(null)
   const [round, setRound] = useState(0)
   const [kind, setKind] = useState<Kind>('note')
+  const [thread, setThread] = useState<Entry['reply'] | null>(null)
   const [subject, setSubject] = useState('')
   const [text, setText] = useState('')
   const [due, setDue] = useState('')
@@ -358,7 +362,7 @@ function Activity({ obj, id, email, hasContacted, onLogged }: { obj: CrmObject; 
         await CrmApi.create('tasks', { title: subject.trim(), body: body ? paragraphs(body) : '', status: 'todo', assignee: me, due: due ? toBase('date', due) : '', [link.many]: [id] })
       } else if (kind === 'email') {
         if (!subject.trim() || !body) throw new Error('An email needs a subject and a message.')
-        const r = await CrmApi.email.sendCrmMail({ to: email, subject: subject.trim(), body, person: obj.collection === 'people' ? id : undefined })
+        const r = await CrmApi.email.sendCrmMail({ to: email, subject: subject.trim(), body, person: obj.collection === 'people' ? id : undefined, in_reply_to: thread?.in_reply_to, references: thread?.references })
         if (!r.sent) throw new Error(`${email} has opted out: nothing was sent.`)
       } else {
         await CrmApi.create('activities', { kind, direction: 'out', channel: kind, subject: subject.trim() || (kind === 'call' ? 'Call' : 'Meeting'), body: body ? paragraphs(body) : '', at: stamp(), [link.activity]: id })
@@ -367,6 +371,7 @@ function Activity({ obj, id, email, hasContacted, onLogged }: { obj: CrmObject; 
       setSubject('')
       setText('')
       setDue('')
+      setThread(null)
       setSaid(kind === 'email' ? 'Sent. It is on the timeline.' : 'Saved.')
       setRound((r) => r + 1)
       onLogged()
@@ -382,7 +387,7 @@ function Activity({ obj, id, email, hasContacted, onLogged }: { obj: CrmObject; 
     <Card p="$3" borderWidth={1} borderColor="$borderColor" gap="$3" data-slot="crm-activity">
       <XStack gap="$2" flexWrap="wrap" role="tablist">
         {kinds.map((k) => (
-          <Button key={k} size="$2" theme={kind === k ? 'blue' : undefined} role="tab" aria-selected={kind === k} onPress={() => setKind(k)}>
+          <Button key={k} size="$2" theme={kind === k ? 'blue' : undefined} role="tab" aria-selected={kind === k} onPress={() => (setKind(k), setThread(null))}>
             {k === 'call' ? 'Log call' : k === 'meeting' ? 'Log meeting' : k === 'email' ? 'Email' : k === 'task' ? 'Task' : 'Note'}
           </Button>
         ))}
@@ -448,6 +453,21 @@ function Activity({ obj, id, email, hasContacted, onLogged }: { obj: CrmObject; 
                 <Text fontSize="$1" color="$color10">
                   {e.trail}
                 </Text>
+              ) : null}
+              {e.reply && email ? (
+                <XStack>
+                  <Button
+                    size="$2"
+                    onPress={() => {
+                      setKind('email')
+                      setSubject(e.reply!.subject)
+                      setThread(e.reply)
+                      setSaid(null)
+                    }}
+                  >
+                    Reply
+                  </Button>
+                </XStack>
               ) : null}
             </YStack>
           ))

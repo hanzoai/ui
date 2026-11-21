@@ -63,8 +63,8 @@ export { paragraphs, plain }
 // ── Mail ────────────────────────────────────────────────────────────────────
 
 /** A filed mail's state, as the cloud writes it in `data.status`. */
-export type MailStatus = 'sent' | 'suppressed' | 'failed' | 'delivered' | 'opened' | 'clicked' | 'bounced' | 'complained'
-const MAIL_STATUSES: readonly MailStatus[] = ['sent', 'suppressed', 'failed', 'delivered', 'opened', 'clicked', 'bounced', 'complained']
+export type MailStatus = 'sent' | 'received' | 'suppressed' | 'failed' | 'delivered' | 'opened' | 'clicked' | 'bounced' | 'complained'
+const MAIL_STATUSES: readonly MailStatus[] = ['sent', 'received', 'suppressed', 'failed', 'delivered', 'opened', 'clicked', 'bounced', 'complained']
 /** A status the cloud names, or `sent` for a mail with none. */
 const mailStatus = (v: unknown): MailStatus => MAIL_STATUSES.find((m) => m === v) ?? 'sent'
 /** Whether a status means the mail reached the inbox. */
@@ -208,7 +208,12 @@ export type TimelineEvent = {
   at: number
   to: string
   by: string
-  /** sent until a report arrives; suppressed or failed when it never left. */
+  /** The address a received mail came from. */
+  from: string
+  /** A received mail's Message-ID, and the ids before it in its thread: what a reply is threaded by. */
+  messageId: string
+  references: string
+  /** sent until a report arrives; suppressed or failed when it never left; received for a reply. */
   status: MailStatus
   /** The rail it left by (ses, sendgrid, mail…). */
   rail: string
@@ -227,6 +232,12 @@ const FORM_FIELDS = [
   'public_id', 'website', 'country', 'amount',
 ]
 
+/** What a reply to a received email carries: its subject as "Re: …" and the ids it is threaded by. None for any other entry. */
+export function replyTo(e: TimelineEvent): { subject: string; in_reply_to: string; references: string } | null {
+  if (e.kind !== 'email' || e.direction !== 'in' || !e.messageId) return null
+  return { subject: /^re:/i.test(e.subject) ? e.subject : `Re: ${e.subject}`, in_reply_to: e.messageId, references: e.references }
+}
+
 export function normalizeTimelineEvent(raw: unknown): TimelineEvent {
   const r = asRecord(raw)
   const d = asRecord(r.data)
@@ -243,6 +254,9 @@ export function normalizeTimelineEvent(raw: unknown): TimelineEvent {
     body: plain(str(r.body)),
     at: time(r.at) || time(r.created) || time(r.createdAt),
     to: str(d.to),
+    from: str(d.from),
+    messageId: str(d.message_id),
+    references: str(d.references),
     by: str(d.by) || str(asRecord(r.created_by).name),
     status: mailStatus(d.status),
     rail: str(d.rail),
@@ -466,9 +480,10 @@ export const CrmApi = {
     /**
      * One email to one person from their record (POST /v1/marketing/mail): the org's
      * own mailbox when it has one, else notify, never to an address that opted out,
-     * filed on the person's timeline. Org admins and SuperAdmins send.
+     * filed on the person's timeline. Org admins and SuperAdmins send. A reply names the
+     * mail it answers (`in_reply_to`, and `references` before it) and leaves in its thread.
      */
-    sendCrmMail: async (input: { to: string; subject: string; body: string; person?: string }): Promise<{ sent: boolean; at: string }> => {
+    sendCrmMail: async (input: { to: string; subject: string; body: string; person?: string; in_reply_to?: string; references?: string }): Promise<{ sent: boolean; at: string }> => {
       const res = await restPost<{ sent: boolean; at?: string }>(v1Url('marketing/mail'), input)
       return { sent: Boolean(res?.sent), at: res?.at || new Date().toISOString() }
     },
