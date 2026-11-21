@@ -329,6 +329,30 @@ export type SuppressionCheck =
 
 const SUPPRESSION_SCOPES = ['address', 'domain', 'platform'] as const
 
+// ── The beta (cloud apps/marketing members.go) ──────────────────────────────
+
+/** One beta of a member's: asked for, granted, or both. `requested` is when it was asked for, empty when it was granted unasked. */
+export type BetaSeat = { id: string; name: string; requested: string; enabled: boolean }
+
+/** One waitlist record: the person, the account's IAM id, the program applied to, and its betas. */
+export type BetaMember = { person: string; email: string; user: string; program: string; applied: string; betas: BetaSeat[] }
+
+/** GET /v1/admin/marketing/beta read: the rows the cloud answers, each field a string or nothing. */
+export function betaMembersOf(raw: unknown): BetaMember[] {
+  return dataOf<unknown>(raw).map((m) => {
+    const r = asRecord(m)
+    const betas = Array.isArray(r.betas) ? r.betas.map(asRecord) : []
+    return {
+      person: str(r.person),
+      email: str(r.email),
+      user: str(r.user),
+      program: str(r.program),
+      applied: str(r.applied),
+      betas: betas.map((b) => ({ id: str(b.id), name: str(b.name) || str(b.id), requested: str(b.requested), enabled: b.enabled === true })),
+    }
+  })
+}
+
 // ── The API ─────────────────────────────────────────────────────────────────
 
 /** A collection's schema, read once per page load: fields do not change under a person working. */
@@ -524,6 +548,9 @@ export const CrmApi = {
 
     /** The org's saved audiences. */
     listAudiences: async (): Promise<Audience[]> => dataOf<Audience>(await restGet(v1Url('marketing/audiences?limit=200'))),
+
+    /** Every beta signup with the betas it asked for and holds, oldest first (GET /v1/admin/marketing/beta). SuperAdmin only. */
+    betaMembers: async (): Promise<BetaMember[]> => betaMembersOf(await restGet(v1Url('admin/marketing/beta'))),
 
     /** Every address the org's send gate refuses, newest first (GET /v1/marketing/suppressions). */
     listSuppressions: async (): Promise<MarketingSuppression[]> => {

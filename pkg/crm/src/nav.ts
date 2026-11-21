@@ -2,7 +2,8 @@
  * The CRM's pages, in the order an app's navigation lists them: People is the
  * index (`/crm`), then each object, and Sequences, the cloud's drip, before
  * Candidates. Each is named as its own screen names it (`deals` is the Pipeline).
- * A host draws these with its own icons, at `/crm` and `/crm/<slug>`.
+ * A host draws these with its own icons, at `/crm` and `/crm/<slug>`; Beta is the
+ * SuperAdmin's alone.
  */
 import { OBJECTS } from './crm/objects'
 
@@ -10,6 +11,8 @@ export interface CrmPage {
   /** The address segment under /crm: '' for People, the index. */
   slug: string
   label: string
+  /** Only a SuperAdmin's: a host lists it for one alone. */
+  superAdmin?: boolean
 }
 
 export const CRM_PAGES: readonly CrmPage[] = [
@@ -21,4 +24,5 @@ export const CRM_PAGES: readonly CrmPage[] = [
   { slug: 'lists', label: OBJECTS.lists.plural },
   { slug: 'sequences', label: 'Sequences' },
   { slug: 'candidates', label: OBJECTS.candidates.plural },
+  { slug: 'beta', label: 'Beta', superAdmin: true },
 ]
