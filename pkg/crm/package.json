@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/crm",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Hanzo CRM \u2014 the org's people, companies, pipeline, fundraising, tasks, lists, candidates and sequences, kept in the org's own Base. One CRM for every app that has one (Hanzo Cloud's console and crm.<brand>, Hanzo Team): each app supplies its request signing, org, session, router and brand through configureCrm and draws <CrmModule />.",
   "exports": {

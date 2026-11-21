@@ -23,6 +23,7 @@ import type { BaseRecord } from '../lib/base-data/api'
 import { toBase, type BaseField } from '../lib/base-data/fields'
 import { baseQuery } from '../lib/base-data/query'
 import { useRouter } from '../lib/host'
+import { useChanges } from '../lib/live'
 import { openingView, starter, viewFits, type CrmObject } from './objects'
 import { expandOf, forgetOptions, rowOf, useAdmin, useRelationOptions, useSchema, words, type Schema } from './schema'
 import { Bulk, Everyone, Grow } from './Actions'
@@ -195,6 +196,7 @@ export function Records({ obj, scope, embedded, defaults, bulkExtra, view: openi
   }, [schema, key, page, where, expand, tick, obj, pipelined])
 
   const refresh = useCallback(() => setTick((t) => t + 1), [])
+  useChanges([obj.collection], refresh)
 
   // ── edits ──
   const baseByName = useMemo(() => new Map((schema?.base ?? []).map((f) => [f.name, f])), [schema])

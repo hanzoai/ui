@@ -18,6 +18,7 @@ import { RecordDetail, type FieldDefinition, type SelectOption } from '@hanzo/da
 import { BackendStateCard, classifyBackend } from '@hanzo/ui/product'
 import { CrmApi, paragraphs, plain, stamp, time, type TimelineEvent } from '../lib/crm'
 import { ApiError, useRouter, useSession } from '../lib/host'
+import { useChanges } from '../lib/live'
 import type { BaseRecord } from '../lib/base-data/api'
 import { toBase } from '../lib/base-data/fields'
 import { OBJECTS, REPLIED_BY_HAND, type CrmObject } from './objects'
@@ -73,6 +74,7 @@ export function RecordPage({ obj, id }: { obj: CrmObject; id: string }) {
   const [record, setRecord] = useState<BaseRecord | null>(null)
   const [error, setError] = useState<unknown>(null)
   const [round, setRound] = useState(0)
+  useChanges([obj.collection], () => setRound((r) => r + 1))
 
   useEffect(() => {
     if (!schema) return
@@ -299,6 +301,7 @@ function Activity({ obj, id, email, hasContacted, onLogged }: { obj: CrmObject; 
   const [due, setDue] = useState('')
   const [busy, setBusy] = useState(false)
   const [said, setSaid] = useState<string | null>(null)
+  useChanges(['activities', 'notes', 'tasks'], () => setRound((r) => r + 1))
 
   useEffect(() => {
     let live = true
