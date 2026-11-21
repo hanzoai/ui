@@ -115,13 +115,41 @@ describe('Tune', () => {
     expect(set).toHaveBeenCalledWith('auto')
   })
 
-  it('titles each closed word with what it chooses, so two Autos never stand alone (hanzo-inc/app#313)', () => {
+  it('draws a word on Auto as its title alone, so two Autos never stand beside each other (hanzo-inc/app#460)', () => {
     const auto = [{ id: 'auto', label: 'Auto', note: 'Adaptive' }]
     mount(<Tune mind={mind()} effort={{ value: 'auto', set: () => {}, items: auto }} mode={{ value: 'auto', set: () => {}, items: auto }} />)
     const text = (slot: string) => host.querySelector<HTMLElement>(`[data-slot="${slot}"]`)!.textContent
-    expect(text('model-picker')).toBe('ModelEnso')
-    expect(text('effort')).toBe('EffortAuto')
-    expect(text('mode')).toBe('ModeAuto')
+    expect(text('model-picker')).toBe('Model')
+    expect(text('effort')).toBe('Effort')
+    expect(text('mode')).toBe('Mode')
+    expect(host.textContent).not.toContain('Auto')
+    // The accessible name still says what is in force.
+    expect(label('Model')!.getAttribute('aria-label')).toBe('Model: Enso')
+    expect(host.querySelector('[data-slot="effort"]')!.getAttribute('aria-label')).toBe('Effort: Auto')
+    expect(host.querySelector('[data-slot="mode"]')!.getAttribute('aria-label')).toBe('Mode: Auto')
+  })
+
+  it('draws a word chosen away from Auto as its title and its value', () => {
+    const items = [
+      { id: 'auto', label: 'Auto', note: 'Adaptive' },
+      { id: 'high', label: 'High', note: 'Thinks longer' },
+    ]
+    mount(<Tune mind={mind({ model: 'thinker' })} effort={{ value: 'high', set: () => {}, items }} mode={{ value: 'high', set: () => {}, items }} />)
+    const text = (slot: string) => host.querySelector<HTMLElement>(`[data-slot="${slot}"]`)!.textContent
+    expect(text('model-picker')).toBe('ModelThinker')
+    expect(text('effort')).toBe('EffortHigh')
+    expect(text('mode')).toBe('ModeHigh')
+  })
+
+  it('lists Auto as a checked option inside the Effort list', () => {
+    const items = [
+      { id: 'auto', label: 'Auto', note: 'Adaptive' },
+      { id: 'high', label: 'High', note: 'Thinks longer' },
+    ]
+    mount(<Tune effort={{ value: 'auto', set: () => {}, items }} />)
+    act(() => host.querySelector<HTMLElement>('[data-slot="effort"]')!.click())
+    const auto = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((o) => o.textContent?.startsWith('Auto'))!
+    expect(auto.getAttribute('aria-selected')).toBe('true')
   })
 
   it('draws nothing where the surface has no model, no effort and no mode', () => {
@@ -159,9 +187,9 @@ describe('Tune, effort and mode lists', () => {
   })
 
   it('names the model from the catalog, with the catalog\'s own description in its tip', () => {
-    mount(<Tune mind={mind()} />)
-    expect(label('Model')!.getAttribute('aria-label')).toBe('Model: Enso')
-    expect(host.textContent).toContain('Enso')
+    mount(<Tune mind={mind({ model: 'thinker' })} />)
+    expect(label('Model')!.getAttribute('aria-label')).toBe('Model: Thinker')
+    expect(host.textContent).toContain('Thinker')
   })
   it('leaves the mode list in the order it was given', () => {
     mount(<Tune mode={{ value: 'fast', set: () => {}, items }} />)

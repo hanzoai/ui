@@ -62,6 +62,8 @@ export interface ModelPickerProps {
   quiet?: boolean
   /** Stack the micro-label (`name`) cleanly above (or beside on narrow screens) the active model value. */
   stacked?: boolean
+  /** With `stacked`: the model is the house default, so only the micro-label (`name`) is drawn; the model is the checked row in the list. */
+  bare?: boolean
   size?: 'sm' | 'md'
   /** Absent, "Choose a model" in the reader's language. */
   placeholder?: string
@@ -98,6 +100,7 @@ export function ModelPicker({
   disabled = false,
   quiet = false,
   stacked = false,
+  bare = false,
   size = 'md',
   placeholder,
   name: named,
@@ -229,7 +232,11 @@ export function ModelPicker({
         }
       }}
     >
-      {stacked ? (
+      {stacked && bare ? (
+        <Text fontSize="$2" lineHeight={16} fontWeight="500" color="$ink" numberOfLines={1} shrink={1}>
+          {name}
+        </Text>
+      ) : stacked ? (
         <YStack flexDirection={sheet ? 'row' : 'column'} items={sheet ? 'center' : 'flex-start'} gap={sheet ? '$1' : 1} minW={0} shrink={1}>
           <Text fontSize="$1" lineHeight={14} color="$soft" numberOfLines={1} shrink={0}>
             {name}

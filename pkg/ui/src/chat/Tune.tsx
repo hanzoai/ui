@@ -12,6 +12,11 @@
  * and add Plan. The chips are the surface's own: Chat's are the model families
  * the catalog lists, Dev's are the places a run reaches.
  *
+ * A word that is on Auto (the house router, the adaptive effort, the automatic
+ * mode) is drawn as its title alone, "Model", "Effort", "Mode": Auto is an option
+ * inside each list, checked there, and never a second "Auto" beside the first
+ * (hanzo-inc/app#460). One chosen away from Auto reads its title and its value.
+ *
  * Its words are the reader's language (@hanzo/i18n `t`): efforts and modes are
  * marked English (`phrase`), drawn through `t`; model names are the catalog's.
  */
@@ -22,12 +27,15 @@ import { forwardRef, useCallback, useRef, useState, type CSSProperties, type Rea
 
 import { Popover, PopoverContent, PopoverTrigger, Sheet, SheetContent, SheetTitle, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../backends/gui'
 import { slot } from '../backends/gui/slot'
-import { grants, modelName, type ModelCatalogEntry, type PauseSource } from '../models/catalog'
+import { ENSO, grants, modelName, type ModelCatalogEntry, type PauseSource } from '../models/catalog'
 import { ModelPicker } from '../models/ModelPicker'
 import { RING } from './look'
 import type { Way } from './ways'
 
 const STRONG = 'var(--border-strong)' as const
+
+/** The id every short list gives its automatic way (ways.ts EFFORTS, a surface's modes). */
+const AUTO = 'auto'
 
 // The composer lowers `--tap-target` to 24px (Composer.tsx `FLOOR`); the words under the frame are thumbs' targets, so on a phone they take it back to 44.
 // inline-style: a custom property, which no gui prop carries.
@@ -82,7 +90,8 @@ const Word = forwardRef<
   HTMLElement,
   {
     category: string
-    children: ReactNode
+    /** The value in force; absent where the word is on Auto and the title stands alone. */
+    children?: ReactNode
     label: string
     slotName: string
     open: boolean
@@ -128,7 +137,11 @@ const Word = forwardRef<
       focusVisibleStyle={RING}
       $max-sm={{ minH: 44 }}
     >
-      {compact ? (
+      {children == null ? (
+        <Text fontSize="$2" lineHeight={16} fontWeight="500" color="$ink" numberOfLines={1} shrink={1}>
+          {category}
+        </Text>
+      ) : compact ? (
         <XStack items="center" gap="$1" minW={0} shrink={1}>
           <Text fontSize="$1" lineHeight={14} color="$soft" numberOfLines={1} shrink={0}>
             {category}
@@ -232,7 +245,8 @@ function Opens({
   category: string
   hint: string
   label: string
-  word: ReactNode
+  /** The value in force, or null where the word is on Auto and only its title is drawn. */
+  word: ReactNode | null
   slotName: string
   disabled?: boolean
   children: (close: () => void, compact: boolean) => ReactNode
@@ -415,7 +429,7 @@ function Pick({
   const now = modes.items.find((m) => m.id === modes.value) ?? modes.items[0]
   if (!now) return null
   return (
-    <Opens category={title} hint={hint} label={label(t(now.label))} word={t(now.label)} slotName={slotName} disabled={disabled}>
+    <Opens category={title} hint={hint} label={label(t(now.label))} word={now.id === AUTO ? null : t(now.label)} slotName={slotName} disabled={disabled}>
       {(close, compact) => (
         <Choices
           title={title}
@@ -469,6 +483,7 @@ export function Tune({
                 <ModelPicker
                   quiet
                   stacked
+                  bare={mind.model === ENSO}
                   size="sm"
                   name={t('Model')}
                   describe={t('Model: {name}', { name: resolvedName })}
