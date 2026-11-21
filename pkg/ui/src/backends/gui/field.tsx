@@ -353,8 +353,57 @@ function FieldError({ children, errors, issues, ...props }: FieldErrorProps) {
   )
 }
 
+
+export type FieldRowProps = {
+  label: ReactNode
+  /** One line of help under the label. */
+  description?: ReactNode
+  /** Why the value is refused; shown under the help, as a `FieldError`. */
+  error?: ReactNode
+  /** Beside the label: a badge, a tip. */
+  adornment?: ReactNode
+  /** The control, to the right on a wide row and under the label on a narrow one. */
+  control?: ReactNode
+  /** Under the whole row: the nested content a setting opens. */
+  children?: ReactNode
+  /** Suppresses the top hairline: the first row of a panel. */
+  first?: boolean
+  /** Marks the row invalid without a message of its own. */
+  invalid?: boolean
+}
+
+/**
+ * ONE SETTINGS ROW, for every product: the label, the help and the error on the
+ * left, the control on the right (under them on a narrow row). It is `Field`,
+ * `FieldTitle`, `FieldDescription` and `FieldError` composed once, so an app does
+ * not compose them a second time and the rows read alike.
+ */
+function FieldRow({ label, description, error, adornment, control, children, first, invalid }: FieldRowProps) {
+  return (
+    <YStack borderTopWidth={first ? 0 : 1} borderColor="$borderColor" {...slot('field-row')}>
+      <Field orientation="horizontal" invalid={invalid ?? (error ? true : undefined)} py="$3" gap="$3" flexWrap="wrap" items="center">
+        <FieldContent minW={0} flexBasis={200} $max-sm={{ flexBasis: '100%' }}>
+          <XStack items="center" gap="$1.5" flexWrap="wrap" minW={0}>
+            <FieldTitle>{label}</FieldTitle>
+            {adornment}
+          </XStack>
+          {description ? <FieldDescription>{description}</FieldDescription> : null}
+          {error ? <FieldError>{error}</FieldError> : null}
+        </FieldContent>
+        {control ? (
+          <XStack items="center" justify="flex-end" gap="$2" shrink={0} flexWrap="wrap" $max-sm={{ justify: 'flex-start', width: '100%' }}>
+            {control}
+          </XStack>
+        ) : null}
+      </Field>
+      {children}
+    </YStack>
+  )
+}
+
 export {
   Field,
+  FieldRow,
   FieldContent,
   FieldDescription,
   FieldError,

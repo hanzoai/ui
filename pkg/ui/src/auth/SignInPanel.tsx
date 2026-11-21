@@ -67,6 +67,12 @@ export interface SignInPanelProps {
   borderColor?: Paint
   /** No card: the panel alone, for a host that sets it in a card of its own. */
   bare?: boolean
+  /**
+   * The host leaves by its own means (a desktop app that signs in in the system
+   * browser): when given it replaces the window navigation. `provider` is the way
+   * chosen, `email` the address typed for `'email'`.
+   */
+  onContinue?: (provider: ProviderKind | 'email', email?: string) => void | Promise<void>
 }
 
 type Mint = (params?: { additionalParams?: Record<string, string> }) => Promise<string>
@@ -100,6 +106,7 @@ function Panel({
   background = '$background',
   borderColor = '$borderColor',
   bare = false,
+  onContinue,
 }: SignInPanelProps & { mint: Mint }) {
   const { t } = useI18n()
   const [email, setEmail] = useState('')
@@ -113,6 +120,11 @@ function Panel({
     setBusy(method)
     track?.('signin_started', { method })
     try {
+      if (onContinue && (way.kind === 'provider' || way.kind === 'email')) {
+        await onContinue(way.kind === 'provider' ? (way.provider as ProviderKind) : 'email', hint)
+        setBusy(null)
+        return
+      }
       const request = await mint(hint ? { additionalParams: { login_hint: hint } } : undefined)
       window.location.assign(authorize(handoff(request, way, signin)))
     } catch (err) {
