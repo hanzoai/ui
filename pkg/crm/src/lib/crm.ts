@@ -353,6 +353,128 @@ export function betaMembersOf(raw: unknown): BetaMember[] {
   })
 }
 
+// ── Customers and their plans (cloud apps/crm customer.go, billing) ─────────
+
+/** One plan a commerce user holds, as GET /v1/billing/subscriptions answers it. Money is in minor units of `currency`. */
+export type Plan = {
+  id: string
+  plan: string
+  status: string
+  seats: number
+  currency: string
+  /** What it contributes per month, as commerce computes it. */
+  monthly: number
+  /** What the period in hand was paid. */
+  paid: number
+  /** When the period in hand ends, RFC 3339. */
+  renews: string
+  /** It ends at `renews` instead of renewing. */
+  ends: boolean
+  /** A sandbox plan: listed, never revenue. */
+  test: boolean
+}
+
+/** GET /v1/billing/subscriptions read: the plans the cloud answers, a field left out as empty. */
+export function plansOf(raw: unknown): Plan[] {
+  const rows = asRecord(raw).subscriptions
+  return (Array.isArray(rows) ? rows : []).map((x) => {
+    const r = asRecord(x)
+    const plan = asRecord(r.plan)
+    return {
+      id: str(r.id),
+      plan: str(plan.name) || str(r.planId),
+      status: str(r.status),
+      seats: num(r.quantity),
+      currency: str(plan.currency).toLowerCase() || 'usd',
+      monthly: num(r.mrrCents),
+      paid: num(r.chargedCents),
+      renews: str(r.currentPeriodEnd),
+      ends: r.cancelAtPeriodEnd === true,
+      test: r.test === true,
+    }
+  })
+}
+
+/** One line of an order or a cart: what, and how many. */
+export type Line = { name: string; quantity: number }
+
+/** One order the org's store made, as GET /v1/commerce/order answers it. Money is in minor units of `currency`. */
+export type Order = { id: string; number: number; status: string; paymentStatus: string; currency: string; total: number; paid: number; refunded: number; placed: string; items: Line[] }
+
+/** One cart, as GET /v1/commerce/cart answers it. */
+export type Cart = { id: string; status: string; currency: string; total: number; updated: string; items: Line[] }
+
+/** An amount in one currency. */
+export type Sum = { currency: string; cents: number }
+
+const linesOf = (raw: unknown): Line[] =>
+  (Array.isArray(raw) ? raw : []).map((x) => {
+    const r = asRecord(x)
+    return { name: str(r.name), quantity: num(r.quantity) }
+  })
+
+const sumsOf = (raw: unknown): Sum[] =>
+  (Array.isArray(raw) ? raw : []).map((x) => {
+    const r = asRecord(x)
+    return { currency: str(r.currency).toLowerCase() || 'usd', cents: num(r.cents) }
+  })
+
+/** GET /v1/commerce/order read: a page of orders, how many matched, and what they came to. */
+export function ordersOf(raw: unknown): { orders: Order[]; count: number; revenue: Sum[] } {
+  const r = asRecord(raw)
+  return {
+    orders: (Array.isArray(r.orders) ? r.orders : []).map((x) => {
+      const o = asRecord(x)
+      return {
+        id: str(o.id),
+        number: num(o.number),
+        status: str(o.status),
+        paymentStatus: str(o.paymentStatus),
+        currency: str(o.currency).toLowerCase() || 'usd',
+        total: num(o.totalCents),
+        paid: num(o.paidCents),
+        refunded: num(o.refundedCents),
+        placed: str(o.createdAt),
+        items: linesOf(o.items),
+      }
+    }),
+    count: num(r.count),
+    revenue: sumsOf(r.revenue),
+  }
+}
+
+/** GET /v1/commerce/cart read: a page of carts, how many matched, and how many were left. */
+export function cartsOf(raw: unknown): { carts: Cart[]; count: number; left: number } {
+  const r = asRecord(raw)
+  return {
+    carts: (Array.isArray(r.carts) ? r.carts : []).map((x) => {
+      const c = asRecord(x)
+      return { id: str(c.id), status: str(c.status), currency: str(c.currency).toLowerCase() || 'usd', total: num(c.totalCents), updated: str(c.updatedAt) || str(c.createdAt), items: linesOf(c.items) }
+    }),
+    count: num(r.count),
+    left: num(r.left),
+  }
+}
+
+/** Whether a plan confers its product: only an active or trialing one does. */
+export const confers = (p: Plan): boolean => !p.test && (p.status === 'active' || p.status === 'trialing')
+
+/** What live plans contribute per month, by currency. */
+export function monthly(plans: Plan[]): Record<string, number> {
+  const out: Record<string, number> = {}
+  for (const p of plans.filter(confers)) out[p.currency] = (out[p.currency] ?? 0) + p.monthly
+  return out
+}
+
+/** An amount in a currency's minor units, as people write it. */
+export const money = (cents: number, currency: string): string => {
+  try {
+    return new Intl.NumberFormat(undefined, { style: 'currency', currency: currency.toUpperCase() }).format(cents / 100)
+  } catch {
+    return `${(cents / 100).toFixed(2)} ${currency.toUpperCase()}`
+  }
+}
+
 // ── The API ─────────────────────────────────────────────────────────────────
 
 /** A collection's schema, read once per page load: fields do not change under a person working. */
@@ -436,6 +558,28 @@ export const CrmApi = {
     }
     return out.slice(0, max)
   },
+
+  /**
+   * The commerce user a person was linked to when a payment settled (the `customer:`
+   * entry on their timeline), or empty when they never paid in this org.
+   */
+  customerOf: (person: string): Promise<string> =>
+    base()
+      .listRecords('activities', { filter: `kind = "system" && channel = "commerce" && person = "${person.replace(/["\\]/g, '')}"`, sort: '-at', perPage: 1, skipTotal: true })
+      .then((r) => str(asRecord(r.items[0]?.data).user)),
+
+  /** The org's orders, newest first, or one buyer's by address (GET /v1/commerce/order). An org admin's or SuperAdmin's read. */
+  orders: async (email?: string) => ordersOf(await restGet(v1Url(`commerce/order${email ? `?email=${enc(email)}` : ''}`))),
+
+  /** The org's carts, newest first, or one shopper's by address (GET /v1/commerce/cart). An org admin's or SuperAdmin's read. */
+  carts: async (email?: string) => cartsOf(await restGet(v1Url(`commerce/cart${email ? `?email=${enc(email)}` : ''}`))),
+
+  /**
+   * The plans the org holds (GET /v1/billing/subscriptions): all of them for an org
+   * admin or SuperAdmin, narrowed to one billing account with `user`. A member reads
+   * only their own.
+   */
+  plans: async (user?: string): Promise<Plan[]> => plansOf(await restGet(v1Url(`billing/subscriptions${user ? `?userId=${enc(user)}` : ''}`))),
 
   get: (collection: string, id: string, expand?: string): Promise<BaseRecord> =>
     expand ? base().listRecords(collection, { filter: `id = "${id.replace(/"/g, '')}"`, perPage: 1, expand, skipTotal: true }).then((r) => {

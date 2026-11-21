@@ -23,6 +23,7 @@ import type { BaseRecord } from '../lib/base-data/api'
 import { toBase } from '../lib/base-data/fields'
 import { OBJECTS, REPLIED_BY_HAND, type CrmObject } from './objects'
 import { Bulk } from './Actions'
+import { Customer } from './Customer'
 import { Records } from './Records'
 import { expandOf, optionOf, rowOf, useRelationOptions, useSchema, words } from './schema'
 import { SuppressionNote, useMailable } from './Timeline'
@@ -165,6 +166,7 @@ export function RecordPage({ obj, id }: { obj: CrmObject; id: string }) {
           </Card>
         </YStack>
         <YStack flex={1.4} minW={300} width="100%" gap="$3">
+          {obj.collection === 'people' ? <Customer person={id} email={email} /> : null}
           {LINK[obj.collection] ? <Activity obj={obj} id={id} email={email} hasContacted={schema.names.has('contacted')} onLogged={() => setRound((r) => r + 1)} /> : null}
         </YStack>
       </XStack>

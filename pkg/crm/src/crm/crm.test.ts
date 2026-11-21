@@ -3,7 +3,7 @@ import { baseCollectionToFields, fromBase, optionsOf, recordFromBase, toBase } f
 import { plain, timelineFilter } from '../lib/crm'
 import { cellText, companyKey, domainOf, fillEmpty, guessTarget, parseCsv, personId, plan, readRow, toCsv } from './csv'
 import { importPeople, type Store } from './importer'
-import { CUSTOMER_BY_HAND, OBJECTS, movedView, objectOf, openingView, starter, viewFits } from './objects'
+import { OBJECTS, WHO_IS_A_CUSTOMER, movedView, objectOf, openingView, starter, viewFits } from './objects'
 import { shape } from './schema'
 
 /** The people collection as module crm declares it (the fields the CRM reads). */
@@ -133,7 +133,7 @@ describe('objects and their views', () => {
   })
 
   it('says on the Customers view what makes a person a customer', () => {
-    expect(OBJECTS.people.views.find((v) => v.id === 'customers')?.note).toBe(CUSTOMER_BY_HAND)
+    expect(OBJECTS.people.views.find((v) => v.id === 'customers')?.note).toBe(WHO_IS_A_CUSTOMER)
   })
 
   it('offers a starter view only when the CRM has its fields', () => {

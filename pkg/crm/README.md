@@ -59,6 +59,9 @@ The CRM writes console-style addresses (`/crm`, `/crm/companies`,
 | Mail | `POST /v1/email`, `POST /v1/email/verify`, `POST /v1/marketing/mail` |
 | Sequences | `/v1/marketing/sequences[/:id[/steps,/status,/enroll,/enrollments]]` |
 | Audiences, suppressions | `/v1/marketing/audiences`, `/v1/marketing/suppressions[/check]` |
+| Orders and carts (a customer's record, Sales) | `GET /v1/commerce/order[?email=]`, `GET /v1/commerce/cart[?email=]` |
+| Plans (a customer's record, Sales) | `GET /v1/billing/subscriptions[?userId=]` |
+| Beta signups (SuperAdmin) | `GET /v1/admin/marketing/beta` |
 
 ## Develop
 

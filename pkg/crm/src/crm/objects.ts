@@ -30,8 +30,8 @@ export interface StarterView {
 /** Until inbound mail is filed, a reply is the team's to mark. */
 export const REPLIED_BY_HAND = 'Replies are not read from the inbox yet: when someone answers, open them and press Mark replied.'
 
-/** A customer is a person the team marked one: nothing outside the CRM writes the type. */
-export const CUSTOMER_BY_HAND = 'A customer here is a person whose Type is Customer. Store orders and billing plans are not copied into the CRM yet, so set Type on the person, or in an import.'
+/** What makes a person a customer: the cloud sets it when a payment settles in the org, and the team may by hand or in an import. */
+export const WHO_IS_A_CUSTOMER = 'A customer here is a person whose Type is Customer. The cloud makes someone one when a payment settles in this org; you can also set Type on the person, or in an import.'
 
 export interface CrmObject {
   id: ObjectId
@@ -76,7 +76,7 @@ export const OBJECTS: Record<ObjectId, CrmObject> = {
     views: [
       { id: 'all', name: 'All people', sorts: recent },
       { id: 'investors', name: 'Investors', filters: [{ field: 'type', op: 'is', value: 'investor' }], sorts: [{ field: 'contacted', dir: 'asc' }] },
-      { id: 'customers', name: 'Customers', filters: [{ field: 'type', op: 'is', value: 'customer' }], sorts: recent, note: CUSTOMER_BY_HAND },
+      { id: 'customers', name: 'Customers', filters: [{ field: 'type', op: 'is', value: 'customer' }], sorts: recent, note: WHO_IS_A_CUSTOMER },
       { id: 'inbound', name: 'Inbound', scope: 'activities_via_person.kind ?= "form"', sorts: recent },
       { id: 'support', name: 'Support & Help Chat', scope: 'activities_via_person.data.program ?= "support"', sorts: recent },
       { id: 'sales_chat', name: 'Sales Chat', scope: 'activities_via_person.data.program ?= "chat"', sorts: recent },

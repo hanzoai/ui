@@ -11,6 +11,7 @@
  *   /crm/tasks           what is to be done, and for whom
  *   /crm/lists           who outreach goes to: lists made by hand, from a view, or from a file
  *   /crm/sequences       the cloud's drip: steps, who is enrolled, where each walk stands
+ *   /crm/sales           the org's customers, orders, carts left and plans, from commerce and billing
  *   /crm/beta            every beta signup and the betas it asked for and holds (SuperAdmin)
  *   /crm/candidates      hiring
  *   /crm/:tab/:id        one record and its timeline
@@ -33,6 +34,7 @@ import { Records } from './crm/Records'
 import { RecordPage } from './crm/Record'
 import { Sequences } from './crm/studio/Sequences'
 import { Beta } from './crm/Beta'
+import { Sales } from './crm/Sales'
 
 type Async<T> = { phase: 'loading' } | { phase: 'error'; error: BackendState } | { phase: 'ready'; data: T }
 
@@ -103,6 +105,13 @@ function Crm({ params }: { params: Record<string, string> }) {
             {"A sequence is a series of emails, each sent a delay after the last. Enroll people from People or a list; every step goes through the org's suppression list, and the unsubscribe link in each one is honoured."}
           </Text>
           <Sequences openId={params.id ?? null} />
+        </YStack>
+      ) : tab === 'sales' ? (
+        <YStack gap="$3">
+          <Text fontSize="$7" fontWeight="700" color="$color12">
+            Sales
+          </Text>
+          <Sales />
         </YStack>
       ) : tab === 'beta' ? (
         <YStack gap="$3">
