@@ -31,6 +31,12 @@ export const useHost = <R>(render: R | undefined, href: string | undefined, own:
  *  page's name (`/models/…/claude-opus-5.5`) is not an extension. */
 const route = (href: string) => href.startsWith('/') && !href.startsWith('//') && !/\.[a-z][a-z0-9]{1,4}$/i.test(href.split(/[?#]/)[0])
 
+/** A control's host as a React key. A control whose address moves from an anchor to a
+ *  route (a page that learns where it runs once it hydrates) changes its element: the
+ *  key remounts it, where reusing the fiber would run the router link's hooks inside
+ *  the anchor's and fail on the count. */
+export const hostKey = (host: unknown) => (typeof host === 'string' ? host : 'link')
+
 /** Whether a host is an address: an `href`, an anchor, or an element carrying
  *  one. A control that is a link answers the pointer; a card that is a link
  *  rests in the link ink the document gives every `<a>`. */

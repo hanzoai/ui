@@ -25,7 +25,7 @@
 import { Text, type TextProps } from '@hanzo/gui'
 
 import { slot } from '../backends/gui/slot'
-import { address, useHost } from './host'
+import { address, hostKey, useHost } from './host'
 import type { Host, Loose } from './loose'
 
 export type ControlProps = Loose<Omit<TextProps, 'render' | 'children'>> &
@@ -71,6 +71,7 @@ const Action = ({ render, fill = false, ...p }: ControlProps & { fill?: boolean 
   const host = useHost(render, p.href, 'a')
   return (
     <Text
+      key={hostKey(host)}
       {...slot('action')}
       {...(fill ? { 'data-fill': '' } : null)}
       render={host}
@@ -132,6 +133,7 @@ const Chip = ({ render, ...p }: ControlProps) => {
   const link = address(host, p.href)
   return (
     <Text
+      key={hostKey(host)}
       {...slot('chip')}
       render={host}
       {...BOX}
@@ -164,6 +166,7 @@ const More = ({ render, ...p }: ControlProps) => {
   const host = useHost(render, p.href, 'a')
   return (
     <Text
+      key={hostKey(host)}
       {...slot('more')}
       render={host}
       {...BOX}
