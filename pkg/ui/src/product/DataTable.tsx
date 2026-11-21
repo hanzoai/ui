@@ -100,8 +100,11 @@ export function DataTable<T>({
 
   return (
     <YStack borderWidth={1} borderColor="$borderColor" rounded="$4" overflow="hidden">
-      <YStack style={{ overflowX: 'auto', overflowY: 'visible' }}>
-        <YStack minW={minTableW}>
+      {/* The scroller is focusable: a table wider than its box scrolls sideways, and a
+          keyboard reader needs a stop to scroll it from. The grid inside is a `table`,
+          so its header row, body rows and cells have the parent their roles require. */}
+      <YStack style={{ overflowX: 'auto', overflowY: 'visible' }} tabIndex={0}>
+        <YStack minW={minTableW} role="table">
           {/* Header — quiet, uppercase-free, Medium. A hairline under it separates
               the head from the body without a heavy fill. */}
           <XStack bg="$sunken" py="$2.5" px="$3" gap="$3" borderBottomWidth={1} borderColor="$borderColor" role="row">
@@ -152,13 +155,14 @@ export function DataTable<T>({
           {loading ? (
             <SkeletonRows columns={columns} />
           ) : rows.length > 0 ? (
-            <YStack>
+            <YStack role="rowgroup">
               {rows.map((row) => {
                 const expanded = (isRowExpanded?.(row) ?? false) && !!renderExpanded
                 return (
                 <YStack key={rowKey(row)}>
                 <XStack
                   data-slot="data-table-row"
+                  role="row"
                   py="$2.5"
                   px="$3"
                   gap="$3"
@@ -192,6 +196,7 @@ export function DataTable<T>({
                     return (
                       <YStack
                         key={c.key}
+                        role="cell"
                         width={c.width}
                         flex={c.width ? undefined : 1}
                         minW={c.width ? undefined : FLEX_MIN_COL_W}
