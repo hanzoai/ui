@@ -237,10 +237,12 @@ for (const [width, height, ratio] of [
       // Under the frame: labelled controls at least a word tall, a transparent edge and no fill at rest, at the text edge.
       check(m.words.some((w) => /^Effort: /.test(w.name)) && m.words.some((w) => /^Model: /.test(w.name)), `${name}: the model and the effort are words under the frame (${m.words.map((w) => w.name).join(', ')})`)
       if (kind === 'dev') check(m.words.filter((w) => /Where the run runs|Repository|Branch/.test(w.name)).length === 3, `${name}: the pills are words under the frame`)
-      // Closed, each one reads as what it chooses, its title before its value: never two bare "Auto"s side by side (hanzo-inc/app#313).
+      // Closed, each one reads as what it chooses: its title alone while it is on Auto, its title before its value once chosen away from it.
+      // Never two bare "Auto"s side by side (hanzo-inc/app#313), nor "Effort Auto" beside "Model Enso Auto" (#460).
       for (const w of m.words.filter((w) => /^(Model|Effort|Mode): /.test(w.name))) {
         const [title, value] = w.name.split(': ')
-        check(w.text.startsWith(title) && w.text.endsWith(value) && w.text !== value, `${name}: ${title} is titled on the row, not only its value ("${w.text}")`)
+        if (/\bAuto$/.test(value)) check(w.text === title, `${name}: ${title} on Auto is its title alone ("${w.text}")`)
+        else check(w.text.startsWith(title) && w.text.endsWith(value) && w.text !== value, `${name}: ${title} is titled on the row, not only its value ("${w.text}")`)
       }
       for (const w of m.words) {
         // Model, Effort and Mode are labelled controls (the label over the value); the pills and chips stay words.
