@@ -329,6 +329,13 @@ describe('ModelPicker, stacked', () => {
     expect(trigger.textContent).toBe('ModelEnso')
   })
 
+  it('draws its title alone where it is bare, the model being the checked row of its list', async () => {
+    await mount(<ModelPicker stacked bare quiet name="Model" models={MODELS} value="enso-auto" onChange={() => {}} />)
+    const trigger = host.querySelector('[data-slot="model-picker"]')!
+    expect(trigger.textContent).toBe('Model')
+    expect(trigger.getAttribute('aria-label')).toBe('Model: Enso')
+  })
+
   it('holds a model the catalog lacks by its id, read as words', async () => {
     await mount(<ModelPicker stacked name="Model" models={MODELS} value="vendor/odd-one" onChange={() => {}} />)
     expect(host.querySelector('[data-slot="model-picker"]')!.textContent).toContain('Vendor Odd One')
