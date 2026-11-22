@@ -236,8 +236,8 @@ const USAGE = limitsOf({
     free: { percent: 20, state: 'ok', paying: 'credits', resets_at: '2026-10-31T00:00:00Z' },
   },
   actions: [
-    { kind: 'upgrade', label: 'Upgrade', url: 'https://hanzo.ai/pricing' },
-    { kind: 'topup', label: 'Add prepaid credit', url: 'https://hanzo.ai/billing' },
+    { kind: 'upgrade', label: 'Upgrade', url: 'https://hanzo.ai/pay/cart' },
+    { kind: 'topup', label: 'Add prepaid credit', url: 'https://hanzo.ai/pay/amount/card' },
   ],
 })!
 
@@ -767,8 +767,8 @@ export const Gallery = () => (
           limits={{ ...USAGE, state: 'ok', period_start: '2026-10-01T00:00:00Z', period_end: '2026-10-31T00:00:00Z', creditsAfterAllowance: true }}
           onAction={() => {}}
           onCredits={async () => {}}
-          creditsHref="https://hanzo.ai/billing"
-          addCreditsHref="https://hanzo.ai/billing"
+          creditsHref="https://hanzo.ai/pay"
+          addCreditsHref="https://hanzo.ai/pay/amount/card"
         />
         <PlanUsage limits={{ ...USAGE, plan: '' }} onAction={() => {}} />
       </div>

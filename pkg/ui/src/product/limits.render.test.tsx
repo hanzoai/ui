@@ -30,8 +30,8 @@ const LIMITED = {
   },
   limited: { reason: 'plan_allowance_used', classes: ['premium'], message: "You've used this period's included premium usage." },
   actions: [
-    { kind: 'upgrade', label: 'Upgrade', plan: 'team', url: 'https://hanzo.ai/pricing' },
-    { kind: 'topup', label: 'Add prepaid credit', url: 'https://hanzo.ai/billing/credit' },
+    { kind: 'upgrade', label: 'Upgrade', plan: 'team', url: 'https://hanzo.ai/pay/cart?plan=team' },
+    { kind: 'topup', label: 'Add prepaid credit', url: 'https://hanzo.ai/pay/amount/card' },
   ],
 }
 
@@ -165,7 +165,7 @@ describe('the free plan as the API names it', () => {
 describe('the credits choice and the server actions', () => {
   const CREDITS = [
     { kind: 'credits', label: 'Continue with credits', url: '/v1/ai/limits' },
-    { kind: 'upgrade', label: 'Upgrade', url: 'https://hanzo.ai/pricing' },
+    { kind: 'upgrade', label: 'Upgrade', url: 'https://hanzo.ai/pay/cart' },
     { kind: 'switch', label: 'Try Enso', model: 'enso' },
   ]
 
@@ -189,7 +189,7 @@ describe('the credits choice and the server actions', () => {
     expect(words(html(<PlanUsage limits={on} now={NOW} />))).not.toContain(CREDITS_TERMS)
     expect(words(html(<PlanUsage limits={limitsOf({ ...LIMITED, state: 'ok', limited: undefined })!} onCredits={async () => {}} now={NOW} />))).not.toContain(CREDITS_TERMS)
     const wrote: boolean[] = []
-    const { host, unmount } = mount(<PlanUsage limits={on} onCredits={async (v) => void wrote.push(v)} addCreditsHref="https://hanzo.ai/billing" now={NOW} />)
+    const { host, unmount } = mount(<PlanUsage limits={on} onCredits={async (v) => void wrote.push(v)} addCreditsHref="https://hanzo.ai/pay/amount/card" now={NOW} />)
     expect(host.textContent).toContain(CREDITS_TERMS)
     expect(host.textContent).toContain('Add credits')
     const toggle = host.querySelector('[aria-label="Continue with credits"]') as HTMLElement

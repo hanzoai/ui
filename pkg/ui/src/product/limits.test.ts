@@ -27,8 +27,8 @@ const LIMITED = {
   classes: { ...OK.classes, premium: { percent: 100, state: 'limited', paying: 'none', resets_at: '2026-10-31T00:00:00Z' } },
   limited: { reason: 'plan_allowance_used', classes: ['premium'], message: "You've used this period's included premium usage." },
   actions: [
-    { kind: 'upgrade', label: 'Upgrade', plan: 'team', url: 'https://hanzo.ai/pricing' },
-    { kind: 'topup', label: 'Add prepaid credit', url: 'https://hanzo.ai/billing/credit' },
+    { kind: 'upgrade', label: 'Upgrade', plan: 'team', url: 'https://hanzo.ai/pay/cart?plan=team' },
+    { kind: 'topup', label: 'Add prepaid credit', url: 'https://hanzo.ai/pay/amount/card' },
   ],
 }
 
@@ -279,7 +279,7 @@ describe('the credits contract', () => {
   it('reads every action kind in the order the server sent them, and drops what cannot act', () => {
     const got = actionsOf([
       { kind: 'credits', label: 'Continue with credits', url: '/v1/ai/limits' },
-      { kind: 'upgrade', label: 'Upgrade', url: 'https://hanzo.ai/pricing' },
+      { kind: 'upgrade', label: 'Upgrade', url: 'https://hanzo.ai/pay/cart' },
       { kind: 'switch', label: 'Try Enso', model: 'enso' },
       { kind: 'switch', label: 'nowhere' },
       { kind: 'topup' },
