@@ -162,4 +162,27 @@ describe('signOut', () => {
     await signOut(iam, { clientId: 'hanzo-app', issuer: 'https://hanzo.id' })
     expect(assign.mock.calls).toEqual([['/login?from=logout'], ['/login?from=logout']])
   })
+
+  it('waits until revoke and end settle before clearing tokens and navigating so components do not flash 401 errors', async () => {
+    localStorage.setItem('hanzo_iam_access_token', 'a')
+    localStorage.setItem('hanzo_iam_refresh_token', 'r')
+    const events: string[] = []
+    vi.stubGlobal('fetch', async (url: string) => {
+      events.push(`fetch:${new URL(url).pathname}`)
+      return new Response('{}')
+    })
+    const assign = vi.fn(() => events.push('assign'))
+    Object.defineProperty(window, 'location', { value: { origin: 'https://hanzo.app', assign }, writable: true })
+    const iam = {
+      clearTokens: () => {
+        events.push('clearTokens')
+        localStorage.clear()
+      },
+    } as unknown as IAM
+    await signOut(iam, { clientId: 'hanzo-app', everywhere: true, issuer: 'https://hanzo.ai' })
+    const clearIdx = events.indexOf('clearTokens')
+    const assignIdx = events.indexOf('assign')
+    expect(clearIdx).toBeGreaterThan(2)
+    expect(assignIdx).toBe(clearIdx + 1)
+  })
 })

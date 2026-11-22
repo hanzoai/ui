@@ -91,8 +91,9 @@ export function endSessionUrl(issuer: string, to: string, clientId?: string): st
 /**
  * Sign out: hand both tokens back to IAM through its /v1/iam revocation route
  * (a same-site call, refresh token first, since it is the one that mints more),
- * end IAM's session cookie, clear the local session, and land on the site's own
- * `/login?from=logout`. A sign-out `everywhere` with an `issuer` lands through the
+ * end IAM's session cookie, then clear the local session right before leaving
+ * so mounted components do not flash 401/unauthenticated errors during the
+ * network round-trip. A sign-out `everywhere` with an `issuer` lands through the
  * issuer's end-session page instead (`endSessionUrl`), so the sessions on the
  * issuer's other sign-in origins end too.
  */
@@ -101,12 +102,14 @@ export async function signOut(iam: IAM, { via, to = '/login?from=logout', client
   const access = bearer()
   const refresh = refresher()
   const idToken = identity()
-  iam.clearTokens()
   try {
-    await revoke(origin, refresh, 'refresh_token', access, clientId)
-    await revoke(origin, access, 'access_token', access, clientId)
-    await end(origin, idToken, clientId, everywhere)
+    await Promise.allSettled([
+      revoke(origin, refresh, 'refresh_token', access, clientId),
+      revoke(origin, access, 'access_token', access, clientId),
+      end(origin, idToken, clientId, everywhere),
+    ])
   } finally {
+    iam.clearTokens()
     track?.('logout_completed', {})
     window.location.assign(everywhere && issuer ? endSessionUrl(issuer, to, clientId) : to)
   }
