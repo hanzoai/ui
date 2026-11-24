@@ -19,6 +19,7 @@ const TAGS = {
     { platform: 'linkedin', type: 'linkedin', id: '555', events: { order_completed: '9876' } },
     { platform: 'x', type: 'x', id: 'o1abc', events: { order_completed: 'tw-o1abc-buy' } },
     { platform: 'tiktok', type: 'tiktok', id: 'TT1' },
+    { platform: 'reddit', type: 'reddit', id: 'a2_test' },
   ],
 }
 
@@ -82,7 +83,7 @@ const fbq = () => ((g.window as { fbq?: { queue: IArguments[] } }).fbq?.queue ??
 const hosts = (b: ReturnType<typeof browser>) => b.scripts.map((s) => new URL(s).hostname).sort()
 const consents = () => layer().filter((a) => a[0] === 'consent')
 const views = () => fbq().filter((a) => a[0] === 'track' && a[1] === 'PageView').length
-const EVERY = ['analytics.tiktok.com', 'connect.facebook.net', 'snap.licdn.com', 'static.ads-twitter.com', 'www.googletagmanager.com'].sort()
+const EVERY = ['analytics.tiktok.com', 'connect.facebook.net', 'snap.licdn.com', 'static.ads-twitter.com', 'www.googletagmanager.com', 'www.redditstatic.com'].sort()
 const OPT_OUT = { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' }
 
 describe('a browser that refuses', () => {
@@ -418,14 +419,14 @@ describe('the audience cloud names', () => {
 })
 
 describe('after accepting', () => {
-  it('loads Google, Meta, LinkedIn, X and TikTok with no reload', async () => {
+  it('loads Google, Meta, LinkedIn, X, TikTok and Reddit with no reload', async () => {
     const b = browser('Europe/Berlin')
     const { startTags, acceptAll } = await import('./index')
     startTags({ key: 'pk-x' })
     await tick()
     acceptAll()
     await tick()
-    expect(b.scripts).toHaveLength(5)
+    expect(b.scripts).toHaveLength(6)
   })
 
   it('sets Consent Mode v2 denied before any Google script, then updates it', async () => {
@@ -463,7 +464,7 @@ describe('after accepting', () => {
     expect(last?.[2]).toMatchObject({ analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' })
     expect(fbq.queue.map((a) => Array.from(a))).toContainEqual(['consent', 'revoke'])
     expect(reload).toHaveBeenCalledTimes(1)
-    expect(b.scripts).toHaveLength(5)
+    expect(b.scripts).toHaveLength(6)
   })
 
   it('a withdrawal made in another tab is acted on when this page is shown again', async () => {
@@ -583,7 +584,7 @@ describe('one event, every tag', () => {
     expect(captured).toHaveLength(1)
     const id = captured[0].props.event_id
     expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-/)
-    expect(String(captured[0].props.tags).split(',').sort()).toEqual(['ga', 'gads', 'linkedin', 'meta', 'tiktok', 'x'])
+    expect(String(captured[0].props.tags).split(',').sort()).toEqual(['ga', 'gads', 'linkedin', 'meta', 'reddit', 'tiktok', 'x'])
 
     const ga = gtag.find((a) => a[0] === 'event' && a[1] === 'purchase')
     expect(ga?.[2]).toMatchObject({ transaction_id: 'ord-1', event_id: id, items, value: 19 })
@@ -753,5 +754,45 @@ describe('every Meta pixel', () => {
     const calls = (g.window as { fbq: { queue: unknown[][] } }).fbq.queue.map((a) => Array.from(a as ArrayLike<unknown>))
     expect(calls.filter((a) => a[0] === 'dataProcessingOptions')).toHaveLength(1)
     expect(calls.findIndex((a) => a[0] === 'dataProcessingOptions')).toBeLessThan(calls.findIndex((a) => a[0] === 'init'))
+  })
+})
+
+describe('Reddit pixel & CAPI deduplication', () => {
+  it('loads redditstatic pixel.js, initializes, fires PageVisit, and mirrors conversions with conversionId + rdt_cid', async () => {
+    const b = browser('America/New_York', accepted())
+    ;(g.window as { location: Record<string, unknown> }).location.search = '?rdt_cid=rcid_123'
+    put('fetch', async (url: string) => {
+      b.requests.push(url)
+      return { ok: true, json: async () => ({ tags: [{ platform: 'reddit', type: 'reddit', id: 'a2_k2sajv4zerym' }] }) }
+    })
+    const { startTags, track } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(b.scripts).toEqual(['https://www.redditstatic.com/ads/pixel.js?pixel_id=a2_k2sajv4zerym'])
+    const rdt = (g.window as { rdt: { callQueue: IArguments[] } }).rdt
+    const calls = () => rdt.callQueue.map((a) => Array.from(a))
+    expect(calls().slice(0, 2)).toEqual([
+      ['init', 'a2_k2sajv4zerym'],
+      ['track', 'PageVisit'],
+    ])
+    const captured: Array<{ name: string; props: Record<string, unknown> }> = []
+    const stream = { capture: (name: string, props: Record<string, unknown>) => captured.push({ name, props }) } as never
+    track(stream, 'order_completed', { order_id: 'ord-42', value: 99, currency: 'USD', items: [{ item_id: 'pro', item_name: 'Hanzo Pro' }] })
+    await tick()
+    expect(captured).toHaveLength(1)
+    expect(captured[0].props.rdt_cid).toBe('rcid_123')
+    expect(captured[0].props.tags).toBe('reddit')
+    const id = captured[0].props.event_id
+    expect(calls()[2]).toEqual([
+      'track',
+      'Purchase',
+      {
+        value: 99,
+        currency: 'USD',
+        itemCount: 1,
+        products: [{ id: 'pro', name: 'Hanzo Pro', category: undefined }],
+        conversionId: id,
+      },
+    ])
   })
 })

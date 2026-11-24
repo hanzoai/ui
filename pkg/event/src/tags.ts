@@ -91,6 +91,7 @@ type Page = {
   twq?: Call & { queue?: unknown[]; exe?: Call; version?: string }
   ttq?: Record<string, Call> & { _i?: Record<string, unknown>; _t?: Record<string, number>; _o?: Record<string, unknown>; methods?: string[]; load?: Call; page?: Call; track?: Call }
   TiktokAnalyticsObject?: string
+  rdt?: Call & { callQueue?: unknown[]; sendEvent?: Call }
 }
 
 const page = (): Page => window as unknown as Page
@@ -367,6 +368,25 @@ function loadTikTok(id: string): void {
   ;(q.page as Call)()
 }
 
+function loadReddit(id: string): void {
+  const p = page()
+  if (!p.rdt) {
+    const r = (p.rdt = function () {
+      if (r.sendEvent) {
+        // eslint-disable-next-line prefer-rest-params
+        r.sendEvent.apply(r, arguments as unknown as unknown[])
+      } else {
+        // eslint-disable-next-line prefer-rest-params
+        r.callQueue!.push(arguments)
+      }
+    } as NonNullable<Page['rdt']>)
+    r.callQueue = []
+    script(`https://www.redditstatic.com/ads/pixel.js?pixel_id=${encodeURIComponent(id)}`)
+  }
+  p.rdt('init', id)
+  p.rdt('track', 'PageVisit')
+}
+
 // ── Which tag is allowed and running ────────────────────────────────────
 
 const NEEDS: Record<string, keyof Choice> = {
@@ -376,6 +396,7 @@ const NEEDS: Record<string, keyof Choice> = {
   linkedin: 'marketing',
   x: 'marketing',
   tiktok: 'marketing',
+  reddit: 'marketing',
 }
 
 /**
@@ -414,6 +435,7 @@ function apply(): void {
     if (t.type === 'linkedin') loadLinkedIn(t.id)
     else if (t.type === 'x') loadX(t.id)
     else if (t.type === 'tiktok') loadTikTok(t.id)
+    else if (t.type === 'reddit') loadReddit(t.id)
     else continue
     loaded.add(k)
   }
@@ -552,14 +574,14 @@ const META_STANDARD = new Set([
   'SubmitApplication', 'Subscribe', 'ViewContent',
 ])
 
-function shape(platform: 'meta' | 'tiktok' | 'x', p: Record<string, unknown>): Record<string, unknown> {
+function shape(platform: 'meta' | 'tiktok' | 'x' | 'reddit', p: Record<string, unknown>): Record<string, unknown> {
   const items = Array.isArray(p.items) ? (p.items as Item[]) : []
   const out: Record<string, unknown> = {}
   if (typeof p.value === 'number') out.value = p.value
   out.currency = typeof p.currency === 'string' ? p.currency : 'USD'
   // A search names what was asked: Meta's and TikTok's standard parameter, and
   // what a search audience is built from.
-  if (typeof p.search_string === 'string' && p.search_string && platform !== 'x') out[platform === 'tiktok' ? 'query' : 'search_string'] = p.search_string
+  if (typeof p.search_string === 'string' && p.search_string && platform !== 'x' && platform !== 'reddit') out[platform === 'tiktok' ? 'query' : 'search_string'] = p.search_string
   if (!items.length) return out
   if (platform === 'meta') {
     out.content_type = 'product'
@@ -570,6 +592,9 @@ function shape(platform: 'meta' | 'tiktok' | 'x', p: Record<string, unknown>): R
   } else if (platform === 'tiktok') {
     out.content_type = 'product'
     out.contents = items.map((i) => ({ content_id: i.item_id, content_name: i.item_name, quantity: i.quantity ?? 1, price: i.price }))
+  } else if (platform === 'reddit') {
+    out.itemCount = items.reduce((n, i) => n + (i.quantity ?? 1), 0)
+    out.products = items.map((i) => ({ id: i.item_id, name: i.item_name, category: i.item_category }))
   } else {
     out.contents = items.map((i) => ({ content_id: i.item_id, content_name: i.item_name, content_price: i.price, num_items: i.quantity ?? 1 }))
   }
@@ -623,6 +648,10 @@ export function mirror(name: string, params: Record<string, unknown>, id: string
       p.lintrk?.('track', { conversion_id: Number(rule), event_id: id })
     } else if (t.type === 'x' && rule && namesOn(name, 'x').length) {
       p.twq?.('event', rule, { ...shape('x', params), conversion_id: id })
+    } else if (t.type === 'reddit') {
+      for (const n of namesOn(name, 'reddit')) {
+        p.rdt?.('track', n, { ...shape('reddit', params), conversionId: id })
+      }
     }
   }
 }
