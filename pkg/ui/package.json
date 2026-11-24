@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.33.11",
+  "version": "8.34.0",
   "type": "module",
   "description": "Hanzo UI \u2014 the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -241,6 +241,18 @@
       "require": "./dist/canvas.cjs",
       "default": "./dist/canvas.js"
     },
+    "./flow": {
+      "types": "./dist/flow.d.ts",
+      "import": "./dist/flow.js",
+      "require": "./dist/flow.cjs",
+      "default": "./dist/flow.js"
+    },
+    "./flow/pure": {
+      "types": "./dist/flow-pure.d.ts",
+      "import": "./dist/flow-pure.js",
+      "require": "./dist/flow-pure.cjs",
+      "default": "./dist/flow-pure.js"
+    },
     "./dashboard": {
       "types": "./dist/dashboard.d.ts",
       "import": "./dist/dashboard.js",
@@ -368,6 +380,7 @@
     "@hanzo/composer": ">=0.2.0",
     "@hanzo/dashboard": ">=0.2.0",
     "@hanzo/event": ">=0.3.63",
+    "@hanzo/flow": ">=0.1.0",
     "@hanzo/data": ">=1.2.4",
     "@hanzo/gui": "^8.3.5",
     "@hanzo/i18n": ">=0.4.0",
@@ -402,6 +415,9 @@
     "@hanzo/canvas": {
       "optional": true
     },
+    "@hanzo/flow": {
+      "optional": true
+    },
     "@hanzo/dashboard": {
       "optional": true
     },
@@ -431,6 +447,7 @@
     "@hanzo/cd": "workspace:*",
     "@hanzo/composer": "workspace:*",
     "@hanzo/event": "workspace:*",
+    "@hanzo/flow": "workspace:*",
     "@hanzo/dashboard": "catalog:",
     "@hanzo/data": "catalog:",
     "@hanzo/gui": "catalog:",
