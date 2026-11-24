@@ -1,0 +1,93 @@
+{
+  "name": "@hanzo/flow",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Canonical visual AI workflow builder for Hanzo (flow.hanzo.ai, hanzo.app, CRM). Built on @hanzo/gui and @xyflow/react — pure monochrome Hanzo Dev aesthetic, zero Tailwind, zero Radix, with headless validation, deterministic layout, execution engine, and HTTP/memory backends.",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./pure": {
+      "types": "./dist/pure.d.ts",
+      "import": "./dist/pure.js",
+      "require": "./dist/pure.cjs",
+      "default": "./dist/pure.js"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "src",
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkg/flow"
+  },
+  "keywords": [
+    "flow",
+    "workflow",
+    "agent",
+    "enso",
+    "canvas",
+    "dag",
+    "automation",
+    "hanzo",
+    "hanzo-ai",
+    "hanzoai",
+    "gui",
+    "react"
+  ],
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
+    "tc": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs .",
+    "clean": "rm -rf dist dist-cjs",
+    "prepack": "pnpm run build",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "@hanzo/gui": ">=8.3.5",
+    "@xyflow/react": ">=12",
+    "lucide-react": ">=0.400.0",
+    "react": ">=19.2.8",
+    "react-dom": ">=19.2.8"
+  },
+  "peerDependenciesMeta": {
+    "@xyflow/react": {
+      "optional": true
+    },
+    "lucide-react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@hanzo/gui": "catalog:",
+    "@hanzogui/config": "catalog:",
+    "@hanzogui/core": "catalog:",
+    "@hanzogui/web": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@xyflow/react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-native-web": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "author": "Hanzo AI <dev@hanzo.ai>"
+}
