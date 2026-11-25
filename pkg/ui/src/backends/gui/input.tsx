@@ -14,7 +14,7 @@ import { useI18n } from '@hanzo/i18n/react'
 import { slot } from './slot'
 import { touch } from './gesture'
 import { masked } from './mask'
-import { BOX, FIELD, FILL, type FieldSize } from './control'
+import { BOX, EDGE, FIELD, FILL, type FieldSize } from './control'
 import { fieldSize, useDensity } from './density'
 import { ltr } from './dir'
 import { invalidOf, useField } from './field'
@@ -89,6 +89,9 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       <GuiInput
         ref={ref as never}
         {...slot('input')}
+        unstyled
+        fontFamily="$body"
+        fontWeight="400"
         {...(isPassword ? masked(!revealed) : { type, secureTextEntry })}
         flex={1}
         minW={0}
@@ -125,6 +128,15 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
     <GuiInput
       ref={ref as never}
       {...slot('input')}
+      // `unstyled` skips `@hanzogui/input`'s default `size: '$true'` variant,
+      // which emits physical `paddingHorizontal` (`_pl-*`/`_pr-*`) classes that
+      // outrank our logical `paddingInlineStart`/`paddingInlineEnd` and put a
+      // leading adornment icon directly over the placeholder (#362).
+      unstyled
+      fontFamily="$body"
+      fontWeight="400"
+      {...EDGE}
+      focusVisibleStyle={{ outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' }}
       // BOTH spellings, via `masked`, and that is not belt-and-braces.
       //
       // This passed `secureTextEntry` alone and dropped `type` on the floor

@@ -276,6 +276,64 @@ describe('another maker’s model on a plan that grants Enso alone', () => {
     expect(row('zen5').textContent).toContain('Upgrade')
   })
 
+  it('shows capabilities, cost, context window, and access together on Free and Unlimited rows (#358)', async () => {
+    const rich = parseModels([
+      { id: 'enso-auto', owned_by: 'hanzo', family: 'enso', class: 'free', name: 'Enso', context_window: 1_000_000, supports_tools: true, pricing: { input_per_million: 0 } },
+      { id: 'zen5', owned_by: 'zenlm', family: 'zen', class: 'ours', name: 'Zen 5', context_window: 1_000_000, supports_vision: true, supports_tools: true, supports_reasoning: true, pricing: { input_per_million: 0.8 } },
+      { id: 'anthropic/claude-sonnet-4.5', owned_by: 'anthropic', class: 'premium', name: 'Claude Sonnet 4.5', context_window: 200_000, supports_vision: true, supports_tools: true, supports_reasoning: true, pricing: { input_per_million: 3 } },
+      { id: 'hanzo/text-only', owned_by: 'hanzo', family: 'zen', class: 'ours', name: 'Zen Plain', context_window: 128_000 },
+    ])
+
+    // Free account: granted only enso-auto
+    await mount(<ModelPicker models={rich} value="enso-auto" onChange={() => {}} granted={(id) => id === 'enso-auto'} onUpgrade={() => {}} open />)
+
+    // Open row (enso-auto): shows capabilities, context, and Free (not bare '1M')
+    const enso = row('enso-auto')
+    expect(enso.textContent).toContain('Tools')
+    expect(enso.textContent).toContain('1M')
+    expect(enso.textContent).toContain('Free')
+
+    // Locked Hanzo row (zen5): shows Upgrade AND capabilities AND context AND cost
+    const zen = row('zen5')
+    expect(zen.textContent).toContain('Upgrade')
+    expect(zen.textContent).toContain('Vision')
+    expect(zen.textContent).toContain('Tools')
+    expect(zen.textContent).toContain('Reasoning')
+    expect(zen.textContent).toContain('1M')
+    expect(zen.textContent).toContain('$0.80 / 1M')
+
+    // Locked third-party row (claude): shows Upgrade AND capabilities AND context AND cost
+    const claude = row('anthropic/claude-sonnet-4.5')
+    expect(claude.textContent).toContain('Upgrade')
+    expect(claude.textContent).toContain('Vision')
+    expect(claude.textContent).toContain('Tools')
+    expect(claude.textContent).toContain('Reasoning')
+    expect(claude.textContent).toContain('200K')
+    expect(claude.textContent).toContain('$3.00 / 1M')
+
+    // Text-only chat model still names what it can do ('Chat') alongside its window
+    const plain = row('hanzo/text-only')
+    expect(plain.textContent).toContain('Chat')
+    expect(plain.textContent).toContain('128K')
+
+    // Unlimited org (all granted): chat models show capabilities, context, and cost without Upgrade or Top up
+    await mount(<ModelPicker models={rich} value="zen5" onChange={() => {}} granted={() => true} open />)
+    const zenUnlimited = row('zen5')
+    expect(zenUnlimited.textContent).toContain('Vision')
+    expect(zenUnlimited.textContent).toContain('Tools')
+    expect(zenUnlimited.textContent).toContain('Reasoning')
+    expect(zenUnlimited.textContent).toContain('1M')
+    expect(zenUnlimited.textContent).toContain('$0.80 / 1M')
+    expect(zenUnlimited.textContent).not.toContain('Upgrade')
+    expect(zenUnlimited.textContent).not.toContain('Top up')
+
+    const claudeUnlimited = row('anthropic/claude-sonnet-4.5')
+    expect(claudeUnlimited.textContent).toContain('Vision')
+    expect(claudeUnlimited.textContent).toContain('200K')
+    expect(claudeUnlimited.textContent).toContain('$3.00 / 1M')
+    expect(claudeUnlimited.textContent).not.toContain('Upgrade')
+  })
+
   it('shows the balance under the list with a Top up link that opens the top-up', async () => {
     const onTopUp = vi.fn()
     await mount(<ModelPicker models={MODELS} onChange={() => {}} balance="$12.40" onTopUp={onTopUp} open />)

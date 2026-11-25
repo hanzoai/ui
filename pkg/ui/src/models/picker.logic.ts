@@ -5,12 +5,19 @@
 import {
   agentGap,
   can,
+  capabilitiesOf,
+  CAPABILITY_NAMES,
   ENSO,
+  formatCeiling,
+  formatContext,
+  formatPrice,
+  formatSaving,
   groupKey,
   groupModels,
   isComparison,
   matchesModel,
   modelName,
+  savingOf,
   sortModels,
   thirdParty,
   withResearch,
@@ -18,6 +25,8 @@ import {
   type Capability,
   type ModelCatalogEntry,
 } from './catalog'
+import type { Say } from '@hanzo/i18n/react'
+import { english } from '../core/english'
 
 /**
  * A drawn row: a group's heading, or a model under it. A heading with a `fold`
@@ -106,6 +115,73 @@ export function standing(
 }
 
 /**
+ * Exact vertical layout for a picker list where non-fold group headings are
+ * shorter than model/fold rows. Prefix sums give O(1) top/height per index
+ * while keeping virtualized scroll height exact.
+ */
+export interface RowLayout {
+  readonly tops: readonly number[]
+  readonly heights: readonly number[]
+  readonly total: number
+}
+
+export function rowLayout(rows: readonly PickerRow[], row: number, head = row): RowLayout {
+  const tops: number[] = []
+  const heights: number[] = []
+  let y = 0
+  for (const r of rows) {
+    const h = r.kind === 'group' && !r.fold ? head : row
+    tops.push(y)
+    heights.push(h)
+    y += h
+  }
+  return { tops, heights, total: y }
+}
+
+/**
+ * The rows a viewport shows, `over` rows beyond each edge, for variable row heights.
+ * `end` is exclusive.
+ */
+export function visibleLayoutRange(
+  top: number,
+  height: number,
+  layout: RowLayout,
+  over = 8,
+): { start: number; end: number } {
+  const n = layout.heights.length
+  if (n <= 0) return { start: 0, end: 0 }
+  const y0 = Math.max(0, top)
+  const y1 = y0 + Math.max(0, height)
+  let lo = 0
+  let hi = n
+  while (lo < hi) {
+    const mid = (lo + hi) >>> 1
+    if (layout.tops[mid]! + layout.heights[mid]! <= y0) lo = mid + 1
+    else hi = mid
+  }
+  const first = lo
+  lo = first
+  hi = n
+  while (lo < hi) {
+    const mid = (lo + hi) >>> 1
+    if (layout.tops[mid]! < y1) lo = mid + 1
+    else hi = mid
+  }
+  const last = lo
+  return { start: Math.max(0, first - over), end: Math.min(n, last + over) }
+}
+
+/** The scroll offset that brings row `i` into view under `layout`, or null if already visible. */
+export function revealLayoutTop(i: number, top: number, height: number, layout: RowLayout): number | null {
+  if (i < 0 || i >= layout.heights.length) return null
+  const y = layout.tops[i]!
+  const h = layout.heights[i]!
+  if (y < top) return y
+  if (y + h > top + height) return y + h - height
+  return null
+}
+
+/**
  * The rows a viewport shows, `over` rows beyond each edge, for rows of one
  * height. `end` is exclusive.
  */
@@ -131,4 +207,55 @@ export function revealTop(i: number, top: number, height: number, row: number): 
   if (y < top) return y
   if (y + row > top + height) return y + row - height
   return null
+}
+
+/**
+ * The capabilities a model picker row names:
+ * - For chat models, specific strengths (`vision`, `tools`, `reasoning`, `image`, ...)
+ *   or `chat` alone when no extra capability flags are published.
+ * - For non-chat models, their actual modalities (`decision`, `embeddings`, `image`, ...).
+ * The umbrella `agent` tag is omitted because it is derived from tools/reasoning/text.
+ */
+export function modelCapabilities(m: ModelCatalogEntry): Capability[] {
+  const caps = capabilitiesOf(m).filter((c) => c !== 'agent')
+  if (!can(m, 'chat')) return caps
+  const specific = caps.filter((c) => c !== 'chat')
+  return specific.length ? specific : ['chat']
+}
+
+/**
+ * What a model costs to call, across every model class (ours, free, and third-party):
+ * comparison savings, router ceiling, Free ($0 or free class), or per-1M input price.
+ * Never invents a price when the catalog omits one.
+ */
+export function modelCost(
+  m: ModelCatalogEntry,
+  models: readonly ModelCatalogEntry[],
+  t: Say = english,
+): string {
+  const saving = savingOf(m, models)
+  if (saving) return formatSaving(saving, t)
+  const ceiling = formatCeiling(m, t)
+  if (ceiling) return ceiling
+  const input = m.pricing?.input_per_million
+  if (input === 0) return t('Free')
+  if (input !== undefined) return t('{price} / 1M', { price: formatPrice(input, t) })
+  if (m.class === 'free') return t('Free')
+  return ''
+}
+
+/**
+ * The secondary metadata line for a model picker row: capabilities, context window, and cost.
+ * Orthogonal to access status (`Upgrade`, `Top up`, `Paused`, `Research preview`), which stays
+ * visible alongside it rather than replacing it.
+ */
+export function modelMeta(
+  m: ModelCatalogEntry,
+  models: readonly ModelCatalogEntry[],
+  t: Say = english,
+): string {
+  const caps = modelCapabilities(m).map((c) => t(CAPABILITY_NAMES[c])).join(' · ')
+  const ctx = formatContext(m.context_window)
+  const cost = modelCost(m, models, t)
+  return [caps, ctx, cost].filter(Boolean).join(' · ')
 }

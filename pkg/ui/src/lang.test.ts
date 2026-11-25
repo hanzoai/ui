@@ -64,7 +64,7 @@ describe('lang.css', () => {
 
   it('ships inside theme.css and on its own', () => {
     expect(compose).toMatch(/readFileSync\(join\(UI, 'src\/lang\.css'\)/)
-    expect(compose).toMatch(/\$\{motion\}\\n\$\{lang\}`/)
+    expect(compose).toMatch(/\$\{motion\}\\n\$\{lang\}(?:\\n\$\{grid\})?`/)
     expect(compose).toMatch(/writeFileSync\(join\(UI, 'dist\/lang\.css'\), lang\)/)
   })
 })

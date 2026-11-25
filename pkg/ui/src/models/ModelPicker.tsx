@@ -40,9 +40,9 @@ let pending: Promise<typeof Menu> | null = null
 const load = (): Promise<typeof Menu> =>
   (pending ??= import('./ModelPickerMenu').then((m) => (menu = m.ModelPickerMenu)))
 
-/** Row height, px: a line of 13px type on a pointer, a thumb's reach on a phone. */
-const ROW = 32
-const ROW_TOUCH = 44
+/** Row height, px: two compact lines (title + access, capabilities · context · cost) on a pointer, thumb-sized on a phone. */
+const ROW = 48
+const ROW_TOUCH = 56
 const STRONG = 'var(--border-strong)' as const
 export interface ModelPickerProps {
   /** The catalog, as `parseModels` reads `GET /v1/models`. */
