@@ -1,0 +1,97 @@
+{
+  "name": "@hanzo/theme",
+  "version": "0.1.0",
+  "description": "Canonical theme palettes, dynamic design tokens, appearance engine, and zero-FOUC pre-paint script for every Hanzo surface.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./palettes": {
+      "types": "./dist/palettes.d.ts",
+      "import": "./dist/palettes.js",
+      "require": "./dist/palettes.cjs",
+      "default": "./dist/palettes.js"
+    },
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "import": "./dist/tokens.js",
+      "require": "./dist/tokens.cjs",
+      "default": "./dist/tokens.js"
+    },
+    "./appearance": {
+      "types": "./dist/appearance.d.ts",
+      "import": "./dist/appearance.js",
+      "require": "./dist/appearance.cjs",
+      "default": "./dist/appearance.js"
+    },
+    "./css": {
+      "types": "./dist/css.d.ts",
+      "import": "./dist/css.js",
+      "require": "./dist/css.cjs",
+      "default": "./dist/css.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js",
+      "require": "./dist/react.cjs",
+      "default": "./dist/react.js"
+    },
+    "./theme.css": "./dist/theme.css",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
+    "build": "rm -rf dist dist-cjs types && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs . palettes,appearance,tokens,css,index && node scripts/gen-css.mjs && node ../ui/scripts/check-exports.mjs .",
+    "clean": "rm -rf dist dist-cjs types",
+    "prepack": "pnpm run build",
+    "typecheck": "tsc --noEmit",
+    "tc": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "hanzo",
+    "theme",
+    "design-tokens",
+    "appearance",
+    "palettes",
+    "dark-mode",
+    "ui"
+  ],
+  "author": "Hanzo AI <dev@hanzo.ai>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "jsdom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -315,6 +315,24 @@
       "import": "./dist/brands.js",
       "require": "./dist/brands.cjs",
       "default": "./dist/brands.js"
+    },
+    "./theme": {
+      "types": "./dist/theme.d.ts",
+      "import": "./dist/theme.js",
+      "require": "./dist/theme.cjs",
+      "default": "./dist/theme.js"
+    },
+    "./theme/react": {
+      "types": "./dist/theme-react.d.ts",
+      "import": "./dist/theme-react.js",
+      "require": "./dist/theme-react.cjs",
+      "default": "./dist/theme-react.js"
+    },
+    "./agent": {
+      "types": "./dist/agent.d.ts",
+      "import": "./dist/agent.js",
+      "require": "./dist/agent.cjs",
+      "default": "./dist/agent.js"
     }
   },
   "main": "./dist/index.cjs",
@@ -366,6 +384,7 @@
     "@hanzo/brand": "catalog:",
     "@hanzo/design": "catalog:",
     "@hanzo/font": "catalog:",
+    "@hanzo/theme": "workspace:^",
     "@hanzo/tokens": "workspace:^",
     "@hanzo/logo": "catalog:",
     "@hanzo/products": "catalog:",
@@ -375,6 +394,7 @@
     "@icons-pack/react-simple-icons": "catalog:"
   },
   "peerDependencies": {
+    "@hanzo/agent-ui": ">=0.1.0",
     "@hanzo/canvas": ">=0.2.3",
     "@hanzo/cd": ">=0.1.2",
     "@hanzo/composer": ">=0.2.0",
@@ -403,6 +423,9 @@
     "react-hook-form": ">=7"
   },
   "peerDependenciesMeta": {
+    "@hanzo/agent-ui": {
+      "optional": true
+    },
     "@hanzo/iam": {
       "optional": true
     },
@@ -444,6 +467,7 @@
     }
   },
   "devDependencies": {
+    "@hanzo/agent-ui": "workspace:*",
     "@hanzo/cd": "workspace:*",
     "@hanzo/composer": "workspace:*",
     "@hanzo/event": "workspace:*",
