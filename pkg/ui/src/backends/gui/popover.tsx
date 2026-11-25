@@ -106,6 +106,7 @@ const PopoverContent = ({ sideOffset, align, solid, size, arrow = false, childre
             borderWidth={1}
             borderColor="$borderColor"
             rounded="$4"
+            zIndex={900}
             {...(small
               ? { p: '$2', gap: '$1', maxW: 'var(--hanzogui-popper-available-width, 100vw)' as never }
               : { p: '$4', width: 288 })}

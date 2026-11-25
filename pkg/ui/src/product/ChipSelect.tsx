@@ -590,6 +590,7 @@ export function ChipSelect<T extends ChipItem>({
 
       <PopoverContent
         {...slot('chip-select-panel')}
+        solid
         sideOffset={8}
         width={width}
         maxW="92vw"
@@ -598,10 +599,11 @@ export function ChipSelect<T extends ChipItem>({
         // Gui's popover content centres its children; a list and a field span
         // the panel.
         items="stretch"
-        bg="$hover"
+        bg="var(--popover)"
         borderColor="$rim"
         rounded="$3"
         elevation="$4"
+        zIndex={950}
         trapFocus
         onOpenAutoFocus={(e: Event) => {
           // The search field, not the first focusable thing in the panel — which

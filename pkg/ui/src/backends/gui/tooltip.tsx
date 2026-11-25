@@ -91,13 +91,14 @@ const TooltipContent = ({ sideOffset, startIcon, description, children, ...props
       <GuiTooltip.Content
         {...slot('tooltip-content')}
         componentName="Hint"
-        bg="$panel"
+        bg="var(--popover)"
         borderWidth={1}
         borderColor="$borderColor"
         rounded="$3"
         px="$1.5"
         py="$1"
         maxW={MAX_W}
+        zIndex={960}
         {...props}
       >
         {startIcon || description ? (
