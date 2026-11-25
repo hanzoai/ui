@@ -23,7 +23,7 @@
  * one to a platform only when a peer app or the org's secret key stated it.
  */
 
-export type PlatformName = 'ga4' | 'meta' | 'linkedin' | 'x' | 'tiktok' | 'reddit'
+export type PlatformName = 'ga4' | 'meta' | 'linkedin' | 'x' | 'tiktok' | 'reddit' | 'openai'
 
 export type StandardName =
   | 'page_view'
@@ -49,6 +49,7 @@ export interface Platforms {
   x?: Name
   tiktok?: Name
   reddit?: Name
+  openai?: Name
   ads?: boolean
   /** The event states an amount a platform bids on. Only the server may state one. */
   money?: boolean
@@ -63,6 +64,7 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
     linkedin: 'view_content',
     tiktok: 'ViewContent',
     reddit: 'ViewContent',
+    openai: 'view_content',
   },
   signup_submitted: {
     standard: 'lead',
@@ -72,6 +74,7 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
     x: 'lead',
     tiktok: 'SubmitForm',
     reddit: 'Lead',
+    openai: 'lead',
   },
   signup_completed: {
     standard: 'signup',
@@ -81,6 +84,7 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
     x: 'sign_up',
     tiktok: 'CompleteRegistration',
     reddit: 'SignUp',
+    openai: 'sign_up',
     ads: true,
   },
   login_completed: { standard: 'login', ga4: 'login' },
@@ -94,6 +98,7 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
     linkedin: 'view_content',
     tiktok: 'ViewContent',
     reddit: 'ViewContent',
+    openai: 'view_content',
   },
   plan_clicked: {
     standard: 'select_item',
@@ -110,6 +115,7 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
     x: 'add_to_cart',
     tiktok: 'AddToCart',
     reddit: 'AddToCart',
+    openai: 'add_to_cart',
   },
   plan_changed: { ga4: ['remove_from_cart', 'add_to_cart'], meta: 'CustomizeProduct' },
   plan_skipped: { ga4: 'plan_skipped', meta: 'PlanSkipped' },
@@ -121,6 +127,7 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
     linkedin: 'view_content',
     tiktok: 'ViewContent',
     reddit: 'ViewContent',
+    openai: 'view_content',
   },
   checkout_started: {
     standard: 'start_checkout',
@@ -130,6 +137,7 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
     x: 'begin_checkout',
     tiktok: 'InitiateCheckout',
     reddit: 'AddToCart',
+    openai: 'checkout_started',
     ads: true,
   },
   payment_info_added: {
@@ -153,10 +161,11 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
     x: 'purchase',
     tiktok: 'CompletePayment',
     reddit: 'Purchase',
+    openai: 'purchase',
     ads: true,
     money: true,
   },
-  subscription_changed: { ga4: 'purchase', meta: 'Subscribe', linkedin: 'purchase', money: true },
+  subscription_changed: { ga4: 'purchase', meta: 'Subscribe', linkedin: 'purchase', reddit: 'Purchase', openai: 'purchase', money: true },
   subscription_canceled: { ga4: 'subscription_canceled', meta: 'SubscriptionCanceled' },
   order_refunded: { ga4: 'refund', meta: 'OrderRefunded', money: true },
 
@@ -169,13 +178,14 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
     x: 'lead',
     tiktok: 'SubmitForm',
     reddit: 'Lead',
+    openai: 'lead',
     ads: true,
   },
-  waitlist_joined: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm', reddit: 'Lead' },
-  referral_used: { standard: 'lead', reddit: 'Lead' },
-  newsletter_subscribed: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm', reddit: 'Lead' },
-  beta_submitted: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm', reddit: 'Lead' },
-  research_access_applied: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm', reddit: 'Lead' },
+  waitlist_joined: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm', reddit: 'Lead', openai: 'lead' },
+  referral_used: { standard: 'lead', reddit: 'Lead', openai: 'lead' },
+  newsletter_subscribed: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm', reddit: 'Lead', openai: 'lead' },
+  beta_submitted: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm', reddit: 'Lead', openai: 'lead' },
+  research_access_applied: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm', reddit: 'Lead', openai: 'lead' },
 
   // ── Audiences: what retargeting is built from ──────────────────
   product_viewed: {
@@ -185,8 +195,9 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
     linkedin: 'view_content',
     tiktok: 'ViewContent',
     reddit: 'ViewContent',
+    openai: 'view_content',
   },
-  search_performed: { standard: 'search', ga4: 'search', meta: 'Search', tiktok: 'Search', reddit: 'Search' },
+  search_performed: { standard: 'search', ga4: 'search', meta: 'Search', tiktok: 'Search', reddit: 'Search', openai: 'search' },
   // A custom event on each: no platform has a standard name for a pressed button.
   cta_clicked: { ga4: 'cta_click', meta: 'CTAClicked', tiktok: 'ClickButton' },
 }

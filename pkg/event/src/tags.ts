@@ -46,7 +46,7 @@
 
 import { namesOn } from '@hanzo/events'
 import { asks, CONSENT_EVENT, open, policy, read, render, serve, type Choice } from './consent'
-import { siteKey } from './org'
+import { HANZO_OPENAI_PIXEL_ID, ORG_KEY, SITE_KEY, keyFor, orgOf } from './org'
 import { capture, touch } from './touch'
 import type { Analytics } from './core'
 import { automated, internal, mark } from './automated'
@@ -74,6 +74,8 @@ export interface TagOptions {
    * token getter; none, or no token, asks as a stranger.
    */
   token?: () => string | undefined
+  /** Enable pixel debug mode (e.g. OpenAI `oaiq("init", { pixelId, debug: true })`). */
+  debug?: boolean
 }
 
 /** Who cloud says the visitor is: a program, the site's own team, or a person. */
@@ -92,6 +94,7 @@ type Page = {
   ttq?: Record<string, Call> & { _i?: Record<string, unknown>; _t?: Record<string, number>; _o?: Record<string, unknown>; methods?: string[]; load?: Call; page?: Call; track?: Call }
   TiktokAnalyticsObject?: string
   rdt?: Call & { callQueue?: unknown[]; sendEvent?: Call }
+  oaiq?: Call & { q?: unknown[] }
 }
 
 const page = (): Page => window as unknown as Page
@@ -387,6 +390,20 @@ function loadReddit(id: string): void {
   p.rdt('track', 'PageVisit')
 }
 
+function loadOpenAI(id: string): void {
+  const p = page()
+  if (!p.oaiq) {
+    const q = (p.oaiq = function () {
+      // eslint-disable-next-line prefer-rest-params
+      q.q!.push(arguments)
+    } as NonNullable<Page['oaiq']>)
+    q.q = []
+    script('https://bzrcdn.openai.com/sdk/oaiq.min.js')
+  }
+  const debug = options.debug === true || new URLSearchParams(window.location?.search ?? '').get('oaiq_debug') === '1'
+  p.oaiq('init', debug ? { pixelId: id, debug: true } : { pixelId: id })
+}
+
 // ── Which tag is allowed and running ────────────────────────────────────
 
 const NEEDS: Record<string, keyof Choice> = {
@@ -397,6 +414,7 @@ const NEEDS: Record<string, keyof Choice> = {
   x: 'marketing',
   tiktok: 'marketing',
   reddit: 'marketing',
+  openai: 'marketing',
 }
 
 /**
@@ -436,6 +454,7 @@ function apply(): void {
     else if (t.type === 'x') loadX(t.id)
     else if (t.type === 'tiktok') loadTikTok(t.id)
     else if (t.type === 'reddit') loadReddit(t.id)
+    else if (t.type === 'openai') loadOpenAI(t.id)
     else continue
     loaded.add(k)
   }
@@ -495,11 +514,11 @@ export function start(o: TagOptions = {}): () => void {
     const base = (o.base ?? 'https://api.hanzo.ai').replace(/\/$/, '')
     const q = new URLSearchParams()
     const host = o.host ?? window.location.hostname
-    const key = o.key ?? siteKey(host)
+    const key = o.key ?? keyFor(host)
     if (key) q.set('key', key)
     q.set('host', host)
     const answer = (list: BrowserTag[]) => {
-      tags = list
+      tags = withHanzoDefaults(list, host, o.key, key)
       configAnswered = true
       apply()
     }
@@ -529,6 +548,15 @@ export function start(o: TagOptions = {}): () => void {
     removeEventListener(CONSENT_EVENT, apply)
     removeEventListener('pagehide', pagehide)
   }
+}
+
+const HANZO_KEYS: ReadonlySet<string> = new Set([ORG_KEY.hanzo, ...Object.values(SITE_KEY)])
+
+function withHanzoDefaults(list: BrowserTag[], host: string, explicitKey: string | undefined, resolvedKey: string | undefined): BrowserTag[] {
+  const isHanzo = (!explicitKey && orgOf(host) === 'hanzo') || (resolvedKey !== undefined && HANZO_KEYS.has(resolvedKey))
+  if (!isHanzo || audience !== 'person') return list
+  if (list.some((t) => t.platform === 'openai' || t.type === 'openai')) return list
+  return [...list, { platform: 'openai', type: 'openai', id: HANZO_OPENAI_PIXEL_ID }]
 }
 
 /** The site's token, or none: a getter that throws asks as a stranger, never breaks the page. */
@@ -601,6 +629,20 @@ function shape(platform: 'meta' | 'tiktok' | 'x' | 'reddit', p: Record<string, u
   return out
 }
 
+function shapeOpenAI(eventName: string, p: Record<string, unknown>, id: string): Record<string, unknown> {
+  const out: Record<string, unknown> = {}
+  if (eventName === 'checkout_started') out.type = 'contents'
+  if (typeof p.value === 'number') {
+    out.value = p.value
+    out.currency = typeof p.currency === 'string' ? p.currency : 'USD'
+  } else if (typeof p.currency === 'string') {
+    out.currency = p.currency
+  }
+  if (typeof p.search_string === 'string' && p.search_string) out.search_string = p.search_string
+  if (id) out.event_id = id
+  return out
+}
+
 /** A test order states no amount: nothing sent for it can be summed into revenue. */
 function unpriced(p: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = { ...p, value: 0 }
@@ -621,11 +663,11 @@ export function mirror(name: string, params: Record<string, unknown>, id: string
   const test = params.test === true
   if (test) params = unpriced(params)
   const transaction = typeof params.order_id === 'string' ? { transaction_id: params.order_id } : {}
-  // Meta's track reaches all of its pixels on the page: it is called once.
-  let once = false
+  // Global pixel dispatchers reach all initialized pixels on the page: each is called once.
+  const globals = new Set<string>()
   for (const t of tags) {
-    if (!on.has(t.type) || !allowed(t, c) || (t.type === 'meta' && once)) continue
-    if (t.type === 'meta') once = true
+    if (!on.has(t.type) || !allowed(t, c) || globals.has(t.type)) continue
+    if (t.type === 'meta' || t.type === 'reddit' || t.type === 'openai') globals.add(t.type)
     const rule = t.events?.[name]
     if (t.type === 'ga') {
       for (const n of ga4) {
@@ -651,6 +693,10 @@ export function mirror(name: string, params: Record<string, unknown>, id: string
     } else if (t.type === 'reddit') {
       for (const n of namesOn(name, 'reddit')) {
         p.rdt?.('track', n, { ...shape('reddit', params), conversionId: id })
+      }
+    } else if (t.type === 'openai') {
+      for (const n of namesOn(name, 'openai')) {
+        p.oaiq?.('measure', n, shapeOpenAI(n, params, id))
       }
     }
   }

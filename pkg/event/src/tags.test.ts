@@ -796,3 +796,96 @@ describe('Reddit pixel & CAPI deduplication', () => {
     ])
   })
 })
+
+describe('OpenAI oaiq pixel & CAPI deduplication', () => {
+  it('loads oaiq.min.js under Marketing consent, queues arguments on oaiq.q, and measures checkout_started with { type: "contents" }', async () => {
+    const b = browser('America/New_York', accepted())
+    ;(g.window as { location: Record<string, unknown> }).location.search = '?oppref=opp_789'
+    put('fetch', async (url: string) => {
+      b.requests.push(url)
+      return {
+        ok: true,
+        json: async () => ({
+          tags: [{ platform: 'openai', type: 'openai', id: 'TXKHZduRxZZGp4B1ysfiwm' }],
+        }),
+      }
+    })
+    const { startTags, track } = await import('./index')
+    const captured: Array<{ name: string; props: Record<string, unknown> }> = []
+    startTags({ key: 'pk-x' })
+    await tick()
+
+    expect(b.scripts).toEqual(['https://bzrcdn.openai.com/sdk/oaiq.min.js'])
+    const w = g.window as unknown as { oaiq: ((...a: unknown[]) => void) & { q: IArguments[] } }
+    const oaiqCalls = () => w.oaiq.q.map((a) => Array.from(a))
+    expect(oaiqCalls()).toEqual([['init', { pixelId: 'TXKHZduRxZZGp4B1ysfiwm' }]])
+
+    const stream = { capture: (name: string, props: Record<string, unknown>) => captured.push({ name, props }) } as never
+    track(stream, 'checkout_started', {})
+    track(stream, 'checkout_started', { value: 20, currency: 'USD' })
+    track(stream, 'order_completed', { order_id: 'ord-42', value: 49, currency: 'USD' })
+    track(stream, 'signup_completed', {})
+    track(stream, 'sales_contacted', {})
+    track(stream, 'plan_selected', { value: 20, currency: 'USD' })
+    track(stream, 'pricing_viewed', {})
+    await tick()
+
+    expect(captured[0].props.oppref).toBe('opp_789')
+    expect(captured[0].props.tags).toBe('openai')
+    const ids = captured.map((c) => c.props.event_id as string)
+    expect(oaiqCalls().slice(1)).toEqual([
+      ['measure', 'checkout_started', { type: 'contents', event_id: ids[0] }],
+      ['measure', 'checkout_started', { type: 'contents', value: 20, currency: 'USD', event_id: ids[1] }],
+      ['measure', 'purchase', { value: 49, currency: 'USD', event_id: ids[2] }],
+      ['measure', 'sign_up', { event_id: ids[3] }],
+      ['measure', 'lead', { event_id: ids[4] }],
+      ['measure', 'add_to_cart', { value: 20, currency: 'USD', event_id: ids[5] }],
+      ['measure', 'view_content', { event_id: ids[6] }],
+    ])
+  })
+
+  it('passes debug: true to oaiq init when debug option is set', async () => {
+    const b = browser('America/New_York', accepted())
+    put('fetch', async (url: string) => {
+      b.requests.push(url)
+      return { ok: true, json: async () => ({ tags: [{ platform: 'openai', type: 'openai', id: 'TXKHZduRxZZGp4B1ysfiwm' }] }) }
+    })
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x', debug: true })
+    await tick()
+    const w = g.window as unknown as { oaiq: { q: IArguments[] } }
+    expect(Array.from(w.oaiq.q[0])).toEqual(['init', { pixelId: 'TXKHZduRxZZGp4B1ysfiwm', debug: true }])
+  })
+
+  it('provisions TXKHZduRxZZGp4B1ysfiwm by default on first-party Hanzo hosts for person visitors without affecting other orgs', async () => {
+    for (const host of ['hanzo.ai', 'pay.hanzo.ai', 'hanzo.app', 'studio.hanzo.ai']) {
+      vi.resetModules()
+      const b = browser('America/New_York', accepted())
+      ;(g.window as { location: { hostname: string; href: string } }).location.hostname = host
+      ;(g.window as { location: { hostname: string; href: string } }).location.href = `https://${host}/`
+      put('fetch', async (url: string) => {
+        b.requests.push(url)
+        return { ok: true, json: async () => ({ tags: [{ platform: 'ga4', type: 'ga', id: 'G-RBVVVLFZDR' }], audience: 'person' }) }
+      })
+      const { startTags } = await import('./index')
+      startTags()
+      await tick()
+      expect(b.scripts, host).toContain('https://bzrcdn.openai.com/sdk/oaiq.min.js')
+      const w = g.window as unknown as { oaiq: { q: IArguments[] } }
+      expect(w.oaiq.q.map((a) => Array.from(a)), host).toEqual([['init', { pixelId: 'TXKHZduRxZZGp4B1ysfiwm' }]])
+    }
+
+    vi.resetModules()
+    const lux = browser('America/New_York', accepted())
+    ;(g.window as { location: { hostname: string; href: string } }).location.hostname = 'lux.network'
+    ;(g.window as { location: { hostname: string; href: string } }).location.href = 'https://lux.network/'
+    put('fetch', async (url: string) => {
+      lux.requests.push(url)
+      return { ok: true, json: async () => ({ tags: [], audience: 'person' }) }
+    })
+    const { startTags } = await import('./index')
+    startTags()
+    await tick()
+    expect(lux.scripts).toEqual([])
+  })
+})

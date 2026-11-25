@@ -94,6 +94,30 @@ test('sign_up, begin_checkout, purchase and lead reach every ad platform', () =>
     ['order_completed', 'purchase'], ['sales_contacted', 'lead']]) {
     for (const p of ['linkedin', 'x']) assert.deepEqual(namesOn(n, p), [kinds], `${n} on ${p}`)
     assert.ok(namesOn(n, 'tiktok').length, `${n} on tiktok`)
+    assert.ok(namesOn(n, 'reddit').length, `${n} on reddit`)
+    assert.ok(namesOn(n, 'openai').length, `${n} on openai`)
+  }
+})
+
+test('OpenAI and Reddit funnel mappings match platform event names', () => {
+  for (const [n, oai, rdt] of [
+    ['pricing_viewed', 'view_content', 'ViewContent'],
+    ['checkout_viewed', 'view_content', 'ViewContent'],
+    ['product_viewed', 'view_content', 'ViewContent'],
+    ['search_performed', 'search', 'Search'],
+    ['plan_selected', 'add_to_cart', 'AddToCart'],
+    ['checkout_started', 'checkout_started', 'AddToCart'],
+    ['signup_submitted', 'lead', 'Lead'],
+    ['sales_contacted', 'lead', 'Lead'],
+    ['waitlist_joined', 'lead', 'Lead'],
+    ['newsletter_subscribed', 'lead', 'Lead'],
+    ['beta_submitted', 'lead', 'Lead'],
+    ['research_access_applied', 'lead', 'Lead'],
+    ['signup_completed', 'sign_up', 'SignUp'],
+    ['order_completed', 'purchase', 'Purchase'],
+  ]) {
+    assert.deepEqual(namesOn(n, 'openai'), [oai], `${n} on openai`)
+    assert.deepEqual(namesOn(n, 'reddit'), [rdt], `${n} on reddit`)
   }
 })
 

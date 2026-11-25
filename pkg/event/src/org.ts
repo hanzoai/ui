@@ -129,6 +129,9 @@ export const SITE_KEY: Readonly<Record<string, string>> = Object.freeze({
   'cloud.hanzo.ai': 'pk-RAfEGHPoNdCEU9fnA_cPd_Xo9Tci44rlYQV9xuJ1Ob0',
 })
 
+/** Hanzo's first-party OpenAI ad measurement pixel ID. */
+export const HANZO_OPENAI_PIXEL_ID = 'TXKHZduRxZZGp4B1ysfiwm'
+
 /** The project key of the site a host is: its own entry, `www.` stripped, a `*.hanzo.app` site under hanzo.app. */
 export function siteKey(host: string): string | undefined {
   const h = normalize(host).replace(/^www\./, '')

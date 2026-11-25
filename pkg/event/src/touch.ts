@@ -19,7 +19,7 @@
 import type { Choice } from './consent'
 import { get, set } from './cookie'
 
-export const CLICK_IDS = ['gclid', 'gbraid', 'wbraid', 'fbclid', 'li_fat_id', 'twclid', 'ttclid', 'rdt_cid'] as const
+export const CLICK_IDS = ['gclid', 'gbraid', 'wbraid', 'fbclid', 'li_fat_id', 'twclid', 'ttclid', 'rdt_cid', 'oppref'] as const
 
 const DAYS = 90
 const now = () => Math.floor(Date.now() / 1000)

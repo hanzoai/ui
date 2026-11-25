@@ -9,14 +9,27 @@
 import { writeFileSync } from 'node:fs'
 import { SCHEMA, NAMES, RESERVED, FUNNELS, PRODUCTS, PLATFORMS } from '../dist/index.js'
 
-writeFileSync(
-  new URL('../dist/catalog.json', import.meta.url),
-  JSON.stringify(
-    { version: 3, names: NAMES, reserved: RESERVED, schema: SCHEMA, platforms: PLATFORMS, products: PRODUCTS, funnels: FUNNELS },
-    null,
-    2,
-  ) + '\n',
-)
+const mapRows = (obj) =>
+  '{\n' +
+  Object.entries(obj)
+    .map(([k, v]) => `    ${JSON.stringify(k)}: ${JSON.stringify(v)}`)
+    .join(',\n') +
+  '\n  }'
+
+const body = [
+  '{',
+  `  "version": 3,`,
+  `  "names": ${JSON.stringify(NAMES)},`,
+  `  "reserved": ${JSON.stringify(RESERVED)},`,
+  `  "schema": ${mapRows(SCHEMA)},`,
+  `  "platforms": ${mapRows(PLATFORMS)},`,
+  `  "products": ${JSON.stringify(PRODUCTS)},`,
+  `  "funnels": ${mapRows(FUNNELS)}`,
+  '}',
+  '',
+].join('\n')
+
+writeFileSync(new URL('../dist/catalog.json', import.meta.url), body)
 console.log(
   `catalog.json — ${NAMES.length} events, ${RESERVED.length} reserved, ${Object.keys(FUNNELS).length} funnels`,
 )
