@@ -533,6 +533,58 @@ describe('error capture', () => {
     expect(tx.sent).toHaveLength(1)
     expect(tx.all[0].error?.message).toBe('x')
   })
+
+  it('never captures errors originating from /v1/event or ingest_key', () => {
+    const a = mk()
+    a.captureError(new Error('POST https://api.hanzo.ai/v1/event?ingest_key=pk-abc failed'))
+    a.captureError(new Error('Failed to fetch /events?ingestkey=pk-abc'))
+    const withStack = new Error('NetworkError')
+    withStack.stack = 'Error: NetworkError\n    at https://api.hanzo.ai/v1/event/replay:1:1'
+    a.captureError(withStack)
+    expect(tx.sent).toHaveLength(0)
+  })
+
+  it('dedupes repeating errors and caps distinct error storms', () => {
+    const a = mk()
+    for (let i = 0; i < 100; i++) {
+      a.captureError(new Error(`Request failed at ${1795463940 + i}`))
+    }
+    expect(tx.all).toHaveLength(1)
+
+    for (let i = 0; i < 50; i++) {
+      a.captureError(new Error(`Unique failure alpha_${String.fromCharCode(65 + (i % 26))}_${'z'.repeat(i + 1)}`))
+    }
+    expect(tx.all.length).toBeLessThanOrEqual(10)
+  })
+
+  it('enforces a strict 3-error ceiling on /auth/callback', () => {
+    const g = globalThis as Record<string, unknown>
+    const hadWindow = 'window' in g
+    const hadDocument = 'document' in g
+    g.window = {
+      location: {
+        href: 'https://hanzo.app/auth/callback?code=c1&state=s1',
+        protocol: 'https:',
+        hostname: 'hanzo.app',
+        origin: 'https://hanzo.app',
+        pathname: '/auth/callback',
+        search: '?code=c1&state=s1',
+      },
+      innerWidth: 1440,
+      addEventListener: () => {},
+    }
+    g.document = accepted({ referrer: '', visibilityState: 'visible' })
+    try {
+      const a = mk()
+      for (let i = 0; i < 20; i++) {
+        a.captureError(new Error(`Callback failure ${'x'.repeat(i + 1)}`))
+      }
+      expect(tx.all.filter((e) => e.type === 'error')).toHaveLength(3)
+    } finally {
+      if (!hadWindow) delete g.window
+      if (!hadDocument) delete g.document
+    }
+  })
 })
 
 describe('a driven browser', () => {

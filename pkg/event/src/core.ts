@@ -192,8 +192,99 @@ function serializeBatch(batch: WireEvent[]): string | null {
  *  `contentType` names the FETCH request's Content-Type (the error plane sets the
  *  envelope type there, and keeps the header carrier with it). The beacon body is
  *  always BEACON_CONTENT_TYPE: its type is a CORS class, not a payload
- *  description, and a beacon that is not a simple request is never sent. */
+ *  description, and a beacon that is not a simple request is never sent.
+ *
+ *  Storm protection: caps sends per sliding window and opens a circuit breaker
+ *  on non-2xx responses (401/403/429 immediately, 5xx/network after consecutive
+ *  failures) so a broken page or rejected key never floods /v1/event. */
+const SEND_WINDOW_MS = 60_000
+const MAX_SENDS_PER_WINDOW = 20
+const AUTH_BACKOFF_MS = 5 * 60_000
+const BASE_BACKOFF_MS = 15_000
+const MAX_BACKOFF_MS = 5 * 60_000
+const FAILURE_THRESHOLD = 2
+
+const ERROR_DEDUP_MS = 60_000
+const MAX_ERRORS_PER_WINDOW = 10
+const MAX_ERRORS_ON_CALLBACK = 3
+const INGEST_ERROR_RE = /\/v1\/event(?:\/|\?|$|\b)|[?&]ingest_?key=|\/events\?ingest_?key=/i
+
+function isIngestError(ex: Exception): boolean {
+  return INGEST_ERROR_RE.test(ex.message) || (ex.stack !== undefined && INGEST_ERROR_RE.test(ex.stack))
+}
+
+function errorSignature(ex: Exception): string {
+  const normalized = ex.message
+    .replace(/\b[0-9a-f]{8,}\b/gi, '#')
+    .replace(/\d+/g, '#')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 160)
+  const top = ex.frames?.[0]
+  const loc = top ? `${top.file ?? ''}:${top.function ?? ''}` : ''
+  return `${ex.type}|${normalized}|${loc}`
+}
+
+function parseRetryAfterMs(res: { headers?: { get?: (name: string) => string | null } }): number | null {
+  try {
+    const raw = res.headers?.get?.('retry-after')
+    if (!raw) return null
+    const seconds = Number(raw)
+    if (Number.isFinite(seconds) && seconds > 0) {
+      return Math.min(Math.max(seconds * 1000, 10_000), MAX_BACKOFF_MS)
+    }
+    const at = Date.parse(raw)
+    if (Number.isFinite(at)) {
+      const delta = at - Date.now()
+      if (delta > 0) return Math.min(Math.max(delta, 10_000), MAX_BACKOFF_MS)
+    }
+  } catch {
+    /* ignore malformed header */
+  }
+  return null
+}
+
 class DefaultTransport implements Transport {
+  private sendTimes: number[] = []
+  private blockedUntil = 0
+  private consecutiveFailures = 0
+
+  private allowSend(): boolean {
+    const now = Date.now()
+    if (now < this.blockedUntil) return false
+    const cutoff = now - SEND_WINDOW_MS
+    while (this.sendTimes.length > 0 && this.sendTimes[0] < cutoff) {
+      this.sendTimes.shift()
+    }
+    if (this.sendTimes.length >= MAX_SENDS_PER_WINDOW) return false
+    this.sendTimes.push(now)
+    return true
+  }
+
+  private onFailure(status?: number, retryAfterMs?: number | null): void {
+    this.consecutiveFailures++
+    const now = Date.now()
+    if (status === 401 || status === 403) {
+      this.blockedUntil = Math.max(this.blockedUntil, now + AUTH_BACKOFF_MS)
+      return
+    }
+    if (status === 429) {
+      const delay = retryAfterMs ?? Math.min(BASE_BACKOFF_MS * 2 ** (this.consecutiveFailures - 1), MAX_BACKOFF_MS)
+      this.blockedUntil = Math.max(this.blockedUntil, now + delay)
+      return
+    }
+    if (this.consecutiveFailures >= FAILURE_THRESHOLD) {
+      const exp = this.consecutiveFailures - FAILURE_THRESHOLD
+      const delay = Math.min(BASE_BACKOFF_MS * 2 ** exp, MAX_BACKOFF_MS)
+      this.blockedUntil = Math.max(this.blockedUntil, now + delay)
+    }
+  }
+
+  private onSuccess(): void {
+    this.consecutiveFailures = 0
+    this.blockedUntil = 0
+  }
+
   send(
     url: string,
     body: string,
@@ -205,6 +296,10 @@ class DefaultTransport implements Transport {
       debug?: boolean
     },
   ): void {
+    if (!this.allowSend()) {
+      if (opts.debug) console.warn('[event] ingest throttled or circuit open', url.split('?')[0])
+      return
+    }
     if (opts.beacon && isBrowser() && typeof navigator.sendBeacon === 'function') {
       const beaconUrl = opts.ingestKey ? appendQuery(url, 'ingest_key', opts.ingestKey) : url
       try {
@@ -245,15 +340,21 @@ class DefaultTransport implements Transport {
       credentials: simple ? 'omit' : 'include',
     })
       .then((res) => {
+        if (res.ok) {
+          this.onSuccess()
+          return
+        }
+        this.onFailure(res.status, parseRetryAfterMs(res))
         // Telemetry loss never throws into the app — but silence is how this
         // client lost the fleet's errors in the first place. Under `debug`, say
         // so. A rejected ingest (the CORS allowlist 403s non-production origins,
         // so local dev NEVER reports) is otherwise indistinguishable from success.
-        if (!res.ok && opts.debug) {
+        if (opts.debug) {
           console.warn('[event] ingest rejected', res.status, url.split('?')[0])
         }
       })
       .catch((e: unknown) => {
+        this.onFailure()
         if (opts.debug) console.warn('[event] ingest failed', url.split('?')[0], e)
       })
   }
@@ -277,6 +378,10 @@ export class Analytics {
   private counted?: string
   /** Guards against an error thrown *inside* the error path re-entering it. */
   private reentrant = false
+  /** Dedupes repeating errors within ERROR_DEDUP_MS so error loops never flood ingest. */
+  private seenErrors = new Map<string, number>()
+  /** Sliding window of error captures to cap distinct error bursts. */
+  private errorTimes: number[] = []
 
   constructor(config: AnalyticsConfig) {
     this.cfg = {
@@ -353,6 +458,8 @@ export class Analytics {
     // Unhandled errors and rejected promises are reported as type:'error' events.
     if (this.cfg.captureErrors) {
       window.addEventListener('error', (e: ErrorEvent) => {
+        // Resource-load failures fire non-Error events targeting the element.
+        if (e.target && e.target !== window) return
         this.captureError(e.error ?? e.message, { handled: false })
       })
       window.addEventListener('unhandledrejection', (e: PromiseRejectionEvent) => {
@@ -471,11 +578,33 @@ export class Analytics {
    *  back into the app. */
   captureError(err: unknown, context?: CaptureErrorOptions): void {
     // A failure inside the error path must not recurse through the global handlers.
-    if (this.reentrant) return
+    if (!this.cfg.enabled || this.reentrant) return
     this.reentrant = true
     try {
       const handled = context?.handled ?? true
       const ex = normalizeError(err)
+      // Never capture or re-emit errors originating from the event ingest endpoint itself.
+      if (isIngestError(ex)) return
+      const now = Date.now()
+      const sig = errorSignature(ex)
+      const prev = this.seenErrors.get(sig)
+      if (prev !== undefined && now - prev < ERROR_DEDUP_MS) return
+      const cutoff = now - ERROR_DEDUP_MS
+      while (this.errorTimes.length > 0 && this.errorTimes[0] < cutoff) {
+        this.errorTimes.shift()
+      }
+      const cap =
+        isBrowser() && isAuthCallback(routeOf(window.location.pathname))
+          ? MAX_ERRORS_ON_CALLBACK
+          : MAX_ERRORS_PER_WINDOW
+      if (this.errorTimes.length >= cap) return
+      if (this.seenErrors.size >= 64) {
+        for (const [k, t] of this.seenErrors) {
+          if (t < cutoff) this.seenErrors.delete(k)
+        }
+      }
+      this.seenErrors.set(sig, now)
+      this.errorTimes.push(now)
       ex.handled = handled
       this.enqueue('error', undefined, {
         error: ex,
