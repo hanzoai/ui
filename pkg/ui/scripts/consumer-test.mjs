@@ -10,12 +10,13 @@
 // `pnpm pack` runs `prepack`, which builds — so the tarball is always the
 // current tree and there is no way to test a stale one by accident.
 import { execFileSync, spawn } from 'node:child_process'
-import { cpSync, mkdtempSync, readdirSync, rmSync } from 'node:fs'
+import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const UI = dirname(dirname(fileURLToPath(import.meta.url)))
+const PKGS = dirname(UI)
 const PORT = Number(process.env.CONSUMER_PORT ?? 4390)
 // The address is STATED, not inferred — see the `--host 127.0.0.1` below, which
 // is the whole reason this gate can go green. Keep the three literals (here, the
@@ -25,12 +26,47 @@ const URL_ = `http://127.0.0.1:${PORT}`
 const run = (cmd, args, cwd) =>
   execFileSync(cmd, args, { cwd, stdio: 'inherit', env: { ...process.env, npm_config_yes: 'true' } })
 
+/** Pack every `workspace:` sibling @hanzo/ui depends on (transitively) into `app`
+ *  and return an npm `overrides` map so unpublished sibling versions resolve locally. */
+function packWorkspaceDeps(dest) {
+  const byName = new Map()
+  for (const entry of readdirSync(PKGS, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue
+    const dir = join(PKGS, entry.name)
+    const pj = join(dir, 'package.json')
+    if (!existsSync(pj)) continue
+    const manifest = JSON.parse(readFileSync(pj, 'utf8'))
+    if (manifest.name) byName.set(manifest.name, { dir, manifest })
+  }
+  const overrides = {}
+  const visited = new Set()
+  const visit = (manifest) => {
+    for (const [dep, range] of Object.entries(manifest.dependencies ?? {})) {
+      if (typeof range !== 'string' || !range.startsWith('workspace:') || visited.has(dep)) continue
+      const sibling = byName.get(dep)
+      if (!sibling) continue
+      visited.add(dep)
+      visit(sibling.manifest)
+      const before = new Set(readdirSync(dest))
+      console.log(`· packing workspace dep ${dep}`)
+      run('pnpm', ['pack', '--pack-destination', dest], sibling.dir)
+      const tgz = readdirSync(dest).find((f) => f.endsWith('.tgz') && !before.has(f))
+      if (!tgz) throw new Error(`pnpm pack produced no tarball for ${dep}`)
+      overrides[dep] = `file:./${tgz}`
+    }
+  }
+  visit(JSON.parse(readFileSync(join(UI, 'package.json'), 'utf8')))
+  return overrides
+}
+
 const app = mkdtempSync(join(tmpdir(), 'hanzo-ui-consumer-'))
 let server
 try {
+  const workspaceOverrides = packWorkspaceDeps(app)
   console.log(`\n· packing @hanzo/ui`)
+  const beforeUi = new Set(readdirSync(app))
   run('pnpm', ['pack', '--pack-destination', app], UI)
-  const tgz = readdirSync(app).find((f) => f.endsWith('.tgz'))
+  const tgz = readdirSync(app).find((f) => f.endsWith('.tgz') && !beforeUi.has(f))
   if (!tgz) throw new Error('pnpm pack produced no tarball')
 
   console.log(`· installing ${tgz} into ${app}`)
@@ -41,6 +77,12 @@ try {
   // anything — the same failure guard-publish.mjs exists to keep off the
   // registry.
   cpSync(join(UI, 'test/consumer'), app, { recursive: true })
+  if (Object.keys(workspaceOverrides).length) {
+    const manifestPath = join(app, 'package.json')
+    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'))
+    manifest.overrides = { ...(manifest.overrides ?? {}), ...workspaceOverrides }
+    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`)
+  }
   // Errors only, not --silent, which also swallows the reason a failed install gives.
   run('npm', ['i', '--no-audit', '--no-fund', '--loglevel=error'], app)
   run('npm', ['i', '--no-audit', '--no-fund', '--loglevel=error', `./${tgz}`], app)
