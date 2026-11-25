@@ -47,6 +47,11 @@ const motion = readFileSync(join(UI, 'src/styles/motion.css'), 'utf8')
 // for it. One source file, two entry points.
 const lang = readFileSync(join(UI, 'src/lang.css'), 'utf8')
 
+// Native CSS Grid responsive rules — its own entry point (`@hanzo/ui/grid.css`)
+// and part of this sheet so responsive `cols={{ base, md, lg }}` and
+// `SplitGrid collapseAt` work automatically with theme.css / styles.css.
+const grid = readFileSync(join(UI, 'src/grid/grid.css'), 'utf8')
+
 /**
  * Drop design's @font-face blocks. FONT DELIVERY HAS ONE OWNER AND IT IS NOT US.
  *
@@ -138,7 +143,7 @@ const data = lightAlias(readFileSync(require.resolve('@hanzo/tokens/css/data'), 
 // in `hsl(...)` — the shadcn-era idiom, where tokens were bare `H S% L%` triples
 // — is invalid at computed-value time, and the browser drops the WHOLE
 // declaration without a word. One grep is cheaper than finding it on a page.
-const composed = `${design}\n${fill}\n${data}\n${ours}\n${glass}\n${motion}\n${lang}`
+const composed = `${design}\n${fill}\n${data}\n${ours}\n${glass}\n${motion}\n${lang}\n${grid}`
 const bad = [...composed.matchAll(/\b(hsl|rgb|oklch)a?\(\s*var\(/g)].map((m) => m[0])
 if (bad.length) {
   throw new Error(
@@ -168,6 +173,7 @@ mkdirSync(join(UI, 'dist'), { recursive: true })
 writeFileSync(join(UI, 'dist/theme.css'), composed)
 writeFileSync(join(UI, 'dist/glass.css'), glass)
 writeFileSync(join(UI, 'dist/lang.css'), lang)
+writeFileSync(join(UI, 'dist/grid.css'), grid)
 
 // design's exports map does not expose ./package.json, so the version is
 // read from the nearest package.json above the resolved sheet.

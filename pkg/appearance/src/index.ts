@@ -29,6 +29,46 @@
  */
 export { Appearance, useAppearance, useScheme, TYPE_STEPS, RATIO_STEPS, ARABICS, ACCENTS, HIGHLIGHTS, CONTRASTS, BACKGROUNDS } from './Appearance'
 export { read, readLayers, write, apply, paint, dark, current, style, bootScript, keyFor, companion, CHANGE, COMPANIONS, DEFAULT, KEY, PAINTED, type Arabic, type Contrast, type Preference, type Scheme, type At } from './state'
+export {
+  BUILT_IN_THEME_IDS,
+  BUILT_IN_THEMES,
+  BUILT_IN_THEMES_BY_ID,
+  CLAY_THEME,
+  EMBER_THEME,
+  GROVE_THEME,
+  IRIS_THEME,
+  LEGACY_THEME_ALIASES,
+  LIGHT_THEME,
+  OCEAN_THEME,
+  PALETTES,
+  RESERVED_THEME_IDS,
+  THEME_COLOR_ROLES,
+  ZEN_THEME,
+  colorLuminance,
+  computeContrastForeground,
+  computeThemeVars,
+  fromThemeConfig,
+  getBuiltInTheme,
+  getDefaultThemeColors,
+  getThemeColorsForAppearance,
+  isBuiltInThemeId,
+  isThemeMode,
+  paletteVars,
+  resolvePalette,
+  resolveThemeId,
+  resolveThemeState,
+  roleToCssVar,
+  toThemeConfig,
+  type AppearanceConfig,
+  type BuiltInThemeId,
+  type PaletteSummary,
+  type ResolvedThemeState,
+  type ThemeAppearance,
+  type ThemeColorRole,
+  type ThemeColors,
+  type ThemeDefinition,
+  type ThemeMode,
+} from './theme'
 export { get, load, put, save, type Account } from './account'
 export { COMPOSING, composing, loadComposing, readComposing, saveComposing, useComposing, writeComposing, type Composing } from './composing'
 export { resolve, layerFor, isInherited, LAYERS, type Layer, type Layers, type Resolved, type Scope } from './scope'

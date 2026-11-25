@@ -12,20 +12,60 @@
  */
 import { vars, type Arabic, type Scheme } from '@hanzo/design'
 import { resolve, type Contrast, type Layers, type Preference, type Scope } from './scope'
+import {
+  colorLuminance,
+  getBuiltInTheme,
+  paletteVars,
+  resolvePalette,
+} from './theme'
 
 export type { Arabic, Contrast, Preference, Scheme }
+export {
+  BUILT_IN_THEME_IDS,
+  BUILT_IN_THEMES,
+  BUILT_IN_THEMES_BY_ID,
+  CLAY_THEME,
+  EMBER_THEME,
+  GROVE_THEME,
+  IRIS_THEME,
+  LEGACY_THEME_ALIASES,
+  LIGHT_THEME,
+  OCEAN_THEME,
+  PALETTES,
+  RESERVED_THEME_IDS,
+  THEME_COLOR_ROLES,
+  ZEN_THEME,
+  colorLuminance,
+  computeContrastForeground,
+  computeThemeVars,
+  fromThemeConfig,
+  getBuiltInTheme,
+  getDefaultThemeColors,
+  getThemeColorsForAppearance,
+  isBuiltInThemeId,
+  isThemeMode,
+  paletteVars,
+  resolvePalette,
+  resolveThemeId,
+  resolveThemeState,
+  roleToCssVar,
+  toThemeConfig,
+  type AppearanceConfig,
+  type BuiltInThemeId,
+  type PaletteSummary,
+  type ResolvedThemeState,
+  type ThemeAppearance,
+  type ThemeColorRole,
+  type ThemeColors,
+  type ThemeDefinition,
+  type ThemeMode,
+} from './theme'
 
 const COLOR_RE = /^(#[0-9a-fA-F]{3,8}|(?:rgb|hsl|oklch|oklab|lab|lch)a?\(\s*[-+0-9.%deg\s,/]+\)|[a-zA-Z]{3,20})$/
 
 function groundInk(c: string): string {
-  const m = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.exec(c)
-  if (!m) return '#fafafa'
-  const h = m[1].length === 3 ? m[1].replace(/./g, '$&$&') : m[1].slice(0, 6)
-  const [r, g, b] = [0, 2, 4].map((i) => {
-    const v = parseInt(h.slice(i, i + 2), 16) / 255
-    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
-  })
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.179 ? '#09090b' : '#fafafa'
+  const lum = colorLuminance(c)
+  return lum !== null && lum > 0.179 ? '#09090b' : '#fafafa'
 }
 
 const CONTRAST_PRESETS: Record<Contrast, Record<string, string>> = {
@@ -96,7 +136,11 @@ function effectiveScheme(p: Preference): Scheme | undefined {
   if (p.contrast && p.contrast in CONTRAST_PRESETS) {
     return 'dark'
   }
-  return p.theme
+  if (p.theme) return p.theme
+  if (p.palette) {
+    return getBuiltInTheme(p.palette)?.appearance
+  }
+  return undefined
 }
 
 /**
@@ -131,17 +175,25 @@ export function purple(v: string | undefined): boolean {
   return band(n(2, 360), 272, 340) && n(1, 1) > 0.04
 }
 
-/** The preference with any purple accent or highlight left out. */
+/** The preference with any purple accent/highlight dropped and legacy palette aliases migrated. */
 function tame(p: Preference): Preference {
   const out: Preference = { ...p }
   if (purple(out.accent)) delete out.accent
   if (purple(out.highlight)) delete out.highlight
+  if (out.palette !== undefined) {
+    const canonical = resolvePalette(out.palette)
+    if (canonical) out.palette = canonical
+    else delete out.palette
+  }
   return out
 }
 
 function varsFor(raw: Preference): Record<string, string> {
   const p = tame(raw)
-  const out: Record<string, string> = { ...vars(p) }
+  const out: Record<string, string> = {
+    ...(p.palette ? paletteVars(p.palette, p.theme) : {}),
+    ...vars(p),
+  }
   if (p.contrast && p.contrast in CONTRAST_PRESETS) {
     Object.assign(out, CONTRAST_PRESETS[p.contrast])
   }
@@ -262,7 +314,9 @@ export function read({ scope = 'everywhere', org, store = safeStore() }: At = {}
     // Only known axes survive. A stored key we do not recognise is either from a
     // future version or from someone editing localStorage, and neither should
     // reach a stylesheet.
+    const palette = typeof p.palette === 'string' ? resolvePalette(p.palette) : undefined
     return {
+      ...(palette ? { palette } : {}),
       ...(typeof p.type === 'number' && Number.isFinite(p.type) ? { type: p.type } : {}),
       ...(typeof p.ratio === 'number' && Number.isFinite(p.ratio) ? { ratio: p.ratio } : {}),
       ...(typeof p.modular === 'number' && Number.isFinite(p.modular) ? { modular: p.modular } : {}),
@@ -346,12 +400,22 @@ export function apply(
     if (v) root.style.setProperty(name, v)
     else root.style.removeProperty(name)
   }
+  const palette = resolvePalette(p.palette)
+  if (palette) root.setAttribute('data-theme', palette)
+  else if (root.hasAttribute('data-theme')) root.removeAttribute('data-theme')
   const scheme = effectiveScheme(p)
   paint(scheme, root)
   if (isBrowser() && root === document.documentElement) {
     follow(scheme)
     try {
-      store?.setItem(PAINTED, JSON.stringify({ vars: next, ...(scheme ? { theme: scheme } : {}) }))
+      store?.setItem(
+        PAINTED,
+        JSON.stringify({
+          vars: next,
+          ...(scheme ? { theme: scheme } : {}),
+          ...(palette ? { palette } : {}),
+        }),
+      )
     } catch {
       // A full or blocked store costs the next load its head start, nothing else.
     }
@@ -421,6 +485,7 @@ function follow(theme: Scheme | undefined): void {
  */
 export const KNOBS: readonly string[] = Object.keys(
   varsFor({
+    palette: 'zen',
     type: 1,
     ratio: 1,
     modular: 1.25,
@@ -481,12 +546,19 @@ export function style(p: Preference): string {
  * `vars()`, because a boot script cannot await anything.
  */
 export function bootScript({ base }: { base?: Preference } = {}): string {
-  const seed = JSON.stringify({ vars: varsFor(base ?? {}), ...(base?.theme ? { theme: base.theme } : {}) })
+  const palette = resolvePalette(base?.palette)
+  const scheme = effectiveScheme(base ?? {})
+  const seed = JSON.stringify({
+    vars: varsFor(base ?? {}),
+    ...(scheme ? { theme: scheme } : {}),
+    ...(palette ? { palette } : {}),
+  })
   return (
     `(function(){try{var d=document.documentElement,s=d.style,c=null;` +
     `try{c=JSON.parse(localStorage.getItem(${JSON.stringify(PAINTED)})||'null')}catch(e){}` +
     `if(!c||typeof c!=='object')c=${seed};var v=c.vars||{};` +
     `for(var k in v)if(k.slice(0,2)==='--'&&typeof v[k]==='string')s.setProperty(k,v[k]);` +
+    `if(typeof c.palette==='string'&&c.palette)d.setAttribute('data-theme',c.palette);` +
     `var t=c.theme;if(t==='light'||t==='dark'||t==='system'){` +
     `var n=t==='dark'||(t==='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);` +
     `var l=d.classList;l.toggle('light',!n);l.toggle('dark',n);l.toggle('t_light',!n);l.toggle('t_dark',n);` +

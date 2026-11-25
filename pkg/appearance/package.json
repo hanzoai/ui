@@ -24,6 +24,12 @@
       "import": "./dist/account.js",
       "require": "./dist/account.cjs",
       "default": "./dist/account.js"
+    },
+    "./theme": {
+      "types": "./dist/theme.d.ts",
+      "import": "./dist/theme.js",
+      "require": "./dist/theme.cjs",
+      "default": "./dist/theme.js"
     }
   },
   "files": [
@@ -34,7 +40,7 @@
   },
   "scripts": {
     "prepublishOnly": "node ../../scripts/guard-publish.mjs",
-    "build": "rm -rf dist dist-cjs types && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs . state && node ../ui/scripts/check-exports.mjs .",
+    "build": "rm -rf dist dist-cjs types && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs . state,theme && node ../ui/scripts/check-exports.mjs .",
     "clean": "rm -rf dist types",
     "prepack": "pnpm run build",
     "typecheck": "tsc --noEmit",
@@ -43,7 +49,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@hanzo/design": "catalog:"
+    "@hanzo/design": "catalog:",
+    "@hanzo/theme": "workspace:^"
   },
   "peerDependencies": {
     "react": ">=19.2.8"

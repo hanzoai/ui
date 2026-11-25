@@ -1,0 +1,64 @@
+/**
+ * `@hanzo/ui/grid` — zero-JS responsive media rules for `Grid` and `SplitGrid`.
+ *
+ * Breakpoints match `@hanzo/design` `tokens/grid.css` byte-for-byte:
+ * sm=40rem, md=48rem, lg=64rem, xl=80rem, 2xl=96rem.
+ *
+ * Non-responsive grids (`cols={3}`, `AutoGrid`, `BentoGrid`, `SplitGrid`
+ * without `collapseAt`) need no stylesheet at all — they run purely on inline
+ * native CSS `display: grid`. This sheet is composed into `@hanzo/ui/theme.css`
+ * and `@hanzo/ui/styles.css`, and also exported standalone at `@hanzo/ui/grid.css`.
+ */
+
+[data-hz-grid-responsive] {
+  --hz-grid-cols: var(--hz-grid-cols-base);
+}
+
+@media (min-width: 40rem) {
+  [data-hz-grid-responsive][data-hz-grid-sm] {
+    --hz-grid-cols: var(--hz-grid-cols-sm);
+  }
+}
+
+@media (min-width: 48rem) {
+  [data-hz-grid-responsive][data-hz-grid-md] {
+    --hz-grid-cols: var(--hz-grid-cols-md);
+  }
+}
+
+@media (min-width: 64rem) {
+  [data-hz-grid-responsive][data-hz-grid-lg] {
+    --hz-grid-cols: var(--hz-grid-cols-lg);
+  }
+}
+
+@media (min-width: 80rem) {
+  [data-hz-grid-responsive][data-hz-grid-xl] {
+    --hz-grid-cols: var(--hz-grid-cols-xl);
+  }
+}
+
+@media (min-width: 96rem) {
+  [data-hz-grid-responsive][data-hz-grid-2xl] {
+    --hz-grid-cols: var(--hz-grid-cols-2xl);
+  }
+}
+
+/* SplitGrid collapseAt — stacks to a single full-width column below breakpoint */
+@media (max-width: 39.999rem) {
+  [data-hz-split-collapse='sm'] {
+    --hz-split-cols: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 47.999rem) {
+  [data-hz-split-collapse='md'] {
+    --hz-split-cols: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 63.999rem) {
+  [data-hz-split-collapse='lg'] {
+    --hz-split-cols: minmax(0, 1fr);
+  }
+}
