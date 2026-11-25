@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { defaultModel, ENSO, parseModels, type ModelCatalogEntry } from './catalog'
-import { modelCount, NOT_FOR_AGENTS, pickerRows, restable, revealTop, standing, visibleRange, type PickerRow } from './picker.logic'
+import { modelCapabilities, modelCost, modelCount, modelMeta, NOT_FOR_AGENTS, pickerRows, restable, revealLayoutTop, revealTop, rowLayout, standing, visibleLayoutRange, visibleRange, type PickerRow } from './picker.logic'
 
 const models = parseModels([
   { id: 'enso', owned_by: 'hanzo', family: 'enso', class: 'ours' },
@@ -179,5 +179,56 @@ describe('two ids that read as one name', () => {
       { id: 'acme/model-a-latest', owned_by: 'acme', class: 'premium', name: 'Model A', outputs: ['text'] },
     ])
     expect(ids(pickerRows(twin, '', 'chat')).filter((id) => id.startsWith('acme/'))).toEqual(['acme/model-a'])
+  })
+})
+
+describe('row metadata: capabilities, context, and cost (#358)', () => {
+  const rich = parseModels([
+    { id: 'enso-auto', owned_by: 'hanzo', family: 'enso', class: 'free', context_window: 1_000_000, supports_tools: true, pricing: { input_per_million: 0 } },
+    { id: 'zen5', owned_by: 'zenlm', family: 'zen', class: 'ours', context_window: 1_000_000, supports_vision: true, supports_tools: true, supports_reasoning: true, pricing: { input_per_million: 0.8 } },
+    { id: 'zen-plain', owned_by: 'zenlm', family: 'zen', class: 'ours', context_window: 128_000 },
+    { id: 'zen-embed', owned_by: 'zenlm', family: 'zen', class: 'ours', outputs: ['embeddings'], context_window: 8_192, pricing: { input_per_million: 0.02 } },
+    { id: 'free-no-price', owned_by: 'meta', class: 'free', context_window: 128_000 },
+  ])
+
+  it('lists specific strengths for chat models and falls back to Chat when none are published', () => {
+    expect(modelCapabilities(rich.find((m) => m.id === 'zen5')!)).toEqual(['vision', 'tools', 'reasoning'])
+    expect(modelCapabilities(rich.find((m) => m.id === 'zen-plain')!)).toEqual(['chat'])
+    expect(modelCapabilities(rich.find((m) => m.id === 'zen-embed')!)).toEqual(['embeddings'])
+  })
+
+  it('prices Hanzo models and $0 models too, and never invents a price when omitted', () => {
+    expect(modelCost(rich.find((m) => m.id === 'enso-auto')!, rich)).toBe('Free')
+    expect(modelCost(rich.find((m) => m.id === 'zen5')!, rich)).toBe('$0.80 / 1M')
+    expect(modelCost(rich.find((m) => m.id === 'zen-plain')!, rich)).toBe('')
+    expect(modelCost(rich.find((m) => m.id === 'free-no-price')!, rich)).toBe('Free')
+  })
+
+  it('composes capabilities, context window, and cost on one metadata line', () => {
+    expect(modelMeta(rich.find((m) => m.id === 'enso-auto')!, rich)).toBe('Tools · 1M · Free')
+    expect(modelMeta(rich.find((m) => m.id === 'zen5')!, rich)).toBe('Vision · Tools · Reasoning · 1M · $0.80 / 1M')
+    expect(modelMeta(rich.find((m) => m.id === 'zen-plain')!, rich)).toBe('Chat · 128K')
+    expect(modelMeta(rich.find((m) => m.id === 'zen-embed')!, rich)).toBe('Embeddings · 8K · $0.02 / 1M')
+
+    const withSpecial = parseModels([
+      { id: 'kai', owned_by: 'hanzo', family: 'kai', class: 'ours', outputs: ['decision'], pricing: { input_per_million: 0.021 } },
+      { id: 'typesafe/jev-1.13', owned_by: 'typesafe', name: 'Jev', class: 'premium', outputs: ['decision'], pricing: { input_per_million: 0.042 } },
+      { id: 'openrouter/auto', owned_by: 'openrouter', name: 'Auto Router', class: 'premium', outputs: ['text'], variable: true, pricing: { prompt: '0.000000042', completion: '0' } },
+    ])
+    expect(modelMeta(withSpecial.find((m) => m.id === 'kai')!, withSpecial)).toBe('Decision · 50% less than Jev')
+    expect(modelMeta(withSpecial.find((m) => m.id === 'openrouter/auto')!, withSpecial)).toBe('Chat · Up to $0.042 / 1M · billed at the model that serves it')
+  })
+
+  it('computes exact virtualized layout with compact group headings', () => {
+    const rows = pickerRows(rich, '')
+    const layout = rowLayout(rows, 48, 28)
+    // First row is Enso group heading (28px), second is enso-auto model row (48px)
+    expect(layout.heights[0]).toBe(28)
+    expect(layout.tops[1]).toBe(28)
+    expect(layout.heights[1]).toBe(48)
+    // 0: Enso (0..28), 1: enso-auto (28..76), 2: Zen (76..104), 3: zen-embed (104..152) — all 4 overlap 0..120
+    expect(visibleLayoutRange(0, 120, layout, 0)).toEqual({ start: 0, end: 4 })
+    expect(revealLayoutTop(1, 0, 120, layout)).toBeNull()
+    expect(revealLayoutTop(4, 0, 120, layout)).toBe(layout.tops[4]! + layout.heights[4]! - 120)
   })
 })

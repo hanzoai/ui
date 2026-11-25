@@ -26,12 +26,15 @@ import { Sheet, SheetContent, SheetTitle } from '../backends/gui/sheet'
 import { RING } from '../backends/gui/press'
 import { slot } from '../backends/gui/slot'
 import { move, type Move } from '../product/chipSelect.logic'
-import { AGENT_GAPS, can, capabilitiesOf, CAPABILITY_NAMES, formatCeiling, formatContext, formatPrice, formatSaving, groupLabel, isPaused, modelName, RESEARCH, savingOf, thirdParty, type Capability, type ModelCatalogEntry, type PauseSource } from './catalog'
-import { modelCount, pickable, pickerRows, restable, revealTop, standing, visibleRange, type PickerRow } from './picker.logic'
+import { AGENT_GAPS, groupLabel, isPaused, modelName, RESEARCH, type Capability, type ModelCatalogEntry, type PauseSource } from './catalog'
+import { modelCount, modelMeta, pickable, pickerRows, restable, revealLayoutTop, rowLayout, standing, visibleLayoutRange, type PickerRow } from './picker.logic'
 
 /** The list's ceiling in a popover, px. */
-const LIST_H = 360
-const PANEL_W = 360
+const LIST_H = 384
+const PANEL_W = 400
+/** Compact height for non-interactive group headings so they leave no dead air. */
+const HEAD = 28
+const HEAD_TOUCH = 32
 
 const MOVES = new Set<Move>(['ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 'PageUp'])
 
@@ -80,6 +83,8 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
   const optionId = (i: number) => `${id}-opt-${i}`
 
   const rows = useMemo(() => pickerRows(models, q, scope, opened), [models, q, scope, opened])
+  const head = sheet ? HEAD_TOUCH : HEAD
+  const layout = useMemo(() => rowLayout(rows, row, head), [rows, row, head])
   const total = useMemo(() => modelCount(rows), [rows])
   const research = useMemo(() => RESEARCH.filter((r) => rows.some((x) => x.kind === 'model' && x.model.id === r.id)), [rows])
   // Position among the models alone, for aria-posinset.
@@ -100,11 +105,12 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
   // and the search field holding the focus.
   useEffect(() => {
     const all = pickerRows(models, '', scope)
+    const allLayout = rowLayout(all, row, head)
     const chosen = all.findIndex((r) => r.kind === 'model' && r.model.id === value)
     const first = all.findIndex((_, i) => restable(all, i))
     const i = chosen >= 0 ? chosen : first
     setAt(i)
-    const y = i >= 0 ? Math.max(0, i * row - viewH / 2 + row / 2) : 0
+    const y = i >= 0 ? Math.max(0, allLayout.tops[i]! - viewH / 2 + allLayout.heights[i]! / 2) : 0
     field.current?.focus()
     // The list lays out with the panel; scroll once it is there.
     requestAnimationFrame(() => scrollTo(y))
@@ -126,10 +132,10 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
 
   const reveal = useCallback(
     (i: number) => {
-      const y = revealTop(i, top, viewH, row)
+      const y = revealLayoutTop(i, top, viewH, layout)
       if (y !== null) scrollTo(y)
     },
-    [top, viewH, row, scrollTo]
+    [top, viewH, layout, scrollTo]
   )
 
   const choose = useCallback(
@@ -169,8 +175,9 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
     }
   }
 
-  const range = visibleRange(top, viewH, row, rows.length)
+  const range = visibleLayoutRange(top, viewH, layout)
   const shown = rows.slice(range.start, range.end)
+  const spacerTop = range.start < layout.tops.length ? layout.tops[range.start]! : layout.total
 
   return (
     <YStack {...slot('model-picker-body')} flex={sheet ? 1 : undefined} minH={0} gap="$1">
@@ -217,7 +224,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
 
       <ScrollView
         ref={list as never}
-        height={sheet ? undefined : Math.min(LIST_H, Math.max(row * 3, rows.length * row))}
+        height={sheet ? undefined : Math.min(LIST_H, Math.max(row * 2 + head, layout.total))}
         flex={sheet ? 1 : undefined}
         showsVerticalScrollIndicator
         scrollEventThrottle={16}
@@ -227,8 +234,8 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
           if (h) setViewH(h)
         }}
       >
-        <YStack {...slot('model-picker-list')} id={listId} role="listbox" aria-label={name} height={rows.length * row}>
-          <YStack height={range.start * row} />
+        <YStack {...slot('model-picker-list')} id={listId} role="listbox" aria-label={name} height={layout.total}>
+          <YStack height={spacerTop} />
           {shown.map((r, k) => {
             const i = range.start + k
             if (r.kind === 'group' && r.fold) {
@@ -263,7 +270,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
             }
             if (r.kind === 'group') {
               return (
-                <XStack key={r.key} {...slot('model-picker-group')} role="presentation" height={row} px="$2" gap="$2" items="flex-end" pb="$1.5">
+                <XStack key={r.key} {...slot('model-picker-group')} role="presentation" height={head} px="$2" gap="$2" items="flex-end" pb="$1">
                   <SizableText size="$1" color="$soft" fontWeight="600" numberOfLines={1} flex={1}>
                     {r.label}
                   </SizableText>
@@ -281,17 +288,19 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
             const upgrade = s === 'upgrade'
             const topup = s === 'top-up'
             const picked = m.id === value
-            // Another maker's model shows what it costs by the million tokens, beside its window.
-            const price = thirdParty(m) ? formatPrice(m.pricing?.input_per_million, t) : ''
-            const ctx = [formatContext(m.context_window), price && m.pricing?.input_per_million ? t('{price} / 1M', { price }) : ''].filter(Boolean).join(' · ')
             const title = modelName(m)
-            // A model that answers in something other than a conversation says
-            // what it does, so an unscoped list is honest about each row.
-            const kind = scope || can(m, 'chat') ? null : capabilitiesOf(m)[0]
-            // A model sold against another says by how much, from the two list prices;
-            // a router, the ceiling it bills up to.
-            const saving = savingOf(m, models)
-            const ceiling = formatCeiling(m, t)
+            const meta = modelMeta(m, models, t)
+            const access = locked
+              ? t('Research preview')
+              : gap
+                ? t(AGENT_GAPS[gap])
+                : topup
+                  ? t('Top up')
+                  : upgrade
+                    ? t('Upgrade')
+                    : paused
+                      ? t('Paused')
+                      : ''
             return (
               <XStack
                 key={m.id}
@@ -309,9 +318,11 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
                       ? t('{model}, {group}, not available for agents: {why}', { model: title, group: groupLabel(m), why: t(AGENT_GAPS[gap]) })
                       : topup
                         ? t('{model}, {group}, top up to use', { model: title, group: groupLabel(m) })
-                        : paused
-                      ? t('{model}, {group}, paused', { model: title, group: groupLabel(m) })
-                      : t('{model}, {group}', { model: title, group: groupLabel(m) })
+                        : upgrade
+                          ? `${t('{model}, {group}', { model: title, group: groupLabel(m) })}, ${t('Upgrade')}`
+                          : paused
+                            ? t('{model}, {group}, paused', { model: title, group: groupLabel(m) })
+                            : t('{model}, {group}', { model: title, group: groupLabel(m) })
                 }
                 data-model={m.id}
                 data-class={m.class}
@@ -327,37 +338,28 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
                 onPress={() => choose(r)}
               >
                 <Check size={14} color="$ink" shrink={0} opacity={picked ? 1 : 0} aria-hidden />
-                <SizableText size={sheet ? '$3' : '$2'} color="$ink" opacity={locked || gap ? 0.5 : 1} numberOfLines={1} flex={1} minW={0}>
-                  {title}
-                </SizableText>
-                {m.class === 'premium' ? (
-                  <SizableText size="$1" color="$soft" shrink={0} aria-hidden>
-                    ✦
-                  </SizableText>
-                ) : null}
-                {locked || gap || upgrade || topup || paused || saving || ceiling || kind || ctx ? (
-                  <SizableText size="$1" color="$soft" shrink={0} maxW="60%" numberOfLines={1} fontVariant={['tabular-nums']}>
-                    {locked
-                      ? t('Research preview')
-                      : gap
-                        ? t(AGENT_GAPS[gap])
-                        : topup
-                          ? ctx
-                            ? `${t('Top up')} · ${ctx}`
-                            : t('Top up')
-                          : upgrade
-                            ? t('Upgrade')
-                      : paused
-                        ? t('Paused')
-                        : saving
-                          ? formatSaving(saving, t)
-                          : ceiling
-                            ? ceiling
-                            : kind
-                              ? t(CAPABILITY_NAMES[kind])
-                              : ctx}
-                  </SizableText>
-                ) : null}
+                <YStack flex={1} minW={0} gap={1} justify="center">
+                  <XStack items="center" gap="$1.5" minW={0}>
+                    <SizableText size={sheet ? '$3' : '$2'} color="$ink" opacity={locked || gap ? 0.5 : 1} numberOfLines={1} flex={1} minW={0}>
+                      {title}
+                    </SizableText>
+                    {m.class === 'premium' ? (
+                      <SizableText size="$1" color="$soft" shrink={0} aria-hidden>
+                        ✦
+                      </SizableText>
+                    ) : null}
+                    {access ? (
+                      <SizableText size="$1" color="$soft" fontWeight="500" shrink={0} numberOfLines={1}>
+                        {access}
+                      </SizableText>
+                    ) : null}
+                  </XStack>
+                  {meta ? (
+                    <SizableText size="$1" color="$soft" opacity={locked || gap ? 0.6 : 0.85} numberOfLines={1} fontVariant={['tabular-nums']}>
+                      {meta}
+                    </SizableText>
+                  ) : null}
+                </YStack>
               </XStack>
             )
           })}

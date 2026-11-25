@@ -93,14 +93,16 @@ export const EDGE = {
 } as const
 
 /**
- * The edge, the gutter and the radius every field wears.
+ * The edge and radius every field wears.
  *
  * Spread FIRST, so a call site can still say otherwise where it has a reason to:
- * `Input` widens the gutter to seat an adornment, `Textarea` reddens the edge
- * when the value is invalid.
+ * `Textarea` reddens the edge when the value is invalid. Horizontal padding is
+ * NOT in `FIELD` because each control sets its own from `BOX[size].gutter` —
+ * `Input` uses logical `paddingInlineStart`/`paddingInlineEnd` (widened for
+ * adornments), and a physical `px` here emits `_pl-*`/`_pr-*` classes that
+ * outrank the logical properties and put a leading icon over the placeholder.
  */
 export const FIELD = {
-  px: '$3',
   rounded: '$3',
   borderWidth: 1,
   borderColor: '$borderColor',

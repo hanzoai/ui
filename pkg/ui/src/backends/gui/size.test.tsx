@@ -73,6 +73,34 @@ describe('Input size', () => {
     // 46 on a pointer and, raised to the touch floor, still 46 under a thumb.
     expect(cls('input')).not.toMatch(/_height-(?!46px|_touchable_46px)/)
   })
+
+  it('never emits physical pl/pr classes that override logical adornment or gutter padding (#362)', () => {
+    mount(<Input aria-label="search" startAdornment={<span>Q</span>} />)
+    const startCls = cls('input')
+    expect(startCls).toContain('_paddingInlineStart-36px')
+    expect(startCls).toContain('_paddingInlineEnd-12px')
+    expect(startCls).not.toMatch(/\b_pl-|\b_pr-/)
+
+    mount(<Input aria-label="end" endAdornment={<span>X</span>} />)
+    const endCls = cls('input')
+    expect(endCls).toContain('_paddingInlineStart-12px')
+    expect(endCls).toContain('_paddingInlineEnd-36px')
+    expect(endCls).not.toMatch(/\b_pl-|\b_pr-/)
+
+    mount(<Input aria-label="pw" type="password" />)
+    const pwCls = cls('input')
+    expect(pwCls).toContain('_paddingInlineEnd-36px')
+    expect(pwCls).not.toMatch(/\b_pl-|\b_pr-/)
+
+    mount(<Input aria-label="lg" size="lg" />)
+    expect(cls('input')).toContain('_paddingInlineStart-14px')
+    expect(cls('input')).not.toMatch(/\b_pl-|\b_pr-/)
+
+    mount(<Input aria-label="sm" size="sm" />)
+    expect(cls('input')).toContain('_paddingInlineStart-8px')
+    expect(cls('input')).not.toMatch(/\b_pl-|\b_pr-/)
+    expect(cls('input')).toContain('_fw-400')
+  })
 })
 
 describe('Textarea size', () => {
