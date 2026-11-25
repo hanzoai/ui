@@ -58,6 +58,11 @@
       "types": "./dist/data.d.ts",
       "import": "./dist/data.mjs",
       "require": "./dist/data.js"
+    },
+    "./desktop": {
+      "types": "./dist/desktop.d.ts",
+      "import": "./dist/desktop.mjs",
+      "require": "./dist/desktop.js"
     }
   },
   "files": [

@@ -12,6 +12,7 @@ export default defineConfig({
     "src/tailwind.ts",
     "src/gui.ts",
     "src/data.ts",
+    "src/desktop.ts",
   ],
   format: ["cjs", "esm"],
   dts: false, // tsc emits these — rollup-plugin-dts cannot load on TS7,

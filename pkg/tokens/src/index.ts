@@ -32,3 +32,35 @@ export type { TokenVar, TokenSection } from "./theme"
 
 export { hues, neutrals, scales, data, next, hueOf } from "./data"
 export type { DataHue, PickHue, Scale } from "./data"
+
+export {
+  BUILT_IN_THEME_IDS,
+  MOBILE_DEFAULT_THEME_ID,
+  MOBILE_THEME_IDS,
+  LEGACY_THEME_ID_ALIASES,
+  resolveLegacyThemeId,
+  RESERVED_THEME_IDS,
+  UNPUBLISHABLE_THEME_IDS,
+  THEME_COLOR_ROLES,
+  APP_THEME_CSS_VARIABLES,
+  getThemeColorVariable,
+  ZEN_DARK_DESKTOP_TOKENS,
+  ZEN_LIGHT_DESKTOP_TOKENS,
+  ZEN_DARK_SYNTAX_TOKENS,
+  ZEN_LIGHT_SYNTAX_TOKENS,
+  DESKTOP_DIMENSIONS,
+  DESKTOP_TYPOGRAPHY,
+  DESKTOP_MOTION,
+  DESKTOP_DESIGN_TOKENS,
+} from "./desktop"
+export type {
+  BuiltInThemeId,
+  MobileThemeId,
+  ThemeAppearance,
+  ThemeColorRole,
+  ThemeColors,
+  ThemeVariants,
+  ThemeDefinition,
+  DesktopSurfaceTokens,
+  DesktopSyntaxTokens,
+} from "./desktop"

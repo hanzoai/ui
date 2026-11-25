@@ -72,3 +72,19 @@ export {
 export { get, load, put, save, type Account } from './account'
 export { COMPOSING, composing, loadComposing, readComposing, saveComposing, useComposing, writeComposing, type Composing } from './composing'
 export { resolve, layerFor, isInherited, LAYERS, type Layer, type Layers, type Resolved, type Scope } from './scope'
+export {
+  ZEN_DARK_DESKTOP_TOKENS,
+  ZEN_LIGHT_DESKTOP_TOKENS,
+  DESKTOP_DIMENSIONS,
+  DESKTOP_TYPOGRAPHY,
+  DESKTOP_MOTION,
+  DESKTOP_DESIGN_TOKENS,
+  HANZO_DEV_LIGHT_THEME_COLORS,
+  HANZO_DEV_DARK_THEME_COLORS,
+  HANZO_CHAT_THEME,
+  resolveDesktopThemeColors,
+  buildDesktopThemeCssVars,
+  applyDesktopThemeCssVars,
+  buildWorkbenchThemeFromTokens,
+  type WorkbenchThemePayload,
+} from './desktop'

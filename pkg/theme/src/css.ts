@@ -108,3 +108,11 @@ export function themeCssLoadsRemoteFiles(css: string): boolean {
   const code = withoutStrings(css.replace(/\/\*[\s\S]*?\*\//g, ''))
   return /@import/i.test(code) || fetchesOutsideStrings(code)
 }
+
+export {
+  applyDesktopThemeCssVars,
+  buildDesktopThemeCssVars,
+  formatDesktopThemeCssText,
+  type DocumentLike,
+  type RootElementLike,
+} from './desktop-css'

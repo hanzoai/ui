@@ -335,6 +335,42 @@
       "import": "./dist/agent.js",
       "require": "./dist/agent.cjs",
       "default": "./dist/agent.js"
+    },
+    "./desktop": {
+      "types": "./dist/desktop/index.d.ts",
+      "import": "./dist/desktop/index.js",
+      "require": "./dist/desktop/index.cjs",
+      "default": "./dist/desktop/index.js"
+    },
+    "./desktop/pure": {
+      "types": "./dist/desktop/pure.d.ts",
+      "import": "./dist/desktop/pure.js",
+      "require": "./dist/desktop/pure.cjs",
+      "default": "./dist/desktop/pure.js"
+    },
+    "./desktop-toolbar": {
+      "types": "./dist/desktop/toolbar-entry.d.ts",
+      "import": "./dist/desktop/toolbar-entry.js",
+      "require": "./dist/desktop/toolbar-entry.cjs",
+      "default": "./dist/desktop/toolbar-entry.js"
+    },
+    "./desktop-toolbar/pure": {
+      "types": "./dist/desktop/toolbar-pure.d.ts",
+      "import": "./dist/desktop/toolbar-pure.js",
+      "require": "./dist/desktop/toolbar-pure.cjs",
+      "default": "./dist/desktop/toolbar-pure.js"
+    },
+    "./desktop-agent": {
+      "types": "./dist/desktop/agent-entry.d.ts",
+      "import": "./dist/desktop/agent-entry.js",
+      "require": "./dist/desktop/agent-entry.cjs",
+      "default": "./dist/desktop/agent-entry.js"
+    },
+    "./desktop-agent/pure": {
+      "types": "./dist/desktop/agent-pure.d.ts",
+      "import": "./dist/desktop/agent-pure.js",
+      "require": "./dist/desktop/agent-pure.cjs",
+      "default": "./dist/desktop/agent-pure.js"
     }
   },
   "main": "./dist/index.cjs",

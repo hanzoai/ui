@@ -30,6 +30,12 @@
       "import": "./dist/theme.js",
       "require": "./dist/theme.cjs",
       "default": "./dist/theme.js"
+    },
+    "./desktop": {
+      "types": "./dist/desktop.d.ts",
+      "import": "./dist/desktop.js",
+      "require": "./dist/desktop.cjs",
+      "default": "./dist/desktop.js"
     }
   },
   "files": [
@@ -40,7 +46,7 @@
   },
   "scripts": {
     "prepublishOnly": "node ../../scripts/guard-publish.mjs",
-    "build": "rm -rf dist dist-cjs types && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs . state,theme && node ../ui/scripts/check-exports.mjs .",
+    "build": "rm -rf dist dist-cjs types && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs . state,theme,desktop && node ../ui/scripts/check-exports.mjs .",
     "clean": "rm -rf dist types",
     "prepack": "pnpm run build",
     "typecheck": "tsc --noEmit",
