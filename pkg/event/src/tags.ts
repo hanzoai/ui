@@ -1,52 +1,18 @@
-// The tag manager: loads each ad and analytics platform's browser pixel, after
-// consent, from the site's tag configuration, and fires every event to each one
-// under one event_id.
+// First-party consent & server-managed tag bridge for Hanzo Analytics.
 //
-// WHERE THE IDS COME FROM. Never from a site's code. The site's tag set is
-// cloud's `GET /v1/project/tags` (non-secret ids only), so connecting a
-// platform to a site is a configuration change and every surface gets it:
+// Open-source @hanzo/event never embeds third-party ad network loaders, SDK
+// URLs, or pixel IDs. It talks strictly to the configured first-party Hanzo
+// Analytics / Cloud endpoint (`GET /v1/project/tags` for the visitor's regional
+// consent rule and audience classification, and `POST /v1/event` for the
+// first-party event stream).
 //
-//   { tags: [{ platform: 'ga4', type: 'ga', id: 'G-…' },
-//            { platform: 'linkedin', type: 'linkedin', id: '1234',
-//              events: { order_completed: '9876' } }, …] }
-//
-// `events` maps one of OUR event names to the platform's own conversion id for
-// it: a Google Ads `AW-…/label`, a LinkedIn conversion rule, an X event id.
-// Google Ads, LinkedIn and X name conversions by rule, not by event, and an
-// event with no rule there is not sent to that platform.
-//
-// WHAT LOADS WHEN is the visitor's region (consent.ts). In eu, Google Analytics
-// loads for everyone under Consent Mode v2 with all four flags denied (cookieless
-// pings) and is updated as the visitor chooses; Meta's pixels are init'ed held
-// revoked, and fbevents is fetched and the PageView sent only once Marketing allows
-// them; every other platform waits for Marketing. In us_privacy and global everything
-// loads at once under Consent Mode granted; Ads off (the visitor's opt-out) is exactly
-// `fbq('dataProcessingOptions', ['LDU'], 0, 0)` and Google's ad_storage, ad_user_data
-// and ad_personalization denied. Under GPC or DNT no platform loads, in any region. A choice that allows more loads the rest
-// with no reload. Google hears every change through Consent Mode and Meta through
-// consent and Limited Data Use; a choice that withdraws any other library reloads the
-// page, since a library that has run cannot be unloaded.
-//
-// WHO IS ASKING. Cloud classifies the visitor (`audience` on the tag config), and
-// the page adds what only a browser sees (automated.ts): a program — automation, a
-// crawler, a cloud provider's address, a driven browser — loads nothing; the site's
-// own team — a member of the site's org by the IAM bearer `token` supplies, an
-// address in the project's internal networks, or a browser marked `?hz_internal=1` —
-// loads Google Analytics alone, tagged `traffic_type: internal`, and no ad pixel.
-// Cloud's word marks the browser, so it stays the team's after sign-out.
-//
-// ONE EVENT ID. `track` mints it, fires the browser pixels with it, and records
-// it on our stream with the list of pixels that fired (`tags`). Cloud forwards
-// the same moment server-side under the same id, and each platform keeps one
-// (Meta and TikTok by event_id, GA4 by transaction_id on a purchase); it sends
-// GA4 only what the page's own gtag did not, which is what `tags` says.
-//
-// WHAT EACH PLATFORM CALLS AN EVENT is the one table in @hanzo/events; cloud
-// reads the same table.
+// When the first-party server reports active project tags for a consenting
+// visitor, it delegates dynamic tag execution exclusively to the server-hosted
+// first-party script (`GET /v1/event/tag.js`), keeping all tag configuration
+// and Conversions API fan-out on the private server side.
 
-import { namesOn } from '@hanzo/events'
-import { asks, CONSENT_EVENT, open, policy, read, render, serve, type Choice } from './consent'
-import { HANZO_OPENAI_PIXEL_ID, ORG_KEY, SITE_KEY, keyFor, orgOf } from './org'
+import { asks, CONSENT_EVENT, open, policy, read, render, serve } from './consent'
+import { keyFor } from './org'
 import { capture, touch } from './touch'
 import type { Analytics } from './core'
 import { automated, internal, mark } from './automated'
@@ -60,71 +26,64 @@ export interface BrowserTag {
 }
 
 export interface TagOptions {
-  /** The site's publishable key; resolves its tag set. */
+  /** The site's publishable key; resolves its project settings on Hanzo Cloud / Analytics. */
   key?: string
   /** The site's host, for a site whose key is the org's. */
   host?: string
-  /** cloud's origin; defaults to https://api.hanzo.ai. */
+  /** First-party Hanzo Cloud / Analytics origin; defaults to https://api.hanzo.ai. */
   base?: string
-  /** Domains one visit crosses, so GA4 keeps it one session. */
+  /** Domains one visit crosses, passed through to first-party session linking. */
   domains?: string[]
   /**
-   * The signed-in person's IAM access token, sent as the bearer on the tag-config
-   * request: a member of the site's org is its own team. A site with IAM passes its
-   * token getter; none, or no token, asks as a stranger.
+   * The signed-in person's IAM access token, sent as the bearer on the project
+   * settings request so org members are classified as internal traffic.
    */
   token?: () => string | undefined
-  /** Enable pixel debug mode (e.g. OpenAI `oaiq("init", { pixelId, debug: true })`). */
-  debug?: boolean
 }
 
 /** Who cloud says the visitor is: a program, the site's own team, or a person. */
 export type Audience = 'bot' | 'internal' | 'person'
 
-type Call = (...args: unknown[]) => void
-type Page = {
-  dataLayer?: unknown[]
-  gtag?: Call
-  fbq?: Call & { queue?: unknown[]; callMethod?: Call; push?: unknown; loaded?: boolean; version?: string }
-  _fbq?: unknown
-  lintrk?: Call & { q?: unknown[] }
-  _linkedin_partner_id?: string
-  _linkedin_data_partner_ids?: string[]
-  twq?: Call & { queue?: unknown[]; exe?: Call; version?: string }
-  ttq?: Record<string, Call> & { _i?: Record<string, unknown>; _t?: Record<string, number>; _o?: Record<string, unknown>; methods?: string[]; load?: Call; page?: Call; track?: Call }
-  TiktokAnalyticsObject?: string
-  rdt?: Call & { callQueue?: unknown[]; sendEvent?: Call }
-  oaiq?: Call & { q?: unknown[] }
+interface TagRuntime {
+  mirror?: (name: string, params: Record<string, unknown>, id: string, to?: string) => void
+  reach?: () => string
+  ready?: (limit?: number) => Promise<void>
 }
 
-const page = (): Page => window as unknown as Page
+interface HostWindow {
+  __hanzoTags?: TagRuntime
+  __hanzoTagConfig?: {
+    key?: string
+    host: string
+    domains?: string[]
+    tags: BrowserTag[]
+    audience: Audience
+  }
+}
 
-let tags: BrowserTag[] = []
+const hostWindow = (): HostWindow => window as unknown as HostWindow
+
+let serverTags: BrowserTag[] = []
 let audience: Audience = 'person'
 let configured = false
-/** The choice the page last acted on, as `render` spells it. */
-let applied = ''
-let options: TagOptions = {}
-const loaded = new Set<string>()
-
-/** gtag.js: 'idle' until fetched, 'wait' while on its way, then how it answered. */
-let google: 'idle' | 'wait' | 'loaded' | 'failed' = 'idle'
 let configAnswered = false
+let scriptLoaded = false
+let applied = ''
+let needsReload = false
+let reloading = false
+let activeBase = 'https://api.hanzo.ai'
+let activeKey: string | undefined
+let activeHost = ''
+let options: TagOptions = {}
 
 const held: Array<() => void> = []
 let leaving = false
 
-function settled(): boolean {
-  return configAnswered && google !== 'wait'
-}
+const bot = (): boolean => audience === 'bot' || automated()
+const team = (): boolean => audience === 'internal' || internal()
 
-/**
- * Whether a moment can go out: the tags have settled, and a visitor the banner asks
- * has answered. A moment from before the answer waits for it, so it carries the
- * consent the visitor gave rather than the empty one they had not yet chosen.
- */
 function due(): boolean {
-  return settled() && !asks()
+  return configAnswered && !asks()
 }
 
 function flush(): void {
@@ -132,403 +91,119 @@ function flush(): void {
 }
 
 /**
- * Resolves once every tag this visitor's choice loads has taken the page view, or after
- * `limit` ms, whichever is first: the tag set has answered, gtag.js has loaded or failed,
- * and Meta's library has replaced the stub that queued the call. A page that is about to
- * leave waits on this so the visit is counted where it arrived. A tag the choice does not
- * load is not waited for.
+ * Resolves once first-party tag & consent configuration has settled (and any
+ * server-hosted tag runtime reports ready), or after `limit` ms.
  */
 export function ready(limit = 3000): Promise<void> {
   if (typeof window === 'undefined') return Promise.resolve()
   const start = Date.now()
-  const meta = () => {
-    const fbq = page().fbq
-    return ![...loaded].some((k) => k.startsWith('meta:')) || typeof fbq?.callMethod === 'function'
-  }
   return new Promise((resolve) => {
     const tick = () => {
-      if ((configured && settled() && meta()) || Date.now() - start >= limit) return resolve()
-      setTimeout(tick, 100)
+      if ((configured && configAnswered) || Date.now() - start >= limit) {
+        const remote = hostWindow().__hanzoTags?.ready
+        if (remote) {
+          const remaining = Math.max(0, limit - (Date.now() - start))
+          remote(remaining).then(() => resolve(), () => resolve())
+          return
+        }
+        resolve()
+        return
+      }
+      setTimeout(tick, 50)
     }
     tick()
   })
 }
 
-function script(src: string, onload?: () => void, onerror?: () => void): void {
+function loadServerTagRuntime(): void {
+  if (scriptLoaded || !activeKey || typeof document === 'undefined' || !document.head) return
+  if (bot() || policy().refused || serverTags.length === 0) return
+  const eligible = team() ? serverTags.filter((t) => t.type === 'ga') : serverTags
+  if (eligible.length === 0) return
+
+  scriptLoaded = true
+  hostWindow().__hanzoTagConfig = {
+    key: activeKey,
+    host: activeHost,
+    domains: options.domains,
+    tags: eligible,
+    audience: team() ? 'internal' : audience,
+  }
   const s = document.createElement('script')
   s.async = true
-  s.src = src
-  if (onload) s.onload = onload
-  if (onerror) s.onerror = onerror
+  s.src = `${activeBase}/v1/event/tag.js`
+  if (typeof s.setAttribute === 'function') {
+    s.setAttribute('data-key', activeKey)
+    s.setAttribute('data-tags-only', '1')
+  } else {
+    ;(s as unknown as Record<string, string>)['data-key'] = activeKey
+    ;(s as unknown as Record<string, string>)['data-tags-only'] = '1'
+  }
   document.head.appendChild(s)
 }
-
-/** A program: cloud said so, or the browser is driven. */
-const bot = (): boolean => audience === 'bot' || automated()
-
-/** The site's own team: cloud said so, or the browser is marked. */
-const team = (): boolean => audience === 'internal' || internal()
-
-// ── Google ──────────────────────────────────────────────────────────────
-
-function gtagStub(): Call {
-  const p = page()
-  p.dataLayer = p.dataLayer || []
-  if (!p.gtag) {
-    // gtag.js reads the `arguments` object itself, so this is a function and not an arrow.
-    p.gtag = function () {
-      // eslint-disable-next-line prefer-rest-params
-      p.dataLayer!.push(arguments)
-    }
-  }
-  return p.gtag
-}
-
-const g = (on: boolean) => (on ? 'granted' : 'denied')
-
-const eu = (): boolean => policy().mode === 'eu'
-
-/**
- * Google Consent Mode v2. The default is the region's: in eu all four flags denied,
- * waiting 500 ms for an update, so Google Analytics sends cookieless pings; elsewhere
- * all granted. The update is the visitor's choice: Ads governs the three ad flags
- * everywhere, Analytics the storage flag in eu (elsewhere Google Analytics with
- * Analytics off does not load).
- */
-function consentMode(c: Choice, first: boolean): void {
-  const gtag = gtagStub()
-  if (first) {
-    const d = g(!eu())
-    gtag('consent', 'default', {
-      analytics_storage: d,
-      ad_storage: d,
-      ad_user_data: d,
-      ad_personalization: d,
-      ...(eu() ? { wait_for_update: 500 } : {}),
-    })
-  }
-  const ads = { ad_storage: g(c.ads), ad_user_data: g(c.ads), ad_personalization: g(c.ads) }
-  gtag('consent', 'update', eu() ? { analytics_storage: g(c.analytics), ...ads } : ads)
-}
-
-function loadGoogle(ids: string[]): void {
-  const gtag = gtagStub()
-  const fresh = ids.filter((id) => !loaded.has(id))
-  if (!fresh.length) return
-  if (google === 'idle') {
-    google = 'wait'
-    gtag('js', new Date())
-    const done = (to: 'loaded' | 'failed') => () => {
-      if (google !== 'wait') return
-      google = to
-      flush()
-    }
-    script(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(fresh[0])}`, done('loaded'), done('failed'))
-    // gtag.js answers once: loaded, failed (a blocker), or silent past 8 s.
-    setTimeout(done('failed'), 8000)
-  }
-  for (const id of fresh) {
-    loaded.add(id)
-    gtag('config', id, {
-      ...(options.domains ? { linker: { domains: options.domains } } : {}),
-      ...(team() ? { traffic_type: 'internal' } : {}),
-    })
-  }
-}
-
-// ── The other pixels ────────────────────────────────────────────────────
-
-/** Limited Data Use, the sale-or-sharing opt-out: on while Ads is off. */
-function ldu(c: Choice): void {
-  const p = page()
-  if (c.ads) p.fbq!('dataProcessingOptions', [])
-  else p.fbq!('dataProcessingOptions', ['LDU'], 0, 0)
-}
-
-/** The page's reload is on its way. */
-let reloading = false
-
-/** Meta's state on this page: held revoked, and whether its library and the PageView went. */
-const meta = { revoked: false, fetched: false, viewed: false }
-
-/**
- * Meta's pixels, every one the site reports to (one per brand). The stub is built
- * once; before the first init Meta is told its consent (revoked without Marketing)
- * and Limited Data Use (on without Ads), and each pixel is init'ed. Only under
- * Marketing (live) is fbevents fetched and the PageView sent, once: fbq('track')
- * reaches every pixel init'ed on the page, and an event fires once (mirror) under
- * one eventID every pixel dedupes on. Without Marketing nothing reaches Meta.
- */
-function loadMeta(ids: string[], c: Choice): void {
-  const fresh = ids.filter((id) => !loaded.has(`meta:${id}`))
-  const p = page()
-  if (fresh.length) {
-    if (!p.fbq) {
-      const n = (p.fbq = function (...a: unknown[]) {
-        if (n.callMethod) n.callMethod(...a)
-        else n.queue!.push(a)
-      } as NonNullable<Page['fbq']>)
-      if (!p._fbq) p._fbq = n
-      n.push = n
-      n.loaded = true
-      n.version = '2.0'
-      n.queue = []
-    }
-    if (!loaded.has('meta')) {
-      loaded.add('meta')
-      if (!c.marketing) {
-        p.fbq('consent', 'revoke')
-        meta.revoked = true
-      }
-      if (!c.ads) ldu(c)
-    }
-    for (const id of fresh) {
-      p.fbq('init', id)
-      loaded.add(`meta:${id}`)
-    }
-  }
-  if (loaded.has('meta') && c.marketing) live()
-}
-
-/**
- * Meta, allowed: consent lifted if it was held, fbevents fetched, the PageView sent
- * once.
- *
- * fbevents reads the whole stub queue when it arrives, and a revoke and a grant
- * both waiting there leave it revoked: no PageView and no event after it, ever, for
- * an eu visitor who accepted (fbevents 2.9.429, measured). Before the library has
- * been fetched it has seen nothing, so the held revoke is struck from the queue
- * rather than answered with a grant; once it is on its way the grant is a call
- * like any other.
- */
-function live(): void {
-  const p = page()
-  if (meta.revoked) {
-    if (meta.fetched) p.fbq!('consent', 'grant')
-    else if (p.fbq?.queue) p.fbq.queue = p.fbq.queue.filter((a) => !((a as ArrayLike<unknown>)[0] === 'consent' && (a as ArrayLike<unknown>)[1] === 'revoke'))
-    meta.revoked = false
-  }
-  if (!meta.fetched) {
-    meta.fetched = true
-    script('https://connect.facebook.net/en_US/fbevents.js')
-  }
-  if (!meta.viewed) {
-    meta.viewed = true
-    p.fbq!('track', 'PageView')
-  }
-}
-
-function loadLinkedIn(id: string): void {
-  const p = page()
-  p._linkedin_partner_id = id
-  p._linkedin_data_partner_ids = p._linkedin_data_partner_ids || []
-  if (!p._linkedin_data_partner_ids.includes(id)) p._linkedin_data_partner_ids.push(id)
-  if (!p.lintrk) {
-    const l = (p.lintrk = function (...a: unknown[]) {
-      l.q!.push(a)
-    } as NonNullable<Page['lintrk']>)
-    l.q = []
-  }
-  script('https://snap.licdn.com/li.lms-analytics/insight.min.js', undefined, () => {
-    const img = document.createElement('img') as HTMLImageElement
-    if (img) img.src = `https://px.ads.linkedin.com/collect/?pid=${encodeURIComponent(id)}&fmt=gif`
-  })
-}
-
-function loadX(id: string): void {
-  const p = page()
-  if (!p.twq) {
-    const s = (p.twq = function (...a: unknown[]) {
-      if (s.exe) s.exe(...a)
-      else s.queue!.push(a)
-    } as NonNullable<Page['twq']>)
-    s.version = '1.1'
-    s.queue = []
-    script('https://static.ads-twitter.com/uwt.js')
-  }
-  p.twq('config', id)
-}
-
-const TIKTOK_METHODS = ['page', 'track', 'identify', 'instances', 'debug', 'on', 'off', 'once', 'ready', 'alias', 'group', 'enableCookie', 'disableCookie']
-
-function loadTikTok(id: string): void {
-  const p = page()
-  p.TiktokAnalyticsObject = 'ttq'
-  const q = (p.ttq = p.ttq || ([] as unknown as NonNullable<Page['ttq']>)) as unknown as Record<string, unknown> & unknown[]
-  if (!q._i) {
-    q.methods = TIKTOK_METHODS
-    for (const m of TIKTOK_METHODS) q[m] = (...a: unknown[]) => q.push([m, ...a])
-    q._i = {}
-    q._t = {}
-    q._o = {}
-    q.load = (sdk: string) => {
-      ;(q._i as Record<string, unknown>)[sdk] = []
-      ;(q._t as Record<string, number>)[sdk] = Date.now()
-      script(`https://analytics.tiktok.com/i18n/pixel/events.js?sdkid=${encodeURIComponent(sdk)}&lib=ttq`)
-    }
-  }
-  ;(q.load as Call)(id)
-  ;(q.page as Call)()
-}
-
-function loadReddit(id: string): void {
-  const p = page()
-  if (!p.rdt) {
-    const r = (p.rdt = function () {
-      if (r.sendEvent) {
-        // eslint-disable-next-line prefer-rest-params
-        r.sendEvent.apply(r, arguments as unknown as unknown[])
-      } else {
-        // eslint-disable-next-line prefer-rest-params
-        r.callQueue!.push(arguments)
-      }
-    } as NonNullable<Page['rdt']>)
-    r.callQueue = []
-    script(`https://www.redditstatic.com/ads/pixel.js?pixel_id=${encodeURIComponent(id)}`)
-  }
-  p.rdt('init', id)
-  p.rdt('track', 'PageVisit')
-}
-
-function loadOpenAI(id: string): void {
-  const p = page()
-  if (!p.oaiq) {
-    const q = (p.oaiq = function () {
-      // eslint-disable-next-line prefer-rest-params
-      q.q!.push(arguments)
-    } as NonNullable<Page['oaiq']>)
-    q.q = []
-    script('https://bzrcdn.openai.com/sdk/oaiq.min.js')
-  }
-  const debug = options.debug === true || new URLSearchParams(window.location?.search ?? '').get('oaiq_debug') === '1'
-  p.oaiq('init', debug ? { pixelId: id, debug: true } : { pixelId: id })
-}
-
-// ── Which tag is allowed and running ────────────────────────────────────
-
-const NEEDS: Record<string, keyof Choice> = {
-  ga: 'analytics',
-  gads: 'marketing',
-  meta: 'marketing',
-  linkedin: 'marketing',
-  x: 'marketing',
-  tiktok: 'marketing',
-  reddit: 'marketing',
-  openai: 'marketing',
-}
-
-/**
- * Whether a tag's library is on the page under a choice. Under GPC or DNT nothing.
- * Else Google Analytics in eu for everyone (Consent Mode keeps it cookieless) and
- * elsewhere under Analytics, Meta's stub always (held revoked without Marketing), every
- * other platform under Marketing.
- */
-const loads = (t: BrowserTag, c: Choice): boolean =>
-  !policy().refused && (t.type === 'meta' || (t.type === 'ga' && eu()) || Boolean(NEEDS[t.type] && c[NEEDS[t.type]]))
-
-/** Whether an event reaches a tag under a choice: Meta's under Marketing, every other's as it loads. */
-const allowed = (t: BrowserTag, c: Choice): boolean => (t.type === 'meta' ? c.marketing : loads(t, c))
 
 function apply(): void {
   if (typeof window === 'undefined' || !configured) return
   const c = read()
   const was = applied
-  applied = render(c)
-  if (withdrawn(c, was)) return
+  const now = render(c)
+  applied = now
+
+  // If a previously granted category was withdrawn after the server tag runtime
+  // loaded, reload once (after the consent sheet closes) so no dynamic tag keeps running.
+  if (scriptLoaded && was) {
+    const prev = new Set(was.split(',').filter(Boolean))
+    const next = new Set(now.split(',').filter(Boolean))
+    if ([...prev].some((g) => !next.has(g))) needsReload = true
+  }
+  if (needsReload) {
+    if (!open() && !reloading && typeof window.location?.reload === 'function') {
+      reloading = true
+      setTimeout(() => window.location.reload(), 0)
+    }
+    return
+  }
+
   capture(c)
-  // A program loads no platform's pixel; the site's own team loads Google
-  // Analytics only, tagged internal.
-  const on = bot() ? [] : tags.filter((t) => loads(t, c) && (t.type === 'ga' || !team()))
-  const ids = on.filter((t) => t.type === 'ga' || t.type === 'gads').map((t) => t.id)
-  if (ids.length) {
-    // Set once, before gtag.js is fetched; a later choice reaches it through withdrawn.
-    if (!loaded.has('consent')) consentMode(c, true)
-    loaded.add('consent')
-    loadGoogle(ids)
-  }
-  loadMeta(on.filter((t) => t.type === 'meta').map((t) => t.id), c)
-  for (const t of on) {
-    const k = `${t.type}:${t.id}`
-    if (loaded.has(k) || t.type === 'meta') continue
-    if (t.type === 'linkedin') loadLinkedIn(t.id)
-    else if (t.type === 'x') loadX(t.id)
-    else if (t.type === 'tiktok') loadTikTok(t.id)
-    else if (t.type === 'reddit') loadReddit(t.id)
-    else if (t.type === 'openai') loadOpenAI(t.id)
-    else continue
-    loaded.add(k)
-  }
+  if (configAnswered) loadServerTagRuntime()
   flush()
 }
 
-/** Whether a tag already loaded on this page. */
-const running = (t: BrowserTag): boolean => loaded.has(t.type === 'ga' || t.type === 'gads' ? t.id : `${t.type}:${t.id}`)
-
 /**
- * A changed choice reaches what is running at once: Google through Consent Mode, Meta
- * through Limited Data Use and a revoke when Marketing is withdrawn. A choice that
- * withdraws any other running library reloads the page so it does not run on — once,
- * when the consent sheet closes, if it is open. Says whether a reload is due.
- */
-function withdrawn(c: Choice, was: string): boolean {
-  const p = page()
-  const before = was.split(',')
-  if (render(c) !== was && loaded.has('consent')) consentMode(c, false)
-  if (loaded.has('meta')) {
-    if (c.ads !== before.includes('ads')) ldu(c)
-    if (!c.marketing && !meta.revoked) {
-      p.fbq!('consent', 'revoke')
-      meta.revoked = true
-    }
-  }
-  const gone = tags.filter((t) => t.type !== 'meta' && running(t) && !loads(t, c))
-  if (!gone.length) return false
-  // gtag stops measuring this page at once, before the reload lets it go.
-  for (const t of gone) if (t.type === 'ga' || t.type === 'gads') (window as unknown as Record<string, boolean>)[`ga-disable-${t.id}`] = true
-  if (!open() && !reloading) {
-    reloading = true
-    setTimeout(() => window.location.reload(), 0)
-  }
-  return true
-}
-
-/**
- * Starts the tag manager: fetches the site's tag set and loads what consent
- * allows, again on every consent change. Safe to call on every page load, and
- * a no-op on the server. Returns a function that stops listening.
+ * Starts first-party consent & server-managed tag resolution. Safe to call on
+ * every page load, and a no-op on the server. Returns a cleanup function.
  */
 export function start(o: TagOptions = {}): () => void {
   if (typeof window === 'undefined') return () => undefined
   options = o
   addEventListener(CONSENT_EVENT, apply)
-  // A choice made in another tab, or before a page came back from the back-forward
-  // cache, is read again whenever this page is shown.
   const shown = () => {
     if (document.visibilityState !== 'hidden' && render(read()) !== applied) apply()
   }
   addEventListener('pageshow', shown)
   addEventListener('visibilitychange', shown)
   addEventListener('pagehide', pagehide)
+
   if (!configured) {
     configured = true
-    const base = (o.base ?? 'https://api.hanzo.ai').replace(/\/$/, '')
+    activeBase = (o.base ?? 'https://api.hanzo.ai').replace(/\/$/, '')
+    activeHost = o.host ?? window.location.hostname
+    activeKey = o.key ?? keyFor(activeHost)
     const q = new URLSearchParams()
-    const host = o.host ?? window.location.hostname
-    const key = o.key ?? keyFor(host)
-    if (key) q.set('key', key)
-    q.set('host', host)
+    if (activeKey) q.set('key', activeKey)
+    q.set('host', activeHost)
+
     const answer = (list: BrowserTag[]) => {
-      tags = withHanzoDefaults(list, host, o.key, key)
+      serverTags = list
       configAnswered = true
       apply()
     }
-    const url = `${base}/v1/project/tags?${q}`
+
+    const url = `${activeBase}/v1/project/tags?${q}`
     const bearer = tokenOf(o)
     const get = (auth?: string) => fetch(url, auth ? { headers: { Authorization: `Bearer ${auth}` } } : undefined)
-    // A page never waits on its tag config: an unreachable cloud is an empty set.
     const cap = setTimeout(() => answer([]), 3000)
-    // An origin cloud does not admit refuses the bearer's preflight; the set is
-    // public, so it is asked for again as a stranger.
+
     get(bearer)
       .catch((e: unknown) => (bearer ? get() : Promise.reject(e)))
       .then((r) => (r.ok ? r.json() : { tags: [] }))
@@ -544,22 +219,15 @@ export function start(o: TagOptions = {}): () => void {
         answer([])
       })
   }
+
   return () => {
     removeEventListener(CONSENT_EVENT, apply)
+    removeEventListener('pageshow', shown)
+    removeEventListener('visibilitychange', shown)
     removeEventListener('pagehide', pagehide)
   }
 }
 
-const HANZO_KEYS: ReadonlySet<string> = new Set([ORG_KEY.hanzo, ...Object.values(SITE_KEY)])
-
-function withHanzoDefaults(list: BrowserTag[], host: string, explicitKey: string | undefined, resolvedKey: string | undefined): BrowserTag[] {
-  const isHanzo = (!explicitKey && orgOf(host) === 'hanzo') || (resolvedKey !== undefined && HANZO_KEYS.has(resolvedKey))
-  if (!isHanzo || audience !== 'person') return list
-  if (list.some((t) => t.platform === 'openai' || t.type === 'openai')) return list
-  return [...list, { platform: 'openai', type: 'openai', id: HANZO_OPENAI_PIXEL_ID }]
-}
-
-/** The site's token, or none: a getter that throws asks as a stranger, never breaks the page. */
 function tokenOf(o: TagOptions): string | undefined {
   try {
     return o.token?.() || undefined
@@ -573,151 +241,40 @@ function pagehide(): void {
   flush()
 }
 
-/** The browser tags a moment can reach right now, as the `tags` property spells it. */
+/** Active tag types reported by the first-party server tag runtime (`''` when none). */
 export function reach(): string {
-  const c = read()
-  const to: string[] = []
-  for (const t of tags) {
-    if (!allowed(t, c)) continue
-    const running = t.type === 'ga' || t.type === 'gads' ? google === 'loaded' : loaded.has(`${t.type}:${t.id}`)
-    if (running && !to.includes(t.type)) to.push(t.type)
-  }
-  return to.join(',')
+  if (typeof window === 'undefined') return ''
+  return hostWindow().__hanzoTags?.reach?.() ?? ''
 }
-
-// ── Firing an event ─────────────────────────────────────────────────────
 
 interface Item {
   item_id: string
   item_name?: string
-  item_category?: string
-  item_variant?: string
   price?: number
   quantity?: number
 }
 
-const META_STANDARD = new Set([
-  'AddPaymentInfo', 'AddToCart', 'AddToWishlist', 'CompleteRegistration', 'Contact', 'CustomizeProduct',
-  'Donate', 'FindLocation', 'InitiateCheckout', 'Lead', 'Purchase', 'Schedule', 'Search', 'StartTrial',
-  'SubmitApplication', 'Subscribe', 'ViewContent',
-])
-
-function shape(platform: 'meta' | 'tiktok' | 'x' | 'reddit', p: Record<string, unknown>): Record<string, unknown> {
-  const items = Array.isArray(p.items) ? (p.items as Item[]) : []
-  const out: Record<string, unknown> = {}
-  if (typeof p.value === 'number') out.value = p.value
-  out.currency = typeof p.currency === 'string' ? p.currency : 'USD'
-  // A search names what was asked: Meta's and TikTok's standard parameter, and
-  // what a search audience is built from.
-  if (typeof p.search_string === 'string' && p.search_string && platform !== 'x' && platform !== 'reddit') out[platform === 'tiktok' ? 'query' : 'search_string'] = p.search_string
-  if (!items.length) return out
-  if (platform === 'meta') {
-    out.content_type = 'product'
-    out.content_ids = items.map((i) => i.item_id)
-    out.contents = items.map((i) => ({ id: i.item_id, quantity: i.quantity ?? 1, item_price: i.price }))
-    out.content_name = items[0].item_name
-    out.num_items = items.reduce((n, i) => n + (i.quantity ?? 1), 0)
-  } else if (platform === 'tiktok') {
-    out.content_type = 'product'
-    out.contents = items.map((i) => ({ content_id: i.item_id, content_name: i.item_name, quantity: i.quantity ?? 1, price: i.price }))
-  } else if (platform === 'reddit') {
-    out.itemCount = items.reduce((n, i) => n + (i.quantity ?? 1), 0)
-    out.products = items.map((i) => ({ id: i.item_id, name: i.item_name, category: i.item_category }))
-  } else {
-    out.contents = items.map((i) => ({ content_id: i.item_id, content_name: i.item_name, content_price: i.price, num_items: i.quantity ?? 1 }))
-  }
-  return out
-}
-
-function shapeOpenAI(eventName: string, p: Record<string, unknown>, id: string): Record<string, unknown> {
-  const out: Record<string, unknown> = {}
-  if (eventName === 'checkout_started') out.type = 'contents'
-  if (typeof p.value === 'number') {
-    out.value = p.value
-    out.currency = typeof p.currency === 'string' ? p.currency : 'USD'
-  } else if (typeof p.currency === 'string') {
-    out.currency = p.currency
-  }
-  if (typeof p.search_string === 'string' && p.search_string) out.search_string = p.search_string
-  if (id) out.event_id = id
-  return out
-}
-
-/** A test order states no amount: nothing sent for it can be summed into revenue. */
 function unpriced(p: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = { ...p, value: 0 }
   if (Array.isArray(p.items)) out.items = (p.items as Item[]).map((i) => ({ ...i, price: 0 }))
   return out
 }
 
-/**
- * Sends one moment to the browser tags named in `to`, under `id`. The names each
- * platform knows it by are the table in @hanzo/events; a platform the table
- * gives no name, or a rule-named platform with no rule for it, is not sent it.
- */
+/** Forwards an event to the server-hosted tag runtime if active on the page. */
 export function mirror(name: string, params: Record<string, unknown>, id: string, to = reach()): void {
-  const p = page()
-  const c = read()
-  const on = new Set(to.split(',').filter(Boolean))
-  const ga4 = namesOn(name, 'ga4')
-  const test = params.test === true
-  if (test) params = unpriced(params)
-  const transaction = typeof params.order_id === 'string' ? { transaction_id: params.order_id } : {}
-  // Global pixel dispatchers reach all initialized pixels on the page: each is called once.
-  const globals = new Set<string>()
-  for (const t of tags) {
-    if (!on.has(t.type) || !allowed(t, c) || globals.has(t.type)) continue
-    if (t.type === 'meta' || t.type === 'reddit' || t.type === 'openai') globals.add(t.type)
-    const rule = t.events?.[name]
-    if (t.type === 'ga') {
-      for (const n of ga4) {
-        p.gtag?.('event', n, { ...params, ...transaction, event_id: id, send_to: t.id, transport_type: 'beacon', ...(test ? { debug_mode: true } : {}) })
-      }
-    } else if (t.type === 'gads' && rule) {
-      p.gtag?.('event', 'conversion', {
-        send_to: rule,
-        value: typeof params.value === 'number' ? params.value : undefined,
-        currency: typeof params.currency === 'string' ? params.currency : 'USD',
-        ...transaction,
-      })
-    } else if (t.type === 'meta') {
-      for (const n of namesOn(name, 'meta')) {
-        p.fbq?.(META_STANDARD.has(n) ? 'track' : 'trackCustom', n, shape('meta', params), { eventID: id })
-      }
-    } else if (t.type === 'tiktok') {
-      for (const n of namesOn(name, 'tiktok')) p.ttq?.track?.(n, shape('tiktok', params), { event_id: id })
-    } else if (t.type === 'linkedin' && rule && namesOn(name, 'linkedin').length) {
-      p.lintrk?.('track', { conversion_id: Number(rule), event_id: id })
-    } else if (t.type === 'x' && rule && namesOn(name, 'x').length) {
-      p.twq?.('event', rule, { ...shape('x', params), conversion_id: id })
-    } else if (t.type === 'reddit') {
-      for (const n of namesOn(name, 'reddit')) {
-        p.rdt?.('track', n, { ...shape('reddit', params), conversionId: id })
-      }
-    } else if (t.type === 'openai') {
-      for (const n of namesOn(name, 'openai')) {
-        p.oaiq?.('measure', n, shapeOpenAI(n, params, id))
-      }
-    }
-  }
+  if (typeof window === 'undefined') return
+  const payload = params.test === true ? unpriced(params) : params
+  hostWindow().__hanzoTags?.mirror?.(name, payload, id, to)
 }
 
 /**
- * One moment, to every place it is counted, under one event_id: our stream
- * always hears it (with the consent, the click and the browser ids cloud
- * forwards on), and each browser tag that is running hears it too. A moment
- * that arrives while gtag.js is still on its way waits for it, so GA4 sees it
- * with a session; a page that is leaving sends what it holds as things stand.
- *
- * A paid order is stated by the SERVER on our stream (and forwarded server-side);
- * its browser copy is `track(stream, 'order_completed', {event_id: order, order_id:
- * order, …}, 'tags')`: the same id, the pixels only, so nothing counts twice.
+ * Emits a funnel event onto the first-party Hanzo Analytics stream (`POST /v1/event`)
+ * under a shared `event_id` (and mirrors to the server-hosted tag runtime if active).
  */
 export function track(
   stream: Analytics | undefined,
   name: string,
   params: Record<string, unknown> = {},
-  /** `'tags'` fires the browser pixels only: the server states this moment on our stream itself. */
   only?: 'tags',
 ): void {
   if (typeof window === 'undefined') return
@@ -726,8 +283,6 @@ export function track(
     return
   }
   const c = read()
-  // A moment the server also states (a paid order) brings its own id, the order's,
-  // so each platform sees the browser's copy and the server's as one.
   const event_id = typeof params.event_id === 'string' && params.event_id ? params.event_id : uuidv7()
   const to = reach()
   mirror(name, params, event_id, to)
@@ -743,7 +298,7 @@ export function track(
   })
 }
 
-/** What cloud needs to forward a moment a page states itself, as if the browser had sent it. */
+/** Context properties for server-stated events so Hanzo Cloud can attribute them first-party. */
 export function visit(): Record<string, unknown> {
   const c = read()
   return { ...touch(c), consent: render(c), tags: reach(), userAgent: navigator.userAgent, url: window.location.href }

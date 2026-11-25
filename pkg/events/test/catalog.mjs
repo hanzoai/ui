@@ -8,7 +8,7 @@
  */
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { EVENTS, SCHEMA, NAMES, RESERVED, isKnown, specFor } from '../dist/index.js'
+import { EVENTS, SCHEMA, NAMES, RESERVED, PLATFORMS, namesOn, isKnown, specFor } from '../dist/index.js'
 
 test('every name in the vocabulary has a spec', () => {
   const missing = Object.values(EVENTS).filter((n) => !(n in SCHEMA))
@@ -54,76 +54,48 @@ test('an unknown name is not known — and that is a flag, not a refusal', () =>
   assert.equal(specFor('totally_made_up'), undefined)
 })
 
-import { PLATFORMS, namesOn } from '../dist/index.js'
-
-test('every platform row names an event in the vocabulary', () => {
+test('every platform row names an event in the vocabulary and carries only first-party metadata', () => {
   const known = new Set(NAMES)
   const orphans = Object.keys(PLATFORMS).filter((n) => !known.has(n))
   assert.deepEqual(orphans, [], `platform rows for events that do not exist: ${orphans.join(', ')}`)
-})
 
-test('every commerce step reaches Google and Meta', () => {
-  for (const n of ['pricing_viewed', 'plan_clicked', 'plan_selected', 'plan_changed', 'checkout_viewed', 'checkout_started',
-    'payment_info_added', 'checkout_abandoned', 'order_completed', 'order_refunded', 'signup_completed', 'sales_contacted']) {
-    assert.ok(namesOn(n, 'ga4').length, `${n} has no GA4 name`)
-    assert.ok(namesOn(n, 'meta').length, `${n} has no Meta name`)
+  const forbidden = ['ga4', 'meta', 'linkedin', 'x', 'tiktok', 'reddit', 'openai', 'ads']
+  for (const [event, row] of Object.entries(PLATFORMS)) {
+    for (const key of Object.keys(row)) {
+      assert.ok(!forbidden.includes(key), `${event} leaked ad-network key ${key} in OSS catalog`)
+      assert.ok(key === 'standard' || key === 'money', `${event} unexpected key ${key}`)
+    }
   }
 })
 
-test('full commerce and lead funnel reaches LinkedIn', () => {
-  for (const [n, kind] of [
+test('core first-party funnel stages resolve via namesOn', () => {
+  for (const [event, stage] of [
     ['pricing_viewed', 'view_content'],
-    ['checkout_viewed', 'view_content'],
-    ['product_viewed', 'view_content'],
-    ['plan_clicked', 'add_to_cart'],
+    ['plan_clicked', 'select_item'],
     ['plan_selected', 'add_to_cart'],
-    ['checkout_started', 'begin_checkout'],
-    ['payment_info_added', 'begin_checkout'],
-    ['checkout_abandoned', 'checkout_abandoned'],
+    ['checkout_viewed', 'view_content'],
+    ['checkout_started', 'start_checkout'],
+    ['payment_info_added', 'add_payment_info'],
     ['signup_submitted', 'lead'],
     ['sales_contacted', 'lead'],
-    ['signup_completed', 'sign_up'],
+    ['signup_completed', 'signup'],
     ['order_completed', 'purchase'],
+    ['search_performed', 'search'],
   ]) {
-    assert.deepEqual(namesOn(n, 'linkedin'), [kind], `${n} on linkedin`)
+    assert.deepEqual(namesOn(event, 'standard'), [stage], `${event} standard stage`)
   }
+  assert.equal(PLATFORMS.order_completed.money, true)
+  assert.equal(PLATFORMS.subscription_changed.money, true)
+  assert.equal(PLATFORMS.order_refunded.money, true)
 })
 
-test('sign_up, begin_checkout, purchase and lead reach every ad platform', () => {
-  for (const [n, kinds] of [['signup_completed', 'sign_up'], ['checkout_started', 'begin_checkout'],
-    ['order_completed', 'purchase'], ['sales_contacted', 'lead']]) {
-    for (const p of ['linkedin', 'x']) assert.deepEqual(namesOn(n, p), [kinds], `${n} on ${p}`)
-    assert.ok(namesOn(n, 'tiktok').length, `${n} on tiktok`)
-    assert.ok(namesOn(n, 'reddit').length, `${n} on reddit`)
-    assert.ok(namesOn(n, 'openai').length, `${n} on openai`)
-  }
-})
-
-test('OpenAI and Reddit funnel mappings match platform event names', () => {
-  for (const [n, oai, rdt] of [
-    ['pricing_viewed', 'view_content', 'ViewContent'],
-    ['checkout_viewed', 'view_content', 'ViewContent'],
-    ['product_viewed', 'view_content', 'ViewContent'],
-    ['search_performed', 'search', 'Search'],
-    ['plan_selected', 'add_to_cart', 'AddToCart'],
-    ['checkout_started', 'checkout_started', 'AddToCart'],
-    ['signup_submitted', 'lead', 'Lead'],
-    ['sales_contacted', 'lead', 'Lead'],
-    ['waitlist_joined', 'lead', 'Lead'],
-    ['newsletter_subscribed', 'lead', 'Lead'],
-    ['beta_submitted', 'lead', 'Lead'],
-    ['research_access_applied', 'lead', 'Lead'],
-    ['signup_completed', 'sign_up', 'SignUp'],
-    ['order_completed', 'purchase', 'Purchase'],
-  ]) {
-    assert.deepEqual(namesOn(n, 'openai'), [oai], `${n} on openai`)
-    assert.deepEqual(namesOn(n, 'reddit'), [rdt], `${n} on reddit`)
-  }
-})
-
-test('the catalog ships the platform table', async () => {
+test('the catalog ships the clean first-party platform table', async () => {
   const { readFileSync } = await import('node:fs')
-  const c = JSON.parse(readFileSync(new URL('../dist/catalog.json', import.meta.url), 'utf8'))
+  const raw = readFileSync(new URL('../dist/catalog.json', import.meta.url), 'utf8')
+  const c = JSON.parse(raw)
   assert.equal(c.version, 3)
   assert.deepEqual(c.platforms, JSON.parse(JSON.stringify(PLATFORMS)))
+  for (const bad of ['"openai"', '"linkedin"', '"reddit"', '"tiktok"', '"meta"', '"ga4"']) {
+    assert.ok(!raw.includes(bad), `catalog.json must not contain ad-network key ${bad}`)
+  }
 })

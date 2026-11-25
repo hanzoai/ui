@@ -1,7 +1,9 @@
-// The tag manager: the region's rule decides what loads before a choice and what a
-// choice changes, and an event reaches each platform under one id and the names the
-// platform table gives.
+// First-party consent & server-hosted tag bridge tests for @hanzo/event.
+// Verifies that open-source @hanzo/event never embeds third-party ad network
+// scripts or hardcoded pixel IDs, and talks exclusively to first-party Hanzo
+// Analytics / Cloud endpoints.
 
+import { readFileSync } from 'node:fs'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const g = globalThis as Record<string, unknown>
@@ -9,24 +11,21 @@ const original = {
   navigator: Object.getOwnPropertyDescriptor(globalThis, 'navigator'),
   Intl: Object.getOwnPropertyDescriptor(globalThis, 'Intl'),
 }
-const put = (k: string, value: unknown) => Object.defineProperty(globalThis, k, { value, configurable: true, writable: true })
+const put = (k: string, value: unknown) =>
+  Object.defineProperty(globalThis, k, { value, configurable: true, writable: true })
 
-const TAGS = {
-  tags: [
-    { platform: 'ga4', type: 'ga', id: 'G-TEST' },
-    { platform: 'google-ads', type: 'gads', id: 'AW-1', events: { order_completed: 'AW-1/abc' } },
-    { platform: 'meta', type: 'meta', id: '111' },
-    { platform: 'linkedin', type: 'linkedin', id: '555', events: { order_completed: '9876' } },
-    { platform: 'x', type: 'x', id: 'o1abc', events: { order_completed: 'tw-o1abc-buy' } },
-    { platform: 'tiktok', type: 'tiktok', id: 'TT1' },
-    { platform: 'reddit', type: 'reddit', id: 'a2_test' },
-  ],
+interface ScriptEl {
+  src: string
+  async?: boolean
+  attrs: Record<string, string>
+  setAttribute: (k: string, v: string) => void
+  onload?: () => void
 }
 
 function browser(zone: string, jar = new Map<string, string>()) {
-  const scripts: string[] = []
+  const scripts: ScriptEl[] = []
   const listeners = new Map<string, Array<() => void>>()
-  const requests: string[] = []
+  const requests: Array<{ url: string; init?: RequestInit }> = []
   put('navigator', { globalPrivacyControl: false, userAgent: 'UA' })
   put('Intl', { DateTimeFormat: () => ({ resolvedOptions: () => ({ timeZone: zone }) }) })
   g.Event = class {
@@ -41,20 +40,37 @@ function browser(zone: string, jar = new Map<string, string>()) {
   g.addEventListener = (g.window as { addEventListener: unknown }).addEventListener
   g.removeEventListener = () => undefined
   g.document = {
+    visibilityState: 'visible',
     get cookie() {
       return [...jar].map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('; ')
     },
     set cookie(line: string) {
       const [pair] = line.split(';')
       const i = pair.indexOf('=')
-      jar.set(pair.slice(0, i), decodeURIComponent(pair.slice(i + 1)))
+      const k = pair.slice(0, i)
+      if (line.includes('Max-Age=0')) jar.delete(k)
+      else jar.set(k, decodeURIComponent(pair.slice(i + 1)))
     },
-    createElement: () => ({}) as Record<string, unknown>,
-    head: { appendChild: (s: { src: string; onload?: () => void }) => (scripts.push(s.src), setTimeout(() => s.onload?.(), 0)) },
+    createElement: () => {
+      const attrs: Record<string, string> = {}
+      return {
+        src: '',
+        attrs,
+        setAttribute: (k: string, v: string) => {
+          attrs[k] = v
+        },
+      }
+    },
+    head: {
+      appendChild: (s: ScriptEl) => {
+        scripts.push(s)
+        setTimeout(() => s.onload?.(), 0)
+      },
+    },
   }
-  put('fetch', async (url: string) => {
-    requests.push(url)
-    return { ok: true, json: async () => TAGS }
+  put('fetch', async (url: string, init?: RequestInit) => {
+    requests.push({ url, init })
+    return { ok: true, json: async () => ({ tags: [] }) }
   })
   let n = 0
   put('crypto', { randomUUID: () => `id-${++n}` })
@@ -63,829 +79,247 @@ function browser(zone: string, jar = new Map<string, string>()) {
 
 beforeEach(() => vi.resetModules())
 afterEach(() => {
-  for (const k of ['window', 'document', 'Event', 'addEventListener', 'removeEventListener', 'fetch', 'crypto']) delete g[k]
+  for (const k of ['window', 'document', 'Event', 'addEventListener', 'removeEventListener', 'fetch', 'crypto']) {
+    delete g[k]
+  }
   for (const [k, d] of Object.entries(original)) if (d) Object.defineProperty(globalThis, k, d)
 })
 
 const tick = () => new Promise((r) => setTimeout(r, 10))
+const accepted = () =>
+  new Map([
+    ['__Host-hz_consent', 'analytics,marketing,ads'],
+    ['__Host-hz_consent_v', '2'],
+  ])
 
-/** The cookie jar of a visitor who accepted everything. */
-const accepted = () => new Map([['__Host-hz_consent', 'analytics,marketing,ads'], ['__Host-hz_consent_v', '2']])
-
-/** Cloud answers the tag set under one region's rule. */
-const under = (b: ReturnType<typeof browser>, mode: string, o: Record<string, unknown> = {}) =>
-  put('fetch', async (url: string) => {
-    b.requests.push(url)
-    return { ok: true, json: async () => ({ ...TAGS, consent: { region: '', mode, version: 3, floor: 2, refused: false, defaults: {}, ...o } }) }
+describe('OSS @hanzo/event contains zero ad-pixel SDKs or hardcoded pixel IDs', () => {
+  it('ships no third-party ad network URLs, globals, or Hanzo pixel IDs in source', () => {
+    for (const file of ['tags.ts', 'org.ts', 'index.ts', 'touch.ts']) {
+      const src = readFileSync(new URL(`./${file}`, import.meta.url), 'utf8')
+      for (const forbidden of [
+        'oaiq',
+        'bzrcdn.openai.com',
+        'TXKHZduRxZZGp4B1ysfiwm',
+        'HANZO_OPENAI_PIXEL_ID',
+        'fbevents.js',
+        'connect.facebook.net',
+        'snap.licdn.com',
+        'static.ads-twitter.com',
+        'analytics.tiktok.com',
+        'redditstatic.com',
+        'googletagmanager.com',
+        '1790308611893001',
+        '10406532',
+      ]) {
+        expect(src, `${file} must not contain ${forbidden}`).not.toContain(forbidden)
+      }
+    }
   })
-const layer = () => ((g.window as { dataLayer?: IArguments[] }).dataLayer ?? []).map((a) => Array.from(a))
-const fbq = () => ((g.window as { fbq?: { queue: IArguments[] } }).fbq?.queue ?? []).map((a) => Array.from(a))
-const hosts = (b: ReturnType<typeof browser>) => b.scripts.map((s) => new URL(s).hostname).sort()
-const consents = () => layer().filter((a) => a[0] === 'consent')
-const views = () => fbq().filter((a) => a[0] === 'track' && a[1] === 'PageView').length
-const EVERY = ['analytics.tiktok.com', 'connect.facebook.net', 'snap.licdn.com', 'static.ads-twitter.com', 'www.googletagmanager.com', 'www.redditstatic.com'].sort()
-const OPT_OUT = { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' }
 
-describe('a browser that refuses', () => {
-  it.each([
-    ['eu', { gpc: true }],
-    ['eu', { dnt: '1' }],
-    ['us_privacy', { gpc: true }],
-    ['us_privacy', { dnt: '1' }],
-    ['global', { gpc: true }],
-  ])('%s %o loads no platform, Google Analytics included, even over a stored yes', async (mode, o: { gpc?: boolean; dnt?: string }) => {
+  it('does not export HANZO_OPENAI_PIXEL_ID', async () => {
+    const mod = (await import('./index')) as Record<string, unknown>
+    expect(mod.HANZO_OPENAI_PIXEL_ID).toBeUndefined()
+  })
+
+  it('loads nothing when /v1/project/tags returns an empty tag list', async () => {
     const b = browser('America/New_York', accepted())
-    put('navigator', { globalPrivacyControl: o.gpc === true, doNotTrack: o.dnt, userAgent: 'UA' })
-    under(b, mode)
-    const { startTags, track } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    track(undefined, 'order_completed', { order_id: 'o-1', value: 5 })
-    expect(b.scripts).toEqual([])
-    expect(layer()).toEqual([])
-    expect(fbq()).toEqual([])
-  })
-
-  it('a refusal cloud saw loads nothing either', async () => {
-    const b = browser('America/Los_Angeles')
-    under(b, 'us_privacy', { refused: true })
     const { startTags } = await import('./index')
-    startTags({ key: 'pk-x' })
+    startTags({ base: 'https://analytics.hanzo.ai', key: 'pk-test' })
     await tick()
+    expect(b.requests[0].url).toBe('https://analytics.hanzo.ai/v1/project/tags?key=pk-test&host=hanzo.ai')
     expect(b.scripts).toEqual([])
   })
 })
 
-describe('eu', () => {
-  it.each([['no choice', {}]])('%s: Google Analytics loads cookieless, Meta is held revoked, nothing else is fetched', async () => {
-    const b = browser('America/New_York')
-    under(b, 'eu')
-    const { startTags } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    expect(hosts(b)).toEqual(['www.googletagmanager.com'])
-    expect(consents()[0]).toEqual(['consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', wait_for_update: 500 }])
-    expect(consents().every((a) => Object.values(a[2] as object).every((v) => v !== 'granted'))).toBe(true)
-    const q = fbq()
-    expect(q.findIndex((a) => a[0] === 'consent' && a[1] === 'revoke')).toBe(0)
-    expect(q.findIndex((a) => a[0] === 'init')).toBeGreaterThan(0)
-    expect(views()).toBe(0)
-  })
-
-  it('a visitor cloud does not answer for is eu', async () => {
-    const b = browser('America/Los_Angeles')
-    const { startTags } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    expect(hosts(b)).toEqual(['www.googletagmanager.com'])
-    expect(fbq()[0]).toEqual(['consent', 'revoke'])
-  })
-
-  it('accepting upgrades Google, grants Meta, fetches fbevents and sends one PageView, with no reload', async () => {
-    const b = browser('Europe/Berlin')
-    const reload = vi.fn()
-    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
-    under(b, 'eu', { region: 'DE' })
-    const { startTags, acceptAll } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    acceptAll()
-    await tick()
-    expect(consents().at(-1)).toEqual(['consent', 'update', { analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' }])
-    // fbevents had not arrived, so it is handed no revoke to undo: a revoke and a
-    // grant waiting in its queue together leave it revoked and the PageView unsent.
-    const q = fbq()
-    expect(q.filter((a) => a[0] === 'consent')).toEqual([])
-    expect(q.findIndex((a) => a[0] === 'track' && a[1] === 'PageView')).toBeGreaterThan(q.findIndex((a) => a[0] === 'init'))
-    expect(views()).toBe(1)
-    expect(hosts(b)).toEqual(EVERY)
-    expect(reload).not.toHaveBeenCalled()
-  })
-
-  it('a moment before the answer waits for it; after a refusal it reaches Google Analytics, cookieless, and never Meta', async () => {
-    const b = browser('Europe/Berlin')
-    under(b, 'eu')
-    const { startTags, track, rejectAll } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    track(undefined, 'order_completed', { order_id: 'o-1', value: 5 })
-    expect(layer().filter((a) => a[0] === 'event')).toEqual([])
-    rejectAll()
-    await tick()
-    expect(layer().filter((a) => a[0] === 'event').map((a) => (a[2] as { send_to: string }).send_to)).toEqual(['G-TEST'])
-    expect(fbq().filter((a) => a[0] === 'track' || a[0] === 'trackCustom')).toEqual([])
-  })
-
-  it('a caller naming Meta itself reaches it only under Marketing', async () => {
-    const b = browser('Europe/Berlin')
-    under(b, 'eu')
-    const { startTags, mirror } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    mirror('order_completed', { value: 5 }, 'e-1', 'ga,meta')
-    expect(fbq().filter((a) => a[0] === 'track' || a[0] === 'trackCustom')).toEqual([])
-  })
-})
-
-describe('us_privacy', () => {
-  it('everything loads at once under Consent Mode granted, Meta live, no banner', async () => {
-    const b = browser('America/Los_Angeles')
-    under(b, 'us_privacy', { region: 'US-CA' })
-    const { startTags, asks } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    expect(hosts(b)).toEqual(EVERY)
-    expect(consents()[0]).toEqual(['consent', 'default', { analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' }])
-    expect(fbq().some((a) => a[0] === 'consent' || a[0] === 'dataProcessingOptions')).toBe(false)
-    expect(views()).toBe(1)
-    expect(asks()).toBe(false)
-  })
-
-  it('the opt-out is exactly LDU and the three ad flags denied, with no reload; opting back in lifts both', async () => {
-    const b = browser('America/Los_Angeles')
-    const reload = vi.fn()
-    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
-    under(b, 'us_privacy')
-    const { startTags, saveConsent, acceptAll } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    saveConsent({ analytics: true, marketing: true, ads: false })
-    await tick()
-    expect(fbq().at(-1)).toEqual(['dataProcessingOptions', ['LDU'], 0, 0])
-    expect(consents().at(-1)).toEqual(['consent', 'update', OPT_OUT])
-    expect(fbq().some((a) => a[0] === 'consent')).toBe(false)
-    expect(reload).not.toHaveBeenCalled()
-    acceptAll()
-    await tick()
-    expect(fbq().at(-1)).toEqual(['dataProcessingOptions', []])
-    expect(consents().at(-1)?.[2]).toEqual({ ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' })
-  })
-
-  it('a stored opt-out is the opt-out from the first call', async () => {
-    const b = browser('America/Denver', new Map([['__Host-hz_consent', 'analytics,marketing'], ['__Host-hz_consent_v', '3'], ['__Host-hz_consent_rule', 'us_privacy']]))
-    under(b, 'us_privacy', { region: 'US-CO' })
-    const { startTags } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    expect(hosts(b)).toEqual(EVERY)
-    expect(fbq().findIndex((a) => a[0] === 'dataProcessingOptions')).toBeLessThan(fbq().findIndex((a) => a[0] === 'init'))
-    expect(fbq().find((a) => a[0] === 'dataProcessingOptions')).toEqual(['dataProcessingOptions', ['LDU'], 0, 0])
-    expect(consents()[1]).toEqual(['consent', 'update', OPT_OUT])
-    expect(views()).toBe(1)
-  })
-})
-
-describe('global', () => {
-  it('everything loads at once, as in us_privacy', async () => {
-    const b = browser('Asia/Tokyo')
-    under(b, 'global', { region: 'JP' })
-    const { startTags } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    expect(hosts(b)).toEqual(EVERY)
-    expect(views()).toBe(1)
-  })
-
-  it('Analytics saved off stops Google Analytics and reloads; Marketing saved off revokes Meta', async () => {
-    const b = browser('Asia/Tokyo')
-    const reload = vi.fn()
-    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
-    under(b, 'global')
-    const { startTags, saveConsent } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    saveConsent({ analytics: false, marketing: false, ads: true })
-    await tick()
-    expect((g.window as Record<string, unknown>)['ga-disable-G-TEST']).toBe(true)
-    expect(fbq()).toContainEqual(['consent', 'revoke'])
-    expect(reload).toHaveBeenCalledTimes(1)
-  })
-
-  it('a withdrawal made while the sheet is open reloads once, when it closes', async () => {
-    const b = browser('Asia/Tokyo')
-    const reload = vi.fn()
-    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
-    under(b, 'global')
-    const { startTags, saveConsent, consentSheet } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    consentSheet(true)
-    saveConsent({ analytics: false, marketing: true, ads: true })
-    await tick()
-    saveConsent({ analytics: false, marketing: false, ads: true })
-    await tick()
-    expect(reload).not.toHaveBeenCalled()
-    expect((g.window as Record<string, unknown>)['ga-disable-G-TEST']).toBe(true)
-    consentSheet(false)
-    await tick()
-    expect(reload).toHaveBeenCalledTimes(1)
-  })
-
-  it('a switch turned off and on again before the sheet closes reloads nothing', async () => {
-    const b = browser('Asia/Tokyo')
-    const reload = vi.fn()
-    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
-    under(b, 'global')
-    const { startTags, saveConsent, consentSheet } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    consentSheet(true)
-    saveConsent({ analytics: true, marketing: false, ads: true })
-    await tick()
-    saveConsent({ analytics: true, marketing: true, ads: true })
-    await tick()
-    consentSheet(false)
-    await tick()
-    expect(reload).not.toHaveBeenCalled()
-  })
-})
-
-describe('before consent', () => {
-  it('a visitor who accepted loads every tag', async () => {
+describe('first-party server-managed tag bridge & consent gating', () => {
+  it('loads only the first-party server tag script when server tags are configured for a person', async () => {
     const b = browser('America/New_York', accepted())
-    const { startTags } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    expect(hosts(b)).toEqual(EVERY)
-  })
-})
-
-describe('a driven browser', () => {
-  it('loads no platform even for a visitor who accepted', async () => {
-    const b = browser('America/New_York', accepted())
-    put('navigator', { globalPrivacyControl: false, userAgent: 'UA', webdriver: true })
-    const { startTags } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    expect(b.requests.some((u) => u.includes('/v1/project/tags'))).toBe(true)
-    expect(b.scripts).toEqual([])
-  })
-})
-
-describe('a teammate’s browser', () => {
-  it('?hz_internal=1 keeps the mark, loads Google tagged internal, and no ad pixel', async () => {
-    const b = browser('America/New_York', accepted())
-    ;(g.window as { location: { search: string } }).location.search = '?hz_internal=1'
-    const { startTags } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    expect(b.jar.get('hz_internal')).toBe('1')
-    expect(b.scripts.every((s) => s.includes('googletagmanager.com'))).toBe(true)
-    expect(b.scripts.length).toBeGreaterThan(0)
-    const layer = (g.window as { dataLayer: IArguments[] }).dataLayer.map((a) => Array.from(a))
-    const config = layer.filter((a) => a[0] === 'config')
-    expect(config.length).toBeGreaterThan(0)
-    for (const c of config) expect(c[2]).toMatchObject({ traffic_type: 'internal' })
-  })
-})
-
-describe('the audience cloud names', () => {
-  const answering = (b: { requests: string[] }, body: Record<string, unknown>, seen: Array<RequestInit | undefined> = []) =>
     put('fetch', async (url: string, init?: RequestInit) => {
-      b.requests.push(url)
-      seen.push(init)
-      return { ok: true, json: async () => ({ ...TAGS, ...body }) }
+      b.requests.push({ url, init })
+      return {
+        ok: true,
+        json: async () => ({
+          tags: [{ platform: 'analytics', type: 'ga', id: 'server-configured' }],
+          consent: { region: 'US-CA', mode: 'us_privacy', version: 3, floor: 2, refused: false },
+          audience: 'person',
+        }),
+      }
     })
+    const { startTags, tagsReady } = await import('./index')
+    startTags({ base: 'https://analytics.hanzo.ai', key: 'pk-site' })
+    await tagsReady(500)
+    await tick()
 
-  it('a bot loads nothing, even for a visitor who accepted', async () => {
+    expect(b.scripts.map((s) => s.src)).toEqual(['https://analytics.hanzo.ai/v1/event/tag.js'])
+    expect(b.scripts[0].attrs).toEqual({
+      'data-key': 'pk-site',
+      'data-tags-only': '1',
+    })
+  })
+
+  it('loads nothing under GPC/DNT refusal or bot classification', async () => {
     const b = browser('America/New_York', accepted())
-    answering(b, { audience: 'bot' })
+    put('fetch', async (url: string, init?: RequestInit) => {
+      b.requests.push({ url, init })
+      return {
+        ok: true,
+        json: async () => ({
+          tags: [{ platform: 'analytics', type: 'ga', id: 'server-configured' }],
+          consent: { region: 'US-CA', mode: 'us_privacy', version: 3, floor: 2, refused: true },
+          audience: 'person',
+        }),
+      }
+    })
     const { startTags } = await import('./index')
-    startTags({ key: 'pk-x' })
+    startTags({ key: 'pk-site' })
     await tick()
     expect(b.scripts).toEqual([])
-  })
-
-  it('the team loads Google alone, tagged internal, and the browser stays marked', async () => {
-    const b = browser('America/New_York', accepted())
-    answering(b, { audience: 'internal' })
-    const { startTags } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    expect(b.scripts.length).toBeGreaterThan(0)
-    expect(b.scripts.every((s) => s.includes('googletagmanager.com'))).toBe(true)
-    const config = (g.window as { dataLayer: IArguments[] }).dataLayer.map((a) => Array.from(a)).filter((a) => a[0] === 'config')
-    expect(config.length).toBeGreaterThan(0)
-    for (const c of config) expect(c[2]).toMatchObject({ traffic_type: 'internal' })
-    expect(b.jar.get('hz_internal')).toBe('1')
-  })
-
-  it('a person loads every tag, untagged, and is not marked', async () => {
-    const b = browser('America/New_York', accepted())
-    answering(b, { audience: 'person' })
-    const { startTags } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    expect(b.scripts.map((s) => new URL(s).hostname)).toContain('connect.facebook.net')
-    const config = (g.window as { dataLayer: IArguments[] }).dataLayer.map((a) => Array.from(a)).filter((a) => a[0] === 'config')
-    for (const c of config) expect(c[2]).not.toHaveProperty('traffic_type')
-    expect(b.jar.has('hz_internal')).toBe(false)
-  })
-
-  it('sends the site’s IAM token as the bearer, and nothing without one', async () => {
-    const b = browser('America/New_York', accepted())
-    const seen: Array<RequestInit | undefined> = []
-    answering(b, {}, seen)
-    const { startTags } = await import('./index')
-    startTags({ key: 'pk-x', token: () => 'jwt-abc' })
-    await tick()
-    expect(seen[0]).toEqual({ headers: { Authorization: 'Bearer jwt-abc' } })
 
     vi.resetModules()
-    const c = browser('America/New_York', accepted())
-    const none: Array<RequestInit | undefined> = []
-    answering(c, {}, none)
-    const again = await import('./index')
-    again.startTags({ key: 'pk-x', token: () => undefined })
-    await tick()
-    expect(none).toEqual([undefined])
-  })
-
-  it('a refused bearer asks again as a stranger', async () => {
-    const b = browser('America/New_York', accepted())
-    const seen: Array<RequestInit | undefined> = []
+    const botBrowser = browser('America/New_York', accepted())
     put('fetch', async (url: string, init?: RequestInit) => {
-      seen.push(init)
-      if (init) throw new TypeError('Failed to fetch')
-      b.requests.push(url)
-      return { ok: true, json: async () => TAGS }
-    })
-    const { startTags } = await import('./index')
-    startTags({ key: 'pk-x', token: () => 'jwt-abc' })
-    await tick()
-    expect(seen).toEqual([{ headers: { Authorization: 'Bearer jwt-abc' } }, undefined])
-    expect(b.scripts.map((s) => new URL(s).hostname)).toContain('www.googletagmanager.com')
-  })
-})
-
-describe('after accepting', () => {
-  it('loads Google, Meta, LinkedIn, X, TikTok and Reddit with no reload', async () => {
-    const b = browser('Europe/Berlin')
-    const { startTags, acceptAll } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    acceptAll()
-    await tick()
-    expect(b.scripts).toHaveLength(6)
-  })
-
-  it('sets Consent Mode v2 denied before any Google script, then updates it', async () => {
-    const b = browser('Europe/Berlin')
-    const { startTags, acceptAll } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    acceptAll()
-    await tick()
-    const layer = (g.window as { dataLayer: IArguments[] }).dataLayer.map((a) => Array.from(a))
-    const dflt = layer.findIndex((a) => a[0] === 'consent' && a[1] === 'default')
-    const js = layer.findIndex((a) => a[0] === 'js')
-    expect(dflt).toBeGreaterThanOrEqual(0)
-    expect(dflt).toBeLessThan(js)
-    expect(layer[dflt][2]).toMatchObject({ analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' })
-    const update = layer.filter((a) => a[0] === 'consent' && a[1] === 'update').at(-1)
-    expect(update?.[2]).toMatchObject({ analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' })
-  })
-
-  it('a withdrawal tells Google and Meta at once and reloads, so nothing loaded under it runs on', async () => {
-    const b = browser('Europe/Berlin')
-    const reload = vi.fn()
-    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
-    const { startTags, acceptAll, rejectAll } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    acceptAll()
-    await tick()
-    const fbq = (g.window as { fbq: { queue: IArguments[] } }).fbq
-    rejectAll()
-    await tick()
-    const layer = (g.window as { dataLayer: IArguments[] }).dataLayer.map((a) => Array.from(a))
-    const last = layer.filter((a) => a[0] === 'consent').at(-1)
-    expect(last?.[1]).toBe('update')
-    expect(last?.[2]).toMatchObject({ analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' })
-    expect(fbq.queue.map((a) => Array.from(a))).toContainEqual(['consent', 'revoke'])
-    expect(reload).toHaveBeenCalledTimes(1)
-    expect(b.scripts).toHaveLength(6)
-  })
-
-  it('a withdrawal made in another tab is acted on when this page is shown again', async () => {
-    const b = browser('Europe/Berlin')
-    const reload = vi.fn()
-    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
-    ;(g.document as Record<string, unknown>).visibilityState = 'visible'
-    const { startTags, acceptAll } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    acceptAll()
-    await tick()
-    b.jar.set('__Host-hz_consent', '')
-    ;(g.window as { dispatchEvent: (e: { type: string }) => void }).dispatchEvent({ type: 'visibilitychange' })
-    await tick()
-    expect(reload).toHaveBeenCalledTimes(1)
-    expect((g.window as Record<string, unknown>)['ga-disable-AW-1']).toBe(true)
-    expect((g.window as Record<string, unknown>)['ga-disable-G-TEST']).toBeUndefined()
-  })
-
-  it('withdrawing Personalized ads alone keeps Meta, under Limited Data Use', async () => {
-    browser('Europe/Berlin')
-    const reload = vi.fn()
-    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
-    const { startTags, acceptAll, saveConsent } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    acceptAll()
-    await tick()
-    saveConsent({ analytics: true, marketing: true, ads: false })
-    await tick()
-    const fbq = (g.window as { fbq: { queue: IArguments[] } }).fbq
-    expect(fbq.queue.map((a) => Array.from(a)).at(-1)).toEqual(['dataProcessingOptions', ['LDU'], 0, 0])
-    expect(reload).not.toHaveBeenCalled()
-  })
-
-  it('a choice that withdraws nothing loaded neither reloads nor revokes', async () => {
-    browser('Europe/Berlin')
-    const reload = vi.fn()
-    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
-    const { startTags, saveConsent, rejectAll } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    rejectAll()
-    await tick()
-    saveConsent({ analytics: true, marketing: false, ads: false })
-    await tick()
-    saveConsent({ analytics: true, marketing: false, ads: true })
-    await tick()
-    expect(reload).not.toHaveBeenCalled()
-  })
-
-  it('analytics alone loads only Google, cookieless for ads', async () => {
-    const b = browser('Europe/Berlin')
-    const { startTags, saveConsent } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    saveConsent({ analytics: true, marketing: false, ads: false })
-    await tick()
-    expect(b.scripts.map((s) => new URL(s).hostname)).toEqual(['www.googletagmanager.com'])
-  })
-})
-
-describe('a moment before the visitor answers', () => {
-  const view = async (answer: 'accept' | 'reject') => {
-    browser('Europe/Berlin')
-    const { startTags, track, acceptAll, rejectAll } = await import('./index')
-    const captured: Array<Record<string, unknown>> = []
-    startTags({ key: 'pk-x' })
-    await tick()
-    track({ capture: (_: string, props: Record<string, unknown>) => captured.push(props) } as never, 'pricing_viewed', { currency: 'USD' })
-    await tick()
-    expect(captured, 'nothing goes out while the banner asks').toEqual([])
-    if (answer === 'accept') acceptAll()
-    else rejectAll()
-    await tick()
-    return captured
-  }
-
-  it('goes out on Accept, carrying the consent given', async () => {
-    const captured = await view('accept')
-    expect(captured).toHaveLength(1)
-    expect(captured[0].consent).toBe('analytics,marketing,ads')
-  })
-
-  it('goes out on Reject, carrying no consent', async () => {
-    const captured = await view('reject')
-    expect(captured).toHaveLength(1)
-    expect(captured[0].consent).toBe('')
-  })
-})
-
-describe('one event, every tag', () => {
-  it('sends purchase under one id to each platform, with the names the table gives', async () => {
-    browser('America/New_York', accepted())
-    const { startTags, track } = await import('./index')
-    const captured: Array<{ name: string; props: Record<string, unknown> }> = []
-    startTags({ key: 'pk-x' })
-    await tick()
-    const w = g.window as unknown as Record<string, unknown>
-    const gtag: unknown[][] = []
-    const fbq: unknown[][] = []
-    const ttq: unknown[][] = []
-    const twq: unknown[][] = []
-    const lintrk: unknown[][] = []
-    w.gtag = (...a: unknown[]) => gtag.push(a)
-    w.fbq = (...a: unknown[]) => fbq.push(a)
-    w.ttq = { track: (...a: unknown[]) => ttq.push(a) }
-    w.twq = (...a: unknown[]) => twq.push(a)
-    w.lintrk = (...a: unknown[]) => lintrk.push(a)
-    const items = [{ item_id: 'dev', item_name: 'Dev', price: 19, quantity: 1 }]
-    track({ capture: (name: string, props: Record<string, unknown>) => captured.push({ name, props }) } as never, 'order_completed', {
-      order_id: 'ord-1', value: 19, currency: 'USD', items,
-    })
-    await tick()
-
-    expect(captured).toHaveLength(1)
-    const id = captured[0].props.event_id
-    expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-/)
-    expect(String(captured[0].props.tags).split(',').sort()).toEqual(['ga', 'gads', 'linkedin', 'meta', 'reddit', 'tiktok', 'x'])
-
-    const ga = gtag.find((a) => a[0] === 'event' && a[1] === 'purchase')
-    expect(ga?.[2]).toMatchObject({ transaction_id: 'ord-1', event_id: id, items, value: 19 })
-    expect(gtag.find((a) => a[1] === 'conversion')?.[2]).toMatchObject({ send_to: 'AW-1/abc', value: 19 })
-    expect(fbq.map((a) => [a[0], a[1], (a[3] as { eventID: string }).eventID])).toEqual([
-      ['track', 'Purchase', id],
-      ['track', 'Subscribe', id],
-    ])
-    expect(ttq[0][0]).toBe('CompletePayment')
-    expect(ttq[0][2]).toEqual({ event_id: id })
-    expect(twq[0][1]).toBe('tw-o1abc-buy')
-    expect(lintrk[0]).toEqual(['track', { conversion_id: 9876, event_id: id }])
-    expect(w._linkedin_partner_id).toBe('555')
-    expect(w._linkedin_data_partner_ids).toEqual(['555'])
-  })
-
-  it('tracks full funnel moments into LinkedIn with shared event_id for CAPI deduplication', async () => {
-    const b = browser('America/New_York', accepted())
-    put('fetch', async (url: string) => {
-      b.requests.push(url)
+      botBrowser.requests.push({ url, init })
       return {
         ok: true,
         json: async () => ({
-          tags: [
-            {
-              platform: 'linkedin',
-              type: 'linkedin',
-              id: '10406532',
-              events: {
-                pricing_viewed: '30631284',
-                checkout_viewed: '30631284',
-                plan_selected: '30631276',
-                checkout_started: '30631268',
-                checkout_abandoned: '30631292',
-                signup_submitted: '30631260',
-                signup_completed: '30631244',
-                order_completed: '30631252',
-              },
-            },
-          ],
+          tags: [{ platform: 'analytics', type: 'ga', id: 'server-configured' }],
+          audience: 'bot',
         }),
       }
     })
-    const { startTags, track } = await import('./index')
-    const captured: Array<{ name: string; props: Record<string, unknown> }> = []
-    startTags({ key: 'pk-x' })
+    const mod2 = await import('./index')
+    mod2.startTags({ key: 'pk-site' })
     await tick()
-    const w = g.window as unknown as Record<string, unknown>
-    expect(w._linkedin_partner_id).toBe('10406532')
-    expect(w._linkedin_data_partner_ids).toEqual(['10406532'])
-    const lintrk: unknown[][] = []
-    w.lintrk = (...a: unknown[]) => lintrk.push(a)
-    const stream = { capture: (name: string, props: Record<string, unknown>) => captured.push({ name, props }) } as never
-    for (const ev of ['pricing_viewed', 'checkout_viewed', 'plan_selected', 'checkout_started', 'checkout_abandoned', 'signup_submitted', 'signup_completed']) {
-      track(stream, ev, { plan: 'dev', value: 20 })
-    }
-    await tick()
-    expect(lintrk.map((a) => (a[1] as { conversion_id: number }).conversion_id)).toEqual([
-      30631284, 30631284, 30631276, 30631268, 30631292, 30631260, 30631244,
-    ])
-    for (let i = 0; i < captured.length; i++) {
-      expect((lintrk[i][1] as { event_id: string }).event_id).toBe(captured[i].props.event_id)
-    }
+    expect(botBrowser.scripts).toEqual([])
   })
 
-  it('the audience moments reach each platform by the names the table gives, a search naming what was asked', async () => {
-    browser('America/New_York', accepted())
-    const { startTags, track } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    const w = g.window as unknown as Record<string, unknown>
-    const gtag: unknown[][] = []
-    const fbq: unknown[][] = []
-    const ttq: unknown[][] = []
-    w.gtag = (...a: unknown[]) => gtag.push(a)
-    w.fbq = (...a: unknown[]) => fbq.push(a)
-    w.ttq = { track: (...a: unknown[]) => ttq.push(a) }
-    const stream = { capture: () => undefined } as never
-    track(stream, 'product_viewed', { content_type: 'model', items: [{ item_id: 'enso', item_name: 'Enso' }] })
-    track(stream, 'search_performed', { search_string: 'gpu pricing', from: 'palette' })
-    track(stream, 'cta_clicked', { cta: 'try_hanzo', page: '/' })
-    for (const name of ['newsletter_subscribed', 'beta_submitted', 'research_access_applied']) track(stream, name, {})
-    await tick()
-
-    expect(gtag.filter((a) => a[0] === 'event').map((a) => a[1])).toEqual([
-      'view_item', 'search', 'cta_click', 'generate_lead', 'generate_lead', 'generate_lead',
-    ])
-    expect(gtag.find((a) => a[1] === 'search')?.[2]).toMatchObject({ search_string: 'gpu pricing' })
-    expect(fbq.map((a) => [a[0], a[1]])).toEqual([
-      ['track', 'ViewContent'], ['track', 'Search'], ['trackCustom', 'CTAClicked'],
-      ['track', 'Lead'], ['track', 'Lead'], ['track', 'Lead'],
-    ])
-    expect(fbq[0][2]).toMatchObject({ content_ids: ['enso'], content_name: 'Enso' })
-    expect(fbq[1][2]).toMatchObject({ search_string: 'gpu pricing' })
-    expect(ttq.map((a) => a[0])).toEqual(['ViewContent', 'Search', 'ClickButton', 'SubmitForm', 'SubmitForm', 'SubmitForm'])
-    expect(ttq[1][1]).toMatchObject({ query: 'gpu pricing' })
-  })
-
-  it('a test order is debug traffic', async () => {
-    browser('America/New_York', accepted())
-    const { startTags, mirror } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    const w = g.window as unknown as Record<string, unknown>
-    const gtag: unknown[][] = []
-    w.gtag = (...a: unknown[]) => gtag.push(a)
-    mirror('order_completed', { test: true, order_id: 'o', value: 19, items: [{ item_id: 'dev', price: 19 }] }, 'id-9', 'ga')
-    const sent = gtag.find((a) => a[1] === 'purchase')?.[2] as { value: number; items: Array<{ price: number }> }
-    expect(sent).toMatchObject({ debug_mode: true, value: 0 })
-    expect(sent.items[0].price).toBe(0)
-  })
-})
-
-describe('a paid order the server also states', () => {
-  it('fires the pixels under the order id and does not touch our stream', async () => {
-    browser('America/New_York', accepted())
-    const { startTags, track } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    const w = g.window as unknown as Record<string, unknown>
-    const fbq: unknown[][] = []
-    const captured: unknown[] = []
-    w.gtag = () => undefined
-    w.fbq = (...a: unknown[]) => fbq.push(a)
-    track({ capture: (...a: unknown[]) => captured.push(a) } as never, 'order_completed', { event_id: 'sub_1', order_id: 'sub_1', value: 19 }, 'tags')
-    await tick()
-    expect(captured).toEqual([])
-    expect(fbq.map((a) => (a[3] as { eventID: string }).eventID)).toEqual(['sub_1', 'sub_1'])
-  })
-})
-
-describe('every Meta pixel', () => {
-  it.each([
-    [['1790308611893001', '758250658033751', '366194547064903']],
-    [['111']],
-  ])('%j: fbevents once, each pixel init\'ed, one PageView, one track per event', async (ids) => {
+  it('retries without Authorization header if bearer preflight fails', async () => {
     const b = browser('America/New_York', accepted())
-    put('fetch', async (url: string) => {
-      b.requests.push(url)
-      return { ok: true, json: async () => ({ tags: ids.map((id) => ({ platform: 'meta', type: 'meta', id })) }) }
-    })
-    const { startTags, track } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    const fbq = (g.window as { fbq: { queue: unknown[][] } }).fbq
-    const calls = () => fbq.queue.map((a) => Array.from(a as ArrayLike<unknown>))
-    expect(b.scripts.filter((s) => s.includes('fbevents'))).toHaveLength(1)
-    expect(calls().filter((a) => a[0] === 'init').map((a) => a[1])).toEqual(ids)
-    expect(calls().filter((a) => a[0] === 'track' && a[1] === 'PageView')).toHaveLength(1)
-    expect(calls().findIndex((a) => a[0] === 'track')).toBeGreaterThan(calls().map((a) => a[0]).lastIndexOf('init'))
-    track({ capture: () => undefined } as never, 'signup_completed', {})
-    await tick()
-    const sent = calls().filter((a) => a[0] === 'track' && a[1] !== 'PageView')
-    expect(sent).toHaveLength(1)
-    expect((sent[0][3] as { eventID: string }).eventID).toBeTruthy()
-  })
-
-  it('states Limited Data Use once, before the first init', async () => {
-    const b = browser('America/New_York', new Map([['__Host-hz_consent', 'analytics,marketing'], ['__Host-hz_consent_v', '2']]))
-    put('fetch', async (url: string) => {
-      b.requests.push(url)
-      return { ok: true, json: async () => ({ tags: ['1', '2', '3'].map((id) => ({ platform: 'meta', type: 'meta', id })) }) }
+    let callCount = 0
+    put('fetch', async (url: string, init?: RequestInit) => {
+      callCount++
+      b.requests.push({ url, init })
+      if (callCount === 1) throw new TypeError('CORS preflight refused')
+      return { ok: true, json: async () => ({ tags: [] }) }
     })
     const { startTags } = await import('./index')
-    startTags({ key: 'pk-x' })
+    startTags({ key: 'pk-site', token: () => 'jwt-token' })
     await tick()
-    const calls = (g.window as { fbq: { queue: unknown[][] } }).fbq.queue.map((a) => Array.from(a as ArrayLike<unknown>))
-    expect(calls.filter((a) => a[0] === 'dataProcessingOptions')).toHaveLength(1)
-    expect(calls.findIndex((a) => a[0] === 'dataProcessingOptions')).toBeLessThan(calls.findIndex((a) => a[0] === 'init'))
+    expect(b.requests.length).toBe(2)
+    expect(b.requests[0].init?.headers).toEqual({ Authorization: 'Bearer jwt-token' })
+    expect(b.requests[1].init).toBeUndefined()
   })
-})
 
-describe('Reddit pixel & CAPI deduplication', () => {
-  it('loads redditstatic pixel.js, initializes, fires PageVisit, and mirrors conversions with conversionId + rdt_cid', async () => {
+  it('waits for consent sheet to close before reloading on category withdrawal', async () => {
     const b = browser('America/New_York', accepted())
-    ;(g.window as { location: Record<string, unknown> }).location.search = '?rdt_cid=rcid_123'
-    put('fetch', async (url: string) => {
-      b.requests.push(url)
-      return { ok: true, json: async () => ({ tags: [{ platform: 'reddit', type: 'reddit', id: 'a2_k2sajv4zerym' }] }) }
-    })
-    const { startTags, track } = await import('./index')
-    startTags({ key: 'pk-x' })
-    await tick()
-    expect(b.scripts).toEqual(['https://www.redditstatic.com/ads/pixel.js?pixel_id=a2_k2sajv4zerym'])
-    const rdt = (g.window as { rdt: { callQueue: IArguments[] } }).rdt
-    const calls = () => rdt.callQueue.map((a) => Array.from(a))
-    expect(calls().slice(0, 2)).toEqual([
-      ['init', 'a2_k2sajv4zerym'],
-      ['track', 'PageVisit'],
-    ])
-    const captured: Array<{ name: string; props: Record<string, unknown> }> = []
-    const stream = { capture: (name: string, props: Record<string, unknown>) => captured.push({ name, props }) } as never
-    track(stream, 'order_completed', { order_id: 'ord-42', value: 99, currency: 'USD', items: [{ item_id: 'pro', item_name: 'Hanzo Pro' }] })
-    await tick()
-    expect(captured).toHaveLength(1)
-    expect(captured[0].props.rdt_cid).toBe('rcid_123')
-    expect(captured[0].props.tags).toBe('reddit')
-    const id = captured[0].props.event_id
-    expect(calls()[2]).toEqual([
-      'track',
-      'Purchase',
-      {
-        value: 99,
-        currency: 'USD',
-        itemCount: 1,
-        products: [{ id: 'pro', name: 'Hanzo Pro', category: undefined }],
-        conversionId: id,
-      },
-    ])
-  })
-})
-
-describe('OpenAI oaiq pixel & CAPI deduplication', () => {
-  it('loads oaiq.min.js under Marketing consent, queues arguments on oaiq.q, and measures checkout_started with { type: "contents" }', async () => {
-    const b = browser('America/New_York', accepted())
-    ;(g.window as { location: Record<string, unknown> }).location.search = '?oppref=opp_789'
-    put('fetch', async (url: string) => {
-      b.requests.push(url)
+    const reload = vi.fn()
+    ;(g.window as { location: Record<string, unknown> }).location.reload = reload
+    put('fetch', async (url: string, init?: RequestInit) => {
+      b.requests.push({ url, init })
       return {
         ok: true,
         json: async () => ({
-          tags: [{ platform: 'openai', type: 'openai', id: 'TXKHZduRxZZGp4B1ysfiwm' }],
+          tags: [{ platform: 'analytics', type: 'ga', id: 'server-configured' }],
+          consent: { region: 'US-CA', mode: 'us_privacy', version: 3, floor: 2, refused: false },
+          audience: 'person',
         }),
       }
     })
-    const { startTags, track } = await import('./index')
-    const captured: Array<{ name: string; props: Record<string, unknown> }> = []
-    startTags({ key: 'pk-x' })
+    const { startTags, consentSheet, saveConsent } = await import('./index')
+    startTags({ key: 'pk-site' })
     await tick()
 
-    expect(b.scripts).toEqual(['https://bzrcdn.openai.com/sdk/oaiq.min.js'])
-    const w = g.window as unknown as { oaiq: ((...a: unknown[]) => void) & { q: IArguments[] } }
-    const oaiqCalls = () => w.oaiq.q.map((a) => Array.from(a))
-    expect(oaiqCalls()).toEqual([['init', { pixelId: 'TXKHZduRxZZGp4B1ysfiwm' }]])
+    consentSheet(true)
+    saveConsent({ analytics: true, marketing: false, ads: false })
+    await tick()
+    expect(reload).not.toHaveBeenCalled()
 
-    const stream = { capture: (name: string, props: Record<string, unknown>) => captured.push({ name, props }) } as never
-    track(stream, 'checkout_started', {})
-    track(stream, 'checkout_started', { value: 20, currency: 'USD' })
-    track(stream, 'order_completed', { order_id: 'ord-42', value: 49, currency: 'USD' })
+    consentSheet(false)
+    await tick()
+    expect(reload).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('track, mirror, reach, and visit', () => {
+  it('captures first-party stream events and bridges to __hanzoTags when registered by server tag.js', async () => {
+    const b = browser('America/New_York', accepted())
+    ;(g.window as { location: Record<string, unknown> }).location.search = '?gclid=G123'
+    const mirrored: Array<{ name: string; params: Record<string, unknown>; id: string; to?: string }> = []
+    ;(g.window as Record<string, unknown>).__hanzoTags = {
+      reach: () => 'ga',
+      mirror: (name: string, params: Record<string, unknown>, id: string, to?: string) =>
+        mirrored.push({ name, params, id, to }),
+    }
+    const { startTags, track, visit } = await import('./index')
+    startTags({ key: 'pk-site' })
+    await tick()
+
+    const captured: Array<{ name: string; props: Record<string, unknown> }> = []
+    const stream = {
+      capture: (name: string, props: Record<string, unknown>) => captured.push({ name, props }),
+    } as never
+
+    track(stream, 'checkout_started', { value: 49, currency: 'USD' })
+    track(stream, 'order_completed', { event_id: 'ord-99', value: 49, currency: 'USD' }, 'tags')
+    track(stream, 'order_completed', { test: true, value: 99, items: [{ item_id: 'pro', price: 99 }] })
+    await tick()
+
+    expect(captured.length).toBe(2)
+    expect(captured[0].name).toBe('checkout_started')
+    expect(captured[0].props.gclid).toBe('G123')
+    expect(captured[0].props.tags).toBe('ga')
+    expect(captured[0].props.consent).toBe('analytics,marketing,ads')
+
+    // `only: 'tags'` mirrors to server tag runtime without duplicating stream capture.
+    expect(mirrored.length).toBe(3)
+    expect(mirrored[0]).toMatchObject({
+      name: 'checkout_started',
+      id: captured[0].props.event_id,
+      to: 'ga',
+    })
+    expect(mirrored[1]).toMatchObject({ name: 'order_completed', id: 'ord-99', to: 'ga' })
+    // `test: true` zeroes revenue before mirroring.
+    expect(mirrored[2].params).toMatchObject({
+      test: true,
+      value: 0,
+      items: [{ item_id: 'pro', price: 0 }],
+    })
+
+    expect(visit()).toMatchObject({
+      gclid: 'G123',
+      consent: 'analytics,marketing,ads',
+      tags: 'ga',
+      userAgent: 'UA',
+    })
+  })
+
+  it('holds eu track calls until consent is answered, then sends with the chosen consent', async () => {
+    const b = browser('Europe/Berlin')
+    put('fetch', async (url: string, init?: RequestInit) => {
+      b.requests.push({ url, init })
+      return {
+        ok: true,
+        json: async () => ({
+          tags: [],
+          consent: { region: 'DE', mode: 'eu', version: 3, floor: 2, refused: false },
+        }),
+      }
+    })
+    const { startTags, track, acceptAll } = await import('./index')
+    startTags({ key: 'pk-site' })
+    await tick()
+
+    const captured: Array<{ name: string; props: Record<string, unknown> }> = []
+    const stream = {
+      capture: (name: string, props: Record<string, unknown>) => captured.push({ name, props }),
+    } as never
+
     track(stream, 'signup_completed', {})
-    track(stream, 'sales_contacted', {})
-    track(stream, 'plan_selected', { value: 20, currency: 'USD' })
-    track(stream, 'pricing_viewed', {})
+    expect(captured).toEqual([])
+
+    acceptAll()
     await tick()
-
-    expect(captured[0].props.oppref).toBe('opp_789')
-    expect(captured[0].props.tags).toBe('openai')
-    const ids = captured.map((c) => c.props.event_id as string)
-    expect(oaiqCalls().slice(1)).toEqual([
-      ['measure', 'checkout_started', { type: 'contents', event_id: ids[0] }],
-      ['measure', 'checkout_started', { type: 'contents', value: 20, currency: 'USD', event_id: ids[1] }],
-      ['measure', 'purchase', { value: 49, currency: 'USD', event_id: ids[2] }],
-      ['measure', 'sign_up', { event_id: ids[3] }],
-      ['measure', 'lead', { event_id: ids[4] }],
-      ['measure', 'add_to_cart', { value: 20, currency: 'USD', event_id: ids[5] }],
-      ['measure', 'view_content', { event_id: ids[6] }],
-    ])
-  })
-
-  it('passes debug: true to oaiq init when debug option is set', async () => {
-    const b = browser('America/New_York', accepted())
-    put('fetch', async (url: string) => {
-      b.requests.push(url)
-      return { ok: true, json: async () => ({ tags: [{ platform: 'openai', type: 'openai', id: 'TXKHZduRxZZGp4B1ysfiwm' }] }) }
-    })
-    const { startTags } = await import('./index')
-    startTags({ key: 'pk-x', debug: true })
-    await tick()
-    const w = g.window as unknown as { oaiq: { q: IArguments[] } }
-    expect(Array.from(w.oaiq.q[0])).toEqual(['init', { pixelId: 'TXKHZduRxZZGp4B1ysfiwm', debug: true }])
-  })
-
-  it('provisions TXKHZduRxZZGp4B1ysfiwm by default on first-party Hanzo hosts for person visitors without affecting other orgs', async () => {
-    for (const host of ['hanzo.ai', 'pay.hanzo.ai', 'hanzo.app', 'studio.hanzo.ai']) {
-      vi.resetModules()
-      const b = browser('America/New_York', accepted())
-      ;(g.window as { location: { hostname: string; href: string } }).location.hostname = host
-      ;(g.window as { location: { hostname: string; href: string } }).location.href = `https://${host}/`
-      put('fetch', async (url: string) => {
-        b.requests.push(url)
-        return { ok: true, json: async () => ({ tags: [{ platform: 'ga4', type: 'ga', id: 'G-RBVVVLFZDR' }], audience: 'person' }) }
-      })
-      const { startTags } = await import('./index')
-      startTags()
-      await tick()
-      expect(b.scripts, host).toContain('https://bzrcdn.openai.com/sdk/oaiq.min.js')
-      const w = g.window as unknown as { oaiq: { q: IArguments[] } }
-      expect(w.oaiq.q.map((a) => Array.from(a)), host).toEqual([['init', { pixelId: 'TXKHZduRxZZGp4B1ysfiwm' }]])
-    }
-
-    vi.resetModules()
-    const lux = browser('America/New_York', accepted())
-    ;(g.window as { location: { hostname: string; href: string } }).location.hostname = 'lux.network'
-    ;(g.window as { location: { hostname: string; href: string } }).location.href = 'https://lux.network/'
-    put('fetch', async (url: string) => {
-      lux.requests.push(url)
-      return { ok: true, json: async () => ({ tags: [], audience: 'person' }) }
-    })
-    const { startTags } = await import('./index')
-    startTags()
-    await tick()
-    expect(lux.scripts).toEqual([])
+    expect(captured.length).toBe(1)
+    expect(captured[0].props.consent).toBe('analytics,marketing,ads')
   })
 })

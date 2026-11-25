@@ -1,209 +1,69 @@
 /**
- * What each event is called on every ad and analytics platform.
+ * Canonical first-party funnel semantics for Hanzo Analytics (`analytics.hanzo.ai`).
  *
- * ONE table, two readers. The browser tag loader in @hanzo/event reads it to
- * fire each platform's pixel under the event's own id, and cloud's server-side
- * forwarder reads it (as `platforms` in catalog.json) to send the same event
- * to each platform's conversion API. Because both read this file, a browser
- * copy and its server copy carry the same name and the platform counts one.
+ * Maps vocabulary event names to normalized first-party funnel stages (`standard`)
+ * and marks events carrying authoritative monetary value (`money`) that only a
+ * server peer or secret key may state.
  *
- * An event absent from a platform's column is not sent there. A value that is
- * an array sends each name in order, under the same event id: the first is the
- * event, the rest are what the platform also wants for the same moment.
- *
- * LinkedIn and X do not name events in the pixel: an advertiser creates one
- * conversion rule per kind, and the pixel is told which rule fired. Their
- * column names the KIND (`sign_up`, `purchase`, `lead`, `begin_checkout`); the
- * rule ids for each kind are tag configuration, never code.
- *
- * `standard` is the normalized name cloud's adapters that do not name events
- * (Google Ads, Pinterest, Reddit) key on. `ads` marks the moments Google Ads
- * (and so YouTube ads) counts as conversions. `money` marks the moments that
- * state an amount (a purchase, a change of subscription, a refund): cloud sends
- * one to a platform only when a peer app or the org's secret key stated it.
+ * Third-party ad network mappings and Conversions API adapters live exclusively
+ * on the private server side — never in open-source client packages.
  */
 
-export type PlatformName = 'ga4' | 'meta' | 'linkedin' | 'x' | 'tiktok' | 'reddit' | 'openai'
+export type PlatformName = 'standard'
 
 export type StandardName =
   | 'page_view'
   | 'view_content'
   | 'search'
-  | 'view_item_list'
   | 'select_item'
+  | 'add_to_cart'
+  | 'start_checkout'
+  | 'add_payment_info'
   | 'lead'
   | 'signup'
   | 'login'
-  | 'start_checkout'
-  | 'add_to_cart'
   | 'purchase'
-  | 'contact'
-
-type Name = string | readonly string[]
 
 export interface Platforms {
   standard?: StandardName
-  ga4?: Name
-  meta?: Name
-  linkedin?: Name
-  x?: Name
-  tiktok?: Name
-  reddit?: Name
-  openai?: Name
-  ads?: boolean
-  /** The event states an amount a platform bids on. Only the server may state one. */
+  /** The event states a settled monetary amount. Only the server may state one. */
   money?: boolean
 }
 
 export const PLATFORMS: Readonly<Record<string, Platforms>> = {
-  // ── Sign-up ────────────────────────────────────────────────────
-  signup_viewed: {
-    standard: 'view_content',
-    ga4: 'view_item',
-    meta: 'ViewContent',
-    linkedin: 'view_content',
-    tiktok: 'ViewContent',
-    reddit: 'ViewContent',
-    openai: 'view_content',
-  },
-  signup_submitted: {
-    standard: 'lead',
-    ga4: 'generate_lead',
-    meta: 'Lead',
-    linkedin: 'lead',
-    x: 'lead',
-    tiktok: 'SubmitForm',
-    reddit: 'Lead',
-    openai: 'lead',
-  },
-  signup_completed: {
-    standard: 'signup',
-    ga4: 'sign_up',
-    meta: 'CompleteRegistration',
-    linkedin: 'sign_up',
-    x: 'sign_up',
-    tiktok: 'CompleteRegistration',
-    reddit: 'SignUp',
-    openai: 'sign_up',
-    ads: true,
-  },
-  login_completed: { standard: 'login', ga4: 'login' },
-  first_action: { ga4: 'first_message' },
+  // ── Identity ───────────────────────────────────────────────────
+  signup_viewed: { standard: 'view_content' },
+  signup_submitted: { standard: 'lead' },
+  signup_completed: { standard: 'signup' },
+  login_completed: { standard: 'login' },
 
-  // ── Plans and checkout: the commerce funnel ────────────────────
-  pricing_viewed: {
-    standard: 'view_item_list',
-    ga4: 'view_item_list',
-    meta: 'ViewContent',
-    linkedin: 'view_content',
-    tiktok: 'ViewContent',
-    reddit: 'ViewContent',
-    openai: 'view_content',
-  },
-  plan_clicked: {
-    standard: 'select_item',
-    ga4: 'select_item',
-    meta: 'PlanClicked',
-    linkedin: 'add_to_cart',
-    tiktok: 'ClickButton',
-  },
-  plan_selected: {
-    standard: 'add_to_cart',
-    ga4: 'add_to_cart',
-    meta: 'AddToCart',
-    linkedin: 'add_to_cart',
-    x: 'add_to_cart',
-    tiktok: 'AddToCart',
-    reddit: 'AddToCart',
-    openai: 'add_to_cart',
-  },
-  plan_changed: { ga4: ['remove_from_cart', 'add_to_cart'], meta: 'CustomizeProduct' },
-  plan_skipped: { ga4: 'plan_skipped', meta: 'PlanSkipped' },
-  upgrade_clicked: { ga4: 'select_promotion', meta: 'UpgradeClicked', linkedin: 'add_to_cart' },
-  checkout_viewed: {
-    standard: 'view_content',
-    ga4: 'view_item',
-    meta: 'ViewContent',
-    linkedin: 'view_content',
-    tiktok: 'ViewContent',
-    reddit: 'ViewContent',
-    openai: 'view_content',
-  },
-  checkout_started: {
-    standard: 'start_checkout',
-    ga4: 'begin_checkout',
-    meta: 'InitiateCheckout',
-    linkedin: 'begin_checkout',
-    x: 'begin_checkout',
-    tiktok: 'InitiateCheckout',
-    reddit: 'AddToCart',
-    openai: 'checkout_started',
-    ads: true,
-  },
-  payment_info_added: {
-    ga4: 'add_payment_info',
-    meta: 'AddPaymentInfo',
-    linkedin: 'begin_checkout',
-    tiktok: 'AddPaymentInfo',
-  },
-  checkout_abandoned: {
-    ga4: 'checkout_abandoned',
-    meta: 'CheckoutAbandoned',
-    linkedin: 'checkout_abandoned',
-    tiktok: 'CheckoutAbandoned',
-  },
-  checkout_failed: { ga4: 'checkout_failed', meta: 'CheckoutFailed' },
-  order_completed: {
-    standard: 'purchase',
-    ga4: 'purchase',
-    meta: ['Purchase', 'Subscribe'],
-    linkedin: 'purchase',
-    x: 'purchase',
-    tiktok: 'CompletePayment',
-    reddit: 'Purchase',
-    openai: 'purchase',
-    ads: true,
-    money: true,
-  },
-  subscription_changed: { ga4: 'purchase', meta: 'Subscribe', linkedin: 'purchase', reddit: 'Purchase', openai: 'purchase', money: true },
-  subscription_canceled: { ga4: 'subscription_canceled', meta: 'SubscriptionCanceled' },
-  order_refunded: { ga4: 'refund', meta: 'OrderRefunded', money: true },
+  // ── Commerce ───────────────────────────────────────────────────
+  pricing_viewed: { standard: 'view_content' },
+  plan_clicked: { standard: 'select_item' },
+  plan_selected: { standard: 'add_to_cart' },
+  checkout_viewed: { standard: 'view_content' },
+  checkout_started: { standard: 'start_checkout' },
+  payment_info_added: { standard: 'add_payment_info' },
+  order_completed: { standard: 'purchase', money: true },
+  subscription_changed: { standard: 'purchase', money: true },
+  order_refunded: { money: true },
 
   // ── Leads ──────────────────────────────────────────────────────
-  sales_contacted: {
-    standard: 'lead',
-    ga4: 'generate_lead',
-    meta: 'Lead',
-    linkedin: 'lead',
-    x: 'lead',
-    tiktok: 'SubmitForm',
-    reddit: 'Lead',
-    openai: 'lead',
-    ads: true,
-  },
-  waitlist_joined: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm', reddit: 'Lead', openai: 'lead' },
-  referral_used: { standard: 'lead', reddit: 'Lead', openai: 'lead' },
-  newsletter_subscribed: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm', reddit: 'Lead', openai: 'lead' },
-  beta_submitted: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm', reddit: 'Lead', openai: 'lead' },
-  research_access_applied: { standard: 'lead', ga4: 'generate_lead', meta: 'Lead', linkedin: 'lead', x: 'lead', tiktok: 'SubmitForm', reddit: 'Lead', openai: 'lead' },
+  sales_contacted: { standard: 'lead' },
+  waitlist_joined: { standard: 'lead' },
+  referral_used: { standard: 'lead' },
+  newsletter_subscribed: { standard: 'lead' },
+  beta_submitted: { standard: 'lead' },
+  research_access_applied: { standard: 'lead' },
 
-  // ── Audiences: what retargeting is built from ──────────────────
-  product_viewed: {
-    standard: 'view_content',
-    ga4: 'view_item',
-    meta: 'ViewContent',
-    linkedin: 'view_content',
-    tiktok: 'ViewContent',
-    reddit: 'ViewContent',
-    openai: 'view_content',
-  },
-  search_performed: { standard: 'search', ga4: 'search', meta: 'Search', tiktok: 'Search', reddit: 'Search', openai: 'search' },
-  // A custom event on each: no platform has a standard name for a pressed button.
-  cta_clicked: { ga4: 'cta_click', meta: 'CTAClicked', tiktok: 'ClickButton' },
+  // ── Content & Discovery ────────────────────────────────────────
+  product_viewed: { standard: 'view_content' },
+  search_performed: { standard: 'search' },
 }
 
-/** The names an event goes by on a platform: [] when the platform is not sent it. */
-export function namesOn(event: string, platform: PlatformName): readonly string[] {
-  const n = PLATFORMS[event]?.[platform]
-  return n === undefined ? [] : typeof n === 'string' ? [n] : n
+/** Normalized first-party stage names for an event (`[]` when unclassified). */
+export function namesOn(event: string, platform: PlatformName = 'standard'): readonly string[] {
+  if (platform !== 'standard') return []
+  const n = PLATFORMS[event]?.standard
+  return n === undefined ? [] : [n]
 }
