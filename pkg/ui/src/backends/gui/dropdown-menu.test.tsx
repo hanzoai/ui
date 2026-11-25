@@ -356,4 +356,32 @@ describe('status lines and shared geometry', () => {
     await settle(150)
     expect(await audit(document.body)).toEqual([])
   })
+
+  it('sections stay transparent so rows inherit the menu panel background and inline actions stay clickable', async () => {
+    const onPin = vi.fn()
+    mount(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>More</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuSection label="Workspace">
+            <DropdownMenuItem
+              actions={
+                <button type="button" data-item="pin-betas" onClick={onPin}>
+                  Pin
+                </button>
+              }
+            >
+              Betas
+            </DropdownMenuItem>
+          </DropdownMenuSection>
+        </DropdownMenuContent>
+      </DropdownMenu>,
+    )
+    await settle(150)
+    const section = document.querySelector<HTMLElement>('[data-slot="dropdown-menu-section"]')!
+    expect(section.className).toMatch(/_bg-transparent/)
+    const pin = document.querySelector<HTMLButtonElement>('[data-item="pin-betas"]')!
+    act(() => pin.click())
+    expect(onPin).toHaveBeenCalledTimes(1)
+  })
 })

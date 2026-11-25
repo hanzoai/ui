@@ -419,7 +419,8 @@ type ItemProps = Omit<React.ComponentProps<typeof Menu.Item>, 'variant'> & {
 
 const DropdownMenuItem = /* @__PURE__ */ React.forwardRef<GuiElement, ItemProps>(function DropdownMenuItem({ inset, variant = 'default', disabled, page, actions, actionsVisibility = 'hover', onSelect, children, ...props }, ref) {
   const pages = React.useContext(PagesContext)
-  const [shown, setShown] = React.useState(false)
+  const [hovered, setHovered] = React.useState(false)
+  const [focused, setFocused] = React.useState(false)
   const opens = page !== undefined && pages !== null
   const item = (
     <Menu.Item
@@ -436,8 +437,13 @@ const DropdownMenuItem = /* @__PURE__ */ React.forwardRef<GuiElement, ItemProps>
       {...(actions
         ? {
             flex: 1,
-            onFocus: () => setShown(true),
-            onBlur: () => setShown(false),
+            onFocus: () => setFocused(true),
+            onBlur: (e: React.FocusEvent<HTMLElement>) => {
+              const rowEl = (e.currentTarget as HTMLElement | null)?.closest?.('[data-slot="dropdown-menu-item-row"]')
+              if (!rowEl || !e.relatedTarget || !rowEl.contains(e.relatedTarget as Node)) {
+                setFocused(false)
+              }
+            },
           }
         : null)}
       onSelect={(e: Event) => {
@@ -465,9 +471,9 @@ const DropdownMenuItem = /* @__PURE__ */ React.forwardRef<GuiElement, ItemProps>
     </Menu.Item>
   )
   if (!actions) return item
-  const visible = actionsVisibility === 'always' || shown
+  const visible = actionsVisibility === 'always' || hovered || focused
   return (
-    <XStack data-slot="dropdown-menu-item-row" items="center" gap={ROW_PX} onHoverIn={() => setShown(true)} onHoverOut={() => setShown(false)}>
+    <XStack data-slot="dropdown-menu-item-row" items="center" gap={ROW_PX} onHoverIn={() => setHovered(true)} onHoverOut={() => setHovered(false)}>
       {item}
       <XStack
         data-slot="dropdown-menu-item-actions"
@@ -563,9 +569,9 @@ function DropdownMenuSelectionGroup({ value, defaultValue = null, onValueChange,
   return (
     <SelectionContext.Provider value={ctx}>
       {multiple ? (
-        <Menu.Group data-slot="dropdown-menu-selection-group">{children}</Menu.Group>
+        <Menu.Group data-slot="dropdown-menu-selection-group" bg="transparent">{children}</Menu.Group>
       ) : (
-        <Menu.RadioGroup data-slot="dropdown-menu-selection-group" value={chosen[0] ?? ''} onValueChange={(v: string) => set(v ? [v] : [])}>
+        <Menu.RadioGroup data-slot="dropdown-menu-selection-group" bg="transparent" value={chosen[0] ?? ''} onValueChange={(v: string) => set(v ? [v] : [])}>
           {children}
         </Menu.RadioGroup>
       )}
@@ -740,7 +746,7 @@ export type DropdownMenuSectionProps = React.ComponentProps<typeof YStack> & {
 
 function DropdownMenuSection({ label, scrollable = false, children, ...props }: DropdownMenuSectionProps) {
   return (
-    <Menu.Group data-slot="dropdown-menu-section" {...(typeof label === 'string' ? { 'aria-label': label } : null)}>
+    <Menu.Group data-slot="dropdown-menu-section" bg="transparent" {...(typeof label === 'string' ? { 'aria-label': label } : null)}>
       {label ? <DropdownMenuLabel variant="band">{label}</DropdownMenuLabel> : null}
       <YStack
         gap={2}
