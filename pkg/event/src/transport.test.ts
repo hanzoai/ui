@@ -143,3 +143,106 @@ describe('the unload beacon', () => {
     expect(fetches[0].keepalive).toBe(true)
   })
 })
+
+describe('ingest storm protection', () => {
+  const flushPromises = () => new Promise<void>((r) => setTimeout(r, 0))
+
+  function withFetchStub(
+    impl: (url: string, init: RequestInit) => Promise<unknown>,
+    fn: () => Promise<void>,
+  ): Promise<void> {
+    const g = globalThis as Record<string, unknown>
+    const saved = Object.getOwnPropertyDescriptor(g, 'fetch')
+    Object.defineProperty(g, 'fetch', { value: impl, configurable: true, writable: true })
+    return fn().finally(() => {
+      if (saved) Object.defineProperty(g, 'fetch', saved)
+      else delete g.fetch
+    })
+  }
+
+  it('opens the circuit immediately on 401/403 and stops flooding /v1/event', async () => {
+    let calls = 0
+    await withFetchStub(
+      async () => {
+        calls++
+        return { ok: false, status: 403 }
+      },
+      async () => {
+        const a = new Analytics({ product: 'test', ingestKey: 'pk-bad', captureErrors: false })
+        a.capture('e1')
+        a.flush()
+        await flushPromises()
+        for (let i = 0; i < 50; i++) {
+          a.capture(`e${i + 2}`)
+          a.flush()
+        }
+        await flushPromises()
+        expect(calls).toBe(1)
+      },
+    )
+  })
+
+  it('opens the circuit on 429 and honours Retry-After', async () => {
+    let calls = 0
+    await withFetchStub(
+      async () => {
+        calls++
+        return {
+          ok: false,
+          status: 429,
+          headers: { get: (k: string) => (k.toLowerCase() === 'retry-after' ? '30' : null) },
+        }
+      },
+      async () => {
+        const a = new Analytics({ product: 'test', ingestKey: 'pk-rl', captureErrors: false })
+        a.capture('e1')
+        a.flush()
+        await flushPromises()
+        for (let i = 0; i < 20; i++) {
+          a.capture(`e${i + 2}`)
+          a.flush()
+        }
+        await flushPromises()
+        expect(calls).toBe(1)
+      },
+    )
+  })
+
+  it('opens the circuit after consecutive 5xx or network failures', async () => {
+    let calls = 0
+    await withFetchStub(
+      async () => {
+        calls++
+        throw new TypeError('Failed to fetch')
+      },
+      async () => {
+        const a = new Analytics({ product: 'test', ingestKey: 'pk-net', captureErrors: false })
+        for (let i = 0; i < 50; i++) {
+          a.capture(`e${i}`)
+          a.flush()
+          await flushPromises()
+        }
+        expect(calls).toBe(2)
+      },
+    )
+  })
+
+  it('caps outgoing flushes per 60s window even when responses succeed', async () => {
+    let calls = 0
+    await withFetchStub(
+      async () => {
+        calls++
+        return { ok: true, status: 200 }
+      },
+      async () => {
+        const a = new Analytics({ product: 'test', ingestKey: 'pk-cap', captureErrors: false })
+        for (let i = 0; i < 100; i++) {
+          a.capture(`e${i}`)
+          a.flush()
+        }
+        await flushPromises()
+        expect(calls).toBe(20)
+      },
+    )
+  })
+})
