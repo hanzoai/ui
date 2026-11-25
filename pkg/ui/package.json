@@ -293,10 +293,12 @@
       "require": "./dist/dots.cjs"
     },
     "./grid": {
-      "types": "./dist/grid.d.ts",
-      "import": "./dist/grid.js",
-      "require": "./dist/grid.cjs"
+      "types": "./dist/grid/index.d.ts",
+      "import": "./dist/grid/index.js",
+      "require": "./dist/grid/index.cjs",
+      "default": "./dist/grid/index.js"
     },
+    "./grid.css": "./dist/grid.css",
     "./types": {
       "types": "./dist/types.d.ts",
       "import": "./dist/types.js",

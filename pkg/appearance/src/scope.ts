@@ -26,10 +26,17 @@
  * a written neutral outranks the stylesheet, an absent one defers to it.
  */
 import type { Preference as DesignPreference } from '@hanzo/design'
+import type { BuiltInThemeId } from '@hanzo/theme'
 
 export type Contrast = 'oled' | 'soft' | 'high'
 
 export type Preference = DesignPreference & {
+  /**
+   * Canonical `@hanzo/theme` palette ID (`'zen'`, `'clay'`, `'grove'`,
+   * `'ocean'`, `'ember'`, `'iris'`, `'light'`). Legacy aliases such as
+   * `'lelouch'` resolve silently to their canonical palette (`'clay'`).
+   */
+  palette?: BuiltInThemeId
   /**
    * The page ground (`--background`). Validated as a CSS `<color>`; emits the
    * derived surface hierarchy (`--background`, `--card`, `--popover`, `--muted`,
@@ -60,7 +67,7 @@ export type Layer = (typeof LAYERS)[number]
 export type Layers = Partial<Record<Layer, Preference>>
 
 /** Which axes exist. Adding one here is all it takes to make it resolvable. */
-const AXES = ['type', 'ratio', 'modular', 'density', 'font', 'arabic', 'width', 'accent', 'highlight', 'background', 'contrast', 'theme', 'radius'] as const
+const AXES = ['palette', 'type', 'ratio', 'modular', 'density', 'font', 'arabic', 'width', 'accent', 'highlight', 'background', 'contrast', 'theme', 'radius'] as const
 
 /**
  * What a person actually sees — and, for each axis, who decided it.

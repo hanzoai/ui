@@ -548,6 +548,9 @@ importers:
       '@hanzo/design':
         specifier: 'catalog:'
         version: 0.5.45
+      '@hanzo/theme':
+        specifier: workspace:^
+        version: link:../theme
     devDependencies:
       '@types/react':
         specifier: 19.2.18
