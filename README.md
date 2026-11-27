@@ -50,6 +50,18 @@ export function App() {
 `<Hanzo>` is the whole setup — it carries the gui config, the theme and the
 stylesheet. There is no CSS import and no generator step.
 
+For Next.js (including static exports with `output: 'export'`), wrap
+`next.config.mjs` with `@hanzo/ui/next`:
+
+```js
+import { createRequire } from 'node:module'
+import { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const withGui = createRequire(import.meta.url)('@hanzo/ui/next')
+export default withGui({ output: 'export' }, dirname(fileURLToPath(import.meta.url)))
+```
+
 ## Import surface
 
 | Import | What you get |
@@ -89,13 +101,15 @@ npx @hanzo/ui add @aceternity/spotlight   # 35+ external registries
 
 ```bash
 pnpm install
-pnpm --filter @hanzo/ui... build   # the `...` builds workspace deps first
+pnpm --filter @hanzo/ui... build   # the `...` builds workspace deps + dist/ first (required before tests)
 ```
 
 | Command | |
 |---|---|
-| `pnpm --filter @hanzo/ui test:unit` | styles + render surface |
+| `pnpm --filter @hanzo/ui test:unit` | styles + render surface (expects built `dist/`) |
 | `pnpm --filter @hanzo/ui test:consumer` | packs the tarball, installs it outside the repo, asserts computed styles |
+| `pnpm --filter @hanzo/ui test:consumer:webpack` | packs the tarball and verifies webpack + `css-loader` resolution |
+| `pnpm --filter @hanzo/ui test:consumer:next` | packs the tarball and verifies Next.js `output: 'export'` static export |
 | `pnpm typecheck` · `pnpm lint` | |
 
 The `shadcn` CLI, the component registry and the docs sites live in

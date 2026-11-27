@@ -3,8 +3,8 @@
 /**
  * Toggle — a single two-state button: pressed or not.
  *
- * `ToggleGroup` already carries this exact recipe — the density ladder, the
- * REST/ON fill per variant, `unstyled` plus a hand-rolled focus ring — for one
+ * `ToggleGroup` already carries this exact recipe — the density ladder and the
+ * REST/ON fill per variant plus a hand-rolled focus ring — for one
  * segment among several. A bare `Toggle` is the same button standing alone, so
  * it repeats those numbers rather than reaching for `ToggleGroup`, which for a
  * group of one would still carry `role="radiogroup"` and roving arrow-key focus
@@ -36,7 +36,6 @@ const PAD = { default: '$3', sm: '$2.5', lg: '$4' } as const
 
 const ToggleFrame = styled(XStack, {
   name: 'Toggle',
-  unstyled: true,
   display: 'inline-flex',
   items: 'center',
   justify: 'center',

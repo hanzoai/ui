@@ -15,10 +15,9 @@ const Collapsible = (p: CollapsibleProps) => <GuiCollapsible {...slot('collapsib
 const CollapsibleTrigger = ({ children, ...p }: CollapsibleTriggerProps) => (
   <GuiCollapsible.Trigger
     {...slot('collapsible-trigger')}
-    unstyled
-    // `unstyled` means gui applies nothing — which on web leaves the UA's own
-    // button chrome, and a native <button> is #efefef with a 2px outset black
-    // border. Unstyled must mean "no chrome", not "the browser's chrome".
+    // `GuiCollapsible.Trigger` compiles from `styled(View, { render: 'button' })`
+    // and has no `unstyled` variant; resetting `bg`/`borderWidth`/`cursor`
+    // removes UA button chrome without forwarding `unstyled` onto `<button>`.
     bg="transparent"
     borderWidth={0}
     cursor="pointer"

@@ -315,7 +315,9 @@ describe('an empty field reads as empty', () => {
    * The token is this package's (theme.css), so it is read from the source
    * sheet; the grounds are design's, read from design's published sheet.
    */
-  const sheet = readFileSync(new URL('./theme.css', import.meta.url), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')
+  const sheet = readFileSync(new URL('./theme.css', import.meta.url), 'utf8')
+    .replace(/\r\n/g, '\n')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
 
   /** The `--text-placeholder` declaration in the block a selector opens. */
   const declared = (selector: string) => {
