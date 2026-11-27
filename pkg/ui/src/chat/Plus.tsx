@@ -44,7 +44,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '../backends/gui'
-import { useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 
 import { GHOST, GLYPH, RING, STROKE } from './look'
 
@@ -191,7 +191,26 @@ export function Plus(p: PlusProps) {
   const wide = media.sm
   const [open, setOpen] = useState(false)
   const [sub, setSub] = useState<string | null>(null)
-  const close = () => setOpen(false)
+  const close = () => {
+    setSub(null)
+    setOpen(false)
+  }
+  useEffect(() => {
+    if (!open) {
+      setSub(null)
+      return
+    }
+    if (typeof window === 'undefined') return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        setSub(null)
+        setOpen(false)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
   const shelves = useMemo(() => SHELVES.filter((s) => p[s.key as Key]), [p])
   const switches = [
     p.research
@@ -306,7 +325,11 @@ export function Plus(p: PlusProps) {
       {shelves.map((s) =>
         wide ? (
           <DropdownMenuSub key={s.key} open={sub === s.key} onOpenChange={(o: boolean) => setSub(o ? s.key : sub === s.key ? null : sub)}>
-            <DropdownMenuSubTrigger data-slot={`plus-${s.key}`} onPress={() => setSub(s.key)}>
+            <DropdownMenuSubTrigger
+              data-slot={`plus-${s.key}`}
+              onPress={() => setSub(s.key)}
+              {...({ onMouseEnter: () => setSub(s.key) } as object)}
+            >
               <Line icon={s.icon} label={t(s.label)} note={t(s.note)} />
             </DropdownMenuSubTrigger>
             {sub === s.key ? (
