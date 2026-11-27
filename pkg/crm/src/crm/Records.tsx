@@ -27,7 +27,12 @@ import { useChanges } from '../lib/live'
 import { openingView, starter, viewFits, type CrmObject } from './objects'
 import { expandOf, forgetOptions, rowOf, useAdmin, useRelationOptions, useSchema, words, type Schema } from './schema'
 import { Bulk, Everyone, Grow } from './Actions'
+import { BulkBar } from './BulkBar'
+import { CalendarView } from './CalendarView'
 import { CreateRecord } from './Create'
+import { useCrmShell, type CrmViewMode } from './CrmContext'
+import { MobileCards } from './MobileCards'
+import { useViewport } from './responsive'
 
 /** A view the picker lists: a starter's or a saved one, and the scope a starter carries. */
 interface Listed {
@@ -113,7 +118,17 @@ type Data = { rows: Record<string, unknown>[]; total: number; ms: number } | nul
 export function Records({ obj, scope, embedded, defaults, bulkExtra, view: opening }: RecordsProps) {
   const router = useRouter()
   const admin = useAdmin()
+  const { mobile } = useViewport()
+  const {
+    viewMode,
+    setViewMode,
+    setAvailableViews,
+    setActiveList,
+    quickCreateObject,
+    setQuickCreateObject,
+  } = useCrmShell()
   const [round, setRound] = useState(0)
+  const [mobileSelected, setMobileSelected] = useState<string[]>([])
   const load = useSchema(obj, round)
   const schema = load.state === 'ready' ? load.value : null
   const options = useRelationOptions(schema)
@@ -145,13 +160,34 @@ export function Records({ obj, scope, embedded, defaults, bulkExtra, view: openi
     setActiveId(undefined)
     setView(null)
     setPage(1)
+    setMobileSelected([])
   }, [obj, scope])
   useEffect(() => {
     const first = view ? undefined : openingView(starters, opening)
     if (!first) return
     setActiveId(first.config.id)
-    setView(embedded ? { ...first.config, kind: 'table', pageSize: 10 } : first.config)
-  }, [starters, view, embedded, opening])
+    const initial = embedded ? { ...first.config, kind: 'table' as const, pageSize: 10 } : first.config
+    setView(initial)
+    if (!embedded) {
+      setViewMode(initial.kind === 'board' ? 'board' : 'table')
+    }
+  }, [starters, view, embedded, opening, setViewMode])
+  const hasCalendar = Boolean(!embedded && obj.calendarField && schema?.names.has(obj.calendarField))
+  useEffect(() => {
+    if (embedded) return
+    const modes: CrmViewMode[] = ['table', ...(obj.board ? (['board'] as const) : []), ...(hasCalendar ? (['calendar'] as const) : [])]
+    setAvailableViews(modes)
+    return () => setAvailableViews(['table'])
+  }, [embedded, obj.board, hasCalendar, setAvailableViews])
+  useEffect(() => {
+    if (embedded || !view) return
+    if (viewMode === 'board' && obj.board && view.kind !== 'board') {
+      setView({ ...view, kind: 'board' })
+    } else if (viewMode === 'table' && view.kind !== 'table') {
+      setView({ ...view, kind: 'table' })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewMode, embedded, obj.board])
   const active = listed.find((l) => l.config.id === activeId)
   const viewScope = active?.scope
 
@@ -169,16 +205,18 @@ export function Records({ obj, scope, embedded, defaults, bulkExtra, view: openi
 
   const row = useCallback((r: BaseRecord): Record<string, unknown> => (schema ? rowOf(schema, r) : r), [schema])
 
+  const isCalendar = !embedded && viewMode === 'calendar' && hasCalendar
+
   useEffect(() => {
     if (!schema || !view || !pipelined) return
     const id = ++seq.current
-    const board = view.kind === 'board'
+    const boardOrCal = view.kind === 'board' || isCalendar
     const q = baseQuery(schema.base, { ...view, search }, where)
     const t0 = performance.now()
     setReading(true)
     CrmApi.list(obj.collection, {
-      page: board ? 1 : page,
-      perPage: board ? 200 : (view.pageSize ?? 50),
+      page: boardOrCal ? 1 : page,
+      perPage: boardOrCal ? 200 : (view.pageSize ?? 50),
       filter: q.filter || undefined,
       sort: q.sort || undefined,
       expand: expand || undefined,
@@ -187,13 +225,21 @@ export function Records({ obj, scope, embedded, defaults, bulkExtra, view: openi
         if (id !== seq.current) return
         raw.current = new Map(r.items.map((x) => [String(x.id), x]))
         setData({ rows: r.items.map(row), total: r.totalItems, ms: Math.round(performance.now() - t0) })
+        if (!embedded) {
+          setActiveList({ objectId: obj.id, collection: obj.collection, total: r.totalItems, records: r.items })
+        }
         setError(null)
       })
       .catch((e) => id === seq.current && setError(e))
       .finally(() => id === seq.current && setReading(false))
     // `view` is read through `key`, whose search is the settled one: typing is one read, not one per key.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [schema, key, page, where, expand, tick, obj, pipelined])
+  }, [schema, key, page, where, expand, tick, obj, pipelined, isCalendar])
+
+  useEffect(() => {
+    if (embedded) return
+    return () => setActiveList(null)
+  }, [embedded, setActiveList])
 
   const refresh = useCallback(() => setTick((t) => t + 1), [])
   useChanges([obj.collection], refresh)
@@ -278,6 +324,12 @@ export function Records({ obj, scope, embedded, defaults, bulkExtra, view: openi
   }, [embedded])
 
   const [creating, setCreating] = useState(false)
+  useEffect(() => {
+    if (!embedded && quickCreateObject === obj.id) {
+      setCreating(true)
+      setQuickCreateObject(null)
+    }
+  }, [embedded, quickCreateObject, obj.id, setQuickCreateObject])
 
   if (load.state === 'error') {
     return <BackendStateCard state={classifyBackend(load.error)} onRetry={() => setRound((r) => r + 1)} hint={`endpoint · GET /v1/base/collections/${obj.collection}`} />
@@ -327,59 +379,109 @@ export function Records({ obj, scope, embedded, defaults, bulkExtra, view: openi
       {error ? (
         <BackendStateCard state={classifyBackend(error)} onRetry={refresh} hint={`endpoint · GET /v1/base/collections/${obj.collection}/records`} />
       ) : null}
-      <RecordsView
-        fields={fields}
-        records={records}
-        loading={!data}
-        empty={view.filters.length || view.search ? 'Nothing matches this view.' : `No ${obj.plural.toLowerCase()} yet.`}
-        view={view}
-        onViewChange={(v) => {
-          setView(v)
-          setPage(1)
-        }}
-        remote={{ page, total: data?.total ?? 0, onPage: setPage }}
-        savedViews={
-          embedded
-            ? undefined
-            : {
-                views: listed.map((l) => l.config),
-                activeId,
-                onSelect: (id) => {
-                  const l = listed.find((x) => x.config.id === id)
-                  if (!l) return
-                  setActiveId(id)
-                  setView(l.config)
-                  setPage(1)
-                },
-                onSave: onSaveView,
-                onDelete: (id) => void onDeleteView(id),
-                // A starter view is the CRM's, the same for every org: only a saved one goes.
-                deletable: (id) => !id.startsWith('starter:'),
-              }
-        }
-        onOpen={(r) => router.push(`/crm/${obj.id}/${String(r.id)}`)}
-        onCreate={() => setCreating(true)}
-        createLabel={`New ${obj.label.toLowerCase()}`}
-        onEditCommit={(r, f, v) => write(r, { [f.name]: v })}
-        onRecordChange={(r, patch) => write(r, patch)}
-        fieldOptions={fieldOptions}
-        boardDisabled={!obj.board || embedded}
-        titleField={obj.title}
-        cardFields={cards}
-        bulkActions={(ids) => (
-          <XStack gap="$2" flexWrap="wrap" shrink={1} minW={0}>
-            {bulkExtra?.(ids, refresh)}
-            <Bulk obj={obj} schema={schema} ids={ids} raw={raw.current} onDone={refresh} />
-          </XStack>
-        )}
-        toolbarExtra={
-          embedded ? null : (
+      {isCalendar && obj.calendarField ? (
+        <CalendarView
+          records={records}
+          dateField={obj.calendarField}
+          dateLabel={schema.fields.find((f) => f.name === obj.calendarField)?.label}
+          titleField={obj.title}
+          onOpen={(r) => router.push(`/crm/${obj.id}/${String(r.id)}`)}
+          onCreate={() => setCreating(true)}
+          createLabel={`New ${obj.label.toLowerCase()}`}
+        />
+      ) : mobile && view.kind === 'table' ? (
+        <>
+          <MobileCards
+            fields={fields}
+            titleField={obj.title}
+            records={records}
+            loading={!data}
+            empty={view.filters.length || view.search ? 'Nothing matches this view.' : `No ${obj.plural.toLowerCase()} yet.`}
+            search={view.search ?? ''}
+            onSearchChange={(s) => {
+              setView({ ...view, search: s })
+              setPage(1)
+            }}
+            selectedIds={mobileSelected}
+            onToggleSelect={(id) =>
+              setMobileSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
+            }
+            onOpen={(r) => router.push(`/crm/${obj.id}/${String(r.id)}`)}
+            onCreate={() => setCreating(true)}
+            createLabel={`New ${obj.label.toLowerCase()}`}
+            page={page}
+            total={data?.total ?? 0}
+            pageSize={view.pageSize ?? 50}
+            onPage={setPage}
+          />
+          <BulkBar
+            obj={obj}
+            schema={schema}
+            ids={mobileSelected}
+            raw={raw.current}
+            extra={bulkExtra?.(mobileSelected, refresh)}
+            onClear={() => setMobileSelected([])}
+            onDone={refresh}
+          />
+        </>
+      ) : (
+        <RecordsView
+          fields={fields}
+          records={records}
+          loading={!data}
+          empty={view.filters.length || view.search ? 'Nothing matches this view.' : `No ${obj.plural.toLowerCase()} yet.`}
+          view={view}
+          onViewChange={(v) => {
+            setView(v)
+            if (!embedded && (v.kind === 'board' || v.kind === 'table')) setViewMode(v.kind)
+            setPage(1)
+          }}
+          remote={{ page, total: data?.total ?? 0, onPage: setPage }}
+          savedViews={
+            embedded
+              ? undefined
+              : {
+                  views: listed.map((l) => l.config),
+                  activeId,
+                  onSelect: (id) => {
+                    const l = listed.find((x) => x.config.id === id)
+                    if (!l) return
+                    setActiveId(id)
+                    setView(l.config)
+                    setViewMode(l.config.kind === 'board' ? 'board' : 'table')
+                    setPage(1)
+                  },
+                  onSave: onSaveView,
+                  onDelete: (id) => void onDeleteView(id),
+                  // A starter view is the CRM's, the same for every org: only a saved one goes.
+                  deletable: (id) => !id.startsWith('starter:'),
+                }
+          }
+          onOpen={(r) => router.push(`/crm/${obj.id}/${String(r.id)}`)}
+          onCreate={() => setCreating(true)}
+          createLabel={`New ${obj.label.toLowerCase()}`}
+          onEditCommit={(r, f, v) => write(r, { [f.name]: v })}
+          onRecordChange={(r, patch) => write(r, patch)}
+          fieldOptions={fieldOptions}
+          boardDisabled={!obj.board || embedded}
+          titleField={obj.title}
+          cardFields={cards}
+          bulkActions={(ids) => (
             <XStack gap="$2" flexWrap="wrap" shrink={1} minW={0}>
-              <Everyone obj={obj} schema={schema} query={query} total={data?.total ?? 0} onDone={refresh} />
+              {bulkExtra?.(ids, refresh)}
+              <Bulk obj={obj} schema={schema} ids={ids} raw={raw.current} onDone={refresh} />
+              {embedded ? null : <BulkBar obj={obj} schema={schema} ids={ids} raw={raw.current} extra={bulkExtra?.(ids, refresh)} onDone={refresh} />}
             </XStack>
-          )
-        }
-      />
+          )}
+          toolbarExtra={
+            embedded ? null : (
+              <XStack gap="$2" flexWrap="wrap" shrink={1} minW={0}>
+                <Everyone obj={obj} schema={schema} query={query} total={data?.total ?? 0} onDone={refresh} />
+              </XStack>
+            )
+          }
+        />
+      )}
       {creating ? (
         <CreateRecord
           obj={obj}

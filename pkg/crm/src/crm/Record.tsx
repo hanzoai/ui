@@ -23,8 +23,11 @@ import type { BaseRecord } from '../lib/base-data/api'
 import { toBase } from '../lib/base-data/fields'
 import { OBJECTS, REPLIED_BY_HAND, type CrmObject } from './objects'
 import { Bulk } from './Actions'
+import { AttachmentsSection } from './Attachments'
+import { useCrmShell } from './CrmContext'
 import { Customer } from './Customer'
 import { Records } from './Records'
+import { useViewport } from './responsive'
 import { expandOf, optionOf, rowOf, useRelationOptions, useSchema, words } from './schema'
 import { SuppressionNote, useMailable } from './Timeline'
 
@@ -72,13 +75,20 @@ const fromEvent = (e: TimelineEvent): Entry => ({
 
 export function RecordPage({ obj, id }: { obj: CrmObject; id: string }) {
   const router = useRouter()
+  const { mobile } = useViewport()
+  const { setActiveRecord, recordRevision } = useCrmShell()
   const load = useSchema(obj)
   const schema = load.state === 'ready' ? load.value : null
   const options = useRelationOptions(schema)
   const [record, setRecord] = useState<BaseRecord | null>(null)
+  const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([])
   const [error, setError] = useState<unknown>(null)
   const [round, setRound] = useState(0)
   useChanges([obj.collection], () => setRound((r) => r + 1))
+
+  useEffect(() => {
+    if (recordRevision > 0) setRound((r) => r + 1)
+  }, [recordRevision])
 
   useEffect(() => {
     if (!schema) return
@@ -90,6 +100,23 @@ export function RecordPage({ obj, id }: { obj: CrmObject; id: string }) {
       live = false
     }
   }, [obj, id, schema, round])
+
+  useEffect(() => {
+    if (!record) return
+    const t = optionOf(obj.collection, record).label
+    const em = obj.collection === 'people' ? String((record.emails as { primaryEmail?: unknown } | undefined)?.primaryEmail ?? '') : ''
+    setActiveRecord({
+      objectId: obj.id,
+      collection: obj.collection,
+      recordId: id,
+      title: t,
+      email: em || undefined,
+      record,
+      timeline: timelineEvents,
+    })
+  }, [obj, id, record, timelineEvents, setActiveRecord])
+
+  useEffect(() => () => setActiveRecord(null), [setActiveRecord])
 
   const row = useMemo(() => (schema && record ? rowOf(schema, record) : null), [schema, record])
   const byBase = useMemo(() => new Map((schema?.base ?? []).map((f) => [f.name, f])), [schema])
@@ -159,15 +186,25 @@ export function RecordPage({ obj, id }: { obj: CrmObject; id: string }) {
         />
       ) : null}
 
-      <XStack gap="$4" flexWrap="wrap" items="flex-start">
-        <YStack flex={1} minW={300} maxW={560} width="100%">
+      <XStack gap="$4" flexWrap="wrap" items="flex-start" width="100%">
+        <YStack flex={1} minW={mobile ? 0 : 300} maxW={mobile ? '100%' : 560} width="100%">
           <Card p="$3" borderWidth={1} borderColor="$borderColor">
             <RecordDetail fields={fields} record={row} editable onEditCommit={commit} fieldOptions={fieldOptions} />
           </Card>
         </YStack>
-        <YStack flex={1.4} minW={300} width="100%" gap="$3">
+        <YStack flex={1.4} minW={mobile ? 0 : 300} width="100%" gap="$3">
           {obj.collection === 'people' ? <Customer person={id} email={email} /> : null}
-          {LINK[obj.collection] ? <Activity obj={obj} id={id} email={email} hasContacted={schema.names.has('contacted')} onLogged={() => setRound((r) => r + 1)} /> : null}
+          {LINK[obj.collection] ? (
+            <Activity
+              obj={obj}
+              id={id}
+              email={email}
+              hasContacted={schema.names.has('contacted')}
+              onLogged={() => setRound((r) => r + 1)}
+              onEventsLoaded={setTimelineEvents}
+            />
+          ) : null}
+          <AttachmentsSection collection={obj.collection} id={id} />
         </YStack>
       </XStack>
 
@@ -294,8 +331,23 @@ function RemoveFromList({ list, ids, onDone }: { list: string; ids: string[]; on
 }
 
 /** The timeline and the ways onto it. */
-function Activity({ obj, id, email, hasContacted, onLogged }: { obj: CrmObject; id: string; email: string; hasContacted: boolean; onLogged: () => void }) {
+function Activity({
+  obj,
+  id,
+  email,
+  hasContacted,
+  onLogged,
+  onEventsLoaded,
+}: {
+  obj: CrmObject
+  id: string
+  email: string
+  hasContacted: boolean
+  onLogged: () => void
+  onEventsLoaded?: (events: TimelineEvent[]) => void
+}) {
   const { account } = useSession()
+  const { draftEmail, clearEmailDraft, recordRevision } = useCrmShell()
   const link = LINK[obj.collection]
   const [entries, setEntries] = useState<Entry[] | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -308,6 +360,21 @@ function Activity({ obj, id, email, hasContacted, onLogged }: { obj: CrmObject; 
   const [busy, setBusy] = useState(false)
   const [said, setSaid] = useState<string | null>(null)
   useChanges(['activities', 'notes', 'tasks'], () => setRound((r) => r + 1))
+
+  useEffect(() => {
+    if (recordRevision > 0) setRound((r) => r + 1)
+  }, [recordRevision])
+
+  useEffect(() => {
+    if (!draftEmail) return
+    if (email) setKind('email')
+    else setKind('note')
+    setSubject(draftEmail.subject)
+    setText(draftEmail.body)
+    setThread(null)
+    setSaid('Draft loaded from AI Copilot.')
+    clearEmailDraft()
+  }, [draftEmail, email, clearEmailDraft])
 
   useEffect(() => {
     let live = true
@@ -342,6 +409,7 @@ function Activity({ obj, id, email, hasContacted, onLogged }: { obj: CrmObject; 
         ]
         all.sort((a, b) => b.at - a.at)
         setEntries(all)
+        onEventsLoaded?.(acts)
         setError(null)
       })
       .catch((e) => live && setError(words(e, 'The timeline could not be read.')))

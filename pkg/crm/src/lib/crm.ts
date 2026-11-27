@@ -25,6 +25,38 @@ import type { BaseClient, BaseListResult, BaseRecord, ListRecordsParams } from '
 import type { BaseCollection } from './base-data/fields'
 import { paragraphs, plain } from './base-data/html'
 import { ApiError, currentOrg, host, restDelete, restGet, restPost, v1Url } from './host'
+import { createCrmExt } from './crm-ext'
+
+export {
+  attachmentFilter,
+  computeAnalytics,
+  currencyAmount,
+  fallbackAiAssist,
+  groupSearchHits,
+  slugifyFieldName,
+  validateCustomField,
+} from './crm-ext'
+export type {
+  ActivityFeedItem,
+  AiAssistAction,
+  AiAssistContext,
+  AiAssistResponse,
+  AiSuggestedTask,
+  AttachmentCategory,
+  AttachmentRecord,
+  AttachmentTarget,
+  CrmAnalytics,
+  CustomFieldInput,
+  CustomFieldType,
+  CustomFieldValidation,
+  MergeResult,
+  OutreachFunnel,
+  OverdueTaskSummary,
+  PipelineStageMetric,
+  PipelineSummary,
+  SearchHit,
+  SearchResultGroup,
+} from './crm-ext'
 
 const enc = encodeURIComponent
 
@@ -480,7 +512,19 @@ export const money = (cents: number, currency: string): string => {
 /** A collection's schema, read once per page load: fields do not change under a person working. */
 const schemas = new Map<string, Promise<BaseCollection>>()
 
+const crmExt = createCrmExt({
+  base,
+  invalidateSchema: (collection: string) => {
+    schemas.delete(collection)
+  },
+})
+
 export const CrmApi = {
+  ...crmExt,
+  /** Forget one cached collection schema after a schema edit. */
+  invalidateSchema: (collection: string): void => {
+    schemas.delete(collection)
+  },
   /** Whether a resume is a file uploaded to the org's storage (`/v1/s3/buckets/…`). */
   isUpload: (u: string): boolean => u.startsWith(`${v1Url('s3/buckets/')}`),
   /** The signed download of an uploaded file: the org's own, for a member alone. */

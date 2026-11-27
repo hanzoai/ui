@@ -12,7 +12,7 @@
  */
 import type { FilterRule, SortRule, ViewConfig } from '@hanzo/data'
 
-export type ObjectId = 'people' | 'companies' | 'deals' | 'fundraising' | 'tasks' | 'lists' | 'candidates'
+export type ObjectId = 'people' | 'companies' | 'deals' | 'fundraising' | 'tasks' | 'notes' | 'lists' | 'candidates'
 
 export interface StarterView {
   id: string
@@ -53,6 +53,8 @@ export interface CrmObject {
   board?: { field: string; lanes?: string[] }
   /** Opens as a board. */
   boardFirst?: boolean
+  /** Date field powering Calendar view when present. */
+  calendarField?: string
   /** People and companies come in from a file. */
   importable?: boolean
 }
@@ -112,6 +114,7 @@ export const OBJECTS: Record<ObjectId, CrmObject> = {
     create: ['name', 'company', 'contact', 'stage', 'amount', 'close_date'],
     board: { field: 'stage', lanes: SALES_STAGES },
     boardFirst: true,
+    calendarField: 'close_date',
     views: [
       { id: 'all', name: 'All deals', sorts: [{ field: 'close_date', dir: 'asc' }] },
       { id: 'open', name: 'Open', filters: [{ field: 'stage', op: 'isAnyOf', value: ['new', 'screening', 'meeting', 'proposal'] }], sorts: [{ field: 'close_date', dir: 'asc' }] },
@@ -130,6 +133,7 @@ export const OBJECTS: Record<ObjectId, CrmObject> = {
     create: ['name', 'company', 'contact', 'stage', 'amount', 'next_step'],
     board: { field: 'stage', lanes: ROUND_STAGES },
     boardFirst: true,
+    calendarField: 'close_date',
     views: [
       { id: 'all', name: 'All investors', sorts: [{ field: 'contacted', dir: 'asc' }] },
       { id: 'active', name: 'In progress', filters: [{ field: 'stage', op: 'isAnyOf', value: ['intro', 'meeting', 'diligence', 'term_sheet'] }], sorts: [{ field: 'contacted', dir: 'asc' }] },
@@ -146,10 +150,24 @@ export const OBJECTS: Record<ObjectId, CrmObject> = {
     columns: ['title', 'status', 'due', 'assignee', 'people', 'companies', 'opportunities'],
     create: ['title', 'due', 'assignee', 'status'],
     board: { field: 'status' },
+    calendarField: 'due',
     views: [
       { id: 'open', name: 'Open', filters: [{ field: 'status', op: 'isAnyOf', value: ['todo', 'in_progress'] }], sorts: [{ field: 'due', dir: 'asc' }] },
       { id: 'all', name: 'All tasks', sorts: recent },
       { id: 'done', name: 'Done', filters: [{ field: 'status', op: 'is', value: 'done' }], sorts: [{ field: 'updated', dir: 'desc' }] },
+    ],
+  },
+  notes: {
+    id: 'notes',
+    collection: 'notes',
+    label: 'Note',
+    plural: 'Notes',
+    title: 'title',
+    columns: ['title', 'body', 'people', 'companies', 'opportunities', 'updated'],
+    create: ['title', 'body', 'people', 'companies', 'opportunities'],
+    views: [
+      { id: 'all', name: 'All notes', sorts: [{ field: 'updated', dir: 'desc' }] },
+      { id: 'recent', name: 'Recently created', sorts: recent },
     ],
   },
   lists: {
@@ -172,6 +190,7 @@ export const OBJECTS: Record<ObjectId, CrmObject> = {
     columns: ['name', 'emails', 'role', 'job', 'stage', 'location', 'applied', 'source'],
     create: ['name', 'emails', 'role', 'job'],
     board: { field: 'stage' },
+    calendarField: 'applied',
     views: [
       { id: 'all', name: 'All candidates', sorts: [{ field: 'applied', dir: 'desc' }] },
       { id: 'open', name: 'In process', filters: [{ field: 'stage', op: 'isAnyOf', value: ['new', 'screening', 'interview', 'offer'] }], sorts: [{ field: 'applied', dir: 'desc' }] },
@@ -180,7 +199,7 @@ export const OBJECTS: Record<ObjectId, CrmObject> = {
 }
 
 /** The tabs in the order the rail lists them; the first is the CRM's index. */
-export const TABS: ObjectId[] = ['people', 'companies', 'deals', 'fundraising', 'tasks', 'lists', 'candidates']
+export const TABS: ObjectId[] = ['people', 'companies', 'deals', 'fundraising', 'tasks', 'notes', 'lists', 'candidates']
 
 /** A tab by its address segment; the index is People. Old addresses land on what replaced them. */
 export function objectOf(tab: string | undefined): CrmObject | null {

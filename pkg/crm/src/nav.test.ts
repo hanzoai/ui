@@ -4,9 +4,10 @@ import { OBJECTS, TABS } from './crm/objects'
 import { CRM_PAGES } from './nav'
 
 describe("the CRM's pages, as a host's navigation lists them", () => {
-  it("opens on People and names every object once, with Sequences before Candidates, then Sales, and the SuperAdmin's Beta last", () => {
-    expect(CRM_PAGES.map((p) => p.slug)).toEqual(['', 'companies', 'deals', 'fundraising', 'tasks', 'lists', 'sequences', 'candidates', 'sales', 'beta'])
-    const objects = CRM_PAGES.map((p) => p.slug || 'people').filter((s) => s !== 'sequences' && s !== 'sales' && s !== 'beta')
+  it("opens on People and names every object once, with Sequences before Candidates, then Sales, Dashboard, Data Model, and the SuperAdmin's Beta last", () => {
+    expect(CRM_PAGES.map((p) => p.slug)).toEqual(['', 'companies', 'deals', 'fundraising', 'tasks', 'notes', 'lists', 'sequences', 'candidates', 'sales', 'dashboard', 'model', 'beta'])
+    const nonObjects = new Set(['sequences', 'sales', 'dashboard', 'model', 'beta'])
+    const objects = CRM_PAGES.map((p) => p.slug || 'people').filter((s) => !nonObjects.has(s))
     expect([...objects].sort()).toEqual([...TABS].sort())
   })
 
