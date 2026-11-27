@@ -5,7 +5,7 @@
  */
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import { DEFAULT, KEY, KNOBS, PAINTED, apply, bootScript, paint, purple, read, style, write } from './state'
+import { DEFAULT, KEY, KNOBS, PAINTED, ZEN_DARK_DEFAULT, apply, bootScript, paint, purple, read, style, write } from './state'
 
 /** A localStorage that behaves, and one that refuses — private mode and embedded
  *  frames both throw rather than returning null, which is the case that takes a
@@ -288,6 +288,38 @@ describe('first paint', () => {
     expect(html.style.getPropertyValue('--primary-foreground')).toBe('#0a0a0a')
     expect(html.classList.contains('t_dark')).toBe(true)
     expect(store.getItem(PAINTED)).toBeNull()
+  })
+
+  it('ZEN_DARK_DEFAULT paints neutral near-black on fresh install and yields to explicit light/system', () => {
+    const store = memory()
+    const g = globalThis as unknown as { document: { documentElement: HTMLElement }; localStorage?: Storage }
+    const realDoc = g.document
+    const realStore = g.localStorage
+    try {
+      const fresh = document.createElement('html')
+      g.localStorage = store
+      g.document = { documentElement: fresh }
+      // eslint-disable-next-line no-eval
+      ;(0, eval)(bootScript({ base: ZEN_DARK_DEFAULT }))
+      expect(fresh.classList.contains('dark')).toBe(true)
+      expect(fresh.classList.contains('t_dark')).toBe(true)
+      expect(fresh.classList.contains('light')).toBe(false)
+      expect(fresh.getAttribute('data-theme')).toBe('zen')
+      expect(fresh.style.colorScheme).toBe('dark')
+
+      // Explicit light choice stored by user wins over ZEN_DARK_DEFAULT on next load
+      apply({ theme: 'light' }, realDoc.documentElement, { store })
+      const lightHtml = realDoc.createElement('html')
+      g.document = { documentElement: lightHtml }
+      // eslint-disable-next-line no-eval
+      ;(0, eval)(bootScript({ base: ZEN_DARK_DEFAULT }))
+      expect(lightHtml.classList.contains('light')).toBe(true)
+      expect(lightHtml.classList.contains('t_light')).toBe(true)
+      expect(lightHtml.getAttribute('data-scheme')).toBe('light')
+    } finally {
+      g.document = realDoc
+      g.localStorage = realStore
+    }
   })
 
   it('the boot script never throws on a blocked or corrupt store', () => {

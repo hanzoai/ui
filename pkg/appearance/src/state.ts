@@ -262,6 +262,15 @@ export interface At {
  *  selected. Never written to the document — see `read()`. */
 export const DEFAULT: Preference = { type: 1, density: 'default' }
 
+/**
+ * Canonical fresh-installation default across Hanzo Bot, Team, and App:
+ * neutral near-black Zen Dark. Pass as `install` to `<Hanzo appearance={{ install: ZEN_DARK_DEFAULT }}>`
+ * or `base` to `bootScript({ base: ZEN_DARK_DEFAULT })` so fresh installs paint
+ * near-black immediately while explicit `light`, `system`, or custom user
+ * preferences always override it cleanly.
+ */
+export const ZEN_DARK_DEFAULT: Preference = { theme: 'dark', palette: 'zen' }
+
 const isBrowser = () => typeof document !== 'undefined'
 
 /**

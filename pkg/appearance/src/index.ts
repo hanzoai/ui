@@ -28,7 +28,7 @@
  *   current({ install, org: fromServer, orgId: 'acme' })   // outside React
  */
 export { Appearance, useAppearance, useScheme, TYPE_STEPS, RATIO_STEPS, ARABICS, ACCENTS, HIGHLIGHTS, CONTRASTS, BACKGROUNDS } from './Appearance'
-export { read, readLayers, write, apply, paint, dark, current, style, bootScript, keyFor, companion, CHANGE, COMPANIONS, DEFAULT, KEY, PAINTED, type Arabic, type Contrast, type Preference, type Scheme, type At } from './state'
+export { read, readLayers, write, apply, paint, dark, current, style, bootScript, keyFor, companion, CHANGE, COMPANIONS, DEFAULT, ZEN_DARK_DEFAULT, KEY, PAINTED, type Arabic, type Contrast, type Preference, type Scheme, type At } from './state'
 export {
   BUILT_IN_THEME_IDS,
   BUILT_IN_THEMES,
