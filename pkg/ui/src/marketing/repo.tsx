@@ -124,8 +124,7 @@ export function Repo({
         shrink={0}
         {...(linked
           ? {
-              render: <a href={href} target={target} rel={rel} />,
-              textDecorationLine: 'none',
+              render: <a href={href} target={target} rel={rel} style={{ textDecoration: 'none' }} />,
             }
           : null)}
       >

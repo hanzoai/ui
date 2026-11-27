@@ -410,7 +410,8 @@
     "test:rtl": "node scripts/compose-theme.mjs && node scripts/rtl.mjs",
     "test:consumer": "node scripts/consumer-test.mjs",
     "test:unit": "vitest run",
-    "test:consumer:webpack": "node scripts/consumer-webpack.mjs"
+    "test:consumer:webpack": "node scripts/consumer-webpack.mjs",
+    "test:consumer:next": "node scripts/consumer-next.mjs"
   },
   "dependencies": {
     "@codemirror/commands": "catalog:",

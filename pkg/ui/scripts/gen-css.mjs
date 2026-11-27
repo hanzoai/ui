@@ -66,15 +66,16 @@ try {
   // every app runs a generator of its own and a fix inside this one script
   // reaches only this package's sheet.
   const gui = guiCSS()
+  const readCss = (path) => readFileSync(path, 'utf8').replace(/\r\n/g, '\n')
   // dist/theme.css, not src: the token layer is @hanzo/design's, composed in
   // by scripts/compose-theme.mjs. Reading src here would ship a stylesheet whose
   // components reference tokens the sheet never declares.
-  const tokens = readFileSync(join(UI, 'dist/theme.css'), 'utf8')
-  const motion = readFileSync(join(UI, 'src/styles/motion.css'), 'utf8')
+  const tokens = readCss(join(UI, 'dist/theme.css'))
+  const motion = readCss(join(UI, 'src/styles/motion.css'))
   // The element ground. It sits after rnw's base and before gui's atomics, so a
   // component still wins over it while an element the app wrote itself is not
   // left on browser defaults.
-  const base = readFileSync(join(UI, 'src/styles/base.css'), 'utf8')
+  const base = readCss(join(UI, 'src/styles/base.css'))
 
   // `--hanzo-ui-styles` is what <Hanzo> looks up to tell a consumer, in
   // development, that this file never reached the document.

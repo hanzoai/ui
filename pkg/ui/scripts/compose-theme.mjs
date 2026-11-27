@@ -23,34 +23,35 @@ import { fileURLToPath } from 'node:url'
 
 const require = createRequire(import.meta.url)
 const UI = dirname(dirname(fileURLToPath(import.meta.url)))
+const readCss = (path) => readFileSync(path, 'utf8').replace(/\r\n/g, '\n')
 
-const designRaw = readFileSync(require.resolve('@hanzo/design/styles.css'), 'utf8')
-const ours = readFileSync(join(UI, 'src/theme.css'), 'utf8')
+const designRaw = readCss(require.resolve('@hanzo/design/styles.css'))
+const ours = readCss(join(UI, 'src/theme.css'))
 
 // The chrome material — its own entry point AND part of this sheet. A host that
 // already has the token layer (or wants only the material) imports
 // `@hanzo/ui/glass.css`; a host that wants everything imports theme.css and
 // gets it inlined. Two entry points, ONE source file, so they cannot say
 // different things about what glass is.
-const glass = readFileSync(join(UI, 'src/glass.css'), 'utf8')
+const glass = readCss(join(UI, 'src/glass.css'))
 
 // The motion vocabulary — its own entry point too (`@hanzo/ui/styles/motion.css`)
 // and part of this sheet, for the same reason glass is: the components carry
 // `data-motion`, and a host that takes theme.css alone still gets the keyframes
 // they name. One source file, two entry points.
-const motion = readFileSync(join(UI, 'src/styles/motion.css'), 'utf8')
+const motion = readCss(join(UI, 'src/styles/motion.css'))
 
 // Type per writing system — its own entry point (`@hanzo/ui/lang.css`) and part
 // of this sheet, the way glass and motion are. It sets the `--font-script` and
 // `--leading-lang` that `ours` reads, keyed on `<html lang>`, so a host that
 // takes theme.css alone already sets Arabic, Thai or Japanese in a face drawn
 // for it. One source file, two entry points.
-const lang = readFileSync(join(UI, 'src/lang.css'), 'utf8')
+const lang = readCss(join(UI, 'src/lang.css'))
 
 // Native CSS Grid responsive rules — its own entry point (`@hanzo/ui/grid.css`)
 // and part of this sheet so responsive `cols={{ base, md, lg }}` and
 // `SplitGrid collapseAt` work automatically with theme.css / styles.css.
-const grid = readFileSync(join(UI, 'src/grid/grid.css'), 'utf8')
+const grid = readCss(join(UI, 'src/grid/grid.css'))
 
 /**
  * Drop design's @font-face blocks. FONT DELIVERY HAS ONE OWNER AND IT IS NOT US.
@@ -136,7 +137,7 @@ const fill =
   `.light, :root.t_light, .t_light {\n${gap(tokens.light)}\n}\n`
 
 /** The data palette — colour a person chose for a record (`@hanzo/tokens/css/data`). */
-const data = lightAlias(readFileSync(require.resolve('@hanzo/tokens/css/data'), 'utf8'))
+const data = lightAlias(readCss(require.resolve('@hanzo/tokens/css/data')))
 
 // The trap from store's decision doc, checked rather than remembered: design
 // publishes FINISHED colors (`#000000`, `rgb(255 255 255 / .10)`). Wrapping one
