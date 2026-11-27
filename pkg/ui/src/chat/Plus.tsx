@@ -340,7 +340,7 @@ export function Plus(p: PlusProps) {
     <DropdownMenu open={open} onOpenChange={setOpen} {...(wide ? null : { defaultPage: 'main' })}>
       <DropdownMenuTrigger asChild disabled={p.disabled}>
         <XStack
-          render="button"
+          render={<button type="button" />}
           data-slot="plus"
           aria-label={t('Add files, agents, skills and more')}
           width={p.size ?? 36}
@@ -358,7 +358,7 @@ export function Plus(p: PlusProps) {
           <PlusIcon size={GLYPH} strokeWidth={STROKE} color="currentColor" />
         </XStack>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" minW={360} maxW={440} data-slot="plus-menu">
+      <DropdownMenuContent sideOffset={8} align="start" minW={320} maxW={420} data-slot="plus-menu">
         {wide ? (
           main
         ) : (

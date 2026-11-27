@@ -114,7 +114,7 @@ export function Message({
         {...props}
       >
         <YStack items="flex-end" maxW="85%" gap="$1">
-          <YStack {...slot('message-body')} data-bubble="true" gap="$2" bg="$hover" rounded="$5" px="$3" py="$2" {...body}>
+          <YStack {...slot('message-body')} data-bubble="true" gap="$2" bg="$hover" rounded={9999} px="$3.5" py="$2" {...body}>
             {ink(children)}
             {busy ? <Caret /> : null}
           </YStack>

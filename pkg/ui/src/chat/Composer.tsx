@@ -564,10 +564,9 @@ export function Composer({
         {...slot('composer')}
         width="100%"
         rounded={CORNER}
-        borderWidth={EDGE}
+        borderWidth={forgetful ? EDGE : 0}
         {...glass(2)}
-        hoverStyle={{ borderColor: STRONG }}
-        focusWithinStyle={{ borderColor: STRONG }}
+        {...(forgetful ? { hoverStyle: { borderColor: STRONG }, focusWithinStyle: { borderColor: STRONG } } : null)}
         p={INSET}
         gap={SPACE}
         cursor="text"
