@@ -308,6 +308,7 @@ describe('first paint', () => {
       expect(fresh.style.colorScheme).toBe('dark')
 
       // Explicit light choice stored by user wins over ZEN_DARK_DEFAULT on next load
+      g.document = realDoc
       apply({ theme: 'light' }, realDoc.documentElement, { store })
       const lightHtml = realDoc.createElement('html')
       g.document = { documentElement: lightHtml }
