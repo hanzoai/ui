@@ -25,8 +25,9 @@
 //
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative, resolve as abs } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const UI = process.argv[2] ? abs(process.argv[2]) : new URL('..', import.meta.url).pathname
+const UI = process.argv[2] ? abs(process.argv[2]) : fileURLToPath(new URL('..', import.meta.url))
 const DIST = join(UI, 'dist')
 const CJS = join(UI, 'dist-cjs')
 const DIRECTIVE = "'use client';"
