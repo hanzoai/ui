@@ -89,7 +89,7 @@ export const DEFAULT_DESKTOP_MENU_ITEMS: ReadonlyArray<DesktopMenuItem> = [
 export const DESKTOP_TOOLBAR_STYLE_ID = "hanzo-desktop-toolbar-styles"
 
 export const DESKTOP_TOOLBAR_CSS = `
-.hz-desktop-toolbar-host {
+[data-slot="desktop-toolbar-host"] {
   position: relative;
   flex: none;
   width: 100%;
@@ -99,7 +99,7 @@ export const DESKTOP_TOOLBAR_CSS = `
   user-select: none;
   -webkit-user-select: none;
 }
-.hz-desktop-toolbar {
+[data-slot="desktop-toolbar"] {
   box-sizing: border-box;
   height: var(--hz-toolbar-height, ${DESKTOP_DIMENSIONS.toolbarHeightPx}px);
   min-height: var(--hz-toolbar-height, ${DESKTOP_DIMENSIONS.toolbarHeightPx}px);
@@ -113,28 +113,29 @@ export const DESKTOP_TOOLBAR_CSS = `
   border-bottom: 1px solid var(--hz-border, var(--app-theme-toolbar-border, #222222));
   -webkit-app-region: drag;
 }
-.hz-desktop-toolbar[data-mac-traffic-lights="true"] {
-  padding-left: var(--desktop-window-controls-inset, 78px);
+[data-slot="desktop-toolbar"][data-mac-traffic-lights="true"] {
+  padding-inline-start: var(--desktop-window-controls-inset, 78px);
 }
-.hz-toolbar-cluster {
+[data-slot="toolbar-left"],
+[data-slot="toolbar-right"] {
   display: flex;
   align-items: center;
   gap: 3px;
   min-width: 0;
   -webkit-app-region: no-drag;
 }
-.hz-toolbar-cluster-end {
+[data-slot="toolbar-right"] {
   justify-content: flex-end;
   justify-self: end;
 }
-.hz-toolbar-sep {
+[data-slot="toolbar-sep"] {
   width: 1px;
   height: 16px;
   background: var(--hz-border, #222222);
   margin: 0 4px;
   flex: none;
 }
-.hz-toolbar-ib {
+:is([data-slot="toolbar-ib"], [data-slot="desktop-app-menu-trigger"]) {
   box-sizing: border-box;
   width: var(--hz-control-size, ${DESKTOP_DIMENSIONS.controlHitAreaPx}px);
   height: var(--hz-control-size, ${DESKTOP_DIMENSIONS.controlHitAreaPx}px);
@@ -151,31 +152,31 @@ export const DESKTOP_TOOLBAR_CSS = `
   -webkit-app-region: no-drag;
   transition: background-color ${DESKTOP_MOTION.hoverTransition}, color ${DESKTOP_MOTION.hoverTransition};
 }
-.hz-toolbar-ib:hover:not(:disabled) {
+:is([data-slot="toolbar-ib"], [data-slot="desktop-app-menu-trigger"]):hover:not(:disabled) {
   background: var(--hz-hover, var(--app-theme-toolbar-control-hover, #1B1B1B));
   color: var(--hz-fg, var(--app-theme-toolbar-foreground, #EDEDED));
 }
-.hz-toolbar-ib[aria-pressed="true"],
-.hz-toolbar-ib[aria-expanded="true"] {
+:is([data-slot="toolbar-ib"], [data-slot="desktop-app-menu-trigger"])[aria-pressed="true"],
+:is([data-slot="toolbar-ib"], [data-slot="desktop-app-menu-trigger"])[aria-expanded="true"] {
   background: var(--hz-hover, #1B1B1B);
   color: var(--hz-fg, #EDEDED);
 }
-.hz-toolbar-ib:disabled {
+:is([data-slot="toolbar-ib"], [data-slot="desktop-app-menu-trigger"]):disabled {
   opacity: 0.35;
   cursor: default;
 }
-.hz-toolbar-ib:focus-visible,
-.hz-toolbar-project:focus-visible,
-.hz-toolbar-command:focus-visible,
-.hz-toolbar-menu-item:focus-visible {
+:is([data-slot="toolbar-ib"], [data-slot="desktop-app-menu-trigger"]):focus-visible,
+[data-slot="toolbar-project"]:focus-visible,
+[data-slot="toolbar-command"]:focus-visible,
+[data-slot="toolbar-menu-item"]:focus-visible {
   outline: 1px solid var(--hz-muted, #A3A3A3);
   outline-offset: -2px;
 }
-.hz-toolbar-ib[data-action="close-window"]:hover:not(:disabled) {
+[data-slot="toolbar-ib"][data-action="close-window"]:hover:not(:disabled) {
   background: #e5484d;
   color: #ffffff;
 }
-.hz-toolbar-project {
+[data-slot="toolbar-project"] {
   border: 0;
   background: transparent;
   color: var(--hz-fg-secondary, #B2B2B2);
@@ -192,11 +193,11 @@ export const DESKTOP_TOOLBAR_CSS = `
   -webkit-app-region: no-drag;
   transition: background-color ${DESKTOP_MOTION.hoverTransition}, color ${DESKTOP_MOTION.hoverTransition};
 }
-.hz-toolbar-project:hover {
+[data-slot="toolbar-project"]:hover {
   background: var(--hz-hover, #1B1B1B);
   color: var(--hz-fg, #EDEDED);
 }
-.hz-toolbar-command {
+[data-slot="toolbar-command"] {
   box-sizing: border-box;
   height: 26px;
   width: 100%;
@@ -216,18 +217,18 @@ export const DESKTOP_TOOLBAR_CSS = `
   -webkit-app-region: no-drag;
   transition: background-color ${DESKTOP_MOTION.hoverTransition}, border-color ${DESKTOP_MOTION.hoverTransition}, color ${DESKTOP_MOTION.hoverTransition};
 }
-.hz-toolbar-command:hover {
+[data-slot="toolbar-command"]:hover {
   background: var(--hz-hover, #1B1B1B);
   border-color: var(--hz-border-subtle, #262626);
   color: var(--hz-fg, #EDEDED);
 }
-.hz-toolbar-command-label {
+[data-slot="toolbar-command-label"] {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.hz-toolbar-kbd {
-  margin-left: auto;
+[data-slot="toolbar-kbd"] {
+  margin-inline-start: auto;
   font-family: inherit;
   font-size: 10px;
   line-height: 1.5;
@@ -239,17 +240,17 @@ export const DESKTOP_TOOLBAR_CSS = `
   white-space: nowrap;
   flex: none;
 }
-.hz-toolbar-window-controls {
+[data-slot="window-controls"] {
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  margin-left: 1px;
+  margin-inline-start: 1px;
   -webkit-app-region: no-drag;
 }
-.hz-toolbar-menu-pop {
+[data-slot="desktop-app-menu"] {
   position: absolute;
   top: calc(var(--hz-toolbar-height, 38px) + 4px);
-  left: 8px;
+  inset-inline-start: 8px;
   width: 236px;
   padding: 5px;
   border-radius: 8px;
@@ -261,15 +262,15 @@ export const DESKTOP_TOOLBAR_CSS = `
   flex-direction: column;
   gap: 2px;
 }
-.hz-toolbar-menu-pop[hidden] {
+[data-slot="desktop-app-menu"][hidden] {
   display: none !important;
 }
-.hz-toolbar-menu-sep {
+[data-slot="toolbar-menu-sep"] {
   height: 1px;
   margin: 4px 6px;
   background: var(--hz-border, #222222);
 }
-.hz-toolbar-menu-item {
+[data-slot="toolbar-menu-item"] {
   width: 100%;
   height: 30px;
   padding: 0 9px;
@@ -283,44 +284,44 @@ export const DESKTOP_TOOLBAR_CSS = `
   display: flex;
   align-items: center;
   gap: 8px;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   transition: background-color ${DESKTOP_MOTION.hoverTransition}, color ${DESKTOP_MOTION.hoverTransition};
 }
-.hz-toolbar-menu-item:hover {
+[data-slot="toolbar-menu-item"]:hover {
   background: var(--hz-hover, #1B1B1B);
   color: var(--hz-fg, #EDEDED);
 }
-.hz-toolbar-menu-item[data-danger="true"]:hover {
+[data-slot="toolbar-menu-item"][data-danger="true"]:hover {
   background: rgba(239, 68, 68, 0.16);
   color: #f87171;
 }
-.hz-toolbar-menu-item-label {
+[data-slot="toolbar-menu-item-label"] {
   flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.hz-toolbar-menu-item-kbd {
+[data-slot="toolbar-menu-item-kbd"] {
   font-family: inherit;
   font-size: 11px;
   color: var(--hz-subtle, #777777);
   flex: none;
 }
 @media (max-width: 850px) {
-  .hz-desktop-toolbar {
+  [data-slot="desktop-toolbar"] {
     grid-template-columns: minmax(95px, 1fr) minmax(75px, 1fr) auto;
     gap: 6px;
   }
-  .hz-toolbar-project,
-  .hz-toolbar-command .hz-toolbar-kbd {
+  [data-slot="toolbar-project"],
+  [data-slot="toolbar-command"] [data-slot="toolbar-kbd"] {
     display: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hz-desktop-toolbar *,
-  .hz-toolbar-menu-pop * {
+  [data-slot="desktop-toolbar"] *,
+  [data-slot="desktop-app-menu"] * {
     transition: none !important;
   }
 }
@@ -389,16 +390,16 @@ export function renderDesktopToolbarHtml(state: DesktopToolbarState = {}): strin
 
   const menuRows = menuItems
     .map((item) => {
-      const sep = item.separatorBefore ? '<div class="hz-toolbar-menu-sep" role="separator"></div>' : ""
+      const sep = item.separatorBefore ? '<div data-slot="toolbar-menu-sep" role="separator"></div>' : ""
       const iconHtml = item.icon ? renderDesktopIconSvg(item.icon, { size: 14 }) : ""
       const kbdHtml = item.shortcut
-        ? `<kbd class="hz-toolbar-menu-item-kbd">${escapeHtml(formatShortcutForPlatform(item.shortcut, isMac))}</kbd>`
+        ? `<kbd data-slot="toolbar-menu-item-kbd">${escapeHtml(formatShortcutForPlatform(item.shortcut, isMac))}</kbd>`
         : ""
       return (
         sep +
-        `<button type="button" role="menuitem" class="hz-toolbar-menu-item" data-menu-id="${escapeHtml(item.id)}"${item.danger ? ' data-danger="true"' : ""}>` +
+        `<button type="button" role="menuitem" data-slot="toolbar-menu-item" data-menu-id="${escapeHtml(item.id)}"${item.danger ? ' data-danger="true"' : ""}>` +
         iconHtml +
-        `<span class="hz-toolbar-menu-item-label">${escapeHtml(item.label)}</span>` +
+        `<span data-slot="toolbar-menu-item-label">${escapeHtml(item.label)}</span>` +
         kbdHtml +
         `</button>`
       )
@@ -406,38 +407,38 @@ export function renderDesktopToolbarHtml(state: DesktopToolbarState = {}): strin
     .join("")
 
   const winControlsHtml = showWinControls
-    ? `<div class="hz-toolbar-sep" aria-hidden="true"></div>` +
-      `<div class="hz-toolbar-window-controls" data-slot="window-controls" aria-label="Window controls">` +
-      `<button type="button" class="hz-toolbar-ib" data-action="min" title="Minimize" aria-label="Minimize">${renderDesktopIconSvg("windowMinimize", { size: 12 })}</button>` +
-      `<button type="button" class="hz-toolbar-ib" data-action="max" title="${state.windowMaximized ? "Restore" : "Maximize"}" aria-label="${state.windowMaximized ? "Restore" : "Maximize"}">${renderDesktopIconSvg(state.windowMaximized ? "windowRestore" : "windowMaximize", { size: 12 })}</button>` +
-      `<button type="button" class="hz-toolbar-ib" data-action="close-window" title="Close" aria-label="Close window">${renderDesktopIconSvg("windowClose", { size: 12 })}</button>` +
+    ? `<div data-slot="toolbar-sep" aria-hidden="true"></div>` +
+      `<div data-slot="window-controls" aria-label="Window controls">` +
+      `<button type="button" data-slot="toolbar-ib" data-action="min" title="Minimize" aria-label="Minimize">${renderDesktopIconSvg("windowMinimize", { size: 12 })}</button>` +
+      `<button type="button" data-slot="toolbar-ib" data-action="max" title="${state.windowMaximized ? "Restore" : "Maximize"}" aria-label="${state.windowMaximized ? "Restore" : "Maximize"}">${renderDesktopIconSvg(state.windowMaximized ? "windowRestore" : "windowMaximize", { size: 12 })}</button>` +
+      `<button type="button" data-slot="toolbar-ib" data-action="close-window" title="Close" aria-label="Close window">${renderDesktopIconSvg("windowClose", { size: 12 })}</button>` +
       `</div>`
     : ""
 
   return (
-    `<div class="hz-desktop-toolbar-host" data-slot="desktop-toolbar-host">` +
-    `<header class="hz-desktop-toolbar" data-slot="desktop-toolbar" data-tauri-drag-region="" aria-label="Window toolbar"${isMac ? ' data-mac-traffic-lights="true"' : ""}>` +
-    `<div class="hz-toolbar-cluster" data-slot="toolbar-left">` +
-    `<button type="button" class="hz-toolbar-ib" data-action="menu" data-slot="desktop-app-menu-trigger" title="Application menu" aria-label="Application menu" aria-haspopup="menu" aria-expanded="false">${renderDesktopIconSvg("menu", { size: 16 })}</button>` +
-    `<button type="button" class="hz-toolbar-ib" data-panel="left" title="Toggle left sidebar (${modB})" aria-label="Toggle left sidebar" aria-pressed="${Boolean(state.leftSidebarOpen)}">${renderDesktopIconSvg("panelLeft", { size: 16 })}</button>` +
-    `<button type="button" class="hz-toolbar-ib" data-action="back" title="Go back" aria-label="Go back"${state.canGoBack ? "" : " disabled"}>${renderDesktopIconSvg("chevronLeft", { size: 16 })}</button>` +
-    `<button type="button" class="hz-toolbar-ib" data-action="forward" title="Go forward" aria-label="Go forward"${state.canGoForward ? "" : " disabled"}>${renderDesktopIconSvg("chevronRight", { size: 16 })}</button>` +
-    `<button type="button" class="hz-toolbar-project" data-action="folder" title="${escapeHtml(projectText)}">${escapeHtml(projectText)}</button>` +
+    `<div data-slot="desktop-toolbar-host">` +
+    `<header data-slot="desktop-toolbar" data-tauri-drag-region="" aria-label="Window toolbar"${isMac ? ' data-mac-traffic-lights="true"' : ""}>` +
+    `<div data-slot="toolbar-left">` +
+    `<button type="button" data-action="menu" data-slot="desktop-app-menu-trigger" title="Application menu" aria-label="Application menu" aria-haspopup="menu" aria-expanded="false">${renderDesktopIconSvg("menu", { size: 16 })}</button>` +
+    `<button type="button" data-slot="toolbar-ib" data-panel="left" title="Toggle left sidebar (${modB})" aria-label="Toggle left sidebar" aria-pressed="${Boolean(state.leftSidebarOpen)}">${renderDesktopIconSvg("panelLeft", { size: 16 })}</button>` +
+    `<button type="button" data-slot="toolbar-ib" data-action="back" title="Go back" aria-label="Go back"${state.canGoBack ? "" : " disabled"}>${renderDesktopIconSvg("chevronLeft", { size: 16 })}</button>` +
+    `<button type="button" data-slot="toolbar-ib" data-action="forward" title="Go forward" aria-label="Go forward"${state.canGoForward ? "" : " disabled"}>${renderDesktopIconSvg("chevronRight", { size: 16 })}</button>` +
+    `<button type="button" data-slot="toolbar-project" data-action="folder" title="${escapeHtml(projectText)}">${escapeHtml(projectText)}</button>` +
     `</div>` +
-    `<button type="button" class="hz-toolbar-command" data-action="palette" aria-label="Open command palette">` +
+    `<button type="button" data-slot="toolbar-command" data-action="palette" aria-label="Open command palette">` +
     renderDesktopIconSvg("search", { size: 13 }) +
-    `<span class="hz-toolbar-command-label">${escapeHtml(searchText)}</span>` +
-    `<kbd class="hz-toolbar-kbd">${escapeHtml(modK)}</kbd>` +
+    `<span data-slot="toolbar-command-label">${escapeHtml(searchText)}</span>` +
+    `<kbd data-slot="toolbar-kbd">${escapeHtml(modK)}</kbd>` +
     `</button>` +
-    `<div class="hz-toolbar-cluster hz-toolbar-cluster-end" data-slot="toolbar-right">` +
-    `<button type="button" class="hz-toolbar-ib" data-panel="browser" title="Toggle browser preview" aria-label="Toggle browser preview" aria-pressed="${Boolean(state.browserOpen)}">${renderDesktopIconSvg(browserIcon, { size: 16 })}</button>` +
-    `<button type="button" class="hz-toolbar-ib" data-panel="bottom" title="Toggle terminal (${modBacktick})" aria-label="Toggle terminal" aria-pressed="${Boolean(state.bottomPanelOpen)}">${renderDesktopIconSvg(terminalIcon, { size: 16 })}</button>` +
-    `<button type="button" class="hz-toolbar-ib" data-panel="integrations" title="Toggle integrations" aria-label="Toggle integrations" aria-pressed="${Boolean(state.integrationsOpen)}">${renderDesktopIconSvg(integrationsIcon, { size: 16 })}</button>` +
-    `<button type="button" class="hz-toolbar-ib" data-panel="right" data-right-panel-toggle="" title="Toggle AI agent (${modAgent})" aria-label="Toggle AI agent" aria-pressed="${Boolean(state.rightSidebarOpen)}">${renderDesktopIconSvg("panelRight", { size: 16 })}</button>` +
+    `<div data-slot="toolbar-right">` +
+    `<button type="button" data-slot="toolbar-ib" data-panel="browser" title="Toggle browser preview" aria-label="Toggle browser preview" aria-pressed="${Boolean(state.browserOpen)}">${renderDesktopIconSvg(browserIcon, { size: 16 })}</button>` +
+    `<button type="button" data-slot="toolbar-ib" data-panel="bottom" title="Toggle terminal (${modBacktick})" aria-label="Toggle terminal" aria-pressed="${Boolean(state.bottomPanelOpen)}">${renderDesktopIconSvg(terminalIcon, { size: 16 })}</button>` +
+    `<button type="button" data-slot="toolbar-ib" data-panel="integrations" title="Toggle integrations" aria-label="Toggle integrations" aria-pressed="${Boolean(state.integrationsOpen)}">${renderDesktopIconSvg(integrationsIcon, { size: 16 })}</button>` +
+    `<button type="button" data-slot="toolbar-ib" data-panel="right" data-right-panel-toggle="" title="Toggle AI agent (${modAgent})" aria-label="Toggle AI agent" aria-pressed="${Boolean(state.rightSidebarOpen)}">${renderDesktopIconSvg("panelRight", { size: 16 })}</button>` +
     winControlsHtml +
     `</div>` +
     `</header>` +
-    `<div class="hz-toolbar-menu-pop" data-slot="desktop-app-menu" role="menu" aria-label="Application menu" hidden>${menuRows}</div>` +
+    `<div data-slot="desktop-app-menu" role="menu" aria-label="Application menu" hidden>${menuRows}</div>` +
     `</div>`
   )
 }
@@ -483,7 +484,7 @@ export function mountDesktopToolbar(
       projectBtn.title = text
     }
 
-    const cmdLabel = host.querySelector<HTMLElement>(".hz-toolbar-command-label")
+    const cmdLabel = host.querySelector<HTMLElement>('[data-slot="toolbar-command-label"]')
     if (cmdLabel) {
       cmdLabel.textContent = currentState.searchPlaceholder || "Search or run a command"
     }

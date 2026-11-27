@@ -107,7 +107,7 @@ export const DEFAULT_AGENT_MODES: ReadonlyArray<string> = ["Auto", "Ask", "Plan"
 export const DESKTOP_AGENT_SIDEBAR_STYLE_ID = "hanzo-desktop-agent-sidebar-styles"
 
 export const DESKTOP_AGENT_SIDEBAR_CSS = `
-.hz-agent-sidebar {
+[data-slot="agent-sidebar"] {
   box-sizing: border-box;
   position: relative;
   display: flex;
@@ -121,16 +121,17 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   font-family: var(--font-sans, "Zen", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
   font-size: var(--hz-ui-font-size, ${DESKTOP_DIMENSIONS.uiFontSizePx}px);
 }
-.hz-agent-sidebar *,
-.hz-agent-sidebar *::before,
-.hz-agent-sidebar *::after {
+[data-slot="agent-sidebar"] *,
+[data-slot="agent-sidebar"] *::before,
+[data-slot="agent-sidebar"] *::after {
   box-sizing: border-box;
 }
-.hz-agent-header {
+[data-slot="agent-header"] {
   height: 37px;
   min-height: 37px;
   flex: none;
-  padding: 0 9px 0 13px;
+  padding-block: 0;
+  padding-inline: 13px 9px;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -139,13 +140,13 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   font-size: 12px;
   font-weight: 500;
 }
-.hz-agent-title-btn {
+[data-slot="agent-title-btn"] {
   border: 0;
   background: transparent;
   color: inherit;
   font: inherit;
   padding: 3px 6px;
-  margin-left: -6px;
+  margin-inline-start: -6px;
   border-radius: 5px;
   display: inline-flex;
   align-items: center;
@@ -155,20 +156,20 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   max-width: 210px;
   transition: background-color ${DESKTOP_MOTION.hoverTransition}, color ${DESKTOP_MOTION.hoverTransition};
 }
-.hz-agent-title-btn:hover {
+[data-slot="agent-title-btn"]:hover {
   background: var(--hz-hover, #1B1B1B);
   color: var(--hz-fg, #EDEDED);
 }
-.hz-agent-title-text {
+[data-slot="agent-title-text"] {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.hz-agent-grow {
+[data-slot="agent-grow"] {
   flex: 1;
   min-width: 0;
 }
-.hz-agent-ib {
+[data-slot="agent-icon-btn"] {
   width: 25px;
   height: 25px;
   border: 0;
@@ -182,19 +183,18 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   flex: none;
   transition: background-color ${DESKTOP_MOTION.hoverTransition}, color ${DESKTOP_MOTION.hoverTransition};
 }
-.hz-agent-ib:hover:not(:disabled) {
+[data-slot="agent-icon-btn"]:hover:not(:disabled) {
   background: var(--hz-hover, #1B1B1B);
   color: var(--hz-fg, #EDEDED);
 }
-.hz-agent-ib:disabled {
+[data-slot="agent-icon-btn"]:disabled {
   opacity: 0.35;
   cursor: default;
 }
-.hz-agent-history-pop {
+[data-slot="agent-history-popover"] {
   position: absolute;
   top: 41px;
-  left: 8px;
-  right: 8px;
+  inset-inline: 8px;
   max-height: 240px;
   overflow: auto;
   padding: 5px;
@@ -207,10 +207,10 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   flex-direction: column;
   gap: 2px;
 }
-.hz-agent-history-pop[hidden] {
+[data-slot="agent-history-popover"][hidden] {
   display: none !important;
 }
-.hz-agent-history-row {
+[data-slot="agent-history-row"] {
   border: 0;
   background: transparent;
   color: var(--hz-fg-secondary, #D2D2D2);
@@ -221,20 +221,20 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   display: flex;
   align-items: center;
   gap: 8px;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
 }
-.hz-agent-history-row:hover,
-.hz-agent-history-row[aria-current="true"] {
+[data-slot="agent-history-row"]:hover,
+[data-slot="agent-history-row"][aria-current="true"] {
   background: var(--hz-hover, #1B1B1B);
   color: var(--hz-fg, #EDEDED);
 }
-.hz-agent-history-meta {
-  margin-left: auto;
+[data-slot="agent-history-meta"] {
+  margin-inline-start: auto;
   font-size: 10.5px;
   color: var(--hz-subtle, #777777);
 }
-.hz-agent-empty {
+[data-slot="agent-empty"] {
   flex: 1;
   min-height: 0;
   display: flex;
@@ -245,35 +245,35 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   overflow: auto;
   text-align: center;
 }
-.hz-agent-empty[hidden],
-.hz-agent-messages[hidden] {
+[data-slot="agent-empty"][hidden],
+[data-slot="agent-messages"][hidden] {
   display: none !important;
 }
-.hz-agent-empty-logo {
+[data-slot="agent-empty-logo"] {
   color: var(--hz-fg-secondary, #BDBDBD);
   margin-bottom: 14px;
   display: inline-flex;
 }
-.hz-agent-empty-title {
+[data-slot="agent-empty-title"] {
   font-size: 14px;
   font-weight: 560;
   margin: 0 0 5px;
   color: var(--hz-fg, #EDEDED);
 }
-.hz-agent-empty-sub {
+[data-slot="agent-empty-sub"] {
   font-size: 12px;
   color: var(--hz-subtle, #888888);
   margin: 0 0 18px;
   max-width: 260px;
   line-height: 1.45;
 }
-.hz-agent-suggestions {
+[data-slot="agent-suggestions"] {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 6px;
 }
-.hz-agent-suggest {
+[data-slot="agent-suggest"] {
   border: 1px solid var(--hz-border-subtle, #282828);
   border-radius: 999px;
   background: transparent;
@@ -284,11 +284,11 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   cursor: pointer;
   transition: background-color ${DESKTOP_MOTION.hoverTransition}, border-color ${DESKTOP_MOTION.hoverTransition}, color ${DESKTOP_MOTION.hoverTransition};
 }
-.hz-agent-suggest:hover {
+[data-slot="agent-suggest"]:hover {
   background: var(--hz-hover, #1B1B1B);
   color: var(--hz-fg, #EDEDED);
 }
-.hz-agent-messages {
+[data-slot="agent-messages"] {
   flex: 1;
   min-height: 0;
   overflow: auto;
@@ -297,36 +297,36 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   flex-direction: column;
   gap: 12px;
 }
-.hz-agent-msg {
+[data-slot="agent-messages"] > [data-role] {
   font-size: 12.5px;
   line-height: 1.5;
   white-space: pre-wrap;
   word-break: break-word;
 }
-.hz-agent-msg-user {
+[data-slot="agent-messages"] > [data-role="user"] {
   padding: 9px 12px;
   background: var(--hz-surface, var(--app-theme-message-surface, #141414));
   border: 1px solid var(--hz-border, #222222);
   border-radius: 10px;
   color: var(--hz-fg, #EDEDED);
 }
-.hz-agent-msg-assistant {
+[data-slot="agent-messages"] > [data-role="assistant"] {
   background: transparent;
   color: var(--hz-fg-secondary, #D5D5D5);
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-.hz-agent-caret {
+[data-slot="agent-caret"] {
   display: inline-block;
   width: 6px;
   height: 13px;
-  margin-left: 3px;
+  margin-inline-start: 3px;
   vertical-align: text-bottom;
   background: var(--hz-fg, #EDEDED);
   opacity: 0.75;
 }
-.hz-agent-tool-card {
+[data-slot="agent-tool-card"] {
   border: 1px solid var(--hz-border, #222222);
   border-radius: 8px;
   background: var(--hz-surface, #141414);
@@ -335,7 +335,7 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   flex-direction: column;
   gap: 6px;
 }
-.hz-agent-tool-head {
+[data-slot="agent-tool-head"] {
   display: flex;
   align-items: center;
   gap: 7px;
@@ -343,21 +343,21 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   font-weight: 500;
   color: var(--hz-fg, #EDEDED);
 }
-.hz-agent-tool-badge {
-  margin-left: auto;
+[data-slot="agent-tool-badge"] {
+  margin-inline-start: auto;
   font-size: 10px;
   padding: 1px 6px;
   border-radius: 999px;
   background: var(--hz-hover, #1B1B1B);
   color: var(--hz-muted, #A3A3A3);
 }
-.hz-agent-tool-card[data-status="pending_approval"] .hz-agent-tool-badge {
+[data-slot="agent-tool-card"][data-status="pending_approval"] [data-slot="agent-tool-badge"] {
   color: #fe9a00;
 }
-.hz-agent-tool-card[data-status="error"] .hz-agent-tool-badge {
+[data-slot="agent-tool-card"][data-status="error"] [data-slot="agent-tool-badge"] {
   color: #fb414a;
 }
-.hz-agent-tool-cmd {
+[data-slot="agent-tool-cmd"] {
   font-family: var(--font-mono, "Zen Mono", "JetBrains Mono", monospace);
   font-size: 11px;
   color: var(--hz-muted, #A3A3A3);
@@ -366,12 +366,12 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   border-radius: 5px;
   overflow-x: auto;
 }
-.hz-agent-tool-actions {
+[data-slot="agent-tool-actions"] {
   display: flex;
   gap: 6px;
   justify-content: flex-end;
 }
-.hz-agent-btn-sm {
+[data-slot="agent-btn-sm"] {
   border: 1px solid var(--hz-border-subtle, #262626);
   border-radius: 6px;
   padding: 3px 9px;
@@ -382,18 +382,18 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   color: var(--hz-fg, #EDEDED);
   cursor: pointer;
 }
-.hz-agent-btn-sm[data-primary="true"] {
+[data-slot="agent-btn-sm"][data-primary="true"] {
   background: #EDEDED;
   color: #0A0A0A;
   border-color: #EDEDED;
 }
-.hz-agent-diff-block {
+[data-slot="agent-diff-block"] {
   border: 1px solid var(--hz-border, #222222);
   border-radius: 8px;
   background: var(--hz-canvas, #090909);
   overflow: hidden;
 }
-.hz-agent-diff-head {
+[data-slot="agent-diff-head"] {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -403,13 +403,13 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   font-family: var(--font-mono, "Zen Mono", monospace);
   font-size: 11px;
 }
-.hz-agent-diff-add {
+[data-slot="agent-diff-add"] {
   color: #a8be9e;
 }
-.hz-agent-diff-del {
+[data-slot="agent-diff-del"] {
   color: #d4848a;
 }
-.hz-agent-diff-pre {
+[data-slot="agent-diff-pre"] {
   margin: 0;
   padding: 7px 9px;
   font-family: var(--font-mono, "Zen Mono", monospace);
@@ -417,17 +417,17 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   line-height: 1.5;
   overflow-x: auto;
 }
-.hz-agent-diff-line-add {
+[data-slot="agent-diff-line-add"] {
   background: rgba(168, 190, 158, 0.12);
   color: #c2d8b8;
   display: block;
 }
-.hz-agent-diff-line-del {
+[data-slot="agent-diff-line-del"] {
   background: rgba(212, 132, 138, 0.12);
   color: #e4a1a7;
   display: block;
 }
-.hz-agent-composer {
+[data-slot="agent-composer"] {
   margin: 10px;
   border: 1px solid var(--hz-border-subtle, #262626);
   border-radius: var(--hz-composer-radius, ${DESKTOP_DIMENSIONS.composerRadiusPx}px);
@@ -436,7 +436,7 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   box-shadow: 0 14px 32px -18px rgba(0, 0, 0, 0.75);
   flex: none;
 }
-.hz-agent-prompt {
+[data-slot="agent-prompt"] {
   width: 100%;
   min-height: 50px;
   max-height: 160px;
@@ -449,16 +449,18 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   font-size: 12.5px;
   line-height: 1.45;
 }
-.hz-agent-prompt::placeholder {
+[data-slot="agent-prompt"]::placeholder {
   color: var(--hz-subtle, #777777);
 }
-.hz-agent-composer-bar {
+[data-slot="agent-composer-bar"] {
   display: flex;
   align-items: center;
   gap: 4px;
   margin-top: 4px;
 }
-.hz-agent-pill {
+[data-slot="agent-model-pill"],
+[data-slot="agent-effort-pill"],
+[data-slot="agent-mode-pill"] {
   border: 0;
   font: inherit;
   font-size: ${DESKTOP_DIMENSIONS.smallLabelFontSizePx}px;
@@ -470,10 +472,12 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   cursor: pointer;
   transition: background-color ${DESKTOP_MOTION.hoverTransition}, color ${DESKTOP_MOTION.hoverTransition};
 }
-.hz-agent-pill:hover {
+[data-slot="agent-model-pill"]:hover,
+[data-slot="agent-effort-pill"]:hover,
+[data-slot="agent-mode-pill"]:hover {
   color: var(--hz-fg, #EDEDED);
 }
-.hz-agent-send {
+[data-slot="agent-send"] {
   width: 26px;
   height: 26px;
   border: 0;
@@ -487,11 +491,11 @@ export const DESKTOP_AGENT_SIDEBAR_CSS = `
   flex: none;
   transition: background-color ${DESKTOP_MOTION.hoverTransition}, opacity ${DESKTOP_MOTION.hoverTransition};
 }
-.hz-agent-send:hover:not(:disabled) {
+[data-slot="agent-send"]:hover:not(:disabled) {
   background: #FFFFFF;
   color: #000000;
 }
-.hz-agent-send:disabled {
+[data-slot="agent-send"]:disabled {
   opacity: 0.4;
   cursor: default;
 }
@@ -533,22 +537,22 @@ function renderToolCardHtml(tc: AgentToolCallItem): string {
           ? "Failed"
           : "Done"
   const cmdHtml = tc.commandOrArgs
-    ? `<div class="hz-agent-tool-cmd">${escapeHtml(tc.commandOrArgs)}</div>`
+    ? `<div data-slot="agent-tool-cmd">${escapeHtml(tc.commandOrArgs)}</div>`
     : ""
   const outHtml = tc.outputPreview
-    ? `<div class="hz-agent-tool-cmd">${escapeHtml(tc.outputPreview)}</div>`
+    ? `<div data-slot="agent-tool-cmd">${escapeHtml(tc.outputPreview)}</div>`
     : ""
   const approvalHtml =
     tc.status === "pending_approval"
-      ? `<div class="hz-agent-tool-actions">` +
-        `<button type="button" class="hz-agent-btn-sm" data-deny-tool="${escapeHtml(tc.id)}">Deny</button>` +
-        `<button type="button" class="hz-agent-btn-sm" data-primary="true" data-approve-tool="${escapeHtml(tc.id)}">Approve</button>` +
+      ? `<div data-slot="agent-tool-actions">` +
+        `<button type="button" data-slot="agent-btn-sm" data-deny-tool="${escapeHtml(tc.id)}">Deny</button>` +
+        `<button type="button" data-slot="agent-btn-sm" data-primary="true" data-approve-tool="${escapeHtml(tc.id)}">Approve</button>` +
         `</div>`
       : ""
 
   return (
-    `<div class="hz-agent-tool-card" data-slot="agent-tool-card" data-status="${escapeHtml(tc.status)}">` +
-    `<div class="hz-agent-tool-head">${renderDesktopIconSvg("wrench", { size: 13 })}<span>${escapeHtml(tc.title)}</span><span class="hz-agent-tool-badge">${statusLabel}</span></div>` +
+    `<div data-slot="agent-tool-card" data-status="${escapeHtml(tc.status)}">` +
+    `<div data-slot="agent-tool-head">${renderDesktopIconSvg("wrench", { size: 13 })}<span>${escapeHtml(tc.title)}</span><span data-slot="agent-tool-badge">${statusLabel}</span></div>` +
     cmdHtml +
     outHtml +
     approvalHtml +
@@ -562,23 +566,23 @@ function renderDiffBlockHtml(diff: AgentDiffBlock): string {
   const linesHtml = diff.lines
     .map((line) => {
       if (line.startsWith("+")) {
-        return `<span class="hz-agent-diff-line-add">${escapeHtml(line)}</span>`
+        return `<span data-slot="agent-diff-line-add">${escapeHtml(line)}</span>`
       }
       if (line.startsWith("-")) {
-        return `<span class="hz-agent-diff-line-del">${escapeHtml(line)}</span>`
+        return `<span data-slot="agent-diff-line-del">${escapeHtml(line)}</span>`
       }
       return `${escapeHtml(line)}\n`
     })
     .join("")
 
   const applyBtn = diff.applied
-    ? `<span class="hz-agent-diff-add">Applied</span>`
-    : `<button type="button" class="hz-agent-btn-sm" data-apply-diff="${escapeHtml(diff.id)}" data-diff-path="${escapeHtml(diff.filePath)}">Apply</button>`
+    ? `<span data-slot="agent-diff-add">Applied</span>`
+    : `<button type="button" data-slot="agent-btn-sm" data-apply-diff="${escapeHtml(diff.id)}" data-diff-path="${escapeHtml(diff.filePath)}">Apply</button>`
 
   return (
-    `<div class="hz-agent-diff-block" data-slot="agent-diff-block">` +
-    `<div class="hz-agent-diff-head">${renderDesktopIconSvg("fileDiff", { size: 13 })}<span>${escapeHtml(diff.filePath)}</span><span class="hz-agent-diff-add">+${adds}</span><span class="hz-agent-diff-del">-${dels}</span><span class="hz-agent-grow"></span>${applyBtn}</div>` +
-    `<pre class="hz-agent-diff-pre">${linesHtml}</pre>` +
+    `<div data-slot="agent-diff-block">` +
+    `<div data-slot="agent-diff-head">${renderDesktopIconSvg("fileDiff", { size: 13 })}<span>${escapeHtml(diff.filePath)}</span><span data-slot="agent-diff-add">+${adds}</span><span data-slot="agent-diff-del">-${dels}</span><span data-slot="agent-grow"></span>${applyBtn}</div>` +
+    `<pre data-slot="agent-diff-pre">${linesHtml}</pre>` +
     `</div>`
   )
 }
@@ -587,13 +591,13 @@ function renderMessagesInnerHtml(messages: ReadonlyArray<AgentMessageItem>): str
   return messages
     .map((m) => {
       if (m.role === "user") {
-        return `<div class="hz-agent-msg hz-agent-msg-user" data-role="user">${escapeHtml(m.content)}</div>`
+        return `<div data-role="user">${escapeHtml(m.content)}</div>`
       }
       const tools = (m.toolCalls ?? []).map(renderToolCardHtml).join("")
       const diffs = (m.diffs ?? []).map(renderDiffBlockHtml).join("")
-      const caret = m.streaming ? '<span class="hz-agent-caret" aria-hidden="true"></span>' : ""
+      const caret = m.streaming ? '<span data-slot="agent-caret" aria-hidden="true"></span>' : ""
       return (
-        `<div class="hz-agent-msg hz-agent-msg-assistant" data-role="assistant">` +
+        `<div data-role="assistant">` +
         `<div>${escapeHtml(m.content)}${caret}</div>` +
         tools +
         diffs +
@@ -608,15 +612,15 @@ function renderHistoryRowsHtml(
   activeThreadId?: string | null,
 ): string {
   if (threads.length === 0) {
-    return `<div class="hz-agent-history-row" aria-disabled="true">No recent threads</div>`
+    return `<div data-slot="agent-history-row" aria-disabled="true">No recent threads</div>`
   }
   return threads
     .map(
       (t) =>
-        `<button type="button" class="hz-agent-history-row" data-thread-id="${escapeHtml(t.id)}" aria-current="${t.id === activeThreadId ? "true" : "false"}">` +
+        `<button type="button" data-slot="agent-history-row" data-thread-id="${escapeHtml(t.id)}" aria-current="${t.id === activeThreadId ? "true" : "false"}">` +
         `<span>${escapeHtml(t.title)}</span>` +
         (t.updatedAtLabel
-          ? `<span class="hz-agent-history-meta">${escapeHtml(t.updatedAtLabel)}</span>`
+          ? `<span data-slot="agent-history-meta">${escapeHtml(t.updatedAtLabel)}</span>`
           : "") +
         `</button>`,
     )
@@ -638,39 +642,39 @@ export function renderAgentSidebarHtml(state: AgentSidebarState = {}): string {
   const suggestionsHtml = suggestions
     .map(
       (s) =>
-        `<button type="button" class="hz-agent-suggest" data-suggest-prompt="${escapeHtml(s)}">${escapeHtml(s)}</button>`,
+        `<button type="button" data-slot="agent-suggest" data-suggest-prompt="${escapeHtml(s)}">${escapeHtml(s)}</button>`,
     )
     .join("")
 
   return (
-    `<section class="hz-agent-sidebar" data-slot="agent-sidebar" aria-label="AI Agent Sidebar">` +
-    `<div class="hz-agent-header" data-slot="agent-header">` +
-    `<button type="button" class="hz-agent-title-btn" data-action="toggle-history" title="Switch thread" aria-haspopup="listbox" aria-expanded="false">` +
-    `<span class="hz-agent-title-text">${escapeHtml(title)}</span>` +
+    `<section data-slot="agent-sidebar" aria-label="AI Agent Sidebar">` +
+    `<div data-slot="agent-header">` +
+    `<button type="button" data-slot="agent-title-btn" data-action="toggle-history" title="Switch thread" aria-haspopup="listbox" aria-expanded="false">` +
+    `<span data-slot="agent-title-text">${escapeHtml(title)}</span>` +
     renderDesktopIconSvg("chevronDown", { size: 13 }) +
     `</button>` +
-    `<div class="hz-agent-grow"></div>` +
-    `<button type="button" class="hz-agent-ib" data-action="toggle-history" title="Thread history" aria-label="Thread history">${renderDesktopIconSvg("history", { size: 15 })}</button>` +
-    `<button type="button" class="hz-agent-ib" data-action="new-thread" title="New thread" aria-label="New thread">${renderDesktopIconSvg("plus", { size: 15 })}</button>` +
-    `<button type="button" class="hz-agent-ib" data-action="close-right" title="Close sidebar" aria-label="Close sidebar">${renderDesktopIconSvg("x", { size: 15 })}</button>` +
+    `<div data-slot="agent-grow"></div>` +
+    `<button type="button" data-slot="agent-icon-btn" data-action="toggle-history" title="Thread history" aria-label="Thread history">${renderDesktopIconSvg("history", { size: 15 })}</button>` +
+    `<button type="button" data-slot="agent-icon-btn" data-action="new-thread" title="New thread" aria-label="New thread">${renderDesktopIconSvg("plus", { size: 15 })}</button>` +
+    `<button type="button" data-slot="agent-icon-btn" data-action="close-right" title="Close sidebar" aria-label="Close sidebar">${renderDesktopIconSvg("x", { size: 15 })}</button>` +
     `</div>` +
-    `<div class="hz-agent-history-pop" data-slot="agent-history-popover" role="listbox" hidden>${renderHistoryRowsHtml(state.threads ?? [], state.activeThreadId)}</div>` +
-    `<div class="hz-agent-empty" data-slot="agent-empty"${hasMessages ? " hidden" : ""}>` +
-    `<span class="hz-agent-empty-logo">${renderHanzoMarkSvg({ size: 30 })}</span>` +
-    `<h2 class="hz-agent-empty-title">${escapeHtml(headline)}</h2>` +
-    `<p class="hz-agent-empty-sub">${escapeHtml(subtitle)}</p>` +
-    `<div class="hz-agent-suggestions">${suggestionsHtml}</div>` +
+    `<div data-slot="agent-history-popover" role="listbox" hidden>${renderHistoryRowsHtml(state.threads ?? [], state.activeThreadId)}</div>` +
+    `<div data-slot="agent-empty"${hasMessages ? " hidden" : ""}>` +
+    `<span data-slot="agent-empty-logo">${renderHanzoMarkSvg({ size: 30 })}</span>` +
+    `<h2 data-slot="agent-empty-title">${escapeHtml(headline)}</h2>` +
+    `<p data-slot="agent-empty-sub">${escapeHtml(subtitle)}</p>` +
+    `<div data-slot="agent-suggestions">${suggestionsHtml}</div>` +
     `</div>` +
-    `<div class="hz-agent-messages" data-slot="agent-messages" aria-live="polite"${hasMessages ? "" : " hidden"}>${renderMessagesInnerHtml(messages)}</div>` +
-    `<div class="hz-agent-composer" data-slot="agent-composer">` +
-    `<textarea class="hz-agent-prompt" data-slot="agent-prompt" placeholder="${escapeHtml(placeholder)}" aria-label="Agent message">${escapeHtml(state.draft ?? "")}</textarea>` +
-    `<div class="hz-agent-composer-bar">` +
-    `<button type="button" class="hz-agent-ib" data-action="attach" title="Attach file or context" aria-label="Attach file">${renderDesktopIconSvg("plus", { size: 15 })}</button>` +
-    `<button type="button" class="hz-agent-pill" data-action="model" data-slot="agent-model-pill">${escapeHtml(model)} ⌄</button>` +
-    `<button type="button" class="hz-agent-pill" data-action="effort" data-slot="agent-effort-pill">${escapeHtml(effort)} ⌄</button>` +
-    `<div class="hz-agent-grow"></div>` +
-    `<button type="button" class="hz-agent-pill" data-action="mode" data-slot="agent-mode-pill">${escapeHtml(mode)} ⌄</button>` +
-    `<button type="button" class="hz-agent-send" data-action="send" title="Send message" aria-label="Send message"${state.busy ? " disabled" : ""}>${renderDesktopIconSvg("arrowUp", { size: 14 })}</button>` +
+    `<div data-slot="agent-messages" aria-live="polite"${hasMessages ? "" : " hidden"}>${renderMessagesInnerHtml(messages)}</div>` +
+    `<div data-slot="agent-composer">` +
+    `<textarea data-slot="agent-prompt" placeholder="${escapeHtml(placeholder)}" aria-label="Agent message">${escapeHtml(state.draft ?? "")}</textarea>` +
+    `<div data-slot="agent-composer-bar">` +
+    `<button type="button" data-slot="agent-icon-btn" data-action="attach" title="Attach file or context" aria-label="Attach file">${renderDesktopIconSvg("plus", { size: 15 })}</button>` +
+    `<button type="button" data-action="model" data-slot="agent-model-pill">${escapeHtml(model)} ⌄</button>` +
+    `<button type="button" data-action="effort" data-slot="agent-effort-pill">${escapeHtml(effort)} ⌄</button>` +
+    `<div data-slot="agent-grow"></div>` +
+    `<button type="button" data-action="mode" data-slot="agent-mode-pill">${escapeHtml(mode)} ⌄</button>` +
+    `<button type="button" data-slot="agent-send" data-action="send" title="Send message" aria-label="Send message"${state.busy ? " disabled" : ""}>${renderDesktopIconSvg("arrowUp", { size: 14 })}</button>` +
     `</div>` +
     `</div>` +
     `</section>`
@@ -704,7 +708,7 @@ export function mountAgentSidebar(
   const promptEl = () => root.querySelector<HTMLTextAreaElement>('[data-slot="agent-prompt"]')
 
   const syncDom = () => {
-    const titleEl = root.querySelector<HTMLElement>(".hz-agent-title-text")
+    const titleEl = root.querySelector<HTMLElement>('[data-slot="agent-title-text"]')
     if (titleEl) titleEl.textContent = state.title || "New thread"
 
     const historyPop = root.querySelector<HTMLElement>('[data-slot="agent-history-popover"]')
