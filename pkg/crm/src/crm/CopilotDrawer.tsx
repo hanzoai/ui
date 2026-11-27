@@ -196,7 +196,7 @@ export function CopilotDrawer() {
         </Button>
       </XStack>
 
-      <YStack p="$3" gap="$2" borderBottomWidth={1} borderColor="$borderColor">
+      <YStack px="$3" py="$2" gap="$1.5" borderBottomWidth={1} borderColor="$borderColor">
         <Text fontSize="$1" fontWeight="700" color="$color10">
           SUGGESTED ACTIONS
         </Text>
@@ -204,7 +204,10 @@ export function CopilotDrawer() {
           {ACTION_CHIPS.map((chip) => (
             <Button
               key={chip.action}
-              size="$2"
+              size="$1"
+              px="$2"
+              py="$1"
+              minH={28}
               bg="$color2"
               borderWidth={1}
               borderColor="$borderColor"
@@ -215,8 +218,8 @@ export function CopilotDrawer() {
               data-action={chip.action}
             >
               <XStack items="center" gap="$1">
-                <Wand2 size={12} color="$blue10" />
-                <Text fontSize="$2" color="$color12">
+                <Wand2 size={11} color="$blue10" />
+                <Text fontSize="$1" fontWeight="500" color="$color12">
                   {chip.label}
                 </Text>
               </XStack>
@@ -225,7 +228,7 @@ export function CopilotDrawer() {
         </XStack>
       </YStack>
 
-      <YStack flex={1} p="$3" gap="$2.5" overflow="scroll">
+      <YStack flex={1} p="$3" gap="$2" overflow="scroll">
         {messages.length === 0 ? (
           <Card p="$3" bg="$color2" borderWidth={1} borderColor="$borderColor" gap="$1.5">
             <Text fontSize="$3" fontWeight="600" color="$color12">

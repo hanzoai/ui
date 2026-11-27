@@ -119,19 +119,29 @@ export function MobileCards({
               >
                 <XStack items="center" gap="$2" width="100%" minW={0}>
                   <Button
-                    size="$2"
+                    size="$1"
                     minW={32}
                     minH={32}
                     p={0}
-                    rounded="$2"
-                    bg={isSel ? '$blue10' : '$background'}
-                    borderWidth={1}
-                    borderColor={isSel ? '$blue10' : '$borderColor'}
+                    chromeless
+                    items="center"
+                    justify="center"
                     aria-label={`Select ${title || id}`}
                     aria-pressed={isSel}
                     onPress={() => onToggleSelect(id)}
                   >
-                    {isSel ? <Check size={14} color="$color12" /> : null}
+                    <XStack
+                      width={20}
+                      height={20}
+                      rounded="$1.5"
+                      items="center"
+                      justify="center"
+                      bg={isSel ? '$blue10' : 'transparent'}
+                      borderWidth={1.5}
+                      borderColor={isSel ? '$blue10' : '$color8'}
+                    >
+                      {isSel ? <Check size={12} color="$color12" /> : null}
+                    </XStack>
                   </Button>
                   <YStack flex={1} minW={0} cursor="pointer" onPress={() => onOpen(r)}>
                     <Text fontSize="$3" fontWeight="700" color="$color12" numberOfLines={1}>

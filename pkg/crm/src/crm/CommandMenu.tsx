@@ -175,24 +175,25 @@ export function CommandMenu({ open, onClose }: { open: boolean; onClose: () => v
       l={0}
       r={0}
       b={0}
-      z={1000}
+      z={1200}
       items="center"
       justify={mobile ? 'flex-end' : 'flex-start'}
       pt={mobile ? 0 : 72}
       px={mobile ? 0 : '$4'}
-      bg="rgba(0,0,0,0.48)"
+      bg="rgba(0,0,0,0.56)"
       onPress={onClose}
       data-slot="crm-command-menu-backdrop"
     >
       <YStack
         width="100%"
         maxW={mobile ? '100%' : 580}
-        maxH={mobile ? '85vh' : '72vh'}
+        maxH={mobile ? '85vh' : '78vh'}
         bg="$background"
         borderWidth={1}
         borderColor="$borderColor"
-        rounded={mobile ? '$4' : '$4'}
+        rounded="$4"
         overflow="hidden"
+        style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.45)' }}
         onPress={(e: { stopPropagation?: () => void }) => e?.stopPropagation?.()}
         role="dialog"
         aria-modal="true"
@@ -219,7 +220,16 @@ export function CommandMenu({ open, onClose }: { open: boolean; onClose: () => v
           </Button>
         </XStack>
 
-        <YStack p="$2" gap="$2" overflow="scroll" flex={1} maxH={mobile ? '70vh' : 460}>
+        <div
+          style={{
+            padding: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 8,
+            overflowY: 'auto',
+            maxHeight: mobile ? '65vh' : 460,
+          }}
+        >
           {groups.map((g) => (
             <YStack key={g.objectId} gap="$1" data-slot="crm-command-group" data-object={g.objectId}>
               <Text fontSize="$1" fontWeight="700" color="$color10" px="$2" py="$1">
@@ -313,7 +323,7 @@ export function CommandMenu({ open, onClose }: { open: boolean; onClose: () => v
               </Text>
             </YStack>
           ) : null}
-        </YStack>
+        </div>
 
         <XStack
           items="center"

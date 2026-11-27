@@ -110,15 +110,19 @@ function Crm({ params }: { params: Record<string, string> }) {
   const [quickCreateObject, setQuickCreateObject] = useState<ObjectId | null>(null)
 
   // Global Cmd+K / Ctrl+K shortcut for Twenty-style Command Menu.
+  // Capture phase + stopImmediatePropagation ensures host shells (e.g. Console app launcher)
+  // do not open a competing palette on top of the CRM command menu.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault()
+        e.stopPropagation()
+        e.stopImmediatePropagation()
         setCommandOpen((o) => !o)
       }
     }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener('keydown', onKey, true)
+    return () => window.removeEventListener('keydown', onKey, true)
   }, [])
 
   // An address from before the CRM was one table per object lands on what replaced it,
@@ -188,7 +192,7 @@ function Crm({ params }: { params: Record<string, string> }) {
       <YStack
         p="$4"
         $sm={{ p: '$2.5' }}
-        pr={!mobile && copilotOpen ? 396 : undefined}
+        style={!mobile && copilotOpen ? { paddingRight: 396 } : undefined}
         gap="$4"
         width="100%"
         maxW={1600}

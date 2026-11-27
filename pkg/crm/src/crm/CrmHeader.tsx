@@ -134,11 +134,11 @@ export function CrmHeader({ activeSlug, isRecordDetail }: CrmHeaderProps) {
         data-slot="crm-header"
         data-mobile="true"
       >
-        <XStack items="center" justify="space-between" gap="$2" minH={44} width="100%" minW={0}>
-          <XStack items="center" gap="$2" flex={1} minW={0}>
+        <XStack items="center" justify="space-between" gap="$2" minH={40} width="100%" minW={0}>
+          <XStack items="center" gap="$1.5" flex={1} minW={0}>
             {pageIcon(current?.slug ?? '', true)}
-            <Text fontSize="$5" fontWeight="700" color="$color12" numberOfLines={1}>
-              {current?.label ?? 'CRM'}
+            <Text fontSize="$3" fontWeight="600" color="$color11" numberOfLines={1}>
+              {`CRM · ${current?.label ?? 'People'}`}
             </Text>
           </XStack>
           <XStack items="center" gap="$1.5" shrink={0}>
@@ -223,7 +223,18 @@ export function CrmHeader({ activeSlug, isRecordDetail }: CrmHeaderProps) {
       minW={0}
       data-slot="crm-header"
     >
-      <div style={{ ...scrollRowStyle, flex: 1 }} role="navigation" aria-label="CRM sections" data-slot="crm-desktop-nav">
+      <div
+        style={{
+          ...scrollRowStyle,
+          flex: 1,
+          paddingRight: 20,
+          maskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)',
+        }}
+        role="navigation"
+        aria-label="CRM sections"
+        data-slot="crm-desktop-nav"
+      >
         {pages.map((p) => {
           const active = p.slug === activeSlug
           return (

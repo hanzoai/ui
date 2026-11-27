@@ -73,8 +73,8 @@ export function Dashboard() {
 
   return (
     <YStack gap="$4" width="100%" maxW="100%" data-slot="crm-dashboard">
-      <XStack items="center" justify="space-between" gap="$2" flexWrap="wrap">
-        <YStack gap="$0.5">
+      <XStack items="center" justify="space-between" gap="$2" flexWrap="wrap" width="100%">
+        <YStack gap="$0.5" flex={1} minW={200} maxW="100%">
           <Text fontSize="$7" fontWeight="700" color="$color12">
             Dashboard
           </Text>
@@ -82,7 +82,7 @@ export function Dashboard() {
             Pipeline health, outreach conversion, overdue follow-ups, and live activity.
           </Text>
         </YStack>
-        <Button size="$2" bg="$color2" borderWidth={1} borderColor="$borderColor" onPress={load} disabled={loading}>
+        <Button size="$2" bg="$color2" borderWidth={1} borderColor="$borderColor" shrink={0} onPress={load} disabled={loading}>
           <XStack items="center" gap="$1.5">
             <RefreshCw size={13} color="$color11" />
             <Text fontSize="$2" color="$color12">
@@ -286,9 +286,9 @@ function PipelineCard({ title, summary, onOpen }: { title: string; summary: Pipe
   const maxVal = Math.max(1, ...summary.stages.map((s) => Math.max(s.value, s.count)))
   const useValue = summary.stages.some((s) => s.value > 0)
   return (
-    <Card p="$3.5" borderWidth={1} borderColor="$borderColor" gap="$3" data-slot="crm-pipeline-card">
-      <XStack items="center" justify="space-between" gap="$2">
-        <YStack>
+    <Card p="$3.5" borderWidth={1} borderColor="$borderColor" gap="$3" data-slot="crm-pipeline-card" width="100%" minW={0}>
+      <XStack items="center" justify="space-between" gap="$2" flexWrap="wrap" width="100%">
+        <YStack flex={1} minW={0}>
           <Text fontSize="$4" fontWeight="700" color="$color12">
             {title}
           </Text>
@@ -296,7 +296,7 @@ function PipelineCard({ title, summary, onOpen }: { title: string; summary: Pipe
             {`${usd(summary.totalValue)} open · ${usd(summary.weightedValue)} weighted`}
           </Text>
         </YStack>
-        <Button size="$2" chromeless onPress={onOpen}>
+        <Button size="$2" chromeless shrink={0} onPress={onOpen}>
           Open board
         </Button>
       </XStack>
