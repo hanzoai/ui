@@ -1,40 +1,52 @@
 'use client'
 
 /**
- * CRM — the org's people, companies, sales pipeline, fundraising, tasks, lists and
- * sequences, kept in the org's own Base (hanzoai/base module `crm`).
+ * CRM — the org's people, companies, sales pipeline, fundraising, tasks, notes,
+ * lists, candidates, sequences, analytics dashboard, and data model, kept in the
+ * org's own Base (hanzoai/base module `crm`).
  *
  *   /crm                 People: everyone the org knows, investors and customers alike
  *   /crm/companies       firms, investor firms among them
- *   /crm/deals           the sales pipeline, a board by stage
- *   /crm/fundraising     the round, a board by stage: intro, meeting, diligence, term sheet, closed
- *   /crm/tasks           what is to be done, and for whom
+ *   /crm/deals           the sales pipeline, a board/table/calendar by stage
+ *   /crm/fundraising     the round, a board/table/calendar by stage
+ *   /crm/tasks           what is to be done, and for whom (table/board/calendar)
+ *   /crm/notes           notes linked across people, companies and opportunities
  *   /crm/lists           who outreach goes to: lists made by hand, from a view, or from a file
  *   /crm/sequences       the cloud's drip: steps, who is enrolled, where each walk stands
+ *   /crm/candidates      hiring (table/board/calendar)
  *   /crm/sales           the org's customers, orders, carts left and plans, from commerce and billing
+ *   /crm/dashboard       pipeline funnels, outreach conversion, overdue tasks & activity
+ *   /crm/model           Data Model settings: inspect 13 CRM objects & add custom fields
  *   /crm/beta            every beta signup and the betas it asked for and holds (SuperAdmin)
- *   /crm/candidates      hiring
- *   /crm/:tab/:id        one record and its timeline
- *
- * Every table is the server's: the view is a Base query and the browser holds one
- * page (crm/Records). On the crm face (crm.<brand>, where the host is `gated`) the CRM
- * is a product any account opens in its own org, and a beta: `BetaGate` reads the
- * org's `crm` enablement first and shows `BetaScreen` to an org without it; a read
- * the engine refuses is `NoRole`.
+ *   /crm/:tab/:id        one record, its timeline, and its attachments
  */
-import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { Spinner, Text, YStack } from '@hanzo/gui'
 import { BackendStateCard, classifyBackend, type BackendState } from '@hanzo/ui/product'
 
 import { CrmApi } from './lib/crm'
 import { currentOrg, host, useRouter, useSearchParams } from './lib/host'
 import { BetaScreen, NoRole } from './crm/Access'
-import { movedView, objectOf } from './crm/objects'
+import { movedView, objectOf, type ObjectId } from './crm/objects'
 import { Records } from './crm/Records'
 import { RecordPage } from './crm/Record'
 import { Sequences } from './crm/studio/Sequences'
 import { Beta } from './crm/Beta'
 import { Sales } from './crm/Sales'
+import { Dashboard } from './crm/Dashboard'
+import { DataModel } from './crm/DataModel'
+import { CrmHeader } from './crm/CrmHeader'
+import { CommandMenu } from './crm/CommandMenu'
+import { CopilotDrawer } from './crm/CopilotDrawer'
+import {
+  CrmShellContext,
+  type ActiveListContext,
+  type ActiveRecordContext,
+  type CrmShellContextValue,
+  type CrmViewMode,
+  type EmailDraftHandoff,
+} from './crm/CrmContext'
+import { useViewport } from './crm/responsive'
 
 type Async<T> = { phase: 'loading' } | { phase: 'error'; error: BackendState } | { phase: 'ready'; data: T }
 
@@ -82,9 +94,32 @@ function BetaGate({ children }: { children: ReactNode }) {
 
 function Crm({ params }: { params: Record<string, string> }) {
   const router = useRouter()
+  const { mobile } = useViewport()
   const tab = (params.tab ?? '').toLowerCase()
   const obj = objectOf(tab)
   const named = useSearchParams()?.get('view') ?? null
+
+  const [commandOpen, setCommandOpen] = useState(false)
+  const [copilotOpen, setCopilotOpen] = useState(false)
+  const [viewMode, setViewMode] = useState<CrmViewMode>('table')
+  const [availableViews, setAvailableViews] = useState<CrmViewMode[]>(['table'])
+  const [activeRecord, setActiveRecord] = useState<ActiveRecordContext | null>(null)
+  const [activeList, setActiveList] = useState<ActiveListContext | null>(null)
+  const [draftEmail, setDraftEmail] = useState<EmailDraftHandoff | null>(null)
+  const [recordRevision, setRecordRevision] = useState(0)
+  const [quickCreateObject, setQuickCreateObject] = useState<ObjectId | null>(null)
+
+  // Global Cmd+K / Ctrl+K shortcut for Twenty-style Command Menu.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setCommandOpen((o) => !o)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   // An address from before the CRM was one table per object lands on what replaced it,
   // and on the view that was that table (/crm/customers is People's Customers).
@@ -94,39 +129,114 @@ function Crm({ params }: { params: Record<string, string> }) {
     router.replace(`/crm/${obj.id === 'people' ? '' : obj.id}${view ? `?view=${view}` : ''}`)
   }, [obj, tab, params.id, router])
 
+  const openCommandMenu = useCallback(() => setCommandOpen(true), [])
+  const toggleCopilot = useCallback(() => setCopilotOpen((o) => !o), [])
+  const openEmailDraft = useCallback((d: { subject: string; body: string }) => {
+    setDraftEmail({ ...d, at: Date.now() })
+  }, [])
+  const clearEmailDraft = useCallback(() => setDraftEmail(null), [])
+  const bumpRecordRevision = useCallback(() => setRecordRevision((r) => r + 1), [])
+
+  const shellValue = useMemo<CrmShellContextValue>(
+    () => ({
+      openCommandMenu,
+      copilotOpen,
+      setCopilotOpen,
+      toggleCopilot,
+      viewMode,
+      setViewMode,
+      availableViews,
+      setAvailableViews,
+      activeRecord,
+      setActiveRecord,
+      activeList,
+      setActiveList,
+      draftEmail,
+      openEmailDraft,
+      clearEmailDraft,
+      recordRevision,
+      bumpRecordRevision,
+      quickCreateObject,
+      setQuickCreateObject,
+    }),
+    [
+      openCommandMenu,
+      copilotOpen,
+      toggleCopilot,
+      viewMode,
+      availableViews,
+      activeRecord,
+      activeList,
+      draftEmail,
+      openEmailDraft,
+      clearEmailDraft,
+      recordRevision,
+      bumpRecordRevision,
+      quickCreateObject,
+    ],
+  )
+
+  const activeSlug =
+    tab === 'sequences' || tab === 'sales' || tab === 'beta' || tab === 'dashboard' || tab === 'model'
+      ? tab
+      : obj && obj.id !== 'people'
+        ? obj.id
+        : ''
+
   return (
-    <YStack p="$4" $sm={{ p: '$2' }} gap="$4" width="100%" maxW={1600} mx="auto" data-slot="crm">
-      {tab === 'sequences' ? (
-        <YStack gap="$3">
-          <Text fontSize="$7" fontWeight="700" color="$color12">
-            Sequences
-          </Text>
-          <Text fontSize="$3" color="$color10">
-            {"A sequence is a series of emails, each sent a delay after the last. Enroll people from People or a list; every step goes through the org's suppression list, and the unsubscribe link in each one is honoured."}
-          </Text>
-          <Sequences openId={params.id ?? null} />
-        </YStack>
-      ) : tab === 'sales' ? (
-        <YStack gap="$3">
-          <Text fontSize="$7" fontWeight="700" color="$color12">
-            Sales
-          </Text>
-          <Sales />
-        </YStack>
-      ) : tab === 'beta' ? (
-        <YStack gap="$3">
-          <Text fontSize="$7" fontWeight="700" color="$color12">
-            Beta
-          </Text>
-          <Beta />
-        </YStack>
-      ) : !obj ? (
-        <BackendStateCard state={classifyBackend(new Error(`The CRM has no "${tab}".`))} hint="crm" />
-      ) : params.id ? (
-        <RecordPage key={`${obj.id}/${params.id}`} obj={obj} id={params.id} />
-      ) : (
-        <Records key={`${obj.id}:${named ?? movedView(tab) ?? ''}`} obj={obj} view={named ?? movedView(tab)} />
-      )}
-    </YStack>
+    <CrmShellContext.Provider value={shellValue}>
+      <YStack
+        p="$4"
+        $sm={{ p: '$2.5' }}
+        pr={!mobile && copilotOpen ? 396 : undefined}
+        gap="$4"
+        width="100%"
+        maxW={1600}
+        mx="auto"
+        overflow="hidden"
+        data-slot="crm"
+      >
+        <CrmHeader activeSlug={activeSlug} isRecordDetail={Boolean(params.id)} />
+
+        {tab === 'sequences' ? (
+          <YStack gap="$3">
+            <Text fontSize="$7" fontWeight="700" color="$color12">
+              Sequences
+            </Text>
+            <Text fontSize="$3" color="$color10">
+              {"A sequence is a series of emails, each sent a delay after the last. Enroll people from People or a list; every step goes through the org's suppression list, and the unsubscribe link in each one is honoured."}
+            </Text>
+            <Sequences openId={params.id ?? null} />
+          </YStack>
+        ) : tab === 'sales' ? (
+          <YStack gap="$3">
+            <Text fontSize="$7" fontWeight="700" color="$color12">
+              Sales
+            </Text>
+            <Sales />
+          </YStack>
+        ) : tab === 'dashboard' ? (
+          <Dashboard />
+        ) : tab === 'model' ? (
+          <DataModel />
+        ) : tab === 'beta' ? (
+          <YStack gap="$3">
+            <Text fontSize="$7" fontWeight="700" color="$color12">
+              Beta
+            </Text>
+            <Beta />
+          </YStack>
+        ) : !obj ? (
+          <BackendStateCard state={classifyBackend(new Error(`The CRM has no "${tab}".`))} hint="crm" />
+        ) : params.id ? (
+          <RecordPage key={`${obj.id}/${params.id}`} obj={obj} id={params.id} />
+        ) : (
+          <Records key={`${obj.id}:${named ?? movedView(tab) ?? ''}`} obj={obj} view={named ?? movedView(tab)} />
+        )}
+      </YStack>
+
+      <CommandMenu open={commandOpen} onClose={() => setCommandOpen(false)} />
+      <CopilotDrawer />
+    </CrmShellContext.Provider>
   )
 }
