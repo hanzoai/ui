@@ -3,10 +3,11 @@
 // it its slots and as Dev does (three pills, a carried file, the commands, the
 // mode).
 //
-//   the frame   a 16px corner and ONE even 1px edge on whole pixels, nothing
+//   the frame   a 16px corner, borderless at rest on whole pixels, nothing
 //               inset along its top; its ground `--composer-ground`, or what
 //               `--composer-fill` says; the edge brighter on focus; a
-//               conversation nothing keeps drops the ground and dashes the edge
+//               conversation nothing keeps drops the ground and draws a 1px
+//               dashed edge
 //   the field   16/24 type, its text 16px in from the frame's edge, no grip; two
 //               lines' room at rest, a line at a time to its ceiling, then it
 //               scrolls
@@ -216,9 +217,9 @@ for (const [width, height, ratio] of [
       // Icons: whole-pixel sizes, one stroke, never scaled.
       for (const i of m.icons) check(Number.isInteger(+i.w) && i.transform === 'none', `${name}: an icon at a whole size, unscaled (${i.w}, ${i.transform})`)
 
-      // The frame: one even edge, on whole pixels, nothing inset.
+      // The frame: borderless at rest, on whole pixels, nothing inset.
       check(near(m.radius, CORNER), `${name}: the frame's corner is ${CORNER}px (${m.radius})`)
-      check(new Set(m.edges.slice(0, 4)).size === 1 && m.edges[0] === '1px', `${name}: the edge is 1px all round (${m.edges.slice(0, 4).join(' ')})`)
+      check(new Set(m.edges.slice(0, 4)).size === 1 && m.edges[0] === '0px', `${name}: the frame is borderless all round (${m.edges.slice(0, 4).join(' ')})`)
       check(new Set(m.edges.slice(4, 8)).size === 1, `${name}: the edge is one colour all round (${m.edges.slice(4, 8).join(' | ')})`)
       check(!/inset/.test(m.shadow), `${name}: nothing inset along the top (${m.shadow})`)
       check(Number.isInteger(m.frame.x * ratio) && Number.isInteger(m.frame.y * ratio) && Number.isInteger(m.frame.w * ratio), `${name}: the frame on whole device pixels (${m.frame.x}, ${m.frame.y}, ${m.frame.w})`)
@@ -351,7 +352,10 @@ for (const [width, height, ratio] of [
       await tab.waitForSelector('[data-slot="composer"][data-forgetful]', { timeout: 120_000 })
       await settle(tab)
       const off = await measure(tab)
-      check(off.fill === 'rgba(0, 0, 0, 0)' && off.edges[8] === 'dashed' && off.shadow === 'none', `${name}: forgetful, no ground and a dashed edge (${off.fill}, ${off.edges[8]}, ${off.shadow})`)
+      check(
+        off.fill === 'rgba(0, 0, 0, 0)' && new Set(off.edges.slice(0, 4)).size === 1 && off.edges[0] === '1px' && off.edges[8] === 'dashed' && off.shadow === 'none',
+        `${name}: forgetful, no ground and a 1px dashed edge (${off.fill}, ${off.edges.slice(0, 4).join(' ')}, ${off.edges[8]}, ${off.shadow})`,
+      )
       await tab.locator('[data-slot="composer-shell"]').screenshot({ path: join(OUT, `${name}-forgetful.png`) })
 
       check(oops.length === 0, `${name}: page errors: ${oops.join(' | ')}`)

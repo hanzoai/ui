@@ -416,7 +416,8 @@ export function renderDesktopIconSvg(
   const def: DesktopIconDefinition = DESKTOP_ICONS[name]
   const size = options.size ?? DESKTOP_DIMENSIONS.iconSizePx
   const strokeWidth = options.strokeWidth ?? def.strokeWidth ?? DESKTOP_DIMENSIONS.iconStrokeWidth
-  const cls = options.className ? ` class="${options.className}"` : ' class="hz-desktop-icon"'
+  const slot = name === "hanzoMark" ? "hanzo-mark" : "desktop-icon"
+  const cls = options.className ? ` class="${options.className}"` : ""
   const a11y = options.ariaLabel
     ? ` role="img" aria-label="${options.ariaLabel}"`
     : ' aria-hidden="true"'
@@ -428,14 +429,14 @@ export function renderDesktopIconSvg(
     .map((el) => `<${el.tag} ${serializeAttrs(el.attrs)}/>`)
     .join("")
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="${def.viewBox}"${strokeAttrs}${cls}${a11y}>${inner}</svg>`
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="${def.viewBox}"${strokeAttrs} data-slot="${slot}"${cls}${a11y}>${inner}</svg>`
 }
 
 /** Render the official 7-path `@hanzo/logo` mark (`viewBox="0 0 67 67"`). */
 export function renderHanzoMarkSvg(options: RenderDesktopIconOptions = {}): string {
   return renderDesktopIconSvg("hanzoMark", {
     size: options.size ?? 28,
-    className: options.className ?? "hz-hanzo-mark",
+    className: options.className,
     ariaLabel: options.ariaLabel ?? "Hanzo",
   })
 }
