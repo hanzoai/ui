@@ -448,4 +448,23 @@ describe('weekly reset and rolling weekly window', () => {
       message: 'free weekly usage reset already used; next reset available at 2026-10-10T12:00:00Z',
     })
   })
+
+  it('never marks an Unlimited plan or credit-paid premium class as near/out of usage', () => {
+    const l = limitsOf({
+      plan: 'unlimited',
+      period_start: '2026-11-10T00:00:00Z',
+      period_end: '2126-11-10T00:00:00Z',
+      state: 'near',
+      classes: {
+        ours: { percent: 0, state: 'ok', paying: 'plan', resets_at: '2126-11-10T00:00:00Z', unbounded: true },
+        premium: { percent: 100, state: 'near', paying: 'credits', resets_at: '2126-11-10T00:00:00Z' },
+      },
+      session: { percent: 0, state: 'ok', resets_at: '2026-11-28T10:04:31Z' },
+      day: { percent: 0, state: 'ok', resets_at: '2026-11-29T00:00:00Z' },
+      actions: [],
+    })!
+    expect(l.classes.ours?.unbounded).toBe(true)
+    expect(l.state).toBe('ok')
+    expect(nearOf(l, NOW)).toBeNull()
+  })
 })

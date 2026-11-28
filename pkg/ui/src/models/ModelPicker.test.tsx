@@ -398,4 +398,24 @@ describe('ModelPicker, stacked', () => {
     await mount(<ModelPicker stacked name="Model" models={MODELS} value="vendor/odd-one" onChange={() => {}} />)
     expect(host.querySelector('[data-slot="model-picker"]')!.textContent).toContain('Vendor Odd One')
   })
+
+  it('renders progressive Enso ring glyphs and omits enso-free', async () => {
+    const ensoModels = parseModels([
+      { id: 'enso-auto', owned_by: 'hanzo', family: 'enso', class: 'free', name: 'Enso Auto' },
+      { id: 'enso-ultra', owned_by: 'hanzo', family: 'enso', class: 'ours', name: 'Enso Ultra' },
+      { id: 'enso-max', owned_by: 'hanzo', family: 'enso', class: 'ours', name: 'Enso Max' },
+      { id: 'enso-pro', owned_by: 'hanzo', family: 'enso', class: 'ours', name: 'Enso Pro' },
+      { id: 'enso', owned_by: 'hanzo', family: 'enso', class: 'ours', name: 'Enso' },
+      { id: 'enso-flash', owned_by: 'hanzo', family: 'enso', class: 'free', name: 'Enso Flash' },
+      { id: 'enso-free', owned_by: 'hanzo', family: 'enso', class: 'free', name: 'Enso Free' },
+    ])
+    await mount(<ModelPicker models={ensoModels} value="enso-auto" onChange={() => {}} open />)
+    const ids = options().map((o) => o.getAttribute('data-model'))
+    expect(ids).not.toContain('enso-free')
+    expect(ids.slice(0, 6)).toEqual(['enso-auto', 'enso-ultra', 'enso-max', 'enso-pro', 'enso', 'enso-flash'])
+    const gaps = ['enso-auto', 'enso-ultra', 'enso-max', 'enso-pro', 'enso', 'enso-flash'].map(
+      (id) => row(id).querySelector('[data-slot="enso-glyph"]')?.getAttribute('data-enso-gap'),
+    )
+    expect(gaps).toEqual(['0', '0.08', '0.16', '0.24', '0.32', '0.42'])
+  })
 })

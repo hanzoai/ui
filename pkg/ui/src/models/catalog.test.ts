@@ -3,13 +3,16 @@ import { describe, expect, it } from 'vitest'
 import {
   agentGap,
   capabilitiesOf,
+  ensoModelGap,
   formatCeiling,
   formatContext,
   formatPrice,
   formatSaving,
+  grants,
   groupModels,
   isComparison,
   isPaused,
+  isRetiredModel,
   makerName,
   makerOf,
   matchesModel,
@@ -314,5 +317,40 @@ describe('a Hanzo model the gateway lists without a family', () => {
   it('is filed under the family its id names, and another maker’s is not', () => {
     const rows = parseModels([{ id: 'zen5-vl' }, { id: 'hanzo/enso-auto' }, { id: 'kai' }, { id: 'zoo-mini' }, { id: 'openai/zen-garden' }, { id: 'zendesk/bot' }])
     expect(rows.map((m) => m.family)).toEqual(['zen', 'enso', 'kai', 'zoo', undefined, undefined])
+  })
+})
+
+describe('Enso progressive glyphs, retirement of enso-free, and Free grants', () => {
+  it('drops retired enso-free entries from parseModels', () => {
+    expect(isRetiredModel('enso-free')).toBe(true)
+    expect(isRetiredModel('hanzo/enso-free')).toBe(true)
+    expect(isRetiredModel('enso-flash')).toBe(false)
+    const parsed = parseModels([
+      { id: 'enso-auto', family: 'enso' },
+      { id: 'enso-free', family: 'enso' },
+      { id: 'hanzo/enso-free', family: 'enso' },
+      { id: 'enso-flash', family: 'enso' },
+    ])
+    expect(parsed.map((m) => m.id)).toEqual(['enso-auto', 'enso-flash'])
+  })
+
+  it('grants enso-auto and enso-flash on the Free plan only', () => {
+    expect(grants(true, 'enso-auto')).toBe(true)
+    expect(grants(true, 'enso-flash')).toBe(true)
+    expect(grants(true, 'hanzo/enso-flash')).toBe(true)
+    expect(grants(true, 'enso-ultra')).toBe(false)
+    expect(grants(true, 'enso-pro')).toBe(false)
+    expect(grants(true, 'zen5')).toBe(false)
+    expect(grants(false, 'enso-ultra')).toBe(true)
+  })
+
+  it('closes ONLY enso-auto (0) and opens progressively from Ultra down to Flash', () => {
+    expect(ensoModelGap('enso-auto')).toBe(0)
+    expect(ensoModelGap('enso-ultra')).toBe(0.08)
+    expect(ensoModelGap('enso-max')).toBe(0.16)
+    expect(ensoModelGap('enso-pro')).toBe(0.24)
+    expect(ensoModelGap('enso')).toBe(0.32)
+    expect(ensoModelGap('enso-flash')).toBe(0.42)
+    expect(ensoModelGap('zen5')).toBeNull()
   })
 })

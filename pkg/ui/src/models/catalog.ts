@@ -175,9 +175,65 @@ export function modelOf(v: unknown): ModelCatalogEntry | null {
   return m
 }
 
+/** Retired model ids that must never be offered in pickers (e.g. `enso-free`). */
+export function isRetiredModel(id: string): boolean {
+  const slug = id.trim().toLowerCase().replace(/^hanzo\//, '')
+  return slug === 'enso-free'
+}
+
+/**
+ * Progressive Enso ring gap fraction (0..1) for Enso family models, matching
+ * web, desktop, and CLI: ONLY `enso-auto` (the default) is a closed circle (`0`);
+ * higher-to-lighter tiers open progressively from `enso-ultra` down to `enso-flash`.
+ * Returns `null` for non-Enso models.
+ */
+export function ensoModelGap(id: string): number | null {
+  const slug = id.trim().toLowerCase().replace(/^hanzo\//, '')
+  switch (slug) {
+    case 'enso-auto':
+      return 0
+    case 'enso-ultra':
+      return 0.08
+    case 'enso-max':
+      return 0.16
+    case 'enso-pro':
+      return 0.24
+    case 'enso':
+    case 'enso-hybrid':
+      return 0.32
+    case 'enso-flash':
+      return 0.42
+    default:
+      return slug.startsWith('enso-') ? 0.32 : null
+  }
+}
+
+/** Canonical sort rank within the Enso family (Auto first, then Ultra → Max → Pro → Enso → Flash). */
+export function ensoRank(id: string): number {
+  const slug = id.trim().toLowerCase().replace(/^hanzo\//, '')
+  switch (slug) {
+    case 'enso-auto':
+      return 0
+    case 'enso-ultra':
+      return 1
+    case 'enso-max':
+      return 2
+    case 'enso-pro':
+      return 3
+    case 'enso':
+      return 4
+    case 'enso-hybrid':
+      return 5
+    case 'enso-flash':
+      return 6
+    default:
+      return 10
+  }
+}
+
 /**
  * The catalog from a `/v1/models` body (`{data: [...]}`) or its `data` array.
- * Rows without an id are dropped; a repeated id keeps its first row.
+ * Rows without an id and retired rows (`enso-free`) are dropped; a repeated id keeps its first row.
  */
 export function parseModels(body: unknown): ModelCatalogEntry[] {
   const rows = Array.isArray(body)
@@ -189,7 +245,7 @@ export function parseModels(body: unknown): ModelCatalogEntry[] {
   const out: ModelCatalogEntry[] = []
   for (const row of rows) {
     const m = modelOf(row)
-    if (!m || seen.has(m.id)) continue
+    if (!m || isRetiredModel(m.id) || seen.has(m.id)) continue
     seen.add(m.id)
     out.push(m)
   }
@@ -505,9 +561,14 @@ export function sortModels(models: readonly ModelCatalogEntry[], by: ModelSort =
 /** The house router: what a conversation is answered by until a model is picked. */
 export const ENSO = 'enso-auto'
 
-/** Whether a plan may send a model: on the Free plan, Enso Auto alone (commerce's `allowedModels`). */
+/** Fast Enso tier, also granted on the Free plan alongside Enso Auto. */
+export const ENSO_FLASH = 'enso-flash'
+
+/** Whether a plan may send a model: on the Free plan, Enso Auto and Enso Flash only. */
 export function grants(free: boolean, model: string): boolean {
-  return !free || model === ENSO
+  if (!free) return true
+  const slug = model.trim().toLowerCase().replace(/^hanzo\//, '')
+  return slug === ENSO || slug === ENSO_FLASH
 }
 
 /**
