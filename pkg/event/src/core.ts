@@ -332,12 +332,17 @@ class DefaultTransport implements Transport {
     // (who) in the header; the bearer never replaces the key.
     const bearer = simple ? undefined : (opts.token ?? opts.ingestKey)
     if (bearer) headers.Authorization = `Bearer ${bearer}`
+    // Only cookie-session requests (no publishable key and no bearer token) need cookies.
+    // Sending `credentials: 'include'` alongside a Bearer JWT fails CORS preflight on
+    // non-credentialed origins (such as localhost previews), preventing the browser from
+    // caching Access-Control-Max-Age and turning every flush into an uncached OPTIONS hit.
+    const hasExplicitAuth = simple || bearer !== undefined
     void fetch(opts.ingestKey ? appendQuery(url, 'ingest_key', opts.ingestKey) : url, {
       method: 'POST',
       headers,
       body,
       keepalive: true,
-      credentials: simple ? 'omit' : 'include',
+      credentials: hasExplicitAuth ? 'omit' : 'include',
     })
       .then((res) => {
         if (res.ok) {

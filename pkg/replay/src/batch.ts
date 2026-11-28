@@ -73,46 +73,130 @@ export function encodeBatch(ids: ReplayIds, parts: string[]): string {
   return head.slice(0, -1) + ',"events":[' + parts.join(',') + ']}'
 }
 
-/** fetch normally; navigator.sendBeacon for the headerless unload flush, where the
- *  publishable key rides `?ingest_key=` instead of a header. Only a body inside the
- *  keepalive quota is beaconed or kept alive: past it the browser refuses the
- *  request outright, and a full snapshot is several times the quota. */
-export const defaultTransport: ReplayTransport = {
-  send(url, payload, opts) {
-    const fits = utf8Length(payload) <= KEEPALIVE_BYTES
-    if (
-      opts.beacon &&
-      fits &&
-      publishable(opts.ingestKey) &&
-      typeof navigator !== 'undefined' &&
-      typeof navigator.sendBeacon === 'function'
-    ) {
-      const sep = url.includes('?') ? '&' : '?'
-      const beaconUrl = url + sep + 'ingest_key=' + encodeURIComponent(opts.ingestKey)
-      try {
-        if (navigator.sendBeacon(beaconUrl, new Blob([payload], { type: 'application/json' }))) return
-      } catch {
-        /* fall through to fetch */
-      }
+const REPLAY_SEND_WINDOW_MS = 60_000
+const REPLAY_MAX_SENDS_PER_WINDOW = 30
+const REPLAY_AUTH_BACKOFF_MS = 5 * 60_000
+const REPLAY_BASE_BACKOFF_MS = 15_000
+const REPLAY_MAX_BACKOFF_MS = 5 * 60_000
+const REPLAY_FAILURE_THRESHOLD = 2
+
+function parseRetryAfterMs(res: { headers?: { get?: (name: string) => string | null } }): number | null {
+  try {
+    const raw = res.headers?.get?.('retry-after')
+    if (!raw) return null
+    const seconds = Number(raw)
+    if (Number.isFinite(seconds) && seconds > 0) {
+      return Math.min(Math.max(seconds * 1000, 10_000), REPLAY_MAX_BACKOFF_MS)
     }
-    if (typeof fetch !== 'function') return
-    void fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${opts.ingestKey}` },
-      body: payload,
-      keepalive: opts.beacon && fits,
-      credentials: 'include',
-    })
-      .then((res) => {
-        // Losing a replay never throws into the app, but silence is how a client
-        // stops reporting without anyone noticing. Under `debug`, say so.
-        if (!res.ok && opts.debug) console.warn('[replay] ingest rejected', res.status)
-      })
-      .catch((e: unknown) => {
-        if (opts.debug) console.warn('[replay] ingest failed', e)
-      })
-  },
+    const at = Date.parse(raw)
+    if (Number.isFinite(at)) {
+      const delta = at - Date.now()
+      if (delta > 0) return Math.min(Math.max(delta, 10_000), REPLAY_MAX_BACKOFF_MS)
+    }
+  } catch {
+    /* ignore malformed header */
+  }
+  return null
 }
+
+/** Creates a storm-protected replay transport: fetch normally, navigator.sendBeacon
+ *  for the headerless unload flush where the publishable key rides `?ingest_key=`.
+ *  Omits cookies when an explicit ingestKey is carried (preventing CORS preflight
+ *  failures on non-credentialed origins like localhost) and opens a circuit breaker
+ *  on 401/403/429 or consecutive failures. */
+export function createDefaultTransport(): ReplayTransport {
+  const sendTimes: number[] = []
+  let blockedUntil = 0
+  let consecutiveFailures = 0
+
+  const allowSend = (): boolean => {
+    const now = Date.now()
+    if (now < blockedUntil) return false
+    const cutoff = now - REPLAY_SEND_WINDOW_MS
+    while (sendTimes.length > 0 && sendTimes[0] < cutoff) {
+      sendTimes.shift()
+    }
+    if (sendTimes.length >= REPLAY_MAX_SENDS_PER_WINDOW) return false
+    sendTimes.push(now)
+    return true
+  }
+
+  const onFailure = (status?: number, retryAfterMs?: number | null): void => {
+    consecutiveFailures++
+    const now = Date.now()
+    if (status === 401 || status === 403) {
+      blockedUntil = Math.max(blockedUntil, now + REPLAY_AUTH_BACKOFF_MS)
+      return
+    }
+    if (status === 429) {
+      const delay = retryAfterMs ?? Math.min(REPLAY_BASE_BACKOFF_MS * 2 ** (consecutiveFailures - 1), REPLAY_MAX_BACKOFF_MS)
+      blockedUntil = Math.max(blockedUntil, now + delay)
+      return
+    }
+    if (consecutiveFailures >= REPLAY_FAILURE_THRESHOLD) {
+      const exp = consecutiveFailures - REPLAY_FAILURE_THRESHOLD
+      const delay = Math.min(REPLAY_BASE_BACKOFF_MS * 2 ** exp, REPLAY_MAX_BACKOFF_MS)
+      blockedUntil = Math.max(blockedUntil, now + delay)
+    }
+  }
+
+  const onSuccess = (): void => {
+    consecutiveFailures = 0
+    blockedUntil = 0
+  }
+
+  return {
+    send(url, payload, opts) {
+      if (!allowSend()) {
+        if (opts.debug) console.warn('[replay] ingest throttled or circuit open')
+        return
+      }
+      const fits = utf8Length(payload) <= KEEPALIVE_BYTES
+      if (
+        opts.beacon &&
+        fits &&
+        publishable(opts.ingestKey) &&
+        typeof navigator !== 'undefined' &&
+        typeof navigator.sendBeacon === 'function'
+      ) {
+        const sep = url.includes('?') ? '&' : '?'
+        const beaconUrl = url + sep + 'ingest_key=' + encodeURIComponent(opts.ingestKey)
+        try {
+          if (navigator.sendBeacon(beaconUrl, new Blob([payload], { type: 'text/plain' }))) return
+        } catch {
+          /* fall through to fetch */
+        }
+      }
+      if (typeof fetch !== 'function') return
+      const hasKey = Boolean(opts.ingestKey)
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+      if (hasKey) headers.Authorization = `Bearer ${opts.ingestKey}`
+      void fetch(url, {
+        method: 'POST',
+        headers,
+        body: payload,
+        keepalive: opts.beacon && fits,
+        credentials: hasKey ? 'omit' : 'include',
+      })
+        .then((res) => {
+          if (res.ok) {
+            onSuccess()
+            return
+          }
+          onFailure(res.status, parseRetryAfterMs(res))
+          // Losing a replay never throws into the app, but silence is how a client
+          // stops reporting without anyone noticing. Under `debug`, say so.
+          if (opts.debug) console.warn('[replay] ingest rejected', res.status)
+        })
+        .catch((e: unknown) => {
+          onFailure()
+          if (opts.debug) console.warn('[replay] ingest failed', e)
+        })
+    },
+  }
+}
+
+export const defaultTransport: ReplayTransport = createDefaultTransport()
 
 export interface BatchConfig extends ReplayIds {
   ingestKey: string

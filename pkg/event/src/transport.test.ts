@@ -227,6 +227,54 @@ describe('ingest storm protection', () => {
     )
   })
 
+  it('omits cookies when a Bearer token is supplied so non-credentialed origins pass CORS preflight', async () => {
+    const seen: RequestInit[] = []
+    await withFetchStub(
+      async (_url, init) => {
+        seen.push(init)
+        return { ok: true, status: 200 }
+      },
+      async () => {
+        const a = new Analytics({
+          product: 'test',
+          ingestKey: 'pk-signed',
+          getToken: () => 'jwt-token-123',
+          captureErrors: false,
+        })
+        a.capture('signed_in_event')
+        a.flush()
+        await flushPromises()
+        expect(seen).toHaveLength(1)
+        expect((seen[0].headers as Record<string, string>).Authorization).toBe('Bearer jwt-token-123')
+        expect(seen[0].credentials).toBe('omit')
+      },
+    )
+  })
+
+  it('keeps credentials: include for pure cookie-session requests with no key or bearer token', async () => {
+    const seen: RequestInit[] = []
+    await withFetchStub(
+      async (_url, init) => {
+        seen.push(init)
+        return { ok: true, status: 200 }
+      },
+      async () => {
+        const a = new Analytics({
+          product: 'test',
+          host: '',
+          ingestKey: '',
+          captureErrors: false,
+        })
+        a.capture('cookie_event')
+        a.flush()
+        await flushPromises()
+        expect(seen).toHaveLength(1)
+        expect((seen[0].headers as Record<string, string>).Authorization).toBeUndefined()
+        expect(seen[0].credentials).toBe('include')
+      },
+    )
+  })
+
   it('caps outgoing flushes per 60s window even when responses succeed', async () => {
     let calls = 0
     await withFetchStub(
