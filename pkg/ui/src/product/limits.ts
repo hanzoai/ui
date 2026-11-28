@@ -75,6 +75,10 @@ export interface Limits {
   period_end?: string
   state: LimitState
   classes: Partial<Record<LimitClass, ClassLimit>>
+  /** 5-hour request session window across all requests the plan covers. */
+  session?: LimitWindow
+  /** UTC daily request window across all requests the plan covers. */
+  day?: LimitWindow
   limited?: Limited
   /** Models paused one by one, by exact id or glob. */
   paused?: PausedModel[]
@@ -239,12 +243,16 @@ export function limitsOf(body: unknown): Limits | null {
   const state =
     one(STATES, o?.state) ??
     Object.values(classes).reduce<LimitState>((s, c) => worst(s, c ? worst(c.state, c.window?.state ?? 'ok') : 'ok'), 'ok')
+  const session = windowOf(o?.session)
+  const day = windowOf(o?.day)
   return {
     plan,
     period_start: text(o?.period_start) ?? undefined,
     period_end: text(o?.period_end) ?? undefined,
     state,
     classes,
+    ...(session ? { session } : {}),
+    ...(day ? { day } : {}),
     ...(limited ? { limited } : {}),
     ...(paused.length ? { paused } : {}),
     actions: actionsOf(o?.actions),
