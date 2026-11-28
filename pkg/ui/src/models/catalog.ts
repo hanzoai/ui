@@ -183,13 +183,14 @@ export function isRetiredModel(id: string): boolean {
 
 /**
  * Progressive Enso ring gap fraction (0..1) for Enso family models, matching
- * web, desktop, and CLI: ONLY `enso-auto` (the default) is a closed circle (`0`);
+ * web and desktop: `enso` and `enso-auto` are the closed circles (`0`);
  * higher-to-lighter tiers open progressively from `enso-ultra` down to `enso-flash`.
  * Returns `null` for non-Enso models.
  */
 export function ensoModelGap(id: string): number | null {
   const slug = id.trim().toLowerCase().replace(/^hanzo\//, '')
   switch (slug) {
+    case 'enso':
     case 'enso-auto':
       return 0
     case 'enso-ultra':
@@ -198,7 +199,6 @@ export function ensoModelGap(id: string): number | null {
       return 0.16
     case 'enso-pro':
       return 0.24
-    case 'enso':
     case 'enso-hybrid':
       return 0.32
     case 'enso-flash':

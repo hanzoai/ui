@@ -29,7 +29,7 @@ import { move, type Move } from '../product/chipSelect.logic'
 import { AGENT_GAPS, ensoModelGap, groupLabel, isPaused, modelName, RESEARCH, type Capability, type ModelCatalogEntry, type PauseSource } from './catalog'
 import { modelCount, modelMeta, pickable, pickerRows, restable, revealLayoutTop, rowLayout, standing, visibleLayoutRange, type PickerRow } from './picker.logic'
 
-/** Progressive Enso ring icon: closed circle ONLY for Enso Auto (gap=0), opening by tier. */
+/** Progressive Enso ring icon: closed circle for Enso and Enso Auto (gap=0), opening by tier. */
 function EnsoGlyph({ gap, size = 14 }: { gap: number; size?: number }) {
   const strokeWidth = 1.75
   const r = (size - strokeWidth) / 2
