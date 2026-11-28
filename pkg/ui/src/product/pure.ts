@@ -63,3 +63,6 @@ export { pinned, SLACK, type Track } from '../chat/stick'
 // Plan usage limits — the `/v1/ai/limits` contract, the served-call headers and
 // the billing refusal, and what each tells the reader.
 export * from './limits'
+
+// Help & feedback — `POST /v1/help/feedback` helper and global exception reporter.
+export * from './feedback'

@@ -109,3 +109,25 @@ export { config, type Conf } from './gui-config'
 // of token with. A server module (a shiki block rendered in an RSC or at build
 // time) reads the same from `@hanzo/ui/core`, which is not a client boundary.
 export { codeFace, codeInk, codeInks, codeTheme, face, syntax, type CodeInk, type CodeTheme, type CodeToken } from './code-theme'
+
+// Help & feedback — `POST /v1/help/feedback`, global exception reporter, and dialog/trigger.
+export {
+  DEFAULT_FEEDBACK_API,
+  installGlobalExceptionReporter,
+  reportException,
+  reportFeedback,
+  type FeedbackKind,
+  type FeedbackPayload,
+  type FeedbackRequestOptions,
+  type FeedbackResult,
+  type GlobalExceptionReporterOptions,
+  type GlobalExceptionTarget,
+  type ReportExceptionOptions,
+} from './product/feedback'
+export {
+  FeedbackButton,
+  FeedbackDialog,
+  type FeedbackButtonProps,
+  type FeedbackDialogProps,
+  type UserFeedbackKind,
+} from './product/FeedbackButton'
