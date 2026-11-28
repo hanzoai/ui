@@ -35,6 +35,16 @@ const LIMITED = {
 const headers = (h: Record<string, string>) => new Headers(h)
 
 describe('limitsOf', () => {
+  it('reads session and daily request windows when present', () => {
+    const l = limitsOf({
+      ...OK,
+      session: { percent: 15, state: 'ok', resets_at: null },
+      day: { percent: 40, state: 'ok', resets_at: '2026-10-04T00:00:00Z' },
+    })!
+    expect(l.session).toEqual({ percent: 15, state: 'ok', resets_at: null })
+    expect(l.day).toEqual({ percent: 40, state: 'ok', resets_at: '2026-10-04T00:00:00Z' })
+  })
+
   it('reads every field of an answer', () => {
     const l = limitsOf(OK)!
     expect(l.plan).toBe('max-20x')

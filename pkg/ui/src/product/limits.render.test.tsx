@@ -79,6 +79,23 @@ describe('UsageMeter', () => {
     expect(words(html(<UsageMeter limits={limitsOf(LIMITED)!} now={NOW} />))).not.toMatch(/\$\s?\d|\d+\s*(requests?|messages?|tokens?)\b/i)
   })
 
+  it('draws 5-hour session and daily request windows when present', () => {
+    const withWindows = limitsOf({
+      ...LIMITED,
+      session: { percent: 10, state: 'ok', resets_at: null },
+      day: { percent: 30, state: 'ok', resets_at: '2026-10-04T00:00:00Z' },
+    })!
+    const m = html(<UsageMeter limits={withWindows} now={NOW} />)
+    const text = words(m)
+    expect(text).toContain('5-hour session')
+    expect(text).toContain('10% used')
+    expect(text).toContain('Starts with your next request')
+    expect(text).toContain('Daily')
+    expect(text).toContain('30% used')
+    expect(m).toContain('data-window="session"')
+    expect(m).toContain('data-window="day"')
+  })
+
   it('draws nothing for a reader whose limits name no class', () => {
     expect(html(<UsageMeter limits={limitsOf({ plan: '' })!} />)).not.toContain('usage-meter')
   })

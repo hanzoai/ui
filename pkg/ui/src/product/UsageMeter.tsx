@@ -62,10 +62,48 @@ export function UsageMeter({ limits, classes = CLASSES, size = 'md', now }: Usag
     return k ? [{ c, k }] : []
   })
   const { t } = useI18n()
-  if (!rows.length) return null
   const sm = size === 'sm'
+  const windows: { key: 'session' | 'day'; label: string; w: LimitWindow }[] = sm
+    ? []
+    : [
+        ...(limits.session ? [{ key: 'session' as const, label: t('5-hour session'), w: limits.session }] : []),
+        ...(limits.day ? [{ key: 'day' as const, label: t('Daily'), w: limits.day }] : []),
+      ]
+  if (!rows.length && !windows.length) return null
   return (
     <YStack gap={sm ? '$2.5' : '$5'} width="100%" minW={0} {...slot('usage-meter')}>
+      {windows.map(({ key, label, w }) => {
+        const resets = when(w.resets_at, now)
+        const resetText = resets
+          ? t('Resets {until}', { until: resets })
+          : key === 'session'
+            ? t('Starts with your next request')
+            : ''
+        return (
+          <YStack key={key} gap="$2" minW={0} data-window={key} data-state={w.state} {...slot('usage-meter-row')}>
+            <XStack justify="space-between" items="baseline" gap="$3" minW={0}>
+              <Text fontSize="$3" color="$ink" fontWeight="500" numberOfLines={1}>
+                {label}
+              </Text>
+              <Text fontSize="$3" color="$ink" fontVariant={['tabular-nums']} shrink={0}>
+                {t('{percent}% used', { percent: w.percent })}
+              </Text>
+            </XStack>
+            <Progress
+              value={w.percent}
+              height={8}
+              minW={0}
+              indicatorColor={STATE_COLOR[w.state]}
+              aria-label={t('{label}: {percent}% used', { label, percent: w.percent })}
+            />
+            {resetText ? (
+              <Text fontSize="$2" color="$soft">
+                {resetText}
+              </Text>
+            ) : null}
+          </YStack>
+        )
+      })}
       {rows.map(({ c, k }) => {
         const label = classesLabel([c], t)
         const resets = when(k.resets_at, now)
