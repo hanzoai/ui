@@ -227,3 +227,7 @@ export * from './useLimits'
 export * from './UsageMeter'
 export * from './LimitedBanner'
 export * from './PlanUsage'
+
+// Help & feedback — `POST /v1/help/feedback`, global exception reporter, and dialog.
+export * from './feedback'
+export * from './FeedbackButton'

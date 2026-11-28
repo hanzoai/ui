@@ -10,7 +10,17 @@ import { phrase } from '@hanzo/i18n'
 import { useI18n } from '@hanzo/i18n/react'
 import { Progress } from '../backends/gui/progress'
 import { slot } from '../backends/gui/slot'
-import { CLASSES, classesLabel, when, type ClassLimit, type LimitClass, type LimitState, type LimitWindow, type Limits } from './limits'
+import {
+  CLASSES,
+  classesLabel,
+  isWeeklyWindow,
+  when,
+  type ClassLimit,
+  type LimitClass,
+  type LimitState,
+  type LimitWindow,
+  type Limits,
+} from './limits'
 
 /** The status rung each state paints its bar in. */
 export const STATE_COLOR = { ok: '$good', near: '$yellow10', limited: '$bad' } as const satisfies Record<LimitState, string>
@@ -23,13 +33,26 @@ function caption(c: ClassLimit): string {
   return ''
 }
 
-function Session({ label, w, now }: { label: string; w: LimitWindow; now?: number }) {
+function ShortWindow({
+  cls,
+  label,
+  w,
+  hasSession,
+  now,
+}: {
+  cls: LimitClass
+  label: string
+  w: LimitWindow
+  hasSession: boolean
+  now?: number
+}) {
   const resets = when(w.resets_at, now)
   const { t } = useI18n()
+  const weekly = isWeeklyWindow(cls, w, hasSession, now)
   return (
-    <XStack items="center" gap="$2" minW={0} data-state={w.state} {...slot('usage-meter-window')}>
+    <XStack items="center" gap="$2" minW={0} data-state={w.state} data-window-kind={weekly ? 'weekly' : 'session'} {...slot('usage-meter-window')}>
       <Text fontSize="$1" color="$soft" shrink={0}>
-        {t('Session')}
+        {weekly ? t('Weekly') : t('Session')}
       </Text>
       <Progress
         value={w.percent}
@@ -37,7 +60,11 @@ function Session({ label, w, now }: { label: string; w: LimitWindow; now?: numbe
         flex={1}
         minW={0}
         indicatorColor={STATE_COLOR[w.state]}
-        aria-label={t('{label} session: {percent}% used', { label, percent: w.percent })}
+        aria-label={
+          weekly
+            ? t('{label} weekly: {percent}% used', { label, percent: w.percent })
+            : t('{label} session: {percent}% used', { label, percent: w.percent })
+        }
       />
       <Text fontSize="$1" color="$soft" shrink={0} fontVariant={['tabular-nums']}>
         {w.percent}%{resets ? ` · ${t('Resets {until}', { until: resets })}` : ''}
@@ -59,7 +86,10 @@ export interface UsageMeterProps {
 export function UsageMeter({ limits, classes = CLASSES, size = 'md', now }: UsageMeterProps) {
   const rows = classes.flatMap((c) => {
     const k = limits.classes[c]
-    return k ? [{ c, k }] : []
+    // Third-party models are prepaid only and never included in monthly plan
+    // allowances; skip any non-plan entry so users never see a false 100% bar.
+    if (!k || (c === 'premium' && k.paying !== 'plan' && k.state !== 'limited')) return []
+    return [{ c, k }]
   })
   const { t } = useI18n()
   const sm = size === 'sm'
@@ -137,7 +167,7 @@ export function UsageMeter({ limits, classes = CLASSES, size = 'md', now }: Usag
                 ) : null}
               </XStack>
             ) : null}
-            {k.window ? <Session label={label} w={k.window} now={now} /> : null}
+            {k.window ? <ShortWindow cls={c} label={label} w={k.window} hasSession={Boolean(limits.session)} now={now} /> : null}
           </YStack>
         )
       })}

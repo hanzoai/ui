@@ -62,7 +62,7 @@ describe('UsageMeter', () => {
   it('draws one row per class with its percent, state and reset', () => {
     const m = html(<UsageMeter limits={limitsOf(LIMITED)!} now={NOW} />)
     const text = words(m)
-    expect(text).toContain('Premium models')
+    expect(text).toContain('Third-party models')
     expect(text).toContain('100% used')
     expect(text).toContain('Hanzo models')
     expect(text).toContain('85% used')
@@ -71,7 +71,7 @@ describe('UsageMeter', () => {
     expect(text).toContain('Session')
     expect(m).toContain('data-state="limited"')
     expect(m).toContain('data-state="near"')
-    expect(m).toContain('aria-label="Premium models: 100% used"')
+    expect(m).toContain('aria-label="Third-party models: 100% used"')
     expect(m).toContain('data-slot="usage-meter"')
   })
 
@@ -79,7 +79,7 @@ describe('UsageMeter', () => {
     expect(words(html(<UsageMeter limits={limitsOf(LIMITED)!} now={NOW} />))).not.toMatch(/\$\s?\d|\d+\s*(requests?|messages?|tokens?)\b/i)
   })
 
-  it('draws 5-hour session and daily request windows when present', () => {
+  it('draws 5-hour session and daily request windows when present and labels ours.window Weekly', () => {
     const withWindows = limitsOf({
       ...LIMITED,
       session: { percent: 10, state: 'ok', resets_at: null },
@@ -92,8 +92,31 @@ describe('UsageMeter', () => {
     expect(text).toContain('Starts with your next request')
     expect(text).toContain('Daily')
     expect(text).toContain('30% used')
+    expect(text).toContain('Weekly')
     expect(m).toContain('data-window="session"')
     expect(m).toContain('data-window="day"')
+    expect(m).toContain('data-window-kind="weekly"')
+  })
+
+  it('labels a 7-day rolling ours.window as Weekly even without a separate session window', () => {
+    const weekly = limitsOf({
+      plan: 'pro',
+      state: 'ok',
+      classes: {
+        ours: {
+          percent: 25,
+          state: 'ok',
+          paying: 'plan',
+          resets_at: '2026-10-31T00:00:00Z',
+          window: { percent: 60, state: 'ok', resets_at: '2026-10-10T12:00:00Z' },
+        },
+      },
+      actions: [],
+    })!
+    const m = html(<UsageMeter limits={weekly} now={NOW} />)
+    expect(words(m)).toContain('Weekly')
+    expect(words(m)).not.toContain('Session')
+    expect(m).toContain('aria-label="Hanzo models weekly: 60% used"')
   })
 
   it('draws nothing for a reader whose limits name no class', () => {
@@ -149,7 +172,7 @@ describe('PlanUsage', () => {
     expect(text).toContain('Max 20x plan')
     expect(text).toContain('Current period Oct 1 – Oct 31')
     for (const line of PLAN_TERMS) expect(text).toContain(line)
-    expect(text).toContain('Premium models')
+    expect(text).toContain('Third-party models')
     expect(text).toContain('Upgrade')
     expect(text).toContain('Add prepaid credit')
     expect(text).not.toMatch(/\$\s?\d|\d+\s*(requests?|messages?|tokens?)\b/i)
@@ -165,6 +188,84 @@ describe('PlanUsage', () => {
     )
     expect(m.indexOf('limited-banner')).toBeGreaterThan(-1)
     expect(m.indexOf('limited-banner')).toBeLessThan(m.indexOf('usage-meter'))
+  })
+
+  it('offers Reset usage (1 free/week) when available, confirms, and updates to cooldown', async () => {
+    const initial = limitsOf({
+      plan: 'pro',
+      state: 'near',
+      classes: { ours: { percent: 85, state: 'near', paying: 'plan', resets_at: '2026-10-31T00:00:00Z' } },
+      reset: { available: true, last_at: null, next_at: null },
+      actions: [],
+    })!
+    const after = limitsOf({
+      plan: 'pro',
+      state: 'ok',
+      classes: { ours: { percent: 0, state: 'ok', paying: 'plan', resets_at: '2026-10-31T00:00:00Z' } },
+      reset: { available: false, last_at: '2026-10-03T12:00:00Z', next_at: '2026-10-10T12:00:00Z' },
+      actions: [],
+    })!
+    const onReset = vi.fn(async () => after)
+    const onLimitsChange = vi.fn()
+    const { host, unmount } = mount(
+      <PlanUsage limits={initial} onReset={onReset} onLimitsChange={onLimitsChange} now={NOW} />,
+    )
+    const trigger = [...host.querySelectorAll('button')].find((b) =>
+      b.textContent?.includes('Reset usage (1 free/week)'),
+    )!
+    expect(trigger).toBeTruthy()
+    act(() => trigger.click())
+    expect(onReset).not.toHaveBeenCalled()
+    const confirm = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes('Confirm reset'))!
+    expect(confirm).toBeTruthy()
+    await act(async () => {
+      confirm.click()
+      await Promise.resolve()
+    })
+    expect(onReset).toHaveBeenCalledTimes(1)
+    expect(onLimitsChange).toHaveBeenCalledWith(after)
+    expect(host.textContent).toContain('0% used')
+    expect(host.textContent).toContain('Free weekly reset available in 7 days')
+    unmount()
+  })
+
+  it('shows cooldown text when reset.available is false and shows error on 429', async () => {
+    const cooling = limitsOf({
+      plan: 'pro',
+      state: 'ok',
+      classes: { ours: { percent: 10, state: 'ok', paying: 'plan', resets_at: '2026-10-31T00:00:00Z' } },
+      reset: { available: false, last_at: '2026-10-03T12:00:00Z', next_at: '2026-10-10T12:00:00Z' },
+      actions: [],
+    })!
+    expect(words(html(<PlanUsage limits={cooling} now={NOW} />))).toContain('Free weekly reset available in 7 days')
+
+    const avail = limitsOf({
+      plan: 'pro',
+      state: 'ok',
+      classes: { ours: { percent: 50, state: 'ok', paying: 'plan', resets_at: '2026-10-31T00:00:00Z' } },
+      reset: { available: true, last_at: null, next_at: null },
+      actions: [],
+    })!
+    const { host, unmount } = mount(
+      <PlanUsage
+        limits={avail}
+        onReset={async () => {
+          throw new Error('free weekly usage reset already used; next reset available at 2026-10-10T12:00:00Z')
+        }}
+        now={NOW}
+      />,
+    )
+    const trigger = [...host.querySelectorAll('button')].find((b) =>
+      b.textContent?.includes('Reset usage (1 free/week)'),
+    )!
+    act(() => trigger.click())
+    const confirm = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes('Confirm reset'))!
+    await act(async () => {
+      confirm.click()
+      await Promise.resolve()
+    })
+    expect(host.querySelector('[role="alert"]')?.textContent).toContain('free weekly usage reset already used')
+    unmount()
   })
 })
 
@@ -233,7 +334,7 @@ describe('useLimits', () => {
     const { unmount } = mount(<Probe read={async () => LIMITED} onRead={(u) => (got = u)} />)
     await flush()
     expect(got!.answered).toBe(true)
-    expect(got!.notice?.message).toMatch(/^Premium models are paused until /)
+    expect(got!.notice?.message).toMatch(/^Third-party models are paused until /)
     expect(got!.notice?.actions).toHaveLength(2)
     unmount()
   })

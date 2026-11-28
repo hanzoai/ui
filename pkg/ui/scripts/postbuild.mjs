@@ -78,6 +78,8 @@ const DATA = new Set(
         'product/brand',
         'product/animatedLogo.logic',
         'product/combobox/filter',
+        'product/limits',
+        'product/feedback',
       ],
 )
 

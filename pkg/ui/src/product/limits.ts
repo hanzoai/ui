@@ -68,6 +68,13 @@ export interface PausedModel {
   resets_at?: string | null
 }
 
+/** One free weekly usage reset (`POST /v1/ai/limits/reset`). */
+export interface LimitReset {
+  available: boolean
+  last_at: string | null
+  next_at: string | null
+}
+
 export interface Limits {
   /** The plan slug, or "" for a caller with no plan. */
   plan: string
@@ -79,6 +86,8 @@ export interface Limits {
   session?: LimitWindow
   /** UTC daily request window across all requests the plan covers. */
   day?: LimitWindow
+  /** Free weekly usage reset status when the server offers it. */
+  reset?: LimitReset
   limited?: Limited
   /** Models paused one by one, by exact id or glob. */
   paused?: PausedModel[]
@@ -87,6 +96,8 @@ export interface Limits {
   /** The org keeps paying from credits once included usage runs out; absent when the server does not say. */
   creditsAfterAllowance?: boolean
 }
+
+export type PlanLimits = Limits
 
 /** What a served call's headers say. */
 export interface Served {
@@ -125,13 +136,13 @@ export interface LimitNotice {
 export const CLASSES: readonly LimitClass[] = ['premium', 'ours', 'free']
 
 export const CLASS_LABEL: Record<LimitClass, string> = {
-  premium: 'Premium models',
+  premium: 'Third-party models',
   ours: 'Hanzo models',
   free: 'Free models',
 }
 
-/** A class's name inside a list ("Premium and Hanzo models"). Hanzo is a name. */
-const className = (c: LimitClass, t: Say): string => (c === 'premium' ? t('Premium') : c === 'ours' ? 'Hanzo' : t('Free'))
+/** A class's name inside a list ("Third-party and Hanzo models"). Hanzo is a name. */
+const className = (c: LimitClass, t: Say): string => (c === 'premium' ? t('Third-party') : c === 'ours' ? 'Hanzo' : t('Free'))
 
 const STATES: readonly LimitState[] = ['ok', 'near', 'limited']
 const PAYERS: readonly LimitPayer[] = ['plan', 'credits', 'free', 'none']
@@ -225,6 +236,16 @@ function pausedOf(v: unknown): PausedModel[] {
   })
 }
 
+function resetInfoOf(v: unknown): LimitReset | null {
+  const o = record(v)
+  if (!o || typeof o.available !== 'boolean') return null
+  return {
+    available: o.available,
+    last_at: text(o.last_at),
+    next_at: text(o.next_at),
+  }
+}
+
 export function limitsOf(body: unknown): Limits | null {
   const o = record(body)
   const plan = text(o?.plan)
@@ -245,6 +266,7 @@ export function limitsOf(body: unknown): Limits | null {
     Object.values(classes).reduce<LimitState>((s, c) => worst(s, c ? worst(c.state, c.window?.state ?? 'ok') : 'ok'), 'ok')
   const session = windowOf(o?.session)
   const day = windowOf(o?.day)
+  const reset = resetInfoOf(o?.reset)
   return {
     plan,
     period_start: text(o?.period_start) ?? undefined,
@@ -253,6 +275,7 @@ export function limitsOf(body: unknown): Limits | null {
     classes,
     ...(session ? { session } : {}),
     ...(day ? { day } : {}),
+    ...(reset ? { reset } : {}),
     ...(limited ? { limited } : {}),
     ...(paused.length ? { paused } : {}),
     actions: actionsOf(o?.actions),
@@ -367,6 +390,99 @@ export function when(iso: string | null | undefined, now: number = Date.now()): 
     : d.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })
 }
 
+/**
+ * Whether a class's rolling short window represents a weekly (7-day) window
+ * rather than a short session window. `ours.window` is a 7-day rolling window
+ * when `resets_at` is >24h away, omitted, or when a separate `session` window
+ * is present.
+ */
+export function isWeeklyWindow(
+  cls: LimitClass,
+  w: Pick<LimitWindow, 'resets_at'>,
+  hasSession: boolean = false,
+  now: number = Date.now(),
+): boolean {
+  const ts = w.resets_at ? Date.parse(w.resets_at) : NaN
+  if (Number.isFinite(ts) && ts - now > 86_400_000) return true
+  if (cls === 'ours') return hasSession || !Number.isFinite(ts)
+  return false
+}
+
+/**
+ * Human-readable relative countdown for a future timestamp (e.g. "in 7 days",
+ * "in 5 hours", "in 20 minutes", "soon", or "on Oct 31" beyond 14 days).
+ */
+export function relativeTime(iso: string | null | undefined, now: number = Date.now(), t: Say = english): string {
+  const ts = iso ? Date.parse(iso) : NaN
+  if (!Number.isFinite(ts)) return ''
+  const diff = ts - now
+  if (diff <= 60_000) return t('soon')
+  const mins = Math.round(diff / 60_000)
+  if (mins < 60) return mins === 1 ? t('in 1 minute') : t('in {n} minutes', { n: mins })
+  const hours = Math.round(diff / 3_600_000)
+  if (hours < 24) return hours === 1 ? t('in 1 hour') : t('in {n} hours', { n: hours })
+  const days = Math.round(diff / 86_400_000)
+  if (days <= 14) return days === 1 ? t('in 1 day') : t('in {n} days', { n: days })
+  const date = new Date(ts).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' })
+  return t('on {date}', { date })
+}
+
+export interface ResetLimitsError extends Error {
+  status: number
+}
+
+/**
+ * Calls `POST /v1/ai/limits/reset` (1 free weekly reset) and returns the
+ * updated parsed `Limits`. Throws an Error carrying `.status` (e.g. 429 on
+ * cooldown) when the server refuses.
+ */
+export async function resetLimits(
+  apiBase: string,
+  token: string,
+  opts?: { headers?: Record<string, string>; signal?: AbortSignal; fetch?: typeof fetch },
+): Promise<Limits> {
+  const base = apiBase.trim().replace(/\/+$/, '')
+  const doFetch = opts?.fetch ?? fetch
+  const res = await doFetch(`${base}/v1/ai/limits/reset`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      ...(opts?.headers ?? {}),
+    },
+    body: '{}',
+    signal: opts?.signal,
+  })
+  const raw = await res.text().catch(() => '')
+  let body: unknown = null
+  try {
+    body = raw ? JSON.parse(raw) : null
+  } catch {
+    body = raw
+  }
+  if (!res.ok) {
+    const rec = record(body)
+    const errObj = record(rec?.error)
+    const msg =
+      text(errObj?.message) ||
+      text(rec?.error) ||
+      text(rec?.message) ||
+      text(rec?.detail) ||
+      (typeof body === 'string' && body.trim() ? body.trim() : '') ||
+      `Could not reset usage (${res.status}).`
+    const err = new Error(msg) as ResetLimitsError
+    err.status = res.status
+    throw err
+  }
+  const parsed = limitsOf(body)
+  if (!parsed) {
+    const err = new Error('Unexpected response from usage reset.') as ResetLimitsError
+    err.status = res.status
+    throw err
+  }
+  return parsed
+}
+
 /** The plain sentence for a reason the server sent no message for. */
 const plainSays = (reason: string, t: Say): string | undefined =>
   reason === 'paid_plan_required'
@@ -458,12 +574,12 @@ export function nearOf(limits: Limits | null, now: number = Date.now(), t: Say =
   })
   if (!near.length) return null
   const until = when(earliest(near.map((c) => resetOf(limits.classes[c]))), now)
-  // Only premium and Hanzo models are ever near (the free lane is not counted).
+  // Only Hanzo models (and any remaining third-party class if sent) are ever near (the free lane is not counted).
   const close =
     near.length > 1
-      ? t("You're close to your plan's included premium and Hanzo model usage.")
+      ? t("You're close to your plan's included Hanzo and third-party model usage.")
       : near[0] === 'premium'
-        ? t("You're close to your plan's included premium model usage.")
+        ? t("You're close to your third-party model usage limit.")
         : t("You're close to your plan's included Hanzo model usage.")
   return until ? `${close} ${t('Resets {until}.', { until })}` : close
 }

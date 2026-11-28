@@ -1,5 +1,19 @@
-import { describe, expect, it } from 'vitest'
-import { actionsOf, limitsOf, navigable, paidPlan, nearOf, noticeOf, overlay, refusalOf, servedOf, when } from './limits'
+import { describe, expect, it, vi } from 'vitest'
+import {
+  actionsOf,
+  isWeeklyWindow,
+  limitsOf,
+  navigable,
+  nearOf,
+  noticeOf,
+  overlay,
+  paidPlan,
+  refusalOf,
+  relativeTime,
+  resetLimits,
+  servedOf,
+  when,
+} from './limits'
 
 const NOW = Date.parse('2026-10-03T12:00:00Z')
 
@@ -200,7 +214,7 @@ describe('noticeOf', () => {
 
   it('pauses a used-up class until its reset, with the server actions', () => {
     const n = noticeOf(limitsOf(LIMITED), none, undefined, NOW)!
-    expect(n.message).toBe('Premium models are paused until Oct 31.')
+    expect(n.message).toBe('Third-party models are paused until Oct 31.')
     expect(n.classes).toEqual(['premium'])
     expect(n.actions.map((a) => a.label)).toEqual(['Upgrade', 'Add prepaid credit'])
     expect(n.refused).toBe(false)
@@ -212,7 +226,7 @@ describe('noticeOf', () => {
       headers({ 'X-Hanzo-Usage': 'limited', 'X-Hanzo-Usage-Class': 'premium', 'X-Hanzo-Fallback': 'zen-free', 'X-Hanzo-Usage-Reason': 'plan_allowance_used' }),
     )
     const n = noticeOf(limitsOf(LIMITED), { served, refusal: null }, (id) => (id === 'zen-free' ? 'Zen Free' : id), NOW)!
-    expect(n.message).toBe("Premium models are paused until Oct 31. You're chatting on Zen Free.")
+    expect(n.message).toBe("Third-party models are paused until Oct 31. You're chatting on Zen Free.")
     expect(n.fallback).toBe('zen-free')
   })
 
@@ -252,7 +266,7 @@ describe('noticeOf', () => {
 
 describe('nearOf', () => {
   it('is one line for a class near its included usage', () => {
-    expect(nearOf(limitsOf(NEAR), NOW)).toBe("You're close to your plan's included premium model usage. Resets Oct 31.")
+    expect(nearOf(limitsOf(NEAR), NOW)).toBe("You're close to your third-party model usage limit. Resets Oct 31.")
     expect(nearOf(limitsOf(OK), NOW)).toBeNull()
     expect(nearOf(limitsOf(LIMITED), NOW)).toBeNull()
   })
@@ -346,5 +360,92 @@ describe('a refusal names its own way past', () => {
     const refusal = refusalOf({ error: { type: 'billing_error', code: 'free_plan_cap', message: 'm', actions: [{ kind: 'topup', label: 'Add prepaid credit', url: 'https://hanzo.ai/pay' }] } }, 429)
     const n = noticeOf(limitsOf({ plan: 'free', actions: [{ kind: 'upgrade', label: 'Upgrade', url: 'https://hanzo.ai/pricing' }] }), { served: null, refusal }, undefined, NOW)!
     expect(n.actions.map((a) => a.kind)).toEqual(['topup'])
+  })
+})
+
+describe('weekly reset and rolling weekly window', () => {
+  it('parses reset metadata from GET /v1/ai/limits', () => {
+    const avail = limitsOf({
+      ...OK,
+      reset: { available: true, last_at: null, next_at: null },
+    })!
+    expect(avail.reset).toEqual({ available: true, last_at: null, next_at: null })
+
+    const cooling = limitsOf({
+      ...OK,
+      reset: { available: false, last_at: '2026-10-03T12:00:00Z', next_at: '2026-10-10T12:00:00Z' },
+    })!
+    expect(cooling.reset).toEqual({
+      available: false,
+      last_at: '2026-10-03T12:00:00Z',
+      next_at: '2026-10-10T12:00:00Z',
+    })
+
+    // Ignores malformed reset object without boolean available.
+    expect(limitsOf({ ...OK, reset: { last_at: null } })?.reset).toBeUndefined()
+  })
+
+  it('classifies ours.window as Weekly when >24h away, null, or when session is separate', () => {
+    expect(isWeeklyWindow('ours', { resets_at: '2026-10-10T12:00:00Z' }, false, NOW)).toBe(true)
+    expect(isWeeklyWindow('ours', { resets_at: null }, false, NOW)).toBe(true)
+    expect(isWeeklyWindow('ours', { resets_at: '2026-10-03T17:00:00Z' }, true, NOW)).toBe(true)
+    expect(isWeeklyWindow('ours', { resets_at: '2026-10-03T17:00:00Z' }, false, NOW)).toBe(false)
+    expect(isWeeklyWindow('premium', { resets_at: '2026-10-03T17:00:00Z' }, true, NOW)).toBe(false)
+    expect(isWeeklyWindow('premium', { resets_at: '2026-10-10T12:00:00Z' }, false, NOW)).toBe(true)
+  })
+
+  it('formats relativeTime across minutes, hours, days, and dates', () => {
+    expect(relativeTime('2026-10-03T12:00:30Z', NOW)).toBe('soon')
+    expect(relativeTime('2026-10-03T12:30:00Z', NOW)).toBe('in 30 minutes')
+    expect(relativeTime('2026-10-03T18:00:00Z', NOW)).toBe('in 6 hours')
+    expect(relativeTime('2026-10-04T12:00:00Z', NOW)).toBe('in 1 day')
+    expect(relativeTime('2026-10-10T12:00:00Z', NOW)).toBe('in 7 days')
+    expect(relativeTime('2026-10-31T00:00:00Z', NOW)).toBe('on Oct 31')
+    expect(relativeTime(null, NOW)).toBe('')
+  })
+
+  it('calls POST /v1/ai/limits/reset and parses refreshed limits on 200', async () => {
+    const mockFetch = vi.fn(async () =>
+      new Response(
+        JSON.stringify({
+          plan: 'pro',
+          state: 'ok',
+          classes: { ours: { percent: 0, state: 'ok', paying: 'plan', resets_at: '2026-10-31T00:00:00Z' } },
+          reset: { available: false, last_at: '2026-10-03T12:00:00Z', next_at: '2026-10-10T12:00:00Z' },
+          actions: [],
+        }),
+        { status: 200, headers: { 'content-type': 'application/json' } },
+      ),
+    )
+    const next = await resetLimits('https://api.hanzo.ai/', 'tok_123', { fetch: mockFetch as typeof fetch })
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://api.hanzo.ai/v1/ai/limits/reset',
+      expect.objectContaining({
+        method: 'POST',
+        body: '{}',
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer tok_123',
+        }),
+      }),
+    )
+    expect(next.classes.ours?.percent).toBe(0)
+    expect(next.reset?.available).toBe(false)
+    expect(next.reset?.next_at).toBe('2026-10-10T12:00:00Z')
+  })
+
+  it('surfaces 429 cooldown message from resetLimits', async () => {
+    const mockFetch = vi.fn(async () =>
+      new Response(
+        JSON.stringify({ error: { message: 'free weekly usage reset already used; next reset available at 2026-10-10T12:00:00Z' } }),
+        { status: 429, headers: { 'content-type': 'application/json' } },
+      ),
+    )
+    await expect(
+      resetLimits('https://api.hanzo.ai', 'tok_123', { fetch: mockFetch as typeof fetch }),
+    ).rejects.toMatchObject({
+      status: 429,
+      message: 'free weekly usage reset already used; next reset available at 2026-10-10T12:00:00Z',
+    })
   })
 })
