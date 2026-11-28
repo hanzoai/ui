@@ -123,9 +123,6 @@ const REST_PHONE = 40
 const CEILING = 240
 const CEILING_PHONE = 160
 
-/** The ink on a filled round: the accent's own foreground. */
-const ON = 'var(--primary-foreground)'
-
 /** What the draft carries, as a chip: a filled pill after `+` on a laptop; on a phone a pill in a row of its own above the field, round with a hairline and no fill, as tall as the controls, so the controls' row never wraps. */
 const CARRIED = { height: 28, rounded: 999, bg: '$hover', paddingInlineStart: 10 } as const
 const pill = (height: number) => ({ height, rounded: 999, borderWidth: 1, borderColor: '$borderColor', bg: 'transparent', paddingInlineStart: 12 }) as const
@@ -432,17 +429,25 @@ export function Composer({
   // The row's last place: send (stop while a turn runs) once there is something
   // to send, voice mode while the draft is empty. Both stand in one box, so the
   // row never moves; the one that is not wanted fades and shrinks out.
+  // Never use a harsh pure-white `fill` background on dark surfaces: send rests
+  // on an elevated monochrome surface (`$raised`) with `$ink` arrow, and stop
+  // switches to `$bad` with high-contrast white square.
   const sending = busy || lit
   const send = (
     <Control
       type="button"
       size={hit}
-      fill
       rounded={999}
       {...slot('composer-send')}
       aria-label={t(busy ? 'Stop' : 'Send')}
       aria-disabled={!live || undefined}
       tabIndex={sending ? 0 : -1}
+      bg={busy ? '$bad' : '$raised'}
+      color={busy ? '#ffffff' : '$ink'}
+      borderWidth={1}
+      borderColor={busy ? '$bad' : live ? STRONG : '$rim'}
+      opacity={live ? 1 : 0.45}
+      hoverStyle={live ? (busy ? { opacity: 0.9 } : { bg: '$hover', borderColor: STRONG }) : undefined}
       pressStyle={{ scale: 0.92 }}
       focusVisibleStyle={RING}
       $max-sm={{ minW: 44, minH: 44 }}
@@ -452,7 +457,7 @@ export function Composer({
         else onSend()
       }}
     >
-      {busy ? <Square size={12} color={ON} fill={ON} /> : <ArrowUp size={GLYPH} strokeWidth={2} color={ON} />}
+      {busy ? <Square size={12} color="#ffffff" fill="#ffffff" /> : <ArrowUp size={GLYPH} strokeWidth={2} color="currentColor" />}
     </Control>
   )
   const last = (

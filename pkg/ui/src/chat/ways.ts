@@ -14,19 +14,21 @@ export interface Way<T extends string = string> {
   off?: boolean
 }
 
-export type Effort = 'auto' | 'instant' | 'low' | 'medium' | 'high' | 'max'
+export type Effort = 'auto' | 'off' | 'minimal' | 'instant' | 'low' | 'medium' | 'high' | 'xhigh' | 'max'
 
 /**
- * Every effort, in order, in English and marked (`phrase`): `reasoning_effort`
- * on a completion; a surface offers the ones it can send. Auto, the default,
- * leaves the depth to the router; the rest are the ladder. The wire also takes
- * `xhigh` as Max and `minimal`/`none` as Instant, which no list repeats.
+ * Every reasoning effort level supported across tracked models, in order, in
+ * English and marked (`phrase`): `reasoning_effort` on a completion; a surface
+ * offers the ones it can send. Auto leaves the depth to the router; the ladder
+ * spans Off → Minimal → Low → Medium → High → Extra High → Max.
  */
 export const EFFORTS: readonly Way<Effort>[] = [
   { id: 'auto', label: phrase('Auto'), note: phrase('Adaptive reasoning based on task complexity') },
-  { id: 'instant', label: phrase('Instant'), note: phrase('Answers right away, without thinking') },
-  { id: 'low', label: phrase('Low'), note: phrase('A quick pass with minimal thinking') },
-  { id: 'medium', label: phrase('Medium'), note: phrase('Thinks before answering') },
+  { id: 'off', label: phrase('Off'), note: phrase('Answers directly without extended thinking') },
+  { id: 'minimal', label: phrase('Minimal'), note: phrase('Very brief reasoning for fast responses') },
+  { id: 'low', label: phrase('Low'), note: phrase('A quick pass with light thinking') },
+  { id: 'medium', label: phrase('Medium'), note: phrase('Balanced thinking before answering') },
   { id: 'high', label: phrase('High'), note: phrase('Deep reasoning for complex problems') },
+  { id: 'xhigh', label: phrase('Extra High'), note: phrase('Extended multi-step reasoning and checks') },
   { id: 'max', label: phrase('Max'), note: phrase('Maximum compute and exhaustive verification') },
 ]

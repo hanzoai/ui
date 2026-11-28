@@ -35,6 +35,8 @@ export interface LimitWindow {
 export interface ClassLimit extends LimitWindow {
   paying: LimitPayer
   window?: LimitWindow
+  /** True on Unlimited / Enterprise plans where this class has no dollar cap. */
+  unbounded?: boolean
 }
 
 /**
@@ -198,7 +200,13 @@ function classOfBody(v: unknown): ClassLimit | null {
   if (!w) return null
   const o = record(v)
   const short = windowOf(o?.window)
-  return { ...w, paying: one(PAYERS, o?.paying) ?? 'plan', ...(short ? { window: short } : {}) }
+  const unbounded = o?.unbounded === true
+  return {
+    ...w,
+    paying: one(PAYERS, o?.paying) ?? 'plan',
+    ...(short ? { window: short } : {}),
+    ...(unbounded ? { unbounded: true } : {}),
+  }
 }
 
 export function actionsOf(v: unknown): LimitAction[] {
@@ -261,11 +269,28 @@ export function limitsOf(body: unknown): Limits | null {
   const limited: Limited | undefined = lim
     ? { reason: text(lim.reason) ?? '', classes: classList(lim.classes), message: text(lim.message) ?? '' }
     : undefined
-  const state =
-    one(STATES, o?.state) ??
-    Object.values(classes).reduce<LimitState>((s, c) => worst(s, c ? worst(c.state, c.window?.state ?? 'ok') : 'ok'), 'ok')
+  const effectiveClassState = (cls: LimitClass, c: ClassLimit | undefined): LimitState => {
+    if (!c || c.unbounded) return 'ok'
+    // Third-party models are prepaid from credits, never part of monthly plan caps;
+    // a non-limited `paying: 'credits'` entry must never push the plan into `near`.
+    if (cls === 'premium' && c.paying === 'credits' && c.state !== 'limited') return 'ok'
+    return worst(c.state, c.window?.state ?? 'ok')
+  }
+  const derivedState = (Object.entries(classes) as [LimitClass, ClassLimit | undefined][]).reduce<LimitState>(
+    (s, [cls, c]) => worst(s, effectiveClassState(cls, c)),
+    'ok',
+  )
   const session = windowOf(o?.session)
   const day = windowOf(o?.day)
+  const windowWorst = worst(session?.state ?? 'ok', day?.state ?? 'ok')
+  const rawState = one(STATES, o?.state)
+  // If the server reported `near` solely because a retired zero-allowance `premium`
+  // class paid from credits showed 100% while every bounded plan class & window is ok,
+  // treat the account as `ok` so Unlimited/credit-funded users never get false warnings.
+  const state: LimitState =
+    rawState === 'near' && derivedState === 'ok' && windowWorst === 'ok' && !limited
+      ? 'ok'
+      : rawState ?? worst(derivedState, windowWorst)
   const reset = resetInfoOf(o?.reset)
   return {
     plan,
@@ -570,7 +595,9 @@ export function nearOf(limits: Limits | null, now: number = Date.now(), t: Say =
   if (!limits || limits.state === 'limited') return null
   const near = CLASSES.filter((c) => {
     const k = limits.classes[c]
-    return c !== 'free' && k && (k.state === 'near' || k.window?.state === 'near')
+    if (!k || k.unbounded) return false
+    if (c === 'premium' && k.paying === 'credits') return false
+    return c !== 'free' && (k.state === 'near' || k.window?.state === 'near')
   })
   if (!near.length) return null
   const until = when(earliest(near.map((c) => resetOf(limits.classes[c]))), now)

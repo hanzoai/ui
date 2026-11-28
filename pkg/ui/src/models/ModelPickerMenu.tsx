@@ -26,8 +26,46 @@ import { Sheet, SheetContent, SheetTitle } from '../backends/gui/sheet'
 import { RING } from '../backends/gui/press'
 import { slot } from '../backends/gui/slot'
 import { move, type Move } from '../product/chipSelect.logic'
-import { AGENT_GAPS, groupLabel, isPaused, modelName, RESEARCH, type Capability, type ModelCatalogEntry, type PauseSource } from './catalog'
+import { AGENT_GAPS, ensoModelGap, groupLabel, isPaused, modelName, RESEARCH, type Capability, type ModelCatalogEntry, type PauseSource } from './catalog'
 import { modelCount, modelMeta, pickable, pickerRows, restable, revealLayoutTop, rowLayout, standing, visibleLayoutRange, type PickerRow } from './picker.logic'
+
+/** Progressive Enso ring icon: closed circle ONLY for Enso Auto (gap=0), opening by tier. */
+function EnsoGlyph({ gap, size = 14 }: { gap: number; size?: number }) {
+  const strokeWidth = 1.75
+  const r = (size - strokeWidth) / 2
+  const cx = size / 2
+  const cy = size / 2
+  const clamped = Math.max(0, Math.min(0.6, gap))
+  const c = 2 * Math.PI * r
+  const arc = c * (1 - clamped)
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      fill="none"
+      aria-hidden="true"
+      data-slot="enso-glyph"
+      data-enso-gap={String(clamped)}
+      style={{ flexShrink: 0, display: 'block', opacity: 0.85 }}
+    >
+      {clamped === 0 ? (
+        <circle cx={cx} cy={cy} r={r} stroke="currentColor" strokeWidth={strokeWidth} />
+      ) : (
+        <circle
+          cx={cx}
+          cy={cy}
+          r={r}
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeDasharray={`${arc} ${c}`}
+          transform={`rotate(${-90 + (clamped * 360) / 2} ${cx} ${cy})`}
+        />
+      )}
+    </svg>
+  )
+}
 
 /** The list's ceiling in a popover, px. */
 const LIST_H = 384
@@ -290,6 +328,7 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
             const picked = m.id === value
             const title = modelName(m)
             const meta = modelMeta(m, models, t)
+            const ensoGap = m.family === 'enso' ? ensoModelGap(m.id) : null
             const access = locked
               ? t('Research preview')
               : gap
@@ -339,7 +378,8 @@ function List({ models, value, onChange, onClose, scope, limits, loading, error,
               >
                 <Check size={14} color="$ink" shrink={0} opacity={picked ? 1 : 0} aria-hidden />
                 <YStack flex={1} minW={0} gap={1} justify="center">
-                  <XStack items="center" gap="$1.5" minW={0}>
+                  <XStack items="center" gap="$1.5" minW={0} color="$ink">
+                    {ensoGap !== null ? <EnsoGlyph gap={ensoGap} size={14} /> : null}
                     <SizableText size={sheet ? '$3' : '$2'} color="$ink" opacity={locked || gap ? 0.5 : 1} numberOfLines={1} flex={1} minW={0}>
                       {title}
                     </SizableText>

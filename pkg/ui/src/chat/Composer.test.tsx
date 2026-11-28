@@ -158,6 +158,13 @@ describe('the composer is wired to its own rules', () => {
     mount(<Composer value="hi" busy onSend={() => {}} onStop={() => {}} onChange={() => {}} />)
     expect(host.querySelector('[data-slot="composer-send"]')?.getAttribute('aria-label')).toBe('Stop')
   })
+
+  it('uses an elevated surface rather than a white fill for the send control', () => {
+    mount(<Composer value="hi" onSend={() => {}} onChange={() => {}} />)
+    const send = host.querySelector('[data-slot="composer-send"]')!
+    expect(send.className).not.toContain('var(--primary)')
+    expect(send.getAttribute('data-fill')).toBeNull()
+  })
 })
 
 describe('the field is bounded at both ends', () => {

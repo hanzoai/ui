@@ -88,7 +88,7 @@ export function UsageMeter({ limits, classes = CLASSES, size = 'md', now }: Usag
     const k = limits.classes[c]
     // Third-party models are prepaid only and never included in monthly plan
     // allowances; skip any non-plan entry so users never see a false 100% bar.
-    if (!k || (c === 'premium' && k.paying !== 'plan' && k.state !== 'limited')) return []
+    if (!k || k.unbounded || (c === 'premium' && k.paying !== 'plan' && k.state !== 'limited')) return []
     return [{ c, k }]
   })
   const { t } = useI18n()

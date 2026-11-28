@@ -8,6 +8,7 @@ import {
   capabilitiesOf,
   CAPABILITY_NAMES,
   ENSO,
+  ensoRank,
   formatCeiling,
   formatContext,
   formatPrice,
@@ -15,6 +16,7 @@ import {
   groupKey,
   groupModels,
   isComparison,
+  isRetiredModel,
   matchesModel,
   modelName,
   savingOf,
@@ -59,10 +61,18 @@ export function pickerRows(
   scope?: Capability,
   opened = false,
 ): PickerRow[] {
-  const listed = withResearch(models).filter((m) => !isComparison(m) && matchesModel(m, query))
+  const listed = withResearch(models).filter((m) => !isComparison(m) && !isRetiredModel(m.id) && matchesModel(m, query))
   const offered = listed.filter((m) => !scope || can(m, scope))
   const rows: PickerRow[] = []
-  const sorted = sortModels(offered).sort((a, b) => Number(b.id === ENSO) - Number(a.id === ENSO))
+  const sorted = sortModels(offered).sort((a, b) => {
+    const ae = a.family === 'enso'
+    const be = b.family === 'enso'
+    if (ae && be) {
+      const diff = ensoRank(a.id) - ensoRank(b.id)
+      if (diff !== 0) return diff
+    }
+    return Number(b.id === ENSO) - Number(a.id === ENSO)
+  })
   // Two ids that read as one name in one group are one row.
   const seen = new Set<string>()
   const unique = sorted.filter((m) => {
