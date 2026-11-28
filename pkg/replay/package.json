@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/replay",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Hanzo Replay — browser session-replay recorder. Wraps rrweb to capture a replayable DOM movie, batches it, and POSTs it to the ONE ingest endpoint (POST /v1/event/replay) attributed by a publishable pk- key. Masks at CAPTURE time using @hanzo/observe's redaction policy — inputs masked by default, marked subtrees excluded, credential-bearing URLs redacted through @hanzo/event, and no recording at all on OAuth callback routes. Orthogonal to @hanzo/observe: semantic capture there, pixels here.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

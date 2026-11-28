@@ -234,10 +234,12 @@ group('the default transport', () => {
 
     expect(calls).toHaveLength(3)
     expect((calls[0][1]!.headers as Record<string, string>).Authorization).toBe('Bearer pk-abc')
+    expect(calls[0][1]!.credentials).toBe('omit')
     expect(calls[0][1]!.method).toBe('POST')
     // an ordinary flush is not kept alive: a snapshot is several times the quota
     expect(calls[0][1]!.keepalive).toBe(false)
     expect((calls[1][1]!.headers as Record<string, string>).Authorization).toBe('Bearer sk-abc')
+    expect(calls[1][1]!.credentials).toBe('omit')
     expect(calls[1][1]!.keepalive).toBe(true)
     expect(calls[2][1]!.body).toBe(tail)
     expect(calls[2][1]!.keepalive).toBe(false)
@@ -245,5 +247,33 @@ group('the default transport', () => {
 
     g.fetch = oldFetch
     nav.sendBeacon = oldBeacon
+  })
+
+  it('opens circuit breaker on 429 and stops flooding /v1/event/replay', async () => {
+    vi.useRealTimers()
+    let calls = 0
+    const g = globalThis as unknown as Record<string, unknown>
+    const oldFetch = g.fetch
+    g.fetch = () => {
+      calls++
+      return Promise.resolve({
+        ok: false,
+        status: 429,
+        headers: { get: (k: string) => (k.toLowerCase() === 'retry-after' ? '30' : null) },
+      } as unknown as Response)
+    }
+    try {
+      const { createDefaultTransport } = await import('./batch')
+      const t = createDefaultTransport()
+      t.send('https://api.hanzo.ai/v1/event/replay', '{}', { beacon: false, ingestKey: 'pk-rl' })
+      await new Promise((r) => setTimeout(r, 0))
+      for (let i = 0; i < 15; i++) {
+        t.send('https://api.hanzo.ai/v1/event/replay', '{}', { beacon: false, ingestKey: 'pk-rl' })
+      }
+      await new Promise((r) => setTimeout(r, 0))
+      expect(calls).toBe(1)
+    } finally {
+      g.fetch = oldFetch
+    }
   })
 })
