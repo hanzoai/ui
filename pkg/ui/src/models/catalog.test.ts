@@ -344,12 +344,15 @@ describe('Enso progressive glyphs, retirement of enso-free, and Free grants', ()
     expect(grants(false, 'enso-ultra')).toBe(true)
   })
 
-  it('closes ONLY enso-auto (0) and opens progressively from Ultra down to Flash', () => {
+  it('closes Enso and Enso Auto and opens the remaining tiers', () => {
     expect(ensoModelGap('enso-auto')).toBe(0)
     expect(ensoModelGap('enso-ultra')).toBe(0.08)
     expect(ensoModelGap('enso-max')).toBe(0.16)
     expect(ensoModelGap('enso-pro')).toBe(0.24)
-    expect(ensoModelGap('enso')).toBe(0.32)
+    expect(ensoModelGap('enso')).toBe(0)
+    expect(ensoModelGap(' HANZO/Enso ')).toBe(0)
+    expect(ensoModelGap('hanzo/enso-hybrid')).toBeGreaterThan(0)
+    expect(ensoModelGap('enso-preview')).toBeGreaterThan(0)
     expect(ensoModelGap('enso-flash')).toBe(0.42)
     expect(ensoModelGap('zen5')).toBeNull()
   })

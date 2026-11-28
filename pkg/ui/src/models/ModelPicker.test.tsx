@@ -416,6 +416,6 @@ describe('ModelPicker, stacked', () => {
     const gaps = ['enso-auto', 'enso-ultra', 'enso-max', 'enso-pro', 'enso', 'enso-flash'].map(
       (id) => row(id).querySelector('[data-slot="enso-glyph"]')?.getAttribute('data-enso-gap'),
     )
-    expect(gaps).toEqual(['0', '0.08', '0.16', '0.24', '0.32', '0.42'])
+    expect(gaps).toEqual(['0', '0.08', '0.16', '0.24', '0', '0.42'])
   })
 })
