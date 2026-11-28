@@ -444,8 +444,8 @@ export function Composer({
       tabIndex={sending ? 0 : -1}
       bg={busy ? '$bad' : '$raised'}
       color={busy ? '#ffffff' : '$ink'}
-      borderWidth={1}
-      borderColor={busy ? '$bad' : live ? STRONG : '$rim'}
+      borderWidth={busy ? 0 : 1}
+      borderColor="$borderColor"
       opacity={live ? 1 : 0.45}
       hoverStyle={live ? (busy ? { opacity: 0.9 } : { bg: '$hover', borderColor: STRONG }) : undefined}
       pressStyle={{ scale: 0.92 }}
